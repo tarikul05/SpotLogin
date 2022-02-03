@@ -1,11 +1,4 @@
 @extends('layouts.main')
-@push('head')
-<!-- Scripts -->
-<script src="{{ asset('js/dataTables.rowGroup.min.js')}}"></script>
-<script src="{{ asset('jquery.dataTables.min.js')}}"></script>
-<script src="{{ asset('js/dataTables.jqueryui.min.js')}}"></script>
-<script src="{{ asset('js/dataTables.rowGroup.min.js')}}"></script>
-@endpush
 
 @section('content')
   <div class="m-4">
@@ -491,14 +484,3 @@
     </table>
   </div>
 @endsection
-
-<script>
-  $(document).ready(function() {
-    $('#example').DataTable( {
-        order: [[2, 'asc']],
-        rowGroup: {
-            dataSrc: 2
-        }
-    } );
-} );
-</script>

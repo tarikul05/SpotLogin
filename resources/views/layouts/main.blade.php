@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>@yield('title')</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="{{ asset('js/jquery-3.5.1.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
 <script type="text/javascript">
@@ -59,4 +62,9 @@
     @yield('content')
 </section>
 </body>
+<script>
+$(document).ready( function () {
+    $('#example').DataTable();
+} );
+</script>
 </html>
