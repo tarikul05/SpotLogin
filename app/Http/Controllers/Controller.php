@@ -7,13 +7,15 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\Request;
 use View;
 use Route;
+use Illuminate\Support\Facades\URL;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    public $BASE_URL = '';
     public $CURRENT_URL = '';
     /** @var object $AppUI Session infomation of user logged. */
     public $AppUI = null;
@@ -32,11 +34,9 @@ class Controller extends BaseController
     	$this->controller = strtolower($controller);
         $this->action = strtolower($method);
         $this->CURRENT_URL = url()->full();
+        $this->BASE_URL = URL::to('');
 
-        $this->all_authority = array(
-          'COACH_USER' => trans('global.LABEL_COACH_USER'),
-          'RINK_USER' => trans('global.LABEL_RINK_USER')
-        );
+        
 
         $this->middleware(function ($request, $next) {
 
@@ -49,11 +49,35 @@ class Controller extends BaseController
                 'controller' => $this->controller,
                 'action' => $this->action,
                 'CURRENT_URL' => $this->CURRENT_URL,
-                'AppUI' => $this->AppUI,
-                'authority' => $this->all_authority
+                'BASE_URL' => $this->BASE_URL,
+                'AppUI' => $this->AppUI
             );
             View::share($data);
             return $next($request);
         });
-    }    
+    } 
+    
+     /**
+     * Commont function check user is Authorized..
+     *
+     *
+     * @param object $user Session user logged.
+     * @return boolean  If true is authorize, and false is unauthorize.
+     */
+    public function isAuthorized($user = null) {
+        if (Auth::check()) {
+            if (empty($user)) {
+                $user = Auth::user();
+            }
+            if (!empty($user)) {
+                $this->AppUI = $user;
+                return true;
+            }
+            return false;
+        } else {
+            return false;
+        }
+        
+        
+    }
 }
