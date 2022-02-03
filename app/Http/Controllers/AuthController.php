@@ -123,48 +123,13 @@ class AuthController extends Controller
      * Login UI and Login confirmation 
      * 
      * @return redirect to login page
-     * @author Mamun <mamun@seazoobd.com>
-     * @version 0.1 written in 2021-12-28
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-03
      */
     public function logout()
     {
         Auth::logout();
-        return redirect('/admin/login');
-    }
-
-
-
-    /**
-     * Company auto Login UI and Login confirmation 
-     * 
-     * @return redirect to corp page
-     * @author Mamun <ocb.mamun@asia.cybridge.jp>
-     * @version 0.1 written in 2022-01-25
-     */
-    public function company_auto_login($id)
-    {
-        $company = Company::find($id);
-
-        if($company) {
-
-            $user = User::updateOrCreate([
-                'provider_id' => $company->id,
-                'provider_name' => 'company',
-            ],[
-                'authority' => 'COMPANY',
-                'status' => 1,
-                'name' => $company->name,
-                'email' => $company->login_mail,
-                'password' => $company->login_pass
-            ]);
-            Auth::login($user);
-            if (Auth::check()) {
-                $user = Auth::user();
-                return redirect('/corp');
-            }
-        }
-
-        return redirect('/admin/login')->withInput()->with('error', 'Login failed, please try again!');
+        return redirect('/login');
     }
 
     
