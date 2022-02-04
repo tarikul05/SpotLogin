@@ -18,7 +18,7 @@ Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 
-// Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 
 
 // auth
