@@ -21,8 +21,6 @@ use URL;
 class AuthController extends Controller
 {
 
-    use SendsPasswordResetEmails;
-
     /**
      * Where to redirect users after login.
      *
