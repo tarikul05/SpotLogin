@@ -2,12 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- Bootstrap select box-->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta/css/bootstrap-select.min.css">
@@ -16,6 +17,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     
 
+   
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('css/mainstyle.css')}}">
@@ -49,7 +51,7 @@
                 </li>
                 
                 <li class="nav-item active">
-                    <a class="px-2 nav-link login_btn" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+                    <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
@@ -70,12 +72,16 @@
     </footer>
 
 
+    @include('layouts.elements.modal_login')
+
+
     <!--common script for all pages-->
     <script src="{{ asset('js/jquery-3.5.1.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta/js/bootstrap-select.min.js"></script>
    
 
@@ -102,8 +108,8 @@
         //LoadAppMessages();   //load app messages
                 
       });
-      PopulateLanguage();
-      PopulateCountry();
+      //PopulateLanguage();
+      //PopulateCountry();
       //LoadAppMessages();   //load app messages 
       
       
