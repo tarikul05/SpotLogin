@@ -13,4 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\TeachersController::class, 'index']);
+Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
+Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index']);
+
+// Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
+
+// Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
+
+
+// auth
+Route::group(['middleware' => ['auth']], function () {
+  Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+});
