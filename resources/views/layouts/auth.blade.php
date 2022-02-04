@@ -33,60 +33,41 @@
     </script>
   </head>
   <body>
-    <div class="m-4 top">
-      <!-- Navigation -->
-      <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
-          <div class="container-fluid">
-              <a class="navbar-brand" href="/">
-                  <img src="{{ asset('img/logo.png') }}" width="36">
-              </a>
-              <ul class="navbar-nav ml-auto align-items-center" style="flex-direction: row!important;">
-                  <li class="nav-item">
-                      
-                      <select id="language_selectpicker" class="selectpicker" data-width="fit">
-                          
-                      </select> 
-                      
-                  </li>
-                  
-                  <li class="nav-item active">
-                      <a class="px-2 nav-link login_btn" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
-                  </li>
-              </ul>
-              <!-- </div> -->
-          </div>
-      </nav>
-      <!-- Full Page Image Header with Vertically Centered Content -->
-      <header class="masthead">
-          <div class="circle-bg"></div>
-          <div class="container-fluid h-100">
-              <div class="row h-100 align-items-center">
-                  <div class="col-12">
-                      <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}">Sportlogin</h1>
-                      <h4 class="gilroy-bold text-white">Let Sportlogin do your off-ice </h4>
-                      <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
-                      <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
-                      <div class="masthead-btn-area">
-                          <a href="#" class="head-btn">
-                              <img src="{{ asset('img/app-store.svg') }}" width="148">
-                          </a>
-                          <a href="#" class="head-btn">
-                              <img src="{{ asset('img/play-store.svg') }}" width="148">
-                          </a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="phone-bg mx-auto text-right"></div>
-      </header>
-            
-    </div>
-    <section class="m-4">
-        @yield('content')
-    </section>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="{{ asset('img/logo.png') }}" width="36">
+            </a>
+            <ul class="navbar-nav ml-auto align-items-center" style="flex-direction: row!important;">
+                <li class="nav-item">
+                    
+                    <select id="language_selectpicker" class="selectpicker" data-width="fit">
+                        
+                    </select> 
+                    
+                </li>
+                
+                <li class="nav-item active">
+                    <a class="px-2 nav-link login_btn" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
+                </li>
+            </ul>
+            <!-- </div> -->
+        </div>
+    </nav>
+    
+          
+    @yield('content')
+
+    <footer>
+      <h2 class="gilroy-regular txtdarkblue">Contact us</h2>
+      <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p> 
+      
+      <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
+    </footer>
 
 
     <!--common script for all pages-->

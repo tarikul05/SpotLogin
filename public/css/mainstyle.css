@@ -42,6 +42,9 @@
 body{
     font-family: 'Gilroy-Regular ☞';
 }
+.row {
+    --bs-gutter-x: 0rem;
+}
 h1{font-size: 76px;}
 h2{font-size: 56px;}
 h3{font-size: 44px;}
@@ -102,6 +105,7 @@ p{font-size: 24px;}
 .container-fluid{max-width: 1500px;}
 .bgdarkblue{background: #152245;}
 .txtdarkblue{color: #152245;}
+footer .txtdarkblue{text-decoration: none;}
 .light-blue-bg{background: #0075BF;}
 .light-blue-txt{color: #0075BF;}
 .light-grey-bg{background: rgb(21 34 69 / 5%);}
