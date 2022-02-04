@@ -51,7 +51,7 @@ class AuthController extends Controller
             $user = Auth::user();
             return redirect(RouteServiceProvider::HOME);
         }
-        return view('pages.auth.login', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
+        return view('pages.top', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
     }
 
     /**
