@@ -70,12 +70,18 @@ class User extends Authenticatable
     }
 
 
-    static public function getUserData($field,$username,$password){
-        return $user = User::where([
-                                       [$field, $username],
-                                       ['deleted_at', null],
-                                       ['password', Hash::make($password)],
-                                   ])->first();
-        //return $data = User::with(['shop'])->find($user->id);
+    static public function getUserData($field,$username,$password = null){
+        if (!empty($password)) {
+            return $user = User::where([
+                [$field, $username],
+                ['deleted_at', null],
+                ['password', Hash::make($password)]
+            ])->first();
+        } else {
+            return $user = User::where([
+                [$field, $username],
+                ['deleted_at', null]
+            ])->first();
+        }
    }
 }
