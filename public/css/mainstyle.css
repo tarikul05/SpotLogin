@@ -207,6 +207,11 @@ footer{
 footer p a{font-size: 28px;}
 footer p a:hover{text-decoration: none;}
 
+
+.error {
+    color: red;
+}
+
 @media only screen and (max-width: 1200px){
     h1{font-size: 68px;}
     h2{font-size: 48px;}
