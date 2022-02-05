@@ -101,10 +101,11 @@ class LanguageTranslationController extends Controller
     */
  
     public function transUpdate(Request $request){
-        $data = $this->openJSONFile($request->code);
+        $data = $this->openJSONFile($request->name);
         $data[$request->pk] = $request->value;
-        $this->saveJSONFile($request->code, $data);
-        return response()->json(['success'=>'Done!']);
+        $this->saveJSONFile($request->name, $data);
+        // return response()->json(['success'=>'Done!']);
+        return response()->json(['success'=>__('Done')]);
     }
  
     /**
@@ -114,7 +115,7 @@ class LanguageTranslationController extends Controller
  
     public function transUpdateKey(Request $request){
         $languages = DB::table('languages')->get();
- 
+
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
