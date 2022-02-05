@@ -20,6 +20,17 @@ Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 
+// Language 
+Route::get('languages', 'LanguageTranslationController@index')->name('languages');
+Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
+Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
+Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
+Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+Route::get('check-translation', function(){
+    \App::setLocale('fr');
+    dd(__('website'));
+});
+
 
 // auth
 Route::group(['middleware' => ['auth']], function () {
