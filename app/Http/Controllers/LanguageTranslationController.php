@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use File;
+use App\Models\Language;
 
 class LanguageTranslationController extends Controller
 {
@@ -14,7 +15,8 @@ class LanguageTranslationController extends Controller
     */
     public function index()
     {
-      $languages = DB::table('languages')->orderBy('created_at')->get();
+      // $languages = DB::table('languages')->orderBy('created_at')->get();
+      $languages = Language::orderBy('created_at')->get();
       $columns = [];
       $columnsCount = $languages->count();
         if($languages->count() > 0){
@@ -41,7 +43,7 @@ class LanguageTranslationController extends Controller
             'value' => 'required',
         ]);
 
-        $languages = DB::table('languages')->get();
+        $languages = Language::orderBy('created_at')->get();
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
@@ -58,7 +60,7 @@ class LanguageTranslationController extends Controller
     */
     public function destroy($key)
     {
-        $languages = DB::table('languages')->get();
+        $languages = Language::orderBy('created_at')->get();
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
@@ -114,7 +116,7 @@ class LanguageTranslationController extends Controller
     */
  
     public function transUpdateKey(Request $request){
-        $languages = DB::table('languages')->get();
+        $languages = Language::orderBy('created_at')->get();
 
         if($languages->count() > 0){
             foreach ($languages as $language){

@@ -44,7 +44,7 @@
             @if($columnsCount > 0)
                 @foreach($columns[0] as $columnKey => $columnValue)
                     <tr>
-                        <td><a href="#" class="translate-key" data-title="Enter Key" data-type="text" data-pk="{{ $columnKey }}" data-url="{{ route('translation.update.json.key') }}" data-placeholder="Required">{{ $columnKey }}</a></td>
+                        <td><a href="javascript:void(0)" class="translate-key" data-title="Enter Key" data-type="text" data-pk="{{ $columnKey }}" data-url="{{ route('translation.update.json.key') }}" data-placeholder="Required">{{ $columnKey }}</a></td>
                         @for($i=1; $i<=$columnsCount; ++$i)
                         <td><a href="#" data-title="Enter Translate" class="translate" data-code="{{ $columns[$i]['lang'] }}" data-type="textarea" data-pk="{{ $columnKey }}" data-url="{{ route('translation.update.json') }}">{{ isset($columns[$i]['data'][$columnKey]) ? $columns[$i]['data'][$columnKey] : '' }}</a></td>
                         @endfor
@@ -63,7 +63,7 @@
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
  
@@ -74,7 +74,7 @@
     //     }
     // });
 
-    $('.translate, .translate-key').each(function(index, el) {
+    $('.translate').each(function(index, el) {
 
         var code = $(this).data('code');
         new DarkEditable(this, {
@@ -86,66 +86,15 @@
     $('.translate').on('click',function(event) {
         event.preventDefault();
         const popover = new DarkEditable(this, {})
-        // var pk = $(this).data('pk');
-        // var url = $(this).data('url');
-        // var code = $(this).data('code');
-        // var txt = $(this).text();
-        /* Act on the event */
-        // const popover = new DarkEditable(this, {
-        //       type: "text",
-        //       value: txt,
-        //       disabled: false,
-        //       emptytext: 'empty',
-        //       url: url,
-        //       //name: code, // name of the field
-        //       pk: pk, // primary key
-        //       send: true, // send data to server
-        //       success: function(response, newValue) {
-        //         if(response.status == 'error') return response.msg; //msg will be shown in editable form
-        //       },
-        //       error: function(response, newValue) {
-        //         // do something
-        //       },
-        // });
     });
-    
-    // $('.translate-key').on('click',function(event) {
-    //     event.preventDefault();
-    //     // var pk = $(this).data('pk');
-    //     // var url = $(this).data('url');
-    //     // var code = $(this).data('code');
-    //     // var txt = $(this).text();
-
-    //     if($.trim(txt) == '') {
-    //         return 'Key is must required';
-    //     }
-    //     console.log("MMM="+txt)
-    //     /* Act on the event */
-    //     // const popover = new DarkEditable(this, {
-    //     //       type: "text",
-    //     //       value: txt,
-    //     //       disabled: false,
-    //     //       emptytext: 'empty',
-    //     //       url: url,
-    //     //       //name: code, // name of the field
-    //     //       pk: pk, // primary key
-    //     //       send: true, // send data to server
-    //     //       success: function(response, newValue) {
-    //     //         if(response.status == 'error') return response.msg; //msg will be shown in editable form
-    //     //       },
-    //     //       error: function(response, newValue) {
-    //     //         // do something
-    //     //       },
-    //     // });
-    // });
  
-    $('.translate-key').DarkEditable({
-        validate: function(value) {
-            if($.trim(value) == '') {
-                return 'Key is must required';
-            }
-        }
-    });
+    // $('.translate-key').DarkEditable({
+    //     validate: function(value) {
+    //         if($.trim(value) == '') {
+    //             return 'Key is must required';
+    //         }
+    //     }
+    // });
  
  
     $('body').on('click', '.remove-key', function(){
