@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\School;
+use App\Models\Teacher;
 
-class Teacher extends Model
+class School extends Model
 {
     use HasFactory;
     /**
@@ -16,33 +16,21 @@ class Teacher extends Model
      * @var array
      */
     protected $fillable = [
-        'school_id',
-        'visibility_id',
-        'gender_id',
-        'lastname',
-        'middlename',
-        'firstname',
-        'birth_date',
-        'phone',
-        'mobile',
-        'email',
+        'school_name',
+        'incorporation_date',
         'street',
         'street_number',
         'street2',
         'zip_code',
-        'place',
         'country_id',
         'province_id',
-        'geo_latitude',
-        'geo_longitude',
-        'type',
-        'comment',
-        'profile_image_id',
-        'has_user_account',
-        'teacher_cv',
-        'licence_arp',
-        'licence_usp',
-        'licence_js',
+        'phone',
+        'phone2',
+        'mobile',
+        'mobile2',
+        'email',
+        'email2',
+        'logo_image_id',
         'bank_iban',
         'bank_account',
         'bank_swift',
@@ -52,24 +40,25 @@ class Teacher extends Model
         'bank_place',
         'bank_country_id',
         'bank_province_id',
-        'bg_color_agenda',
-        'billing_street',
-        'billing_street_number',
-        'billing_street2',
-        'billing_zip_code',
-        'billing_place',
-        'billing_country_id',
-        'billing_province_id',
-        'about_text',
-        'display_home_flag',
+
+        'contact_gender_id',
+        'contact_lastname',
+        'contact_firstname',
+        'contact_position',
+        'bank_account_holder',
+        'status',
+        'school_code',
+        'default_currency_code',
+        'sender_email',
         'billing_method',
         'billing_amount',
         'billing_method_eff_date',
         'billing_currency',
         'billing_date_start',
         'billing_date_end',
-        'invoice_process_day_no',
-        'person_language_preference',
+        'max_students',
+        'max_teachers',
+        'school_type',
         'tax_desc',
         'tax_perc',
         'tax_applicable',
@@ -94,27 +83,16 @@ class Teacher extends Model
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-
-    protected $appends = ['school_name'];
-
-     /**
-     * Get the user for the News.
+    
+    /**
+     * Get the teachers.
      */
-    public function school()
+    public function teachers()
     {
-        return $this->belongsTo(School::class);
+        return $this->hasMany(Teacher::class);
     }
-
    
-     /**
-     * Get the school's name.
-     *
-     * @return string
-     */
-    public function getSchoolNameAttribute()
-    {
-        return !empty($this->school) ? $this->school->school_name : null;
-    }
+    
 
 }
 

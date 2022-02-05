@@ -102,7 +102,25 @@ class AuthController extends Controller
             $username = $data['login_username'];
             $field = 'username';
             $user = User::getUserData($field, $username);
-
+            $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+            //         $result = array(
+            //             "status"     => 0,
+            //             'message' => _('Successfully logged in'),
+            //             "user_id"  => $user['id'],
+            //             "user_name" => $user['username'],
+            //             "user_role"  => $user['person_type'],
+            //             "school_code"  => $user['related_school']['school_code'],                                
+            //             "email"  => $user['email'],
+            //             "school_id"  => $user['related_school']['id'],
+            //             "v_t_cnt"  => $user['related_school']['max_teachers'],
+            //             "v_s_cnt"  =>$user['related_school']['max_students'],
+            //             //"tc_accepted_flag"  => $row['tc_accepted_flag'],
+            //             "country_id"  => $user['teacher']['country_id'],
+            //             "person_id"  => $user['person_id'],
+            //             "http_host" => $http_host
+            //         );
+            // print_r($result);
+            // exit();
             
             if ($user) {
                 if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
@@ -112,13 +130,25 @@ class AuthController extends Controller
                     //if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
                     
                     Auth::login($user, true);
-                    $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+
                     $result = array(
                         "status"     => 0,
                         'message' => _('Successfully logged in'),
-                        "user"  => $user,
+                        "user_id"  => $user['id'],
+                        "user_name" => $user['username'],
+                        "user_role"  => $user['person_type'],
+                        "school_code"  => $user['related_school']['school_code'],                                
+                        "email"  => $user['email'],
+                        "school_id"  => $user['related_school']['id'],
+                        "v_t_cnt"  => $user['related_school']['max_teachers'],
+                        "v_s_cnt"  =>$user['related_school']['max_students'],
+                        //"tc_accepted_flag"  => $row['tc_accepted_flag'],
+                        "country_id"  => $user['teacher']['country_id'],
+                        "person_id"  => $user['person_id'],
                         "http_host" => $http_host
                     );
+            
+                    
                     return response()->json($result);
                     
                     

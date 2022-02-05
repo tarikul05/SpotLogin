@@ -71,7 +71,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['related_person'];
+    protected $appends = ['related_school'];
 
 
 
@@ -133,14 +133,14 @@ class User extends Authenticatable
      *
      * @return object|null
      */
-    public function getRelatedPersonAttribute()
+    public function getRelatedSchoolAttribute()
     {
         $person = '';
 
         switch ($this->person_type) {
             case 'TEACHER':
                 if ($this->teacher) {
-                    $person = !empty($this->teacher) ? $this->teacher : null;
+                    $person = !empty($this->teacher->school) ? $this->teacher->school : null;
                 }
                 break;
             case 'COACH':
@@ -150,19 +150,19 @@ class User extends Authenticatable
                 break;
             case 'STUDENT':
                 if ($this->student ) {
-                    $person = !empty($this->student) ? $this->student : null;
+                    $person = !empty($this->student->school) ? $this->student->school : null;
                 }
                 break;
             case 'PARENT':
                 if ($this->parent ) {
-                    $person = !empty($this->parent) ? $this->parent : null;
+                    $person = !empty($this->parent->school) ? $this->parent->school : null;
                 }
                 break;
             default:
                 $person = null;
         }
 
-        return $person=null;
+        return $person;
     }
 
 
