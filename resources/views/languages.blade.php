@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Laravel Multi Language Translation</h1>
+    <h1>New Translation key</h1>
     <form method="POST" action="{{ route('translations.create') }}">
         @csrf
         <div class="row">
@@ -21,7 +21,7 @@
             </div>
  
             <div class="col-md-4">
-                <label>Value:</label>
+                <label>Value (en):</label>
                 <input type="text" name="value" class="form-control Key" placeholder="Enter Value......">
             </div>
             <div class="col-md-4">
@@ -30,7 +30,7 @@
         </div>
     </form>
  
-    <h2>Laravel Multi Language Translation using lang() Tutorial</h2>
+    <h2>Translate key value pair</h2>
     <table class="table table-hover table-bordered">
         <thead>
         <tr>

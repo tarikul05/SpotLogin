@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>@yield('title')</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="{{ asset('js/jquery-3.5.1.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+<!-- Links form inner page -->
+@section('head_links')
+
+@show
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
@@ -61,10 +64,9 @@
 <section class="m-4">
     @yield('content')
 </section>
+
+<!-- js comes form inner page -->
+@section('footer_js')
+@show
 </body>
-<script>
-$(document).ready( function () {
-    $('#example').DataTable();
-} );
-</script>
 </html>
