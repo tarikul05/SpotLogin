@@ -89,70 +89,49 @@ class AuthController extends Controller
     {
         $data = $request->all();
 
-       
+      
 
         $result = array(
-		    'status' => 1,
-		    'message' => _('failed to login'),
-		);
+            'status' => 1,
+            'message' => _('failed to login'),
+        );
 
 
         if ($data['type'] === 'login_submit') { 
 
             $username = $data['login_username'];
+            $field = 'username';
+            $user = User::getUserData($field, $username);
 
-            if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
-                $field = 'email';
-            } else {
-                $field = 'username';
+            
+            if ($user) {
+                if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
+                
+            
 
-            }
-            $user = User::getUserData($field, $username,$data['password']);
-        }
-
-    
-        return response()->json($result);
-        if ($user) {
-
-            Auth::login($user);
-            if (Auth::check()) {
-                //     $user = Auth::user();
-                //     return redirect('/corp');
-                // }
-
-                // if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+                    //if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
                     
-                //Auth::login($user, true);
-                if ($user->person_type =='SUPER_ADMIN') {
-                    return redirect(RouteServiceProvider::ROOT);
+                    Auth::login($user, true);
+                    $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+                    $result = array(
+                        "status"     => 0,
+                        'message' => _('Successfully logged in'),
+                        "user"  => $user,
+                        "http_host" => $http_host
+                    );
+                    return response()->json($result);
+                    
+                    
+                    
                 }
-                //in case intended url is available
-                if (session()->has('url.intended')) {
-                    $redirectTo = session()->get('url.intended');
-                    session()->forget('url.intended');
-                }
-
-                // if($user->authority =='MASTER'){
-                //     return redirect(RouteServiceProvider::HOME);
-                // }
-
-                $request->session()->regenerate();
-
-                if (isset($redirectTo)) {
-                    if ($redirectTo == $this->BASE_URL && $user->authority =='MASTER') {
-                        return redirect(RouteServiceProvider::USER_LIST);
-                    }
-                    return redirect($redirectTo);
-                }
-                return redirect(RouteServiceProvider::HOME);
-                
-                
             }
+            
         }
-        
-        return redirect()->back()->withInput()->with('error', 'Login failed, please try again!');
-    }
 
+        return response()->json($result);
+        
+        
+    }
     /**
      * Login UI and Login confirmation 
      * 
@@ -163,7 +142,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect('/');
     }
 
     

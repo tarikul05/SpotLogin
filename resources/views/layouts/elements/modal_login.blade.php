@@ -147,50 +147,49 @@ $(document).ready(function() {
         async: false,
         encode: true,
         success: function(data) {
-          console.log(data);
-          return false;
+          
           if (data.status == 0) {
             var username = $("#login_username").val();
 
-            setSessionStorage('v_t_cnt', data.v_t_cnt);
-            setSessionStorage('v_s_cnt', data.v_s_cnt);
-            setSessionStorage('country_id', data.country_id);
+            // setSessionStorage('v_t_cnt', data.v_t_cnt);
+            // setSessionStorage('v_s_cnt', data.v_s_cnt);
+            // setSessionStorage('country_id', data.country_id);
 
-            setCookie('v_t_cnt', data.v_t_cnt, 1);
-            setCookie('v_s_cnt', data.v_s_cnt, 1);
-
-
-            setSessionStorage('user_id', data.user_id);
-            setSessionStorage('user_role', data.user_role);
-            setSessionStorage('school_code', data.school_code);
-            setSessionStorage('school_id', data.school_id);
-            setSessionStorage('person_id', data.person_id);
+            //setCookie('v_t_cnt', data.v_t_cnt, 1);
+            //setCookie('v_s_cnt', data.v_s_cnt, 1);
 
 
-            setSessionStorage('glang_id', langid);
-            setSessionStorage('Language', langid);
+            // setSessionStorage('user_id', data.user_id);
+            // setSessionStorage('user_role', data.user_role);
+            // setSessionStorage('school_code', data.school_code);
+            // setSessionStorage('school_id', data.school_id);
+            // setSessionStorage('person_id', data.person_id);
+
+
+            //setSessionStorage('glang_id', langid);
+            //setSessionStorage('Language', langid);
 
             setSessionStorage('http_host', data.http_host);
 
 
-            setCookie('user_id', data.user_id, 1);
-            setCookie('user_role', data.user_role, 1);
-            setCookie('school_code', data.school_code, 1);
-            setCookie('school_id', data.school_id, 1);
+            //setCookie('user_id', data.user.id, 1);
+            //setCookie('user_role', data.user.person_type, 1);
+            //setCookie('school_code', data.school_code, 1);
+            //setCookie('school_id', data.user.school_id, 1);
 
-            document.cookie = "event_type_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "event_student_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "event_teacher_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //document.cookie = "event_type_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //document.cookie = "event_student_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //document.cookie = "event_teacher_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
-            document.cookie = "view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "cal_view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "prevnext='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+           // document.cookie = "view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //document.cookie = "cal_view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            //document.cookie = "prevnext='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
 
             successModalCall('Logged In Successfully');
             $("#loginModal").modal('hide');
             setTimeout(function() {
-              window.location.href = "../" + data.school_code + "/agenda/agenda.html";
+              window.location.href = "../agenda";
             }, 2000);
 
 
