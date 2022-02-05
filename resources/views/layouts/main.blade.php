@@ -65,8 +65,9 @@
     @yield('content')
 </section>
 
-<!-- js comes form inner page -->
+<!-- js comes form inner page start -->
 @section('footer_js')
 @show
+<!-- js comes form inner page end -->
 </body>
 </html>

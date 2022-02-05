@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Laravel Multi Language Translation</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
+@extends('layouts.main')
+
+@section('head_links')
     <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-</head>
-<body>
-<div class="container">
-    <h1>New Translation key</h1>
+@endsection
+
+@section('content')
+    <!-- <h1>New Translation key</h1> -->
     <form method="POST" action="{{ route('translations.create') }}">
         @csrf
         <div class="row">
@@ -58,7 +53,10 @@
         </tbody>
     </table>
 </div>
- 
+@endsection
+
+
+@section('footer_js') 
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
@@ -97,5 +95,4 @@
         }
     });
 </script>
-</body>
-</html>
+@endsection
