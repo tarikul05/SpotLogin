@@ -25,8 +25,8 @@ class LoginRequest extends FormRequest
     {
         return [
             
-            'username' => 'required',
-            'password' => 'required|string|min:4|max:255'
+            'login_username' => 'required',
+            'login_password' => 'required|string|min:4|max:255'
         ];
     }
 
@@ -34,9 +34,9 @@ class LoginRequest extends FormRequest
     {
         return[
             
-            'username.required' => 'username required',
-            'password.required' => 'password required',
-            'password.min' => 'pinimum 4 character required'
+            'login_username.required' => _('username required'),
+            'login_password.required' => _('password required'),
+            'login_password.min' => _('pinimum 4 character required')
            
            
         ];

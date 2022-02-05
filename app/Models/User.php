@@ -21,12 +21,24 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'username',
         'person_id',
         'person_type',
+        'username',
+        'email',
+        'password',
+        'status',
+        'first_name',
+        'last_name',
+        'gender_id',
+        'birth_date',
+        'is_mail_sent',
+        'is_reset_mail_requested',
+        'profile_image_id',
+        'user_authorisation',
+        'school_id',
+        'is_active',
+        'created_by',
+        'modified_by'
     ];
 
     /**
@@ -46,6 +58,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
 
@@ -53,4 +68,14 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($password);
     }
+
+
+    static public function getUserData($field,$username,$password){
+        return $user = User::where([
+                                       [$field, $username],
+                                       ['deleted_at', null],
+                                       ['password', Hash::make($password)],
+                                   ])->first();
+        //return $data = User::with(['shop'])->find($user->id);
+   }
 }

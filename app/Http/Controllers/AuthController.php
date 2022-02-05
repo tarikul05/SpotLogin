@@ -69,6 +69,15 @@ class AuthController extends Controller
         return view('pages.auth.login', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
     }
 
+    
+
+
+
+
+
+
+        
+
     /**
      * Login UI and Login confirmation 
      * 
@@ -79,16 +88,43 @@ class AuthController extends Controller
     public function loginSubmit(LoginRequest $request)
     {
         $data = $request->all();
-        $user = User::where([
-                        ['email', $data['email']],
-                        ['deleted_at', null],
-                ])->first();
+
+       
+
+        $result = array(
+		    'status' => 1,
+		    'message' => _('failed to login'),
+		);
+
+
+        if ($data['type'] === 'login_submit') { 
+
+            $username = $data['login_username'];
+
+            if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+                $field = 'email';
+            } else {
+                $field = 'username';
+
+            }
+            $user = User::getUserData($field, $username,$data['password']);
+        }
+
+    
+        return response()->json($result);
         if ($user) {
-            if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-                
-                Auth::login($user, true);
-                if ($user->authority =='MASTER') {
-                    return redirect(RouteServiceProvider::USER_LIST);
+
+            Auth::login($user);
+            if (Auth::check()) {
+                //     $user = Auth::user();
+                //     return redirect('/corp');
+                // }
+
+                // if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+                    
+                //Auth::login($user, true);
+                if ($user->person_type =='SUPER_ADMIN') {
+                    return redirect(RouteServiceProvider::ROOT);
                 }
                 //in case intended url is available
                 if (session()->has('url.intended')) {
