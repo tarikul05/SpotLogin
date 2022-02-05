@@ -165,20 +165,23 @@ class User extends Authenticatable
         return $person;
     }
 
-
     static public function getUserData($field,$username,$password = null){
-        if (!empty($password)) {
+        if (!empty($password)) {   
+            return $user = self::where([
+                [$field, $username],
+                ['deleted_at', null],
+                ['password', Hash::make($password)]
+            ])->first();
+        } else {
+            return $user = self::where([
+                [$field, $username],
+                ['deleted_at', null]
+            ])->first();
+        }
+    }
 
-            // return self::with(['school'])
-            //         ->whereHas('latestLoginLog', function ($q) {
-            //             $q->whereNotNull('push_token')
-            //                 ->where('push_token', '<>', '');
-            //         })
-            //         ->where('person_type', 'USER')
-            //         ->where('is_verified', true)
-            //         ->select('users.id');
-
-                    
+    static public function getUserData1($field,$username,$password = null){
+        if (!empty($password)) {   
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null],
