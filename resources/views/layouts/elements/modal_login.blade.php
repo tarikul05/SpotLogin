@@ -119,12 +119,16 @@ $(document).ready(function() {
       }
 
       var formdata = $("#login_form").serializeArray();
-      console.log('formdata=' + formdata);
-      return false;
-      //console.log('TIMEZONEOFFSET=' + TIMEZONEOFFSET);
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      
+      
       formdata.push({
         "name": "type",
         "value": "login_submit"
+      });
+      formdata.push({
+        "name": "_token",
+        "value": csrfToken
       });
       // formdata.push({
       //   "name": "TIMEZONEOFFSET",
@@ -134,15 +138,17 @@ $(document).ready(function() {
       //   "name": "p_school_code",
       //   "value": school_code
       // });
+      console.log(formdata);
       $.ajax({
-        url: 'new_login_data.php',
+        url: BASE_URL + '/login',
         data: formdata,
         type: 'POST',
         dataType: 'json',
         async: false,
         encode: true,
         success: function(data) {
-
+          console.log(data);
+          return false;
           if (data.status == 0) {
             var username = $("#login_username").val();
 
