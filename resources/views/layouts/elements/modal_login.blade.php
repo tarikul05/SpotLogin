@@ -189,7 +189,7 @@ $(document).ready(function() {
             successModalCall('Logged In Successfully');
             $("#loginModal").modal('hide');
             setTimeout(function() {
-              window.location.href = "../agenda";
+              window.location.href = "../teachers";
             }, 2000);
 
 
