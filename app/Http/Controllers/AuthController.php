@@ -69,6 +69,15 @@ class AuthController extends Controller
         return view('pages.auth.login', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
     }
 
+    
+
+
+
+
+
+
+        
+
     /**
      * Login UI and Login confirmation 
      * 
@@ -79,44 +88,100 @@ class AuthController extends Controller
     public function loginSubmit(LoginRequest $request)
     {
         $data = $request->all();
-        $user = User::where([
-                        ['email', $data['email']],
-                        ['deleted_at', null],
-                ])->first();
-        if ($user) {
-            if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+
+      
+
+        $result = array(
+            'status' => 1,
+            'message' => _('failed to login'),
+        );
+
+
+        if ($data['type'] === 'login_submit') { 
+
+            $username = $data['login_username'];
+            $field = 'username';
+            $user = User::getUserData($field, $username);
+            $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+            //         $result = array(
+            //             "status"     => 0,
+            //             'message' => _('Successfully logged in'),
+            //             "user_id"  => $user['id'],
+            //             "user_name" => $user['username'],
+            //             "user_role"  => $user['person_type'],
+            //             "school_code"  => isset($user['related_school']) ? $user['related_school']['school_code'] : null,                                
+            //             "email"  => $user['email'],
+            //             "school_id"  => isset($user['related_school']) ? $user['related_school']['id'] : null,  
+            //             "v_t_cnt"  => isset($user['related_school']) ? $user['related_school']['max_teachers'] : null,  
+            //             "v_s_cnt"  =>isset($user['related_school']) ? $user['related_school']['max_students'] : null,
+            //             //"tc_accepted_flag"  => $row['tc_accepted_flag'],
+            //             "country_id"  => isset($user['teacher']) ? $user['teacher']['country_id'] : null,
+            //             "person_id"  => $user['person_id'],
+            //             "http_host" => $http_host
+            //         );
+            // print_r($result);
+            // exit();
+            
+            if ($user) {
+                if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
                 
-                Auth::login($user, true);
-                if ($user->authority =='MASTER') {
-                    return redirect(RouteServiceProvider::USER_LIST);
-                }
-                //in case intended url is available
-                if (session()->has('url.intended')) {
-                    $redirectTo = session()->get('url.intended');
-                    session()->forget('url.intended');
-                }
+            
 
-                // if($user->authority =='MASTER'){
-                //     return redirect(RouteServiceProvider::HOME);
-                // }
-
-                $request->session()->regenerate();
-
-                if (isset($redirectTo)) {
-                    if ($redirectTo == $this->BASE_URL && $user->authority =='MASTER') {
-                        return redirect(RouteServiceProvider::USER_LIST);
+                   
+                    // Auth::login($user);
+                    $user = Auth::user();
+                    $country_id = null;
+                    if (isset($user->teacher)) {
+                        $country_id = $user->teacher['country_id'];
                     }
-                    return redirect($redirectTo);
-                }
-                return redirect(RouteServiceProvider::HOME);
-                
-                
-            }
-        }
+                    else if (isset($user->student)) {
+                        $country_id = $user->student['country_id'];
+                    }
+                    else if (isset($user->parent)) {
+                        $country_id = $user->parent['country_id'];
+                    }
+                    else if (isset($user->coach)) {
+                        $country_id = $user->coach['country_id'];
+                        $user->related_school['school_code'] = null;
+                        $user->related_school['id'] = null;
+                        $user->related_school['max_teachers'] = null;
+                        $user->related_school['max_students'] = null;
+                    }
         
-        return redirect()->back()->withInput()->with('error', 'Login failed, please try again!');
-    }
+                    
 
+
+                    $result = array(
+                        "status"     => 0,
+                        'message' => _('Successfully logged in'),
+                        "user_id"  => $user['id'],
+                        "user_name" => $user['username'],
+                        "user_role"  => $user['person_type'],
+                        "school_code"  => isset($user->related_school) ? $user->related_school['school_code'] : null,                                
+                        "email"  => $user['email'],
+                        "school_id"  => isset($user->related_school) ? $user->related_school['id'] : null,  
+                        "v_t_cnt"  => isset($user->related_school) ? $user->related_school['max_teachers'] : null,  
+                        "v_s_cnt"  =>isset($user->related_school) ? $user->related_school['max_students'] : null,
+                        //"tc_accepted_flag"  => $row['tc_accepted_flag'],
+                        "country_id"  => $country_id,
+                        "person_id"  => $user['person_id'],
+                        "http_host" => $http_host
+                    );
+            
+                    
+                    return response()->json($result);
+                    
+                    
+                    
+                }
+            }
+            
+        }
+
+        return response()->json($result);
+        
+        
+    }
     /**
      * Login UI and Login confirmation 
      * 
@@ -127,7 +192,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect('/');
     }
 
     

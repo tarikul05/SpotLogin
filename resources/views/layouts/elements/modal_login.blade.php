@@ -119,12 +119,16 @@ $(document).ready(function() {
       }
 
       var formdata = $("#login_form").serializeArray();
-      console.log('formdata=' + formdata);
-      return false;
-      //console.log('TIMEZONEOFFSET=' + TIMEZONEOFFSET);
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      
+      
       formdata.push({
         "name": "type",
         "value": "login_submit"
+      });
+      formdata.push({
+        "name": "_token",
+        "value": csrfToken
       });
       // formdata.push({
       //   "name": "TIMEZONEOFFSET",
@@ -134,15 +138,16 @@ $(document).ready(function() {
       //   "name": "p_school_code",
       //   "value": school_code
       // });
+      console.log(formdata);
       $.ajax({
-        url: 'new_login_data.php',
+        url: BASE_URL + '/login',
         data: formdata,
         type: 'POST',
         dataType: 'json',
         async: false,
         encode: true,
         success: function(data) {
-
+          
           if (data.status == 0) {
             var username = $("#login_username").val();
 
@@ -161,14 +166,14 @@ $(document).ready(function() {
             setSessionStorage('person_id', data.person_id);
 
 
-            setSessionStorage('glang_id', langid);
-            setSessionStorage('Language', langid);
+            //setSessionStorage('glang_id', langid);
+            //setSessionStorage('Language', langid);
 
             setSessionStorage('http_host', data.http_host);
 
 
             setCookie('user_id', data.user_id, 1);
-            setCookie('user_role', data.user_role, 1);
+            setCookie('user_role', data.person_type, 1);
             setCookie('school_code', data.school_code, 1);
             setCookie('school_id', data.school_id, 1);
 
@@ -184,7 +189,7 @@ $(document).ready(function() {
             successModalCall('Logged In Successfully');
             $("#loginModal").modal('hide');
             setTimeout(function() {
-              window.location.href = "../" + data.school_code + "/agenda/agenda.html";
+              window.location.href = "../teachers";
             }, 2000);
 
 

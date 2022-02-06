@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\School;
 
-class Teacher extends Model
+class Student extends Model
 {
     use HasFactory;
     /**
@@ -94,26 +93,13 @@ class Teacher extends Model
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-
-    protected $appends = ['school_name'];
-
-     /**
-     * Get the user for the News.
+   
+    /**
+     * Get the city for the user.
      */
     public function school()
     {
         return $this->belongsTo(School::class);
-    }
-
-   
-     /**
-     * Get the school's name.
-     *
-     * @return string
-     */
-    public function getSchoolNameAttribute()
-    {
-        return !empty($this->school) ? $this->school->school_name : null;
     }
 
 }

@@ -15,7 +15,7 @@ class CreateParentsTable extends Migration {
 	{
 		Schema::create('parents', function(Blueprint $table)
 		{
-			$table->integer('id')->primary();
+			$table->id();
 			$table->integer('visibility_id')->nullable()->default(10);
 			$table->integer('gender_id')->nullable();
 			$table->string('lastname', 250)->nullable();

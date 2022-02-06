@@ -15,12 +15,19 @@ class UserSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' =>'SuperAdmin',
+            'firstname' =>'SuperAdmin',
             'username' => 'sadmin',
             'email' => 'sadmin@spotlogin.com',
             'person_type' => 'SUPER_ADMIN',
             'password' => Hash::make('12345678'),
-            'email_verified_at' => now(),
+            'status' => 1,
+            'lastname' => 'admin',
+            'is_mail_sent' => 1,
+            'is_reset_mail_requested' => 1,
+            'user_authorisation' => 1,
+            'school_id' => 1,
+            'is_active' => 1,
+            'created_at' => now()
         ]);
     }
 }
