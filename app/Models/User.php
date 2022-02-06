@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\SchoolTeacher;
 
 class User extends Authenticatable
 {
@@ -146,34 +147,36 @@ class User extends Authenticatable
      */
     public function getRelatedSchoolAttribute()
     {
-        $person = '';
+
+        
+        $school_data = '';
 
         switch ($this->person_type) {
             case 'TEACHER':
                 if ($this->teacher) {
-                    $person = !empty($this->teacher->school) ? $this->teacher->school : null;
+                    $school_data = !empty($this->teacher->schoolData) ? $this->teacher->schoolData : null;
                 }
                 break;
             case 'COACH':
                 if ($this->coach) {
-                    $person = !empty($this->coach) ? $this->coach : null;
+                    $school_data = !empty($this->coach) ? $this->coach : null;
                 }
                 break;
             case 'STUDENT':
                 if ($this->student ) {
-                    $person = !empty($this->student->school) ? $this->student->school : null;
+                    $school_data = !empty($this->student->school) ? $this->student->school : null;
                 }
                 break;
             case 'PARENT':
                 if ($this->parent ) {
-                    $person = !empty($this->parent->school) ? $this->parent->school : null;
+                    $school_data = !empty($this->parent->school) ? $this->parent->school : null;
                 }
                 break;
             default:
-                $person = null;
+                $school_data = null;
         }
 
-        return $person;
+        return $school_data;
     }
 
     static public function getUserData($field,$username,$password = null){

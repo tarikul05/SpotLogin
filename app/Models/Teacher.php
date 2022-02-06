@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\School;
 
+use App\Models\SchoolTeacher;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Teacher extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -95,26 +98,31 @@ class Teacher extends Model
     ];
 
 
-    protected $appends = ['school_name'];
+    protected $appends = [];
 
      /**
      * Get the user for the News.
      */
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->hasMany(SchoolTeacher::class);
+
+
+    }
+
+     /**
+     * Get the schools for the teacher.
+     */
+    public function schoolData()
+    {
+        
+        return $this->hasMany(SchoolTeacher::class)
+            ->join('schools as u', 'u.id', '=', 'school_teachers.school_id')
+            ->select(['u.*']);
+
     }
 
    
-     /**
-     * Get the school's name.
-     *
-     * @return string
-     */
-    public function getSchoolNameAttribute()
-    {
-        return !empty($this->school) ? $this->school->school_name : null;
-    }
 
 }
 
