@@ -130,6 +130,23 @@ class AuthController extends Controller
                    
                     // Auth::login($user);
                     $user = Auth::user();
+                    $country_id = null;
+                    if (isset($user->teacher)) {
+                        $country_id = $user->teacher['country_id'];
+                    }
+                    else if (isset($user->student)) {
+                        $country_id = $user->student['country_id'];
+                    }
+                    else if (isset($user->parent)) {
+                        $country_id = $user->parent['country_id'];
+                    }
+                    else if (isset($user->coach)) {
+                        $country_id = $user->coach['country_id'];
+                        $user->related_school['school_code'] = null;
+                        $user->related_school['id'] = null;
+                        $user->related_school['max_teachers'] = null;
+                        $user->related_school['max_students'] = null;
+                    }
         
                     
 
@@ -146,7 +163,7 @@ class AuthController extends Controller
                         "v_t_cnt"  => isset($user->related_school) ? $user->related_school['max_teachers'] : null,  
                         "v_s_cnt"  =>isset($user->related_school) ? $user->related_school['max_students'] : null,
                         //"tc_accepted_flag"  => $row['tc_accepted_flag'],
-                        "country_id"  => isset($user->teacher) ? $user->teacher['country_id'] : null,
+                        "country_id"  => $country_id,
                         "person_id"  => $user['person_id'],
                         "http_host" => $http_host
                     );

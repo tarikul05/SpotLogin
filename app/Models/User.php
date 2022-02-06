@@ -103,6 +103,17 @@ class User extends Authenticatable
         
     }
 
+     /**
+     * Get the teacher for the user.
+     */
+    public function coach()
+    {
+        
+        return $this->belongsTo(Teacher::class, 'person_id', 'id');
+        
+        
+    }
+
 
      /**
      * Get the student for the user.
@@ -144,8 +155,8 @@ class User extends Authenticatable
                 }
                 break;
             case 'COACH':
-                if ($this->teacher) {
-                    $person = !empty($this->teacher) ? $this->teacher : null;
+                if ($this->coach) {
+                    $person = !empty($this->coach) ? $this->coach : null;
                 }
                 break;
             case 'STUDENT':
