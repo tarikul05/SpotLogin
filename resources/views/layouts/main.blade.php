@@ -24,43 +24,9 @@
 </script>
 </head>
 <body>
-<div class="m-4 top">
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a href="#" class="navbar-brand">
-                    <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
-                </a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav">
-                        <a href="#" class="nav-item nav-link active">Mon agenda</a>
-                        <a href="#" class="nav-item nav-link">École</a>
-                        <a href="#" class="nav-item nav-link">Professeurs</a>
-                        <a href="#" class="nav-item nav-link">Élèves</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Facturation</a>
-                            <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">Liste des factures</a>
-                                <a href="#" class="dropdown-item">Facturation élèves</a>
-                                <a href="#" class="dropdown-item">Facturation professeurs</a>
-                                <a href="#" class="dropdown-item">Facture manuelle</a>
-                            </div>
-                        </div>
-                        <a href="#" class="nav-item nav-link">Dashboard</a>
-                    </div>
-                    <div class="navbar-nav ms-auto">
-                        <span class="admin_name">S'identifier</span>
-                        <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
-                        <img src="{{ asset('img/setting.svg') }}" width="36px" alt="globe">
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-</div>
+<section class="m-4 top">
+    @include('elements.header_menu')
+</section>
 <section class="m-4">
     @yield('content')
 </section>
