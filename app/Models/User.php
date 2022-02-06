@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Student;
+use App\Models\Teacher;
 
 class User extends Authenticatable
 {
@@ -64,24 +66,120 @@ class User extends Authenticatable
     ];
 
 
+     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['related_school'];
+
+
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
     }
 
 
+    /**
+     * Check user has USER authority
+     * @return boolean
+     */
+    public function isUser()
+    {
+
+        return $this->authority !== 'SUPER_ADMIN';
+    }
+
+
+     /**
+     * Get the teacher for the user.
+     */
+    public function teacher()
+    {
+        
+        return $this->belongsTo(Teacher::class, 'person_id', 'id');
+        
+        
+    }
+
+
+     /**
+     * Get the student for the user.
+     */
+    public function student()
+    {
+        
+        return $this->belongsTo(Student::class, 'person_id', 'id');
+        
+    }
+
+     /**
+     * Get the student for the user.
+     */
+    public function parent()
+    {
+        
+        return $this->belongsTo(Parent::class, 'person_id', 'id');
+        
+    }
+
+
+  
+
+
+    /**
+     * Get the posted user name
+     *
+     * @return object|null
+     */
+    public function getRelatedSchoolAttribute()
+    {
+        $person = '';
+
+        switch ($this->person_type) {
+            case 'TEACHER':
+                if ($this->teacher) {
+                    $person = !empty($this->teacher->school) ? $this->teacher->school : null;
+                }
+                break;
+            case 'COACH':
+                if ($this->teacher) {
+                    $person = !empty($this->teacher) ? $this->teacher : null;
+                }
+                break;
+            case 'STUDENT':
+                if ($this->student ) {
+                    $person = !empty($this->student->school) ? $this->student->school : null;
+                }
+                break;
+            case 'PARENT':
+                if ($this->parent ) {
+                    $person = !empty($this->parent->school) ? $this->parent->school : null;
+                }
+                break;
+            default:
+                $person = null;
+        }
+
+        return $person;
+    }
+
     static public function getUserData($field,$username,$password = null){
-        if (!empty($password)) {
-            return $user = User::where([
-                [$field, $username],
-                ['deleted_at', null],
-                ['password', Hash::make($password)]
-            ])->first();
-        } else {
-            return $user = User::where([
+        
+            return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null]
             ])->first();
-        }
+        
+    }
+
+    static public function getUserDataDetails($field,$username,$password = null){
+        
+            return $user = self::where([
+                [$field, $username],
+                ['deleted_at', null]
+            ])->first()->toArray();
+        
    }
 }
