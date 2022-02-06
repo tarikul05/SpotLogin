@@ -166,32 +166,20 @@ class User extends Authenticatable
     }
 
     static public function getUserData($field,$username,$password = null){
-        if (!empty($password)) {   
-            return $user = self::where([
-                [$field, $username],
-                ['deleted_at', null],
-                ['password', Hash::make($password)]
-            ])->first();
-        } else {
+        
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null]
             ])->first();
-        }
+        
     }
 
-    static public function getUserData1($field,$username,$password = null){
-        if (!empty($password)) {   
-            return $user = self::where([
-                [$field, $username],
-                ['deleted_at', null],
-                ['password', Hash::make($password)]
-            ])->first()->toArray();
-        } else {
+    static public function getUserDataDetails($field,$username,$password = null){
+        
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null]
             ])->first()->toArray();
-        }
+        
    }
 }

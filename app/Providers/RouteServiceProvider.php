@@ -18,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/agenda';
+    public const HOME = '/teachers';
     public const ROOT = '/';
     public const LOGIN = '/';
 

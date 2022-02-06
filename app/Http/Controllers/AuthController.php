@@ -127,13 +127,9 @@ class AuthController extends Controller
                 
             
 
-                    //if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-                    //     $user = User::getUserData1($field, $username);
+                   
                     // Auth::login($user);
                     $user = Auth::user();
-                    
-                    
-                    $user = User::getUserData1($field, $username);
         
                     
 
@@ -144,13 +140,13 @@ class AuthController extends Controller
                         "user_id"  => $user['id'],
                         "user_name" => $user['username'],
                         "user_role"  => $user['person_type'],
-                        "school_code"  => isset($user['related_school']) ? $user['related_school']['school_code'] : null,                                
+                        "school_code"  => isset($user->related_school) ? $user->related_school['school_code'] : null,                                
                         "email"  => $user['email'],
-                        "school_id"  => isset($user['related_school']) ? $user['related_school']['id'] : null,  
-                        "v_t_cnt"  => isset($user['related_school']) ? $user['related_school']['max_teachers'] : null,  
-                        "v_s_cnt"  =>isset($user['related_school']) ? $user['related_school']['max_students'] : null,
+                        "school_id"  => isset($user->related_school) ? $user->related_school['id'] : null,  
+                        "v_t_cnt"  => isset($user->related_school) ? $user->related_school['max_teachers'] : null,  
+                        "v_s_cnt"  =>isset($user->related_school) ? $user->related_school['max_students'] : null,
                         //"tc_accepted_flag"  => $row['tc_accepted_flag'],
-                        "country_id"  => isset($user['teacher']) ? $user['teacher']['country_id'] : null,
+                        "country_id"  => isset($user->teacher) ? $user->teacher['country_id'] : null,
                         "person_id"  => $user['person_id'],
                         "http_host" => $http_host
                     );
