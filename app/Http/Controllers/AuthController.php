@@ -119,7 +119,8 @@ class AuthController extends Controller
             //             "person_id"  => $user['person_id'],
             //             "http_host" => $http_host
             //         );
-            // print_r($result);
+            // $user = User::getUserDataDetails($field, $username);
+            // print_r($user);
             // exit();
             
             if ($user) {
@@ -142,10 +143,10 @@ class AuthController extends Controller
                     }
                     else if (isset($user->coach)) {
                         $country_id = $user->coach['country_id'];
-                        $user->related_school['school_code'] = null;
-                        $user->related_school['id'] = null;
-                        $user->related_school['max_teachers'] = null;
-                        $user->related_school['max_students'] = null;
+                        $user->related_school[0]['school_code'] = null;
+                        $user->related_school[0]['id'] = null;
+                        $user->related_school[0]['max_teachers'] = null;
+                        $user->related_school[0]['max_students'] = null;
                     }
         
                     
@@ -157,11 +158,11 @@ class AuthController extends Controller
                         "user_id"  => $user['id'],
                         "user_name" => $user['username'],
                         "user_role"  => $user['person_type'],
-                        "school_code"  => isset($user->related_school) ? $user->related_school['school_code'] : null,                                
+                        "school_code"  => isset($user->related_school) ? $user->related_school[0]['school_code'] : null,                                
                         "email"  => $user['email'],
-                        "school_id"  => isset($user->related_school) ? $user->related_school['id'] : null,  
-                        "v_t_cnt"  => isset($user->related_school) ? $user->related_school['max_teachers'] : null,  
-                        "v_s_cnt"  =>isset($user->related_school) ? $user->related_school['max_students'] : null,
+                        "school_id"  => isset($user->related_school) ? $user->related_school[0]['id'] : null,  
+                        "v_t_cnt"  => isset($user->related_school) ? $user->related_school[0]['max_teachers'] : null,  
+                        "v_s_cnt"  =>isset($user->related_school) ? $user->related_school[0]['max_students'] : null,
                         //"tc_accepted_flag"  => $row['tc_accepted_flag'],
                         "country_id"  => $country_id,
                         "person_id"  => $user['person_id'],
