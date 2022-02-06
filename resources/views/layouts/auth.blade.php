@@ -11,12 +11,10 @@
   <!-- CSS only -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <!-- Bootstrap select box-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
-
-
 
 
   <!-- Theme style -->
@@ -48,11 +46,17 @@
       </a>
       <ul class="navbar-nav ml-auto align-items-center" style="flex-direction: row!important;">
         <li class="nav-item">
-
-          <select id="language_selectpicker" class="selectpicker" data-width="fit">
-
+          <select id="setLan" class="selectpicker" data-width="fit" >
+            @foreach ($language as $key => $lan)
+                <option 
+                value="{{ $lan->language_code }}"
+                @if ($lan->language_code == app()->getLocale())
+                    selected="selected"
+                @endif
+                data-icon="{{ $lan->translation_file}}"
+                >  {{ $lan->title }}</option>
+            @endforeach
           </select>
-
         </li>
 
         <li class="nav-item active">
@@ -88,7 +92,7 @@
   <!-- JavaScript Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta/js/bootstrap-select.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 
 
   <!--common script for all pages-->
@@ -105,123 +109,16 @@
 
 </body>
 <script type="text/javascript">
-  var TIMEZONEOFFSET = '';
-  var langid = $('#language_selectpicker').val();
   $(document).ready(function() {
-    $("#language_selectpicker").change(function() {
-      langid = $('#language_selectpicker').val();
-      document.cookie = "glang_id=" + langid + ";path=/";
-      setCookie('glang_id', langid, 365);
-      getCookie('glang_id');
-      setSessionStorage('glang_id', langid);
-      setSessionStorage('Language', langid);
-      //LoadAppMessages();   //load app messages
 
+
+    $("#setLan").change(function(event) {
+      var lanCode = $(this).val();
+      window.location.href = BASE_URL+"/setlang/"+lanCode ;
     });
-    //PopulateLanguage();
-    //PopulateCountry();
-    //LoadAppMessages();   //load app messages 
 
 
 
-    function PopulateCountry() {
-      $.ajax({
-        url: 'admin/get_master_data.php',
-        data: 'type=country',
-        type: 'POST',
-        dataType: 'json',
-        async: false,
-        encode: true,
-        success: function(data) {
-          var resultHtml = '';
-          $.each(data, function(key, value) {
-            resultHtml += '<option value="' + value.code + '">' + value.name + '</option>';
-          });
-          $('#country_id').html(resultHtml);
-          $('#country_id').selectpicker('refresh');
-
-        }, // sucess
-        error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
-
-        }
-      });
-    }
-
-
-
-    function PopulateLanguage() {
-      $.ajax({
-        url: 'admin/get_master_data.php',
-        data: 'type=language_list&TIMEZONEOFFSET=' + TIMEZONEOFFSET,
-        type: 'POST',
-        dataType: 'json',
-        async: false,
-        success: function(data) {
-          var resultHtml = '';
-          $.each(data, function(key, value) {
-            //onclick="lang_Click('+value.id+','+"'"+value.name+"'"+')"
-            if (getCookie('glang_id') == value.id) {
-              //resultHtml+='<option value="'+value.id+'" data-id="'+value.id+'" data-icon="'+value.language_icon+'" onclick="lang_Click('+"'"+value.id+"'"+','+"'"+value.name+"'"+');" selected>'+value.name+'</option>';
-              resultHtml += '<option value="' + value.id + '" data-id="' + value.id + '" data-icon="' + value.language_icon + '" selected>' + value.name + '</option>';
-            } else {
-              //resultHtml+='<option value="'+value.id+'" data-id="'+value.id+'" data-icon="'+value.language_icon+'" onclick="lang_Click('+"'"+value.id+"'"+','+"'"+value.name+"'"+');">' +value.name+'</option>';
-              resultHtml += '<option value="' + value.id + '" data-id="' + value.id + '" data-icon="' + value.language_icon + '" >' + value.name + '</option>';
-            }
-
-          });
-
-          //alert(resultHtml);
-          $('#language_selectpicker').html(resultHtml);
-          $('#language_selectpicker').selectpicker('refresh');
-          langid = getCookie('glang_id');
-          console.log('langid=' + langid);
-          if (langid.trim() == '') {
-            document.getElementById("language_selectpicker").selectedIndex = "0";
-            langid = $('#language_selectpicker').val();
-            setCookie('glang_id', langid, 365);
-            setSessionStorage('glang_id', langid);
-            setSessionStorage('Language', langid);
-          } else {
-            setSessionStorage('glang_id', langid);
-            setSessionStorage('Language', langid);
-
-          }
-
-
-        }, // sucess
-        error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
-
-        }
-      });
-    }
-
-    function AcceptCookies() {
-      setCookie('cookies_accepted', 'Y', 365);
-    }
-
-    
-
-
-
-
-    
-
-
-
-
-
-
-    
-
-
-  });
-
-  $(window).on('load', function () {
-    // if (getCookie('cookies_accepted') != 'Y') {
-    //   $('#myModal').modal('show');
-    // }
   });
   
 </script>
