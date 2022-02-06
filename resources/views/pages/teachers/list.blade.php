@@ -1,5 +1,10 @@
 @extends('layouts.main')
 
+@section('head_links')
+    <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+@endsection
+
 @section('content')
   <div class="m-4">
    <table id="example" class="display" style="width:100%">
@@ -483,4 +488,13 @@
         </tfoot>
     </table>
   </div>
+@endsection
+
+
+@section('footer_js')
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#example').DataTable();
+    } );
+</script>
 @endsection

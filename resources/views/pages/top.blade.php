@@ -8,7 +8,7 @@
     <div class="row h-100 align-items-center">
       <div class="col-12">
         <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}">Sportlogin</h1>
-        <h4 class="gilroy-bold text-white">Let Sportlogin do your off-ice </h4>
+        <h4 class="gilroy-bold text-white">{{ __('Let Sportlogin do your off-ice') }} </h4>
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
         <div class="masthead-btn-area">
@@ -29,29 +29,29 @@
   <div class="container-fluid">
     <div class="row text-center">
       <div class="col-12">
-        <h2 class="gilroy-regular txtdarkblue">Why Sportlogin?</h2>
+        <h2 class="gilroy-regular txtdarkblue">{{ __('Why Sportlogin?') }}</h2>
       </div>
       <div class="col-lg-3 col-md-6 col-6 sportlogin-feature">
         <div class="sportlogin-feature-icon">
           <img src="{{ asset('img/schedule.svg') }}" alt="" class="mx-auto">
         </div>
-        <h4 class="gilroy-bold">Schedule</h4>
-        <p class="gilroy-light txtdarkblue">Manage your schedule with your own personalized fees</p>
+        <h4 class="gilroy-bold">{{ __('Schedule') }} </h4>
+        <p class="gilroy-light txtdarkblue"> {{ __('Manage your schedule with your own personalized fees') }} </p>
       </div>
       <div class="col-lg-3 col-md-6 col-6 sportlogin-feature">
         <div class="sportlogin-feature-icon">
           <img src="{{ asset('img/invoice.svg') }}" alt="" class="mx-auto">
         </div>
-        <h4 class="gilroy-bold">Invoices</h4>
-        <p class="gilroy-light txtdarkblue">Automatically edit your invoices and send them in</p>
+        <h4 class="gilroy-bold">{{ __('Invoices') }}</h4>
+        <p class="gilroy-light txtdarkblue">{{ __('Automatically edit your invoices and send them in') }} </p>
       </div>
       <div class="col-lg-3 col-md-6 col-6 sportlogin-feature">
         <div class="sportlogin-feature-icon">
           <img src="{{ asset('img/communication.svg') }}" alt="" class="mx-auto">
         </div>
-        <h4 class="gilroy-bold">Communication</h4>
+        <h4 class="gilroy-bold">{{ __('Communication') }}</h4>
 
-        <p class="gilroy-light txtdarkblue">Communicate with the parents within the app<br>
+        <p class="gilroy-light txtdarkblue">{{ __('Communicate with the parents within the app') }} <br>
         <h4 class="gilroy-bold">Cooming Soon</h4>
         </p>
 
@@ -60,9 +60,9 @@
         <div class="sportlogin-feature-icon">
           <img src="{{ asset('img/payment.svg') }}" alt="" class="mx-auto">
         </div>
-        <h4 class="gilroy-bold">Payment</h4>
-        <p class="gilroy-light txtdarkblue">Allow your students to pay online in a click
-        <h4 class="gilroy-bold">Cooming Soon</h4>
+        <h4 class="gilroy-bold">{{ __('Payment') }} </h4>
+        <p class="gilroy-light txtdarkblue">{{ __('Allow your students to pay online in a click') }}
+        <h4 class="gilroy-bold">{{ __('Cooming Soon') }} </h4>
         </p>
       </div>
     </div>
