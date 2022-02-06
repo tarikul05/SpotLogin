@@ -74,7 +74,7 @@
   @yield('content')
 
   <footer>
-    <h2 class="gilroy-regular txtdarkblue">Contact us</h2>
+    <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
 
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
