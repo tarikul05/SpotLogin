@@ -15,8 +15,8 @@ class LanguageTranslationController extends Controller
     */
     public function index()
     {
-      // $languages = DB::table('languages')->orderBy('created_at')->get();
-      $languages = Language::orderBy('created_at')->get();
+      // $languages = DB::table('languages')->orderBy('sort_order')->get();
+      $languages = Language::orderBy('sort_order')->get();
       $columns = [];
       $columnsCount = $languages->count();
         if($languages->count() > 0){
@@ -43,7 +43,7 @@ class LanguageTranslationController extends Controller
             'value' => 'required',
         ]);
 
-        $languages = Language::orderBy('created_at')->get();
+        $languages = Language::orderBy('sort_order')->get();
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
@@ -60,7 +60,7 @@ class LanguageTranslationController extends Controller
     */
     public function destroy($key)
     {
-        $languages = Language::orderBy('created_at')->get();
+        $languages = Language::orderBy('sort_order')->get();
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
@@ -116,7 +116,7 @@ class LanguageTranslationController extends Controller
     */
  
     public function transUpdateKey(Request $request){
-        $languages = Language::orderBy('created_at')->get();
+        $languages = Language::orderBy('sort_order')->get();
 
         if($languages->count() > 0){
             foreach ($languages as $language){

@@ -19,6 +19,8 @@ class CreateLanguagesTable extends Migration {
 			$table->string('title', 100)->nullable();
 			$table->string('abbr_name', 10)->nullable();
 			$table->string('translation_file')->nullable();
+			$table->string('flag_class')->nullable();
+			$table->integer('sort_order')->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();
