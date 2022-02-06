@@ -4,8 +4,8 @@
     <div class="modal-content">
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-        <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">Sign in</h3>
-        <p class="mb-0">Welcome back!</p>
+        <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">{{ __('Sign in') }}</h3>
+        <p class="mb-0">{{ __('Welcome back!') }}</p>
       </div>
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
@@ -21,8 +21,8 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">Forgot password?</a></small></div>
-          <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
+          <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
         <!--
               <div style="text-align:center;margin-top:10px;">
