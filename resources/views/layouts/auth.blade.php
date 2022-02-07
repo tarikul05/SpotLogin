@@ -53,7 +53,7 @@
                 @if ($lan->language_code == app()->getLocale())
                     selected="selected"
                 @endif
-                data-icon="{{ $lan->translation_file}}"
+                data-icon="{{ $lan->flag_class}}"
                 >  {{ $lan->title }}</option>
             @endforeach
           </select>

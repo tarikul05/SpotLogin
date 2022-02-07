@@ -4,7 +4,9 @@
     <div class="modal-content">
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-        <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">Sign in</h3>
+
+        <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">{{ __('Sign in') }}</h3>
+
         <p class="mb-0">{{ __('Welcome back!') }}</p>
       </div>
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">

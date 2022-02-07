@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         view()->composer(
             'layouts.auth', 
             function ($view) {
-                $view->with('language', Language::orderBy('created_at')->get());
+                $view->with('language', Language::orderBy('sort_order')->get());
             }
         );
     }
