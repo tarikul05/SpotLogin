@@ -1,5 +1,13 @@
 {
     "Abc": "abc",
     "Login": null,
-    "submit": "submit"
+    "submit": "submit",
+    "Please enter a username": "Please enter a username",
+    "Your password must be at least 6 characters long": "Your password must be at least 6 characters long",
+    "Please provide a password": "Please provide a password",
+    "Sign in": "Sign in",
+    "Forgot password?": "Forgot password?",
+    "Welcome back!": "Welcome back!",
+    "Logged In Successfully":"Logged In Successfully",
+    "Invalid username or password":"Invalid username or password"
 }

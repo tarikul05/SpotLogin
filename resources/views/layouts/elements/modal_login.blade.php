@@ -5,7 +5,7 @@
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
         <h3 class="modal-title light-blue-txt gilroy-bold" id="loginModalLabel">Sign in</h3>
-        <p class="mb-0">Welcome back!</p>
+        <p class="mb-0">{{ __('Welcome back!') }}</p>
       </div>
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
@@ -21,8 +21,8 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">Forgot password?</a></small></div>
-          <button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button>
+          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
+          <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
         <!--
               <div style="text-align:center;margin-top:10px;">
@@ -95,10 +95,10 @@ $(document).ready(function() {
     messages: {
 
       login_password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 6 characters long"
+        required: "{{ __('Please provide a password') }}",
+        minlength: "{{ __('Your password must be at least 6 characters long') }}"
       },
-      login_username: "Please enter a username"
+      login_username: "{{ __('Please enter a username') }}"
     },
     errorPlacement: function(error, element) {
       if (element.attr("type") == "checkbox") {
@@ -138,7 +138,7 @@ $(document).ready(function() {
       //   "name": "p_school_code",
       //   "value": school_code
       // });
-      console.log(formdata);
+      //console.log(formdata);
       $.ajax({
         url: BASE_URL + '/login',
         data: formdata,
@@ -151,42 +151,10 @@ $(document).ready(function() {
           if (data.status == 0) {
             var username = $("#login_username").val();
 
-            setSessionStorage('v_t_cnt', data.v_t_cnt);
-            setSessionStorage('v_s_cnt', data.v_s_cnt);
-            setSessionStorage('country_id', data.country_id);
+           
+           
 
-            setCookie('v_t_cnt', data.v_t_cnt, 1);
-            setCookie('v_s_cnt', data.v_s_cnt, 1);
-
-
-            setSessionStorage('user_id', data.user_id);
-            setSessionStorage('user_role', data.user_role);
-            setSessionStorage('school_code', data.school_code);
-            setSessionStorage('school_id', data.school_id);
-            setSessionStorage('person_id', data.person_id);
-
-
-            //setSessionStorage('glang_id', langid);
-            //setSessionStorage('Language', langid);
-
-            setSessionStorage('http_host', data.http_host);
-
-
-            setCookie('user_id', data.user_id, 1);
-            setCookie('user_role', data.person_type, 1);
-            setCookie('school_code', data.school_code, 1);
-            setCookie('school_id', data.school_id, 1);
-
-            document.cookie = "event_type_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "event_student_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "event_teacher_id='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-            document.cookie = "view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "cal_view_mode='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            document.cookie = "prevnext='';path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
-
-            successModalCall('Logged In Successfully');
+            successModalCall("{{ __('Logged In Successfully') }}");
             $("#loginModal").modal('hide');
             setTimeout(function() {
               window.location.href = "../teachers";
@@ -196,14 +164,14 @@ $(document).ready(function() {
 
           } else {
 
-            errorModalCall('Invalid username or password');
+            errorModalCall("{{ __('Invalid username or password') }}");
 
 
           }
 
         }, // sucess
         error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
+          errorModalCall("{{ __('Invalid username or password') }}");
 
         }
       });

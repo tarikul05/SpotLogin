@@ -88,21 +88,15 @@ class AuthController extends Controller
     public function loginSubmit(LoginRequest $request)
     {
         $data = $request->all();
-
-      
-
         $result = array(
             'status' => 1,
-            'message' => _('failed to login'),
+            'message' => __('failed to login'),
         );
-
-
         if ($data['type'] === 'login_submit') { 
 
             $username = $data['login_username'];
             $field = 'username';
             $user = User::getUserData($field, $username);
-            $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
             //         $result = array(
             //             "status"     => 0,
             //             'message' => _('Successfully logged in'),
@@ -126,9 +120,6 @@ class AuthController extends Controller
             if ($user) {
                 if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
                 
-            
-
-                   
                     // Auth::login($user);
                     $user = Auth::user();
                     $country_id = null;
@@ -143,44 +134,24 @@ class AuthController extends Controller
                     }
                     else if (isset($user->coach)) {
                         $country_id = $user->coach['country_id'];
-                        $user->related_school[0]['school_code'] = null;
-                        $user->related_school[0]['id'] = null;
-                        $user->related_school[0]['max_teachers'] = null;
-                        $user->related_school[0]['max_students'] = null;
                     }
-        
-                    
-
 
                     $result = array(
                         "status"     => 0,
-                        'message' => _('Successfully logged in'),
+                        'message' => __('Successfully logged in'),
                         "user_id"  => $user['id'],
                         "user_name" => $user['username'],
                         "user_role"  => $user['person_type'],
-                        "school_code"  => isset($user->related_school) ? $user->related_school[0]['school_code'] : null,                                
                         "email"  => $user['email'],
-                        "school_id"  => isset($user->related_school) ? $user->related_school[0]['id'] : null,  
-                        "v_t_cnt"  => isset($user->related_school) ? $user->related_school[0]['max_teachers'] : null,  
-                        "v_s_cnt"  =>isset($user->related_school) ? $user->related_school[0]['max_students'] : null,
-                        //"tc_accepted_flag"  => $row['tc_accepted_flag'],
                         "country_id"  => $country_id,
-                        "person_id"  => $user['person_id'],
-                        "http_host" => $http_host
+                        "person_id"  => $user['person_id']
                     );
-            
-                    
                     return response()->json($result);
-                    
-                    
-                    
                 }
             }
             
         }
-
         return response()->json($result);
-        
         
     }
     /**
