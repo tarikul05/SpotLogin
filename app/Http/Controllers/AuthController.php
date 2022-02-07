@@ -135,6 +135,9 @@ class AuthController extends Controller
                     else if (isset($user->coach)) {
                         $country_id = $user->coach['country_id'];
                     }
+                    else if (isset($user->schooladmin)) {
+                        $country_id = $user->schooladmin['country_id'];
+                    }
 
                     $result = array(
                         "status"     => 0,

@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\SchoolStudent;
+use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Student extends Model
+class Schooladmin extends Model
 {
     use HasFactory, SoftDeletes;
     /**
@@ -95,7 +95,7 @@ class Student extends Model
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-   
+
     protected $appends = [];
 
      /**
@@ -103,22 +103,10 @@ class Student extends Model
      */
     public function school()
     {
-        return $this->hasMany(SchoolStudent::class);
-
-
+      return $this->belongsTo(School::class);
     }
 
-     /**
-     * Get the schools for the teacher.
-     */
-    public function schoolData()
-    {
-        
-        return $this->hasMany(SchoolStudent::class)
-            ->join('schools as u', 'u.id', '=', 'school_students.school_id')
-            ->select(['u.*']);
-
-    }
+   
 
 }
 

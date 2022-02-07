@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Schooladmin;
 use App\Models\SchoolTeacher;
 
 class User extends Authenticatable
@@ -137,6 +138,17 @@ class User extends Authenticatable
     }
 
 
+     /**
+     * Get the student for the user.
+     */
+    public function schooladmin()
+    {
+        
+        return $this->belongsTo(Schooladmin::class, 'person_id', 'id');
+        
+    }
+
+
   
 
 
@@ -164,12 +176,17 @@ class User extends Authenticatable
                 break;
             case 'STUDENT':
                 if ($this->student ) {
-                    $school_data = !empty($this->student->school) ? $this->student->school : null;
+                    $school_data = !empty($this->student->schoolData) ? $this->student->schoolData : null;
                 }
                 break;
             case 'PARENT':
                 if ($this->parent ) {
                     $school_data = !empty($this->parent->school) ? $this->parent->school : null;
+                }
+                break;
+            case 'SCHOOL_ADMIN':
+                if ($this->schooladmin ) {
+                    $school_data = !empty($this->schooladmin->school) ? $this->schooladmin->school : null;
                 }
                 break;
             default:
