@@ -55,7 +55,7 @@
               </form>
               
               <div style="text-align:center;margin-top:10px;">
-                  <p>Already have an account? <a class="login_btn" href="#loginModal" data-toggle="modal">Sign in</a> now</p>
+                  <p>Already have an account? <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
               </div>
           </div>
       </div>
