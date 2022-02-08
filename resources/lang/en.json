@@ -9,5 +9,9 @@
     "Welcome back!": "Welcome back!",
     "Logged In Successfully":"Logged In Successfully",
     "Invalid username or password":"Invalid username or password",
-    "Login": "loginen"
+    "Login": "loginen",
+    "Please_sign_up":"If you don't have an account, please",
+    "Sign up":"Sign up",
+    "School Sign up":"School Sign up",
+    "Please fill in this form to create an account!":"Please fill in this form to create an account!"
 }

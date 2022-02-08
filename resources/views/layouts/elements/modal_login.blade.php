@@ -26,12 +26,11 @@
           <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
-        <!--
-              <div style="text-align:center;margin-top:10px;">
-                  <p>If you don't have an account, please <a class="signup_btn" href="#signupModal" data-toggle="modal">Sign Up</a>
-                  </p>
-              </div>
-    -->
+        
+        <!-- <div style="text-align:center;margin-top:10px;">
+            <p>{{ __('Please_sign_up') }} <a href="#" class="signup_btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a>
+            </p>
+        </div> -->
       </div>
     </div>
   </div>

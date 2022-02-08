@@ -14,20 +14,25 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'firstname' =>'SuperAdmin',
-            'username' => 'sadmin',
-            'email' => 'sadmin@spotlogin.com',
-            'person_type' => 'SUPER_ADMIN',
-            'password' => Hash::make('12345678'),
-            'status' => 1,
-            'lastname' => 'admin',
-            'is_mail_sent' => 1,
-            'is_reset_mail_requested' => 1,
-            'user_authorisation' => 1,
-            'school_id' => 1,
-            'is_active' => 1,
-            'created_at' => now()
-        ]);
+
+        DB::table('users')->updateOrInsert(
+            [
+                'username' => 'sadmin',
+                'email' => 'sadmin@spotlogin.com'
+            ],
+            [
+                'firstname' =>'SuperAdmin',
+                'person_type' => 'SUPER_ADMIN',
+                'password' => Hash::make('12345678'),
+                'status' => 1,
+                'lastname' => 'admin',
+                'is_mail_sent' => 1,
+                'is_reset_mail_requested' => 1,
+                'user_authorisation' => 1,
+                'school_id' => 1,
+                'is_active' => 1,
+                'created_at' => now()
+            ]
+        );
     }
 }

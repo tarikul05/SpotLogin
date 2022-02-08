@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Language;
+use App\Models\Country;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,12 @@ class AppServiceProvider extends ServiceProvider
         view()->composer(
             'layouts.auth', 
             function ($view) {
-                $view->with('language', Language::orderBy('sort_order')->get());
+                $language = Language::orderBy('sort_order')->get();
+                $countries = Country::where([
+                    ['is_active', 1],
+                    ['deleted_at', null]
+                ])->orderBy('id')->get();
+                $view->with(compact('language', 'countries'));
             }
         );
     }
