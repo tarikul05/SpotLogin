@@ -11,6 +11,8 @@ class Country extends Model
 {
     use HasFactory,SoftDeletes;
     protected $table = 'countries';
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'modified_at';
 
     /**
      * The attributes that are mass assignable.

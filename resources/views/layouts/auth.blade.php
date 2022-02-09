@@ -87,7 +87,6 @@
   @include('layouts.elements.modal_login')
   @include('layouts.elements.modal_reset_login')
   @include('layouts.elements.modal_school_sign_up')
-  @include('layouts.elements.modal_sign_up')
 
 
   <!--common script for all pages-->

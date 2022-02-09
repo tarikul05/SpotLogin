@@ -12,6 +12,17 @@
     "Login": "loginDe",
     "Please_sign_up":"If you don't have an account, please",
     "Sign up":"Sign up",
+    "Coach":"Coach",
+    "School":"School",
     "School Sign up":"School Sign up",
-    "Please fill in this form to create an account!":"Please fill in this form to create an account!"
+    "Please fill in this form to create an account!":"Please fill in this form to create an account!",
+    "Please select type":"Please select type",
+    "Please enter your full name":"Please enter your full name",
+    "Please enter your username":"Please enter your username",
+    "Please select country":"Please select country",
+    "Please enter a valid email address":"Please enter a valid email address",
+    "I agree with the terms and conditions":"I agree with the terms and conditions",
+    "Create an account":"Create an account",
+    "This field is required.":"This field is required.",
+    "Username already exists...":"Username already exists..."
 }

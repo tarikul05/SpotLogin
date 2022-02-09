@@ -81,18 +81,31 @@ class AuthController extends Controller
     /**
      * Login UI and Login confirmation 
      * 
-     * @return redirect to root
+     * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
      */
-    public function loginSubmit(LoginRequest $request)
+    public function loginSubmit(Request $request)
     {
         $data = $request->all();
         $result = array(
             'status' => 1,
             'message' => __('failed to login'),
         );
-        if ($data['type'] === 'login_submit') { 
+        if ($data['type'] === "validate_username") {
+            $p_username=trim($_POST['p_username']);
+            $field = 'username';
+            $user = User::getUserData($field, $p_username);
+            $result['status']=0;
+            $result['cnt']=0;
+            $result['message']=__('username is ok!');
+            if ($user) {
+                $result['cnt']=1;
+                $result['message']=__('username already exist');
+            }
+            return response()->json($result);
+        }
+        else if ($data['type'] === 'login_submit') { 
 
             $username = $data['login_username'];
             $field = 'username';
@@ -157,6 +170,9 @@ class AuthController extends Controller
         return response()->json($result);
         
     }
+
+
+   
     /**
      * Login UI and Login confirmation 
      * 

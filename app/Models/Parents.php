@@ -12,6 +12,8 @@ class Parents extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'parents';
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'modified_at';
     /**
      * The attributes that are mass assignable.
      *

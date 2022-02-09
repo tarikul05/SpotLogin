@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Teacher;
+use App\Models\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class School extends Model
 {
     use HasFactory, SoftDeletes;
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'modified_at';
     /**
      * The attributes that are mass assignable.
      *
@@ -91,6 +95,15 @@ class School extends Model
     public function teachers()
     {
         return $this->hasMany(Teacher::class);
+    }
+
+
+    /**
+     * Get the city for the user.
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
    
     

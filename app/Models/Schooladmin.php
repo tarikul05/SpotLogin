@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Schooladmin extends Model
 {
     use HasFactory, SoftDeletes;
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'modified_at';
     /**
      * The attributes that are mass assignable.
      *
