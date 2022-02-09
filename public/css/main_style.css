@@ -1,46 +1,46 @@
 @font-face {
-    font-family: 'Gilroy-Bold ☞';
+    font-family: 'Gilroy-Bold';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Bold ☞'), url('../font/Gilroy-Bold.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Bold'), url('../font/Gilroy-Bold.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Heavy ☞';
+@font-face {
+    font-family: 'Gilroy-Heavy';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Heavy ☞'), url('../font/Gilroy-Heavy.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Heavy'), url('../font/Gilroy-Heavy.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Light ☞';
+@font-face {
+    font-family: 'Gilroy-Light';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Light ☞'), url('../font/Gilroy-Light.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Light'), url('../font/Gilroy-Light.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Medium ☞';
+@font-face {
+    font-family: 'Gilroy-Medium';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Medium ☞'), url('../font/Gilroy-Medium.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Medium'), url('../font/Gilroy-Medium.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Regular ☞';
+@font-face {
+    font-family: 'Gilroy-Regular';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Regular ☞'), url('../font/Gilroy-Regular.woff') format('woff');
-    }
+    src: local('../font/Gilroy-Regular'), url('../font/Gilroy-Regular.woff') format('woff');
+}
 
-.gilroy-bold{font-family: 'Gilroy-Bold ☞';}
-.gilroy-heavy{font-family: 'Gilroy-Heavy ☞';}
-.gilroy-light{font-family: 'Gilroy-Light ☞';}
-.gilroy-medium{font-family: 'Gilroy-Medium ☞';}
-.gilroy-regular{font-family: 'Gilroy-Regular ☞';}
+.gilroy-bold{font-family: 'Gilroy-Bold';}
+.gilroy-heavy{font-family: 'Gilroy-Heavy';}
+.gilroy-light{font-family: 'Gilroy-Light';}
+.gilroy-medium{font-family: 'Gilroy-Medium';}
+.gilroy-regular{font-family: 'Gilroy-Regular';}
 
 body{
-    font-family: 'Gilroy-Regular ☞';
+    font-family: 'Gilroy-Regular';
 }
 .row {
     --bs-gutter-x: 0rem;

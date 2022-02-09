@@ -1,3 +1,6 @@
+
+@import "http://127.0.0.1:8000/css/main_style.css";
+
 .m-4.top{
     margin:0px!important;
     background-color: #152245!important;
@@ -24,4 +27,74 @@ img.admin_logo {
     width: 40px;
     height: 40px;
     margin-right: 20px;
+}
+label#page_header {
+    color: #0075BF;
+    float: left;
+    font-size: 28px;
+    font-family: 'Gilroy-Bold';
+    padding: 0;
+    margin: 0;
+    position: relative;
+    text-align: left;
+    border: 0px;
+    width: 100%;
+} 
+.nav-tabs .nav-link {
+    padding-left: 0;
+}
+.nav-tabs .nav-item.show .nav-link, 
+.nav-tabs .nav-link.active {
+    padding-left: 0;
+    background-color: #fff;
+    font-family: 'Gilroy-Bold';
+    font-weight: bold;
+    color: #3b75bf;
+    cursor: default;
+    background-color: #fff;
+    border: 0;
+    border-bottom: 4px solid #3b75bf;
+}
+header.panel-heading {
+    margin: 40px 0;
+}
+nav {
+    margin-bottom: 40px;
+}
+.section_header_class label {
+    color: #152245;
+    font-size: 20px;
+    font-family: 'Gilroy-Bold';
+    margin: 15px 0 40px 0;
+    text-align: left;
+    font-weight: normal;
+}
+.form-group.row {
+    margin-bottom: 30px;
+}
+.input-group-addon, .input-group-btn {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.input-group-addon {
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #0075BF;
+    text-align: center;
+    background-color: #B3D6EC;
+    border: 1px solid #B3D6EC;
+    border-radius: 4px;
+}
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
