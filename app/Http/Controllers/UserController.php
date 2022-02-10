@@ -34,6 +34,10 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $data = $request->all();
+        $result = array(
+            'status' => 1,
+            'message' => __('failed to signup'),
+        );
         
         $school_type=trim($data['school_type']);
         $default_currency_code = '';
@@ -77,7 +81,6 @@ class UserController extends Controller
                 'firstname'=>$data['fullname'],
                 'email'=>$data['email'],
                 'country_id'=>$data['country_id'],
-                'type'=>'SCHOOL_ADMIN',
                 'has_user_account'=>1,
                 'is_active' =>0
             ];
@@ -86,7 +89,7 @@ class UserController extends Controller
             $schoolAdmin->save();
             $usersData = [
                 'person_id' => $schoolAdmin->id,
-                'person_type' =>$schoolAdmin->type,
+                'person_type' =>'SCHOOL_ADMIN',
                 'school_id' => $school->id,
                 'username' =>$data['username'],
                 'lastname' => '',
@@ -100,22 +103,52 @@ class UserController extends Controller
 
             $user = User::create($usersData);
             $user->save();
+            $result = array(
+                "status"     => 0,
+                'message' => __('Successfully Registered')
+            );
         }
         else if($school_type=='COACH'){
             //'max_students'=>1,
             $coachData = [
-
+                'lastname' => '',
+                'middlename'=>'',
+                'firstname'=>$data['fullname'],
+                'email'=>$data['email'],
+                'country_id'=>$data['country_id'],
+                'type'=>2,//1=teacher 2=coach
+                'has_user_account'=>1,
+                'display_home_flag'=>1,
+                'is_active' =>0
             ];
-            $teacher = Teacher::create($coachData);
-            $teacher->save();
+
+            $coach = Teacher::create($coachData);
+            $coach->save();
+            $usersData = [
+                'person_id' => $coach->id,
+                'person_type' =>'COACH',
+                'username' =>$data['username'],
+                'lastname' => '',
+                'middlename'=>'',
+                'firstname'=>$data['fullname'],
+                'email'=>$data['email'],
+                'password'=>$data['password'],
+                'is_mail_sent'=>0,
+                'is_active'=>0
+            ];
+
+            $user = User::create($usersData);
+            $user->save();
+            $result = array(
+                "status"     => 0,
+                'message' => __('Successfully Registered')
+            );
+
+
+            
         }
-        print_r($data);
-        exit();
-        
-        $result = array(
-            'status' => 1,
-            'message' => __('failed to login'),
-        );
+
+        return response()->json($result);
 
         
 
