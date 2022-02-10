@@ -119,13 +119,13 @@ $(document).ready(function() {
 
             var formdata = $("#signup_form").serializeArray();
 
-            var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+            var csrfToken = "{{ csrf_token() }}";
 
 
         
             formdata.push({
                 "name": "_token",
-                "value": csrfToken
+                "value": "{{ csrf_token() }}"
             });
             //console.log(formdata);
             formdata.push({
@@ -140,6 +140,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 async: false,
                 encode: true,
+                headers: {'X-CSRF-TOKEN': csrfToken},
                 success: function(data) {
 
                     if (data.status) {
