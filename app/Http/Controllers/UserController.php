@@ -34,8 +34,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $data = $request->all();
-        print_r($data);
-        exit();
+        
         $school_type=trim($data['school_type']);
         $default_currency_code = '';
         if (!empty($data['country_id'])) {
@@ -63,7 +62,7 @@ class UserController extends Controller
                 'sender_email'=>$data['email'],
                 'max_students'=>0,
                 'max_teachers'=>0,
-                'school_type'=>$school_type
+                'is_active'=>1
             ];
             
             $school = School::create($schoolData);
@@ -80,7 +79,7 @@ class UserController extends Controller
                 'country_id'=>$data['country_id'],
                 'type'=>'SCHOOL_ADMIN',
                 'has_user_account'=>1,
-                'is_active' =>1
+                'is_active' =>0
             ];
 
             $schoolAdmin = Schooladmin::create($schoolAdminData);
@@ -96,7 +95,7 @@ class UserController extends Controller
                 'email'=>$data['email'],
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
-                'is_active'=>1
+                'is_active'=>0
             ];
 
             $user = User::create($usersData);
@@ -110,6 +109,8 @@ class UserController extends Controller
             $teacher = Teacher::create($coachData);
             $teacher->save();
         }
+        print_r($data);
+        exit();
         
         $result = array(
             'status' => 1,

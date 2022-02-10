@@ -34,7 +34,6 @@ class CreateSchooladminTable extends Migration
 			$table->integer('province_id')->nullable();
 			$table->float('geo_latitude', 10, 0)->nullable();
 			$table->float('geo_longitude', 10, 0)->nullable();
-			$table->boolean('type')->nullable()->default(1)->comment('1= teacher, 2= coach');
 			$table->string('comment', 500)->nullable();
 			$table->integer('profile_image_id')->nullable();
 			$table->smallInteger('has_user_account')->nullable()->default(0);

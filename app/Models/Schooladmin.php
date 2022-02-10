@@ -38,7 +38,6 @@ class Schooladmin extends Model
         'province_id',
         'geo_latitude',
         'geo_longitude',
-        'type',
         'comment',
         'profile_image_id',
         'has_user_account',
