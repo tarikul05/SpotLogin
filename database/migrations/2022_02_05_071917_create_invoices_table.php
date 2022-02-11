@@ -16,7 +16,8 @@ class CreateInvoicesTable extends Migration {
 		Schema::create('invoices', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('school_id', 64);
+            $table->integer('school_id');
+            $table->foreign('school_id')->references('id')->on('schools');
 			$table->string('invoice_no', 20)->nullable();
 			$table->smallInteger('invoice_type')->nullable();
 			$table->smallInteger('invoice_status')->nullable();
@@ -49,6 +50,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('seller_zip_code', 8)->nullable();
 			$table->string('seller_place', 120)->nullable();
 			$table->string('seller_country_code', 4)->nullable();
+            $table->foreign('seller_country_code')->references('code')->on('countries');
 			$table->string('seller_phone', 50)->nullable();
 			$table->string('seller_mobile', 50)->nullable();
 			$table->string('seller_email', 50)->nullable();
@@ -62,6 +64,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('payment_bank_zipcode', 10)->nullable();
 			$table->string('payment_bank_place', 100)->nullable();
 			$table->string('payment_bank_country_code', 4)->nullable();
+            $table->foreign('payment_bank_country_code')->references('code')->on('countries');
 			$table->float('subtotal_amount_all', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_no_discount', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_with_discount', 10, 0)->nullable()->default(0);
