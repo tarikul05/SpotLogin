@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEventCategoriesTable extends Migration {
+class CreateLevelsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,12 +13,12 @@ class CreateEventCategoriesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('event_categories', function(Blueprint $table)
+		Schema::create('levels', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('school_id');
-			$table->string('invoiced_type', 1)->nullable()->default('S');
-			$table->integer('file_id')->nullable();
+			$table->integer('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
+			$table->string('title', 100)->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();
@@ -36,7 +36,7 @@ class CreateEventCategoriesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('event_categories');
+		Schema::drop('levels');
 	}
 
 }

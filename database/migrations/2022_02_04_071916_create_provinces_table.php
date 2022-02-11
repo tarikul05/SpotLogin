@@ -16,7 +16,8 @@ class CreateProvincesTable extends Migration {
 		Schema::create('provinces', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('country_code', 4);
+			$table->string('country_code', 4)->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
 			$table->string('province_code', 20)->nullable();
 			$table->string('province_name', 100)->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
