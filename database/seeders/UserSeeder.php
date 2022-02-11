@@ -24,7 +24,6 @@ class UserSeeder extends Seeder
                 'firstname' =>'SuperAdmin',
                 'person_type' => 'SUPER_ADMIN',
                 'password' => Hash::make('12345678'),
-                'status' => 1,
                 'lastname' => 'admin',
                 'is_mail_sent' => 1,
                 'is_reset_mail_requested' => 1,
