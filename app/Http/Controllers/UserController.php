@@ -7,7 +7,11 @@ use App\Models\User;
 use App\Models\School;
 use App\Models\Teacher;
 use App\Models\Schooladmin;
+use App\Models\VerifyToken;
 use App\Models\Currency;
+use App\Mail\NewRegistration;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 
 class UserController extends Controller
@@ -148,73 +152,95 @@ class UserController extends Controller
             
         }
 
-        return response()->json($result);
 
         
 
+        //sending activation email after successful signed up
+        if (config('global.email_send') == 1) {
+            try {
+                $data = [];
+                $data['email'] = $user->email;
+                $data['name'] = $user->firstname;
+                $verifyUser = VerifyToken::create([
+                    'user_id' => $user->id,
+                    'token' => Str::random(5),
+                    'expire_date' => Carbon::now()->addDays(2)->timestamp
+                ]);
         
-        //print_r($row);die;
-        // if(empty($row)){
-
-        //     $return_data = array('status'=>false,'data'=>'');
-            
-        // } else {
-            
-        //     $user_no=$row['user_no'];
-        //     $user_id=$row['user_id'];
-            
-        //     if (trim($_SERVER['SERVER_NAME']) == 'sportlogin.ch'){
-        //         $p_base_code="teamvg";  
-        //      } else {
-        //         $p_base_code="teamvg";
-        //      }
-             
-        //      $softlink="ln -s /var/www/html/$p_base_code /var/www/html/$username";
-        //      $status=exec($softlink);
- 
-        //      $softlink="mkdir -p /var/www/html/$p_base_code/medias/users/$username/thumb";
-        //      $status=exec($softlink);
- 
-        //      $softlink="mkdir -p /var/www/html/$p_base_code/medias/schools/$username/thumb";
-        //      $status=exec($softlink);
- 
-        //      $softlink="mkdir -p /var/www/html/$p_base_code/medias/schools/$username/pdf";
-        //      $status=exec($softlink);
-             
-        //      // set permission
-        //      $softlink="setfacl -Rm g:mescours:rwx /var/www/html/$p_base_code/medias/users";
-        //      $status=exec($softlink);
-             
-        //      $softlink="setfacl -Rm g:mescours:rwx /var/www/html/$p_base_code/medias/schools";
-        //      $status=exec($softlink);
-            
-        //     //sending activation email after successful signed up
-            
-        //     //$urls = explode("/",$_SERVER['REQUEST_URI']);
-        //     //$http_host=$_SERVER['SERVER_NAME']."/".$urls[1];
-        //     $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
-            
-        //     $url=$http_host.$username."/new_login_data.php?action=activate_account&username=".urlencode(base64_encode($username))."&hxunid=".urlencode(base64_encode($user_no));
- 
-        //     $qry="select body_text FROM email_template WHERE template_code='sign_up_confirmation_email' and language='en';";
-        //     $email_body=fetch_single_query_value($qry);
-            
-		// 	$email_body = str_replace("[~~HOSTNAME~~]",$http_host,$email_body);
-        //     $email_body = str_replace("[~~USER_NAME~~]",$username,$email_body);
-        //     $email_body = str_replace("[~~URL~~]",$url,$email_body);
-			
-        //     //print_r($email_body);die;
-        //     $email_subject="www.sportogin.ch: Welcome! Activate account.";
-            
-        //     $mail_status=SendGenericMail($username,'p_from_email',$email,'','',$email_subject,$email_body);           
-            
-        //     $return_data = array('status'=>true,'data'=>$row);
-
-        // }
+                $verifyUser = [
+                    'user_id' => $user->id,
+                    'token' => Str::random(5),
+                    'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                ];
         
-          
+                $verifyUser = VerifyToken::create($verifyUser);
+        
+                // print_r($verifyUser);
+                // exit();
+        
+                $data['token'] = $verifyUser->token; 
+                $data['username'] = $user->username; 
+                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                
+                    
+                $url = route('verify.email',$data['token']); 
+                $data['body_text'] = str_replace("[~~URL~~]",$url,$email_body);
+
+                
+                
+                \Mail::to($user->email)->send(new NewRegistration($data));
+                
+                $result = array(
+                    'status' => 0,
+                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                );
+                
+                return response()->json($result);
+            } catch (\Exception $e) {
+                $result = array(
+                    'status' => 0,
+                    'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                );
+                $user->is_active = 1;
+                $user->save();
+                return response()->json($result);
+            }
+        }
         return response()->json($result);
         
+    }
+
+    /**
+     * signup virification 
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-11
+     */
+    public function verifyUser($token)
+    {
+        $verifyUser = VerifyToken::where('token', $token)->first();
+        if(isset($verifyUser) ){
+            $user = $verifyUser->user;
+            if(!$user->is_active) {
+                $verifyUser->user->is_active = 1;
+                $verifyUser->user->save();
+                echo '<h1>Account Activated Successfully..please login into your account</h1>';
+                header( "refresh:2;url=/" );
+                //exit();
+                $status = "Your e-mail is verified. You can now login.";
+            }else{
+                echo $status = "Your e-mail is already verified. You can now login.";
+                die;
+            }
+        }else{
+            //return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+        
+
+            echo '<h1>Invalid activation Link.</h1>'; die;
+        }
+
+        //return redirect('/login')->with('status', $status);
     }
 
     /**

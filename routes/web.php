@@ -22,7 +22,7 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'
 
 
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
-
+Route::get('/verify-account/{token}', [App\Http\Controllers\UserController::class, 'VerifyEmail'])->name('verify.email');
 
 // Language 
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');

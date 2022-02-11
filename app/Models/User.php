@@ -200,7 +200,8 @@ class User extends Authenticatable
         
             return $user = self::where([
                 [$field, $username],
-                ['deleted_at', null]
+                ['deleted_at', null],
+                ['is_active', 1]
             ])->first();
         
     }
@@ -209,7 +210,8 @@ class User extends Authenticatable
         
             return $user = self::where([
                 [$field, $username],
-                ['deleted_at', null]
+                ['deleted_at', null],
+                ['is_active', 1]
             ])->first()->toArray();
         
    }
