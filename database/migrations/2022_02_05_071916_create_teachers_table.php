@@ -31,7 +31,7 @@ class CreateTeachersTable extends Migration {
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
 			$table->string('place', 120)->nullable();
-			$table->integer('country_id')->nullable();
+			$table->string('country_code',4)->nullable();
 			$table->integer('province_id')->nullable();
 			$table->float('geo_latitude', 10, 0)->nullable();
 			$table->float('geo_longitude', 10, 0)->nullable();
@@ -50,7 +50,7 @@ class CreateTeachersTable extends Migration {
 			$table->string('bank_address', 100)->nullable();
 			$table->string('bank_zipcode', 10)->nullable();
 			$table->string('bank_place', 100)->nullable();
-			$table->string('bank_country_id', 2)->nullable();
+			$table->string('bank_country_code', 4)->nullable();
 			$table->integer('bank_province_id')->nullable();
 			$table->string('bg_color_agenda', 7)->nullable();
 			$table->string('billing_street', 120)->nullable();
@@ -58,7 +58,7 @@ class CreateTeachersTable extends Migration {
 			$table->string('billing_street2', 120)->nullable();
 			$table->string('billing_zip_code', 10)->nullable();
 			$table->string('billing_place', 120)->nullable();
-			$table->string('billing_country_id', 2)->nullable();
+			$table->string('billing_country_code', 4)->nullable();
 			$table->integer('billing_province_id')->nullable();
 			$table->string('about_text', 500)->nullable();
 			$table->integer('display_home_flag')->nullable()->default(1);

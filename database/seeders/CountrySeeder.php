@@ -16,10 +16,10 @@ class CountrySeeder extends Seeder
 
         DB::table('countries')->updateOrInsert(
             [
-                'name' => 'Canada'
+                'code' =>'CA',
             ],
             [
-                'code' =>'CA',
+                'name' => 'Canada'
                 'icon' => '',
                 'is_active' => 1,
                 'created_at' => now()
@@ -27,21 +27,21 @@ class CountrySeeder extends Seeder
         );
         DB::table('countries')->updateOrInsert(
           [
-              'name' => 'France'
+              'code' =>'FR',
           ],
           [
-              'code' =>'FR',
+              'name' => 'France'
               'icon' => '',
               'is_active' => 1,
               'created_at' => now()
           ]
         );
         DB::table('countries')->updateOrInsert(
-          [
-              'name' => 'Switzerland'
-          ],
           [
               'code' =>'CH',
+          ],
+          [
+              'name' => 'Switzerland'
               'icon' => '',
               'is_active' => 1,
               'created_at' => now()
@@ -49,10 +49,10 @@ class CountrySeeder extends Seeder
         );
         DB::table('countries')->updateOrInsert(
           [
-              'name' => 'United States'
+              'code' =>'US',
           ],
           [
-              'code' =>'US',
+              'name' => 'United States'
               'icon' => '',
               'is_active' => 1,
               'created_at' => now()

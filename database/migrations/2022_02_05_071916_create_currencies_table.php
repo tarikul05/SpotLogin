@@ -16,8 +16,8 @@ class CreateCurrenciesTable extends Migration {
 		Schema::create('currencies', function(Blueprint $table)
 		{
 			$table->string('currency_code', 10)->primary();
-			$table->integer('country_id')->nullable();
 			$table->string('name', 30)->nullable();
+			$table->string('country_code', 4)->nullable();
 			$table->string('description', 30)->nullable();
 			$table->integer('sort_order')->nullable();
 			$table->boolean('is_active')->nullable()->default(1);

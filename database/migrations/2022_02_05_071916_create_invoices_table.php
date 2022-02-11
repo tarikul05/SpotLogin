@@ -37,7 +37,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('client_street2', 100)->nullable();
 			$table->string('client_zip_code', 8)->nullable();
 			$table->string('client_place', 120)->nullable();
-			$table->string('client_country_id', 2)->nullable();
+			$table->string('client_country_code', 4)->nullable();
 			$table->string('seller_id', 64)->nullable();
 			$table->string('seller_name', 250)->nullable();
 			$table->integer('seller_gender_id')->nullable();
@@ -48,7 +48,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('seller_street2', 100)->nullable();
 			$table->string('seller_zip_code', 8)->nullable();
 			$table->string('seller_place', 120)->nullable();
-			$table->string('seller_country_id', 2)->nullable();
+			$table->string('seller_country_code', 4)->nullable();
 			$table->string('seller_phone', 50)->nullable();
 			$table->string('seller_mobile', 50)->nullable();
 			$table->string('seller_email', 50)->nullable();
@@ -61,7 +61,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('payment_bank_address', 100)->nullable();
 			$table->string('payment_bank_zipcode', 10)->nullable();
 			$table->string('payment_bank_place', 100)->nullable();
-			$table->string('payment_bank_country_id', 2)->nullable();
+			$table->string('payment_bank_country_code', 4)->nullable();
 			$table->float('subtotal_amount_all', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_no_discount', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_with_discount', 10, 0)->nullable()->default(0);

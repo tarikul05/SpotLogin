@@ -22,7 +22,7 @@ class CreateSchoolsTable extends Migration {
 			$table->string('street_number', 20)->nullable();
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
-			$table->integer('country_id')->nullable();
+			$table->integer('country_code')->nullable();
 			$table->integer('province_id')->nullable();
 			$table->string('phone', 50)->nullable();
 			$table->string('phone2', 50)->nullable();
@@ -37,14 +37,13 @@ class CreateSchoolsTable extends Migration {
 			$table->string('bank_name', 120)->nullable();
 			$table->string('bank_address', 100)->nullable();
 			$table->string('bank_zipcode', 10)->nullable();
-			$table->integer('bank_country_id')->nullable();
+			$table->integer('bank_country_code')->nullable();
 			$table->integer('bank_province_id')->nullable();
 			$table->integer('contact_gender_id')->nullable();
 			$table->string('contact_lastname', 120)->nullable();
 			$table->string('contact_firstname', 120)->nullable();
 			$table->string('contact_position', 120)->nullable();
 			$table->string('bank_account_holder', 120)->nullable();
-			$table->integer('status')->nullable()->default(10);
 			$table->string('school_code', 30)->nullable();
 			$table->string('default_currency_code', 10)->nullable()->default('CHF');
 			$table->string('sender_email', 200)->nullable();

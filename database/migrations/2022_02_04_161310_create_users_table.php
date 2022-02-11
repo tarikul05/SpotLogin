@@ -18,8 +18,7 @@ class CreateUsersTable extends Migration
             $table->integer('person_id')->default(0);
             $table->string('person_type',50)->nullable();
             $table->string('email', 120)->nullable();
-            $table->string('password', 120)->default('d54d1702ad0f8326224b817c796763c9');
-            $table->integer('status')->default(10);
+            $table->string('password', 120)->nullable();
             $table->string('firstname', 120)->nullable();
             $table->string('lastname', 120)->nullable();
             $table->smallInteger('gender_id')->nullable();
@@ -29,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('profile_image_id', 64)->nullable();
             $table->string('username', 120)->nullable();
             $table->string('user_authorisation', 3)->default('MIN');
-            $table->string('school_id', 64)->default('FCDB0ADF-C49F-4D8A-B244-DF6B58104DA3');
+            $table->string('school_id', 64)->nullable();
             $table->boolean('is_active')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('modified_by')->nullable();

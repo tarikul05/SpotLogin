@@ -31,7 +31,7 @@ class CreateParentsTable extends Migration {
 			$table->string('street_number', 20)->nullable();
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
-			$table->integer('country_id')->nullable();
+			$table->string('country_code', 4)->nullable();
 			$table->integer('province_id')->nullable();
 			$table->integer('profile_image_id')->nullable();
 			$table->smallInteger('has_user_account')->nullable()->default(0);
@@ -42,7 +42,7 @@ class CreateParentsTable extends Migration {
 			$table->string('bank_address', 100)->nullable();
 			$table->string('bank_zipcode', 10)->nullable();
 			$table->string('bank_place', 100)->nullable();
-			$table->string('bank_country_id', 2)->nullable();
+			$table->string('bank_country_code', 4)->nullable();
 			$table->integer('bank_province_id')->nullable();
 			$table->dateTime('level_date_arp')->nullable();
 			$table->dateTime('level_date_usp')->nullable();
@@ -54,7 +54,7 @@ class CreateParentsTable extends Migration {
 			$table->string('billing_street2', 120)->nullable();
 			$table->string('billing_zip_code', 10)->nullable();
 			$table->string('billing_place', 120)->nullable();
-			$table->string('billing_country_id', 2)->nullable();
+			$table->string('billing_country_code', 4)->nullable();
 			$table->integer('billing_province_id')->nullable();
 			$table->integer('display_home_flag')->nullable()->default(1);
 			$table->string('billing_method', 3)->nullable()->default('E')->comment('E=Eventwise, M=Monthly & Y=Yearly');
