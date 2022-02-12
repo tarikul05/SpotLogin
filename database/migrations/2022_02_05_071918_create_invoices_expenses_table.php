@@ -16,7 +16,8 @@ class CreateInvoicesExpensesTable extends Migration {
 		Schema::create('invoices_expenses', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('invoice_id');
+            $table->integer('invoice_id')->nullable();
+            $table->foreign('invoice_id')->references('id')->on('invoices');
 			$table->string('expense_name')->nullable();
 			$table->decimal('expense_amount', 10)->nullable();
 		});

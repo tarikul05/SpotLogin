@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProvincesTable extends Migration {
+class CreateLevelsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,17 +13,18 @@ class CreateProvincesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('provinces', function(Blueprint $table)
+		Schema::create('levels', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('country_id', 10);
-			$table->string('province_code', 20)->nullable();
-			$table->string('province_name', 100)->nullable();
+			$table->integer('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
+			$table->string('title', 100)->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();
 			$table->integer('created_by')->nullable();
 			$table->integer('modified_by')->nullable();
+			$table->softDeletes();
 		});
 	}
 
@@ -35,7 +36,7 @@ class CreateProvincesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('provinces');
+		Schema::drop('levels');
 	}
 
 }

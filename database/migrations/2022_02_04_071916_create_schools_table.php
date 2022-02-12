@@ -15,38 +15,50 @@ class CreateSchoolsTable extends Migration {
 	{
 		Schema::create('schools', function(Blueprint $table)
 		{
-			$table->id();
+			$table->integer('id', true);
 			$table->string('school_name', 200)->nullable();
 			$table->dateTime('incorporation_date')->nullable();
 			$table->string('street', 120)->nullable();
 			$table->string('street_number', 20)->nullable();
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
-			$table->integer('country_id')->nullable();
-			$table->integer('province_id')->nullable();
+			// $table->integer('country_code')->nullable();
+			$table->string('country_code', 4)->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
+			// $table->integer('province_id')->nullable();
+            $table->integer('province_id')->nullable();
+            $table->foreign('province_id')->references('id')->on('provinces');
 			$table->string('phone', 50)->nullable();
 			$table->string('phone2', 50)->nullable();
 			$table->string('mobile', 50)->nullable();
 			$table->string('mobile2', 50)->nullable();
 			$table->string('email', 50)->nullable();
 			$table->string('email2', 50)->nullable();
-			$table->integer('logo_image_id')->nullable();
+			// $table->integer('logo_image_id')->nullable();
+            $table->integer('logo_image_id')->nullable();
+            $table->foreign('logo_image_id')->references('id')->on('files');
 			$table->string('bank_iban', 50)->nullable();
 			$table->string('bank_account', 30)->nullable();
 			$table->string('bank_swift', 10)->nullable();
 			$table->string('bank_name', 120)->nullable();
 			$table->string('bank_address', 100)->nullable();
 			$table->string('bank_zipcode', 10)->nullable();
-			$table->integer('bank_country_id')->nullable();
-			$table->integer('bank_province_id')->nullable();
+			// $table->integer('bank_country_code')->nullable();
+			$table->string('bank_country_code', 4)->nullable();
+            $table->foreign('bank_country_code')->references('code')->on('countries');
+
+			// $table->integer('bank_province_id')->nullable();
+            $table->integer('bank_province_id')->nullable();
+            $table->foreign('bank_province_id')->references('id')->on('provinces');
 			$table->integer('contact_gender_id')->nullable();
 			$table->string('contact_lastname', 120)->nullable();
 			$table->string('contact_firstname', 120)->nullable();
 			$table->string('contact_position', 120)->nullable();
 			$table->string('bank_account_holder', 120)->nullable();
-			$table->integer('status')->nullable()->default(10);
 			$table->string('school_code', 30)->nullable();
-			$table->string('default_currency_code', 10)->nullable()->default('CHF');
+			// $table->string('default_currency_code', 10)->nullable()->default('CHF');
+			$table->string('default_currency_code', 4)->nullable();
+            $table->foreign('default_currency_code')->references('currency_code')->on('currencies');
 			$table->string('sender_email', 200)->nullable();
 			$table->string('billing_method', 3)->nullable()->default('M')->comment('E=Eventwise, M=Monthly & Y=Yearly');
 			$table->float('billing_amount', 10, 0)->nullable()->default(0);

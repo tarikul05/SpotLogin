@@ -16,19 +16,23 @@ class CreateEventsTable extends Migration {
 		Schema::create('events', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('school_id', 64);
+			// $table->string('school_id', 64);
+            $table->integer('school_id');
+            $table->foreign('school_id')->references('id')->on('schools');
 			$table->integer('visibility_id')->nullable()->default(10);
 			$table->integer('event_type')->nullable();
 			$table->integer('event_category')->nullable();
 			$table->dateTime('date_start')->nullable();
 			$table->dateTime('date_end')->nullable();
 			$table->integer('duration_minutes')->nullable();
-			$table->string('teacher_id', 64)->nullable();
+			// $table->string('teacher_id', 64)->nullable();
+            $table->integer('teacher_id')->nullable();
+            $table->foreign('teacher_id')->references('id')->on('teachers');
 			$table->smallInteger('is_paying')->nullable()->default(1);
 			$table->string('event_price', 50)->nullable();
 			$table->string('title', 200)->nullable();
 			$table->string('description', 500)->nullable();
-			$table->string('original_event_id', 64)->nullable();
+			$table->integer('original_event_id')->nullable();
 			$table->smallInteger('is_locked')->nullable()->default(0);
 			$table->float('price_amount_sell', 10, 0)->nullable();
 			$table->string('price_currency', 3)->nullable();
@@ -37,7 +41,9 @@ class CreateEventsTable extends Migration {
 			$table->integer('no_of_students')->nullable()->default(1);
 			$table->boolean('event_mode', 1)->nullable()->default(1);
 			$table->float('extra_charges', 10, 0)->nullable()->default('0.00');
-			$table->integer('location_id')->nullable();
+			// $table->integer('location_id')->nullable();
+            $table->integer('location_id')->nullable();
+            $table->foreign('location_id')->references('id')->on('locations');
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();

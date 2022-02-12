@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 $countries = Country::where([
                     ['is_active', 1],
                     ['deleted_at', null]
-                ])->orderBy('id')->get();
+                ])->orderBy('code')->get();
                 $view->with(compact('language', 'countries'));
             }
         );

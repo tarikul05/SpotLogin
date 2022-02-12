@@ -16,7 +16,8 @@ class CreateInvoicesTable extends Migration {
 		Schema::create('invoices', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('school_id', 64);
+            $table->integer('school_id');
+            $table->foreign('school_id')->references('id')->on('schools');
 			$table->string('invoice_no', 20)->nullable();
 			$table->smallInteger('invoice_type')->nullable();
 			$table->smallInteger('invoice_status')->nullable();
@@ -37,7 +38,7 @@ class CreateInvoicesTable extends Migration {
 			$table->string('client_street2', 100)->nullable();
 			$table->string('client_zip_code', 8)->nullable();
 			$table->string('client_place', 120)->nullable();
-			$table->string('client_country_id', 2)->nullable();
+			$table->string('client_country_code', 4)->nullable();
 			$table->string('seller_id', 64)->nullable();
 			$table->string('seller_name', 250)->nullable();
 			$table->integer('seller_gender_id')->nullable();
@@ -48,7 +49,8 @@ class CreateInvoicesTable extends Migration {
 			$table->string('seller_street2', 100)->nullable();
 			$table->string('seller_zip_code', 8)->nullable();
 			$table->string('seller_place', 120)->nullable();
-			$table->string('seller_country_id', 2)->nullable();
+			$table->string('seller_country_code', 4)->nullable();
+            $table->foreign('seller_country_code')->references('code')->on('countries');
 			$table->string('seller_phone', 50)->nullable();
 			$table->string('seller_mobile', 50)->nullable();
 			$table->string('seller_email', 50)->nullable();
@@ -61,7 +63,8 @@ class CreateInvoicesTable extends Migration {
 			$table->string('payment_bank_address', 100)->nullable();
 			$table->string('payment_bank_zipcode', 10)->nullable();
 			$table->string('payment_bank_place', 100)->nullable();
-			$table->string('payment_bank_country_id', 2)->nullable();
+			$table->string('payment_bank_country_code', 4)->nullable();
+            $table->foreign('payment_bank_country_code')->references('code')->on('countries');
 			$table->float('subtotal_amount_all', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_no_discount', 10, 0)->nullable()->default(0);
 			$table->float('subtotal_amount_with_discount', 10, 0)->nullable()->default(0);
@@ -90,15 +93,21 @@ class CreateInvoicesTable extends Migration {
 			$table->string('invoice_creation_type', 1)->nullable()->default('N');
 			$table->string('language_code', 10)->nullable()->default('en');
 			$table->string('billing_method', 3)->nullable()->default('E')->comment('E=Eventwise, M=Monthly & Y=Yearly');
-			$table->string('invoice_currency', 10)->nullable();
+			$table->string('invoice_currency', 4)->nullable();
+            $table->foreign('invoice_currency')->references('currency_code')->on('currencies');
 			$table->string('tax_desc', 150)->nullable();
 			$table->decimal('tax_perc', 10, 3)->nullable()->default(0.000);
 			$table->float('tax_amount', 10, 0)->nullable();
 			$table->string('etransfer_acc', 150)->nullable()->default('');
 			$table->string('cheque_payee', 150)->nullable()->default('');
-			$table->integer('client_province_id')->nullable();
-			$table->integer('seller_province_id')->nullable();
-			$table->integer('bank_province_id')->nullable();
+            $table->integer('client_province_id')->nullable();
+            $table->foreign('client_province_id')->references('id')->on('provinces');
+			// $table->integer('seller_province_id')->nullable();
+            $table->integer('seller_province_id')->nullable();
+            $table->foreign('seller_province_id')->references('id')->on('provinces');
+			// $table->integer('bank_province_id')->nullable();
+            $table->integer('bank_province_id')->nullable();
+            $table->foreign('bank_province_id')->references('id')->on('provinces');
 			$table->string('e_transfer_email', 100)->nullable();
 			$table->string('name_for_checks', 100)->nullable();
 			$table->string('category_invoiced_type', 1)->nullable()->default('S');

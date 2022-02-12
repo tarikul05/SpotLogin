@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTcTemplateLangTable extends Migration {
+class CreateProvincesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,19 +13,18 @@ class CreateTcTemplateLangTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('tc_template_lang', function(Blueprint $table)
+		Schema::create('provinces', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('tc_template_id');
-			$table->string('language_id', 10)->default('fr');
-			$table->text('tc_text')->nullable();
-			$table->text('spp_text')->nullable();
+			$table->string('country_code', 4)->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
+			$table->string('province_code', 20)->nullable();
+			$table->string('province_name', 100)->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();
 			$table->integer('created_by')->nullable();
 			$table->integer('modified_by')->nullable();
-			$table->softDeletes();
 		});
 	}
 
@@ -37,7 +36,7 @@ class CreateTcTemplateLangTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('tc_template_lang');
+		Schema::drop('provinces');
 	}
 
 }

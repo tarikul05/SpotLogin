@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLevelsTable extends Migration {
+class CreateCurrenciesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -13,11 +13,14 @@ class CreateLevelsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('levels', function(Blueprint $table)
+		Schema::create('currencies', function(Blueprint $table)
 		{
-			$table->integer('id', true);
-			$table->integer('school_id')->nullable();
-			$table->string('title', 100)->nullable();
+			$table->string('currency_code', 10)->primary();
+			$table->string('name', 30)->nullable();
+			$table->string('country_code', 4)->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
+			$table->string('description', 30)->nullable();
+			$table->integer('sort_order')->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();
@@ -35,7 +38,7 @@ class CreateLevelsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('levels');
+		Schema::drop('currencies');
 	}
 
 }

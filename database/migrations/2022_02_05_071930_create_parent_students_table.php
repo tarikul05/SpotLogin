@@ -17,7 +17,9 @@ class CreateParentStudentsTable extends Migration {
 		{
 			$table->integer('id', true);
 			$table->integer('parent_id');
+            $table->foreign('parent_id')->references('id')->on('parents');
 			$table->integer('student_id');
+            $table->foreign('student_id')->references('id')->on('students');
 			$table->string('relations', 15)->nullable();
 		});
 	}

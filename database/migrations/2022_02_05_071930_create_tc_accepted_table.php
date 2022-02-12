@@ -16,8 +16,10 @@ class CreateTcAcceptedTable extends Migration {
 		Schema::create('tc_accepted', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('tc_template_id')->nullable();
+            $table->integer('tc_template_id')->nullable();
+            $table->foreign('tc_template_id')->references('id')->on('tc_template');
 			$table->integer('tc_template_lang_id')->nullable();
+            $table->foreign('tc_template_lang_id')->references('id')->on('tc_template_lang');
 			$table->integer('user_id')->nullable();
 			$table->timestamp('accepted_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
 		});
