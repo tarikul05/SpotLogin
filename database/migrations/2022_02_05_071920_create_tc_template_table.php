@@ -16,7 +16,8 @@ class CreateTcTemplateTable extends Migration {
 		Schema::create('tc_template', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('school_id')->nullable();
+            $table->integer('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
 			$table->char('type', 3)->nullable()->default('A')->comment('A-ALL,S-STUDENT, T-TEACHER, S-SCHOOL ADMIN');
 			$table->date('effected_at')->nullable();
 			$table->date('effected_till')->nullable();

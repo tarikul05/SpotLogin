@@ -16,7 +16,8 @@ class CreateInvoicesTaxesTable extends Migration {
 		Schema::create('invoices_taxes', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('invoice_id');
+            $table->integer('invoice_id')->nullable();
+            $table->foreign('invoice_id')->references('id')->on('invoices');
 			$table->string('tax_name')->nullable();
 			$table->decimal('tax_percentage', 10)->nullable();
 			$table->string('tax_number', 100)->nullable();

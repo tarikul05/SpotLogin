@@ -15,7 +15,7 @@ class CreateParentsTable extends Migration {
 	{
 		Schema::create('parents', function(Blueprint $table)
 		{
-			$table->id();
+			$table->integer('id', true);
 			$table->integer('visibility_id')->nullable()->default(10);
 			$table->integer('gender_id')->nullable();
 			$table->string('lastname', 250)->nullable();
@@ -32,7 +32,9 @@ class CreateParentsTable extends Migration {
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
 			$table->string('country_code', 4)->nullable();
-			$table->integer('province_id')->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
+            $table->integer('province_id')->nullable();
+            $table->foreign('province_id')->references('id')->on('provinces');
 			$table->integer('profile_image_id')->nullable();
 			$table->smallInteger('has_user_account')->nullable()->default(0);
 			$table->string('bank_iban', 50)->nullable();
@@ -43,7 +45,8 @@ class CreateParentsTable extends Migration {
 			$table->string('bank_zipcode', 10)->nullable();
 			$table->string('bank_place', 100)->nullable();
 			$table->string('bank_country_code', 4)->nullable();
-			$table->integer('bank_province_id')->nullable();
+            $table->integer('bank_province_id')->nullable();
+            $table->foreign('bank_province_id')->references('id')->on('provinces');
 			$table->dateTime('level_date_arp')->nullable();
 			$table->dateTime('level_date_usp')->nullable();
 			$table->string('nickname', 50)->nullable();
@@ -55,7 +58,8 @@ class CreateParentsTable extends Migration {
 			$table->string('billing_zip_code', 10)->nullable();
 			$table->string('billing_place', 120)->nullable();
 			$table->string('billing_country_code', 4)->nullable();
-			$table->integer('billing_province_id')->nullable();
+            $table->integer('billing_province_id')->nullable();
+            $table->foreign('billing_province_id')->references('id')->on('provinces');
 			$table->integer('display_home_flag')->nullable()->default(1);
 			$table->string('billing_method', 3)->nullable()->default('E')->comment('E=Eventwise, M=Monthly & Y=Yearly');
 			$table->float('billing_amount', 10, 0)->nullable()->default(0);

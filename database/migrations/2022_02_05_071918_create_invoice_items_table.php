@@ -16,8 +16,12 @@ class CreateInvoiceItemsTable extends Migration {
 		Schema::create('invoice_items', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('school_id', 64);
-			$table->string('invoice_id', 64);
+			// $table->string('school_id', 64);
+            $table->integer('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
+			// $table->string('invoice_id', 64);
+            $table->integer('invoice_id')->nullable();
+            $table->foreign('invoice_id')->references('id')->on('invoices');
 			$table->smallInteger('is_locked')->nullable()->default(0);
 			$table->string('caption', 250)->nullable();
 			$table->float('unit', 10, 0)->nullable()->default(0);
