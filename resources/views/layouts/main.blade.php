@@ -28,6 +28,7 @@
     @include('elements.header_menu')
 </section>
 <section class="m-4">
+	@include('elements/flash-message')
     @yield('content')
 </section>
 

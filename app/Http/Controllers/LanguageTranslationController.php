@@ -47,6 +47,9 @@ class LanguageTranslationController extends Controller
         if($languages->count() > 0){
             foreach ($languages as $language){
                 $data = $this->openJSONFile($language->language_code);
+                if (isset($data[$request->key])){
+                    return redirect()->route('languages')->with('error','Key already exist');;
+                }
                 $data[$request->key] = ($language->language_code == 'en') ?  $request->value :  null;
                 $this->saveJSONFile($language->language_code, $data);
             }
