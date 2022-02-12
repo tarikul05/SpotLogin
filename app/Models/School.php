@@ -27,7 +27,7 @@ class School extends Model
         'street_number',
         'street2',
         'zip_code',
-        'country_id',
+        'country_code',
         'province_id',
         'phone',
         'phone2',
@@ -43,7 +43,7 @@ class School extends Model
         'bank_address',
         'bank_zipcode',
         'bank_place',
-        'bank_country_id',
+        'bank_country_code',
         'bank_province_id',
 
         'contact_gender_id',
