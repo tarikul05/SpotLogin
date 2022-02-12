@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-  <div class="m-4">
+  <div class="content">
 	<div class="container-fluid">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
@@ -22,7 +22,7 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+						<button id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
 					</div>
 				</div>    
 			</div>          

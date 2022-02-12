@@ -112,3 +112,7 @@ nav {
   border-style: solid;
   border-width: 1px;
 }
+.form-control{
+    box-shadow: none!important;
+    outline: none;
+}
