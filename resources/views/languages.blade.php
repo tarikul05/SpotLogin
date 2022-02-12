@@ -1,9 +1,14 @@
 @extends('layouts.main')
 
 @section('head_links')
+
+    <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
     <link href="{{ asset('dark-editable/dark-editable.css')}}" rel="stylesheet"/>
     <script src="{{ asset('dark-editable/dark-editable.js')}}"></script>
 @endsection
+
 
 @section('content')
 <div class="container">
@@ -22,13 +27,14 @@
                 <input type="text" name="value" class="form-control Key" placeholder="Enter Value......">
             </div>
             <div class="col-md-4">
+                <br>
                 <button type="submit" class="btn btn-success">Add</button>
             </div>
         </div>
     </form>
  
     <h2>Translate key value pair</h2>
-    <table class="table table-hover table-bordered">
+    <table id="lanTable" class="table table-hover table-bordered">
         <thead>
         <tr>
             <th>Key</th>
@@ -61,6 +67,8 @@
 
 @section('footer_js') 
 <script type="text/javascript">
+    $('#lanTable').DataTable();
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
