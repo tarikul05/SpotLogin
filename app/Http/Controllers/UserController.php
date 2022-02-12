@@ -9,6 +9,7 @@ use App\Models\Teacher;
 use App\Models\SchoolEmployee;
 use App\Models\VerifyToken;
 use App\Models\Currency;
+use App\Models\EmailTemplate;
 use App\Mail\NewRegistration;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -249,7 +250,21 @@ class UserController extends Controller
         
                 $data['token'] = $verifyUser->token; 
                 $data['username'] = $user->username; 
-                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                $country_code = strtolower($data['country_code']);
+                $emailTemplateExist = EmailTemplate::where([
+                    ['template_code', 'sign_up_confirmation_email'],
+                    ['language', 'en'],
+                    ['deleted_at', null],
+                    ['is_active', 'Y'],
+                  ])->first(); 
+                if ($emailTemplateExist) {
+                    $email_body= $emailTemplateExist->body_text;
+                    $data['subject'] = $emailTemplateExist->subject_text;
+                }  else{
+                    $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                    $data['subject']='www.sportogin.ch: Welcome! Activate account.';
+                }  
+                //$verifyUser = EmailTemplate::where('template_code', 'sign_up_confirmation_email')->first();
                 
                     
                 $url = route('verify.email',$data['token']); 

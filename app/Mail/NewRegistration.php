@@ -35,6 +35,6 @@ class NewRegistration extends Mailable
       $admin_email_from = config('global.mail_from_address');
       $admin_email_from_name = config('global.mail_from_name');
       return $this->from($admin_email_from, $admin_email_from_name)
-                ->subject('www.sportogin.ch: Welcome! Activate account.')->markdown('emails.verifyUser');
+                ->subject($this->data['subject'])->markdown('emails.verifyUser');
     }
 }
