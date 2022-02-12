@@ -135,21 +135,21 @@ class AuthController extends Controller
                 
                     // Auth::login($user);
                     $user = Auth::user();
-                    $country_id = null;
+                    $country_code = null;
                     if (isset($user->teacher)) {
-                        $country_id = $user->teacher['country_id'];
+                        $country_code = $user->teacher['country_code'];
                     }
                     else if (isset($user->student)) {
-                        $country_id = $user->student['country_id'];
+                        $country_code = $user->student['country_code'];
                     }
                     else if (isset($user->parent)) {
-                        $country_id = $user->parent['country_id'];
+                        $country_code = $user->parent['country_code'];
                     }
                     else if (isset($user->coach)) {
-                        $country_id = $user->coach['country_id'];
+                        $country_code = $user->coach['country_code'];
                     }
                     else if (isset($user->schooladmin)) {
-                        $country_id = $user->schooladmin['country_id'];
+                        $country_code = $user->schooladmin['country_code'];
                     }
 
                     $result = array(
@@ -159,7 +159,7 @@ class AuthController extends Controller
                         "user_name" => $user['username'],
                         "user_role"  => $user['person_type'],
                         "email"  => $user['email'],
-                        "country_id"  => $country_id,
+                        "country_code"  => $country_code,
                         "person_id"  => $user['person_id']
                     );
                     return response()->json($result);

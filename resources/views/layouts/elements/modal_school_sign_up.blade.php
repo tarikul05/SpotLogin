@@ -30,11 +30,11 @@
                           required>
                   </div>
                   <div class="form-group custom-selection">
-                      <select class="selectpicker" id="country_id" name="country_id" required>
+                      <select class="selectpicker" id="country_code" name="country_code" required>
                           <option value="">Select Country</option>
                           @foreach ($countries as $key => $country)
                             <option 
-                            value="{{ $country->id }}"
+                            value="{{ $country->code }}"
                             >  {{ $country->name }}</option>
                           @endforeach
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
             school_type: "{{__('Please select type')}}",
             fullname: "{{ __('Please enter your full name')}}",
             username: "{{ __('Please enter your username')}}",
-            country_id: "{{ __('Please select country')}}",
+            country_code: "{{ __('Please select country')}}",
             password: {
             required: "{{ __('Please provide a password')}}",
             minlength: "{{ __('Your password must be at least 6 characters long')}}"

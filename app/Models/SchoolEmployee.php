@@ -8,9 +8,10 @@ use App\Models\User;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Schooladmin extends Model
+class SchoolEmployee extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'school_employees';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
     /**
@@ -34,7 +35,7 @@ class Schooladmin extends Model
         'street2',
         'zip_code',
         'place',
-        'country_id',
+        'country_code',
         'province_id',
         'geo_latitude',
         'geo_longitude',
@@ -52,7 +53,7 @@ class Schooladmin extends Model
         'bank_address',
         'bank_zipcode',
         'bank_place',
-        'bank_country_id',
+        'bank_country_code',
         'bank_province_id',
         'bg_color_agenda',
         'billing_street',
@@ -60,7 +61,7 @@ class Schooladmin extends Model
         'billing_street2',
         'billing_zip_code',
         'billing_place',
-        'billing_country_id',
+        'billing_country_code',
         'billing_province_id',
         'about_text',
         'display_home_flag',

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use App\Models\Teacher;
-use App\Models\Schooladmin;
+use App\Models\SchoolEmployee;
 use App\Models\SchoolTeacher;
 
 class User extends Authenticatable
@@ -144,7 +144,7 @@ class User extends Authenticatable
     public function schooladmin()
     {
         
-        return $this->belongsTo(Schooladmin::class, 'person_id', 'id');
+        return $this->belongsTo(SchoolEmployee::class, 'person_id', 'id');
         
     }
 
