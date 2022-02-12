@@ -98,3 +98,17 @@ nav {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+.dot {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  display: inline-block;
+  /*background-color: #FF0000;*/
+  font-size: 0px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+}

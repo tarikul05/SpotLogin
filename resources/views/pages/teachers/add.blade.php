@@ -1,7 +1,12 @@
 @extends('layouts.main')
 
 @section('head_links')
-	
+<!-- datetimepicker -->
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
+<!-- color wheel -->
+<script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
+<link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
 @endsection
 
 @section('content')
@@ -17,7 +22,7 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+						<button id="save_btn" name="save_btn" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
 					</div>
 				</div>    
 			</div>          
@@ -96,8 +101,11 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">Date de naissance:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="sbirth_date_div">
-											<input class="form-control" id="sbirth_date" name="sbirth_date" type="text"> <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span> <span class="add-on"><i class="icon-remove"></i></span></span>
+										<div class="input-group" id="sbirth_date_div"> 
+											<input id="sbirth_date" name="sbirth_date" type="text" class="form-control">
+											<span class="input-group-addon">
+												<i class="fa fa-calendar"></i>
+											</span>
 										</div>
 									</div>
 								</div>
@@ -134,8 +142,7 @@
 								<div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">Couleur agenda:</label>
 									<div class="col-sm-2">
-										<div class="form-control1 dot" data-target="#colorModal" data-toggle="modal" id="selected_color"></div>
-										<input class="form-control" id="sbg_color_agenda" maxlength="7" name="sbg_color_agenda" placeholder="" readonly style="display:none;" type="text" value="">
+										<input type="text" class="colorpicker dot" />
 									</div>
 								</div>
 							</div>
@@ -515,12 +522,27 @@
 			</div>
 		</div>
 	</div>
+
 	<!-- End Tabs content -->
 @endsection
 
 
 @section('footer_js')
 <script type="text/javascript">
+$(function() {
+	$("#sbirth_date").datetimepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+});
 
+$(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
+  
 </script>
 @endsection
