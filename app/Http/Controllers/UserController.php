@@ -40,98 +40,19 @@ class UserController extends Controller
     {
         $data = $request->all();
 
-
-        // $verifyUser = [
-        //     'user_id' => 1,
-        //     'token' => Str::random(5),
-        //     'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
-        // ];
-
-        // $data['email'] = $data['email'];
-        // $data['name'] =$data['fullname'];
-
-        // $data['token'] = $verifyUser['token']; 
-
-
-        // $email_body ='<table border="0" cellpadding="0" cellspacing="0" width="100%">
-        //                         <tbody>
-        //                     <tr>
-        //                         <td style="background-color:#0e2245; height:100px; text-align:center"><a href="[~~HOSTNAME~~][~~USER_NAME~~]/index.html"><img alt="SPORTLOGIN" src="http://sportlogin.ch/img/banner-sport-login.jpg" style="height:100%; width:100%" /></a></td>
-        //                     </tr>
-        //                 </tbody>
-        //             </table>
-        //             <!-- BEGIN BODY -->
-                    
-        //             <table align="center" cellpadding="15" style="width:100%">
-        //                 <tbody>
-        //                     <tr>
-        //                         <td style="text-align:center">
-        //                         <h2><span style="color:#2980b9"><strong>Welcome to Sportlogin!</strong></span></h2>
-                    
-        //                         <p><span style="color:#2980b9">Please confirm your account by clicking on</span></p>
-                    
-        //                         <p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>
-                    
-        //                         <p>[~~HOSTNAME~~][~~USER_NAME~~]/index.html</p>
-        //                         </td>
-        //                     </tr>
-        //                 </tbody>
-        //             </table>
-                    
-        //             <table cellpadding="0" cellspacing="0" style="width:100%">
-        //             </table>';
-        // $eol = "\r\n"; 
         
-        // $url = route('verify.email',$data['token']); 
-        // $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
-        // $email_body = str_replace("[~~HOSTNAME~~]",$http_host,$email_body);
-        // $email_body = str_replace("[~~USER_NAME~~]/index.html",'',$email_body);
-        // $email_body = str_replace("[~~URL~~]",$url,$email_body);
-        // //message body
-        // $body_text=wordwrap(trim($email_body), 70, $eol);
-        // $data['body_text']=str_replace('<<~>>','&',$body_text);
-
-        // //print_r($email_body);die;
-        // //$email_subject="www.sportogin.ch: Welcome! Activate account.";
-
-        // //$mail_status=SendGenericMail($username,'p_from_email',$email,'','',$email_subject,$email_body);           
-
-        // //$return_data = array('status'=>true,'data'=>$row);
-
-       
-        
-        // \Mail::to($data['email'])->send(new NewRegistration($data));
-        // print_r($data);
-        // exit();
-
-        //$verifyUser = VerifyToken::create($verifyUser);
-
-        // print_r($verifyUser);
-        // exit();
         $result = array(
             'status' => 1,
             'message' => __('failed to signup'),
         );
         
         $school_type=trim($data['school_type']);
-        $default_currency_code = '';
-        if (!empty($data['country_code'])) {
-            $currencyExists = Currency::where([
-                ['country_code', $data['country_code']],
-                ['deleted_at', null],
-                ['is_active', 1],
-              ])->first();       
-
-            if ($currencyExists) {
-                $default_currency_code = $currencyExists->currency_code;
-            } 
-        }
+        
 
         if ($school_type=='SCHOOL') {
             $school_code = strtolower($data['username']);
 
             $schoolData = [
-                'default_currency_code' => $default_currency_code,
                 'school_code' => $school_code,
                 'school_name' => $data['fullname'],
                 'incorporation_date'=> now(),
@@ -142,6 +63,16 @@ class UserController extends Controller
                 'max_teachers'=>0,
                 'is_active'=>1
             ];
+            if (!empty($data['country_code'])) {
+                $currencyExists = Currency::where([
+                    ['country_code', $data['country_code']],
+                    ['is_active', 1],
+                  ])->first();  
+                if ($currencyExists) {
+                    $schoolData['default_currency_code'] = $currencyExists->currency_code;
+                }    
+            }
+            
             
             $school = School::create($schoolData);
             $school->save();
@@ -156,11 +87,13 @@ class UserController extends Controller
                 'email'=>$data['email'],
                 'country_code'=>$data['country_code'],
                 'has_user_account'=>1,
-                'is_active' =>0
+                'is_active' =>1
             ];
+            
 
             $schoolAdmin = SchoolEmployee::create($schoolAdminData);
             $schoolAdmin->save();
+            
             $usersData = [
                 'person_id' => $schoolAdmin->id,
                 'person_type' =>'SCHOOL_ADMIN',
@@ -227,36 +160,27 @@ class UserController extends Controller
 
         //sending activation email after successful signed up
         if (config('global.email_send') == 1) {
+            
             try {
                 $data = [];
                 $data['email'] = $user->email;
-                $data['name'] = $user->firstname;
-                $verifyUser = VerifyToken::create([
-                    'user_id' => $user->id,
-                    'token' => Str::random(5),
-                    'expire_date' => Carbon::now()->addDays(2)->timestamp
-                ]);
-        
+                $data['name'] = $user->username;
                 $verifyUser = [
                     'user_id' => $user->id,
                     'token' => Str::random(5),
                     'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
                 ];
+                
         
                 $verifyUser = VerifyToken::create($verifyUser);
         
-                // print_r($verifyUser);
-                // exit();
-        
                 $data['token'] = $verifyUser->token; 
                 $data['username'] = $user->username; 
-                $country_code = strtolower($data['country_code']);
                 $emailTemplateExist = EmailTemplate::where([
                     ['template_code', 'sign_up_confirmation_email'],
-                    ['language', 'en'],
-                    ['deleted_at', null],
-                    ['is_active', 'Y'],
+                    ['language', 'en']
                   ])->first(); 
+
                 if ($emailTemplateExist) {
                     $email_body= $emailTemplateExist->body_text;
                     $data['subject'] = $emailTemplateExist->subject_text;
@@ -264,15 +188,10 @@ class UserController extends Controller
                     $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
                     $data['subject']='www.sportogin.ch: Welcome! Activate account.';
                 }  
-                //$verifyUser = EmailTemplate::where('template_code', 'sign_up_confirmation_email')->first();
-                
-                    
-                $url = route('verify.email',$data['token']); 
-                $data['body_text'] = str_replace("[~~URL~~]",$url,$email_body);
-
-                
-                
+                $data['body_text'] = $email_body;
+                $data['url'] = route('verify.email',$data['token']); 
                 \Mail::to($user->email)->send(new NewRegistration($data));
+                
                 
                 $result = array(
                     'status' => 0,
@@ -303,7 +222,12 @@ class UserController extends Controller
      */
     public function verifyUser($token)
     {
-        $verifyUser = VerifyToken::where('token', $token)->first();
+        $to = Carbon::now()->format("Y-m-d");
+        $verifyUser = VerifyToken::where([
+                                    ['expire_date', '>=', $to],
+                                    ['token', $token]
+                                ])->first();
+        
         if(isset($verifyUser) ){
             $user = $verifyUser->user;
             if(!$user->is_active) {
@@ -315,16 +239,11 @@ class UserController extends Controller
                 $status = "Your e-mail is verified. You can now login.";
             }else{
                 echo $status = "Your e-mail is already verified. You can now login.";
-                die;
+                header( "refresh:2;url=/" );
             }
         }else{
-            //return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
-        
-
             echo '<h1>Invalid activation Link.</h1>'; die;
         }
-
-        //return redirect('/login')->with('status', $status);
     }
 
     /**
