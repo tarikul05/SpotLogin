@@ -116,7 +116,6 @@ $(document).ready(function() {
         $("#resetModal").modal('show');
         return false;
       }
-      return false;
 
       var formdata = $("#login_form").serializeArray();
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
