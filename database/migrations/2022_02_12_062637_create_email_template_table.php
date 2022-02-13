@@ -25,7 +25,7 @@ class CreateEmailTemplateTable extends Migration
             $table->timestamp('modified_at')->useCurrentOnUpdate()->nullable()->useCurrent();
             $table->integer('created_by');
             $table->integer('modified_by')->nullable();
-            $table->integer('deleted_at');
+            $table->softDeletes();
 
             $table->unique(['template_code', 'language'], 'template_code');
         });

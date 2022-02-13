@@ -42,5 +42,10 @@ class EmailTemplate extends Model
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
+
+    public function getDelatedAtAttribute($value){
+      return $value === 0 ? null : $value;
+    }
+
   
 }

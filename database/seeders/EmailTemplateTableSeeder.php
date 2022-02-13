@@ -44,7 +44,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             1 => 
             array (
@@ -71,7 +71,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             2 => 
             array (
@@ -98,7 +98,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             3 => 
             array (
@@ -120,7 +120,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             4 => 
             array (
@@ -140,7 +140,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             5 => 
             array (
@@ -160,7 +160,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             6 => 
             array (
@@ -174,7 +174,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             7 => 
             array (
@@ -196,7 +196,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-02-12 12:24:24',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             8 => 
             array (
@@ -210,7 +210,7 @@ class EmailTemplateTableSeeder extends Seeder
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             9 => 
             array (
@@ -234,7 +234,7 @@ Sobald Ihre Seite aktiviert ist, f&uuml;llen Sie bitte Ihre Schulinformationen i
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             10 => 
             array (
@@ -257,7 +257,7 @@ Sobald Ihre Seite aktiviert ist, f&uuml;llen Sie bitte Ihre Schulinformationen i
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             11 => 
             array (
@@ -283,7 +283,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             12 => 
             array (
@@ -303,7 +303,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             13 => 
             array (
@@ -325,7 +325,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             14 => 
             array (
@@ -345,7 +345,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             15 => 
             array (
@@ -385,7 +385,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-16 11:40:02',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             16 => 
             array (
@@ -425,7 +425,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 22:20:15',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             17 => 
             array (
@@ -465,7 +465,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-16 11:39:51',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             18 => 
             array (
@@ -496,7 +496,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             19 => 
             array (
@@ -527,7 +527,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             20 => 
             array (
@@ -558,7 +558,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             21 => 
             array (
@@ -598,7 +598,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             22 => 
             array (
@@ -638,7 +638,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             23 => 
             array (
@@ -678,7 +678,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             24 => 
             array (
@@ -708,7 +708,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             25 => 
             array (
@@ -740,7 +740,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
             26 => 
             array (
@@ -772,7 +772,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
-                'deleted_at' => 0,
+                'deleted_at' => NULL,
             ),
         ));
         
