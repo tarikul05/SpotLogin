@@ -41,6 +41,7 @@ class User extends Authenticatable
         'user_authorisation',
         'school_id',
         'is_active',
+        'is_firstlogin',
         'created_by',
         'modified_by'
     ];
@@ -214,5 +215,19 @@ class User extends Authenticatable
                 ['is_active', 1]
             ])->first()->toArray();
         
-   }
+    }
+
+    public function getFirstLoginData_after_reset($username,$password = null){
+        
+        //return $user = User::whereUsername($username)->wherePassword(Hash::make($password))->first();
+        return $user = self::where([
+            ['username', $username],
+            ['is_firstlogin',1],
+            ['deleted_at', null],
+            ['is_active', 1]
+        ])->first();
+
+    }
+
+   
 }

@@ -39,25 +39,22 @@
 <script>
 $(document).ready(function() {
   function FirstLoginAfterResetPass() {
-      console.log('ssss');
-      return false;
+      
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      
       var status = 0;
       var formdata = $("#login_form").serializeArray();
-      console.log('TIMEZONEOFFSET=' + TIMEZONEOFFSET);
+      
       formdata.push({
         "name": "type",
         "value": "check_first_login"
       });
       formdata.push({
-        "name": "TIMEZONEOFFSET",
-        "value": TIMEZONEOFFSET
-      });
-      formdata.push({
-        "name": "p_school_code",
-        "value": school_code
+        "name": "_token",
+        "value": csrfToken
       });
       $.ajax({
-        url: 'new_login_data.php',
+        url: BASE_URL + '/login',
         data: formdata,
         type: 'POST',
         dataType: 'json',
@@ -71,8 +68,8 @@ $(document).ready(function() {
 
         }
       });
-
       if (status == 0) {
+        //return true; //demo
         return false;
       } else {
         return true;
@@ -112,12 +109,14 @@ $(document).ready(function() {
     submitHandler: function(form) {
 
       if (FirstLoginAfterResetPass()) {
+
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
         $("#resetModal").modal('show');
         return false;
       }
+      return false;
 
       var formdata = $("#login_form").serializeArray();
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
@@ -131,15 +130,6 @@ $(document).ready(function() {
         "name": "_token",
         "value": csrfToken
       });
-      // formdata.push({
-      //   "name": "TIMEZONEOFFSET",
-      //   "value": TIMEZONEOFFSET
-      // });
-      // formdata.push({
-      //   "name": "p_school_code",
-      //   "value": school_code
-      // });
-      //console.log(formdata);
       $.ajax({
         url: BASE_URL + '/login',
         data: formdata,

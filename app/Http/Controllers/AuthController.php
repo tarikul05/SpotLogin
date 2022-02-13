@@ -110,26 +110,7 @@ class AuthController extends Controller
             $username = $data['login_username'];
             $field = 'username';
             $user = User::getUserData($field, $username);
-            //         $result = array(
-            //             "status"     => 0,
-            //             'message' => _('Successfully logged in'),
-            //             "user_id"  => $user['id'],
-            //             "user_name" => $user['username'],
-            //             "user_role"  => $user['person_type'],
-            //             "school_code"  => isset($user['related_school']) ? $user['related_school']['school_code'] : null,                                
-            //             "email"  => $user['email'],
-            //             "school_id"  => isset($user['related_school']) ? $user['related_school']['id'] : null,  
-            //             "v_t_cnt"  => isset($user['related_school']) ? $user['related_school']['max_teachers'] : null,  
-            //             "v_s_cnt"  =>isset($user['related_school']) ? $user['related_school']['max_students'] : null,
-            //             //"tc_accepted_flag"  => $row['tc_accepted_flag'],
-            //             "country_id"  => isset($user['teacher']) ? $user['teacher']['country_id'] : null,
-            //             "person_id"  => $user['person_id'],
-            //             "http_host" => $http_host
-            //         );
-            // $user = User::getUserDataDetails($field, $username);
-            // print_r($user);
-            // exit();
-            
+          
             if ($user) {
                 if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
                 
@@ -165,6 +146,43 @@ class AuthController extends Controller
                     return response()->json($result);
                 }
             }
+            
+        }
+        else if ($data['type'] === "check_first_login") {
+
+            
+            $time_zone = date_default_timezone_get();
+            
+        
+            $user_name = $data['login_username'];
+            $password = $data['login_password'];
+            $user = User::getFirstLoginData_after_reset($user_name, $password);
+            
+            if (!$user) {
+                $result = array(
+                    'status' => 1,
+                    'message' => __('user not exist'),
+                );
+                //return response()->json($result);
+            }
+            if (!Hash::check($password, $user->password)) {
+                $result = array(
+                    'status' => 1,
+                    'message' => __('Login Fail, pls check password'),
+                );
+                //return response()->json($result);
+            } 
+            
+            
+            // $user->is_firstlogin = 0;
+            // $user->save();
+            $result = array(
+                'status' => 0,
+                'message' => __('first login'),
+            );
+            // print_r($result);
+            // exit();
+            
             
         }
         return response()->json($result);

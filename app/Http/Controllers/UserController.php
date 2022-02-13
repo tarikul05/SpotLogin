@@ -105,7 +105,8 @@ class UserController extends Controller
                 'email'=>$data['email'],
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
-                'is_active'=>0
+                'is_active'=>0,
+                'is_firstlogin'=>0
             ];
 
             $user = User::create($usersData);
@@ -141,7 +142,8 @@ class UserController extends Controller
                 'email'=>$data['email'],
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
-                'is_active'=>0
+                'is_active'=>0,
+                'is_firstlogin'=>0
             ];
 
             $user = User::create($usersData);
@@ -192,7 +194,8 @@ class UserController extends Controller
                 $data['url'] = route('verify.email',$data['token']); 
                 \Mail::to($user->email)->send(new NewRegistration($data));
                 
-                
+                $user->is_mail_sent = 1;
+                $user->save();
                 $result = array(
                     'status' => 0,
                     'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),

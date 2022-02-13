@@ -30,6 +30,7 @@ class UserSeeder extends Seeder
                 'user_authorisation' => 1,
                 'school_id' => 1,
                 'is_active' => 1,
+                'is_firstlogin'=>0,
                 'created_at' => now()
             ]
         );
