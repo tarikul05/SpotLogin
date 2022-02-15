@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
 Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index']);
+Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 

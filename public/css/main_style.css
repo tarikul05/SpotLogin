@@ -1,46 +1,46 @@
 @font-face {
-    font-family: 'Gilroy-Bold ☞';
+    font-family: 'Gilroy-Bold';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Bold ☞'), url('../font/Gilroy-Bold.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Bold'), url('../font/Gilroy-Bold.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Heavy ☞';
+@font-face {
+    font-family: 'Gilroy-Heavy';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Heavy ☞'), url('../font/Gilroy-Heavy.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Heavy'), url('../font/Gilroy-Heavy.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Light ☞';
+@font-face {
+    font-family: 'Gilroy-Light';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Light ☞'), url('../font/Gilroy-Light.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Light'), url('../font/Gilroy-Light.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Medium ☞';
+@font-face {
+    font-family: 'Gilroy-Medium';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Medium ☞'), url('../font/Gilroy-Medium.woff') format('woff');
-    }    
+    src: local('../font/Gilroy-Medium'), url('../font/Gilroy-Medium.woff') format('woff');
+}    
 
-    @font-face {
-    font-family: 'Gilroy-Regular ☞';
+@font-face {
+    font-family: 'Gilroy-Regular';
     font-style: normal;
     font-weight: normal;
-    src: local('../font/Gilroy-Regular ☞'), url('../font/Gilroy-Regular.woff') format('woff');
-    }
+    src: local('../font/Gilroy-Regular'), url('../font/Gilroy-Regular.woff') format('woff');
+}
 
-.gilroy-bold{font-family: 'Gilroy-Bold ☞';}
-.gilroy-heavy{font-family: 'Gilroy-Heavy ☞';}
-.gilroy-light{font-family: 'Gilroy-Light ☞';}
-.gilroy-medium{font-family: 'Gilroy-Medium ☞';}
-.gilroy-regular{font-family: 'Gilroy-Regular ☞';}
+.gilroy-bold{font-family: 'Gilroy-Bold';}
+.gilroy-heavy{font-family: 'Gilroy-Heavy';}
+.gilroy-light{font-family: 'Gilroy-Light';}
+.gilroy-medium{font-family: 'Gilroy-Medium';}
+.gilroy-regular{font-family: 'Gilroy-Regular';}
 
 body{
-    font-family: 'Gilroy-Regular ☞';
+    font-family: 'Gilroy-Regular';
 }
 .row {
     --bs-gutter-x: 0rem;
@@ -198,6 +198,10 @@ section.why-sportlogin{
     justify-content: center;
     text-align: center;
 }
+.btn-area .btn-group .btn, .btn-area .btn {
+    margin-left: 5px!important;
+    border-radius: 4px!important;
+}
 /* .about-us-cont-bg h1{transform: scale(1.25);} */
 footer{
     padding: 45px 0 60px 0;
@@ -243,6 +247,9 @@ footer p a:hover{text-decoration: none;}
 }
 
 @media only screen and (max-width: 768px){
+    .m-4{
+        margin:.5rem!important;
+    }
     h1{font-size: 45px;}
     h2{font-size: 32px;}
     h3{font-size: 28px;}
@@ -277,5 +284,8 @@ footer p a:hover{text-decoration: none;}
     .software-capabilities-content{padding-right: 1rem!important;padding-left: 1rem!important;}
     .software-capabilities li{font-size: 17px;}
     footer p a {font-size: 20px;}
+    .btn-area .btn-group .btn, .btn-area .btn {
+        margin-top: 20px;
+    }
 }
 
