@@ -1,5 +1,5 @@
 
-@import "http://127.0.0.1:8000/css/main_style.css";
+@import "/css/main_style.css";
 
 .m-4.top{
     margin:0px!important;
