@@ -23,7 +23,7 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
+          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
         
