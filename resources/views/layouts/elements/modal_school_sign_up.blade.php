@@ -146,7 +146,8 @@ $(document).ready(function() {
                     if (data.status) {
 
                         $("#signupModal").modal('hide');
-                        $("#successModal").modal('show');
+                        //$("#successModal").modal('show');
+                        successModalCall(data.message);
 
                         //$("#loginModal").modal('show');
                     } else {

@@ -206,6 +206,91 @@ class AuthController extends Controller
     }
 
 
+    /**
+     * forgot password send and reset
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-15
+     */
+    public function forgotPassword(Request $request)
+    {
+        $data = $request->all();
+        $result = array(
+            'status' => false,
+            'message' => __('failed to login'),
+        );
+        if ($action == "forgot_password_submit") {
+
+		
+            // $username=trim($_POST['forgot_password_username']);
+            // $p_school_code=trim($_POST['p_school_code']);
+            // $p_lang=trim($_POST['p_lang']);
+            
+            // $query="SELECT u.user_no,u.user_id,u.email  FROM users u inner join objects_schools s on u.school_id=s.school_id WHERE username = '".$username."' and s.school_code='$p_school_code'";
+            
+            
+            // echo "<script>alert(".$query.");</script>";die;exit;
+            
+            // $result = mysql_query($query) or die( $return = 'Error:-3> ' . mysql_error());
+            // $row = mysql_fetch_assoc($result);
+            // //print_r($row);die;
+            
+            // if(empty($row)){
+    
+            //     $return_data = array('status'=>false,'msg'=>'Username not exist');
+                
+            // } else {
+                
+            //     $user_no=$row['user_no'];
+            //     $user_id=$row['user_id'];
+            //     $email = $row['email'];
+            //     $firstname = $row['firstname'];
+                
+            //     $update_query="UPDATE users u SET otp = '".$user_no."' WHERE user_no='".$user_no."' and exists (select 1 from objects_schools s where s.school_code='$p_school_code' and s.school_id=u.school_id)";
+            //     $update_result = mysql_query($update_query) or die( $return = 'Error:-4> ' . mysql_error());
+                
+            //     //sending forgot password email after successful signed up
+                
+            //     //$urls = explode("/",$_SERVER['REQUEST_URI']);
+            //     //$http_host=$_SERVER['SERVER_NAME']."/".$urls[1];
+                
+            //     $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+                
+            //     $url=$http_host.$p_school_code."/forgot_password.php?action=reset_password&username=".urlencode(base64_encode($username))."&hxunid=".urlencode(base64_encode($user_no))."&hxschid=".urlencode(base64_encode($p_school_code));
+     
+            //     $qry="select ifnull(b.body_text,a.body_text ) body_text 	
+            //     FROM email_template_default a left outer join email_template b 
+            //     on a.template_code=b.template_code and a.language=b.language left outer join objects_schools s
+            //     on b.school_id=s.school_id and s.school_code='$p_school_code'
+            //     WHERE a.template_code='forgot_password_email' and a.language='$p_lang';";
+            //     //echo $qry;die;
+            //     $email_body=fetch_single_query_value($qry);
+                
+            //     $email_body = str_replace("[~~USER_NAME~~]",$firstname,$email_body);
+            //     $email_body = str_replace("[~~URL~~]",$url,$email_body);
+            //     $email_body = str_replace("[~~SCHOOL_CODE~~]",$p_school_code,$email_body);
+            //     $email_body = str_replace("[~~HOSTNAME~~]",$http_host,$email_body);
+            //     //print_r($email_body);die;
+            //     $email_subject="Reset Password";
+                
+            //     $mail_status=SendGenericMail($username,'p_from_email',$email,'','',$email_subject,$email_body);           
+                
+            //     $return_data = array('status'=>true,'data'=>$row);
+    
+            // }
+
+            $return = array('status'=>true,'data'=>$data);
+            
+            echo json_encode($return);  
+        
+        }
+
+        return response()->json($result);
+        
+    }
+
+
    
     /**
      * Login UI and Login confirmation 

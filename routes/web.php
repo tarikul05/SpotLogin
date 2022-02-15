@@ -20,6 +20,7 @@ Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'cre
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
+Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 
 
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');

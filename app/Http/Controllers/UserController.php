@@ -42,7 +42,7 @@ class UserController extends Controller
 
         
         $result = array(
-            'status' => 1,
+            'status' => 0,
             'message' => __('failed to signup'),
         );
         
@@ -112,7 +112,7 @@ class UserController extends Controller
             $user = User::create($usersData);
             $user->save();
             $result = array(
-                "status"     => 0,
+                "status"     => 1,
                 'message' => __('Successfully Registered')
             );
         }
@@ -149,7 +149,7 @@ class UserController extends Controller
             $user = User::create($usersData);
             $user->save();
             $result = array(
-                "status"     => 0,
+                "status"     => 1,
                 'message' => __('Successfully Registered')
             );
 
@@ -197,20 +197,23 @@ class UserController extends Controller
                 $user->is_mail_sent = 1;
                 $user->save();
                 $result = array(
-                    'status' => 0,
+                    'status' => 1,
                     'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
                 );
                 
                 return response()->json($result);
             } catch (\Exception $e) {
                 $result = array(
-                    'status' => 0,
+                    'status' => 1,
                     'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
                 );
                 $user->is_active = 1;
                 $user->save();
                 return response()->json($result);
             }
+        } else {
+            $user->is_active = 1;
+            $user->save();
         }
         return response()->json($result);
         
