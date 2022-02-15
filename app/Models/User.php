@@ -228,6 +228,37 @@ class User extends Authenticatable
         ])->first();
 
     }
+    public function reset_password($username,$old_password,$new_password){
+        
+        $user = self::where([
+            ['username', $username],
+            ['is_firstlogin',1],
+            ['deleted_at', null],
+            ['is_active', 1]
+        ])->first();
+        if (!$user) {
+            return $result = array(
+                'status' => 1,
+                'message' => __('user not exist'),
+            );
+        }
+        if (!Hash::check($old_password, $user->password)) {
+            return $result = array(
+                'status' => 1,
+                'message' => __('Old password not matched'),
+            );
+        } 
+        
+        
+        $user->is_firstlogin = 0;
+        $user->save();
+        return $result = array(
+            'status' => 0,
+            'message' => __('password reset done'),
+        );
+        
+
+    }
 
    
 }

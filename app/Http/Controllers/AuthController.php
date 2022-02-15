@@ -185,6 +185,22 @@ class AuthController extends Controller
             
             
         }
+
+        else if ($action == "change_first_password") {
+
+           
+            $user_name = trim($_POST['reset_username']);
+            $old_password = trim($_POST['old_password']);
+            $new_password = trim($_POST['new_password']);
+
+            $result = User::reset_password($user_name, $old_password,$new_password);
+            
+
+           
+
+            				
+            echo json_encode($result);	
+        }
         return response()->json($result);
         
     }
