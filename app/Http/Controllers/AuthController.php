@@ -8,6 +8,8 @@ use App\Http\Requests\LoginRequest;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\VerifyToken;
+use App\Models\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -15,6 +17,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use App\Mail\SpotloginEmail;
 use URL;
 
 
@@ -186,7 +189,7 @@ class AuthController extends Controller
             
         }
 
-        else if ($action == "change_first_password") {
+        else if ($data['type'] === "change_first_password") {
 
            
             $user_name = trim($_POST['reset_username']);
@@ -218,71 +221,79 @@ class AuthController extends Controller
         $data = $request->all();
         $result = array(
             'status' => false,
-            'message' => __('failed to login'),
+            'message' => __('failed to send email'),
         );
-        if ($action == "forgot_password_submit") {
+        if ($data['type'] === "forgot_password_submit") {
 
 		
-            // $username=trim($_POST['forgot_password_username']);
-            // $p_school_code=trim($_POST['p_school_code']);
-            // $p_lang=trim($_POST['p_lang']);
-            
-            // $query="SELECT u.user_no,u.user_id,u.email  FROM users u inner join objects_schools s on u.school_id=s.school_id WHERE username = '".$username."' and s.school_code='$p_school_code'";
-            
-            
-            // echo "<script>alert(".$query.");</script>";die;exit;
-            
-            // $result = mysql_query($query) or die( $return = 'Error:-3> ' . mysql_error());
-            // $row = mysql_fetch_assoc($result);
-            // //print_r($row);die;
-            
-            // if(empty($row)){
-    
-            //     $return_data = array('status'=>false,'msg'=>'Username not exist');
-                
-            // } else {
-                
-            //     $user_no=$row['user_no'];
-            //     $user_id=$row['user_id'];
-            //     $email = $row['email'];
-            //     $firstname = $row['firstname'];
-                
-            //     $update_query="UPDATE users u SET otp = '".$user_no."' WHERE user_no='".$user_no."' and exists (select 1 from objects_schools s where s.school_code='$p_school_code' and s.school_id=u.school_id)";
-            //     $update_result = mysql_query($update_query) or die( $return = 'Error:-4> ' . mysql_error());
-                
-            //     //sending forgot password email after successful signed up
-                
-            //     //$urls = explode("/",$_SERVER['REQUEST_URI']);
-            //     //$http_host=$_SERVER['SERVER_NAME']."/".$urls[1];
-                
-            //     $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
-                
-            //     $url=$http_host.$p_school_code."/forgot_password.php?action=reset_password&username=".urlencode(base64_encode($username))."&hxunid=".urlencode(base64_encode($user_no))."&hxschid=".urlencode(base64_encode($p_school_code));
-     
-            //     $qry="select ifnull(b.body_text,a.body_text ) body_text 	
-            //     FROM email_template_default a left outer join email_template b 
-            //     on a.template_code=b.template_code and a.language=b.language left outer join objects_schools s
-            //     on b.school_id=s.school_id and s.school_code='$p_school_code'
-            //     WHERE a.template_code='forgot_password_email' and a.language='$p_lang';";
-            //     //echo $qry;die;
-            //     $email_body=fetch_single_query_value($qry);
-                
-            //     $email_body = str_replace("[~~USER_NAME~~]",$firstname,$email_body);
-            //     $email_body = str_replace("[~~URL~~]",$url,$email_body);
-            //     $email_body = str_replace("[~~SCHOOL_CODE~~]",$p_school_code,$email_body);
-            //     $email_body = str_replace("[~~HOSTNAME~~]",$http_host,$email_body);
-            //     //print_r($email_body);die;
-            //     $email_subject="Reset Password";
-                
-            //     $mail_status=SendGenericMail($username,'p_from_email',$email,'','',$email_subject,$email_body);           
-                
-            //     $return_data = array('status'=>true,'data'=>$row);
-    
-            // }
+            $username=trim($_POST['forgot_password_username']);
+            $p_lang=trim($_POST['p_lang']);
 
-            $return = array('status'=>true,'data'=>$data);
+            $user = User::where([
+                ['username', $username],
+                ['is_active', 1],
+                ['deleted_at', null],
+              ])->first();  
+            if ($user) {
+                //sending email for forgot password
+                if (config('global.email_send') == 1) {
+                    
+                    try {
+                        $data = [];
+                        $data['email'] = $user->email;
+                        $data['name'] = $user->username;
+                        $verifyUser = [
+                            'user_id' => $user->id,
+                            'token' => Str::random(5),
+                            'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                        ];
+                        
+                
+                        $verifyUser = VerifyToken::create($verifyUser);
+                
+                        $data['token'] = $verifyUser->token; 
+                        $data['username'] = $user->username; 
+                        $emailTemplateExist = EmailTemplate::where([
+                            ['template_code', 'forgot_password_email'],
+                            ['language', $p_lang]
+                        ])->first(); 
+
+                        if ($emailTemplateExist) {
+                            $email_body= $emailTemplateExist->body_text;
+                            $data['subject'] = $emailTemplateExist->subject_text;
+                        }  else{
+                            $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                            $data['subject']='Reset Password';
+                        }  
+                        $data['body_text'] = $email_body;
+                        $data['url'] = route('reset_password.email',$data['token']); 
+                        \Mail::to($user->email)->send(new SpotloginEmail($data));
+                        
+                        $user->is_mail_sent = 1;
+                        $user->save();
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                        );
+                        
+                        return response()->json($result);
+                    } catch (\Exception $e) {
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                        );
+                        $user->is_active = 1;
+                        $user->save();
+                        return response()->json($result);
+                    }
+                } else{
+                    $result = array('status'=>true,'msg'=>'email sent');
+                }
+            }   else {
+                $result = array('status'=>false,'msg'=>'Username not exist');
+            }
             
-            echo json_encode($return);  
+           
         
         }
 

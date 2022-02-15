@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Config;
 
-class NewRegistration extends Mailable
+class SpotloginEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -25,8 +25,16 @@ class NewRegistration extends Mailable
       $eol = "\r\n";        
       if (isset($data['body_text'])&& !empty($data['body_text'])) {
         $data['body_text'] = str_replace("[~~HOSTNAME~~][~~USER_NAME~~]/index.html",$http_host,$data['body_text']);
-        $data['body_text'] = str_replace("[~~URL~~]",$data['url'],$data['body_text']);
+        if ($data['username']) {
+          $data['body_text'] = str_replace("[~~USER_NAME~~]",$data['username'],$data['body_text']);
+        
+        }
+        if ($data['url']) {
+          $data['body_text'] = str_replace("[~~URL~~]",$data['url'],$data['body_text']);
 
+        }
+        
+        
         
         // //message body
         $data['body_text']=wordwrap(trim($data['body_text']), 70, $eol);
@@ -47,6 +55,6 @@ class NewRegistration extends Mailable
       $admin_email_from = config('global.mail_from_address');
       $admin_email_from_name = config('global.mail_from_name');
       return $this->from($admin_email_from, $admin_email_from_name)
-                ->subject($this->data['subject'])->markdown('emails.verifyUser');
+                ->subject($this->data['subject'])->markdown('emails.spotLogin');
     }
 }
