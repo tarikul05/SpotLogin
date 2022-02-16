@@ -70,19 +70,13 @@
           <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
         </li>
       </ul>
-      <!-- </div> -->
     </div>
   </nav>
 
 
   @yield('content')
 
-  <footer>
-    <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
-    <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
 
-    <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
-  </footer>
 
 
   @include('layouts.elements.modal_login')
@@ -105,6 +99,7 @@
     
   <script src="{{ asset('js/common-scripts.js')}}"></script>
 
+
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -114,8 +109,6 @@
       var lanCode = $(this).val();
       window.location.href = BASE_URL+"/setlang/"+lanCode ;
     });
-
-
 
   });
   

@@ -1,6 +1,9 @@
 
 @import "/css/main_style.css";
 
+.login-signup-modal.mt-200 {
+    margin-top: 15%;
+}
 .m-4.top{
     margin:0px!important;
     background-color: #152245!important;

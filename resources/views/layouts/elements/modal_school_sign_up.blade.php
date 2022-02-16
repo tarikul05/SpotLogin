@@ -31,7 +31,7 @@
                   </div>
                   <div class="form-group custom-selection">
                       <select class="selectpicker" id="country_code" name="country_code" required>
-                          <option value="">Select Country</option>
+                          <option value="">{{ __('Select Country')}}</option>
                           @foreach ($countries as $key => $country)
                             <option 
                             value="{{ $country->code }}"
@@ -55,7 +55,7 @@
               </form>
               
               <div style="text-align:center;margin-top:10px;">
-                  <p>Already have an account? <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
+                  <p>{{ __('Already have an account?')}} <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
               </div>
           </div>
       </div>

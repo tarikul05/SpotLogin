@@ -3,8 +3,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header d-block text-center border-0">
-        <h4 class="modal-title light-blue-txt gilroy-bold" id="resetModalLabel">Reset Password</h4>
-        <h6 class="mb-0">Welcome!</h6>
+        <h4 class="modal-title light-blue-txt gilroy-bold" id="resetModalLabel">{{ __('Reset Password')}}</h4>
+        <h6 class="mb-0">{{ __('Welcome!')}}</h6>
       </div>
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="reset_form" name="reset_form" method="POST" action="#">
@@ -46,7 +46,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-lg btn-primary btn-block">Reset Password</button>
+          <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Reset Password')}}</button>
         </form>
       </div>
     </div>

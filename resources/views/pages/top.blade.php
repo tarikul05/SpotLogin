@@ -52,7 +52,7 @@
         <h4 class="gilroy-bold">{{ __('Communication') }}</h4>
 
         <p class="gilroy-light txtdarkblue">{{ __('Communicate with the parents within the app') }} <br>
-        <h4 class="gilroy-bold">Cooming Soon</h4>
+        <h4 class="gilroy-bold">{{ __('Cooming Soon')}}</h4>
         </p>
 
       </div>
