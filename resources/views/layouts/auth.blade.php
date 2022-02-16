@@ -76,7 +76,9 @@
 
 
   @yield('content')
-
+  <div id="pageloader">
+      <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
+  </div>
   <footer>
     <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
@@ -84,13 +86,14 @@
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
   </footer>
 
-
+  
   @include('layouts.elements.modal_login')
   @include('layouts.elements.modal_reset_login')
   @include('layouts.elements.modal_school_sign_up')
   @include('layouts.elements.modal_forgot_password')
+  @include('layouts.elements.modal_loader')
 
-
+  
   <!--common script for all pages-->
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
@@ -114,6 +117,9 @@
       var lanCode = $(this).val();
       window.location.href = BASE_URL+"/setlang/"+lanCode ;
     });
+
+
+    
 
 
 

@@ -203,6 +203,31 @@ section.why-sportlogin{
     border-radius: 4px!important;
 }
 /* .about-us-cont-bg h1{transform: scale(1.25);} */
+
+/* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
+#pageloader {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    padding-top: 100px;
+    background-color: rgba(0, 0, 0, 0.7);    
+    overflow: auto;    
+}
+
+#pageloader img {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+}
+/* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
+
 footer{
     padding: 45px 0 60px 0;
     text-align: center;

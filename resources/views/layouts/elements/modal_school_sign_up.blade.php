@@ -106,61 +106,70 @@ $(document).ready(function() {
         },
 
         submitHandler: function(form) {
+            var loader = $('#pageloader');
             var Validate_User_Name = ValidateUserName();
             console.log('Validate_User_Name =' + Validate_User_Name);
+            
             if (Validate_User_Name != 0) {
 
                 errorModalCall("{{__('Username already exists...')}}");
-
+                loader.hide();
 
                 return false;
             } else {
-            //console.log('Username is valid.'); 
+                //console.log('Username is valid.'); 
 
-            var formdata = $("#signup_form").serializeArray();
+                var formdata = $("#signup_form").serializeArray();
 
-            var csrfToken = "{{ csrf_token() }}";
+                var csrfToken = "{{ csrf_token() }}";
 
 
-        
-            formdata.push({
-                "name": "_token",
-                "value": "{{ csrf_token() }}"
-            });
-            //console.log(formdata);
-            formdata.push({
-                "name": "type",
-                "value": "signup_submit"
-            });
+            
+                formdata.push({
+                    "name": "_token",
+                    "value": "{{ csrf_token() }}"
+                });
+                //console.log(formdata);
+                formdata.push({
+                    "name": "type",
+                    "value": "signup_submit"
+                });
+                
+                $.ajax({
+                    url: BASE_URL + '/signup',
+                    data: formdata,
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    encode: true,
+                    headers: {'X-CSRF-TOKEN': csrfToken},
+                    beforeSend: function (xhr) {
+                        loader.show();
+                    },
+                    success: function(data) {
 
-            $.ajax({
-                url: BASE_URL + '/signup',
-                data: formdata,
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                encode: true,
-                headers: {'X-CSRF-TOKEN': csrfToken},
-                success: function(data) {
+                        if (data.status) {
 
-                    if (data.status) {
+                            $("#schoolsignupModal").modal('hide');
+                            //$("#successModal").modal('show');
+                            successModalCall(data.message);
+                            loader.hide();
 
-                        $("#signupModal").modal('hide');
-                        //$("#successModal").modal('show');
-                        successModalCall(data.message);
+                            //$("#loginModal").modal('show');
+                        } else {
+                            errorModalCall(GetAppMessage('error_message_text'));
 
-                        //$("#loginModal").modal('show');
-                    } else {
+                        }
+
+                    }, // sucess
+                    error: function(ts) {
                         errorModalCall(GetAppMessage('error_message_text'));
 
+                    },
+                    complete: function() {
+                        loader.hide();
                     }
-
-                }, // sucess
-                error: function(ts) {
-                    errorModalCall(GetAppMessage('error_message_text'));
-
-                }
-            });
+                });
 
             }
         }
@@ -168,6 +177,8 @@ $(document).ready(function() {
     });
 
     function ValidateUserName() {
+        var loader = $('#pageloader');
+        loader.show();
         var v_cnt;
         var username = $('#username').val();
 
