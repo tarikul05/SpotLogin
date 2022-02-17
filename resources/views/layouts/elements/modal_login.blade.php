@@ -80,7 +80,7 @@ $(document).ready(function() {
           status = data.status;
         }, // sucess
         error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
+          //errorModalCall(GetAppMessage('error_message_text'));
 
         }
       });

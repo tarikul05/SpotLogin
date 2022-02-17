@@ -178,8 +178,8 @@ class AuthController extends Controller
                 $user_name = trim($_POST['reset_username']);
                 $old_password = trim($_POST['old_password']);
                 $new_password = trim($_POST['new_password']);
-
-                $result = User::reset_password($user_name, $old_password,$new_password);
+                sleep(3);
+                $result = User::change_password($user_name, $old_password,$new_password);
                 
 
             

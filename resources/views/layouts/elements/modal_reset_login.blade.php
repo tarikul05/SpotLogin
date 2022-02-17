@@ -102,6 +102,8 @@ $(document).ready(function() {
       var old_pass = $("#old_password").val();
       var new_pass = $("#new_password").val();
       var confirm_pass = $("#confirm_password").val();
+      let loader = $('#pageloader');
+      
 
       if (new_pass.trim() != confirm_pass.trim()) {
         successModalCall("{{ __('Invalid confirm password: password and confirm password must be same.') }}");
@@ -112,7 +114,7 @@ $(document).ready(function() {
         successModalCall("{{ __('Invalid new password: old password and new password cannot be same.')}}");
         return false;
       }
-
+      loader.show("fast");
       var formdata = $("#reset_form").serializeArray();
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
       
@@ -130,8 +132,11 @@ $(document).ready(function() {
         data: formdata,
         type: 'POST',
         dataType: 'json',
-        async: false,
-        encode: true,
+        //async: false,
+        //encode: true,
+        beforeSend: function (xhr) {
+          loader.show("fast");
+        },
         success: function(data) {
           if (data.status == 0) {
             //var username = $("#login_username").val();
@@ -148,8 +153,12 @@ $(document).ready(function() {
         error: function(ts) {
           errorModalCall(GetAppMessage('error_message_text'));
 
+        },
+        complete: function() {
+            loader.hide("fast");
         }
       });
+      return false; // required to block normal submit since you used ajax
 
     }
   });
