@@ -19,7 +19,6 @@
 
 
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('css/main_style.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 
   <!-- flag icons -->
