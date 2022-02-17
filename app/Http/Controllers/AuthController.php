@@ -148,38 +148,27 @@ class AuthController extends Controller
             else if ($data['type'] === "check_first_login") {
 
                 
-                $time_zone = date_default_timezone_get();
                 
             
                 $user_name = $data['login_username'];
                 $password = $data['login_password'];
                 $user = User::getFirstLoginData_after_reset($user_name, $password);
-                
+                $result = array(
+                    'status' => 0,
+                    'message' => __('first login'),
+                );
                 if (!$user) {
                     $result = array(
                         'status' => 1,
                         'message' => __('user not exist'),
                     );
-                    //return response()->json($result);
                 }
                 if (!Hash::check($password, $user->password)) {
                     $result = array(
                         'status' => 1,
                         'message' => __('Login Fail, pls check password'),
                     );
-                    //return response()->json($result);
                 } 
-                
-                
-                // $user->is_firstlogin = 0;
-                // $user->save();
-                $result = array(
-                    'status' => 0,
-                    'message' => __('first login'),
-                );
-                // print_r($result);
-                // exit();
-                
                 
             }
 
