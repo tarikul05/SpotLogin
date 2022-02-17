@@ -66,7 +66,9 @@
 
 $(document).ready(function () {
 
-    $("#signup_form").validate({
+    $("#signup_form").submit(function(e) {
+    e.preventDefault();
+    }).validate({
         // Specify validation rules
         rules: {
             terms_condition:"required",

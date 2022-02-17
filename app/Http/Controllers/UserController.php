@@ -169,7 +169,7 @@ class UserController extends Controller
                     $data['name'] = $user->username;
                     $verifyUser = [
                         'user_id' => $user->id,
-                        'token' => Str::random(5),
+                        'token' => Str::random(10),
                         'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
                     ];
                     
@@ -232,8 +232,9 @@ class UserController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
      */
-    public function verifyUser($token)
+    public function verify_user($token)
     {
+       
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyUser = VerifyToken::where([

@@ -27,7 +27,7 @@ Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'res
 
 
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
-Route::get('/verify-account/{token}', [App\Http\Controllers\UserController::class, 'verifyUser'])->name('verify.email');
+Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
 // Language 
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
