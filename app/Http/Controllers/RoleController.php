@@ -16,10 +16,10 @@ class RoleController extends Controller
      */
     function __construct()
     {
-         // $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
-         // $this->middleware('permission:role-create', ['only' => ['create','store']]);
-         // $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-         // $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index','store']]);
+         $this->middleware('permission:role-create', ['only' => ['create','store']]);
+         $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -29,7 +29,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Role::orderBy('id','DESC')->paginate(5);
+        $data = Role::orderBy('id','DESC')->paginate(20);
 
         return view('roles.index', compact('data'));
     }

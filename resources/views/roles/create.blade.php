@@ -2,16 +2,6 @@
 @section('content')
 <div class="container">
     <div class="justify-content-center">
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <strong>Opps!</strong> Something went wrong, please check below errors.<br><br>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
         <div class="card">
             <div class="card-header">Create role
                 <span class="float-right">
