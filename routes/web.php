@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,7 +50,14 @@ Route::get('setlang/{locale}', function ($locale) {
 });
 
 
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
+
+
 // auth
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+
+    // Route::resource('roles', RoleController::class);
+    // Route::resource('permissions', PermissionController::class);
 });
