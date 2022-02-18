@@ -147,8 +147,43 @@ nav {
     margin-right: 2px;
     font-size: 14px;
 }
+.email_template_page .save_button{
+    margin-top:10px;
+}
 .table-responsive {
     margin-top: 80px;
+}
+.selectbox {
+    position: relative;
+}
+.selectbox:after {
+    font-family: FontAwesome;
+    content: "\f078";
+    line-height: 1;
+    color: #0075BF;
+    width: 25px;
+    height: 33px;
+    right: 1%;
+    position: absolute;
+    top: 10px;
+}
+h4.section_header_class{
+    color: #152245;
+    font-size: 20px;
+    font-family: 'Gilroy-Bold';
+    margin: 15px 0;
+    text-align: left;
+    font-weight: normal;
+    margin-bottom: 50px;
+}
+table.email_template{
+    border: 1px solid #E1EFF7!important;
+}
+table.email_template td, 
+table.email_template th{
+    vertical-align: middle;
+    border:1px solid #E1EFF7!important;
+    padding: 19px;
 }
 @media only screen and (max-width: 768px){
     .language_page label {

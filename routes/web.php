@@ -27,6 +27,7 @@ Route::get('/verify-account/{token}', [App\Http\Controllers\UserController::clas
 
 // Language 
 Route::get('add-language', 'LanguagesController@create')->name('language');
+Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
 Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
 Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
