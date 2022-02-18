@@ -22,7 +22,7 @@ Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'cre
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
-Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPassword'])->name('reset_password.update');
+Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 
 
 

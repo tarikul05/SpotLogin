@@ -317,14 +317,7 @@ class AuthController extends Controller
             if(isset($verifyUser) ){
                 $user = $verifyUser->user;
                 if($user) {
-                    // $verifyUser->user->is_active = 1;
-                    // $verifyUser->user->save();
-                    // echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                    // header( "refresh:2;url=/" );
-                    // //exit();
-                    // $status = "Your e-mail is verified. You can now login.";
-
-                    return view('pages.auth.reset_password', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
+                    return view('pages.auth.reset_password', ['title' => 'User Login','user'=>$user]);
                 }else{
                     echo '<h1>Invalid reset password Link.</h1>'; die;
                 }
@@ -338,43 +331,41 @@ class AuthController extends Controller
     }
 
 
-
      /**
-     * signup virification 
+     * reset password change 
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-02-16
+     * @version 0.1 written in 2022-02-11
      */
-    public function resetPassword(Request $request)
+    public function resetPasswordSubmit(Request $request)
     {
         try {
-            $to = Carbon::now()->format("Y-m-d");
-            $verifyUser = VerifyToken::where([
-                                        ['expire_date', '>=', $to],
-                                        ['token', $token]
-                                    ])->first();
-            
-            if(isset($verifyUser) ){
-                $user = $verifyUser->user;
-                if(!$user->is_active) {
-                    $verifyUser->user->is_active = 1;
-                    $verifyUser->user->save();
-                    echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                    header( "refresh:2;url=/" );
-                    //exit();
-                    $status = "Your e-mail is verified. You can now login.";
-                }else{
-                    echo $status = "Your e-mail is already verified. You can now login.";
-                    header( "refresh:2;url=/" );
+            $data = $request->all();
+            $user = User::where([
+                            ['id', $data['reset_password_user_id']],
+                            ['deleted_at', null],
+                    ])->first();
+            if ($user) {
+                $password = $data['reset_password_pass'];
+                $confirm_password = $data['reset_password_confirm_pass'];
+               
+                
+                if ($password==$confirm_password) {
+                    $user->password = $password;
+                    $user->save();
+                    return back()->with('status', "Password changed successfully!");
+                   
+                } else{
+                    return redirect()->back()->withInput()->with('error', 'password not matched');
+    
                 }
-            }else{
-                echo '<h1>Invalid activation Link.</h1>'; die;
             }
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
+            return redirect()->back()->withInput()->with('error', 'Internal server error!');
+    
+
         }
     }
 
