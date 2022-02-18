@@ -50,8 +50,8 @@ Route::get('setlang/{locale}', function ($locale) {
 });
 
 
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
+    Route::resource('roles', "RoleController");
+    Route::resource('permissions', "PermissionController");
 
 
 // auth
