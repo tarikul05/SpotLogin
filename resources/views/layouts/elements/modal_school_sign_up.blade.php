@@ -51,7 +51,7 @@
                   <div class="checkbox">
                       <label><input type="checkbox" id="terms_condition" name="terms_condition" required>{{ __('I agree with the terms and conditions') }}</label>
                   </div>
-                  <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
               </form>
               
               <div style="text-align:center;margin-top:10px;">
@@ -63,10 +63,11 @@
 </div>
 
 <script>
-$(document).ready(function() {
+
+$(document).ready(function () {
 
     $("#signup_form").submit(function(e) {
-        e.preventDefault();
+    e.preventDefault();
     }).validate({
         // Specify validation rules
         rules: {
@@ -104,20 +105,18 @@ $(document).ready(function() {
                 $(element).parents('.form-group').append(error);
             }
         },
-
-        submitHandler: function(form) {
+        submitHandler: function (form) {
             var loader = $('#pageloader');
             var Validate_User_Name = ValidateUserName();
-            console.log('Validate_User_Name =' + Validate_User_Name);
-            
+                console.log('Validate_User_Name =' + Validate_User_Name);
+
             if (Validate_User_Name != 0) {
 
                 errorModalCall("{{__('Username already exists...')}}");
-                loader.hide();
+                loader.hide("fast");
 
                 return false;
             } else {
-                //console.log('Username is valid.'); 
 
                 var formdata = $("#signup_form").serializeArray();
 
@@ -140,11 +139,11 @@ $(document).ready(function() {
                     data: formdata,
                     type: 'POST',
                     dataType: 'json',
-                    async: false,
-                    encode: true,
+                    //async: false,
+                    //encode: true,
                     headers: {'X-CSRF-TOKEN': csrfToken},
                     beforeSend: function (xhr) {
-                        loader.show();
+                        loader.show("fast");
                     },
                     success: function(data) {
 
@@ -153,7 +152,7 @@ $(document).ready(function() {
                             $("#schoolsignupModal").modal('hide');
                             //$("#successModal").modal('show');
                             successModalCall(data.message);
-                            loader.hide();
+                            
 
                             //$("#loginModal").modal('show');
                         } else {
@@ -167,11 +166,11 @@ $(document).ready(function() {
 
                     },
                     complete: function() {
-                        loader.hide();
+                        loader.hide("fast");
                     }
                 });
-
             }
+            return false; // required to block normal submit since you used ajax
         }
 
     });

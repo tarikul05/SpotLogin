@@ -11,17 +11,43 @@
                 
             </div>
             <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
-                <form id="reset_password_form_new" name="reset_password_form_new" method="POST" action="#">
-                <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
-                </div>
-
-                <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
-                </div>
+                <form method="POST" action="{{route('reset_password.submit')}}">
+                <!-- <form id="reset_password_form_new" name="reset_password_form_new" method="POST" action="#"> -->
                     
-                
-                <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Submit')}}</button>
+                    @csrf
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger invalid-feedback d-block">{{ session()->get('error') }}</div>
+                    @endif
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                        {{ session('status') }}
+                        </div>
+                    @endif
+                    @if (session('warning'))
+                        <div class="alert alert-warning">
+                        {{ session('warning') }}
+                        </div>
+                    @endif
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" type="hidden" id="reset_password_username" name="reset_password_username" value="{{$user->username}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" type="hidden" id="reset_password_user_id" name="reset_password_user_id" value="{{$user->id}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
+                    </div>
+                        
+                    
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Submit')}}</button>
                 </form>
                 
             </div>

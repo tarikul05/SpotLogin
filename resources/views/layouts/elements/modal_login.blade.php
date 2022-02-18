@@ -58,7 +58,7 @@ $(document).ready(function() {
       
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
       
-      var status = 0;
+      var status = 1;
       var formdata = $("#login_form").serializeArray();
       
       formdata.push({
@@ -80,15 +80,15 @@ $(document).ready(function() {
           status = data.status;
         }, // sucess
         error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
+          //errorModalCall(GetAppMessage('error_message_text'));
 
         }
       });
       if (status == 0) {
         //return true; //demo
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     }
 
@@ -123,13 +123,15 @@ $(document).ready(function() {
     },
 
     submitHandler: function(form) {
-
+      let loader = $('#pageloader');
+      loader.show("fast");
       if (FirstLoginAfterResetPass()) {
-
+        loader.hide("fast");
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
         $("#resetModal").modal('show');
+        
         return false;
       }
 
@@ -150,8 +152,11 @@ $(document).ready(function() {
         data: formdata,
         type: 'POST',
         dataType: 'json',
-        async: false,
-        encode: true,
+        //async: false,
+        //encode: true,
+        beforeSend: function (xhr) {
+          loader.show("fast");
+        },
         success: function(data) {
           
           if (data.status == 0) {
@@ -159,9 +164,9 @@ $(document).ready(function() {
 
            
            
-
-            successModalCall("{{ __('Logged In Successfully') }}");
             $("#loginModal").modal('hide');
+            successModalCall("{{ __('Logged In Successfully') }}");
+            
             setTimeout(function() {
               window.location.href = "../teachers";
             }, 2000);
@@ -179,8 +184,12 @@ $(document).ready(function() {
         error: function(ts) {
           errorModalCall("{{ __('Invalid username or password') }}");
 
+        },
+        complete: function() {
+            loader.hide("fast");
         }
       });
+      return false; // required to block normal submit since you used ajax
 
     }
   });

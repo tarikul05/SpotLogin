@@ -34,12 +34,7 @@ class VerifyToken extends Model
         'updated_at' => 'date:Y/m/d H:i',
     ];
 
-    
-
-    public function setTokenAttribute($token)
-    {
-        $this->attributes['token'] = Hash::make($token);
-    }
+  
 
      /**
      * Get the user for the user enquiry.

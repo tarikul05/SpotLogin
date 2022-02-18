@@ -228,7 +228,7 @@ class User extends Authenticatable
         ])->first();
 
     }
-    public function reset_password($username,$old_password,$new_password){
+    public function change_password($username,$old_password,$new_password){
         
         $user = self::where([
             ['username', $username],
@@ -249,7 +249,7 @@ class User extends Authenticatable
             );
         } 
         
-        
+        $user->password = $new_password;
         $user->is_firstlogin = 0;
         $user->save();
         return $result = array(

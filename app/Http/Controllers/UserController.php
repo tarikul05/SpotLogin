@@ -10,7 +10,7 @@ use App\Models\SchoolEmployee;
 use App\Models\VerifyToken;
 use App\Models\Currency;
 use App\Models\EmailTemplate;
-use App\Mail\SpotloginEmail;
+use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -169,7 +169,7 @@ class UserController extends Controller
                     $data['name'] = $user->username;
                     $verifyUser = [
                         'user_id' => $user->id,
-                        'token' => Str::random(5),
+                        'token' => Str::random(10),
                         'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
                     ];
                     
@@ -188,11 +188,11 @@ class UserController extends Controller
                         $data['subject'] = $emailTemplateExist->subject_text;
                     }  else{
                         $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                        $data['subject']='www.sportogin.ch: Welcome! Activate account.';
+                        $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
                     }  
                     $data['body_text'] = $email_body;
                     $data['url'] = route('verify.email',$data['token']); 
-                    \Mail::to($user->email)->send(new SpotloginEmail($data));
+                    \Mail::to($user->email)->send(new SportloginEmail($data));
                     
                     $user->is_mail_sent = 1;
                     $user->save();
@@ -232,8 +232,9 @@ class UserController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
      */
-    public function verifyUser($token)
+    public function verify_user($token)
     {
+       
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyUser = VerifyToken::where([

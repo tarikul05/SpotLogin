@@ -16,7 +16,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
-use App\Mail\SpotloginEmail;
+use App\Mail\SportloginEmail;
 use URL;
 
 
@@ -84,7 +84,7 @@ class AuthController extends Controller
     {
         $result = array(
             'status' => 1,
-            'message' => __('failed to login'),
+            'message' => __('Failed to login'),
         );
         try {
             $data = $request->all();
@@ -148,38 +148,27 @@ class AuthController extends Controller
             else if ($data['type'] === "check_first_login") {
 
                 
-                $time_zone = date_default_timezone_get();
                 
             
                 $user_name = $data['login_username'];
                 $password = $data['login_password'];
                 $user = User::getFirstLoginData_after_reset($user_name, $password);
-                
+                $result = array(
+                    'status' => 0,
+                    'message' => __('First login'),
+                );
                 if (!$user) {
                     $result = array(
                         'status' => 1,
                         'message' => __('user not exist'),
                     );
-                    //return response()->json($result);
                 }
                 if (!Hash::check($password, $user->password)) {
                     $result = array(
                         'status' => 1,
                         'message' => __('Login Fail, pls check password'),
                     );
-                    //return response()->json($result);
                 } 
-                
-                
-                // $user->is_firstlogin = 0;
-                // $user->save();
-                $result = array(
-                    'status' => 0,
-                    'message' => __('first login'),
-                );
-                // print_r($result);
-                // exit();
-                
                 
             }
 
@@ -189,8 +178,8 @@ class AuthController extends Controller
                 $user_name = trim($_POST['reset_username']);
                 $old_password = trim($_POST['old_password']);
                 $new_password = trim($_POST['new_password']);
-
-                $result = User::reset_password($user_name, $old_password,$new_password);
+                sleep(3);
+                $result = User::change_password($user_name, $old_password,$new_password);
                 
 
             
@@ -266,7 +255,7 @@ class AuthController extends Controller
                             }  
                             $data['body_text'] = $email_body;
                             $data['url'] = route('reset_password.email',$data['token']); 
-                            \Mail::to($user->email)->send(new SpotloginEmail($data));
+                            \Mail::to($user->email)->send(new SportloginEmail($data));
                             
                             $user->is_mail_sent = 1;
                             $user->save();
@@ -328,14 +317,7 @@ class AuthController extends Controller
             if(isset($verifyUser) ){
                 $user = $verifyUser->user;
                 if($user) {
-                    // $verifyUser->user->is_active = 1;
-                    // $verifyUser->user->save();
-                    // echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                    // header( "refresh:2;url=/" );
-                    // //exit();
-                    // $status = "Your e-mail is verified. You can now login.";
-
-                    return view('pages.auth.reset_password', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
+                    return view('pages.auth.reset_password', ['title' => 'User Login','user'=>$user]);
                 }else{
                     echo '<h1>Invalid reset password Link.</h1>'; die;
                 }
@@ -349,43 +331,41 @@ class AuthController extends Controller
     }
 
 
-
      /**
-     * signup virification 
+     * reset password change 
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-02-16
+     * @version 0.1 written in 2022-02-11
      */
-    public function resetPassword(Request $request)
+    public function resetPasswordSubmit(Request $request)
     {
         try {
-            $to = Carbon::now()->format("Y-m-d");
-            $verifyUser = VerifyToken::where([
-                                        ['expire_date', '>=', $to],
-                                        ['token', $token]
-                                    ])->first();
-            
-            if(isset($verifyUser) ){
-                $user = $verifyUser->user;
-                if(!$user->is_active) {
-                    $verifyUser->user->is_active = 1;
-                    $verifyUser->user->save();
-                    echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                    header( "refresh:2;url=/" );
-                    //exit();
-                    $status = "Your e-mail is verified. You can now login.";
-                }else{
-                    echo $status = "Your e-mail is already verified. You can now login.";
-                    header( "refresh:2;url=/" );
+            $data = $request->all();
+            $user = User::where([
+                            ['id', $data['reset_password_user_id']],
+                            ['deleted_at', null],
+                    ])->first();
+            if ($user) {
+                $password = $data['reset_password_pass'];
+                $confirm_password = $data['reset_password_confirm_pass'];
+               
+                
+                if ($password==$confirm_password) {
+                    $user->password = $password;
+                    $user->save();
+                    return back()->with('status', "Password changed successfully!");
+                   
+                } else{
+                    return redirect()->back()->withInput()->with('error', __('password not matched'));
+    
                 }
-            }else{
-                echo '<h1>Invalid activation Link.</h1>'; die;
             }
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
+            return redirect()->back()->withInput()->with('error', __('Internal server error'));
+    
+
         }
     }
 
