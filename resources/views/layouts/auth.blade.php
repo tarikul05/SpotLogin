@@ -63,7 +63,7 @@
           <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
         </li>
         <li class="nav-item active">
-          <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('School Sign up') }}</a>
+          <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
         </li>
         <li class="nav-item">
           <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>

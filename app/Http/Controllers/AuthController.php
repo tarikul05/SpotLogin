@@ -16,7 +16,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
-use App\Mail\SpotloginEmail;
+use App\Mail\SportloginEmail;
 use URL;
 
 
@@ -84,7 +84,7 @@ class AuthController extends Controller
     {
         $result = array(
             'status' => 1,
-            'message' => __('failed to login'),
+            'message' => __('Failed to login'),
         );
         try {
             $data = $request->all();
@@ -155,7 +155,7 @@ class AuthController extends Controller
                 $user = User::getFirstLoginData_after_reset($user_name, $password);
                 $result = array(
                     'status' => 0,
-                    'message' => __('first login'),
+                    'message' => __('First login'),
                 );
                 if (!$user) {
                     $result = array(
@@ -255,7 +255,7 @@ class AuthController extends Controller
                             }  
                             $data['body_text'] = $email_body;
                             $data['url'] = route('reset_password.email',$data['token']); 
-                            \Mail::to($user->email)->send(new SpotloginEmail($data));
+                            \Mail::to($user->email)->send(new SportloginEmail($data));
                             
                             $user->is_mail_sent = 1;
                             $user->save();
@@ -357,13 +357,13 @@ class AuthController extends Controller
                     return back()->with('status', "Password changed successfully!");
                    
                 } else{
-                    return redirect()->back()->withInput()->with('error', 'password not matched');
+                    return redirect()->back()->withInput()->with('error', __('password not matched'));
     
                 }
             }
         } catch (Exception $e) {
             //return error message
-            return redirect()->back()->withInput()->with('error', 'Internal server error!');
+            return redirect()->back()->withInput()->with('error', __('Internal server error'));
     
 
         }
