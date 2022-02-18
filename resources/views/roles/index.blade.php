@@ -5,9 +5,9 @@
         <div class="card">
             <div class="card-header">Roles
                 @can('role-create')
-                    <span class="float-right">
+                    <!-- <span class="float-right">
                         <a class="btn btn-primary" href="{{ route('roles.create') }}">New Role</a>
-                    </span>
+                    </span> -->
                 @endcan
             </div>
             <div class="card-body">
