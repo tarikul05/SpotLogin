@@ -32,7 +32,7 @@
 					</div>
 					<div class="form-group row">
 						<label class="col-lg-4 col-sm-4 text-end">On / Off: </label>
-						<div class="col-sm-6">
+						<div class="col-sm-6 selectbox">
 							<select class="form-control" id="province_id" name="province_id">
 								<option value="1">active</option>
                                 <option value="0">Inactive</option>
