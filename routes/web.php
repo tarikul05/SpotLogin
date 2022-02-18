@@ -26,6 +26,7 @@ Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->
 Route::get('/verify-account/{token}', [App\Http\Controllers\UserController::class, 'verifyUser'])->name('verify.email');
 
 // Language 
+Route::get('add-language', 'LanguagesController@create')->name('language');
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
 Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
 Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
