@@ -33,6 +33,7 @@ class LanguagesController extends Controller
             try {
                 $params['title']=$params['language_title'];
                 $params['language_code']=$params['language_code_data'];
+                $params['flag_class']='flag-icon flag-icon-'.$params['language_code_data'];
                 if (!empty($params['row_id'])) {
                     $language = Language::where([
                         ['language_code', $params['language_code']]
@@ -40,6 +41,7 @@ class LanguagesController extends Controller
                     $language->title = $params['title'];
                     $language->abbr_name = $params['abbr_name'];
                     $language->is_active = $params['is_active'];
+                    $language->flag_class = $params['flag_class'];
                     $authUser = request()->user();
                     if ($authUser) {
                         $language->modified_by = $authUser->id;

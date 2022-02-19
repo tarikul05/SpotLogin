@@ -155,7 +155,6 @@
     	}
     }  
 
-		//$('#update_btn').click(function (e) {
 		$("#langForm").submit(function(e) {
 			$('span.error').remove();
 			if(validateForm()) {
