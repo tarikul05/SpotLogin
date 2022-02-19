@@ -22,17 +22,46 @@ class LanguagesController extends Controller
      * @return Response
     */
  
-    public function create(Request $request, Language $language)
+    public function addUpdate(Request $request, Language $language)
     {
         
         $result = [];
         $params = $request->all();
+        
         if ($request->isMethod('post'))
         {
-            print_r($params);
-            exit();
-            //$language = Language::find($id);
-            //$query = $language->filter($params); 
+            try {
+                $params['title']=$params['language_title'];
+                if (!empty($params['row_id'])) {
+                    $language = Language::where([
+                        ['language_code', $data['language_code']],
+                        ['deleted_at', null],
+                    ])->first();
+                    $authUser = request()->user();
+
+                    if ($authUser) {
+                        $params['modified_by'] = $authUser->id;
+                    }
+                    if (!$language->update($params)) {
+                        return redirect()->back()->withInput()->with('error', __('Internal server error'));
+                    }
+                } else {
+                    $authUser = request()->user();
+                    if ($authUser) {
+                        $params['created_by'] = $authUser->id;
+                    }
+                    if (!Language::create($params)) {
+                        return redirect()->back()->withInput()->with('error', __('Internal server error'));
+                    }
+                }
+                return back()->with('success', __('Language added successfully!'));
+            } catch (\Exception $e) {
+                //return error message
+                return redirect()->back()->withInput()->with('error', __('Internal server error'));
+        
+    
+            }
+            
         }
          
         

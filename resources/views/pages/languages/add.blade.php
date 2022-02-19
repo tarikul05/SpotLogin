@@ -1,20 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-<style>
-			.se-pre-con {
-					position: fixed;
-					left: 0px;
-					top: 0px;
-					width: 100%;
-					height: 100%;
-					z-index: 9999;  
-					
-					opacity: 1; 
-			}
-	</style>
-	<!-- background: url({{ asset('img/loader4.gif') }}) center no-repeat #ffffff; -->
-	<div class="se-pre-con"></div> 
 	<div class="content language_page">
 		<div class="container-fluid">
 			<form method="POST" action="{{route('add.language')}}" id="langForm" name="langForm" class="form-horizontal" role="form">
@@ -25,19 +11,7 @@
 						</div>
 					</div>
 					@csrf
-					@if(session()->has('error'))
-							<div class="alert alert-danger invalid-feedback d-block">{{ session()->get('error') }}</div>
-					@endif
-					@if (session('status'))
-							<div class="alert alert-success">
-							{{ session('status') }}
-							</div>
-					@endif
-					@if (session('warning'))
-							<div class="alert alert-warning">
-							{{ session('warning') }}
-							</div>
-					@endif
+				
 					<div class="col-md-6 offset-md-2">
 						<div class="form-group">
 							<input type="hidden" id="row_id" name="row_id" value="0">
@@ -45,7 +19,7 @@
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Language code')}}: </label>
 							<div class="col-sm-6">
-								<div class="selectdiv">
+								<div class="selectdiv form-group-data">
 									<input type="text" class="form-control" id="language_code" name="language_code">
 									
 								</div>
@@ -53,20 +27,20 @@
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Language name')}}: </label>
-							<div class="col-sm-6">
+							<div class="col-sm-6 form-group-data">
 								<input type="text" class="form-control" id="language_title" name="language_title">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Language short name')}}: </label>
-							<div class="col-sm-6">
+							<div class="col-sm-6 form-group-data">
 								<input type="text" class="form-control" id="abbr_name" name="abbr_name">
                  
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Active')}} / {{ __('Inactive')}}: </label>
-							<div class="col-sm-6 selectbox">
+							<div class="col-sm-6 selectbox form-group-data">
 								<select class="form-control" name="is_active" id="is_active">
 									<option value="1">{{ __('Active')}}</option>
 									<option value="0">{{ __('Inactive')}}</option>
@@ -137,7 +111,45 @@
 	</div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".se-pre-con").hide();
+		function validateForm() {
+    	var language_code = document.getElementById("language_code").value;
+    	var language_title = document.getElementById("language_title").value;
+        var abbr_name = document.getElementById("abbr_name").value;
+    	let error = false;
+    	if (language_code == null || language_code == "") {
+				$('#language_code').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+				document.getElementById("language_code").focus();
+				error = true;
+    	}
+			if (language_title == null || language_title == "") {
+				document.getElementById("language_title").focus();
+				$('#language_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+				error = true;             
+    	}
+    	if (abbr_name == null || abbr_name  == "") {		
+				$('#abbr_name').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+				document.getElementById("abbr_name").focus();
+				error = true;
+    	}
+
+			if (error) {
+				return false;
+			}            			
+    	else
+    	{
+				return true;
+    	}
+    }  
+
+		//$('#update_btn').click(function (e) {
+		$("#langForm").submit(function(e) {
+			$('span.error').remove();
+			if(validateForm()) {
+			} else {
+				e.preventDefault(e);  
+			}
+		});
+		
 	}); //ready
 </script>
 	<!-- End Tabs content -->
