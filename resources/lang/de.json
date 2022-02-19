@@ -64,5 +64,15 @@
     "password not matched":"password not matched",
     "failed to signup":"failed to signup",
     "Successfully Registered":"Successfully Registered",
-    "www.sportogin.ch: Welcome! Activate account.":"www.sportogin.ch: Welcome! Activate account."
+    "www.sportogin.ch: Welcome! Activate account.":"www.sportogin.ch: Welcome! Activate account.",
+    "Language Setup":"Language Setup",
+    "Language code":"Code de langue",
+    "Language name":"Nom de la langue",
+    "Language short name":"Nom court de la langue",
+    "Active":"actif",
+    "Inactive":"Inactif",
+    "Save":"Enregistrer",
+    "Status":"Statut",
+    "Update":"Mettre à jour"
+
 }

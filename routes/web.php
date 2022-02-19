@@ -23,14 +23,20 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
-
-
-
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
-// Language 
-Route::get('add-language', 'LanguagesController@create')->name('language');
+
+Route::prefix('admin')->group(function() {
+        
+  // Language 
+  Route::match(array('GET', 'POST'), "add-language", array(
+    'uses' => 'LanguagesController@create',
+    'as' => 'add.language'
+  ));
+
+});
+
 Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
 Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');

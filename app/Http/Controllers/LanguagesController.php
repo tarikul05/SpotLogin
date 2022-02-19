@@ -15,16 +15,29 @@ class LanguagesController extends Controller
     */
     public function index()
     {
-
+       
     }   
     /**
      * Remove the specified resource from storage.
      * @return Response
     */
  
-    public function create(Request $request)
+    public function create(Request $request, Language $language)
     {
-        return view('pages.languages.add');
+        
+        $result = [];
+        $params = $request->all();
+        if ($request->isMethod('post'))
+        {
+            print_r($params);
+            exit();
+            //$language = Language::find($id);
+            //$query = $language->filter($params); 
+        }
+         
+        
+        
+        return view('pages.languages.add', ['data'=>$params]);        
     }
  
  
