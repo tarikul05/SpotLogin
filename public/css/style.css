@@ -119,3 +119,105 @@ nav {
     box-shadow: none!important;
     outline: none;
 }
+
+/* add language page css */
+
+.page_title{
+    margin-bottom:40px!important;
+}
+.language_page label{
+    color: #657E8E;
+    font-size: 15px;
+    padding-right:10px;
+    margin-top:10px;
+}
+.language_page .form-group.row {
+    margin-bottom: 10px;
+}
+.save_button,
+.update_button{
+    font-size: 14px;
+    background-color: #97CC04;
+    border:none;
+}
+.save_button:hover,
+.update_button:hover{
+    color:#000;
+    background-color: #97CC04;
+}
+.save_button i.fa,
+.update_button i.fa {
+    margin-right: 2px;
+    font-size: 14px;
+}
+.email_template_page .save_button{
+    margin-top:10px;
+}
+.table-responsive {
+    margin-top: 80px;
+}
+.selectbox {
+    position: relative;
+}
+.selectbox:after {
+    font-family: FontAwesome;
+    content: "\f078";
+    line-height: 1;
+    color: #0075BF;
+    width: 25px;
+    height: 33px;
+    right: 1%;
+    position: absolute;
+    top: 10px;
+}
+h4.section_header_class{
+    color: #152245;
+    font-size: 20px;
+    font-family: 'Gilroy-Bold';
+    margin: 15px 0;
+    text-align: left;
+    font-weight: normal;
+    margin-bottom: 50px;
+}
+table.email_template{
+    border: 1px solid #E1EFF7!important;
+}
+table.email_template td, 
+table.email_template th{
+    vertical-align: middle;
+    border:1px solid #E1EFF7!important;
+    padding: 19px;
+}
+@media only screen and (max-width: 768px){
+    .language_page label {
+        text-align: left!important;
+        padding-bottom: 8px;
+    }
+    .save_button {
+        font-size: 14px;
+        margin-top: 20px;
+    }
+    .table-responsive {
+        margin-top: 40px;
+        width: 100%;
+        margin-bottom: 15px;
+        overflow-y: hidden;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    .navbar-toggler{
+        width:60px;
+    }
+    span.icon-bar {
+        height: 2px;
+        background-color: #fff;
+        margin: 5px 0;
+        float: left;
+        width: 100%;
+    }
+    .navbar-light .navbar-toggler {
+        color: #fff;
+        border: none;
+        outline: none;
+    }
+
+}   
