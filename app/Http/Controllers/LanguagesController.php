@@ -63,10 +63,32 @@ class LanguagesController extends Controller
             }
             
         }
+
+
+        
+        
+        try{
+            //All languages
+            $languageList = Language::all();
+        
+            $result = $languageList;
+            
+
+            return view('pages.languages.add', [
+                'alllanguages' => $result,
+                'data'        => $params,
+                'title' => 'Languages',
+                'pageInfo'=>['siteTitle'=>'']
+            ]);
+        }
+        catch(\Exception $e){
+            echo $e->getMessage(); exit;
+        }
+        
          
         
         
-        return view('pages.languages.add', ['data'=>$params]);        
+        //return view('pages.languages.add', ['data'=>$params]);        
     }
  
  
