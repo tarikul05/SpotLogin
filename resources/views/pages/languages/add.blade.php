@@ -9,6 +9,8 @@
         document.getElementById("abbr_name").value=document.getElementById("language_table").rows[p_row].cells[2].innerHTML;
         document.getElementById("is_active").value=document.getElementById("language_table").rows[p_row].cells[3].getAttribute('data-active');
 				document.getElementById("row_id").value=p_row;
+				document.getElementById("language_code_data").value=document.getElementById("language_table").rows[p_row].cells[0].innerHTML;
+        
         document.getElementById("language_title").focus();
         return false;
     }
@@ -27,6 +29,7 @@
 					<div class="col-md-6 offset-md-2">
 						<div class="form-group">
 							<input type="hidden" id="row_id" name="row_id" value="0">
+							<input type="hidden" id="language_code_data" name="language_code_data" value="">
 						</div> 
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Language code')}}: </label>
@@ -85,7 +88,6 @@
 									$i = 1
 									@endphp
 									@foreach($alllanguages as $key => $value)
-
 										<tr>
 											<th>{{ $value->language_code }}</th>
 											<td>{{ $value->title }}</td>

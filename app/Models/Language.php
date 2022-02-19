@@ -13,6 +13,10 @@ class Language extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
 
+    protected $primaryKey = 'language_code';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     /**
      * The attributes that are mass assignable.
      *
