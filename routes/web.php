@@ -50,10 +50,6 @@ Route::get('setlang/{locale}', function ($locale) {
 });
 
 
-    // Route::resource('roles', "RoleController");
-    // Route::resource('permissions', "PermissionController");
-
-
 // auth
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);

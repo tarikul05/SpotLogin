@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header">Create role
                 <span class="float-right">
-                    <a class="btn btn-primary" href="{{ route('roles.index') }}">Roles</a>
+                    <a class="btn btn-sm btn-primary" href="{{ route('roles.index') }}">Roles</a>
                 </span>
             </div>
             <div class="card-body">
@@ -23,7 +23,7 @@
                         <br/>
                         @endforeach
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                 {!! Form::close() !!}
             </div>
         </div>

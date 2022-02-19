@@ -6,7 +6,7 @@
             <div class="card-header">Role
                 @can('role-create')
                     <span class="float-right">
-                        <a class="btn btn-primary" href="{{ route('roles.index') }}">Back</a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('roles.index') }}">Back</a>
                     </span>
                 @endcan
             </div>

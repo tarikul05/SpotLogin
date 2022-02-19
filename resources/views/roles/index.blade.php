@@ -6,7 +6,7 @@
             <div class="card-header">Roles
                 @can('role-create')
                     <!-- <span class="float-right">
-                        <a class="btn btn-primary" href="{{ route('roles.create') }}">New Role</a>
+                        <a class="btn btn-sm btn-primary" href="{{ route('roles.create') }}">New Role</a>
                     </span> -->
                 @endcan
             </div>
@@ -25,13 +25,13 @@
                                 <td>{{ $role->id }}</td>
                                 <td>{{ $role->name }}</td>
                                 <td>
-                                    <a class="btn btn-success" href="{{ route('roles.show',$role->id) }}">Show</a>
+                                    <a class="btn btn-sm btn-success" href="{{ route('roles.show',$role->id) }}">Show</a>
                                     @can('role-edit')
-                                        <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
+                                        <a class="btn btn-sm btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
                                     @endcan
                                     @can('role-delete')
                                         {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
-                                        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                                        {!! Form::submit('Delete', ['class' => 'btn btn-sm btn-danger']) !!}
                                         {!! Form::close() !!}
                                     @endcan
                                 </td>

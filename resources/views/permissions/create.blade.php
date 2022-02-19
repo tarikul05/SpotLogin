@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header">Create permission
                 <span class="float-right">
-                    <a class="btn btn-primary" href="{{ route('permissions.index') }}">Permissions</a>
+                    <a class="btn btn-sm btn-primary" href="{{ route('permissions.index') }}">Permissions</a>
                 </span>
             </div>
             <div class="card-body">
@@ -14,7 +14,7 @@
                         <strong>Name:</strong>
                         {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                 {!! Form::close() !!}
             </div>
         </div>
