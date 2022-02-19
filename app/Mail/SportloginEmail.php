@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Config;
 
-class SpotloginEmail extends Mailable
+class SportloginEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -55,6 +55,6 @@ class SpotloginEmail extends Mailable
       $admin_email_from = config('global.mail_from_address');
       $admin_email_from_name = config('global.mail_from_name');
       return $this->from($admin_email_from, $admin_email_from_name)
-                ->subject($this->data['subject'])->markdown('emails.spotLogin');
+                ->subject($this->data['subject'])->markdown('emails.sportlogin');
     }
 }
