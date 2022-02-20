@@ -43,7 +43,7 @@
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Language name')}}: </label>
 							<div class="col-sm-6 form-group-data">
-								<input type="text" class="form-control" id="language_title" name="language_title">
+								<input type="text" class="form-control" id="language_title" name="title">
 							</div>
 						</div>
 						<div class="form-group row">

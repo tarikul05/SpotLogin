@@ -31,7 +31,7 @@ Route::prefix('admin')->group(function() {
         
   // Language 
   Route::match(array('GET', 'POST'), "add-language", array(
-    'uses' => 'LanguagesController@addUpdate',
+    'uses' => 'LanguagesController@addUpdate2',
     'as' => 'add.language'
   ));
 

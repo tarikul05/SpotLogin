@@ -16,7 +16,7 @@ class LanguageTranslationController extends Controller
     public function index()
     {
       // $languages = DB::table('languages')->orderBy('sort_order')->get();
-      $languages = Language::orderBy('sort_order')->get();
+      $languages = Language::where('is_active',1)->orderBy('sort_order')->get();
       $columns = [];
       $columnsCount = $languages->count();
         if($languages->count() > 0){
