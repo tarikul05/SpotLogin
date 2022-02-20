@@ -8,7 +8,7 @@ trait CreatedUpdatedBy
     {
         // updating created_by and updated_by when model is created
         static::creating(function ($model) {
-            if (!$model->isDirty('created_by')) {
+            if (!$model->isDirty('created_by') && request()->user()) {
                 $model->created_by = auth()->user()->id;
             }
             if (!$model->isDirty('modified_by')) {
@@ -18,7 +18,7 @@ trait CreatedUpdatedBy
 
         // updating updated_by when model is updated
         static::updating(function ($model) {
-            if (!$model->isDirty('modified_by')) {
+            if (!$model->isDirty('modified_by') && request()->user()) {
                 $model->modified_by = auth()->user()->id;
             }
         });
