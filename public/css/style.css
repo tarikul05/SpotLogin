@@ -187,6 +187,10 @@ table.email_template th{
     vertical-align: middle;
     border:1px solid #E1EFF7!important;
     padding: 19px;
+
+    display:block;
+    width:99.9%;
+    clear:both;
 }
 @media only screen and (max-width: 768px){
     .language_page label {

@@ -43,7 +43,7 @@
 <section class="m-4 top">
     @include('elements.header_menu')
 </section>
-<section class="m-4">
+<section class="" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
 </section>

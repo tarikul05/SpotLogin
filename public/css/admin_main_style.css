@@ -76,6 +76,13 @@ h4{font-size: 34px;}
 h5{font-size: 30px;}
 h6{font-size: 24px;}
 p{font-size: 24px;}
+#main-content {
+  margin-left: 0;
+}
+#main-content {
+  margin-top: 80px;
+}
+
 .navbar{padding: 0 .5rem;}
 .navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .btn.dropdown-toggle{
   padding: .375rem .25rem;font-size: .9rem;
@@ -88,6 +95,31 @@ p{font-size: 24px;}
 }
 .navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .navbar-brand{
   margin-right: 0.5rem!important;
+}
+.navbar {
+  position: relative;
+  min-height: 60px;
+  margin-bottom: 20px;
+  border: 0;
+}
+.navbar-fixed-bottom, .navbar-fixed-top {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+.navbar-fixed-top {
+  top: 0;
+  border-width: 0 0 1px;
+}
+header.panel-heading {
+  margin: 40px 0;
+  padding-top: 1px;
+  padding-bottom: 5px;
+  top: 60px;
+  position: sticky;
+  z-index: 9;
+  background: #FFF;
 }
 
 
@@ -234,6 +266,16 @@ section.why-sportlogin{
   justify-content: center;
   text-align: center;
 }
+
+.btn {
+  font-family: 'Gilroy-Medium';
+  font-weight: normal;
+  font-size: 14px;
+}
+#back_btn {
+  margin-top: 0.6rem;
+}
+
 .btn-area .btn-group .btn, .btn-area .btn {
   margin-left: 5px!important;
   border-radius: 4px!important;
