@@ -18,9 +18,9 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
 <script type="text/javascript">
-    var CURRENT_URL = '{{ $CURRENT_URL }}';
-    var controller = '{{ $controller }}';
-    var action = '{{ $action }}';
+    var CURRENT_URL = '{{ $CURRENT_URL ?? '' }}';
+    var controller = '{{ $controller ?? '' }}';
+    var action = '{{ $action ?? '' }}';
     var HTTP_HOST = '{{ $_SERVER['HTTP_HOST'] }}';
     var MESSAGE_CONFIRM_DELETE = '{{ __('MESSAGE_CONFIRM_DELETE') }}';
 </script>
