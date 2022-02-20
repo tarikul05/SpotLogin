@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class Language extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CreatedUpdatedBy;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
@@ -31,8 +32,8 @@ class Language extends Model
         'flag_class',
         'translation_file',
         'is_active',
-        'created_by',
-        'modified_by'
+        // 'created_by',
+        // 'modified_by'
     ];
 
   
