@@ -1,0 +1,369 @@
+@font-face {
+  font-family: 'Gilroy-Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-Bold'), url('../font/gilroy/Gilroy-Bold.ttf') format('truetype');
+  }
+
+  @font-face {
+  font-family: 'gilroy-SemiBold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-SemiBold'), url('../font/gilroy/Gilroy-SemiBold.ttf') format('truetype');
+  }
+
+  @font-face {
+  font-family: 'Gilroy-Heavy';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-Heavy'), url('../font/gilroy/Gilroy-Heavy.ttf') format('truetype');
+  }    
+
+  @font-face {
+  font-family: 'Gilroy-Light';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-Light'), url('../font/gilroy/Gilroy-Light.ttf') format('truetype');
+  }    
+
+  @font-face {
+  font-family: 'Gilroy-Medium';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-Medium'), url('../font/gilroy/Gilroy-Medium.ttf') format('truetype');
+  }    
+
+  @font-face {
+  font-family: 'Gilroy-Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('../font/gilroy/Gilroy-Regular'), url('../font/gilroy/Gilroy-Regular.ttf') format('truetype');
+  }
+
+  .gilroy-bold{font-family: 'Gilroy-Bold'; font-weight:normal;}
+  .gilroy-semibold{font-family: 'Gilroy-SemiBold'; font-weight:normal;}
+  .gilroy-heavy{font-family: 'Gilroy-Heavy'; font-weight:normal;}
+  .gilroy-light{font-family: 'Gilroy-Light'; font-weight:normal;}
+  .gilroy-medium{font-family: 'Gilroy-Medium'; font-weight:normal;}
+  .gilroy-regular{font-family: 'Gilroy-Regular'; font-weight:normal;}
+
+body{
+  font-family: 'Gilroy-Regular', sans-serif;
+  font-weight: normal;
+  font-size: 15px;
+}
+::-webkit-scrollbar-track
+{
+background-color: #FFF;
+}
+::-webkit-scrollbar
+{
+width: 6px;
+background-color: #FFF;
+}
+::-webkit-scrollbar-thumb
+{
+background-color: #0075BF;
+  border-radius: 3px;
+}
+.row {
+  --bs-gutter-x: 0rem;
+}
+h1{font-size: 76px;}
+h2{font-size: 56px;}
+h3{font-size: 44px;}
+h4{font-size: 34px;}
+h5{font-size: 30px;}
+h6{font-size: 24px;}
+p{font-size: 24px;}
+.navbar{padding: 0 .5rem;}
+.navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .btn.dropdown-toggle{
+  padding: .375rem .25rem;font-size: .9rem;
+}
+/* .navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .dropdown-menu{
+  position: absolute;
+} */
+.navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .bootstrap-select .dropdown-menu li a{
+  padding: .375rem .25rem;
+}
+.navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .navbar-brand{
+  margin-right: 0.5rem!important;
+}
+
+
+
+/***LOGIN SIGNUP MODAL CSS***/
+/* .modal{overflow-y: scroll;} */
+.modal-lg {max-width: 800px;}
+.modal-dialog{margin:1rem auto;}
+.modal-content{border-radius: .75rem;}
+.modal-content h3{font-size: 38px;}
+.modal-content p{font-size: 16px;}
+.modal-content .form-group {margin-bottom: .75rem;}
+/**/
+.login-signup-modal .form-control{background-color: #E8F3F9;border: 0;outline:0;padding:10px;height:50px;box-shadow: none;}
+.login-signup-modal .input-group-addon:last-child{background-color: #E8F3F9;border: 0;outline:0;}
+.login-signup-modal .forgot_password_btn {color: #0075BF !important; cursor: pointer;}
+
+@media (min-width: 576px) {
+  .login-signup-modal .modal-body {width: 375px;min-height: 150px;}
+}
+.custom-selection .btn.dropdown-toggle.btn-light{background-color: #E8F3F9!important;padding:10px;border: 0;max-height: 46px;}
+.custom-selection .dropdown-toggle::after{
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 18px;
+  color: #427bff;
+  border: 0;
+  margin-right: 15px;
+  line-height: 1.5;
+}
+#login_form .dropdown-menu.show{width:100%;}
+.custom-selection .dropdown-toggle[aria-expanded="true"]::after{content: "\f077";}
+.custom-selection .dropdown.bootstrap-select{width: 100%!important;}
+.custom-selection .dropdown-menu{margin:0;padding:0;border-radius:0 auto 4px;}
+.custom-selection .dropdown-item{padding:10px;background-color: #E8F3F9;}
+.custom-selection .dropdown-item.selected.active{background-color:#007bff!important;}
+#show_hide_password .input-group-addon{padding: 10px;}
+#show_hide_password .input-group-addon i.fa{color:#989898;}
+/***INDEX PAGE CSS***/
+.container-fluid{max-width: 1500px;}
+.bgdarkblue{background: #152245;}
+.txtdarkblue{color: #152245;}
+.light-blue-bg{background: #0075BF;}
+.light-blue-txt{color: #0075BF;}
+.light-grey-bg{background: rgb(21 34 69 / 5%);}
+.skyblue-bg{background: #B3D6EC!important;}
+.skyblue-bg2{background: #E1EFF7!important;}
+.txt-white{color:#FFF!important;}
+.txt-grey{color:#657E8E!important;}
+.text-suces{color: #97CC04;}
+.text-warn{color:#FF8000;}
+footer .txtdarkblue{text-decoration: none;}
+.light-blue-bg{background: #0075BF;}
+.light-blue-txt{color: #0075BF;}
+.light-grey-bg{background: rgb(21 34 69 / 5%);}
+.masthead {
+  margin-top: 54px;
+  height: calc(100vh - 54px);
+  min-height: 500px;
+  background-image: url('../img/sicong-li-xsHAv92hOsE-unsplash@2x.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  text-align: left;
+}
+.masthead h1{font-size:56px;letter-spacing: 1px;}
+.masthead h1 img{width: 78px;}
+.masthead h4{font-size:34px;}
+.masthead p{font-size:24px;}
+.circle-bg{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-image: url('../img/Mask_Group_13_fm@2x.png');
+}
+.phone-bg{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: calc(100% - 80px);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-image: url('../img/Mask_Group_12@2x.png');
+}
+.masthead .container-fluid{
+  max-width: 1500px;
+  position: relative;
+  z-index: 1;
+}
+.masthead-btn-area{
+  margin-top: 30px;
+}
+.head-btn{
+  margin-right:15px;
+}
+.head-btn img{margin-bottom: 15px;}
+section.why-sportlogin{
+  padding: 80px 0;
+}
+.why-sportlogin h2{
+  font-size: 56px;
+  margin-bottom: 30px;
+}
+.sportlogin-feature .sportlogin-feature-icon{
+  width: 154px;
+  height: 154px;
+  background: #0075BF;
+  border-radius: 50%;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.sportlogin-feature .sportlogin-feature-icon img{height: 68px;}
+.sportlogin-feature h4{
+ color: #0075BF;
+}
+.about-us p{font-size: 22px;}
+
+.about-us-content{padding-left: 4rem!important; padding-right: 1rem!important;}
+.software-capabilities-content{padding-right: 4rem!important; padding-left: 4rem!important;}
+
+.software-capabilities li{font-size: 22px; color: #FFF;line-height: 1.75;margin-bottom: 10px;}
+.software-capabilities li i{margin-right: 10px;}
+.about-us-cont-bg,.software-capabilities-cont-bg{
+  width: 100%;
+  height: 100%;
+  min-height:480px;
+}
+.about-us-cont-bg{
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.btn-area .btn-group .btn, .btn-area .btn {
+  margin-left: 5px!important;
+  border-radius: 4px!important;
+}
+/* .about-us-cont-bg h1{transform: scale(1.25);} */
+
+/* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
+#pageloader {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  padding-top: 100px;
+  background-color: rgba(0, 0, 0, 0.7);    
+  overflow: auto;    
+}
+
+#pageloader img {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+}
+/* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
+
+
+/********************ADMIN PANEL DEV CSS******************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+footer{
+  padding: 45px 0 60px 0;
+  text-align: center;
+  width: 100%;
+}
+footer p a{font-size: 28px;}
+footer p a:hover{text-decoration: none;}
+
+
+.error {
+  color: red;
+}
+
+@media only screen and (max-width: 1200px){
+  h1{font-size: 68px;}
+  h2{font-size: 48px;}
+  h3{font-size: 40px;}
+  h4{font-size: 30px;}
+  h5{font-size: 28px;}
+  h6{font-size: 20px;}
+  p{font-size: 20px;}
+  .about-us-content{padding-left: 2rem!important; padding-right: 1rem!important;}
+  .software-capabilities-content{padding-right: 2rem!important; padding-left: 2rem!important;}
+  .about-us p{font-size: 18px;}
+  .software-capabilities li{font-size: 18px;}
+  footer p a {font-size: 24px;}
+}
+
+@media only screen and (max-width: 991px){
+  h1{font-size: 48px;}
+  h2{font-size: 42px;}
+  h3{font-size: 36px;}
+  h4{font-size: 26px;}
+  h5{font-size: 22px;}
+  h6{font-size: 18px;}
+  p{font-size: 18px;}
+  .masthead h1{font-size:48px;letter-spacing: 1px;}
+  .masthead h1 img{width: 64px;}
+  .masthead h4{font-size:30px;}
+  .masthead p{font-size:20px;}
+  .why-sportlogin h2{font-size: 42px;}
+}
+
+
+@media only screen and (max-width: 768px){
+  .m-4{
+      margin:.5rem!important;
+  }
+  h1{font-size: 45px;}
+  h2{font-size: 32px;}
+  h3{font-size: 28px;}
+  h4{font-size: 22px;}
+  h5{font-size: 20px;}
+  h6{font-size: 17px;}
+  p{font-size: 17px;}
+  .modal-dialog{margin: 1rem auto;max-width:90%;}
+  .circle-bg {
+      height: 85%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 30% 100%;
+  }
+  .masthead{text-align: center; min-height: 580px;}
+  .masthead .row{align-items: start!important; padding-top: 48px;}
+  .masthead h1{font-size:45px;letter-spacing: 1px;}
+  .masthead h1 img{width: 54px;}
+  .masthead h4{font-size:26px;}
+  .masthead p{font-size:18px;}
+  section.why-sportlogin {padding: 25px 0;}
+  .why-sportlogin h2{font-size: 35px;}
+  .about-us-content{padding-left: 1rem!important; padding-right: 1rem!important;}
+  .about-us-cont-bg,.software-capabilities-cont-bg{min-height:300px;}
+  .software-capabilities-content h2{font-size:28px;}
+  .sportlogin-feature .sportlogin-feature-icon{
+      width: 108px;
+      height: 108px;
+  }
+  .sportlogin-feature .sportlogin-feature-icon img{height: 48px;}
+  .about-us p{font-size: 17px;}
+  .software-capabilities-content{padding-right: 1rem!important;padding-left: 1rem!important;}
+  .software-capabilities li{font-size: 17px;}
+  footer p a {font-size: 20px;}
+  .btn-area .btn-group .btn, .btn-area .btn {
+      margin-top: 20px;
+  }
+}
+

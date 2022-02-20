@@ -1,5 +1,5 @@
 
-@import "/css/main_style.css";
+@import "/css/admin_main_style.css";
 
 .login-signup-modal.mt-200 {
     margin-top: 15%;
@@ -177,7 +177,7 @@ h4.section_header_class{
     margin: 15px 0;
     text-align: left;
     font-weight: normal;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 table.email_template{
     border: 1px solid #E1EFF7!important;

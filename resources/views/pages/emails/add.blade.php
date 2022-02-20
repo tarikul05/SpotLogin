@@ -6,13 +6,21 @@
 
 @section('content')
 <div class="content email_template_page">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-sm-12 col-xs-12 header-area">
-				<div class="page_header_class">
-					<label id="page_header"class="page_title">Email Template</label>
+	<div class="container-fluid area-container">
+		<div class="row panel-row" style="margin:0;">
+				<div class="col-sm-6 col-xs-12 header-area">
+						<div class="page_header_class">
+								<label id="page_header" name="page_header"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Email Template</font></font></label>
+						</div>
 				</div>
-			</div>
+				<div class="col-sm-6 col-xs-12 btn-area">
+						<div class="pull-right btn-group">
+								<a class="btn btn-sm btn-info" href="../admin/" id="back_btn"> <i class="glyphicon glyphicon-arrow-left"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Back</font></font></a>
+								<button class="btn btn-sm btn-theme-success save_button" id="save_btn" name="save_btn"><i class="fa fa-plus"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">to safeguard</font></font></button>
+						</div>
+				</div>    
+		</div>
+		<div class="row">
 			
 			<h4 class="section_header_class">Email Template information</h4>
 

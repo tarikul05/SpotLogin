@@ -40,7 +40,23 @@
 .gilroy-regular{font-family: 'Gilroy-Regular';}
 
 body{
-    font-family: 'Gilroy-Regular';
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: normal;
+    font-size: 15px;
+}
+::-webkit-scrollbar-track
+{
+	background-color: #FFF;
+}
+::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #FFF;
+}
+::-webkit-scrollbar-thumb
+{
+	background-color: #0075BF;
+    border-radius: 3px;
 }
 .row {
     --bs-gutter-x: 0rem;
