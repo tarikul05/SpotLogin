@@ -2,18 +2,7 @@
 
 @section('content')
 <script type="text/javascript">
-		function FetchData(p_row){
-        document.getElementById("language_code").disabled = true;
-        document.getElementById("language_code").value=document.getElementById("language_table").rows[p_row].cells[0].innerHTML;
-        document.getElementById("language_title").value=document.getElementById("language_table").rows[p_row].cells[1].innerHTML;
-        document.getElementById("abbr_name").value=document.getElementById("language_table").rows[p_row].cells[2].innerHTML;
-        document.getElementById("is_active").value=document.getElementById("language_table").rows[p_row].cells[3].getAttribute('data-active');
-				document.getElementById("row_id").value=p_row;
-				document.getElementById("language_code_data").value=document.getElementById("language_table").rows[p_row].cells[0].innerHTML;
-        
-        document.getElementById("language_title").focus();
-        return false;
-    }
+		
 </script>
 	<div class="content language_page">
 		<div class="container-fluid">
@@ -119,6 +108,11 @@
 				</form>
 		</div>
 	</div>
+
+	<!-- End Tabs content -->
+@endsection
+
+@section('footer_js')
 <script type="text/javascript">
 	$(document).ready(function(){
 
@@ -164,8 +158,21 @@
 		});
 		
 	}); //ready
+
+
+	function FetchData(p_row){
+        document.getElementById("language_code").disabled = true;
+        document.getElementById("language_code").value=document.getElementById("language_table").rows[p_row].cells[0].innerHTML;
+        document.getElementById("language_title").value=document.getElementById("language_table").rows[p_row].cells[1].innerHTML;
+        document.getElementById("abbr_name").value=document.getElementById("language_table").rows[p_row].cells[2].innerHTML;
+        document.getElementById("is_active").value=document.getElementById("language_table").rows[p_row].cells[3].getAttribute('data-active');
+				document.getElementById("row_id").value=p_row;
+				document.getElementById("language_code_data").value=document.getElementById("language_table").rows[p_row].cells[0].innerHTML;
+        
+        document.getElementById("language_title").focus();
+        return false;
+    }
 </script>
-	<!-- End Tabs content -->
 @endsection
 
 
