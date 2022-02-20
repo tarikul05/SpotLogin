@@ -70,7 +70,10 @@ nav {
     font-weight: normal;
 }
 .form-group.row {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+.form-group.row label{
+    margin-top: 10px;
 }
 .input-group-addon, .input-group-btn {
     white-space: nowrap;
@@ -122,13 +125,15 @@ nav {
 .page_title{
     margin-bottom:40px!important;
 }
-.language_page label{
+.language_page label,
+.email_template_page label{
     color: #657E8E;
     font-size: 15px;
     padding-right:10px;
     margin-top:10px;
 }
-.language_page .form-group.row {
+.language_page .form-group.row,
+.email_template_page .form-group.row {
     margin-bottom: 10px;
 }
 .save_button,
@@ -185,8 +190,32 @@ table.email_template th{
     border:1px solid #E1EFF7!important;
     padding: 19px;
 }
+.delete_event,
+.delete_location{
+    background-color: #FF8000;
+    border-color: #FF8000;
+    color: #FFF;
+    font-size: 18px;
+}
+.invoice_type_label {
+    padding-left: 12%;
+}
+#nav-tab .nav-link{
+    margin-right:15px;
+    color:#657E8E;
+}
+#nav-tab .nav-link.active{
+    color:#3b75bf
+}
+#nav-tab .nav-link:hover{
+    border:0px;
+}
+#nav-tab .nav-link.active:hover{
+    border-bottom: 4px solid #3b75bf;
+}
 @media only screen and (max-width: 768px){
-    .language_page label {
+    .language_page label,
+    .email_template_page label {
         text-align: left!important;
         padding-bottom: 8px;
     }
