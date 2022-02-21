@@ -37,13 +37,8 @@ class CreateTeachersTable extends Migration {
             $table->foreign('province_id')->references('id')->on('provinces');
 			$table->float('geo_latitude', 10, 0)->nullable();
 			$table->float('geo_longitude', 10, 0)->nullable();
-			$table->boolean('type')->nullable()->default(1)->comment('1= teacher, 2= coach');
-			$table->string('comment', 500)->nullable();
 			$table->integer('profile_image_id')->nullable();
-			$table->smallInteger('has_user_account')->nullable()->default(0);
 			$table->text('teacher_cv')->nullable();
-			$table->string('licence_arp', 30)->nullable();
-			$table->string('licence_usp', 30)->nullable();
 			$table->string('licence_js', 30)->nullable();
 			$table->string('bank_iban', 50)->nullable();
 			$table->string('bank_account', 30)->nullable();
@@ -54,7 +49,6 @@ class CreateTeachersTable extends Migration {
 			$table->string('bank_place', 100)->nullable();
 			$table->string('bank_country_code', 4)->nullable();
 			$table->integer('bank_province_id')->nullable();
-			$table->string('bg_color_agenda', 7)->nullable();
 			$table->string('billing_street', 120)->nullable();
 			$table->string('billing_street_number', 30)->nullable();
 			$table->string('billing_street2', 120)->nullable();
