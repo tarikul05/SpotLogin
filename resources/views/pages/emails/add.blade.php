@@ -162,7 +162,10 @@
 			"value": csrfToken
 		});
 		// console.log(formdata);
-		// return false;		
+		// return false;
+		for (key in CKEDITOR.instances) {
+				CKEDITOR.instances[key].destroy(true);
+		}		
 		$.ajax({
 				url: BASE_URL + '/fetch_email_template',
 				data: formdata,
