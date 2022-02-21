@@ -1,7 +1,8 @@
 @extends('layouts.main')
 
 @section('head_links')
-	<script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script>
+	<!-- <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script> -->
+<script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
 @section('content')
@@ -42,9 +43,17 @@
 						<div class="row col-lg-5 col-md-5 col-sm-12">
 							<label class="col-lg-5 col-md-5 col-sm-12 text-start">Language: <span class="req">*<span></label>
 							<div class="col-sm-12 col-lg-5 col-md-5 selectbox">
-								<select class="form-control" id="province_id" name="province_id">
-									<option value="1">active</option>
-									<option value="0">Inactive</option>
+								
+								<select class="form-control m-bot15" name="language_id" id="language_id" onchange="ChangeLanguage()" >
+									@foreach ($alllanguages as $key => $lan)
+											<option 
+											value="{{ $lan->language_code }}"
+											@if ($lan->language_code == app()->getLocale())
+													selected="selected"
+											@endif
+											">  {{ $lan->title }}</option>
+									@endforeach
+								</select>
 								</select>
 							</div>
 						</div>
@@ -98,10 +107,50 @@
 
 @section('footer_js')
 <script>
-	ClassicEditor
-		.create( document.querySelector( '#editor' ) )
-		.catch( error => {
-			console.error( error );
-		} );
+	// ClassicEditor
+	// 	.create(document.querySelector('#editor'),
+	// 		{
+	// 			//toolbar: [ 'bold', 'italic' ]
+	// 		}
+	//  		//document.querySelector( '#editor' ) 
+	//  	)
+	// 	.catch( error => {
+	// 		console.error( error );
+	// 	} );
+	
+		$('#editor').each( function () {
+                        CKEDITOR.replace( this.id, {
+													  customConfig: '/ckeditor/config_email.js',
+                            height: 300
+                            //,extraPlugins: 'smiley'
+                            //,extraPlugins: 'font'
+                            ,extraPlugins: 'Cy-GistInsert'
+														//,extraPlugins: 'uicolor'
+														,extraPlugins: 'AppFields'
+                        });
+                    });  
+
+	// Replace the <textarea id="editor1"> with a CKEditor
+	// instance, using default configuration.
+	// CKEDITOR.editorConfig = function (config) {
+	// 		config.language = 'es';
+	// 		config.uiColor = '#F7B42C';
+	// 		config.height = 300;
+	// 		config.toolbarCanCollapse = true;
+
+	// };
+	// CKEDITOR.replace('editor');
+	
+	$(document).ready(function(){
+		// will use for responsive design
+		// if($(window).width() > 991){
+		// 	bind_top_nav(); 
+		// } else {
+		// 	bind_top_nav_mobile(); 
+		// }
+
+		//PopulateLanguageList();
+		//ChangeLanguage();
+	}); //ready
 </script>
 @endsection

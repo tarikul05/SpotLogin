@@ -24,7 +24,13 @@ class EmailTemplateController extends Controller
  
     public function create(Request $request)
     {
-        return view('pages.emails.add');
+        $language = Language::orderBy('sort_order')->get();
+
+        return view('pages.emails.add', [
+            'alllanguages' => $language,
+            'title' => 'Email Template',
+            'pageInfo'=>['siteTitle'=>'']
+        ]);
     }
  
  
