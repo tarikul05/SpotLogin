@@ -120,40 +120,37 @@
 				</div>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form class="form-horizontal" role="form">
-					<label id="row_hdr_buy" style="display: none;"></label> <label id="row_hdr_sale" style="display: none;"></label> <!--<label style="display: none;" id="course_type_caption" name="course_type_caption"></label>-->
-						<!-- <font color="blue">
-							<h5>Tarifs</h5>
-						</font> -->
-					<div class="section_header_class">
-						<label class="tarif_caption" id="tarif_caption">Tarifs</label>
+				<div class="section_header_class row">
+					<div class="col-md-3">
+						<label>Level Name</label>
 					</div>
-					<div class="table-responsive">
-						<table class="table list-item" id="tariff_table_rate" width="100%">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th><span id="course_type_caption">Hourly Rate</span></th>
-									<th><span class="tarif_caption" id="tarif_caption">Tarif</span></th>
-									<th class="text-right" id="buy_header">
-										<span id="row_hdr_buy_cap">Buy</span>
-										<h6><span id="buy_buy_caption_info" style="white-space: pre-line1;display:block;">The ‘Buy price’ is the price you ask offer the teacher for his service</span></h6>
-									</th>
-									<th class="text-right">
-										<span id="row_hdr_sell_cap">Sell</span>
-										<h6><span id="buy_sell_caption_info" style="white-space: pre-line;display:block;">The ‘Sell price’ is the price you sell your students the lesson</span></h6>
-									</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-							<tfoot>
-								<tr>
-									<th colspan="5" style="text-align:right"><button class="btn btn-theme-success add-row" type="button"><em class="glyphicon glyphicon-plus"></em><span id="add_new_id">Add</span></button></th>
-								</tr>
-							</tfoot>
-						</table>
+					<div class="col-md-2">
+						<label></label>
 					</div>
-				</form>
+				</div>
+				<div class="row">
+					<div id="add_more_location_div" class="col-md-8">
+						<div class="col-md-12 add_more_location_row row">
+							<div class="col-md-5">
+								<div class="form-group row">
+									<div class="col-sm-11">
+										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+									</div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group row">
+									<div class="col-sm-5">
+										<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
