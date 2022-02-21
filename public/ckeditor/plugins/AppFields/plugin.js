@@ -19,22 +19,23 @@ CKEDITOR.plugins.add( 'AppFields',
       tags[2]=["[{project_district}]", "Project=District", "Project District"];
       */
 	  var getValues = function(url) {
-		var result = [
-			['aaa', 'aaa', 'aaa'],
-			['bbb', 'bbb', 'bbb'],
-		];
-		// $.ajax({
-		// 	url: url,
-		// 	type: 'POST',
-		// 	dataType: 'json',
-		// 	async: false,
-		// 	success: function(data) {
-		// 		//result = data;
-		// 		$.each(data, function(key, row){
-		// 			result.push([row.value, row.drop_text, row.drop_label]);
-		// 		});
-		// 	}
-		// });
+		var result = [];
+		// var result = [
+		// 	['aaa', 'aaa', 'aaa'],
+		// 	['bbb', 'bbb', 'bbb'],
+		// ];
+		$.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'json',
+			async: false,
+			success: function(data) {
+				//result = data;
+				$.each(data, function(key, row){
+					result.push([row.value, row.drop_text, row.drop_label]);
+				});
+			}
+		});
 	   return result;
 	};
 	
@@ -54,7 +55,7 @@ CKEDITOR.plugins.add( 'AppFields',
 		return "";
 	};
       //alert(get_school_code('school_code'));
-	  var ajx_url = window.location.protocol + '//' + window.location.hostname + '/'+get_school_code('school_code')+'/template_variables.php'+'?time='+new Date().getTime();
+	  var ajx_url = window.location.protocol + '//' + window.location.hostname + '/template_variables'+'?school_code='+get_school_code('school_code');
 	  //var ajx_url = window.location.protocol + '//' + window.location.hostname + '/'+get_school_code('school_code')+'/template_variables.php';
 	  //alert(ajx_url);
 	  var tags = getValues(ajx_url);

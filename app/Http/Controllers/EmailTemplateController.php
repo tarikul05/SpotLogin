@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
-use File;
 use App\Models\Language;
+use App\Models\EmailTemplate;
+use App\Http\Requests\FetchTemplateRequest;
+
 
 class EmailTemplateController extends Controller
 {
@@ -25,13 +26,66 @@ class EmailTemplateController extends Controller
     public function create(Request $request)
     {
         $language = Language::orderBy('sort_order')->get();
-
+        
+        $email_template = config('global.email_template');
+        
         return view('pages.emails.add', [
             'alllanguages' => $language,
+            'email_template' => $email_template,
             'title' => 'Email Template',
             'pageInfo'=>['siteTitle'=>'']
         ]);
     }
+
+    
+    public function templateVariables(Request $request)
+    {
+        $result =[];
+        if (config('global.template_variables')) {
+            $result = config('global.template_variables');
+        }
+        return response()->json($result);
+    }
+
+    
+
+    public function getEmailTemplate(FetchTemplateRequest $request, EmailTemplate $emailTemplate)
+    {
+        $params = $request->all();
+        $result = array(
+            'status' => 0,
+            'message' => __('Failed to get email template'),
+        );
+        try {
+            if ($request->isMethod('post')){
+                app()->setLocale($params['language_id']);
+                session()->put('locale', $params['language_id']);
+                $template = EmailTemplate::where([
+                    ['template_code', $params['template_code']],
+                    ['language', $params['language_id']],
+                    ['is_active', 'Y'],
+                    ['deleted_at', null],
+                ])->first(); 
+                if ($template) {
+                    $result = [
+                        'status'=>1,
+                        'message'=>__('email template found'),
+                        'data'=>$template
+                    ];
+                } 
+                
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+        
+    }
+
+    
  
  
 }

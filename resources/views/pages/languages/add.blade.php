@@ -116,8 +116,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 
-		console.log(document.getElementById("language_table").rows[1].cells[3].getAttribute('data-active'));
-
+		
 
 		function validateForm() {
     	var language_code = document.getElementById("language_code").value;

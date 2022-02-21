@@ -31,17 +31,21 @@
 				</div>    
 			</div>                 
 		</header>
-		<form method="POST" action="{{route('add.language')}}" id="langForm" name="langForm" class="form-horizontal" role="form">
+		<form method="POST" action="{{route('add.language')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				
 				<div class="row">
+					<input type="hidden" name="type" id="type" value="">
+					<input type="hidden" name="last_template_code" id="last_template_code" value="">
+					<input type="hidden" name="html_subject_text" id="html_subject_text" value="">
+					<input type="hidden" name="html_body_text" id="html_body_text" value="">
 					
 					
 					<div class="col-md-10 offset-md-1 row">
-						<h4 class="section_header_class">Email Template information</h4>
+						<h4 class="section_header_class">{{ __('Email Template information')}}</h4>
 						
 						<div class="row col-lg-5 col-md-5 col-sm-12">
-							<label class="col-lg-5 col-md-5 col-sm-12 text-start">Language: <span class="req">*<span></label>
+							<label class="col-lg-5 col-md-5 col-sm-12 text-start">{{ __('Language')}}: <span class="req">*<span></label>
 							<div class="col-sm-12 col-lg-5 col-md-5 selectbox">
 								
 								<select class="form-control m-bot15" name="language_id" id="language_id" onchange="ChangeLanguage()" >
@@ -54,16 +58,21 @@
 											">  {{ $lan->title }}</option>
 									@endforeach
 								</select>
-								</select>
+								<span id="language_id_error" class="error"></span>
 							</div>
 						</div>
 						<div class="row col-lg-7 col-md-7 col-sm-12">
-							<label class="col-lg-4 col-md-4 col-sm-12 text-start">Email Template: *   </label>
+							<label class="col-lg-4 col-md-4 col-sm-12 text-start">{{ __('Email Template')}}: *   </label>
 							<div class="col-sm-12 col-lg-4 col-md-4 selectbox">
-								<select class="form-control" id="province_id" name="province_id">
-									<option value="1">active</option>
-									<option value="0">Inactive</option>
+								
+								<select class="form-control m-bot15" name="template_code" id="template_code" onchange="Fetch_page_item_info()" >
+									@foreach ($email_template as $key => $template)
+											<option 
+											value="{{ $key }}"
+											">  {{ __($template) }}</option>
+									@endforeach
 								</select>
+								<span id="template_code_error" class="error"></span>
 							</div>
 						</div>
 					</div>
@@ -76,17 +85,15 @@
 									
 									<tr align="left" valign="middle">
 										<td>
-											<div>Subject:</div>
-											<input type="text" class="form-control" id="subject_text" name="subject_text" value="Facture en attente de paiement">
+											<div>{{ __('Subject')}}:</div>
+											<input type="text" class="form-control" id="subject_text" name="subject_text" value="">
 										</td>
 									</tr>
 									<tr align="left" valign="middle">
 										<td>
-											<div>Email Messsage:</div>
-
-											<div id="editor">
-												<p>This is some sample content.</p>
-											</div>
+											<div>{{ __('Email Messsage')}}:</div>
+											<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+											
 										</td>
 									</tr>
 								</tbody>
@@ -107,50 +114,96 @@
 
 @section('footer_js')
 <script>
-	// ClassicEditor
-	// 	.create(document.querySelector('#editor'),
-	// 		{
-	// 			//toolbar: [ 'bold', 'italic' ]
-	// 		}
-	//  		//document.querySelector( '#editor' ) 
-	//  	)
-	// 	.catch( error => {
-	// 		console.error( error );
-	// 	} );
 	
-		$('#editor').each( function () {
-                        CKEDITOR.replace( this.id, {
-													  customConfig: '/ckeditor/config_email.js',
-                            height: 300
-                            //,extraPlugins: 'smiley'
-                            //,extraPlugins: 'font'
-                            ,extraPlugins: 'Cy-GistInsert'
-														//,extraPlugins: 'uicolor'
-														,extraPlugins: 'AppFields'
-                        });
-                    });  
-
-	// Replace the <textarea id="editor1"> with a CKEditor
-	// instance, using default configuration.
-	// CKEDITOR.editorConfig = function (config) {
-	// 		config.language = 'es';
-	// 		config.uiColor = '#F7B42C';
-	// 		config.height = 300;
-	// 		config.toolbarCanCollapse = true;
-
-	// };
-	// CKEDITOR.replace('editor');
 	
+
 	$(document).ready(function(){
+		$('#back_btn').click(function (e) {							
+	   	window.history.back();
+		});
 		// will use for responsive design
 		// if($(window).width() > 991){
 		// 	bind_top_nav(); 
 		// } else {
 		// 	bind_top_nav_mobile(); 
 		// }
+		// $("#language_id").change(function(event) {
+    //   var lanCode = $(this).val();
+    //   window.location.href = BASE_URL+"/setlang/"+lanCode ;
+    // });
+		
 
-		//PopulateLanguageList();
-		//ChangeLanguage();
+		ChangeLanguage();
 	}); //ready
+
+	function ChangeLanguage(){
+		Fetch_page_item_info(1);
+	}
+
+	function SetContents(value) {
+		// Get the editor instance that you want to interact with.
+		var editor = CKEDITOR.instances.body_text;
+		
+		editor.setData( value );
+	}
+
+	function Fetch_page_item_info(lan=null){    
+		var found=0;
+		var p_template_code=document.getElementById("template_code").value;      
+		document.getElementById("last_template_code").value=p_template_code;         
+		var resultHtml ='',data='';
+		
+		document.getElementById("type").value='fetch_email_template';
+		let formdata = $("#emailForm").serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      
+		formdata.push({
+			"name": "_token",
+			"value": csrfToken
+		});
+		// console.log(formdata);
+		// return false;		
+		$.ajax({
+				url: BASE_URL + '/fetch_email_template',
+				data: formdata,
+				type: 'POST',                     
+				dataType: 'json',
+				success: function(data) {
+					if (data.status==1) {
+							
+							document.getElementById("subject_text").value=data.data.subject_text;
+							document.getElementById("body_text").value=data.data.body_text;
+							let body_text = document.getElementById("body_text");   
+							body_text.innerHTML=data.data.body_text;
+							//SetContents(data.data.body_text);
+					} else{
+						document.getElementById("subject_text").value='';
+						let body_text = document.getElementById("body_text");   
+						body_text.innerHTML='';
+					} 
+					//$('.my_ckeditor').each( function () {
+						CKEDITOR.replace( "body_text", {
+							customConfig: '/ckeditor/config_email.js',
+							height: 300
+							,extraPlugins: 'Cy-GistInsert'
+							,extraPlugins: 'AppFields'
+						});
+					//});  
+					  
+				},   // sucess
+				error: function(reject) { 
+					if( reject.status === 422 ) {
+						let errors = $.parseJSON(reject.responseText);
+						errors = errors.errors;
+						$.each(errors, function (key, val) {
+								$("#" + key + "_error").text(val[0]);
+						});
+					}
+				}
+		});                    
+	}   //Fetch_page_item_info
+
+
+	
 </script>
 @endsection

@@ -18,6 +18,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
 <script type="text/javascript">
+    var BASE_URL = "{{ URL::to('/')}}";
     var CURRENT_URL = '{{ $CURRENT_URL ?? '' }}';
     var controller = '{{ $controller ?? '' }}';
     var action = '{{ $action ?? '' }}';
