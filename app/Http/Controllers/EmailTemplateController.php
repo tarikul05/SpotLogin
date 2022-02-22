@@ -90,8 +90,6 @@ class EmailTemplateController extends Controller
         );
         try {
             if ($request->isMethod('post')){
-                app()->setLocale($params['language_id']);
-                session()->put('locale', $params['language_id']);
                 $template = EmailTemplate::where([
                     ['template_code', $params['template_code']],
                     ['language', $params['language_id']],
