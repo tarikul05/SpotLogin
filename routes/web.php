@@ -30,9 +30,8 @@ Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'res
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
+// email template 
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
-
-
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
 
 
@@ -44,22 +43,28 @@ Route::prefix('admin')->group(function() {
     'as' => 'add.language'
   ));
 
+  // email template 
+  Route::match(array('GET', 'POST'), "add-email-template", array(
+    'uses' => 'EmailTemplateController@addUpdate',
+    'as' => 'add.email_template'
+  ));
+
 });
 
-Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
+
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
 Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
 Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
 Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
 Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
 Route::get('check-translation', function(){
-    \App::setLocale('fr');
-    dd(__('website'));
+  \App::setLocale('fr');
+  dd(__('website'));
 });
 Route::get('setlang/{locale}', function ($locale) {
-    app()->setLocale($locale);
-    session()->put('locale', $locale);
-    return redirect()->back();
+  app()->setLocale($locale);
+  session()->put('locale', $locale);
+  return redirect()->back();
 });
 
 
@@ -67,6 +72,6 @@ Route::get('setlang/{locale}', function ($locale) {
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
-    Route::resource('roles', "RoleController");
-    Route::resource('permissions', "PermissionController");
+  Route::resource('roles', "RoleController");
+  Route::resource('permissions', "PermissionController");
 });

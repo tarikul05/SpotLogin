@@ -31,9 +31,9 @@
 				</div>    
 			</div>                 
 		</header>
-		<form method="POST" action="{{route('add.language')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
+		<form method="POST" action="{{route('add.email_template')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				
+				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
 					<input type="hidden" name="last_template_code" id="last_template_code" value="">
@@ -86,14 +86,17 @@
 									<tr align="left" valign="middle">
 										<td>
 											<div>{{ __('Subject')}}:</div>
-											<input type="text" class="form-control" id="subject_text" name="subject_text" value="">
+											<div class="form-group-data">
+												<input type="text" class="form-control" id="subject_text" name="subject_text" value="">
+											</div>
 										</td>
 									</tr>
 									<tr align="left" valign="middle">
 										<td>
 											<div>{{ __('Email Messsage')}}:</div>
-											<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
-											
+											<div class="form-group-data">
+												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+											</div>
 										</td>
 									</tr>
 								</tbody>
@@ -101,7 +104,11 @@
 						</div>
 					</div>
 					<div class="offset-md-1 col-lg-10 col-md-10">
-						<a class="btn btn-sm btn-success save_button float-end" href="" id="save_btn1" name="save_btn1"><i class="fa fa-plus"></i> sauvegarder</a>
+						<button type="submit" class="btn btn-sm btn-success save_button float-end" id="update_btn">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+							{{ __('Save')}}
+						</button>
+								
 					</div>
 				</div>
 		</form>
@@ -131,6 +138,17 @@
     //   var lanCode = $(this).val();
     //   window.location.href = BASE_URL+"/setlang/"+lanCode ;
     // });
+
+		$("#emailForm").submit(function(e) {
+			$('.error').html('');
+			if(validateForm()) {
+				var body_text = CKEDITOR.instances["body_text"].getData();
+				//console.log(document.getElementById("subject_text").value);
+				//e.preventDefault(e);  
+			} else {
+				e.preventDefault(e);  
+			}
+		});
 		
 
 		ChangeLanguage();
@@ -139,6 +157,30 @@
 	function ChangeLanguage(){
 		Fetch_page_item_info(1);
 	}
+
+	function validateForm() {
+		var subject_text = document.getElementById("subject_text").value;
+		var body_text = document.getElementById("body_text").value;
+		let error = false;
+		if (subject_text == null || subject_text == "") {
+			$('#subject_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+			document.getElementById("subject_text").focus();
+			error = true;
+		}
+		if (body_text == null || body_text == "") {
+			document.getElementById("body_text").focus();
+			$('#body_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+			error = true;             
+		}
+		
+		if (error) {
+			return false;
+		}            			
+		else
+		{
+			return true;
+		}
+	} 
 
 	function SetContents(value) {
 		// Get the editor instance that you want to interact with.
