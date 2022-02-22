@@ -8,30 +8,31 @@
 @section('content')
 <div class="content email_template_page">
 	<div class="container-fluid area-container">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
-						<div class="page_header_class">
-								<label id="page_header" name="page_header">
-									{{__('Email Template')}}
-								</label>
-						</div>
-				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
-						<div class="pull-right btn-group">
-								<a class="btn btn-sm btn-info text-white" href="../admin/" id="back_btn"> 
-									<i class="fa fa-arrow-left"></i>
-									{{ __('back')}}
-								</a>
-								<button class="btn btn-sm btn-success save_button float-end" id="save_btn" name="save_btn">
-									<i class="fa fa-plus"></i>
-									{{ __('to safeguard')}}
-								</button>
-						</div>
-				</div>    
-			</div>                 
-		</header>
 		<form method="POST" action="{{route('add.email_template')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
+			<header class="panel-heading" style="border: none;">
+				<div class="row panel-row" style="margin:0;">
+					<div class="col-sm-6 col-xs-12 header-area">
+							<div class="page_header_class">
+									<label id="page_header" name="page_header">
+										{{__('Email Template')}}
+									</label>
+							</div>
+					</div>
+					<div class="col-sm-6 col-xs-12 btn-area">
+							<div class="pull-right btn-group">
+									<a class="btn btn-sm btn-info text-white" href="../admin/" id="back_btn"> 
+										<i class="fa fa-arrow-left"></i>
+										{{ __('back')}}
+									</a>
+									<button type="submit" class="btn btn-sm btn-success save_button float-end" id="update_btn">
+										<i class="fa fa-plus" aria-hidden="true"></i>
+										{{ __('Save')}}
+									</button>
+							</div>
+					</div>    
+				</div>                 
+			</header>
+		
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				@csrf
 				<div class="row">
@@ -111,6 +112,9 @@
 								
 					</div>
 				</div>
+			</div>
+		
+		
 		</form>
 	</div>
 </div>
