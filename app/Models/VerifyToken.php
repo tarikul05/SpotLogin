@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 
-class VerifyToken extends Model
+class VerifyToken extends BaseModel
 {
   use SoftDeletes;
   protected $table = 'verify_token';

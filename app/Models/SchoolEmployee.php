@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SchoolEmployee extends Model
+class SchoolEmployee extends BaseModel
 {
     use HasFactory, SoftDeletes;
     protected $table = 'school_employees';

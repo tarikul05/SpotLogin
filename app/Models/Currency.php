@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Currency extends Model
+class Currency extends BaseModel
 {
     use SoftDeletes;
     protected $table = 'currencies';
@@ -40,5 +40,17 @@ class Currency extends Model
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
+
+      /**
+     * Scope a query to only include users of a given type.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByCountry($query, $code)
+    {
+        return $query->where('country_code', $code);
+    }
 
 }
