@@ -31,7 +31,8 @@ class CreateTeachersTable extends Migration {
 			$table->string('street2', 100)->nullable();
 			$table->string('zip_code', 8)->nullable();
 			$table->string('place', 120)->nullable();
-			$table->string('country_code',4)->nullable();
+			$table->string('country_code', 4)->nullable();
+            $table->foreign('country_code')->references('code')->on('countries');
 			// $table->integer('province_id')->nullable();
             $table->integer('province_id')->nullable();
             $table->foreign('province_id')->references('id')->on('provinces');
