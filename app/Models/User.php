@@ -100,10 +100,7 @@ class User extends Authenticatable
      */
     public function teacher()
     {
-        
         return $this->belongsTo(Teacher::class, 'person_id', 'id');
-        
-        
     }
 
      /**
@@ -111,9 +108,7 @@ class User extends Authenticatable
      */
     public function coach()
     {
-        
         return $this->belongsTo(Teacher::class, 'person_id', 'id');
-        
         
     }
 

@@ -13,7 +13,7 @@ class CreateSchoolTeachersTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_teachers', function (Blueprint $table) {
+        Schema::create('school_teacher', function (Blueprint $table) {
             $table->id();
             $table->integer('teacher_id')->nullable();
             $table->foreign('teacher_id')->references('id')->on('teachers')->onDelete('cascade');
@@ -26,6 +26,7 @@ class CreateSchoolTeachersTable extends Migration
             $table->smallInteger('has_user_account')->nullable()->default(0);
             $table->string('bg_color_agenda', 10)->nullable();
             $table->string('comment', 500)->nullable();
+            $table->boolean('is_active')->nullable()->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -38,6 +39,6 @@ class CreateSchoolTeachersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_teachers');
+        Schema::dropIfExists('school_teacher');
     }
 }

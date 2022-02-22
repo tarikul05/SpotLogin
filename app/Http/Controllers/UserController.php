@@ -64,15 +64,11 @@ class UserController extends Controller
                     'is_active'=>1
                 ];
                 if (!empty($data['country_code'])) {
-                    $currencyExists = Currency::where([
-                        ['country_code', $data['country_code']],
-                        ['is_active', 1],
-                    ])->first();  
+                    $currencyExists = Currency::byCountry($data['country_code'])->active()->first();  
                     if ($currencyExists) {
                         $schoolData['default_currency_code'] = $currencyExists->currency_code;
                     }    
                 }
-                
                 
                 $school = School::create($schoolData);
                 $school->save();

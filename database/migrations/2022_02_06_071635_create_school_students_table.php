@@ -13,7 +13,7 @@ class CreateSchoolStudentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_students', function (Blueprint $table) {
+        Schema::create('school_student', function (Blueprint $table) {
             $table->id();
             $table->integer('student_id')->nullable();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
@@ -32,6 +32,7 @@ class CreateSchoolStudentsTable extends Migration
             $table->string('level_skating_usp', 20)->nullable();
             $table->dateTime('level_date_usp')->nullable();
             $table->string('comment', 500)->nullable();
+            $table->boolean('is_active')->nullable()->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -44,6 +45,6 @@ class CreateSchoolStudentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_students');
+        Schema::dropIfExists('school_student');
     }
 }

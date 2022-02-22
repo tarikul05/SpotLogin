@@ -108,7 +108,8 @@ class Teacher extends BaseModel
      */
     public function school()
     {
-        return $this->hasMany(SchoolTeacher::class);
+        return $this->belongsToMany(School::class)
+                    ->withPivot('is_active', 'nickname');
 
 
     }
