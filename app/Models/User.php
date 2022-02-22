@@ -137,19 +137,6 @@ class User extends Authenticatable
         return $this->belongsTo(Parent::class, 'person_id', 'id');
         
     }
-
-
-     /**
-     * Get the student for the user.
-     */
-    public function schooladmin()
-    {
-        
-        return $this->belongsTo(SchoolEmployee::class, 'person_id', 'id');
-        
-    }
-
-
   
 
 
@@ -183,11 +170,6 @@ class User extends Authenticatable
             case 'PARENT':
                 if ($this->parent ) {
                     $school_data = !empty($this->parent->school) ? $this->parent->school : null;
-                }
-                break;
-            case 'SCHOOL_ADMIN':
-                if ($this->schooladmin ) {
-                    $school_data = !empty($this->schooladmin->school) ? $this->schooladmin->school : null;
                 }
                 break;
             default:

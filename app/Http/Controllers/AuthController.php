@@ -123,12 +123,6 @@ class AuthController extends Controller
                         else if (isset($user->parent)) {
                             $country_code = $user->parent['country_code'];
                         }
-                        else if (isset($user->coach)) {
-                            $country_code = $user->coach['country_code'];
-                        }
-                        else if (isset($user->schooladmin)) {
-                            $country_code = $user->schooladmin['country_code'];
-                        }
 
                         $result = array(
                             "status"     => 0,
@@ -146,8 +140,6 @@ class AuthController extends Controller
                 
             }
             else if ($data['type'] === "check_first_login") {
-
-                
                 
             
                 $user_name = $data['login_username'];
@@ -173,16 +165,11 @@ class AuthController extends Controller
             }
 
             else if ($data['type'] === "change_first_password") {
-
-            
                 $user_name = trim($_POST['reset_username']);
                 $old_password = trim($_POST['old_password']);
                 $new_password = trim($_POST['new_password']);
                 sleep(3);
                 $result = User::change_password($user_name, $old_password,$new_password);
-                
-
-            
 
             }
             return response()->json($result);
