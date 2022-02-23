@@ -104,14 +104,20 @@ class Teacher extends BaseModel
     protected $appends = [];
 
      /**
-     * Get the user for the News.
+     * Get the schools for the Teachers.
      */
-    public function school()
+    public function schools()
     {
         return $this->belongsToMany(School::class)
                     ->withPivot('is_active', 'nickname');
+    }
 
-
+    /**
+     * Get the user account.
+     */
+    public function user()
+    {
+        return $this->morphOne(User::class, 'personable','person_type', 'person_id');
     }
 
      /**

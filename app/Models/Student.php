@@ -101,7 +101,18 @@ class Student extends BaseModel
    
     protected $appends = [];
 
-     /**
+
+    /**
+     * Get the schools for the Student.
+     */
+    public function schools()
+    {
+        return $this->belongsToMany(School::class)
+                    ->withPivot('is_active', 'nickname');
+    }
+
+
+    /**
      * Get the user for the News.
      */
     public function school()
@@ -109,6 +120,14 @@ class Student extends BaseModel
         return $this->hasMany(SchoolStudent::class);
 
 
+    }
+
+    /**
+     * Get the user account.
+     */
+    public function user()
+    {
+        return $this->morphOne(User::class, 'personable','person_type', 'person_id');
     }
 
      /**

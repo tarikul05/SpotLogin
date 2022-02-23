@@ -104,6 +104,14 @@ class User extends Authenticatable
     }
 
      /**
+     * Get the personable for the user.
+     */
+    public function personable()
+    {
+        return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
+    }
+
+     /**
      * Get the teacher for the user.
      */
     public function coach()
