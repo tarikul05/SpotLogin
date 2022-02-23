@@ -214,6 +214,17 @@
 							document.getElementById("body_text").value=data.data.body_text;
 							let body_text = document.getElementById("body_text");   
 							body_text.innerHTML=data.data.body_text;
+
+							var resultHtml ='';
+							$.each(data.lngdata, function(key,value){
+								resultHtml+='<option value="'+key+'">'+value+'</option>';  
+    					});
+    					$('#template_code').html(resultHtml);
+							var last_template_code=document.getElementById("last_template_code").value;
+							if (last_template_code != "") {
+									$('#template_code').val(last_template_code);
+									$('#last_template_code').val(last_template_code);
+							}
 							//SetContents(data.data.body_text);
 					} else{
 						document.getElementById("subject_text").value='';

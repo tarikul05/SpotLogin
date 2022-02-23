@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Language;
 use App\Models\EmailTemplate;
 use App\Http\Requests\FetchTemplateRequest;
+use File;
 
 
 class EmailTemplateController extends Controller
@@ -79,6 +80,42 @@ class EmailTemplateController extends Controller
         return response()->json($result);
     }
 
+
+     /**
+     * Open Translation File
+     * @return Response
+    */
+ 
+    private function openJSONFileValue($code,$key){
+        $jsonString = [];
+        if(File::exists(base_path('resources/lang/'.$code.'.json'))){
+            $jsonString = file_get_contents(base_path('resources/lang/'.$code.'.json'));
+            $jsonString = json_decode($jsonString, true);
+        }
+        return $result = $jsonString[$key] ?? null;
+    }
+
+     /**
+     * Open Translation File
+     * @return Response
+    */
+ 
+    private function openJSONFile($code){
+        $jsonString = [];
+        if(File::exists(base_path('resources/lang/'.$code.'.json'))){
+            $jsonString = file_get_contents(base_path('resources/lang/'.$code.'.json'));
+            $jsonString = json_decode($jsonString, true);
+        }
+        $email_template_code = config('global.email_template');
+        $email_template_code = array_keys($email_template_code);
+        return $filtered = array_filter(
+            $jsonString,
+            fn ($key) => in_array($key, $email_template_code),
+            ARRAY_FILTER_USE_KEY
+        );
+        
+    }
+
     
 
     public function getEmailTemplate(FetchTemplateRequest $request, EmailTemplate $emailTemplate)
@@ -90,6 +127,9 @@ class EmailTemplateController extends Controller
         );
         try {
             if ($request->isMethod('post')){
+                $lngdata = $this->openJSONFile($params['language_id']);
+                // app()->setLocale($params['language_id']);
+                // session()->put('locale', $params['language_id']);
                 $template = EmailTemplate::where([
                     ['template_code', $params['template_code']],
                     ['language', $params['language_id']],
@@ -100,7 +140,8 @@ class EmailTemplateController extends Controller
                     $result = [
                         'status'=>1,
                         'message'=>__('email template found'),
-                        'data'=>$template
+                        'data'=>$template,
+                        'lngdata'=>$lngdata
                     ];
                 } 
                 
