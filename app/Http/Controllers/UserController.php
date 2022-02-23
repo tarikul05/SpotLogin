@@ -13,6 +13,7 @@ use App\Models\EmailTemplate;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 
 class UserController extends Controller
@@ -44,114 +45,78 @@ class UserController extends Controller
             'status' => 0,
             'message' => __('failed to signup'),
         );
+        DB::beginTransaction();
         try{
             $data = $request->all();
             $school_type=trim($data['school_type']);
             
 
-            if ($school_type=='SCHOOL') {
-                $school_code = strtolower($data['username']);
+            $roleType = ($school_type=='COACH') ? 'admin_teachers' : 'schooladmin';
+            $school_code = strtolower($data['username']);
 
-                $schoolData = [
-                    'school_code' => $school_code,
-                    'school_name' => $data['fullname'],
-                    'incorporation_date'=> now(),
-                    'country_code' => $data['country_code'],
-                    'email'=>$data['email'],
-                    'sender_email'=>$data['email'],
-                    'max_students'=>0,
-                    'max_teachers'=>0,
-                    'is_active'=>1
-                ];
-                if (!empty($data['country_code'])) {
-                    $currencyExists = Currency::byCountry($data['country_code'])->active()->first();  
-                    if ($currencyExists) {
-                        $schoolData['default_currency_code'] = $currencyExists->currency_code;
-                    }    
-                }
-                
-                $school = School::create($schoolData);
-                $school->save();
-
-                
-
-                $schoolAdminData = [
-                    'school_id' => $school->id,
-                    'lastname' => '',
-                    'middlename'=>'',
-                    'firstname'=>$data['fullname'],
-                    'email'=>$data['email'],
-                    'country_code'=>$data['country_code'],
-                    'has_user_account'=>1,
-                    'is_active' =>1
-                ];
-                
-
-                $schoolAdmin = SchoolEmployee::create($schoolAdminData);
-                $schoolAdmin->save();
-                
-                $usersData = [
-                    'person_id' => $schoolAdmin->id,
-                    'person_type' =>'SCHOOL_ADMIN',
-                    'school_id' => $school->id,
-                    'username' =>$data['username'],
-                    'lastname' => '',
-                    'middlename'=>'',
-                    'firstname'=>$data['fullname'],
-                    'email'=>$data['email'],
-                    'password'=>$data['password'],
-                    'is_mail_sent'=>0,
-                    'is_active'=>0,
-                    'is_firstlogin'=>0
-                ];
-
-                $user = User::create($usersData);
-                $user->save();
-                $result = array(
-                    "status"     => 1,
-                    'message' => __('Successfully Registered')
-                );
+            $schoolData = [
+                'school_code' => $school_code,
+                'school_name' => $data['fullname'],
+                'incorporation_date'=> now(),
+                'country_code' => $data['country_code'],
+                'email'=>$data['email'],
+                'sender_email'=>$data['email'],
+                'max_students'=>0,
+                'max_teachers'=>0,
+                'is_active'=>1
+            ];
+            if (!empty($data['country_code'])) {
+                $currencyExists = Currency::byCountry($data['country_code'])->active()->first();  
+                if ($currencyExists) {
+                    $schoolData['default_currency_code'] = $currencyExists->currency_code;
+                }    
             }
-            else if($school_type=='COACH'){
-                //'max_students'=>1,
-                $coachData = [
-                    'lastname' => '',
-                    'middlename'=>'',
-                    'firstname'=>$data['fullname'],
-                    'email'=>$data['email'],
-                    'country_code'=>$data['country_code'],
-                    'type'=>2,//1=teacher 2=coach
-                    'has_user_account'=>1,
-                    'display_home_flag'=>1,
-                    'is_active' =>0
-                ];
 
-                $coach = Teacher::create($coachData);
-                $coach->save();
-                $usersData = [
-                    'person_id' => $coach->id,
-                    'person_type' =>'COACH',
-                    'username' =>$data['username'],
-                    'lastname' => '',
-                    'middlename'=>'',
-                    'firstname'=>$data['fullname'],
-                    'email'=>$data['email'],
-                    'password'=>$data['password'],
-                    'is_mail_sent'=>0,
-                    'is_active'=>0,
-                    'is_firstlogin'=>0
-                ];
+            $school = School::create($schoolData);
+            $school->save();
 
-                $user = User::create($usersData);
-                $user->save();
-                $result = array(
-                    "status"     => 1,
-                    'message' => __('Successfully Registered')
-                );
+            $teacherData = [
+                'lastname' => '',
+                'middlename'=>'',
+                'firstname'=>$data['fullname'],
+                'email'=>$data['email'],
+                'country_code'=>$data['country_code'],
+                'is_active' =>1
+            ];
+            
 
+            $teacher = Teacher::creates($teacherData);
+            $teacher->save();
+            $teacher->schools()->attach($school->id, ['nickname' => 'this is nickname','role_type'=>$roleType, 'has_user_account'=> 1]);
+            
+            $usersData = [
+                'person_id' => $teacher->id,
+                'person_type' =>'App\Models\Teacher',
+                'school_id' => $school->id,
+                'username' =>$data['username'],
+                'lastname' => '',
+                'middlename'=>'',
+                'firstname'=>$data['fullname'],
+                'email'=>$data['email'],
+                'password'=>$data['password'],
+                'is_mail_sent'=>0,
+                'is_active'=>0,
+                'is_firstlogin'=>0
+            ];
 
-                
-            }
+            $user = User::create($usersData);
+            $user->save();
+            $result = array(
+                "status"     => 1,
+                'message' => __('Successfully Registered')
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
 
 
             
@@ -213,11 +178,6 @@ class UserController extends Controller
             }
             return response()->json($result);
 
-        } catch (Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
-        }
         
     }
 

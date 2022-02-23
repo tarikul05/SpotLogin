@@ -109,7 +109,7 @@ class Teacher extends BaseModel
     public function schools()
     {
         return $this->belongsToMany(School::class)
-                    ->withPivot('is_active', 'nickname');
+                    ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at');
     }
 
     /**
