@@ -356,6 +356,36 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * checked permission
+     * 
+     * @return json
+     * @author Tarikul
+     * @version 0.1 written in 2022-02-11
+     */
+    public function permission_check(Request $request)
+    {
+        $user = Auth::user();
+        // echo "<pre>";
+        // dd($user->selected_school->pivot->role_type);
+        if ($request->isMethod('post')){
+            $params = $request->all();
+            foreach ($user->schools() as $key => $school) {
+                if ($school->id == $params['sch']) {
+                    $request->session()->put('selected_school', $school);
+                }
+            }
+            
+        }
+
+        return view('pages.auth.permission_check', [
+            'schools' => $user->schools(),
+            'user' => $user,
+            'pageInfo'=>['siteTitle'=>'']
+        ]);
+
+    }
+
    
     /**
      * logout action

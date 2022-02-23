@@ -30,6 +30,12 @@ Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'res
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
+// Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
+
+Route::match(array('GET', 'POST'), "permission-check", array(
+  'uses' => 'AuthController@permission_check',
+  'as' => 'check.permission'
+));
 // email template 
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');

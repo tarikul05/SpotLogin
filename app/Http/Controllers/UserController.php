@@ -177,9 +177,8 @@ class UserController extends Controller
                 $user->save();
             }
             return response()->json($result);
-
-        
     }
+    
 
     /**
      * signup virification 
