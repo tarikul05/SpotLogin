@@ -46,7 +46,6 @@ class EmailTemplateController extends Controller
                 ])->first(); 
                 if (empty($template)) {
                     EmailTemplate::create($request->except(['_token']));
-                    $this->generateLanFile($lanCode);
                     return back()->with('success', __('Email Template added successfully!'));
                 }else{
                     $template->update($request->except(['_token']));
@@ -81,19 +80,7 @@ class EmailTemplateController extends Controller
     }
 
 
-     /**
-     * Open Translation File
-     * @return Response
-    */
- 
-    private function openJSONFileValue($code,$key){
-        $jsonString = [];
-        if(File::exists(base_path('resources/lang/'.$code.'.json'))){
-            $jsonString = file_get_contents(base_path('resources/lang/'.$code.'.json'));
-            $jsonString = json_decode($jsonString, true);
-        }
-        return $result = $jsonString[$key] ?? null;
-    }
+   
 
      /**
      * Open Translation File
