@@ -49,6 +49,12 @@ Route::prefix('admin')->group(function() {
     'as' => 'add.email_template'
   ));
 
+  // email template 
+  Route::match(array('GET', 'POST'), "term_cond/term_cond_cms", array(
+    'uses' => 'TermCondController@addUpdateCMS',
+    'as' => 'add.term_cond_cms'
+  ));
+
 });
 
 
