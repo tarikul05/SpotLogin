@@ -74,6 +74,18 @@
     "Save":"Enregistrer",
     "Status":"Statut",
     "Update":"Mettre à jour",
-    "forgot_password_email":"forgot password email"
+    "forgot_password_email":"forgot password email",
+    "Email Template":"Email Template",
+    "back":"back",
+    "Email Template information":"Email Template information",
+    "Language":"Language",
+    "Subject":"Subject",
+    "Email Messsage":"Email Messsage",
+    "Email Template added successfully!":"Email Template added successfully!",
+    "Email Template updated successfully!":"Email Template updated successfully!",
+    "Failed to get email template":"Failed to get email template",
+    "email template found":"email template found",
+    "template_code required":"template_code required",
+    "language_id required":"language_id required"
 
 }
