@@ -42,29 +42,29 @@
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<div class="section_header_class row">
-					<div class="col-md-3">
+					<div class="col-md-3 col-5">
 						<label>Category Name</label>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-6">
 						<label class="invoice_type_label">Invoice Type</label>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-1">
 						<label></label>
 					</div>
 				</div>
 				<div class="row">
 					<div id="add_more_event_category_div" class="col-md-8">
 						<div class="col-md-12 add_more_event_category_row row">
-							<div class="col-md-5">
+							<div class="col-md-5 col-5">
 								<div class="form-group row">
 									<div class="col-sm-11">
 										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
 							</div>
-							<div class="col-md-5">
-								<div class="form-group row">
-									<div class="col-sm-5">
+							<div class="col-md-5 col-6">
+								<div class="form-group row invoice_part">
+									<div class="col-sm-6">
 										<input name="school_invoice" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
 									</div>
 									<div class="col-sm-6">
@@ -72,7 +72,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 col-1">
 								<div class="form-group row">
 									<div class="col-sm-5">
 										<button type="button" class="btn btn-theme-warn delete_event" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -88,24 +88,24 @@
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<div class="section_header_class row">
-					<div class="col-md-3">
+					<div class="col-md-3 col-9">
 						<label>Location Name</label>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-2">
 						<label></label>
 					</div>
 				</div>
 				<div class="row">
 					<div id="add_more_location_div" class="col-md-8">
 						<div class="col-md-12 add_more_location_row row">
-							<div class="col-md-5">
+							<div class="col-md-5 col-9">
 								<div class="form-group row">
 									<div class="col-sm-11">
 										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="offset-1 col-2">
 								<div class="form-group row">
 									<div class="col-sm-5">
 										<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -121,34 +121,34 @@
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<div class="section_header_class row">
-					<div class="col-md-3">
+					<div class="col-md-3 col-9">
 						<label>Level Name</label>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-2">
 						<label></label>
 					</div>
 				</div>
 				<div class="row">
-					<div id="add_more_location_div" class="col-md-8">
-						<div class="col-md-12 add_more_location_row row">
-							<div class="col-md-5">
+					<div id="add_more_level_div" class="col-md-8">
+						<div class="col-md-12 add_more_level_row row">
+							<div class="col-md-5 col-9">
 								<div class="form-group row">
 									<div class="col-sm-11">
 										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 offset-1 col-2">
 								<div class="form-group row">
 									<div class="col-sm-5">
-										<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+										<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-2">
-						<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
+						<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
 					</div>
 				</div>
 			</div>
@@ -163,16 +163,16 @@
 <script type="text/javascript">
 	$(document).on('click','#add_more_event_category_btn',function(){
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
-			<div class="col-md-5">
+			<div class="col-md-5 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
 						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 					</div>
 				</div>
 			</div>
-			<div class="col-md-5">
-				<div class="form-group row">
-					<div class="col-sm-5">
+			<div class="col-md-5 col-6">
+				<div class="form-group row invoice_part">
+					<div class="col-sm-6">
 						<input name="school_invoice" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
 					</div>
 					<div class="col-sm-6">
@@ -180,7 +180,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-2 col-1">
 				<div class="form-group row">
 					<div class="col-sm-5">
 						<button type="button" class="btn btn-theme-warn delete_event" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -224,14 +224,14 @@
 	// location part
 	$(document).on('click','#add_more_location_btn',function(){
 		var resultHtml = `<div class="col-md-12 add_more_location_row row">
-			<div class="col-md-5">
+			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
 						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 					</div>
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-2 offset-1 col-2">
 				<div class="form-group row">
 					<div class="col-sm-5">
 						<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -247,6 +247,34 @@
 		var category_id = $(this).data('category_id');
 		var current_obj = $(this);
 		current_obj.parents('.add_more_location_row').remove();
+	});
+
+	// level part
+	$(document).on('click','#add_more_level_btn',function(){
+	var resultHtml = `<div class="col-md-12 add_more_level_row row">
+			<div class="col-md-5 col-9">
+				<div class="form-group row">
+					<div class="col-sm-11">
+						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 offset-1 col-2">
+				<div class="form-group row">
+					<div class="col-sm-5">
+						<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>`;
+
+		$("#add_more_level_div").append(resultHtml);
+	})
+	
+	$(document).on('click','.delete_level',function(){
+		var category_id = $(this).data('category_id');
+		var current_obj = $(this);
+		current_obj.parents('.add_more_level_row').remove();
 	});
 </script>
 @endsection

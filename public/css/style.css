@@ -191,7 +191,8 @@ table.email_template th{
     padding: 19px;
 }
 .delete_event,
-.delete_location{
+.delete_location,
+.delete_level{
     background-color: #FF8000;
     border-color: #FF8000;
     color: #FFF;
@@ -212,6 +213,48 @@ table.email_template th{
 }
 #nav-tab .nav-link.active:hover{
     border-bottom: 4px solid #3b75bf;
+}
+.dropdown-menu.show {
+    display: block;
+    background: #35404d;
+    max-width: 180px;
+    margin-top: 8px;
+    right:0;
+    left:auto;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.dropdown-menu a {
+    font-size: 12px;
+    padding: 12px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    color: #aeb2b7;
+    line-height: 20px;
+    text-align:right;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.dro_set {
+    width: 26px;
+    margin-top: 7px;
+    margin-left: 15px;
+}
+.dropdown-menu a:hover{
+    color: #479CCF;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    display: block;
+    background: #0075BF;
+}
+.dropdown-toggle::after{
+    content:none;
 }
 @media only screen and (max-width: 768px){
     .language_page label,
@@ -244,6 +287,18 @@ table.email_template th{
         color: #fff;
         border: none;
         outline: none;
+    }
+    .section_header_class label {
+        margin: 15px 0 ;
+        font-size: 17px;
+    }
+    .form-group.row.invoice_part {
+        margin-top: -4px;
+        margin-left: 10px;
+        font-size: 15px;
+    }
+    .form-group.row.invoice_part  label {
+        margin-top: 4px;
     }
 
 }   

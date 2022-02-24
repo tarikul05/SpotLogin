@@ -30,7 +30,44 @@
                     <div class="navbar-nav ms-auto">
                         <span class="admin_name">{{ __('Username') }}</span>
                         <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
-                        <img src="{{ asset('img/setting.svg') }}" width="36px" alt="globe">
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/users/edit_user">
+                                    Votre compte utilisateur
+                                </a>
+                                <a class="dropdown-item" href="/param/parameters">
+                                    paramètres
+                                </a>
+                                <a class="dropdown-item" href="/term_cond/accept_term_cond">
+                                    Conditionsd'utilisations et<br/> politique de confidentialité
+                                </a>
+                                <a class="dropdown-item" href="/email/email_template">
+                                    Modèle d'email
+                                </a>
+                                <a class="dropdown-item" href="/admin/language_master_list">
+                                    Language Master
+                                </a>
+                                <a class="dropdown-item" href="/home_page_cms">
+                                   Gérer la page d'accueil
+                                </a>
+                                <a class="dropdown-item" href="/admin/page_translate_master_list">
+                                    translate master
+                                </a>
+                                <a class="dropdown-item" href="/admin/update_core_dataset_options">
+                                    data set master
+                                </a>
+                                <a class="dropdown-item" href="/admin/page_master_list">
+                                    page master
+                                </a>
+                                <a class="dropdown-item" href="/term_cond/term_cond_cms">
+                                    Conditions d'utilisations et<br/> politique de confidentialité
+                                </a>
+                                <a class="dropdown-item" href="/">
+                                    Déconnexion
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
