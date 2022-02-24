@@ -28,17 +28,11 @@
                         <a href="#" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                     </div>
                     <div class="navbar-nav ms-auto">
-                        <span class="admin_name">{{ __('Username') }}</span>
+                        <span class="admin_name">{{ __(auth()->user()->username) }}</span>
                         <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/users/edit_user">
-                                    Votre compte utilisateur
-                                </a>
-                                <a class="dropdown-item" href="/param/parameters">
-                                    paramètres
-                                </a>
                                 <a class="dropdown-item" href="/term_cond/accept_term_cond">
                                     Conditionsd'utilisations et<br/> politique de confidentialité
                                 </a>
@@ -60,12 +54,13 @@
                                 <a class="dropdown-item" href="/admin/page_master_list">
                                     page master
                                 </a>
-                                <a class="dropdown-item" href="/term_cond/term_cond_cms">
-                                    Conditions d'utilisations et<br/> politique de confidentialité
-                                </a>
-                                <a class="dropdown-item" href="/">
-                                    Déconnexion
-                                </a>
+                                <!-- @can('role-edit') -->
+                                    <a class="dropdown-item" href="/admin/languages">{{ __('Translations') }}</a>
+                                <!-- @endcan -->
+                                @can('role-edit')
+                                    <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
+                                @endcan
+                                <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
                             </div>
                         </div>
                     </div>

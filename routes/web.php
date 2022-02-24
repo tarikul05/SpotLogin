@@ -39,31 +39,9 @@ Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController:
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
 
 
-Route::prefix('admin')->group(function() {
-        
-  // Language 
-  Route::match(array('GET', 'POST'), "add-language", array(
-    'uses' => 'LanguagesController@addUpdate',
-    'as' => 'add.language'
-  ));
 
-  // email template 
-  Route::match(array('GET', 'POST'), "add-email-template", array(
-    'uses' => 'EmailTemplateController@addUpdate',
-    'as' => 'add.email_template'
-  ));
-
-});
-
-
-Route::get('add-language', 'LanguagesController@create')->name('language');
-Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
 Route::get('parameters', 'ParametersController@index')->name('parameters');
-Route::get('languages', 'LanguageTranslationController@index')->name('languages');
-Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
-Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
-Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
-Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
 Route::get('check-translation', function(){
   \App::setLocale('fr');
   dd(__('website'));
@@ -79,11 +57,40 @@ Route::get('setlang/{locale}', function ($locale) {
 Route::group(['middleware' => ['auth']], function () {
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
-  Route::resource('roles', "RoleController");
-  Route::resource('permissions', "PermissionController");
+  Route::prefix('admin')->group(function() {
+
+    Route::resource('roles', "RoleController");
+    Route::resource('permissions', "PermissionController");
+
+    // Add edit language translations from json 
+    Route::get('languages', 'LanguageTranslationController@index')->name('languages');
+    Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
+    Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
+    Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
+    Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+        
+    // Language 
+    Route::match(array('GET', 'POST'), "add-language", array(
+      'uses' => 'LanguagesController@addUpdate',
+      'as' => 'add.language'
+    ));
+
+    // email template 
+    Route::match(array('GET', 'POST'), "add-email-template", array(
+      'uses' => 'EmailTemplateController@addUpdate',
+      'as' => 'add.email_template'
+    ));
+
+  });
+
 
   Route::middleware(['select_role'])->group(function () {
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
   });
+
+
+
 });
+
+
