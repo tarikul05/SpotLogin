@@ -17,11 +17,14 @@ return [
         'permission-create',
         'permission-edit',
         'permission-delete',
-        
+
         // Language Translations Controller
         'translation-list',
         'translation-create',
         'translation-edit',
         'translation-delete',
+
+        'language-list',
+        'language-create-udpate',
         
         ];

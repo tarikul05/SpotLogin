@@ -39,21 +39,12 @@
                                 <a class="dropdown-item" href="/email/email_template">
                                     Modèle d'email
                                 </a>
-                                <a class="dropdown-item" href="/admin/language_master_list">
-                                    Language Master
-                                </a>
-                                <a class="dropdown-item" href="/home_page_cms">
-                                   Gérer la page d'accueil
-                                </a>
-                                <a class="dropdown-item" href="/admin/page_translate_master_list">
-                                    translate master
-                                </a>
                                 <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                     data set master
                                 </a>
-                                <a class="dropdown-item" href="/admin/page_master_list">
-                                    page master
-                                </a>
+                                @can('language-list')
+                                    <a class="dropdown-item" href="/admin/language">{{ __('Languages') }}</a>
+                                @endcan
                                 @can('translation-list')
                                     <a class="dropdown-item" href="/languages">{{ __('Translations') }}</a>
                                 @endcan

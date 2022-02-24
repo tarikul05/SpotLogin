@@ -28,7 +28,7 @@ Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'res
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
-Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
+// Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
 Route::match(array('GET', 'POST'), "permission-check", array(
   'uses' => 'AuthController@permission_check',
@@ -69,10 +69,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('permissions', "PermissionController");
         
     // Language 
-    Route::match(array('GET', 'POST'), "add-language", array(
-      'uses' => 'LanguagesController@addUpdate',
-      'as' => 'add.language'
-    ));
+
+    Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
+    Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
+    // Route::match(array('GET', 'POST'), "add-language", array(
+    //   'uses' => 'LanguagesController@addUpdate',
+    //   'as' => 'add.language'
+    // ));
 
     // email template 
     Route::match(array('GET', 'POST'), "add-email-template", array(
