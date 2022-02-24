@@ -18,8 +18,6 @@ use App\Http\Controllers\PermissionController;
 */
 
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
-Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index']);
-Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 
@@ -30,7 +28,7 @@ Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'res
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
 
-// Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
+Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
 Route::match(array('GET', 'POST'), "permission-check", array(
   'uses' => 'AuthController@permission_check',
@@ -83,4 +81,9 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::resource('roles', "RoleController");
   Route::resource('permissions', "PermissionController");
+
+  Route::middleware(['select_role'])->group(function () {
+    Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
+    Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
+  });
 });

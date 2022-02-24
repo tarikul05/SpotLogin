@@ -51,7 +51,8 @@ class UserController extends Controller
             $school_type=trim($data['school_type']);
             
 
-            $roleType = ($school_type=='COACH') ? 'admin_teachers' : 'schooladmin';
+            $roleType = ($school_type=='COACH') ? 'coach' : 'schooladmin';
+            $scType = ($school_type=='COACH') ? 'C' : 'S';
             $school_code = strtolower($data['username']);
 
             $schoolData = [
@@ -61,6 +62,7 @@ class UserController extends Controller
                 'country_code' => $data['country_code'],
                 'email'=>$data['email'],
                 'sender_email'=>$data['email'],
+                'school_type'=>$scType,
                 'max_students'=>0,
                 'max_teachers'=>0,
                 'is_active'=>1
@@ -85,7 +87,7 @@ class UserController extends Controller
             ];
             
 
-            $teacher = Teacher::creates($teacherData);
+            $teacher = Teacher::create($teacherData);
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => 'this is nickname','role_type'=>$roleType, 'has_user_account'=> 1]);
             

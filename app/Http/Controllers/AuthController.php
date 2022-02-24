@@ -369,6 +369,19 @@ class AuthController extends Controller
         $user = Auth::user();
         // echo "<pre>";
         // dd($user->getRoleTypettribute());
+        if ($user->person_type == 'App\Models\Student') {
+            $user->syncRoles(['student']);
+            $request->session()->put('selected_role','student');
+            return redirect()->route('teacherHome');
+
+        }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
+            $tRoleType = $user->schools()[0]->pivot->role_type;
+            $user->syncRoles([$tRoleType]);
+            $request->session()->put('selected_role',$tRoleType);
+            return redirect()->route('teacherHome');
+
+        }
+
         if ($request->isMethod('post')){
             $params = $request->all();
             foreach ($user->schools() as $key => $school) {
@@ -377,7 +390,6 @@ class AuthController extends Controller
                     $user->syncRoles([$school->pivot->role_type]);
                 }
             }
-            
         }
 
         return view('pages.auth.permission_check', [
@@ -396,9 +408,11 @@ class AuthController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        Session::flush();
+        
         return redirect('/');
     }
 
