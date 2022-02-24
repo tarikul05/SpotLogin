@@ -13,17 +13,18 @@ return [
         'role-delete',
 
         // permission Controller
-        'permission-list',
-        'permission-create',
-        'permission-edit',
-        'permission-delete',
+        // 'permission-list',
+        // 'permission-create',
+        // 'permission-edit',
+        // 'permission-delete',
 
-        // Language Translations Controller
+        // LanguageTranslations Controller
         'translation-list',
         'translation-create',
         'translation-edit',
         'translation-delete',
-
+        
+        // add-update language Language controller
         'language-list',
         'language-create-udpate',
         

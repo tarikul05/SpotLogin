@@ -72,10 +72,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
     Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
-    // Route::match(array('GET', 'POST'), "add-language", array(
-    //   'uses' => 'LanguagesController@addUpdate',
-    //   'as' => 'add.language'
-    // ));
+
 
     // email template 
     Route::match(array('GET', 'POST'), "add-email-template", array(
