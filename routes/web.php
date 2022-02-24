@@ -58,6 +58,9 @@ Route::prefix('admin')->group(function() {
 });
 
 
+Route::get('add-language', 'LanguagesController@create')->name('language');
+Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
+Route::get('parameters', 'ParametersController@index')->name('parameters');
 Route::get('languages', 'LanguageTranslationController@index')->name('languages');
 Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
 Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
