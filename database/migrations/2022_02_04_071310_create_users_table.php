@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('user_authorisation', 3)->default('MIN');
             $table->string('school_id', 64)->nullable();
             $table->boolean('is_active')->default(1);
+            $table->boolean('is_firstlogin')->default(1);
             $table->integer('created_by')->nullable();
             $table->integer('modified_by')->nullable();
             $table->rememberToken();

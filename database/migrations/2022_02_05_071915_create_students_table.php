@@ -27,7 +27,6 @@ class CreateStudentsTable extends Migration {
 			$table->string('phone2', 50)->nullable();
 			$table->string('mobile', 50)->nullable();
 			$table->string('mobile2', 50)->nullable();
-			$table->string('email', 50)->nullable();
 			$table->string('email2', 50)->nullable();
 			$table->string('street', 120)->nullable();
 			$table->string('street_number', 20)->nullable();
@@ -39,12 +38,8 @@ class CreateStudentsTable extends Migration {
 			$table->integer('province_id')->nullable();
 			$table->float('geo_latitude', 10, 0)->nullable();
 			$table->float('geo_longitude', 10, 0)->nullable();
-			$table->string('comment', 500)->nullable();
 			$table->integer('profile_image_id')->nullable();
 			$table->string('sections', 2000)->nullable();
-			$table->smallInteger('has_user_account')->nullable()->default(0);
-			$table->string('level_skating_arp', 20)->nullable();
-			$table->string('level_skating_usp', 20)->nullable();
 			$table->string('licence_arp', 30)->nullable();
 			$table->string('licence_usp', 30)->nullable();
 			$table->string('bank_iban', 50)->nullable();
@@ -58,9 +53,6 @@ class CreateStudentsTable extends Migration {
 			$table->string('bank_country_code', 4)->nullable();
             $table->foreign('bank_country_code')->references('code')->on('countries');
 			$table->integer('bank_province_id')->nullable();
-			$table->dateTime('level_date_arp')->nullable();
-			$table->dateTime('level_date_usp')->nullable();
-			$table->string('nickname', 50)->nullable();
 			$table->string('bg_color_agenda', 7)->nullable();
 			$table->string('billing_street', 120)->nullable();
 			$table->string('billing_street_number', 30)->nullable();
@@ -73,7 +65,6 @@ class CreateStudentsTable extends Migration {
 			$table->integer('billing_province_id')->nullable();
 			$table->string('about_text', 500)->nullable();
 			$table->integer('display_home_flag')->nullable()->default(1);
-			$table->string('billing_method', 3)->nullable()->default('E')->comment('E=Eventwise, M=Monthly & Y=Yearly');
 			$table->float('billing_amount', 10, 0)->nullable()->default(0);
 			$table->dateTime('billing_method_eff_date')->nullable()->comment('for information only ');
 			$table->string('billing_currency', 3)->nullable()->comment('currency for billing');
@@ -81,8 +72,6 @@ class CreateStudentsTable extends Migration {
 			$table->date('billing_date_end')->nullable()->comment('billing end date');
 			$table->string('person_language_preference', 3)->nullable()->default('fr');
 			$table->string('student_email', 100)->nullable();
-            $table->integer('level_id')->nullable();
-            $table->foreign('level_id')->references('id')->on('levels');
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();
 			$table->dateTime('modified_at')->nullable();

@@ -4,6 +4,59 @@
     'app_debug' => env('APP_DEBUG', false),
     'mail_from_address' => env('MAIL_FROM_ADDRESS'),
     'mail_from_name' => env('MAIL_FROM_NAME'),
-    'email_send' =>  (env('APP_ENV') =='local') ? 0 : 1
+    'email_send' =>  (env('APP_ENV') =='local') ? 0 : 1,
+    'template_variables' => array(
+      array(
+        'value'     => '[~~HOSTNAME~~]',
+        'drop_text'     => 'Hostname',
+        'drop_label'     => 'Hostname',
+      ),
+      array(
+        'value'     => '[~~SCHOOL_CODE~~]',
+        'drop_text'     => 'School Code',
+        'drop_label'     => 'School Code',
+      ),
+      array(
+        'value'     => '[~~SCHOOL_NAME~~]',
+        'drop_text'     => 'School Name',
+        'drop_label'     => 'School Name',
+      ),
+      array(
+        'value'     => '[~~USER_NAME~~]',
+        'drop_text'     => 'User Name',
+        'drop_label'     => 'User Name',
+      ),
+      array(
+        'value'     => '[~~RESET_PASSORD_URL~~]',
+        'drop_text'     => 'Reset Password UR',
+        'drop_label'     => 'Reset Password URL',
+      ),
+      array(
+        'value'     => '[~~FIRST_NAME~~]',
+        'drop_text'     => 'First Name',
+        'drop_label'     => 'First Name',
+      ),
+      array(
+        'value'     => '[~~LAST_NAME~~]',
+        'drop_text'     => 'Last Name',
+        'drop_label'     => 'Last Name',
+      ),
+      array(
+        'value'     => '[~~CLIENT_NAME~~]',
+        'drop_text'     => 'Client Name',
+        'drop_label'     => 'Client Name',
+      )
+    ),
+    'email_template' => array(
+      'forgot_password_email'     => 'forgot_password_email',
+      'reminder_email_unpaid' => 'reminder_email_unpaid',
+      'reset_pass_email' => 'reset_pass_email',
+      'school' => 'school',
+      'send_approve_pdf_invoice' => 'send_approve_pdf_invoice',
+      'sign_up_confirmation_email' => 'sign_up_confirmation_email',
+      'student' => 'student',
+      'student_activation_email' => 'student_activation_email',
+      'teacher' => 'teacher',
+    ),
     
   ];

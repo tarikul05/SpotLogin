@@ -23,7 +23,7 @@
               </div>
             </div>
           </div>
-          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn" data-toggle="modal" data-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
+          <div style="margin-bottom:10px;"><small><a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
         
@@ -38,26 +38,39 @@
 
 <script>
 $(document).ready(function() {
+
+  $("#show_hide_password a").on('click', function(event) {
+    event.preventDefault();
+    if ($('#show_hide_password input').attr("type") == "text") {
+      $('#show_hide_password input').attr('type', 'password');
+      $('#show_hide_password i').addClass("fa-eye-slash");
+      $('#show_hide_password i').removeClass("fa-eye");
+    } else if ($('#show_hide_password input').attr("type") == "password") {
+      $('#show_hide_password input').attr('type', 'text');
+      $('#show_hide_password i').removeClass("fa-eye-slash");
+      $('#show_hide_password i').addClass("fa-eye");
+    }
+  });
+
+
+  
   function FirstLoginAfterResetPass() {
-      console.log('ssss');
-      return false;
-      var status = 0;
+      
+      var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      
+      var status = 1;
       var formdata = $("#login_form").serializeArray();
-      console.log('TIMEZONEOFFSET=' + TIMEZONEOFFSET);
+      
       formdata.push({
         "name": "type",
         "value": "check_first_login"
       });
       formdata.push({
-        "name": "TIMEZONEOFFSET",
-        "value": TIMEZONEOFFSET
-      });
-      formdata.push({
-        "name": "p_school_code",
-        "value": school_code
+        "name": "_token",
+        "value": csrfToken
       });
       $.ajax({
-        url: 'new_login_data.php',
+        url: BASE_URL + '/login',
         data: formdata,
         type: 'POST',
         dataType: 'json',
@@ -67,15 +80,15 @@ $(document).ready(function() {
           status = data.status;
         }, // sucess
         error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
+          //errorModalCall(GetAppMessage('error_message_text'));
 
         }
       });
-
       if (status == 0) {
-        return false;
-      } else {
+        //return true; //demo
         return true;
+      } else {
+        return false;
       }
     }
 
@@ -110,12 +123,15 @@ $(document).ready(function() {
     },
 
     submitHandler: function(form) {
-
+      let loader = $('#pageloader');
+      loader.show("fast");
       if (FirstLoginAfterResetPass()) {
+        loader.hide("fast");
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
         $("#resetModal").modal('show');
+        
         return false;
       }
 
@@ -131,22 +147,16 @@ $(document).ready(function() {
         "name": "_token",
         "value": csrfToken
       });
-      // formdata.push({
-      //   "name": "TIMEZONEOFFSET",
-      //   "value": TIMEZONEOFFSET
-      // });
-      // formdata.push({
-      //   "name": "p_school_code",
-      //   "value": school_code
-      // });
-      //console.log(formdata);
       $.ajax({
         url: BASE_URL + '/login',
         data: formdata,
         type: 'POST',
         dataType: 'json',
-        async: false,
-        encode: true,
+        //async: false,
+        //encode: true,
+        beforeSend: function (xhr) {
+          loader.show("fast");
+        },
         success: function(data) {
           
           if (data.status == 0) {
@@ -154,9 +164,9 @@ $(document).ready(function() {
 
            
            
-
-            successModalCall("{{ __('Logged In Successfully') }}");
             $("#loginModal").modal('hide');
+            successModalCall("{{ __('Logged In Successfully') }}");
+            
             setTimeout(function() {
               window.location.href = "../teachers";
             }, 2000);
@@ -174,8 +184,12 @@ $(document).ready(function() {
         error: function(ts) {
           errorModalCall("{{ __('Invalid username or password') }}");
 
+        },
+        complete: function() {
+            loader.hide("fast");
         }
       });
+      return false; // required to block normal submit since you used ajax
 
     }
   });

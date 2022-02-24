@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon" />
   <title>@yield('title')</title>
 
   <!-- Bootstrap -->
@@ -18,8 +19,7 @@
 
 
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('css/mainstyle.css')}}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/main_style.css') }}">
 
   <!-- flag icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css">
@@ -63,7 +63,7 @@
           <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
         </li>
         <li class="nav-item active">
-          <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('School Sign up') }}</a>
+          <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
         </li>
         <li class="nav-item">
           <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
@@ -75,7 +75,9 @@
 
 
   @yield('content')
-
+  <div id="pageloader">
+      <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
+  </div>
   <footer>
     <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
@@ -83,12 +85,14 @@
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
   </footer>
 
-
+  
   @include('layouts.elements.modal_login')
   @include('layouts.elements.modal_reset_login')
   @include('layouts.elements.modal_school_sign_up')
+  @include('layouts.elements.modal_forgot_password')
+  @include('layouts.elements.modal_loader')
 
-
+  
   <!--common script for all pages-->
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
@@ -103,14 +107,6 @@
     
   <script src="{{ asset('js/common-scripts.js')}}"></script>
 
-  <!-- <script src='lib/moment.js'></script>
-    <script src='lib/moment-timezone-with-data.js'></script>
-
-
-    <script src="../teamvg/common/custom_sm.js?dt=new Date()" type="text/javascript"></script>
-    <script src="../teamvg/js/custom_translate_website.js" type="text/javascript"></script> -->
-
-
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
@@ -120,6 +116,9 @@
       var lanCode = $(this).val();
       window.location.href = BASE_URL+"/setlang/"+lanCode ;
     });
+
+
+    
 
 
 

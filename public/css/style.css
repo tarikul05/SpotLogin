@@ -1,6 +1,9 @@
 
-@import "http://127.0.0.1:8000/css/main_style.css";
+@import "/css/admin_main_style.css";
 
+.login-signup-modal.mt-200 {
+    margin-top: 15%;
+}
 .m-4.top{
     margin:0px!important;
     background-color: #152245!important;
@@ -179,7 +182,7 @@ h4.section_header_class{
     margin: 15px 0;
     text-align: left;
     font-weight: normal;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
 table.email_template{
     border: 1px solid #E1EFF7!important;
@@ -189,6 +192,10 @@ table.email_template th{
     vertical-align: middle;
     border:1px solid #E1EFF7!important;
     padding: 19px;
+
+    display:block;
+    width:99.9%;
+    clear:both;
 }
 .delete_event,
 .delete_location,

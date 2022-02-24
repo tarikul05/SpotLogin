@@ -31,7 +31,7 @@
                   </div>
                   <div class="form-group custom-selection">
                       <select class="selectpicker" id="country_code" name="country_code" required>
-                          <option value="">Select Country</option>
+                          <option value="">{{ __('Select Country')}}</option>
                           @foreach ($countries as $key => $country)
                             <option 
                             value="{{ $country->code }}"
@@ -51,11 +51,11 @@
                   <div class="checkbox">
                       <label><input type="checkbox" id="terms_condition" name="terms_condition" required>{{ __('I agree with the terms and conditions') }}</label>
                   </div>
-                  <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
               </form>
               
               <div style="text-align:center;margin-top:10px;">
-                  <p>Already have an account? <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
+                  <p>{{ __('Already have an account?')}} <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
               </div>
           </div>
       </div>
@@ -63,10 +63,11 @@
 </div>
 
 <script>
-$(document).ready(function() {
+
+$(document).ready(function () {
 
     $("#signup_form").submit(function(e) {
-        e.preventDefault();
+    e.preventDefault();
     }).validate({
         // Specify validation rules
         rules: {
@@ -104,69 +105,79 @@ $(document).ready(function() {
                 $(element).parents('.form-group').append(error);
             }
         },
-
-        submitHandler: function(form) {
+        submitHandler: function (form) {
+            var loader = $('#pageloader');
             var Validate_User_Name = ValidateUserName();
-            console.log('Validate_User_Name =' + Validate_User_Name);
+                console.log('Validate_User_Name =' + Validate_User_Name);
+
             if (Validate_User_Name != 0) {
 
                 errorModalCall("{{__('Username already exists...')}}");
-
+                loader.hide("fast");
 
                 return false;
             } else {
-            //console.log('Username is valid.'); 
 
-            var formdata = $("#signup_form").serializeArray();
+                var formdata = $("#signup_form").serializeArray();
 
-            var csrfToken = "{{ csrf_token() }}";
+                var csrfToken = "{{ csrf_token() }}";
 
 
-        
-            formdata.push({
-                "name": "_token",
-                "value": "{{ csrf_token() }}"
-            });
-            //console.log(formdata);
-            formdata.push({
-                "name": "type",
-                "value": "signup_submit"
-            });
+            
+                formdata.push({
+                    "name": "_token",
+                    "value": "{{ csrf_token() }}"
+                });
+                //console.log(formdata);
+                formdata.push({
+                    "name": "type",
+                    "value": "signup_submit"
+                });
+                
+                $.ajax({
+                    url: BASE_URL + '/signup',
+                    data: formdata,
+                    type: 'POST',
+                    dataType: 'json',
+                    //async: false,
+                    //encode: true,
+                    headers: {'X-CSRF-TOKEN': csrfToken},
+                    beforeSend: function (xhr) {
+                        loader.show("fast");
+                    },
+                    success: function(data) {
 
-            $.ajax({
-                url: BASE_URL + '/signup',
-                data: formdata,
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                encode: true,
-                headers: {'X-CSRF-TOKEN': csrfToken},
-                success: function(data) {
+                        if (data.status) {
 
-                    if (data.status) {
+                            $("#schoolsignupModal").modal('hide');
+                            //$("#successModal").modal('show');
+                            successModalCall(data.message);
+                            
 
-                        $("#signupModal").modal('hide');
-                        $("#successModal").modal('show');
+                            //$("#loginModal").modal('show');
+                        } else {
+                            errorModalCall(GetAppMessage('error_message_text'));
 
-                        //$("#loginModal").modal('show');
-                    } else {
+                        }
+
+                    }, // sucess
+                    error: function(ts) {
                         errorModalCall(GetAppMessage('error_message_text'));
 
+                    },
+                    complete: function() {
+                        loader.hide("fast");
                     }
-
-                }, // sucess
-                error: function(ts) {
-                    errorModalCall(GetAppMessage('error_message_text'));
-
-                }
-            });
-
+                });
             }
+            return false; // required to block normal submit since you used ajax
         }
 
     });
 
     function ValidateUserName() {
+        var loader = $('#pageloader');
+        loader.show();
         var v_cnt;
         var username = $('#username').val();
 

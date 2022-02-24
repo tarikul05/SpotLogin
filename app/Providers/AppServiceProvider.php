@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer(
-            'layouts.auth', 
+            ['layouts.auth', 'layouts.raw'], 
             function ($view) {
                 $language = Language::orderBy('sort_order')->get();
                 $countries = Country::where([

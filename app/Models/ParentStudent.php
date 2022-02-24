@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\Parents;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ParentStudent extends Model
+class ParentStudent extends BaseModel
 {
   use SoftDeletes;
     /**

@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\School;
 
 use App\Models\SchoolTeacher;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Teacher extends Model
+class Teacher extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
@@ -104,13 +104,20 @@ class Teacher extends Model
     protected $appends = [];
 
      /**
-     * Get the user for the News.
+     * Get the schools for the Teachers.
      */
-    public function school()
+    public function schools()
     {
-        return $this->hasMany(SchoolTeacher::class);
+        return $this->belongsToMany(School::class)
+                    ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at');
+    }
 
-
+    /**
+     * Get the user account.
+     */
+    public function user()
+    {
+        return $this->morphOne(User::class, 'personable','person_type', 'person_id');
     }
 
      /**

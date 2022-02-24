@@ -7,7 +7,7 @@ function successModalCall(title, desc = '') {
                 <div class="modal-body text-center p-4">                    
                     <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
                     <p style="font-size: 20px;">` + desc + `</p>
-                    <button type="button" class="btn btn-primary gilroy-medium" data-dismiss="modal" style="width:188px;">OK</button>
+                    <button type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;">OK</button>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@ function errorModalCall(title, desc = '') {
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
                         <p style="font-size: 20px;">` + desc + `</p>
-                        <button type="button" class="btn btn-primary gilroy-medium" data-dismiss="modal" style="width:188px;">OK</button>
+                        <button type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;">OK</button>
                     </div>
                 </div>
             </div>

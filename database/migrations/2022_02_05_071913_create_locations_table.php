@@ -17,8 +17,8 @@ class CreateLocationsTable extends Migration {
 		{
 			$table->integer('id', true);
 			// $table->integer('school_id')->nullable();
-            $table->integer('teacher_id')->nullable();
-            $table->foreign('teacher_id')->references('id')->on('teachers');
+            $table->integer('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
 			$table->string('title', 100)->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
 			$table->dateTime('created_at')->nullable();

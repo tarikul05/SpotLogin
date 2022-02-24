@@ -19,6 +19,7 @@ class CreateEventCategoriesTable extends Migration {
 			// $table->integer('school_id');
             $table->integer('school_id');
             $table->foreign('school_id')->references('id')->on('schools');
+			$table->string('title', 100)->nullable();
 			$table->string('invoiced_type', 1)->nullable()->default('S');
 			$table->integer('file_id')->nullable();
 			$table->boolean('is_active')->nullable()->default(1);
