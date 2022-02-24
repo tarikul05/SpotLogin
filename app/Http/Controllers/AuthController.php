@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use App\Mail\SportloginEmail;
 use URL;
+use Spatie\Permission\Models\Role;
 
 
 class AuthController extends Controller
@@ -367,12 +368,13 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         // echo "<pre>";
-        // dd($user->selected_school->pivot->role_type);
+        // dd($user->getRoleTypettribute());
         if ($request->isMethod('post')){
             $params = $request->all();
             foreach ($user->schools() as $key => $school) {
                 if ($school->id == $params['sch']) {
                     $request->session()->put('selected_school', $school);
+                    $user->syncRoles([$school->pivot->role_type]);
                 }
             }
             

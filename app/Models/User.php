@@ -15,6 +15,7 @@ use App\Models\Teacher;
 use App\Models\SchoolEmployee;
 use App\Models\SchoolTeacher;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -122,15 +123,16 @@ class User extends Authenticatable
 
     }
 
-    // /**
-    //  * Get the schools for the user.
-    //  */
-    // public function getRoleTypettribute()
-    // {
+    /**
+     * Get the schools for the user.
+     */
+    public function getRoleTypettribute()
+    {
+        // $this->selected_school
+        return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
+        return $this->getRoleNames()[0];
 
-    //     return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
-
-    // }
+    }
 
 
      /**
