@@ -74,17 +74,17 @@
 									<tr align="left" valign="middle">
 										<td>
 											<div class="form-group-data">
-												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="tc_text" id="tc_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
 											</div>
 										</td>
 									</tr>
                   <tr align="left" valign="middle">
-                    <th align="center" width="100%" class="detail_header">GENERAL CONDITIONS OF USE OF THE SPORTLOGIN SOLUTION</th>
+                    <th align="center" width="100%" class="detail_header">SPORTLOGIN SOLUTION PRIVACY POLICY</th>
                   </tr>
                   <tr align="left" valign="middle">
 										<td>
 											<div class="form-group-data">
-												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="spp_text" id="spp_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
 											</div>
 										</td>
 									</tr>
@@ -134,6 +134,21 @@
 				e.preventDefault(e);  
 			}
 		});
+
+		$('.my_ckeditor').each( function () {
+			//CKEDITOR.replace( "body_text", {
+				CKEDITOR.replace( this.id, {
+							//customConfig: '/ckeditor/config_all.js',
+							height: 300
+							,extraPlugins: 'Cy-GistInsert'
+							,extraPlugins: 'AppFields'
+							//,language: langid
+							,filebrowserBrowseUrl: 'ckfinder/ckfinder.html'
+							//,filebrowserImageBrowseUrl: ckfinder_html
+							,filebrowserUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files'
+							,filebrowserImageUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload'
+						});
+		});  
 		
 
 		//ChangeLanguage();
