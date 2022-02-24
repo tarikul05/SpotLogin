@@ -52,22 +52,21 @@ Route::get('setlang/{locale}', function ($locale) {
   return redirect()->back();
 });
 
-
 // auth
 Route::group(['middleware' => ['auth']], function () {
+
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
-
-  Route::prefix('admin')->group(function() {
-
-    Route::resource('roles', "RoleController");
-    Route::resource('permissions', "PermissionController");
-
     // Add edit language translations from json 
     Route::get('languages', 'LanguageTranslationController@index')->name('languages');
     Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
     Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
     Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
     Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
+  Route::prefix('admin')->group(function() {
+
+    Route::resource('roles', "RoleController");
+    Route::resource('permissions', "PermissionController");
         
     // Language 
     Route::match(array('GET', 'POST'), "add-language", array(

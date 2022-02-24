@@ -14,6 +14,7 @@
 <div class="container">
     
     <!-- <h1>New Translation key</h1> -->
+    @can('translation-create')
     <form method="POST" action="{{ route('translations.create') }}">
         @csrf
         <div class="row">
@@ -32,6 +33,7 @@
             </div>
         </div>
     </form>
+    @endcan
  
     <h2>Translate key value pair</h2>
     <table id="lanTable" class="table table-hover table-bordered">
@@ -54,7 +56,10 @@
                         @for($i=1; $i<=$columnsCount; ++$i)
                         <td><a href="#" data-title="Enter Translate" class="translate" data-code="{{ $columns[$i]['lang'] }}" data-type="textarea" data-pk="{{ $columnKey }}" data-url="{{ route('translation.update.json') }}">{{ isset($columns[$i]['data'][$columnKey]) ? $columns[$i]['data'][$columnKey] : '' }}</a></td>
                         @endfor
+
+                    @can('translation-delete')
                         <td><button data-action="{{ route('translations.destroy', $columnKey) }}" class="btn btn-danger btn-xs remove-key">DeleteIT</button></td>
+                    @endcan
                     </tr>
                 @endforeach
             @endif
@@ -113,7 +118,7 @@
                 method: 'DELETE',
                 success: function(data) {
                     cObj.parents("tr").remove();
-                    alert("Your imaginary file has deleted.");
+                    alert("Your translation key file has deleted.");
                 }
             });
         }

@@ -54,10 +54,10 @@
                                 <a class="dropdown-item" href="/admin/page_master_list">
                                     page master
                                 </a>
-                                <!-- @can('role-edit') -->
-                                    <a class="dropdown-item" href="/admin/languages">{{ __('Translations') }}</a>
-                                <!-- @endcan -->
-                                @can('role-edit')
+                                @can('translation-list')
+                                    <a class="dropdown-item" href="/languages">{{ __('Translations') }}</a>
+                                @endcan
+                                @can('role-list')
                                     <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
                                 @endcan
                                 <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
