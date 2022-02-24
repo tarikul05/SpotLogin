@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('head_links')
-	<!-- <script src="https://cdn.ckeditor.com/ckeditor5/30.0.0/classic/ckeditor.js"></script> -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
@@ -138,17 +137,10 @@
 		// } else {
 		// 	bind_top_nav_mobile(); 
 		// }
-		// $("#language_id").change(function(event) {
-    //   var lanCode = $(this).val();
-    //   window.location.href = BASE_URL+"/setlang/"+lanCode ;
-    // });
-
 		$("#emailForm").submit(function(e) {
 			$('.error').html('');
 			if(validateForm()) {
-				var body_text = CKEDITOR.instances["body_text"].getData();
-				//console.log(document.getElementById("subject_text").value);
-				//e.preventDefault(e);  
+				var body_text = CKEDITOR.instances["body_text"].getData(); 
 			} else {
 				e.preventDefault(e);  
 			}
@@ -207,8 +199,6 @@
 			"name": "_token",
 			"value": csrfToken
 		});
-		// console.log(formdata);
-		// return false;
 		for (key in CKEDITOR.instances) {
 				CKEDITOR.instances[key].destroy(true);
 		}		
@@ -224,6 +214,17 @@
 							document.getElementById("body_text").value=data.data.body_text;
 							let body_text = document.getElementById("body_text");   
 							body_text.innerHTML=data.data.body_text;
+
+							var resultHtml ='';
+							$.each(data.lngdata, function(key,value){
+								resultHtml+='<option value="'+key+'">'+value+'</option>';  
+    					});
+    					$('#template_code').html(resultHtml);
+							var last_template_code=document.getElementById("last_template_code").value;
+							if (last_template_code != "") {
+									$('#template_code').val(last_template_code);
+									$('#last_template_code').val(last_template_code);
+							}
 							//SetContents(data.data.body_text);
 					} else{
 						document.getElementById("subject_text").value='';
