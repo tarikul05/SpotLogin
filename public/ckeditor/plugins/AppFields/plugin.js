@@ -55,7 +55,7 @@ CKEDITOR.plugins.add( 'AppFields',
 		return "";
 	};
       //alert(get_school_code('school_code'));
-	  var ajx_url = window.location.protocol + '//' + window.location.hostname + '/template_variables'+'?school_code='+get_school_code('school_code');
+	  var ajx_url = BASE_URL + '/template_variables';
 	  //var ajx_url = window.location.protocol + '//' + window.location.hostname + '/'+get_school_code('school_code')+'/template_variables.php';
 	  //alert(ajx_url);
 	  var tags = getValues(ajx_url);
