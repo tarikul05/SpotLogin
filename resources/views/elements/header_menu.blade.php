@@ -37,12 +37,15 @@
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="/email/email_template">
+                                <!-- <a class="dropdown-item" href="/email/email_template">
                                     Modèle d'email
                                 </a>
                                 <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                     data set master
-                                </a>
+                                </a> -->
+                                @can('email-template-list')
+                                    <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
+                                @endcan
                                 @can('terms-condition-list')
                                     <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
                                 @endcan
