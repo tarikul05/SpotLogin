@@ -100,13 +100,7 @@ class TermCondController extends Controller
                         ['language_id', $params['language_id']],
                         ['is_active', 1]
                     ])->orderBy('id', 'desc')->first();
-                    if ($template) {
-                        $template = TermConditionLang::where([
-                            ['tc_template_id', $template->tc_template_id],
-                            ['language_id', $params['language_id']],
-                            ['is_active', 1]
-                        ])->orderBy('id', 'desc')->first();
-                    }
+                    
                 }
                  
                 if ($template) {
