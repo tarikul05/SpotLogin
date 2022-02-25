@@ -61,14 +61,14 @@ class TermCondController extends Controller
                 $request->merge(['tc_template_id'=> $template->id]);
             
                 TermConditionLang::create($request->except(['_token']));
-                return back()->with('success', __('Term Condition Template added successfully!'));
+                return back()->withInput($request->all())->with('success', __('Term Condition Template added successfully!'));
             }else{
                 $template->update($request->except(['_token']));
-                return back()->with('success', __('Term Condition Template updated successfully!'));
+                return back()->withInput($request->all())->with('success', __('Term Condition Template updated successfully!'));
             }
         } catch (\Exception $e) {
             //return error message
-            return redirect()->back()->with('error', __('Internal server error'));
+            return redirect()->withInput($request->all())->back()->with('error', __('Internal server error'));
 
         }
         

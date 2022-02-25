@@ -57,14 +57,14 @@ class EmailTemplateController extends Controller
             ])->first(); 
             if (empty($template)) {
                 EmailTemplate::create($request->except(['_token']));
-                return back()->with('success', __('Email Template added successfully!'));
+                return back()->withInput($request->all())->with('success', __('Email Template added successfully!'));
             }else{
                 $template->update($request->except(['_token']));
-                return back()->with('success', __('Email Template updated successfully!'));
+                return back()->withInput($request->all())->with('success', __('Email Template updated successfully!'));
             }
         } catch (\Exception $e) {
             //return error message
-            return redirect()->back()->with('error', __('Internal server error'));
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
 
         }
         
