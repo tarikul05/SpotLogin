@@ -75,17 +75,15 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // email template 
-    Route::match(array('GET', 'POST'), "add-email-template", array(
-      'uses' => 'EmailTemplateController@addUpdate',
-      'as' => 'add.email_template'
-    ));
+    Route::get('/add-email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
+    Route::post('/add-email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
+
 
     
     // tc template 
-    Route::match(array('GET', 'POST'), "term_cond/term_cond_cms", array(
-      'uses' => 'TermCondController@addUpdateCMS',
-      'as' => 'add.term_cond_cms'
-    ));
+    Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
+    Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
+
 
   });
 

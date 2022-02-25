@@ -7,6 +7,7 @@ use App\Models\Language;
 use App\Models\TermCondition;
 use App\Models\TermConditionLang;
 use App\Http\Requests\FetchTermCondCMSRequest;
+use App\Http\Requests\TermCondRequest;
 
 
 
@@ -18,52 +19,6 @@ class TermCondController extends Controller
     */
     public function index()
     {
-
-    }   
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-    */
- 
-    public function addUpdateCMS(Request $request, TermCondition $emailTemplate)
-    {
-        $params = $request->all();
-        
-        if ($request->isMethod('post')){
-            
-            try{
-                $this->validate($request, [
-                    'tc_template_id' => 'required',
-                    'language_id' => 'required',
-                    'tc_text' => 'required',
-                    'spp_text' => 'required',
-                ]);
-                
-                $template = TermConditionLang::where([
-                    ['tc_template_id', $params['tc_template_id']],
-                    ['language_id', $params['language_id']],
-                    ['is_active', 1]
-                ])->first(); 
-                
-                if (empty($template)) {
-                    
-                    $request->merge(['type'=>'A','active_flag'=> 'Y']);
-                
-                    $template = TermCondition::create($request->except(['_token']));
-                    $request->merge(['tc_template_id'=> $template->id]);
-                
-                    TermConditionLang::create($request->except(['_token']));
-                    return back()->with('success', __('Term Condition Template added successfully!'));
-                }else{
-                    $template->update($request->except(['_token']));
-                    return back()->with('success', __('Term Condition Template updated successfully!'));
-                }
-            } catch (\Exception $e) {
-                //return error message
-                return redirect()->back()->with('error', __('Internal server error'));
-
-            }
-        }
         $language = Language::orderBy('sort_order')->get();
         
         return view('pages.term_cond.addcms', [
@@ -71,13 +26,43 @@ class TermCondController extends Controller
             'title' => 'Term Condition Template',
             'pageInfo'=>['siteTitle'=>'']
         ]);
+    }   
+    /**
+     * Remove the specified resource from storage.
+     * @return Response
+    */
+ 
+    public function addUpdate(TermCondRequest $request, TermCondition $emailTemplate)
+    {
+        $params = $request->all();  
+        try{
+            $template = TermConditionLang::where([
+                ['tc_template_id', $params['tc_template_id']],
+                ['language_id', $params['language_id']],
+                ['is_active', 1]
+            ])->first(); 
+            
+            if (empty($template)) {
+                
+                $request->merge(['type'=>'A','active_flag'=> 'Y']);
+            
+                $template = TermCondition::create($request->except(['_token']));
+                $request->merge(['tc_template_id'=> $template->id]);
+            
+                TermConditionLang::create($request->except(['_token']));
+                return back()->with('success', __('Term Condition Template added successfully!'));
+            }else{
+                $template->update($request->except(['_token']));
+                return back()->with('success', __('Term Condition Template updated successfully!'));
+            }
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->with('error', __('Internal server error'));
+
+        }
+        
     }
 
-    
-
-
-
-    
     
 
     public function getTcTemplate(FetchTermCondCMSRequest $request)
