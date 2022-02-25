@@ -36,9 +36,9 @@
 				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
-					<input type="hidden" name="last_template_code" id="last_template_code" value="">
-					<input type="hidden" name="html_subject_text" id="html_subject_text" value="">
-					<input type="hidden" name="html_body_text" id="html_body_text" value="">
+					<input type="hidden" name="last_template_code" id="last_template_code" value="{{old('template_code') ? old('template_code') : ''}}">
+					<input type="hidden" name="html_subject_text" id="html_subject_text" value="{{old('subject_text') ? old('subject_text') : ''}}">
+					<input type="hidden" name="html_body_text" id="html_body_text" value="{{old('body_text') ? old('body_text') : ''}}">
 					
 					
 					<div class="col-md-10 offset-md-1 row">
@@ -51,11 +51,11 @@
 								<select class="form-control m-bot15" name="language_id" id="language_id" onchange="ChangeLanguage()" >
 									@foreach ($alllanguages as $key => $lan)
 											<option 
-											value="{{ $lan->language_code }}"
+											value="{{ $lan->language_code }}" {{ old('language_id') == $lan->language_code ? 'selected' : '' }}
 											@if ($lan->language_code == app()->getLocale())
 													selected="selected"
 											@endif
-											">  {{ $lan->title }}</option>
+											>  {{ $lan->title }}</option>
 									@endforeach
 								</select>
 								<span id="language_id_error" class="error"></span>
@@ -68,8 +68,8 @@
 								<select class="form-control m-bot15" name="template_code" id="template_code" onchange="Fetch_page_item_info()" >
 									@foreach ($email_template as $key => $template)
 											<option 
-											value="{{ $key }}"
-											">  {{ __($template) }}</option>
+											value="{{ $key }}" {{ old('template_code') == $key ? 'selected' : '' }}
+											>  {{ __($template) }}</option>
 									@endforeach
 								</select>
 								<span id="template_code_error" class="error"></span>
@@ -87,7 +87,7 @@
 										<td>
 											<div>{{ __('Subject')}}:</div>
 											<div class="form-group-data">
-												<input type="text" class="form-control" id="subject_text" name="subject_text" value="">
+												<input type="text" class="form-control" id="subject_text" name="subject_text" value="{{old('subject_text') ? old('subject_text') : ''}}">
 											</div>
 										</td>
 									</tr>
@@ -95,7 +95,7 @@
 										<td>
 											<div>{{ __('Email Messsage')}}:</div>
 											<div class="form-group-data">
-												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">{{old('body_text') ? old('body_text') : ''}}</textarea>
 											</div>
 										</td>
 									</tr>
