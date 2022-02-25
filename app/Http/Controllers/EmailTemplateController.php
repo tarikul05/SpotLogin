@@ -12,6 +12,16 @@ use File;
 
 class EmailTemplateController extends Controller
 {
+    /**
+     * create a new instance of the class
+     *
+     * @return void
+     */
+    function __construct()
+    {
+         $this->middleware('permission:email-template-list|email-template-add-udpate', ['only' => ['index','templateVariables']]);
+         $this->middleware('permission:email-template-add-udpate', ['only' => ['addUpdate']]);
+    }
      /**
      * Remove the specified resource from storage.
      * @return Response

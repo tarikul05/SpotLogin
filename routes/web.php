@@ -75,8 +75,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // email template 
-    Route::get('/add-email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
-    Route::post('/add-email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
+    Route::get('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
+    Route::post('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
 
 
     

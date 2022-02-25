@@ -30,6 +30,10 @@ return [
 
         // TermCondController controller
         'terms-condition-list',
-        'terms-condition-add-udpate'
+        'terms-condition-add-udpate',
+
+        // TermCondController controller
+        'email-template-list',
+        'email-template-add-udpate'
         
         ];
