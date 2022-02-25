@@ -88,6 +88,7 @@
 											<div>{{ __('Subject')}}:</div>
 											<div class="form-group-data">
 												<input type="text" class="form-control" id="subject_text" name="subject_text" value="{{old('subject_text') ? old('subject_text') : ''}}">
+												<span id="subject_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>
@@ -96,6 +97,7 @@
 											<div>{{ __('Email Messsage')}}:</div>
 											<div class="form-group-data">
 												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">{{old('body_text') ? old('body_text') : ''}}</textarea>
+												<span id="body_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>

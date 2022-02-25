@@ -36,7 +36,7 @@
 				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
-					<input type="hidden" name="tc_template_id" id="tc_template_id" value="0">
+					<input type="hidden" name="tc_template_id" id="tc_template_id" value="{{old('tc_template_id') ? old('tc_template_id') : ''}}">
 					
 
 					<div class="col-md-10 offset-md-1 row">
@@ -48,11 +48,11 @@
 								<select class="form-control m-bot15" name="language_id" id="language_id" onchange="ChangeLanguage()" >
 									@foreach ($alllanguages as $key => $lan)
 											<option 
-											value="{{ $lan->language_code }}"
+											value="{{ $lan->language_code }}" {{ old('language_id') == $lan->language_code ? 'selected' : '' }}
 											@if ($lan->language_code == app()->getLocale())
 													selected="selected"
 											@endif
-											">  {{ $lan->title }}</option>
+											>  {{ $lan->title }}</option>
 									@endforeach
 								</select>
 								<span id="language_id_error" class="error"></span>
@@ -72,7 +72,10 @@
 									<tr align="left" valign="middle">
 										<td>
 											<div class="form-group-data">
-												<textarea rows="30" name="tc_text" id="tc_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="tc_text" id="tc_text" type="textarea" class="form-control my_ckeditor textarea">
+												{{old('tc_text') ? old('tc_text') : ''}}
+												</textarea>
+												<span id="tc_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>
@@ -82,7 +85,10 @@
                   <tr align="left" valign="middle">
 										<td>
 											<div class="form-group-data">
-												<textarea rows="30" name="spp_text" id="spp_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="spp_text" id="spp_text" type="textarea" class="form-control my_ckeditor textarea">
+												{{old('spp_text') ? old('spp_text') : ''}}
+												</textarea>
+												<span id="spp_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>
