@@ -367,8 +367,9 @@ class AuthController extends Controller
     public function permission_check(Request $request)
     {
         $user = Auth::user();
-        // echo "<pre>";
-        // dd($user->getRoleTypettribute());
+        // if (!empty($request->session()->get('selected_role'))) {
+        //     return redirect()->route('teacherHome');
+        // }
         if ($user->person_type == 'App\Models\Student') {
             $user->syncRoles(['student']);
             $request->session()->put('selected_role','student');
@@ -379,7 +380,6 @@ class AuthController extends Controller
             $user->syncRoles([$tRoleType]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect()->route('teacherHome');
-
         }
 
         if ($request->isMethod('post')){
@@ -387,7 +387,9 @@ class AuthController extends Controller
             foreach ($user->schools() as $key => $school) {
                 if ($school->id == $params['sch']) {
                     $request->session()->put('selected_school', $school);
+                    $request->session()->put('selected_role',$school->pivot->role_type);
                     $user->syncRoles([$school->pivot->role_type]);
+                    return redirect()->route('teacherHome');
                 }
             }
         }
