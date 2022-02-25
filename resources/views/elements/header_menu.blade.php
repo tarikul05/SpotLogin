@@ -26,6 +26,10 @@
                             </div>
                         </div>
                         <a href="#" class="nav-item nav-link">{{ __('Dashboard') }}</a>
+                        @unlessrole('superadmin')
+                            <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
+                        @endunlessrole
+                        
                     </div>
                     <div class="navbar-nav ms-auto">
                         <span class="admin_name">{{ __(auth()->user()->username) }}</span>

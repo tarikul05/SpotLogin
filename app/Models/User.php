@@ -126,10 +126,9 @@ class User extends Authenticatable
     /**
      * Get the schools for the user.
      */
-    public function getRoleTypettribute()
+    public function roleType()
     {
-        // $this->selected_school
-        return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
+        // return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
         return $this->getRoleNames()[0];
 
     }

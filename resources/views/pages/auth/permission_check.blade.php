@@ -27,6 +27,10 @@
                     {!! Form::hidden('sch', $school->id, ['class' => 'form-control']) !!}
                     {!! Form::submit('Logged in As '.$role, ['class' => 'btn btn-primary']) !!}
                     {!! Form::close() !!}
+                    @if ($user->roleType() === $role)
+                        <span class="bg-success text-white p-1">checked</span>
+                    @endif
+                    
               </div>
             </div>
           </div>

@@ -293,6 +293,10 @@ table.tc_template .detail_header {
 .dropdown-toggle::after{
     content:none;
 }
+.permission-btn{
+    margin-left: 100px;
+    background-color: gray;
+}
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label {
