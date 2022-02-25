@@ -34,8 +34,8 @@ class FetchTemplateRequest extends FormRequest
     {
         return[
             
-            'template_code.required' => _('template_code required'),
-            'language_id.required' => _('language_id required')
+            'template_code.required' => __('template_code required'),
+            'language_id.required' => __('language_id required')
            
            
         ];

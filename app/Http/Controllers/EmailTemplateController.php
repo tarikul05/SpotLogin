@@ -120,8 +120,7 @@ class EmailTemplateController extends Controller
                 $template = EmailTemplate::where([
                     ['template_code', $params['template_code']],
                     ['language', $params['language_id']],
-                    ['is_active', 'Y'],
-                    ['deleted_at', null],
+                    ['is_active', 'Y']
                 ])->first(); 
                 if ($template) {
                     $result = [
