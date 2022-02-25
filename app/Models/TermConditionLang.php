@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\School;
+use App\Models\Language;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TermCondition extends Model
+class TermConditionLang extends Model
 {
     use SoftDeletes;
-    protected $table = 'tc_template';
+    protected $table = 'tc_template_lang';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
     /**
@@ -20,10 +20,10 @@ class TermCondition extends Model
      */
     protected $fillable = [
         'school_id',
-        'type',
-        'effected_at',
-        'effected_till',
-        'active_flag',
+        'tc_template_id',
+        'language_id',
+        'tc_text',
+        'spp_text',
         'is_active',
         'created_by',
         'modified_by'
@@ -44,12 +44,12 @@ class TermCondition extends Model
 
     protected $appends = [];
 
-     /**
+    /**
      * Get the user for the News.
-     */
-    public function school()
+    */
+    public function language()
     {
-      return $this->belongsTo(School::class);
+      return $this->belongsTo(Language::class);
     }
 
    

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Language;
 use App\Models\TermCondition;
+use App\Models\TermConditionLang;
 use App\Http\Requests\FetchTermCondCMSRequest;
 
 
@@ -32,25 +33,30 @@ class TermCondController extends Controller
             
             try{
                 $this->validate($request, [
-                    'template_code' => 'required',
-                    'subject_text' => 'required',
-                    'body_text' => 'required',
+                    'tc_template_id' => 'required',
                     'language_id' => 'required',
+                    'tc_text' => 'required',
+                    'spp_text' => 'required',
                 ]);
-                $request->merge(['language'=> $params['language_id'],'is_active'=> 'Y']);
                 
-                $template = EmailTemplate::where([
-                    ['template_code', $params['template_code']],
-                    ['language', $params['language_id']],
-                    ['is_active', 'Y']
+                $template = TermConditionLang::where([
+                    ['tc_template_id', $params['tc_template_id']],
+                    ['language_id', $params['language_id']],
+                    ['is_active', 1]
                 ])->first(); 
+                
                 if (empty($template)) {
-                    EmailTemplate::create($request->except(['_token']));
-                    $this->generateLanFile($lanCode);
-                    return back()->with('success', __('Email Template added successfully!'));
+                    
+                    $request->merge(['type'=>'A','active_flag'=> 'Y']);
+                
+                    $template = TermCondition::create($request->except(['_token']));
+                    $request->merge(['tc_template_id'=> $template->id]);
+                
+                    TermConditionLang::create($request->except(['_token']));
+                    return back()->with('success', __('Term Condition Template added successfully!'));
                 }else{
                     $template->update($request->except(['_token']));
-                    return back()->with('success', __('Email Template updated successfully!'));
+                    return back()->with('success', __('Term Condition Template updated successfully!'));
                 }
             } catch (\Exception $e) {
                 //return error message
@@ -60,12 +66,9 @@ class TermCondController extends Controller
         }
         $language = Language::orderBy('sort_order')->get();
         
-        $email_template_code = config('global.email_template');
-        
         return view('pages.term_cond.addcms', [
             'alllanguages' => $language,
-            'email_template' => $email_template_code,
-            'title' => 'Email Template',
+            'title' => 'Term Condition Template',
             'pageInfo'=>['siteTitle'=>'']
         ]);
     }
@@ -74,33 +77,43 @@ class TermCondController extends Controller
 
 
 
-
+    
     
 
-    public function getEmailTemplate(FetchTemplateRequest $request, EmailTemplate $emailTemplate)
+    public function getTcTemplate(FetchTermCondCMSRequest $request)
     {
         $params = $request->all();
         $result = array(
             'status' => 0,
-            'message' => __('Failed to get email template'),
+            'message' => __('Failed to get Term and Condition template'),
         );
         try {
             if ($request->isMethod('post')){
-                $lngdata = $this->openJSONFile($params['language_id']);
-                // app()->setLocale($params['language_id']);
-                // session()->put('locale', $params['language_id']);
-                $template = EmailTemplate::where([
-                    ['template_code', $params['template_code']],
-                    ['language', $params['language_id']],
-                    ['is_active', 'Y'],
-                    ['deleted_at', null],
-                ])->first(); 
+                if ($params['tc_template_id'] !=0) {
+                    $template = TermConditionLang::where([
+                        ['tc_template_id', $params['tc_template_id']],
+                        ['language_id', $params['language_id']],
+                        ['is_active', 1]
+                    ])->first();
+                } else {
+                    $template = TermConditionLang::where([
+                        ['language_id', $params['language_id']],
+                        ['is_active', 1]
+                    ])->orderBy('id', 'desc')->first();
+                    if ($template) {
+                        $template = TermConditionLang::where([
+                            ['tc_template_id', $template->tc_template_id],
+                            ['language_id', $params['language_id']],
+                            ['is_active', 1]
+                        ])->orderBy('id', 'desc')->first();
+                    }
+                }
+                 
                 if ($template) {
                     $result = [
                         'status'=>1,
-                        'message'=>__('email template found'),
-                        'data'=>$template,
-                        'lngdata'=>$lngdata
+                        'message'=>__('Term Condition template found'),
+                        'data'=>$template
                     ];
                 } 
                 
@@ -111,8 +124,6 @@ class TermCondController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
-        
     }
 
     

@@ -25,7 +25,6 @@ class FetchTermCondCMSRequest extends FormRequest
     {
         return [
             
-            'template_code' => 'required',
             'language_id' => 'required'
         ];
     }
@@ -34,8 +33,7 @@ class FetchTermCondCMSRequest extends FormRequest
     {
         return[
             
-            'template_code.required' => _('template_code required'),
-            'language_id.required' => _('language_id required')
+            'language_id.required' => __('language_id required')
            
            
         ];

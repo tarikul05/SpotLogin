@@ -7,7 +7,7 @@
 @section('content')
 <div class="content email_template_page">
 	<div class="container-fluid area-container">
-		<form method="POST" action="{{route('add.email_template')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
+		<form method="POST" action="{{route('add.term_cond_cms')}}" id="tcTemplateForm" name="tcTemplateForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
 					<div class="col-sm-10 col-xs-12 header-area">
@@ -36,11 +36,9 @@
 				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
-					<input type="hidden" name="last_template_code" id="last_template_code" value="">
-					<input type="hidden" name="html_subject_text" id="html_subject_text" value="">
-					<input type="hidden" name="html_body_text" id="html_body_text" value="">
+					<input type="hidden" name="tc_template_id" id="tc_template_id" value="0">
 					
-					
+
 					<div class="col-md-10 offset-md-1 row">
 						
 						<div class="row col-lg-5 col-md-5 col-sm-12">
@@ -126,32 +124,23 @@
 		// } else {
 		// 	bind_top_nav_mobile(); 
 		// }
-		$("#emailForm").submit(function(e) {
+		$("#tcTemplateForm").submit(function(e) {
 			$('.error').html('');
 			if(validateForm()) {
-				var body_text = CKEDITOR.instances["body_text"].getData(); 
+				//var body_text = CKEDITOR.instances["body_text"].getData(); 
 			} else {
 				e.preventDefault(e);  
 			}
 		});
 
-		$('.my_ckeditor').each( function () {
-			//CKEDITOR.replace( "body_text", {
-				CKEDITOR.replace( this.id, {
-							//customConfig: '/ckeditor/config_all.js',
-							height: 300
-							,extraPlugins: 'Cy-GistInsert'
-							,extraPlugins: 'AppFields'
-							//,language: langid
-							,filebrowserBrowseUrl: 'ckfinder/ckfinder.html'
-							//,filebrowserImageBrowseUrl: ckfinder_html
-							,filebrowserUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files'
-							,filebrowserImageUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload'
-						});
-		});  
-		
 
-		//ChangeLanguage();
+
+		  
+ 
+
+		
+		Fetch_page_item_info();
+
 	}); //ready
 
 	function ChangeLanguage(){
@@ -159,17 +148,18 @@
 	}
 
 	function validateForm() {
-		var subject_text = document.getElementById("subject_text").value;
-		var body_text = document.getElementById("body_text").value;
+		var tc_text = CKEDITOR.instances["tc_text"].getData(); 
+		var spp_text = CKEDITOR.instances["spp_text"].getData(); 
+		
 		let error = false;
-		if (subject_text == null || subject_text == "") {
-			$('#subject_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
-			document.getElementById("subject_text").focus();
+		if (tc_text == null || tc_text == "") {
+			$('#tc_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+			document.getElementById("tc_text").focus();
 			error = true;
 		}
-		if (body_text == null || body_text == "") {
-			document.getElementById("body_text").focus();
-			$('#body_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+		if (spp_text == null || spp_text == "") {
+			document.getElementById("spp_text").focus();
+			$('#spp_text').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
 			error = true;             
 		}
 		
@@ -189,60 +179,72 @@
 		editor.setData( value );
 	}
 
-	function Fetch_page_item_info(lan=null){    
-		var found=0;
-		var p_template_code=document.getElementById("template_code").value;      
-		document.getElementById("last_template_code").value=p_template_code;         
-		var resultHtml ='',data='';
+	function Fetch_page_item_info(lan=null){  
+		var resultHtml ='',data='',fetched_rows =0,
+		language_id=document.getElementById("language_id").value;
+		if (lan != null) {
+			tc_template_id=0;
+			$('#tc_template_id').val(tc_template_id); 
+		} else {
+			tc_template_id=document.getElementById("tc_template_id").value; 
+		}
+		 
 		
-		document.getElementById("type").value='fetch_email_template';
-		let formdata = $("#emailForm").serializeArray();
+		
+		document.getElementById("type").value='fetch_tc_cms_template';
+		let formdata = $("#tcTemplateForm").serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
       
-		formdata.push({
-			"name": "_token",
-			"value": csrfToken
-		});
+	
+		// console.log(formdata);
+		// return false;
 		for (key in CKEDITOR.instances) {
 				CKEDITOR.instances[key].destroy(true);
 		}		
 		$.ajax({
-				url: BASE_URL + '/fetch_email_template',
+				url: BASE_URL + '/fetch_tc_cms_template',
 				data: formdata,
 				type: 'POST',                     
 				dataType: 'json',
 				success: function(data) {
 					if (data.status==1) {
 							
-							document.getElementById("subject_text").value=data.data.subject_text;
-							document.getElementById("body_text").value=data.data.body_text;
-							let body_text = document.getElementById("body_text");   
-							body_text.innerHTML=data.data.body_text;
+							document.getElementById("tc_text").value=data.data.tc_text;
+							// let tc_text = document.getElementById("tc_text");   
+							// tc_text.innerHTML=data.data.tc_text;
+							document.getElementById("spp_text").value=data.data.spp_text;
+							// let spp_text = document.getElementById("spp_text");   
+							// spp_text.innerHTML=data.data.spp_text;
 
-							var resultHtml ='';
-							$.each(data.lngdata, function(key,value){
-								resultHtml+='<option value="'+key+'">'+value+'</option>';  
-    					});
-    					$('#template_code').html(resultHtml);
-							var last_template_code=document.getElementById("last_template_code").value;
-							if (last_template_code != "") {
-									$('#template_code').val(last_template_code);
-									$('#last_template_code').val(last_template_code);
+							
+							var tc_template_id=data.data.tc_template_id;
+							if (tc_template_id != "") {
+									$('#tc_template_id').val(tc_template_id);
 							}
 							//SetContents(data.data.body_text);
 					} else{
-						document.getElementById("subject_text").value='';
-						let body_text = document.getElementById("body_text");   
-						body_text.innerHTML='';
+						document.getElementById("tc_text").value='';
+						document.getElementById("spp_text").value='';
 					} 
-					//$('.my_ckeditor').each( function () {
-						CKEDITOR.replace( "body_text", {
-							customConfig: '/ckeditor/config_email.js',
-							height: 300
-							,extraPlugins: 'Cy-GistInsert'
-							,extraPlugins: 'AppFields'
-						});
-					//});  
+
+
+					var langid=document.getElementById("language_id").value;
+					var ckfinder_html='ckfinder/ckfinder.html?type=Images&time='+new Date().getTime();
+					$('.my_ckeditor').each( function () {
+						//CKEDITOR.replace( "body_text", {
+							CKEDITOR.replace( this.id, {
+										//customConfig: '/ckeditor/config_all.js',
+										height: 300
+										,extraPlugins: 'Cy-GistInsert'
+										,extraPlugins: 'AppFields'
+										,language: langid
+										,filebrowserBrowseUrl: 'ckfinder/ckfinder.html'
+										,filebrowserImageBrowseUrl: ckfinder_html
+										,filebrowserUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files'
+										,filebrowserImageUploadUrl: 'ckfinder/core/connector/php/connector.php?command=QuickUpload'
+									});
+					});
+					 
 					  
 				},   // sucess
 				error: function(reject) { 
