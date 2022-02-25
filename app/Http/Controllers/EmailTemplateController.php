@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Language;
 use App\Models\EmailTemplate;
 use App\Http\Requests\FetchTemplateRequest;
+use App\Http\Requests\EmailTemplateRequest;
 use File;
 
 
@@ -17,46 +18,6 @@ class EmailTemplateController extends Controller
     */
     public function index()
     {
-
-    }   
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-    */
- 
-    public function addUpdate(Request $request, EmailTemplate $emailTemplate)
-    {
-        $params = $request->all();
-        
-        if ($request->isMethod('post')){
-            
-            try{
-                $this->validate($request, [
-                    'template_code' => 'required',
-                    'subject_text' => 'required',
-                    'body_text' => 'required',
-                    'language_id' => 'required',
-                ]);
-                $request->merge(['language'=> $params['language_id'],'is_active'=> 'Y']);
-                
-                $template = EmailTemplate::where([
-                    ['template_code', $params['template_code']],
-                    ['language', $params['language_id']],
-                    ['is_active', 'Y']
-                ])->first(); 
-                if (empty($template)) {
-                    EmailTemplate::create($request->except(['_token']));
-                    return back()->with('success', __('Email Template added successfully!'));
-                }else{
-                    $template->update($request->except(['_token']));
-                    return back()->with('success', __('Email Template updated successfully!'));
-                }
-            } catch (\Exception $e) {
-                //return error message
-                return redirect()->back()->with('error', __('Internal server error'));
-
-            }
-        }
         $language = Language::orderBy('sort_order')->get();
         
         $email_template_code = config('global.email_template');
@@ -67,6 +28,36 @@ class EmailTemplateController extends Controller
             'title' => 'Email Template',
             'pageInfo'=>['siteTitle'=>'']
         ]);
+
+    }   
+    /**
+     * Remove the specified resource from storage.
+     * @return Response
+    */
+ 
+    public function addUpdate(EmailTemplateRequest $request)
+    {
+        $params = $request->all();  
+        try{
+            $request->merge(['language'=> $params['language_id'],'is_active'=> 'Y']);
+            $template = EmailTemplate::where([
+                ['template_code', $params['template_code']],
+                ['language', $params['language_id']],
+                ['is_active', 'Y']
+            ])->first(); 
+            if (empty($template)) {
+                EmailTemplate::create($request->except(['_token']));
+                return back()->with('success', __('Email Template added successfully!'));
+            }else{
+                $template->update($request->except(['_token']));
+                return back()->with('success', __('Email Template updated successfully!'));
+            }
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->with('error', __('Internal server error'));
+
+        }
+        
     }
 
     
