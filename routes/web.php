@@ -37,7 +37,7 @@ Route::match(array('GET', 'POST'), "permission-check", array(
 // email template 
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
-
+Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
 
 
 Route::get('parameters', 'ParametersController@index')->name('parameters');
@@ -78,6 +78,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), "add-email-template", array(
       'uses' => 'EmailTemplateController@addUpdate',
       'as' => 'add.email_template'
+    ));
+
+    
+    // tc template 
+    Route::match(array('GET', 'POST'), "term_cond/term_cond_cms", array(
+      'uses' => 'TermCondController@addUpdateCMS',
+      'as' => 'add.term_cond_cms'
     ));
 
   });
