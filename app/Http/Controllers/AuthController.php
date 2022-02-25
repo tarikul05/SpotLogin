@@ -398,6 +398,7 @@ class AuthController extends Controller
         return view('pages.auth.permission_check', [
             'schools' => $user->schools(),
             'user' => $user,
+            'selected_role' => $request->session()->get('selected_role'),
             'pageInfo'=>['siteTitle'=>'']
         ]);
 
