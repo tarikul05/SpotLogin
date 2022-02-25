@@ -367,6 +367,7 @@ class AuthController extends Controller
     public function permission_check(Request $request)
     {
         $user = Auth::user();
+        // dd($user->roleType());
         // if (!empty($request->session()->get('selected_role'))) {
         //     return redirect()->route('teacherHome');
         // }

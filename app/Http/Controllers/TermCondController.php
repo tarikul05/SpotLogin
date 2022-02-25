@@ -10,9 +10,20 @@ use App\Http\Requests\FetchTermCondCMSRequest;
 use App\Http\Requests\TermCondRequest;
 
 
-
 class TermCondController extends Controller
 {
+    /**
+     * create a new instance of the class
+     *
+     * @return void
+     */
+    function __construct()
+    {
+         $this->middleware('permission:terms-condition-list|terms-condition-add-udpate', ['only' => ['index']]);
+         $this->middleware('permission:terms-condition-add-udpate', ['only' => ['addUpdate']]);
+         // $this->middleware('permission:language-delete', ['only' => ['destroy']]);
+    }
+
      /**
      * Remove the specified resource from storage.
      * @return Response

@@ -24,8 +24,16 @@ return [
         'translation-edit',
         'translation-delete',
         
-        // add-update language Language controller
+        // Language controller
         'language-list',
         'language-create-udpate',
+
+        // TermCondController controller
+        'terms-condition-list',
+        'terms-condition-add-udpate',
+
+        // TermCondController controller
+        'email-template-list',
+        'email-template-add-udpate'
         
         ];
