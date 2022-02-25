@@ -13,12 +13,26 @@ class CreateSchoolStudentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_students', function (Blueprint $table) {
+        Schema::create('school_student', function (Blueprint $table) {
             $table->id();
             $table->integer('student_id')->nullable();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->integer('school_id')->nullable();
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->string('email', 50)->nullable();
+            $table->string('nickname', 50)->nullable();
+            $table->string('billing_method', 3)->nullable()->default('E')->comment('E=Eventwise, M=Monthly & Y=Yearly');
+            $table->smallInteger('has_user_account')->nullable()->default(0);
+            $table->integer('level_id')->nullable();
+            $table->foreign('level_id')->references('id')->on('levels');
+            $table->string('licence_arp', 30)->nullable();
+            $table->string('level_skating_arp', 20)->nullable();
+            $table->dateTime('level_date_arp')->nullable();
+            $table->string('licence_usp', 30)->nullable();
+            $table->string('level_skating_usp', 20)->nullable();
+            $table->dateTime('level_date_usp')->nullable();
+            $table->string('comment', 500)->nullable();
+            $table->boolean('is_active')->nullable()->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +45,6 @@ class CreateSchoolStudentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_students');
+        Schema::dropIfExists('school_student');
     }
 }

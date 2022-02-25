@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use App\Mail\SportloginEmail;
 use URL;
+use Spatie\Permission\Models\Role;
 
 
 class AuthController extends Controller
@@ -123,12 +124,6 @@ class AuthController extends Controller
                         else if (isset($user->parent)) {
                             $country_code = $user->parent['country_code'];
                         }
-                        else if (isset($user->coach)) {
-                            $country_code = $user->coach['country_code'];
-                        }
-                        else if (isset($user->schooladmin)) {
-                            $country_code = $user->schooladmin['country_code'];
-                        }
 
                         $result = array(
                             "status"     => 0,
@@ -146,8 +141,6 @@ class AuthController extends Controller
                 
             }
             else if ($data['type'] === "check_first_login") {
-
-                
                 
             
                 $user_name = $data['login_username'];
@@ -173,16 +166,11 @@ class AuthController extends Controller
             }
 
             else if ($data['type'] === "change_first_password") {
-
-            
                 $user_name = trim($_POST['reset_username']);
                 $old_password = trim($_POST['old_password']);
                 $new_password = trim($_POST['new_password']);
                 sleep(3);
                 $result = User::change_password($user_name, $old_password,$new_password);
-                
-
-            
 
             }
             return response()->json($result);
@@ -367,6 +355,37 @@ class AuthController extends Controller
     
 
         }
+    }
+
+    /**
+     * checked permission
+     * 
+     * @return json
+     * @author Tarikul
+     * @version 0.1 written in 2022-02-11
+     */
+    public function permission_check(Request $request)
+    {
+        $user = Auth::user();
+        // echo "<pre>";
+        // dd($user->getRoleTypettribute());
+        if ($request->isMethod('post')){
+            $params = $request->all();
+            foreach ($user->schools() as $key => $school) {
+                if ($school->id == $params['sch']) {
+                    $request->session()->put('selected_school', $school);
+                    $user->syncRoles([$school->pivot->role_type]);
+                }
+            }
+            
+        }
+
+        return view('pages.auth.permission_check', [
+            'schools' => $user->schools(),
+            'user' => $user,
+            'pageInfo'=>['siteTitle'=>'']
+        ]);
+
     }
 
    

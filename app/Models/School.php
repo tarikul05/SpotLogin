@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class School extends Model
+class School extends BaseModel
 {
     use HasFactory, SoftDeletes;
 

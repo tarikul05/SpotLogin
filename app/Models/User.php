@@ -14,6 +14,8 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\SchoolEmployee;
 use App\Models\SchoolTeacher;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -74,7 +76,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['related_school'];
+    protected $appends = ['related_school','selected_school','role_type'];
 
 
 
@@ -94,27 +96,42 @@ class User extends Authenticatable
         return $this->authority !== 'SUPER_ADMIN';
     }
 
-
      /**
-     * Get the teacher for the user.
+     * Get the personable for the user.
      */
-    public function teacher()
+    public function personable()
     {
-        
-        return $this->belongsTo(Teacher::class, 'person_id', 'id');
-        
-        
+        return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
     }
 
      /**
-     * Get the teacher for the user.
+     * Get the schools for the user.
      */
-    public function coach()
+    public function schools()
     {
-        
-        return $this->belongsTo(Teacher::class, 'person_id', 'id');
-        
-        
+
+        return $this->personable->schools;
+
+    }
+     /**
+     * Get the schools for the user.
+     */
+    public function getSelectedSchoolAttribute()
+    {
+
+        return session('selected_school');
+
+    }
+
+    /**
+     * Get the schools for the user.
+     */
+    public function getRoleTypettribute()
+    {
+        // $this->selected_school
+        return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
+        return $this->getRoleNames()[0];
+
     }
 
 
@@ -137,19 +154,6 @@ class User extends Authenticatable
         return $this->belongsTo(Parent::class, 'person_id', 'id');
         
     }
-
-
-     /**
-     * Get the student for the user.
-     */
-    public function schooladmin()
-    {
-        
-        return $this->belongsTo(SchoolEmployee::class, 'person_id', 'id');
-        
-    }
-
-
   
 
 
@@ -158,44 +162,39 @@ class User extends Authenticatable
      *
      * @return object|null
      */
-    public function getRelatedSchoolAttribute()
-    {
+    // public function getRelatedSchoolAttribute()
+    // {
 
         
-        $school_data = '';
+    //     $school_data = '';
 
-        switch ($this->person_type) {
-            case 'TEACHER':
-                if ($this->teacher) {
-                    $school_data = !empty($this->teacher->schoolData) ? $this->teacher->schoolData : null;
-                }
-                break;
-            case 'COACH':
-                if ($this->coach) {
-                    $school_data = !empty($this->coach) ? $this->coach : null;
-                }
-                break;
-            case 'STUDENT':
-                if ($this->student ) {
-                    $school_data = !empty($this->student->schoolData) ? $this->student->schoolData : null;
-                }
-                break;
-            case 'PARENT':
-                if ($this->parent ) {
-                    $school_data = !empty($this->parent->school) ? $this->parent->school : null;
-                }
-                break;
-            case 'SCHOOL_ADMIN':
-                if ($this->schooladmin ) {
-                    $school_data = !empty($this->schooladmin->school) ? $this->schooladmin->school : null;
-                }
-                break;
-            default:
-                $school_data = null;
-        }
+    //     switch ($this->person_type) {
+    //         case 'TEACHER':
+    //             if ($this->teacher) {
+    //                 $school_data = !empty($this->teacher->schoolData) ? $this->teacher->schoolData : null;
+    //             }
+    //             break;
+    //         case 'COACH':
+    //             if ($this->coach) {
+    //                 $school_data = !empty($this->coach) ? $this->coach : null;
+    //             }
+    //             break;
+    //         case 'STUDENT':
+    //             if ($this->student ) {
+    //                 $school_data = !empty($this->student->schoolData) ? $this->student->schoolData : null;
+    //             }
+    //             break;
+    //         case 'PARENT':
+    //             if ($this->parent ) {
+    //                 $school_data = !empty($this->parent->school) ? $this->parent->school : null;
+    //             }
+    //             break;
+    //         default:
+    //             $school_data = null;
+    //     }
 
-        return $school_data;
-    }
+    //     return $school_data;
+    // }
 
     static public function getUserData($field,$username,$password = null){
         
