@@ -19,6 +19,7 @@
 					</div>
 					<div class="col-sm-2 col-xs-12 btn-area">
 							<div class="pull-right btn-group">
+								@can('terms-condition-add-udpate')
 									<a class="btn btn-sm btn-info text-white" href="../admin/" id="back_btn"> 
 										<i class="fa fa-arrow-left"></i>
 										{{ __('back')}}
@@ -27,6 +28,7 @@
 										<i class="fa fa-plus" aria-hidden="true"></i>
 										{{ __('Save')}}
 									</button>
+								@endcan
 							</div>
 					</div>    
 				</div>                 
@@ -90,13 +92,15 @@
 							</table>
 						</div>
 					</div>
+
+					@can('terms-condition-add-udpate')
 					<div class="offset-md-1 col-lg-10 col-md-10">
 						<button type="submit" class="btn btn-sm btn-success save_button float-end" id="update_btn">
 							<i class="fa fa-plus" aria-hidden="true"></i>
 							{{ __('Save')}}
 						</button>
-								
 					</div>
+					@endcan
 				</div>
 			</div>
 		

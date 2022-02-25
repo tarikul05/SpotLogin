@@ -28,7 +28,7 @@
                     {!! Form::submit('Logged in As '.$role, ['class' => 'btn btn-primary']) !!}
                     {!! Form::close() !!}
                     @if ($user->roleType() === $role)
-                        <span class="bg-success text-white p-1">checked</span>
+                        <span class="bg-success text-white p-1 rounded">checked</span>
                     @endif
                     
               </div>

@@ -43,6 +43,9 @@
                                 <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                     data set master
                                 </a>
+                                @can('terms-condition-list')
+                                    <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
+                                @endcan
                                 @can('language-list')
                                     <a class="dropdown-item" href="/admin/language">{{ __('Languages') }}</a>
                                 @endcan
