@@ -36,7 +36,7 @@
 				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
-					<input type="hidden" name="tc_template_id" id="tc_template_id" value="{{old('tc_template_id') ? old('tc_template_id') : ''}}">
+					<input type="hidden" name="tc_template_id" id="tc_template_id" value="{{old('tc_template_id') ? old('tc_template_id') : '0'}}">
 					
 
 					<div class="col-md-10 offset-md-1 row">
