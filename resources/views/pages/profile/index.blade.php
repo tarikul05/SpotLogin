@@ -9,13 +9,13 @@
 <div class="content update_profile_page">
 	<div class="container-fluid area-container">
 
-    <form method="POST" action="{{route('add.email_template')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
+    <form method="POST" action="{{route('profile.update')}}" id="emailForm" name="emailForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
 					<div class="col-sm-6 col-xs-12 header-area">
 							<div class="page_header_class">
 									<label id="page_header" name="page_header">
-										{{__('User Account')}}: {{ $data['user']->username }}
+										{{__('User Account')}}: <?php echo !empty($AppUI['username']) ? $AppUI['username'] : '';?>
 									</label>
 							</div>
 					</div>
@@ -53,17 +53,16 @@
                     <label id="page_header" class="page_title text-black">{{ __('User Account')}}</label>
                   </div>
                 </div>
-                @csrf
               
                 <div class="col-md-6 offset-md-2">
                   <div class="form-group">
-                    <input type="hidden" id="user_id" name="user_id" value="0">
+                    <input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
                   </div> 
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
                     <div class="col-sm-6">
                       <div class="selectdiv form-group-data">
-                        <input type="text" class="form-control" id="language_code" name="language_code">
+                        <input type="text" class="form-control" id="username" name="username" value="{{!empty($AppUI['username']) ? old('username', $AppUI['username']) : old('username')}}">
                         
                       </div>
                     </div>

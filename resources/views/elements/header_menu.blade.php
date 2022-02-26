@@ -32,38 +32,39 @@
                         
                     </div>
                     <div class="navbar-nav ms-auto user-area">
-                        
-                        <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
-                            <span class="admin_name"><?php echo !empty($AppUI['username']) ? $AppUI['username'] : 'Admin';?></span>
-                            <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
-                        </a>
-                        <div class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
-                            <div class="dropdown-menu">
-                                <!-- <a class="dropdown-item" href="/email/email_template">
-                                    Modèle d'email
-                                </a>
-                                <a class="dropdown-item" href="/admin/update_core_dataset_options">
-                                    data set master
-                                </a> -->
-                                @can('email-template-list')
-                                    <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
-                                @endcan
-                                @can('terms-condition-list')
-                                    <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
-                                @endcan
-                                @can('language-list')
-                                    <a class="dropdown-item" href="/admin/language">{{ __('Languages') }}</a>
-                                @endcan
-                                @can('translation-list')
-                                    <a class="dropdown-item" href="/languages">{{ __('Translations') }}</a>
-                                @endcan
-                                @can('role-list')
-                                    <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
-                                @endcan
-                                <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
+                        <?php if (!empty($AppUI['id'])): ?>
+                            <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
+                                <span class="admin_name"><?php echo !empty($AppUI['username']) ? $AppUI['username'] : 'Admin';?></span>
+                                <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
+                            </a>
+                            <div class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
+                                <div class="dropdown-menu">
+                                    <!-- <a class="dropdown-item" href="/email/email_template">
+                                        Modèle d'email
+                                    </a>
+                                    <a class="dropdown-item" href="/admin/update_core_dataset_options">
+                                        data set master
+                                    </a> -->
+                                    @can('email-template-list')
+                                        <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
+                                    @endcan
+                                    @can('terms-condition-list')
+                                        <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
+                                    @endcan
+                                    @can('language-list')
+                                        <a class="dropdown-item" href="/admin/language">{{ __('Languages') }}</a>
+                                    @endcan
+                                    @can('translation-list')
+                                        <a class="dropdown-item" href="/languages">{{ __('Translations') }}</a>
+                                    @endcan
+                                    @can('role-list')
+                                        <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
+                                    @endcan
+                                    <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -131,17 +131,14 @@ class ProfileController extends Controller
    */
   public function userDetailUpdate(Request $request)
   {
-    $user = $request->user();
-    if (!$user) {
-      return back();
-    }
+    
 
     $response = [];
     $params = $request->all();
 
     
     
-    $response['data'] = $user;
+   // $response['data'] = $user;
 
 
     return view('pages.profile.index', [
@@ -154,7 +151,7 @@ class ProfileController extends Controller
         ,
         'data'=>
         [
-           'user'      =>  $user,
+           //'user'      =>  $user,
            'Title' =>  trans('global.Profile')
         ]
       ]);
