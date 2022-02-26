@@ -16,8 +16,9 @@ class LanguagesController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:language-list|language-create-udpate', ['only' => ['index']]);
-         $this->middleware('permission:language-create-udpate', ['only' => ['addUpdate']]);
+        parent::__construct();
+        $this->middleware('permission:language-list|language-create-udpate', ['only' => ['index']]);
+        $this->middleware('permission:language-create-udpate', ['only' => ['addUpdate']]);
          // $this->middleware('permission:language-delete', ['only' => ['destroy']]);
     }
      /**
