@@ -335,6 +335,28 @@ table.tc_template .detail_header {
     margin-left: 100px;
     background-color: gray;
 }
+.modal_parameter .modal-content p {
+    font-size: 22px;
+    color: #0075BF;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 0;
+}
+.modal_parameter .modal-footer {
+    border: 0;
+}
+.modal_parameter .modal-footer {
+    border: 0;
+    width: 100%;
+    display: block;
+}
+.modal_parameter .modal-footer button{
+    margin: 0 auto;
+    display: block;
+    width: 120px;
+}
+
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

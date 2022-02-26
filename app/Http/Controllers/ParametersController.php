@@ -8,6 +8,7 @@ use File;
 use App\Models\Level;
 use App\Models\Location;
 use App\Models\Parameters;
+use Illuminate\Support\Facades\Auth;
 
 class ParametersController extends Controller
 {
@@ -38,43 +39,65 @@ class ParametersController extends Controller
     {
         try{
             if ($request->isMethod('post')){
-                $locationData = $request->all();
-                print_r($locationData);exit;
-                $location = Location::create($locationData);
-                $location->save();
                 
-                $result = array(
-                    "status"     => 1,
-                    'message' => __('Successfully Registered')
-                );
+                $locationData = $request->all();
+                foreach($locationData['location_name'] as $key => $value){
+                    $names[] = [
+                        'title' => $value,
+                        'school_id' => $locationData['school_id'] ? $locationData['school_id'] : 1,
+                    ];
+                }
+
+                $location = Location::insert($names);
+                if($location==1){
+                    $result = array(
+                        "status"     => 1,
+                        'message' => __('Successfully Registered')
+                    );
+                }
             }
         }catch (Exception $e) {
             DB::rollBack();
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
         }   
+
+        return $result;
     }
 
     public function addLevel(Request $request)
     {
         try{
             if ($request->isMethod('post')){
-                $levelData = $request->all();
-                $level = Level::create($levelData);
-                $level->save();
                 
-                $result = array(
-                    "status"     => 1,
-                    'message' => __('Successfully Registered')
-                );
+                $levelData = $request->all();
+
+                foreach($levelData['level_name'] as $key => $value){
+                    $names[] = [
+                        'title' => $value,
+                        'school_id' => $levelData['school_id'] ? $levelData['school_id'] : 1,
+                    ];
+                }
+
+                $level = Level::insert($names);
+                if($level==1){
+                    $result = array(
+                        "status"     => 1,
+                        'message' => __('Successfully Registered')
+                    );
+                }
             }
         }catch (Exception $e) {
             DB::rollBack();
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
         }   
+
+        return $result;
     }
  
  

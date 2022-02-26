@@ -31,9 +31,9 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_category" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Event Category</button>
-				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_location" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Locations</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_level" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Level</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_category" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Event Category') }}</button>
+				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_location" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Locations') }}</button>
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_level" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">{{ __('Level') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -43,10 +43,10 @@
 			<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
 				<div class="section_header_class row">
 					<div class="col-md-3 col-5">
-						<label>Category Name</label>
+						<label>{{ __('Category Name') }}</label>
 					</div>
 					<div class="col-md-3 col-6">
-						<label class="invoice_type_label">Invoice Type</label>
+						<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
 					</div>
 					<div class="col-md-2 col-1">
 						<label></label>
@@ -58,17 +58,17 @@
 							<div class="col-md-5 col-5">
 								<div class="form-group row">
 									<div class="col-sm-11">
-										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+										<input class="form-control category_name" maxlength="50" name="category_name[]" placeholder="Category Name" type="text">
 									</div>
 								</div>
 							</div>
 							<div class="col-md-5 col-6">
 								<div class="form-group row invoice_part">
 									<div class="col-sm-6">
-										<input name="school_invoice" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
+										<input type="radio" name="category_invoiced[]" value="School Invoiced" checked> <label> {{ __('School Invoiced') }}</label>
 									</div>
 									<div class="col-sm-6">
-										<input name="teacher_invoice" type="radio" value="Teacher Invoiced"> <label> Teacher Invoiced </label>
+										<input type="radio" name="category_invoiced[]" value="Teacher Invoiced"> <label> {{ __('Teacher Invoiced') }}</label>
 									</div>
 								</div>
 							</div>
@@ -88,10 +88,11 @@
 			</div>
 			<div class="tab-pane fade" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
 				<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('add_event_location.create')}}">
+					<input type="hidden" name="school_id" value="3">
 					@csrf
 					<div class="section_header_class row">
 						<div class="col-md-3 col-9">
-							<label>Location Name</label>
+							<label>{{ __('Location Name') }}</label>
 						</div>
 						<div class="col-md-2 col-2">
 							<label></label>
@@ -103,7 +104,7 @@
 								<div class="col-md-5 col-9">
 									<div class="form-group row">
 										<div class="col-sm-11">
-											<input class="form-control" id="location_name" maxlength="50" name="title[]" placeholder="Location Name" type="text">
+											<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="Location Name" type="text">
 										</div>
 									</div>
 								</div>
@@ -117,17 +118,18 @@
 							</div>
 						</div>
 						<div class="col-md-2">
-							<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Location</button>
+							<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
 						</div>
 					</div>
 				</form>	
 			</div>
 			<div class="tab-pane fade" id="tab_level" role="tabpanel" aria-labelledby="tab_level">
 				<form role="form" id="level_form" class="form-horizontal" method="post" action="#">
-				@csrf
+					<input type="hidden" name="school_id" value="3">
+					@csrf
 					<div class="section_header_class row">
 						<div class="col-md-3 col-9">
-							<label>Level Name</label>
+							<label>{{ __('Level Name') }}</label>
 						</div>
 						<div class="col-md-2 col-2">
 							<label></label>
@@ -139,7 +141,7 @@
 								<div class="col-md-5 col-9">
 									<div class="form-group row">
 										<div class="col-sm-11">
-											<input class="form-control" id="level_name[]" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
+											<input class="form-control" id="level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
 										</div>
 									</div>
 								</div>
@@ -160,8 +162,21 @@
 			</div>
 		</div>
 	</div>
-
 	<!-- End Tabs content -->
+
+	<!-- success modal-->
+	<div class="modal modal_parameter" id="modal_parameter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p id="modal_alert_body">{{ __('Sauvegarde réussie') }}</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal"><{{ __('Ok') }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 @endsection
 
 
@@ -172,17 +187,17 @@
 			<div class="col-md-5 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+						<input class="form-control" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
 					</div>
 				</div>
 			</div>
 			<div class="col-md-5 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-6">
-						<input name="school_invoice" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
+						<input name="category_invoiced[]" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
 					</div>
 					<div class="col-sm-6">
-						<input name="teacher_invoice" type="radio" value="Teacher Invoiced"> <label> Teacher Invoiced </label>
+						<input name="category_invoiced[]" type="radio" value="Teacher Invoiced"> <label> Teacher Invoiced </label>
 					</div>
 				</div>
 			</div>
@@ -233,7 +248,7 @@
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" id="location name" maxlength="50" name="title[]" placeholder="location name" type="text">
+						<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="location name" type="text">
 					</div>
 				</div>
 			</div>
@@ -261,7 +276,7 @@
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+						<input class="form-control" id="level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
 					</div>
 				</div>
 			</div>
@@ -339,13 +354,11 @@
 	function save_event_location(){	
 		
 		var formData = $('#location_form').serializeArray();
-		var school_id = 1;
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-      console.log(formData);
-
+		
 		formData.push({
 			"name": "_token",
-			"value": csrfToken
+			"value": csrfToken,
 		});
 		
 		$.ajax({
@@ -354,32 +367,41 @@
 				type: 'POST',
 				dataType: 'json',
 				success: function(response){	
-					if(response.status == 'success'){
-					
+					if(response.status == 1){
+						$('#modal_parameter').modal('show');
 					}
 				}
 			})
 	}
 
 	function save_event_level(){
-		var formData = new FormData($('#level_form')[0]);
-		formData.append("p_school_id", school_id);
-		formData.append("type", "save_event_level");
+		
+		var formData = $('#level_form').serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+		formData.push({
+			"name": "_token",
+			"value": csrfToken,
+		});
 
 		$.ajax({
-				url: 'handler/param_data.php',
+			url: BASE_URL + '/add-event-level',
 				data: formData,
 				type: 'POST',
 				dataType: 'json',
-				async: false,
-				processData: false,
-				contentType: false,
 				success: function(response){	
-					if(response.status == 'success'){
-
+					if(response.status == 1){
+						$('#modal_parameter').modal('show');
 					}
 				}
 			})
 	}
+
+	$(function () {
+        $('#modalClose').on('click', function () {
+            $('#modal_parameter').hide();
+			$('.modal-backdrop.show').hide();
+        })
+    })
 </script>
 @endsection

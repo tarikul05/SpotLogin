@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class Location extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes, CreatedUpdatedBy;
     protected $table = 'locationS';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
