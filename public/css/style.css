@@ -129,14 +129,16 @@ nav {
     margin-bottom:40px!important;
 }
 .language_page label,
-.email_template_page label{
+.email_template_page label,
+.update_profile_page label{
     color: #657E8E;
     font-size: 15px;
     padding-right:10px;
     margin-top:10px;
 }
 .language_page .form-group.row,
-.email_template_page .form-group.row {
+.email_template_page .form-group.row ,
+.update_profile_page .form-group.row {
     margin-bottom: 10px;
 }
 .save_button,
@@ -155,7 +157,8 @@ nav {
     margin-right: 2px;
     font-size: 14px;
 }
-.email_template_page .save_button{
+.email_template_page .save_button,
+.update_profile_page .save_button{
     margin-top:10px;
 }
 .table-responsive {
@@ -251,11 +254,43 @@ table.tc_template .detail_header {
 #nav-tab .nav-link.active:hover{
     border-bottom: 4px solid #3b75bf;
 }
+.navbar-nav.user-area {
+
+}
+.navbar-nav.user-area a.user_profile{
+    color: #FFF;
+    text-decoration: none;
+    display: block;
+    padding: 12px 10px 10px 10px;
+    font-family: 'Gilroy-Regular';
+    font-size: 17px;
+    outline: none;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+
+
+.navbar-nav.user-area a.user_profile.active, 
+.navbar-nav.user-area a.user_profile:hover, 
+.navbar-nav.user-area a.user_profile:focus {
+    background: #0075BF;
+    color: #152245;
+    display: block;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
 .dropdown-menu.show {
     display: block;
     background: #35404d;
     max-width: 180px;
-    margin-top: 8px;
+    margin-top: 0px;
     right:0;
     left:auto;
     padding-top: 0;
@@ -278,7 +313,10 @@ table.tc_template .detail_header {
 .dro_set {
     width: 26px;
     margin-top: 7px;
-    margin-left: 15px;
+    margin-left: 0px;
+    padding: 0;
+    padding-top: 16px;
+    padding-bottom: 17px;
 }
 .dropdown-menu a:hover{
     color: #479CCF;
@@ -299,7 +337,8 @@ table.tc_template .detail_header {
 }
 @media only screen and (max-width: 768px){
     .language_page label,
-    .email_template_page label {
+    .email_template_page label,
+    .update_profile_page label {
         text-align: left!important;
         padding-bottom: 8px;
     }
