@@ -19,8 +19,9 @@ class EmailTemplateController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:email-template-list|email-template-add-udpate', ['only' => ['index','templateVariables']]);
-         $this->middleware('permission:email-template-add-udpate', ['only' => ['addUpdate']]);
+        parent::__construct();
+        $this->middleware('permission:email-template-list|email-template-add-udpate', ['only' => ['index','templateVariables']]);
+        $this->middleware('permission:email-template-add-udpate', ['only' => ['addUpdate']]);
     }
      /**
      * Remove the specified resource from storage.

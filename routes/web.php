@@ -84,6 +84,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
 
+    // profile update
+    Route::get('profile-update', 'ProfileController@userDetailUpdate');
+    Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
+
 
   });
 
