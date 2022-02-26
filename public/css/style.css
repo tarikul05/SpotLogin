@@ -197,6 +197,36 @@ table.email_template th{
     width:99.9%;
     clear:both;
 }
+
+table.tc_template{
+    border: 1px solid #E1EFF7!important;
+}
+table.tc_template td, 
+table.tc_template th{
+    vertical-align: middle;
+    border:1px solid #E1EFF7!important;
+    padding: 19px;
+
+    display:block;
+    width:99.9%;
+    clear:both;
+}
+
+table.tc_template, table.tc_template tr, table.tc_template th, table.tc_template td {
+    /* border: 0px solid white; */
+   
+    line-height: 3em;
+    padding: 0px;
+    font-weight: bolder;
+}
+table.tc_template .detail_header {
+    
+    background-color: #ccccff;
+    padding: 5px;
+    border: 1px solid black;
+    font-weight: bolder;
+    text-align: center;
+}
 .delete_event,
 .delete_location,
 .delete_level{
@@ -262,6 +292,10 @@ table.email_template th{
 }
 .dropdown-toggle::after{
     content:none;
+}
+.permission-btn{
+    margin-left: 100px;
+    background-color: gray;
 }
 @media only screen and (max-width: 768px){
     .language_page label,

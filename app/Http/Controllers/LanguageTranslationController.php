@@ -10,6 +10,19 @@ use App\Models\Language;
 class LanguageTranslationController extends Controller
 {
      /**
+     * create a new instance of the class
+     *
+     * @return void
+     */
+    function __construct()
+    {
+         $this->middleware('permission:translation-list|translation-create|translation-edit|translation-delete', ['only' => ['index']]);
+         $this->middleware('permission:translation-create', ['only' => ['store']]);
+         $this->middleware('permission:translation-edit', ['only' => ['transUpdate']]);
+         $this->middleware('permission:translation-delete', ['only' => ['destroy']]);
+    }
+
+     /**
      * Remove the specified resource from storage.
      * @return Response
     */

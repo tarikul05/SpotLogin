@@ -9,12 +9,30 @@ use App\Models\Language;
 
 class LanguagesController extends Controller
 {
+    /**
+     * create a new instance of the class
+     *
+     * @return void
+     */
+    function __construct()
+    {
+         $this->middleware('permission:language-list|language-create-udpate', ['only' => ['index']]);
+         $this->middleware('permission:language-create-udpate', ['only' => ['addUpdate']]);
+         // $this->middleware('permission:language-delete', ['only' => ['destroy']]);
+    }
      /**
      * Remove the specified resource from storage.
      * @return Response
     */
     public function index()
     {
+        $languageList = Language::all();
+
+        return view('pages.languages.add', [
+            'alllanguages' => $languageList,
+            'title' => 'Languages',
+            'pageInfo'=>['siteTitle'=>'']
+        ]);
        
     } 
     
@@ -42,14 +60,6 @@ class LanguagesController extends Controller
                 return back()->with('success', __('Language updated successfully!'));
             }
         }
-
-        $languageList = Language::all();
-
-        return view('pages.languages.add', [
-            'alllanguages' => $languageList,
-            'title' => 'Languages',
-            'pageInfo'=>['siteTitle'=>'']
-        ]);
 
     }
 

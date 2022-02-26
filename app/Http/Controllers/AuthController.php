@@ -367,22 +367,38 @@ class AuthController extends Controller
     public function permission_check(Request $request)
     {
         $user = Auth::user();
-        // echo "<pre>";
-        // dd($user->getRoleTypettribute());
+        // dd($user->roleType());
+        // if (!empty($request->session()->get('selected_role'))) {
+        //     return redirect()->route('teacherHome');
+        // }
+        if ($user->person_type == 'App\Models\Student') {
+            $user->syncRoles(['student']);
+            $request->session()->put('selected_role','student');
+            return redirect()->route('teacherHome');
+
+        }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
+            $tRoleType = $user->schools()[0]->pivot->role_type;
+            $user->syncRoles([$tRoleType]);
+            $request->session()->put('selected_role',$tRoleType);
+            return redirect()->route('teacherHome');
+        }
+
         if ($request->isMethod('post')){
             $params = $request->all();
             foreach ($user->schools() as $key => $school) {
                 if ($school->id == $params['sch']) {
                     $request->session()->put('selected_school', $school);
+                    $request->session()->put('selected_role',$school->pivot->role_type);
                     $user->syncRoles([$school->pivot->role_type]);
+                    return redirect()->route('teacherHome');
                 }
             }
-            
         }
 
         return view('pages.auth.permission_check', [
             'schools' => $user->schools(),
             'user' => $user,
+            'selected_role' => $request->session()->get('selected_role'),
             'pageInfo'=>['siteTitle'=>'']
         ]);
 
@@ -396,9 +412,11 @@ class AuthController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        Session::flush();
+        
         return redirect('/');
     }
 

@@ -19,6 +19,7 @@
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
 							<div class="pull-right btn-group">
+								@can('email-template-add-udpate')
 									<a class="btn btn-sm btn-info text-white" href="../admin/" id="back_btn"> 
 										<i class="fa fa-arrow-left"></i>
 										{{ __('back')}}
@@ -27,6 +28,7 @@
 										<i class="fa fa-plus" aria-hidden="true"></i>
 										{{ __('Save')}}
 									</button>
+								@endcan
 							</div>
 					</div>    
 				</div>                 
@@ -36,9 +38,9 @@
 				@csrf
 				<div class="row">
 					<input type="hidden" name="type" id="type" value="">
-					<input type="hidden" name="last_template_code" id="last_template_code" value="">
-					<input type="hidden" name="html_subject_text" id="html_subject_text" value="">
-					<input type="hidden" name="html_body_text" id="html_body_text" value="">
+					<input type="hidden" name="last_template_code" id="last_template_code" value="{{old('template_code') ? old('template_code') : ''}}">
+					<input type="hidden" name="html_subject_text" id="html_subject_text" value="{{old('subject_text') ? old('subject_text') : ''}}">
+					<input type="hidden" name="html_body_text" id="html_body_text" value="{{old('body_text') ? old('body_text') : ''}}">
 					
 					
 					<div class="col-md-10 offset-md-1 row">
@@ -51,11 +53,11 @@
 								<select class="form-control m-bot15" name="language_id" id="language_id" onchange="ChangeLanguage()" >
 									@foreach ($alllanguages as $key => $lan)
 											<option 
-											value="{{ $lan->language_code }}"
+											value="{{ $lan->language_code }}" {{ old('language_id') == $lan->language_code ? 'selected' : '' }}
 											@if ($lan->language_code == app()->getLocale())
 													selected="selected"
 											@endif
-											">  {{ $lan->title }}</option>
+											>  {{ $lan->title }}</option>
 									@endforeach
 								</select>
 								<span id="language_id_error" class="error"></span>
@@ -68,8 +70,8 @@
 								<select class="form-control m-bot15" name="template_code" id="template_code" onchange="Fetch_page_item_info()" >
 									@foreach ($email_template as $key => $template)
 											<option 
-											value="{{ $key }}"
-											">  {{ __($template) }}</option>
+											value="{{ $key }}" {{ old('template_code') == $key ? 'selected' : '' }}
+											>  {{ __($template) }}</option>
 									@endforeach
 								</select>
 								<span id="template_code_error" class="error"></span>
@@ -87,7 +89,8 @@
 										<td>
 											<div>{{ __('Subject')}}:</div>
 											<div class="form-group-data">
-												<input type="text" class="form-control" id="subject_text" name="subject_text" value="">
+												<input type="text" class="form-control" id="subject_text" name="subject_text" value="{{old('subject_text') ? old('subject_text') : ''}}">
+												<span id="subject_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>
@@ -95,7 +98,8 @@
 										<td>
 											<div>{{ __('Email Messsage')}}:</div>
 											<div class="form-group-data">
-												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea"></textarea>
+												<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">{{old('body_text') ? old('body_text') : ''}}</textarea>
+												<span id="body_text_error" class="error"></span>
 											</div>
 										</td>
 									</tr>
@@ -103,6 +107,7 @@
 							</table>
 						</div>
 					</div>
+					@can('email-template-add-udpate')
 					<div class="offset-md-1 col-lg-10 col-md-10">
 						<button type="submit" class="btn btn-sm btn-success save_button float-end" id="update_btn">
 							<i class="fa fa-plus" aria-hidden="true"></i>
@@ -110,6 +115,7 @@
 						</button>
 								
 					</div>
+					@endcan
 				</div>
 			</div>
 		

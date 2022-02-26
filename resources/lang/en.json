@@ -94,5 +94,6 @@
     "Failed to get email template":"Failed to get email template",
     "email template found":"email template found",
     "template_code required":"template_code required",
-    "language_id required":"language_id required"
+    "language_id required":"language_id required",
+    "General_TC_PAGE_TITLE":"General Terms and Conditions, Solution Privacy Policy of sportlogin.ch"
 }

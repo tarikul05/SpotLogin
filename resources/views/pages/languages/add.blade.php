@@ -6,6 +6,7 @@
 </script>
 	<div class="content language_page">
 		<div class="container-fluid">
+			@can('language-create-udpate')
 			<form method="POST" action="{{route('add.language')}}" id="langForm" name="langForm" class="form-horizontal" role="form">
 				<div class="row">
 					<div class="col-sm-12 col-xs-12 header-area">
@@ -58,6 +59,7 @@
 					</div>
 				</div>
 			</form>
+			@endcan
 			<div class="row">
 				<form class="form-horizontal" role="form" action="">
 					<div class="offset-md-1 col-lg-10 col-md-10">
@@ -90,9 +92,12 @@
 
 											</td>
 											<td>
-											<button class="btn btn-success update_button" type="button" onclick="FetchData({{$i}})"><i class="fa fa-pencil"></i>
-											{{__('Update')}}
-											</button>
+
+											@can('language-create-udpate')
+												<button class="btn btn-success update_button" type="button" onclick="FetchData({{$i}})"><i class="fa fa-pencil"></i>
+												{{__('Update')}}
+												</button>
+											@endcan
 											</td>
 										</tr>
 										@php

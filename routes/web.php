@@ -18,8 +18,6 @@ use App\Http\Controllers\PermissionController;
 */
 
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
-Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index']);
-Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 
@@ -39,33 +37,11 @@ Route::match(array('GET', 'POST'), "permission-check", array(
 // email template 
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
+Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
 
 
-Route::prefix('admin')->group(function() {
-        
-  // Language 
-  Route::match(array('GET', 'POST'), "add-language", array(
-    'uses' => 'LanguagesController@addUpdate',
-    'as' => 'add.language'
-  ));
-
-  // email template 
-  Route::match(array('GET', 'POST'), "add-email-template", array(
-    'uses' => 'EmailTemplateController@addUpdate',
-    'as' => 'add.email_template'
-  ));
-
-});
-
-
-Route::get('add-language', 'LanguagesController@create')->name('language');
-Route::get('add-email-template', 'EmailTemplateController@create')->name('language');
 Route::get('parameters', 'ParametersController@index')->name('parameters');
-Route::get('languages', 'LanguageTranslationController@index')->name('languages');
-Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
-Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
-Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
-Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
 Route::get('check-translation', function(){
   \App::setLocale('fr');
   dd(__('website'));
@@ -76,11 +52,49 @@ Route::get('setlang/{locale}', function ($locale) {
   return redirect()->back();
 });
 
-
 // auth
 Route::group(['middleware' => ['auth']], function () {
-  Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
-  Route::resource('roles', "RoleController");
-  Route::resource('permissions', "PermissionController");
+  Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+    // Add edit language translations from json 
+    Route::get('languages', 'LanguageTranslationController@index')->name('languages');
+    Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
+    Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
+    Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
+    Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
+  Route::prefix('admin')->group(function() {
+
+    Route::resource('roles', "RoleController");
+    Route::resource('permissions', "PermissionController");
+        
+    // Language 
+
+    Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
+    Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
+
+
+    // email template 
+    Route::get('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
+    Route::post('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
+
+
+    
+    // tc template 
+    Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
+    Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
+
+
+  });
+
+
+  Route::middleware(['select_role'])->group(function () {
+    Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
+    Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
+  });
+
+
+
 });
+
+
