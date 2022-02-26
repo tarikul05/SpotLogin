@@ -31,9 +31,9 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Event Category</button>
-				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Locations</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Level</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_category" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Event Category</button>
+				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_location" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Locations</button>
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_level" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Level</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -87,7 +87,8 @@
 				</div>
 			</div>
 			<div class="tab-pane fade" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
-				<form role="form" id="location_form" class="form-horizontal" method="post" action="#">
+				<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('add_event_location.create')}}">
+					@csrf
 					<div class="section_header_class row">
 						<div class="col-md-3 col-9">
 							<label>Location Name</label>
@@ -102,7 +103,7 @@
 								<div class="col-md-5 col-9">
 									<div class="form-group row">
 										<div class="col-sm-11">
-											<input class="form-control" id="location_name" maxlength="50" name="location_name[]" placeholder="Location Name" type="text">
+											<input class="form-control" id="location_name" maxlength="50" name="title[]" placeholder="Location Name" type="text">
 										</div>
 									</div>
 								</div>
@@ -123,6 +124,7 @@
 			</div>
 			<div class="tab-pane fade" id="tab_level" role="tabpanel" aria-labelledby="tab_level">
 				<form role="form" id="level_form" class="form-horizontal" method="post" action="#">
+				@csrf
 					<div class="section_header_class row">
 						<div class="col-md-3 col-9">
 							<label>Level Name</label>
@@ -231,7 +233,7 @@
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+						<input class="form-control" id="location name" maxlength="50" name="title[]" placeholder="location name" type="text">
 					</div>
 				</div>
 			</div>
@@ -335,23 +337,26 @@
 	}
 
 	function save_event_location(){	
-		var formData = new FormData($('#location_form')[0]);
-		formData.append("p_school_id", school_id);
-		console.log(formdata);
+		
+		var formData = $('#location_form').serializeArray();
+		var school_id = 1;
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+      console.log(formData);
+
+		formData.push({
+			"name": "_token",
+			"value": csrfToken
+		});
+		
 		$.ajax({
-				url: '',
+				url: BASE_URL + '/add-event-location',
 				data: formData,
 				type: 'POST',
 				dataType: 'json',
-				async: false,
-				processData: false,
-				contentType: false,
 				success: function(response){	
-				if(response.status == 'success')
-				
-				},
-				error: function(e){ 
+					if(response.status == 'success'){
 					
+					}
 				}
 			})
 	}
@@ -370,12 +375,9 @@
 				processData: false,
 				contentType: false,
 				success: function(response){	
-				if(response.status == 'success')
-				PopulateEventlevel();
-				successModalCall(GetAppMessage('save_confirm_message'));
-				},
-				error: function(e){ errorModalCall(GetAppMessage('error_message_text'));
-					//alert('Error processing your request: '+e.responseText+' update_student_disc_perc');
+					if(response.status == 'success'){
+
+					}
 				}
 			})
 	}

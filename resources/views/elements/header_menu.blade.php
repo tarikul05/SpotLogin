@@ -32,7 +32,6 @@
                         
                     </div>
                     <div class="navbar-nav ms-auto">
-                        <span class="admin_name">{{ __(auth()->user()->username) }}</span>
                         <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>

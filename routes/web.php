@@ -98,3 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 
+// add parameters
+
+Route::post('/add-event-location', 'ParametersController@addLocation')->name('add_event_location.create');
+Route::post('/add-event-level', 'ParametersController@addLevel')->name('add_event_level.create');
