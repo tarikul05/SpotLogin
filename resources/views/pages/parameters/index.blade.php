@@ -40,7 +40,7 @@
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
-			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+			<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
 				<div class="section_header_class row">
 					<div class="col-md-3 col-5">
 						<label>Category Name</label>
@@ -86,71 +86,75 @@
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-				<div class="section_header_class row">
-					<div class="col-md-3 col-9">
-						<label>Location Name</label>
+			<div class="tab-pane fade" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
+				<form role="form" id="location_form" class="form-horizontal" method="post" action="#">
+					<div class="section_header_class row">
+						<div class="col-md-3 col-9">
+							<label>Location Name</label>
+						</div>
+						<div class="col-md-2 col-2">
+							<label></label>
+						</div>
 					</div>
-					<div class="col-md-2 col-2">
-						<label></label>
-					</div>
-				</div>
-				<div class="row">
-					<div id="add_more_location_div" class="col-md-8">
-						<div class="col-md-12 add_more_location_row row">
-							<div class="col-md-5 col-9">
-								<div class="form-group row">
-									<div class="col-sm-11">
-										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+					<div class="row">
+						<div id="add_more_location_div" class="col-md-8">
+							<div class="col-md-12 add_more_location_row row">
+								<div class="col-md-5 col-9">
+									<div class="form-group row">
+										<div class="col-sm-11">
+											<input class="form-control" id="location_name" maxlength="50" name="location_name[]" placeholder="Location Name" type="text">
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="offset-1 col-2">
-								<div class="form-group row">
-									<div class="col-sm-5">
-										<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								<div class="offset-1 col-2">
+									<div class="form-group row">
+										<div class="col-sm-5">
+											<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div class="col-md-2">
+							<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Location</button>
+						</div>
 					</div>
-					<div class="col-md-2">
-						<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Location</button>
-					</div>
-				</div>
+				</form>	
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<div class="section_header_class row">
-					<div class="col-md-3 col-9">
-						<label>Level Name</label>
+			<div class="tab-pane fade" id="tab_level" role="tabpanel" aria-labelledby="tab_level">
+				<form role="form" id="level_form" class="form-horizontal" method="post" action="#">
+					<div class="section_header_class row">
+						<div class="col-md-3 col-9">
+							<label>Level Name</label>
+						</div>
+						<div class="col-md-2 col-2">
+							<label></label>
+						</div>
 					</div>
-					<div class="col-md-2 col-2">
-						<label></label>
-					</div>
-				</div>
-				<div class="row">
-					<div id="add_more_level_div" class="col-md-8">
-						<div class="col-md-12 add_more_level_row row">
-							<div class="col-md-5 col-9">
-								<div class="form-group row">
-									<div class="col-sm-11">
-										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+					<div class="row">
+						<div id="add_more_level_div" class="col-md-8">
+							<div class="col-md-12 add_more_level_row row">
+								<div class="col-md-5 col-9">
+									<div class="form-group row">
+										<div class="col-sm-11">
+											<input class="form-control" id="level_name[]" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-md-2 offset-1 col-2">
-								<div class="form-group row">
-									<div class="col-sm-5">
-										<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+								<div class="col-md-2 offset-1 col-2">
+									<div class="form-group row">
+										<div class="col-sm-5">
+											<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div class="col-md-2">
+							<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
+						</div>
 					</div>
-					<div class="col-md-2">
-						<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
-					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -276,5 +280,104 @@
 		var current_obj = $(this);
 		current_obj.parents('.add_more_level_row').remove();
 	});
+
+	// save functionality
+	$('#save_btn').click(function (e) {
+		var x=document.getElementsByClassName("tab-pane active");
+		if (x[0].id == "tab_category"){
+			save_event_category();
+		}else if (x[0].id == "tab_location"){
+			save_event_location();
+		}else if (x[0].id == "tab_level"){
+			save_event_level();
+		}
+	}); 
+
+	function save_event_category(){
+			var list = document.getElementsByClassName("category_name_class");
+			for (var i = 0; i < list.length; i++) {
+				if (list[i].value == '') {
+					try {
+						errorModalCall(GetAppMessage('invalid_category_name_msg'));
+						return false;
+					} catch (err) {
+						//null
+					}
+				}
+			}
+		
+		var p_person_id="";
+		//var p_school_id=document.getElementById("school_id").value;
+
+		var formData = new FormData($('#event_cat_form')[0]);
+		formData.append("p_school_id", school_id);
+		formData.append("p_person_id", "");
+		formData.append("type", "save_event_category");
+
+		$.ajax({
+				url: '../school/school_data.php',
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				processData: false,
+				contentType: false,
+				success: function(response){	
+				if(response.status == 'success')
+					PopulateEventLocation();
+					successModalCall(GetAppMessage('save_confirm_message'));
+					
+				},
+				error: function(e){ errorModalCall(GetAppMessage('error_message_text'));
+					//alert('Error processing your request: '+e.responseText+' update_student_disc_perc');
+				}
+			})            
+	}
+
+	function save_event_location(){	
+		var formData = new FormData($('#location_form')[0]);
+		formData.append("p_school_id", school_id);
+		console.log(formdata);
+		$.ajax({
+				url: '',
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				processData: false,
+				contentType: false,
+				success: function(response){	
+				if(response.status == 'success')
+				
+				},
+				error: function(e){ 
+					
+				}
+			})
+	}
+
+	function save_event_level(){
+		var formData = new FormData($('#level_form')[0]);
+		formData.append("p_school_id", school_id);
+		formData.append("type", "save_event_level");
+
+		$.ajax({
+				url: 'handler/param_data.php',
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				processData: false,
+				contentType: false,
+				success: function(response){	
+				if(response.status == 'success')
+				PopulateEventlevel();
+				successModalCall(GetAppMessage('save_confirm_message'));
+				},
+				error: function(e){ errorModalCall(GetAppMessage('error_message_text'));
+					//alert('Error processing your request: '+e.responseText+' update_student_disc_perc');
+				}
+			})
+	}
 </script>
 @endsection
