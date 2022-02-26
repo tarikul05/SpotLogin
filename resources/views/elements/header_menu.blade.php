@@ -34,7 +34,7 @@
                     <div class="navbar-nav ms-auto user-area">
                         
                         <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
-                            <span class="admin_name">{{ __(auth()->user()->username) }}</span>
+                            <span class="admin_name"><?php echo !empty($AppUI['username']) ? $AppUI['username'] : 'Admin';?></span>
                             <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
                         </a>
                         <div class="dropdown">

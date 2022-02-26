@@ -47,59 +47,82 @@
           <div class="tab-content" id="ex1-content">
 			      <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-            <div class="row">
-              <div class="col-sm-12 col-xs-12 header-area">
-                <div class="page_header_class">
-                  <label id="page_header" class="page_title text-black">{{ __('User Account')}}</label>
+              <div class="row">
+                <div class="col-sm-12 col-xs-12 header-area">
+                  <div class="page_header_class">
+                    <label id="page_header" class="page_title text-black">{{ __('User Account')}}</label>
+                  </div>
                 </div>
-              </div>
-              @csrf
-            
-              <div class="col-md-6 offset-md-2">
-                <div class="form-group">
-                  <input type="hidden" id="row_id" name="row_id" value="0">
-                  <input type="hidden" id="language_code_data" name="language_code_data" value="">
-                </div> 
-                <div class="form-group row">
-                  <label class="col-lg-4 col-sm-4 text-end">{{ __('Language code')}}: </label>
-                  <div class="col-sm-6">
-                    <div class="selectdiv form-group-data">
-                      <input type="text" class="form-control" id="language_code" name="language_code">
+                @csrf
+              
+                <div class="col-md-6 offset-md-2">
+                  <div class="form-group">
+                    <input type="hidden" id="user_id" name="user_id" value="0">
+                  </div> 
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
+                    <div class="col-sm-6">
+                      <div class="selectdiv form-group-data">
+                        <input type="text" class="form-control" id="language_code" name="language_code">
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
+                    <div class="col-sm-6 form-group-data">
+                      <input type="text" class="form-control" id="language_title" name="title">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
+                    <div class="col-sm-6 form-group-data">
+                      <input type="text" class="form-control" id="abbr_name" name="abbr_name">
                       
                     </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-lg-4 col-sm-4 text-end">{{ __('Language name')}}: </label>
-                  <div class="col-sm-6 form-group-data">
-                    <input type="text" class="form-control" id="language_title" name="title">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-lg-4 col-sm-4 text-end">{{ __('Language short name')}}: </label>
-                  <div class="col-sm-6 form-group-data">
-                    <input type="text" class="form-control" id="abbr_name" name="abbr_name">
-                    
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-lg-4 col-sm-4 text-end">{{ __('Active')}} / {{ __('Inactive')}}: </label>
-                  <div class="col-sm-6 selectbox form-group-data">
-                    <select class="form-control" name="is_active" id="is_active">
-                      <option value="1">{{ __('Active')}}</option>
-                      <option value="0">{{ __('Inactive')}}</option>
-                    </select>
-                  </div>
-                  <div class="col-lg-2 col-md-2">
-                    <button type="submit" class="btn btn-success btn-theme-success save_button float-end" id="update_btn"><i class="fa fa-plus-circle" aria-hidden="true"></i>{{ __('Save')}}</button>
-                    
-                  </div>
-                </div>
                 </div>
               </div>
           
             </div>
             <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+            
+              <div class="row">
+                <div class="col-sm-12 col-xs-12 header-area">
+                  <div class="page_header_class">
+                    <label id="page_header" class="page_title text-black">{{ __('Profile picture')}}</label>
+                  </div>
+                </div>
+                @csrf
+              
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="hidden" id="user_id" name="user_id" value="0">
+                  </div> 
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
+                    <div class="col-sm-6">
+                      <div class="selectdiv form-group-data">
+                        <input type="text" class="form-control" id="language_code" name="language_code">
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
+                    <div class="col-sm-6 form-group-data">
+                      <input type="text" class="form-control" id="language_title" name="title">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
+                    <div class="col-sm-6 form-group-data">
+                      <input type="text" class="form-control" id="abbr_name" name="abbr_name">
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- Tabs content -->
