@@ -22,10 +22,10 @@ class ProfileController extends Controller
 
     $this->img_config = [
         'target_path' => [
-          'UserImage' => public_path('photo/user_photo')
+          'UserImage' => public_path('uploads/photo/user_photo')
         ],
         'target_url' => [
-            'UserImage' => URL::to('').'/photo/user_photo/'
+            'UserImage' => URL::to('').'/uploads/photo/user_photo/'
         ],
       ];
       

@@ -100,9 +100,17 @@
                       <div class="col-sm-8">
                         <fieldset>
                           <div class="profile-image-cropper responsive">
+                          <?php if (!empty($AppUI->profileImage->path_name)): ?>
+                            <img id="profile_image_user_account" src="{{ $AppUI->profileImage->path_name }}"
+                                height="128" width="128" class="img-circle"
+                                style="margin-right:10px;">
+                          <?php else: ?>
                             <img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
                                 height="128" width="128" class="img-circle"
                                 style="margin-right:10px;">
+                          <?php endif; ?>
+
+                            
                             <div style="display:flex;flex-direction: column;">
                               <div style="margin:5px;">
                                 <span class="btn btn-theme-success">
@@ -154,17 +162,11 @@
     $("#profile_image_file").trigger('click');
   }
   function ChangeImage() {
-    //$("#form_images").submit();
-
     var p_person_id = $("#user_id").val(),
         p_file_id = '', data = '';
 
     
     var file_data = $('#profile_image_file').prop('files')[0];
-    
-    //var formdata = new FormData(); 
-    var formElem = $("#form_images");
-    //var formElem = document.querySelector('#form_images');
     var formData = new FormData();
     formData.append('profile_image_file', file_data);
     formData.append('type', 'upload_image');
@@ -179,15 +181,13 @@
         processData: false,
         contentType: false,
         success: function (result) {
-          console.log(result);
             var mfile = result.image_file + '?time=' + new Date().getTime();
             $("#profile_image_user_account").attr("src",mfile);
             $("#user_profile_image").attr("src",mfile);
             $("#admin_logo").attr("src",mfile);
         },// success
         error: function (ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
-          // alert(ts.responseText+' failed: UploadImage') 
+          errorModalCall(ts.responseText+ ' '+GetAppMessage('error_message_text')); 
         }
     });
 
