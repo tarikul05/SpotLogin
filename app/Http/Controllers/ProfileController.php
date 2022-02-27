@@ -137,7 +137,7 @@ class ProfileController extends Controller
     if (!$result) {
       throw new HttpResponseException(response()->error('Image could not be uploaded', Response::HTTP_BAD_REQUEST));
     }
-    return [$this->img_config['target_url'][$type] . $imageNewName, $imageNewName];
+    return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
   }
   
   /**
@@ -190,7 +190,7 @@ class ProfileController extends Controller
         $result = array(
           "status"     => 1,
           "file_id" => $authUser->profile_image_id,
-          "image_file" => $this->img_config['target_url']['UserImage'] . $imageNewName,   
+          "image_file" => $path,   
           'message' => __('Successfully Changed Profile image')
         );
       }
@@ -201,6 +201,17 @@ class ProfileController extends Controller
     }
     return response()->json($result);
     
+  }
+
+
+  public function profilePhotoDelete(Request $request)
+  {
+    $path_name =  $request->user()->profileImage->path_name;
+    $file = str_replace(URL::to('').'/uploads/','',$path_name);
+
+    $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
+    if(file_exists($storagePath.$file)) unlink($storagePath.$file);
+    //Storage::disk('local')->delete();
   }
   
   

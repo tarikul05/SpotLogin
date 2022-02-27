@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/translations/update',
         'translations/updateKey',
-        'admin/update-profile-photo'
+        'admin/update-profile-photo',
+        'admin/delete-profile-photo'
     ];
 }

@@ -151,6 +151,7 @@
     $("#profile_image_file").trigger('click');
   }
   function ChangeImage() {
+    console.log('sss');
     var p_person_id = $("#user_id").val(),
         p_file_id = '', data = '';
     var file_data = $('#profile_image_file').prop('files')[0];
@@ -191,6 +192,33 @@
         loader.hide("fast");
       }
     });
+  }
+  $('#delete_profile_image').click(function (e) {
+    DeleteProfileImage();      // refresh lesson details for billing
+  })
+  function DeleteProfileImage() {
+    //delete image
+    var p_person_id = document.getElementById('user_id').value;
+    $.ajax({
+        url: BASE_URL + '/admin/delete-profile-photo',
+        data: 'user_id=' + p_person_id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status == 'success'){
+
+                $("#profile_image").attr("src","../images/default_profile_image.png");
+                $("#delete_profile_image_div").hide();
+                successModalCall(GetAppMessage('delete_confirm_message'));
+            }
+                
+        },
+        error: function(e) {
+            errorModalCall(GetAppMessage('error_message_text'));
+            // alert('Error processing your request: ' + e.responseText + ' DeleteProfileImage');
+        }
+    });
+
   }
 </script>
 @endsection
