@@ -14,6 +14,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\SchoolEmployee;
 use App\Models\SchoolTeacher;
+use App\Models\AttachedFile;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
