@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class ProfilePhotoUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class ProfileUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'filled|string',
-            'email' => 'filled|string|email|max:255',
-            'password' => 'nullable|min:8'
+            'profile_image_file' => 'filled',
         ];
     }
 
@@ -38,12 +36,7 @@ class ProfileUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.filled' => __('name.required'),
-            'email.filled' => __('email.required'),
-            'email.string' => __('email.string'),
-            'email.email' => __('email.email'),
-            'email.max' => __('email.max'),
-            'password.min' => __('messages.password.min'),
+            'profile_image_file.filled' => __('profile_image_file.required')
         ];
     }
 }

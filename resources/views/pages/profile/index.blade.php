@@ -70,13 +70,13 @@
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
                     <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="language_title" name="title">
+                      <input type="text" class="form-control" id="language_title" name="title" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
                     <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="abbr_name" name="abbr_name">
+                      <input type="password" type="text" class="form-control" id="password" name="password" value="">
                       
                     </div>
                   </div>
@@ -92,34 +92,41 @@
                     <label id="page_header" class="page_title text-black">{{ __('Profile picture')}}</label>
                   </div>
                 </div>
-                @csrf
               
                 <div class="col-md-6">
-                  <div class="form-group">
-                    <input type="hidden" id="user_id" name="user_id" value="0">
-                  </div> 
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
-                    <div class="col-sm-6">
-                      <div class="selectdiv form-group-data">
-                        <input type="text" class="form-control" id="language_code" name="language_code">
-                        
+                  <form enctype="multipart/form-data" role="form" id="form_images"
+                                            class="form-horizontal" method="post" action="#">
+                    <div class="form-group row">
+                      <div class="col-sm-8">
+                        <fieldset>
+                          <div class="profile-image-cropper responsive">
+                            <img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
+                                height="128" width="128" class="img-circle"
+                                style="margin-right:10px;">
+                            <div style="display:flex;flex-direction: column;">
+                              <div style="margin:5px;">
+                                <span class="btn btn-theme-success">
+                                  <i class="fa fa-picture-o"></i>
+                                  <span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
+                                  <input onchange="ChangeImage()"
+                                      class="custom-file-input" id="profile_image_file"
+                                      type="file" name="profile_image_file"
+                                      accept="image/*" style="display: none;">
+                                </span>
+                              </div>
+
+                              <div style="margin:5px;">
+                                <a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn">
+                                  <i class="fa fa-trash"></i>
+                                  <span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </fieldset>
                       </div>
                     </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
-                    <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="language_title" name="title">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
-                    <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="abbr_name" name="abbr_name">
-                      
-                    </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -131,4 +138,60 @@
   </div>
 </div>
 
+@endsection
+
+@section('footer_js')
+<script>
+	
+	
+
+	$(document).ready(function(){
+		
+		
+
+	}); //ready
+  function UploadImage() {
+    $("#profile_image_file").trigger('click');
+  }
+  function ChangeImage() {
+    //$("#form_images").submit();
+
+    var p_person_id = $("#user_id").val(),
+        p_file_id = '', data = '';
+
+    
+    var file_data = $('#profile_image_file').prop('files')[0];
+    
+    //var formdata = new FormData(); 
+    var formElem = $("#form_images");
+    //var formElem = document.querySelector('#form_images');
+    var formData = new FormData();
+    formData.append('profile_image_file', file_data);
+    formData.append('type', 'upload_image');
+    formData.append('p_person_id', p_person_id);
+    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+    $.ajax({
+        url: BASE_URL + '/admin/update-profile-photo',
+        data: formData,
+        type: 'POST',
+        //dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+          console.log(result);
+            var mfile = result.image_file + '?time=' + new Date().getTime();
+            $("#profile_image_user_account").attr("src",mfile);
+            $("#user_profile_image").attr("src",mfile);
+            $("#admin_logo").attr("src",mfile);
+        },// success
+        error: function (ts) {
+          errorModalCall(GetAppMessage('error_message_text'));
+          // alert(ts.responseText+' failed: UploadImage') 
+        }
+    });
+
+
+  }
+</script>
 @endsection

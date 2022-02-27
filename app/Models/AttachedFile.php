@@ -2,35 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\School;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
-class TermCondition extends Model
+class AttachedFile extends BaseModel
 {
     use SoftDeletes, CreatedUpdatedBy;
-    protected $table = 'tc_template';
+    protected $table = 'files';
+    //public $timestamps = false;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'school_id',
-        'type',
-        'effected_at',
-        'effected_till',
-        'active_flag',
-        'is_active',
-        'created_by',
-        'modified_by'
+      'object_id',
+      'document_id',
+      'visibility',
+      'file_type',
+      'title',
+      'description',
+      'path_name',
+      'file_name',
+      'thumb_name',
+      'extension',
+      'mime_type',
+      'file_size',
+      'orientation',
+      'width',
+      'height',
+      'count_pages',
+      'sort_order',
+      'created_by',
+      'modified_by'
     ];
 
-  
+ 
 
     /**
      * The attributes that should be casted to native types.
@@ -42,18 +54,4 @@ class TermCondition extends Model
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-
-    protected $appends = [];
-
-     /**
-     * Get the user for the News.
-     */
-    public function school()
-    {
-      return $this->belongsTo(School::class);
-    }
-
-   
-
 }
-

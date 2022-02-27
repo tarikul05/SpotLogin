@@ -153,6 +153,15 @@ class User extends Authenticatable
         return $this->belongsTo(Parent::class, 'person_id', 'id');
         
     }
+
+
+    /**
+     * Get the user for the News.
+    */
+    public function profileImage()
+    {
+        return $this->belongsTo(AttachedFile::class, 'profile_image_id', 'id');
+    }
   
 
 

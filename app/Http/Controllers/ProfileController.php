@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use App\Http\Requests\ProfileUpdateRequest;
-
-
-use App\Models\User;
-
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ProfilePhotoUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
+use App\Models\AttachedFile;
 
 
 class ProfileController extends Controller
@@ -20,7 +18,29 @@ class ProfileController extends Controller
   public function __construct()
   {
     parent::__construct();
+     
+
+    $this->img_config = [
+        'target_path' => [
+          'UserImage' => public_path('photo/user_photo')
+        ],
+        'target_url' => [
+            'UserImage' => URL::to('').'/photo/user_photo/'
+        ],
+      ];
+      
+    // create the folder if it does not exist
+    foreach ($this->img_config['target_path'] as $img_dir) {
+        if (!is_dir($img_dir)) {
+            if (!mkdir($img_dir, 0777, true)) {
+                die('Failed to create folders...');
+            }
+        }
+    }
+
   }
+
+  
 
 
   /**
@@ -31,94 +51,96 @@ class ProfileController extends Controller
    */
   public function profileUpdate(ProfileUpdateRequest $request)
   {
-      $data = $request->all();
+    $data = $request->all();
+    try{
       $authUser = $request->user();
-      if (!$authUser) {
-        return back();
+      if (array_key_exists('password', $data) && empty($data['password'])) {
+        unset($data['password']);          
       }
-      if ($request->isMethod('post')) {
-
-        $rules = array(
-          'name'   => 'filled|string|max:50',
-          'avatar_image_path' => 'nullable',
-        );    
-        $messages = array(
-          'name.filled' => trans('messages.name.required'),
-          'name.max' => trans('messages.name.max')
-          
-        );
-        if (array_key_exists('authority', $data)) {
-            unset($data['authority']);
-        }
-        
-        if (array_key_exists('email', $data)) {
-            unset($data['email']);
-        }
-
-          
-        if (array_key_exists('current_password', $data)) {
-            if(!Hash::check($data['current_password'], $authUser->password)){
-                throw new HttpResponseException(response()->error(trans('messages.password.current'), Response::HTTP_BAD_REQUEST));
-            }            
-        }
-        $validator = Validator::make( $data, $rules, $messages );
-
-        if ( $validator->fails() ) 
-        {
-            
-          Toastr::warning('Error occured',$validator->errors()->all()[0]);
-          return redirect()->back()->withInput()->withErrors($validator);
-        }
-        else
-        {
-
-          if (!$authUser->update($data)) {
-            return redirect()->back()->withInput()->withErrors(trans('messages.error_message'));
-          }
-
-          Toastr::success(trans('oauth.success_message'),'Success');
-          return back();
-        }
+      if (!$authUser->update($data)) {
+        return back()->withInput($request->all())->with('error', __('Profile failed to update'));
       }
-      $rink_all = Rink::all()->pluck("name", "id")->sortBy("name");
-      $experience_all = Experience::all()->pluck("name", "id")->sortBy("name");
-      $certificate_all = Certificate::all()->pluck("name", "id")->sortBy("name");
-      $language_all = Language::all()->pluck("name", "id")->sortBy("name");
-      $price_all = Price::all()->pluck("name", "id")->sortBy("name");
-      $speciality_all = Speciality::all()->pluck("name", "id")->sortBy("name");
+      return back()->withInput($request->all())->with('success', __('Profile updated successfully!'));
+    } catch (\Exception $e) {
+      //return error message
+      return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+
+    }
       
-    
-
-      $response = [];
-
-      
-      if (!$authUser->isSuperAdmin()) { 
-          $filterParams = [];
-      }
-
-      $breadcrumb = array(
-        array(
-           'name'=>trans('global.Profile'),
-           'link'=>''
-        )
-      );
-
-      return view('admin.profile.update', [
-        'pageInfo'=>
-         [
-          'siteTitle'        =>'Manage Users',
-          'pageHeading'      =>'Manage Users',
-          'pageHeadingSlogan'=>'Here the section to manage all registered users'
-          ]
-          ,
-          'data'=>
-          [
-             'user'      =>  $authUser,
-             'breadcrumb' =>  $breadcrumb,
-             'Title' =>  trans('global.Profile')
-          ]
-        ])->with(compact('rink_all','experience_all','speciality_all','language_all','price_all','certificate_all'));
   }
+
+  public function __processImg($image,$type,$authUser) {
+
+    $imageNewName = 'user_'.$authUser->id.'_dp.'.$image->getClientOriginalExtension();
+    $uploadedPath = $this->img_config['target_path'][$type];
+    $image->move($uploadedPath, $imageNewName);
+    return [$this->img_config['target_url'][$type] . $imageNewName, $imageNewName];
+  }
+
+   /**
+   * Update the specified resource in storage.
+   *
+   * @param  \App\Http\Requests\ProfilePhotoUpdateRequest  $request
+   * @return \Illuminate\Http\Response
+   */
+  public function profilePhotoUpdate(ProfilePhotoUpdateRequest $request)
+  {
+    $data = $request->all();
+    $result = array(
+      'status' => 0,
+      "file_id" => '0',
+      "image_file" => '',   
+      'message' => __('failed to change image'),
+    );
+    try{
+      $authUser = $request->user();
+      if($request->file('profile_image_file'))
+      {
+        
+        $image = $request->file('profile_image_file');
+        $mime_type = $image->getMimeType();
+        $extension = $image->getClientOriginalExtension();
+        if($image->getSize()>0)
+        { 
+          list($path, $imageNewName) = $this->__processImg($image,'UserImage',$authUser); 
+          
+          if (!empty($path)) {
+            $fileData = [
+              'visibility' => 1,
+              'file_type' =>'image',
+              'title' => $authUser->username,
+              'path_name' =>$path,
+              'file_name' => $imageNewName,
+              'extension'=>$extension,
+              'mime_type'=>$mime_type
+            ];
+
+            $attachedImage = AttachedFile::create($fileData);
+         
+            $data['profile_image_id'] = $attachedImage->id;
+
+          }
+        }
+      }
+      
+      if ($authUser->update($data)) {
+        $result = array(
+          "status"     => 1,
+          "file_id" => $authUser->profile_image_id,
+          "image_file" => $this->img_config['target_url']['UserImage'] . $imageNewName,   
+          'message' => __('Successfully Changed Profile image')
+        );
+      }
+      
+    } catch (\Exception $e) {
+      //return error message
+        $result['message'] = __('Internal server error');
+    }
+    return response()->json($result);
+      
+  }
+
+  
 
 
 
@@ -131,31 +153,9 @@ class ProfileController extends Controller
    */
   public function userDetailUpdate(Request $request)
   {
-    
-
     $response = [];
     $params = $request->all();
-
-    
-    
-   // $response['data'] = $user;
-
-
-    return view('pages.profile.index', [
-      'pageInfo'=>
-       [
-        'siteTitle'        =>'Manage Users',
-        'pageHeading'      =>'Manage Users',
-        'pageHeadingSlogan'=>'Here the section to manage all registered users'
-        ]
-        ,
-        'data'=>
-        [
-           //'user'      =>  $user,
-           'Title' =>  trans('global.Profile')
-        ]
-      ]);
-
+    return view('pages.profile.index');
   }
 
  
