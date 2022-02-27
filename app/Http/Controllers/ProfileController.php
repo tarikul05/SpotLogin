@@ -206,12 +206,25 @@ class ProfileController extends Controller
 
   public function profilePhotoDelete(Request $request)
   {
+    $authUser = $request->user();
+    $result = array(
+      'status' => 'failed',   
+      'message' => __('failed to remove image'),
+    );
     $path_name =  $request->user()->profileImage->path_name;
     $file = str_replace(URL::to('').'/uploads/','',$path_name);
 
     $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
     if(file_exists($storagePath.$file)) unlink($storagePath.$file);
-    //Storage::disk('local')->delete();
+    AttachedFile::find($authUser->profileImage->id)->delete();
+    $data['profile_image_id'] ='';
+    if ($authUser->update($data)) {
+      $result = array(
+        "status"     => 'success',
+        'message' => __('Successfully Changed Profile image')
+      );
+    }
+    return response()->json($result);
   }
   
   

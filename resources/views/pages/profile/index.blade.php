@@ -207,8 +207,12 @@
         success: function(response) {
             if (response.status == 'success'){
 
-                $("#profile_image").attr("src","../images/default_profile_image.png");
-                $("#delete_profile_image_div").hide();
+              $("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
+              $("#user_profile_image").attr("src",BASE_URL+'/img/photo_blank.jpg');
+              $("#admin_logo").attr("src",BASE_URL+'/img/photo_blank.jpg');
+
+                //$("#profile_image").attr("src","../images/default_profile_image.png");
+                $("#delete_profile_image").hide();
                 successModalCall(GetAppMessage('delete_confirm_message'));
             }
                 
