@@ -19,8 +19,9 @@ class TermCondController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:terms-condition-list|terms-condition-add-udpate', ['only' => ['index']]);
-         $this->middleware('permission:terms-condition-add-udpate', ['only' => ['addUpdate']]);
+        parent::__construct();
+        $this->middleware('permission:terms-condition-list|terms-condition-add-udpate', ['only' => ['index']]);
+        $this->middleware('permission:terms-condition-add-udpate', ['only' => ['addUpdate']]);
          // $this->middleware('permission:language-delete', ['only' => ['destroy']]);
     }
 

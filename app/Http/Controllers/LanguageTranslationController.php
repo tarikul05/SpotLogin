@@ -16,10 +16,11 @@ class LanguageTranslationController extends Controller
      */
     function __construct()
     {
-         $this->middleware('permission:translation-list|translation-create|translation-edit|translation-delete', ['only' => ['index']]);
-         $this->middleware('permission:translation-create', ['only' => ['store']]);
-         $this->middleware('permission:translation-edit', ['only' => ['transUpdate']]);
-         $this->middleware('permission:translation-delete', ['only' => ['destroy']]);
+        parent::__construct();
+        $this->middleware('permission:translation-list|translation-create|translation-edit|translation-delete', ['only' => ['index']]);
+        $this->middleware('permission:translation-create', ['only' => ['store']]);
+        $this->middleware('permission:translation-edit', ['only' => ['transUpdate']]);
+        $this->middleware('permission:translation-delete', ['only' => ['destroy']]);
     }
 
      /**
