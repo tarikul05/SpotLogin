@@ -115,13 +115,14 @@
                                       accept="image/*" style="display: none;">
                                 </span>
                               </div>
-
-                              <div style="margin:5px;">
-                                <a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn">
-                                  <i class="fa fa-trash"></i>
-                                  <span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
-                                </a>
-                              </div>
+                              <?php //if (!empty($AppUI->profile_image_id)): ?>
+                                <div style="margin:5px;">
+                                  <a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($AppUI->profile_image_id) ? '' : 'display:none;'}}">
+                                    <i class="fa fa-trash"></i>
+                                    <span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
+                                  </a>
+                                </div>
+                              <?php //endif; ?>
                             </div>
                           </div>
                         </fieldset>
@@ -151,7 +152,6 @@
     $("#profile_image_file").trigger('click');
   }
   function ChangeImage() {
-    console.log('sss');
     var p_person_id = $("#user_id").val(),
         p_file_id = '', data = '';
     var file_data = $('#profile_image_file').prop('files')[0];
@@ -174,18 +174,19 @@
       },
       success: function (result) {
         loader.hide("fast");
-          var mfile = result.image_file + '?time=' + new Date().getTime();
-          $("#profile_image_user_account").attr("src",mfile);
-          $("#user_profile_image").attr("src",mfile);
-          $("#admin_logo").attr("src",mfile);
+        var mfile = result.image_file + '?time=' + new Date().getTime();
+        $("#profile_image_user_account").attr("src",mfile);
+        $("#user_profile_image").attr("src",mfile);
+        $("#admin_logo").attr("src",mfile);
+        $("#delete_profile_image").show();
       },// success
       error: function (reject) {
         loader.hide("fast");
         let errors = $.parseJSON(reject.responseText);
         errors = errors.errors;
         $.each(errors, function (key, val) {
-            //$("#" + key + "_error").text(val[0]);
-            errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+          //$("#" + key + "_error").text(val[0]);
+          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
         });
       },
       complete: function() {
@@ -199,28 +200,38 @@
   function DeleteProfileImage() {
     //delete image
     var p_person_id = document.getElementById('user_id').value;
+    let loader = $('#pageloader');
     $.ajax({
-        url: BASE_URL + '/admin/delete-profile-photo',
-        data: 'user_id=' + p_person_id,
-        type: 'POST',
-        dataType: 'json',
-        success: function(response) {
-            if (response.status == 'success'){
-
-              $("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
-              $("#user_profile_image").attr("src",BASE_URL+'/img/photo_blank.jpg');
-              $("#admin_logo").attr("src",BASE_URL+'/img/photo_blank.jpg');
-
-                //$("#profile_image").attr("src","../images/default_profile_image.png");
-                $("#delete_profile_image").hide();
-                successModalCall(GetAppMessage('delete_confirm_message'));
-            }
-                
-        },
-        error: function(e) {
-            errorModalCall(GetAppMessage('error_message_text'));
-            // alert('Error processing your request: ' + e.responseText + ' DeleteProfileImage');
+      url: BASE_URL + '/admin/delete-profile-photo',
+      data: 'user_id=' + p_person_id,
+      type: 'POST',
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        loader.show("fast");
+      },
+      success: function(response) {
+        if (response.status == 'success'){
+          loader.hide("fast");
+          $("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
+          $("#user_profile_image").attr("src",BASE_URL+'/img/photo_blank.jpg');
+          $("#admin_logo").attr("src",BASE_URL+'/img/photo_blank.jpg');
+          $("#delete_profile_image").hide();
+          successModalCall(response.message);
         }
+              
+      },
+      error: function (reject) {
+        loader.hide("fast");
+        let errors = $.parseJSON(reject.responseText);
+        errors = errors.errors;
+        $.each(errors, function (key, val) {
+          //$("#" + key + "_error").text(val[0]);
+          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+        });
+      },
+      complete: function() {
+        loader.hide("fast");
+      }
     });
 
   }

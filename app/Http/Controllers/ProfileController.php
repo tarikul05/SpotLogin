@@ -38,9 +38,7 @@ class ProfileController extends Controller
     }
     
   }
-  
-  
-  
+
   
   /**
   * Update the specified resource in storage.
@@ -200,7 +198,6 @@ class ProfileController extends Controller
       $result['message'] = __('Internal server error');
     }
     return response()->json($result);
-    
   }
 
 
@@ -211,26 +208,28 @@ class ProfileController extends Controller
       'status' => 'failed',   
       'message' => __('failed to remove image'),
     );
-    $path_name =  $request->user()->profileImage->path_name;
-    $file = str_replace(URL::to('').'/uploads/','',$path_name);
+    try{
+      $path_name =  $request->user()->profileImage->path_name;
+      $file = str_replace(URL::to('').'/uploads/','',$path_name);
 
-    $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
-    if(file_exists($storagePath.$file)) unlink($storagePath.$file);
-    AttachedFile::find($authUser->profileImage->id)->delete();
-    $data['profile_image_id'] ='';
-    if ($authUser->update($data)) {
-      $result = array(
-        "status"     => 'success',
-        'message' => __('Successfully Changed Profile image')
-      );
+      $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
+      if(file_exists($storagePath.$file)) unlink($storagePath.$file);
+      AttachedFile::find($authUser->profileImage->id)->delete();
+      $data['profile_image_id'] ='';
+      if ($authUser->update($data)) {
+        $result = array(
+          "status"     => 'success',
+          'message' => __('Successfully Changed Profile image')
+        );
+      }
+    }
+    catch (\Exception $e) {
+      //return error message
+      $result['message'] = __('Internal server error');
     }
     return response()->json($result);
   }
-  
-  
-  
-  
-  
+
   /**
   * Display the specified resource.
   * 
@@ -244,8 +243,5 @@ class ProfileController extends Controller
     $params = $request->all();
     return view('pages.profile.index');
   }
-  
-  
-  
-  
+
 }

@@ -38,7 +38,7 @@
                                 <?php if (!empty($AppUI->profileImage->path_name)): ?>
                                     <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                                 <?php else: ?>
-                                    <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                                    <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                                 <?php endif; ?>
 
                                 
