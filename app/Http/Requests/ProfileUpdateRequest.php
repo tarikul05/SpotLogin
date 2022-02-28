@@ -38,12 +38,11 @@ class ProfileUpdateRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'username.filled' => __('name.required'),
-			'email.filled' => __('email.required'),
-			'email.string' => __('email.string'),
-			'email.email' => __('email.email'),
-			'email.max' => __('email.max'),
-			'password.min' => __('messages.password.min'),
+			'username.filled' => __('username required'),
+			'email.filled' => __('email required'),
+			'email.email' => __('email format wrong'),
+			'email.max' => __('max 255 character will support'),
+			'password.min' => __('password must be minimum 8 character'),
 		];
 	}
 }

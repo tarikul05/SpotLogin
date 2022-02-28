@@ -39,7 +39,7 @@ class ProfilePhotoUpdateRequest extends FormRequest
 			'profile_image_file.required' => __('image required'),
 			'profile_image_file.image' => __('Please upload image file'),
 			'profile_image_file.mimes' => __('jpeg,png,jpg,gif,svg needed'),
-			'profile_image_file.max' => __('Maximum 20 mb supported'),
+			'profile_image_file.max' => __('Maximum 20mb image file will support'),
 		];
 	}
 }
