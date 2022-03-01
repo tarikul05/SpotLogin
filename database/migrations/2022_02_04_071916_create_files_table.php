@@ -22,7 +22,7 @@ class CreateFilesTable extends Migration {
 			$table->string('file_type', 50)->nullable();
 			$table->string('title', 250)->nullable();
 			$table->string('description', 500)->nullable();
-			$table->string('path_name', 19)->nullable();
+			$table->text('path_name');
 			$table->string('file_name', 50)->nullable();
 			$table->string('thumb_name', 50)->nullable();
 			$table->string('extension', 10)->nullable();
@@ -33,6 +33,12 @@ class CreateFilesTable extends Migration {
 			$table->integer('height')->nullable();
 			$table->integer('count_pages')->nullable();
 			$table->smallInteger('sort_order')->nullable()->default(9999);
+			$table->boolean('is_active')->nullable()->default(1);
+			$table->dateTime('created_at')->nullable();
+			$table->dateTime('modified_at')->nullable();
+			$table->integer('created_by')->nullable();
+			$table->integer('modified_by')->nullable();
+			$table->softDeletes();
 		});
 	}
 

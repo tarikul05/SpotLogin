@@ -47,6 +47,9 @@
 <section class="" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
+    <div id="pageloader">
+      <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
+    </div>
 </section>
 
 <!-- js comes form inner page start -->

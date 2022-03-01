@@ -95,5 +95,26 @@
     "email template found":"email template found",
     "template_code required":"template_code required",
     "language_id required":"language_id required",
-    "General_TC_PAGE_TITLE":"General Terms and Conditions, Solution Privacy Policy of sportlogin.ch"
+    "General_TC_PAGE_TITLE":"General Terms and Conditions, Solution Privacy Policy of sportlogin.ch",
+    "Profile failed to update":"Profile failed to update",
+    "Profile updated successfully!":"Profile updated successfully!",
+    "failed to change image":"failed to change image",
+    "failed to remove image":"failed to remove image",
+    "Successfully Changed Profile image":"Successfully Changed Profile image",
+    "image required":"image required",
+    "Please upload image file":"Please upload image file",
+    "jpeg,png,jpg,gif,svg needed":"jpeg,png,jpg,gif,svg needed",
+    "Maximum 20mb image file will support":"Maximum 20mb image file will support",
+    "username required":"username required",
+    "email required":"email required",
+    "email format wrong":"email format wrong",
+    "max 255 character will suppor":"max 255 character will suppor",
+    "User Account":"User Account",
+    "Name of User":"Name of User",
+    "Email":"Email",
+    "New Password":"New Password",
+    "Profile picture":"Profile picture",
+    "Choose an image ...":"Choose an image ...",
+    "Remove Image":"Remove Image"
+
 }

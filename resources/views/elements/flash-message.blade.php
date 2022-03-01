@@ -55,10 +55,14 @@
   
 
 @if ($errors->any())
+    @foreach ($errors->all() as $error)
+    <div class="alert alert-dismissible alert-danger alert-block">
+        
+        
+        {{ $error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-<div class="alert alert-dismissible alert-danger">
-    Please check the form below for errors
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
-</div>
-
+        
+    </div>
+    @endforeach
 @endif
