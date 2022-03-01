@@ -87,7 +87,7 @@
 				</div>
 			</div>
 			<div class="tab-pane fade" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
-				<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('add_event_location.create')}}">
+				<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('event_location.create')}}">
 					<input type="hidden" name="school_id" value="3">
 					@csrf
 					<div class="section_header_class row">
@@ -100,22 +100,25 @@
 					</div>
 					<div class="row">
 						<div id="add_more_location_div" class="col-md-8">
-							<div class="col-md-12 add_more_location_row row">
-								<div class="col-md-5 col-9">
-									<div class="form-group row">
-										<div class="col-sm-11">
-											<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="Location Name" type="text">
+							<?php foreach($locations as $loca): ?>
+								<div class="col-md-12 add_more_location_row row">
+									<div class="col-md-5 col-9">
+										<div class="form-group row">
+											<div class="col-sm-11">
+												<input type="hidden" name="location_id[]" value="<?= $loca->id; ?>">
+												<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="Location Name" value="<?= $loca->title; ?>" type="text">
+											</div>
+										</div>
+									</div>
+									<div class="offset-1 col-2">
+										<div class="form-group row">
+											<div class="col-sm-5">
+												<button type="button" class="btn btn-theme-warn delete_location" data-location_id="<?= $loca->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="offset-1 col-2">
-									<div class="form-group row">
-										<div class="col-sm-5">
-											<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
+							<?php endforeach; ?>
 						</div>
 						<div class="col-md-2">
 							<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
@@ -137,22 +140,25 @@
 					</div>
 					<div class="row">
 						<div id="add_more_level_div" class="col-md-8">
-							<div class="col-md-12 add_more_level_row row">
-								<div class="col-md-5 col-9">
-									<div class="form-group row">
-										<div class="col-sm-11">
-											<input class="form-control" id="level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
+						<?php foreach($levels as $lvl): ?>
+								<div class="col-md-12 add_more_level_row row">
+									<div class="col-md-5 col-9">
+										<div class="form-group row">
+											<div class="col-sm-11">
+												<input type="hidden" name="level_id[]" value="<?= $lvl->id; ?>">
+												<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="Level Name" value="<?= $lvl->title; ?>" type="text">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 offset-1 col-2">
+										<div class="form-group row">
+											<div class="col-sm-5">
+												<button type="button" class="btn btn-theme-warn delete_level" data-level_id="<?= $lvl->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-md-2 offset-1 col-2">
-									<div class="form-group row">
-										<div class="col-sm-5">
-											<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
+							<?php endforeach; ?>
 						</div>
 						<div class="col-md-2">
 							<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
@@ -169,10 +175,10 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<p id="modal_alert_body">{{ __('Sauvegarde réussie') }}</p>
+					<p id="modal_alert_body"></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal"><{{ __('Ok') }}</button>
+					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal">{{ __('Ok') }}</button>
 				</div>
 			</div>
 		</div>
@@ -265,9 +271,24 @@
 	})
 	
 	$(document).on('click','.delete_location',function(){
-		var category_id = $(this).data('category_id');
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('location_id');
 		var current_obj = $(this);
-		current_obj.parents('.add_more_location_row').remove();
+		$.ajax({
+			url: BASE_URL + '/remove-event-location/'+id,
+			type: 'DELETE',
+			dataType: 'json',
+			data: {
+                "id": id,
+                "_token": csrfToken,
+            },
+			success: function(response){	
+				if(response.status == 1){
+					current_obj.parents('.add_more_location_row').remove();
+				}
+			}
+		})
+		
 	});
 
 	// level part
@@ -276,7 +297,7 @@
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" id="level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
+						<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
 					</div>
 				</div>
 			</div>
@@ -293,9 +314,23 @@
 	})
 	
 	$(document).on('click','.delete_level',function(){
-		var category_id = $(this).data('category_id');
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('level_id');
 		var current_obj = $(this);
-		current_obj.parents('.add_more_level_row').remove();
+		$.ajax({
+			url: BASE_URL + '/remove-event-level/'+id,
+			type: 'DELETE',
+			dataType: 'json',
+			data: {
+                "id": id,
+                "_token": csrfToken,
+            },
+			success: function(response){	
+				if(response.status == 1){
+					current_obj.parents('.add_more_level_row').remove();
+				}
+			}
+		})
 	});
 
 	// save functionality
@@ -356,12 +391,26 @@
 		var formData = $('#location_form').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		
+		var error = '';
+
+		$( ".location_name" ).each(function( key, value ) {
+			var lname = $(this).val();
+			if(lname=='' || lname==null || lname==undefined){
+				$(this).addClass('error');
+				error = 1;
+			}else{
+				$(this).removeClass('error');
+				error = 0;
+			}
+		});
+
 		formData.push({
 			"name": "_token",
 			"value": csrfToken,
 		});
 		
-		$.ajax({
+		if(error < 1){
+			$.ajax({
 				url: BASE_URL + '/add-event-location',
 				data: formData,
 				type: 'POST',
@@ -369,9 +418,14 @@
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
+						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
 					}
 				}
 			})
+		}else{
+			$('#modal_parameter').modal('show');
+			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+		}
 	}
 
 	function save_event_level(){
@@ -379,12 +433,24 @@
 		var formData = $('#level_form').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
+		$( ".level_name").each(function( key, value ) {
+			var lvname = $(this).val();
+			if(lvname=='' || lvname==null || lvname==undefined){
+				$(this).addClass('error');
+				error = 1;
+			}else{
+				$(this).removeClass('error');
+				error = 0;
+			}
+		});
+
 		formData.push({
 			"name": "_token",
 			"value": csrfToken,
 		});
-
-		$.ajax({
+		
+		if(error < 1){
+			$.ajax({
 			url: BASE_URL + '/add-event-level',
 				data: formData,
 				type: 'POST',
@@ -392,16 +458,16 @@
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
+						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
 					}
 				}
 			})
+		}else{
+			$('#modal_parameter').modal('show');
+			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+		}
 	}
 
-	$(function () {
-        $('#modalClose').on('click', function () {
-            $('#modal_parameter').hide();
-			$('.modal-backdrop.show').hide();
-        })
-    })
+
 </script>
 @endsection

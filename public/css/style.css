@@ -356,7 +356,9 @@ table.tc_template .detail_header {
     display: block;
     width: 120px;
 }
-
+input.error {
+    border: 2px solid red;
+}
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

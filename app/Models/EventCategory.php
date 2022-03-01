@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
-class Level extends Model
+class EventCategory extends Model
 {
-    use HasFactory, SoftDeletes, CreatedUpdatedBy;
-    protected $table = 'levels';
+    use HasFactory,SoftDeletes, CreatedUpdatedBy;
+    protected $table = 'event_categories';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
 
@@ -22,6 +22,8 @@ class Level extends Model
     protected $fillable = [
       'school_id',
       'title',
+      'invoiced_type',
+      'file_id',
       'is_active',
       'created_by',
       'modified_by'

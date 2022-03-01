@@ -10,7 +10,7 @@ use App\Traits\CreatedUpdatedBy;
 class Location extends Model
 {
     use HasFactory,SoftDeletes, CreatedUpdatedBy;
-    protected $table = 'locationS';
+    protected $table = 'locations';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
 
