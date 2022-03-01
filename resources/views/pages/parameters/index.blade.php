@@ -57,7 +57,7 @@
 					</div>
 					<div class="row">
 						<div id="add_more_event_category_div" class="col-md-8">
-							<?php $count=$eventCatId->id; foreach($eventCat as $cat): ?>
+							<?php $count= isset($eventCatId->id) ? ($eventCatId->id) : 1; foreach($eventCat as $cat): ?>
 								<div class="col-md-12 add_more_event_category_row row">
 									<div class="col-md-5 col-5">
 										<div class="form-group row">
