@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class TermCondition extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CreatedUpdatedBy;
     protected $table = 'tc_template';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';

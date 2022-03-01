@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Language;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class TermConditionLang extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CreatedUpdatedBy;
     protected $table = 'tc_template_lang';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';

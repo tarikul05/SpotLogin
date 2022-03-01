@@ -7,10 +7,11 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class EmailTemplate extends BaseModel
 {
-  use SoftDeletes;
+  use SoftDeletes, CreatedUpdatedBy;
   protected $table = 'email_template';
   const CREATED_AT = 'created_at';
   const UPDATED_AT = 'modified_at';

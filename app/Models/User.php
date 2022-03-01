@@ -14,6 +14,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\SchoolEmployee;
 use App\Models\SchoolTeacher;
+use App\Models\AttachedFile;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -152,6 +153,15 @@ class User extends Authenticatable
         
         return $this->belongsTo(Parent::class, 'person_id', 'id');
         
+    }
+
+
+    /**
+     * Get the user for the News.
+    */
+    public function profileImage()
+    {
+        return $this->belongsTo(AttachedFile::class, 'profile_image_id', 'id');
     }
   
 

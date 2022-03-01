@@ -87,7 +87,9 @@ Route::group(['middleware' => ['auth']], function () {
     // profile update
     Route::get('profile-update', 'ProfileController@userDetailUpdate');
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
-
+    Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ]);
+    Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ]);
+    
 
   });
 

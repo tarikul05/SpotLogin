@@ -35,7 +35,13 @@
                         <?php if (!empty($AppUI['id'])): ?>
                             <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
                                 <span class="admin_name"><?php echo !empty($AppUI['username']) ? $AppUI['username'] : 'Admin';?></span>
-                                <img src="{{ asset('img/admin.jpeg') }}" class="admin_logo" alt="globe">
+                                <?php if (!empty($AppUI->profileImage->path_name)): ?>
+                                    <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                                <?php else: ?>
+                                    <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                                <?php endif; ?>
+
+                                
                             </a>
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
