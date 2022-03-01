@@ -32,8 +32,10 @@ class ParametersController extends Controller
         $eventCat = EventCategory::where('is_active', 1)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
         $locations = Location::where('is_active', 1)->get();
+        $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
         $levels = Level::where('is_active', 1)->get();
-        return view('pages.parameters.index',compact('eventCat','eventLastCatId','locations','levels'));
+        $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
+        return view('pages.parameters.index',compact('eventCat','eventLastCatId','locations','eventLastLocaId','levels','eventLastLevelId'));
     }   
     /**
      * Remove the specified resource from storage.
@@ -92,20 +94,27 @@ class ParametersController extends Controller
             if ($request->isMethod('post')){
                 
                 $locationData = $request->all();
-                foreach($locationData['location_name'] as $key => $value){
-                    $names[] = [
-                        'title' => $value,
-                        'school_id' => $locationData['school_id'] ? $locationData['school_id'] : 1,
-                    ];
+                foreach($locationData['location'] as $location){
+                    if(isset($location['id']) && !empty($location['id'])){
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::where('id', $location['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::create($answers);
+                    }
                 }
 
-                $location = Location::insert($names);
-                if($location==1){
-                    $result = array(
-                        "status"     => 1,
-                        'message' => __('Successfully Registered')
-                    );
-                }
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+                
             }
         }catch (Exception $e) {
             DB::rollBack();
@@ -124,33 +133,26 @@ class ParametersController extends Controller
             if ($request->isMethod('post')){
                 
                 $levelData = $request->all();
-                $level='';
-                $result=[];
-                
-                if(!empty($levelData['level_id'])){
-                    for ($i = 1; $i < count($request->level_name); $i++) {
-                        $level = DB::table('lavels')
-                        ->where('id', $request->level_id[$i])
-                        ->update([
-                            'title' => $request->lavel_name[$i]
-                            ]);
-                    }
-                }else{
-                    foreach($levelData['level_name'] as $key => $value){
-                        $names[] = [
-                            'title' => $value,
-                            'school_id' => $levelData['school_id'] ? $levelData['school_id'] : 1,
+                foreach($levelData['level'] as $level){
+                    if(isset($level['id']) && !empty($level['id'])){
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $level['name']
                         ];
+                        $eventLevel = Level::where('id', $level['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $level['name']
+                        ];
+                        $eventLevel = Level::create($answers);
                     }
-                    $level = Level::insert($names);
                 }
 
-                if($level==1){
-                    $result = array(
-                        "status"     => 1,
-                        'message' => __('Successfully Registered')
-                    );
-                }
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
             }
         }catch (Exception $e) {
             DB::rollBack();

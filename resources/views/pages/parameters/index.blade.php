@@ -85,7 +85,7 @@
 										</div>
 									</div>
 								</div>
-							<?php  $count++; ?> @endforeach
+							@php $count++; endforeach @endphp
 						</div>
 						<div class="col-md-2">
 							<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
@@ -107,13 +107,14 @@
 					</div>
 					<div class="row">
 						<div id="add_more_location_div" class="col-md-8">
-							<?php foreach($locations as $loca): ?>
+							@php $count= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
+							@foreach($locations as $loca)
 								<div class="col-md-12 add_more_location_row row">
 									<div class="col-md-5 col-9">
 										<div class="form-group row">
 											<div class="col-sm-11">
-												<input type="hidden" name="location_id[]" value="<?= $loca->id; ?>">
-												<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
+												<input type="hidden" name="location[{{$count}}][id]" value="<?= $loca->id; ?>">
+												<input class="form-control location_name" name="location[{{$count}}][name]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
 											</div>
 										</div>
 									</div>
@@ -125,10 +126,10 @@
 										</div>
 									</div>
 								</div>
-							<?php endforeach; ?>
+							@php $count++; endforeach @endphp
 						</div>
 						<div class="col-md-2">
-							<button id="add_more_location_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
+							<button id="add_more_location_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
 						</div>
 					</div>
 				</form>	
@@ -147,13 +148,14 @@
 					</div>
 					<div class="row">
 						<div id="add_more_level_div" class="col-md-8">
-						<?php foreach($levels as $lvl): ?>
+						@php $count= isset($eventLastLevelId->id) ? ($eventLastLevelId->id) : 1; @endphp
+						 @foreach($levels as $lvl)
 								<div class="col-md-12 add_more_level_row row">
 									<div class="col-md-5 col-9">
 										<div class="form-group row">
 											<div class="col-sm-11">
-												<input type="hidden" name="level_id[]" value="<?= $lvl->id; ?>">
-												<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
+												<input type="hidden" name="level[{{$count}}][id]" value="<?= $lvl->id; ?>">
+												<input class="form-control level_name" name="level[{{$count}}][name]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
 											</div>
 										</div>
 									</div>
@@ -165,10 +167,10 @@
 										</div>
 									</div>
 								</div>
-							<?php endforeach; ?>
+							@php $count++; endforeach @endphp
 						</div>
 						<div class="col-md-2">
-							<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
+							<button id="add_more_level_btn" type="button" data-last_id="{{$count}}"  class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
 						</div>
 					</div>
 				</form>
@@ -198,8 +200,8 @@
 	$(document).on('click','#add_more_event_category_btn',function(){
 		var lst_id = $(this).attr('data-last_id');
 		var incre = (parseInt(lst_id)+1);
-
 		$(this).attr('data-last_id',incre);
+
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
 			<div class="col-md-5 col-5">
 				<div class="form-group row">
@@ -233,7 +235,6 @@
 	$(document).on('click','.delete_event',function(){
 		var lst_id = $(this).attr('data-r_id');
 		var incre = parseInt(lst_id);
-
 		$(this).attr('data-last_id',incre);
 
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
@@ -261,11 +262,15 @@
 
 	// location part
 	$(document).on('click','#add_more_location_btn',function(){
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+		$(this).attr('data-last_id',incre);
+
 		var resultHtml = `<div class="col-md-12 add_more_location_row row">
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="location name" type="text">
+						<input class="form-control location_name" name="location[`+lst_id+`][name]" placeholder="location name" type="text">
 					</div>
 				</div>
 			</div>
@@ -285,6 +290,9 @@
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('location_id');
 		var current_obj = $(this);
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+		$(this).attr('data-last_id',incre);
 
 		if(id){
 			$.ajax({
@@ -309,11 +317,15 @@
 
 	// level part
 	$(document).on('click','#add_more_level_btn',function(){
-	var resultHtml = `<div class="col-md-12 add_more_level_row row">
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+		$(this).attr('data-last_id',incre);
+
+		var resultHtml = `<div class="col-md-12 add_more_level_row row">
 			<div class="col-md-5 col-9">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="Level Name" type="text">
+						<input class="form-control level_name" name="level[`+lst_id+`][name]" placeholder="Level Name" type="text">
 					</div>
 				</div>
 			</div>
@@ -333,6 +345,9 @@
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('level_id');
 		var current_obj = $(this);
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+		$(this).attr('data-last_id',incre);
 		if(id){
 			$.ajax({
 				url: BASE_URL + '/remove-event-level/'+id,
