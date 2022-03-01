@@ -42,7 +42,6 @@
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
 				<form role="form" id="event_form" class="form-horizontal" method="post" action="{{route('event_category.create')}}">
-					<input type="hidden" name="school_id" value="3">
 					@csrf
 					<div class="section_header_class row">
 						<div class="col-md-3 col-5">
@@ -57,23 +56,24 @@
 					</div>
 					<div class="row">
 						<div id="add_more_event_category_div" class="col-md-8">
-							<?php $count= isset($eventCatId->id) ? ($eventCatId->id) : 1; foreach($eventCat as $cat): ?>
+							<?php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1;?>
+							@foreach($eventCat as $cat)
 								<div class="col-md-12 add_more_event_category_row row">
 									<div class="col-md-5 col-5">
 										<div class="form-group row">
 											<div class="col-sm-11">
-												<input type="hidden" name="category_id[]" value="<?= $cat->id; ?>">
-												<input class="form-control category_name" name="category_name[{{$count}}]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+												<input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
+												<input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
 											</div>
 										</div>
 									</div>
 									<div class="col-md-5 col-6">
 										<div class="form-group row invoice_part">
 											<div class="col-sm-6">
-												<input type="radio" name="category_invoiced[{{$count}}]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+												<input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
 											</div>
 											<div class="col-sm-6">
-												<input type="radio" name="category_invoiced[{{$count}}]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+												<input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
 											</div>
 										</div>
 									</div>
@@ -85,7 +85,7 @@
 										</div>
 									</div>
 								</div>
-							<?php  $count++; endforeach; ?>
+							<?php  $count++; ?> @endforeach
 						</div>
 						<div class="col-md-2">
 							<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
@@ -160,7 +160,7 @@
 									<div class="col-md-2 offset-1 col-2">
 										<div class="form-group row">
 											<div class="col-sm-5">
-												<button type="button" class="btn btn-theme-warn delete_level" data-level_id="<?= $lvl->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												<button type="button" class="btn btn-theme-warn delete_level" data-level_id="{{ $lvl->id; }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 										</div>
 									</div>
@@ -204,17 +204,17 @@
 			<div class="col-md-5 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control category_name" name="category_name[`+lst_id+`]" placeholder="Category Name" type="text">
+						<input class="form-control category_name" name="category[`+lst_id+`][name]" placeholder="Category Name" type="text">
 					</div>
 				</div>
 			</div>
 			<div class="col-md-5 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-6">
-						<input name="category_invoiced[`+lst_id+`]" type="radio" value="S" checked> <label> School Invoiced</label>
+						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
 					</div>
 					<div class="col-sm-6">
-						<input name="category_invoiced[`+lst_id+`]" type="radio" value="T"> <label> Teacher Invoiced </label>
+						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
 					</div>
 				</div>
 			</div>

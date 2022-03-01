@@ -30,10 +30,10 @@ class ParametersController extends Controller
     public function index()
     {   
         $eventCat = EventCategory::where('is_active', 1)->get();
-        $eventCatId = DB::table('event_categories')->orderBy('id','desc')->first();;
+        $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
         $locations = Location::where('is_active', 1)->get();
         $levels = Level::where('is_active', 1)->get();
-        return view('pages.parameters.index',compact('eventCat','eventCatId','locations','levels'));
+        return view('pages.parameters.index',compact('eventCat','eventLastCatId','locations','levels'));
     }   
     /**
      * Remove the specified resource from storage.
@@ -47,22 +47,28 @@ class ParametersController extends Controller
                 
                 $categoryData = $request->all();
 
-                for ($i = 1; $i < count($request->category_name); $i++) {
-                    $answers[] = [
-                        'school_id' => $categoryData['school_id'] ? $categoryData['school_id'] : 1,
-                        'title' => $request->category_name[$i],
-                        'invoiced_type' => $request->category_invoiced[$i]
-                    ];
+                foreach($categoryData['category'] as $cat){
+                    if(isset($cat['id']) && !empty($cat['id'])){
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $cat['invoice']
+                        ];
+                        $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => 1,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $cat['invoice']
+                        ];
+                        $eventCat = EventCategory::create($answers);
+                    }
                 }
 
-                $eventCat = EventCategory::insert($answers);
-
-                if($eventCat==1){
-                    $result = array(
-                        "status"     => 1,
-                        'message' => __('Successfully Registered')
-                    );
-                }
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
             }
         }catch (Exception $e) {
             DB::rollBack();
