@@ -56,7 +56,7 @@
 					</div>
 					<div class="row">
 						<div id="add_more_event_category_div" class="col-md-8">
-							<?php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1;?>
+						@php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 							@foreach($eventCat as $cat)
 								<div class="col-md-12 add_more_event_category_row row">
 									<div class="col-md-5 col-5">
