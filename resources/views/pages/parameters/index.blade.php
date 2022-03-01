@@ -41,50 +41,57 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
-				<div class="section_header_class row">
-					<div class="col-md-3 col-5">
-						<label>{{ __('Category Name') }}</label>
-					</div>
-					<div class="col-md-3 col-6">
-						<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
-					</div>
-					<div class="col-md-2 col-1">
-						<label></label>
-					</div>
-				</div>
-				<div class="row">
-					<div id="add_more_event_category_div" class="col-md-8">
-						<div class="col-md-12 add_more_event_category_row row">
-							<div class="col-md-5 col-5">
-								<div class="form-group row">
-									<div class="col-sm-11">
-										<input class="form-control category_name" maxlength="50" name="category_name[]" placeholder="Category Name" type="text">
-									</div>
-								</div>
-							</div>
-							<div class="col-md-5 col-6">
-								<div class="form-group row invoice_part">
-									<div class="col-sm-6">
-										<input type="radio" name="category_invoiced[]" value="School Invoiced" checked> <label> {{ __('School Invoiced') }}</label>
-									</div>
-									<div class="col-sm-6">
-										<input type="radio" name="category_invoiced[]" value="Teacher Invoiced"> <label> {{ __('Teacher Invoiced') }}</label>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-2 col-1">
-								<div class="form-group row">
-									<div class="col-sm-5">
-										<button type="button" class="btn btn-theme-warn delete_event" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
-									</div>
-								</div>
-							</div>
+				<form role="form" id="event_form" class="form-horizontal" method="post" action="{{route('event_category.create')}}">
+					<input type="hidden" name="school_id" value="3">
+					@csrf
+					<div class="section_header_class row">
+						<div class="col-md-3 col-5">
+							<label>{{ __('Category Name') }}</label>
+						</div>
+						<div class="col-md-3 col-6">
+							<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
+						</div>
+						<div class="col-md-2 col-1">
+							<label></label>
 						</div>
 					</div>
-					<div class="col-md-2">
-						<button id="add_more_event_category_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+					<div class="row">
+						<div id="add_more_event_category_div" class="col-md-8">
+							<?php $count=$eventCatId->id; foreach($eventCat as $cat): ?>
+								<div class="col-md-12 add_more_event_category_row row">
+									<div class="col-md-5 col-5">
+										<div class="form-group row">
+											<div class="col-sm-11">
+												<input type="hidden" name="category_id[]" value="<?= $cat->id; ?>">
+												<input class="form-control category_name" name="category_name[{{$count}}]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-5 col-6">
+										<div class="form-group row invoice_part">
+											<div class="col-sm-6">
+												<input type="radio" name="category_invoiced[{{$count}}]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+											</div>
+											<div class="col-sm-6">
+												<input type="radio" name="category_invoiced[{{$count}}]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-2 col-1">
+										<div class="form-group row">
+											<div class="col-sm-5">
+												<button type="button" class="btn btn-theme-warn delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php  $count++; endforeach; ?>
+						</div>
+						<div class="col-md-2">
+							<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+						</div>
 					</div>
-				</div>
+				</form>	
 			</div>
 			<div class="tab-pane fade" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
 				<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('event_location.create')}}">
@@ -106,7 +113,7 @@
 										<div class="form-group row">
 											<div class="col-sm-11">
 												<input type="hidden" name="location_id[]" value="<?= $loca->id; ?>">
-												<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="Location Name" value="<?= $loca->title; ?>" type="text">
+												<input class="form-control location_name" maxlength="50" name="location_name[]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
 											</div>
 										</div>
 									</div>
@@ -146,7 +153,7 @@
 										<div class="form-group row">
 											<div class="col-sm-11">
 												<input type="hidden" name="level_id[]" value="<?= $lvl->id; ?>">
-												<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="Level Name" value="<?= $lvl->title; ?>" type="text">
+												<input class="form-control level_name" maxlength="50" name="level_name[]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
 											</div>
 										</div>
 									</div>
@@ -161,7 +168,7 @@
 							<?php endforeach; ?>
 						</div>
 						<div class="col-md-2">
-							<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Level</button>
+							<button id="add_more_level_btn" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
 						</div>
 					</div>
 				</form>
@@ -189,28 +196,32 @@
 @section('footer_js')
 <script type="text/javascript">
 	$(document).on('click','#add_more_event_category_btn',function(){
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+
+		$(this).attr('data-last_id',incre);
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
 			<div class="col-md-5 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
-						<input class="form-control" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+						<input class="form-control category_name" name="category_name[`+lst_id+`]" placeholder="Category Name" type="text">
 					</div>
 				</div>
 			</div>
 			<div class="col-md-5 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-6">
-						<input name="category_invoiced[]" type="radio" value="School Invoiced" checked> <label> School Invoiced</label>
+						<input name="category_invoiced[`+lst_id+`]" type="radio" value="S" checked> <label> School Invoiced</label>
 					</div>
 					<div class="col-sm-6">
-						<input name="category_invoiced[]" type="radio" value="Teacher Invoiced"> <label> Teacher Invoiced </label>
+						<input name="category_invoiced[`+lst_id+`]" type="radio" value="T"> <label> Teacher Invoiced </label>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-2 col-1">
 				<div class="form-group row">
 					<div class="col-sm-5">
-						<button type="button" class="btn btn-theme-warn delete_event" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-theme-warn delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -220,32 +231,32 @@
 	})
 
 	$(document).on('click','.delete_event',function(){
-		var category_id = $(this).data('category_id');
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+
+		$(this).attr('data-last_id',incre);
+
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('category_id');
 		var current_obj = $(this);
-		current_obj.parents('.add_more_event_category_row').remove();
-
-		// $.ajax({
-		// 	type: "POST",
-		// 	url: "../school/school_data.php", 
-		// 	data: {"type":"delete_school_event_category","p_category_id":category_id,"p_school_id":p_school_id},
-		// 	dataType: "json",
-		// 	async: false,
-		// 	success:function(result){
-				
-		// 		if(result.status){
-
-		// 			current_obj.parents('.add_more_event_category_row').remove();
-		// 			successModalCall(GetAppMessage("delete_confirm_message"));
-					
-				
-		// 		} else {
-		// 			successModalCall(GetAppMessage("delete_category_event_exist_msg"));
-		// 		}
-			
-		// 	},   
-		// 	error: function(ts) { 
-		// 		errorModalCall(ts.responseText+ ' '+GetAppMessage('error_message_text')); 
-		// 	}
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-category/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_event_category_row').remove();
+					}
+				}
+			})
+		}else{
+			current_obj.parents('.add_more_event_category_row').remove();
+		}
 	});
 
 	// location part
@@ -261,7 +272,7 @@
 			<div class="col-md-2 offset-1 col-2">
 				<div class="form-group row">
 					<div class="col-sm-5">
-						<button type="button" class="btn btn-theme-warn delete_location" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-theme-warn delete_location"><i class="fa fa-trash" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -274,20 +285,25 @@
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('location_id');
 		var current_obj = $(this);
-		$.ajax({
-			url: BASE_URL + '/remove-event-location/'+id,
-			type: 'DELETE',
-			dataType: 'json',
-			data: {
-                "id": id,
-                "_token": csrfToken,
-            },
-			success: function(response){	
-				if(response.status == 1){
-					current_obj.parents('.add_more_location_row').remove();
+
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-location/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_location_row').remove();
+					}
 				}
-			}
-		})
+			})
+		}else{
+			current_obj.parents('.add_more_location_row').remove();
+		}
 		
 	});
 
@@ -304,7 +320,7 @@
 			<div class="col-md-2 offset-1 col-2">
 				<div class="form-group row">
 					<div class="col-sm-5">
-						<button type="button" class="btn btn-theme-warn delete_level" data-category_id="10"><i class="fa fa-trash" aria-hidden="true"></i></button>
+						<button type="button" class="btn btn-theme-warn delete_level"><i class="fa fa-trash" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
@@ -317,20 +333,24 @@
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('level_id');
 		var current_obj = $(this);
-		$.ajax({
-			url: BASE_URL + '/remove-event-level/'+id,
-			type: 'DELETE',
-			dataType: 'json',
-			data: {
-                "id": id,
-                "_token": csrfToken,
-            },
-			success: function(response){	
-				if(response.status == 1){
-					current_obj.parents('.add_more_level_row').remove();
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-level/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_level_row').remove();
+					}
 				}
-			}
-		})
+			})
+		}else{
+			current_obj.parents('.add_more_level_row').remove();
+		}	
 	});
 
 	// save functionality
@@ -346,44 +366,44 @@
 	}); 
 
 	function save_event_category(){
-			var list = document.getElementsByClassName("category_name_class");
-			for (var i = 0; i < list.length; i++) {
-				if (list[i].value == '') {
-					try {
-						errorModalCall(GetAppMessage('invalid_category_name_msg'));
-						return false;
-					} catch (err) {
-						//null
-					}
-				}
-			}
+			var formData = $('#event_form').serializeArray();
+			var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		
-		var p_person_id="";
-		//var p_school_id=document.getElementById("school_id").value;
+			var error = '';
 
-		var formData = new FormData($('#event_cat_form')[0]);
-		formData.append("p_school_id", school_id);
-		formData.append("p_person_id", "");
-		formData.append("type", "save_event_category");
-
-		$.ajax({
-				url: '../school/school_data.php',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				async: false,
-				processData: false,
-				contentType: false,
-				success: function(response){	
-				if(response.status == 'success')
-					PopulateEventLocation();
-					successModalCall(GetAppMessage('save_confirm_message'));
-					
-				},
-				error: function(e){ errorModalCall(GetAppMessage('error_message_text'));
-					//alert('Error processing your request: '+e.responseText+' update_student_disc_perc');
+			$( ".category_name" ).each(function( key, value ) {
+				var lname = $(this).val();
+				if(lname=='' || lname==null || lname==undefined){
+					$(this).addClass('error');
+					error = 1;
+				}else{
+					$(this).removeClass('error');
+					error = 0;
 				}
-			})            
+			});
+
+			formData.push({
+				"name": "_token",
+				"value": csrfToken,
+			});
+
+			if(error < 1){	
+				$.ajax({
+					url: BASE_URL + '/add-event-category',
+					data: formData,
+					type: 'POST',
+					dataType: 'json',
+					success: function(response){	
+						if(response.status == 1){
+							$('#modal_parameter').modal('show');
+							$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						}
+					}
+				})
+			}else{
+				$('#modal_parameter').modal('show');
+				$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+			}	            
 	}
 
 	function save_event_location(){	

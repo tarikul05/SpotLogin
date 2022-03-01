@@ -106,6 +106,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 // add parameters
 
+Route::post('/add-event-category', 'ParametersController@addEventCategory')->name('event_category.create');
+Route::delete('/remove-event-category/{key}', 'ParametersController@removeEventCategory')->name('event_location.destroy');
 Route::post('/add-event-location', 'ParametersController@addLocation')->name('event_location.create');
 Route::delete('/remove-event-location/{key}', 'ParametersController@removeLocation')->name('event_location.destroy');
 Route::post('/add-event-level', 'ParametersController@addLevel')->name('event_level.create');

@@ -7,6 +7,7 @@ use DB;
 use File;
 use App\Models\Level;
 use App\Models\Location;
+use App\Models\EventCategory;
 use App\Models\Parameters;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,30 +29,35 @@ class ParametersController extends Controller
     */
     public function index()
     {   
+        $eventCat = EventCategory::where('is_active', 1)->get();
+        $eventCatId = DB::table('event_categories')->orderBy('id','desc')->first();;
         $locations = Location::where('is_active', 1)->get();
         $levels = Level::where('is_active', 1)->get();
-        return view('pages.parameters.index',compact('locations','levels'));
+        return view('pages.parameters.index',compact('eventCat','eventCatId','locations','levels'));
     }   
     /**
      * Remove the specified resource from storage.
      * @return Response
     */
  
-    public function addCategory(Request $request)
+    public function addEventCategory(Request $request)
     {
         try{
             if ($request->isMethod('post')){
                 
-                $locationData = $request->all();
-                foreach($locationData['location_name'] as $key => $value){
-                    $names[] = [
-                        'title' => $value,
-                        'school_id' => $locationData['school_id'] ? $locationData['school_id'] : 1,
+                $categoryData = $request->all();
+
+                for ($i = 1; $i < count($request->category_name); $i++) {
+                    $answers[] = [
+                        'school_id' => $categoryData['school_id'] ? $categoryData['school_id'] : 1,
+                        'title' => $request->category_name[$i],
+                        'invoiced_type' => $request->category_invoiced[$i]
                     ];
                 }
 
-                $location = Location::insert($names);
-                if($location==1){
+                $eventCat = EventCategory::insert($answers);
+
+                if($eventCat==1){
                     $result = array(
                         "status"     => 1,
                         'message' => __('Successfully Registered')
@@ -112,15 +118,27 @@ class ParametersController extends Controller
             if ($request->isMethod('post')){
                 
                 $levelData = $request->all();
-
-                foreach($levelData['level_name'] as $key => $value){
-                    $names[] = [
-                        'title' => $value,
-                        'school_id' => $levelData['school_id'] ? $levelData['school_id'] : 1,
-                    ];
+                $level='';
+                $result=[];
+                
+                if(!empty($levelData['level_id'])){
+                    for ($i = 1; $i < count($request->level_name); $i++) {
+                        $level = DB::table('lavels')
+                        ->where('id', $request->level_id[$i])
+                        ->update([
+                            'title' => $request->lavel_name[$i]
+                            ]);
+                    }
+                }else{
+                    foreach($levelData['level_name'] as $key => $value){
+                        $names[] = [
+                            'title' => $value,
+                            'school_id' => $levelData['school_id'] ? $levelData['school_id'] : 1,
+                        ];
+                    }
+                    $level = Level::insert($names);
                 }
 
-                $level = Level::insert($names);
                 if($level==1){
                     $result = array(
                         "status"     => 1,
@@ -139,6 +157,23 @@ class ParametersController extends Controller
         return $result;
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeEventCategory($id)
+    {
+        $eventCat = EventCategory::find($id)->delete();
+        
+        if($eventCat==1){
+            return $result = array(
+                "status"     => 1,
+                'message' => __('Successfully Deleted')
+            );
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
