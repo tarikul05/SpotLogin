@@ -34,7 +34,7 @@
                     <div class="navbar-nav ms-auto user-area">
                         <?php if (!empty($AppUI['id'])): ?>
                             <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
-                                <span class="admin_name"><?php echo !empty($AppUI['username']) ? $AppUI['username'] : 'Admin';?></span>
+                                <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?></span>
                                 <?php if (!empty($AppUI->profileImage->path_name)): ?>
                                     <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                                 <?php else: ?>

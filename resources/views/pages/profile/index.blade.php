@@ -14,7 +14,7 @@
             <div class="col-sm-6 col-xs-12 header-area">
               <div class="page_header_class">
                 <label id="page_header" name="page_header">
-                  {{__('User Account')}}: <?php echo !empty($AppUI['username']) ? $AppUI['username'] : '';?>
+                  {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
                 </label>
               </div>
             </div>
@@ -58,7 +58,7 @@
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
                     <div class="col-sm-6">
                       <div class="selectdiv form-group-data">
-                        <input type="text" class="form-control" id="username" name="username" value="{{!empty($AppUI['username']) ? old('username', $AppUI['username']) : old('username')}}">
+                        <input type="text" class="form-control" id="firstname" name="firstname" value="{{!empty($AppUI['firstname']) ? old('firstname', $AppUI['firstname']) : old('firstname')}}">
                         
                       </div>
                     </div>

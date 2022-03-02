@@ -106,6 +106,7 @@
     "jpeg,png,jpg,gif,svg needed":"jpeg,png,jpg,gif,svg needed",
     "Maximum 20mb image file will support":"Maximum 20mb image file will support",
     "username required":"username required",
+    "firstname required":"firstname required",
     "email required":"email required",
     "email format wrong":"email format wrong",
     "max 255 character will suppor":"max 255 character will suppor",

@@ -17,10 +17,11 @@ use App\Models\SchoolTeacher;
 use App\Models\AttachedFile;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use App\Traits\CreatedUpdatedBy;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes,CreatedUpdatedBy;
 
     /**
      * The attributes that are mass assignable.
@@ -34,8 +35,8 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
-        'first_name',
-        'last_name',
+        'firstname',
+        'lastname',
         'gender_id',
         'birth_date',
         'is_mail_sent',

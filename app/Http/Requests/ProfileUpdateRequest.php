@@ -24,7 +24,7 @@ class ProfileUpdateRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'username' => 'filled|string',
+			'firstname' => 'filled|string',
 			'email' => 'filled|string|email|max:255',
 			'password' => 'nullable|min:8'
 		];
@@ -38,7 +38,7 @@ class ProfileUpdateRequest extends FormRequest
 	public function messages()
 	{
 		return [
-			'username.filled' => __('username required'),
+			'firstname.filled' => __('firstname required'),
 			'email.filled' => __('email required'),
 			'email.email' => __('email format wrong'),
 			'email.max' => __('max 255 character will support'),
