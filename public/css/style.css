@@ -193,7 +193,17 @@ table.email_template{
 table.email_template td, 
 table.email_template th{
     vertical-align: middle;
-    border:1px solid #E1EFF7!important;
+    border:1px solid #E1EFF7;
+    padding: 19px;
+
+    display:block;
+    width:99.9%;
+    clear:both;
+}
+table.email_template.school td, 
+table.email_template.school th{
+    vertical-align: middle;
+    border:none;
     padding: 19px;
 
     display:block;
@@ -202,7 +212,7 @@ table.email_template th{
 }
 
 table.tc_template{
-    border: 1px solid #E1EFF7!important;
+    border: 1px solid #E1EFF7;
 }
 table.tc_template td, 
 table.tc_template th{

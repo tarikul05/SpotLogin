@@ -89,9 +89,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
     Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ]);
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ]);
-    
 
   });
+
+  // school update
+  Route::get('school-update', 'SchoolsController@edit');
+  Route::post('school-update', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
+
 
 
   Route::middleware(['select_role'])->group(function () {

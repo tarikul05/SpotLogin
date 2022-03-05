@@ -162,6 +162,9 @@ header.panel-heading {
 #show_hide_password .input-group-addon i.fa{color:#989898;}
 /***INDEX PAGE CSS***/
 .container-fluid{max-width: 1500px;}
+.container-fluid.body {
+  padding: 0 5%;
+}
 .bgdarkblue{background: #152245;}
 .txtdarkblue{color: #152245;}
 .light-blue-bg{background: #0075BF;}
@@ -212,6 +215,35 @@ footer .txtdarkblue{text-decoration: none;}
   background-repeat: no-repeat;
   background-position: right bottom;
   background-image: url('../img/Mask_Group_12@2x.png');
+}
+.selectdiv {
+  width: 100%;
+}
+#default_currency_lbl{
+
+}
+
+.selectdiv {
+  position: relative;
+  float: left;
+}
+.selectdiv:after {
+  font-family: FontAwesome;
+  content: "\f078";
+  line-height: 1;
+  color: #0075BF;
+  background: #fff;
+  width: 25px;
+  height: 33px;
+  right: 2px;
+  top: 1px;
+  border-radius: 0 4px 4px 0;
+  padding: 10px 0;
+  text-align: center;
+  margin: 0;
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
 }
 .masthead .container-fluid{
   max-width: 1500px;
