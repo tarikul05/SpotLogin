@@ -24,14 +24,18 @@ class SportloginEmail extends Mailable
       $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;   
       $eol = "\r\n";        
       if (isset($data['body_text'])&& !empty($data['body_text'])) {
+        
+        $data['body_text'] = str_replace("[~~ HOSTNAME ~~][~~ USER_NAME ~~]/index.html",$http_host,$data['body_text']);
+        
         $data['body_text'] = str_replace("[~~HOSTNAME~~][~~USER_NAME~~]/index.html",$http_host,$data['body_text']);
         if ($data['username']) {
           $data['body_text'] = str_replace("[~~USER_NAME~~]",$data['username'],$data['body_text']);
+          $data['body_text'] = str_replace("[~~ USER_NAME ~~]",$data['username'],$data['body_text']);
         
         }
         if ($data['url']) {
           $data['body_text'] = str_replace("[~~URL~~]",$data['url'],$data['body_text']);
-
+          $data['body_text'] = str_replace("[~~ URL ~~]",$data['url'],$data['body_text']);
         }
         
         

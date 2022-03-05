@@ -95,7 +95,8 @@ Route::group(['middleware' => ['auth']], function () {
   // school update
   Route::get('school-update', 'SchoolsController@edit');
   Route::post('school-update', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
-
+  Route::post('school-user-update', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
+  
 
 
   Route::middleware(['select_role'])->group(function () {
