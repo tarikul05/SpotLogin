@@ -104,7 +104,7 @@
 											Account Type:
 										</label>
 										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
-											Coach/School
+											School
 										</label>
 									</div>
 									<div class="form-group row">
@@ -166,7 +166,7 @@
 									<div class="form-group row">
 										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">Maximum Number of Students:</label>
 										<div class="col-sm-4">
-											<input type="number" min="0" max="5000" value="0" class="form-control right" id="max_students" name="max_students"
+											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
 											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : old('max_students')}}">
 											
 										</div>
@@ -176,7 +176,7 @@
 									<div class="form-group row">
 										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">Maximum number of teachers:</label>
 										<div class="col-sm-4">
-										<input type="number" min="0" max="5000" value="0" class="form-control" id="max_teachers" name="max_teachers"
+										<input type="number" min="0" max="5000" class="form-control" id="max_teachers" name="max_teachers"
 										value="{{!empty($school->max_teachers) ? old('max_teachers', $school->max_teachers) : old('max_teachers')}}">
 										</div>
 									</div>
@@ -210,7 +210,7 @@
 											<div id="monthly_job_day_div3" class="form-group row">
 													<label id="monthly_job_day_label"
 															name="monthly_job_day_label"
-															class="col-lg-4 col-sm-4 text-left">Issue date:</label>
+															class="col-lg-4 col-sm-4 text-left">Issue date (Confusion):</label>
 													<div class="col-sm-4">
 															<div class="selectdiv">
 																<select class="form-control"
@@ -242,7 +242,7 @@
 															</div>
 													</div>
 													<div class="col-sm-4 col-xs-6">
-															<input value="0" name="billing_amount"
+															<input name="billing_amount"
 																	id="billing_amount" class="form-control numeric"
 																	type="text" data-force-required="true"
 																	data-isrequired="true" maxlength="5" 
@@ -377,8 +377,8 @@
 												<select class="form-control" name="country_code" id="country_code">
 													@foreach ($country as $key => $value)
 														<option 
-														value="{{ $value->currency_code }}" {{!empty($school->country_code) ? (old('country_code', $school->country_code) == $value->country_code ? 'selected' : '') : (old('country_code') == $value->country_code ? 'selected' : '')}}
-														>  {{ $value->country_code }}</option>
+														value="{{ $value->code }}" {{!empty($school->country_code) ? (old('country_code', $school->country_code) == $value->code ? 'selected' : '') : (old('country_code') == $value->code ? 'selected' : '')}}
+														>  {{ $value->name }}</option>
 													@endforeach
 												</select>
 											</div>
@@ -503,7 +503,7 @@
 													@foreach ($country as $key => $value)
 														<option 
 														value="{{ $value->code }}" {{!empty($school->bank_country_code) ? (old('bank_country_code', $school->bank_country_code) == $value->code ? 'selected' : '') : (old('bank_country_code') == $value->code ? 'selected' : '')}}
-														>  {{ $value->code }}</option>
+														>  {{ $value->name }}</option>
 													@endforeach
 												</select>
 											</div>
@@ -643,7 +643,7 @@
 <script type="text/javascript">
 $(function() {
 	$(".date_picker").datetimepicker({
-		format: "dd/mm/yyyy",
+		format: "yyyy/mm/dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,

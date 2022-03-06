@@ -87,6 +87,8 @@ class School extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
         'incorporation_date' => 'date:Y/m/d',
+        'billing_date_start'=> 'date:Y/m/d',
+        'billing_date_end'=> 'date:Y/m/d'
     ];
 
     

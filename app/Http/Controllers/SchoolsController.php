@@ -90,8 +90,6 @@ class SchoolsController extends Controller
             ['template_code', 'school'],
             ['language', $lanCode]
         ])->first(); 
-        //dd($school);
-
         if ($emailTemplate) {
             $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
             if (!empty($emailTemplate->body_text)) {
@@ -105,9 +103,6 @@ class SchoolsController extends Controller
             $school->incorporation_date = str_replace('-', '/', $school->incorporation_date);
             //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
         } 
-
-        //dd($currency);
-        
         return view('pages.schools.edit')
         ->with(compact('authUser','currency','school','emailTemplate','country'));
     }
@@ -116,24 +111,40 @@ class SchoolsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  School $school
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, School $school)
     {
-        //
+        $params = $request->all();
+        try{
+            //$request->merge(['language'=> $params['language_id'],'is_active'=> 'Y']);
+            $school->update($request->except(['_token']));
+            return back()->withInput($request->all())->with('success', __('School updated successfully!'));
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 
      /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  School $school
      * @return \Illuminate\Http\Response
      */
-    public function userUpdate(Request $request, $id)
+    public function userUpdate(Request $request, School $school)
     {
-        //
+        $params = $request->all();
+        try{
+            $request->merge(['language'=> $params['language_id'],'is_active'=> 'Y']);
+            $school->update($request->except(['_token']));
+            return back()->withInput($request->all())->with('success', __('School updated successfully!'));
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 
 

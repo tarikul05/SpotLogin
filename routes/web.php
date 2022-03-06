@@ -94,8 +94,8 @@ Route::group(['middleware' => ['auth']], function () {
 
   // school update
   Route::get('school-update', 'SchoolsController@edit');
-  Route::post('school-update', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
-  Route::post('school-user-update', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
+  Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
+  Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
   
 
 
