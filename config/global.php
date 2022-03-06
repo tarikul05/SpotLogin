@@ -58,5 +58,24 @@
       'student_activation_email' => 'student_activation_email',
       'teacher' => 'teacher',
     ),
+    'legal_status' => array(
+      array(
+        'code'     => 11,
+        'drop_text' => 'Company (individual reason)'
+      ),
+      array(
+        'code'     => 10,
+        'drop_text'     => 'Society'
+      ),
+      array(
+        'code'     => 20,
+        'drop_text'     => 'Association'
+      ),
+      array(
+        'code'     => 30,
+        'drop_text'     => 'Foundation'
+      ),
+     
+    ),
     
   ];

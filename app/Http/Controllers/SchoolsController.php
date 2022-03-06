@@ -85,6 +85,8 @@ class SchoolsController extends Controller
         }
         $currency = Currency::all();  
         $country = Country::all();  
+        $legal_status = config('global.legal_status');
+        
         
         $emailTemplate = EmailTemplate::where([
             ['template_code', 'school'],
@@ -104,7 +106,7 @@ class SchoolsController extends Controller
             //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
         } 
         return view('pages.schools.edit')
-        ->with(compact('authUser','currency','school','emailTemplate','country'));
+        ->with(compact('legal_status','currency','school','emailTemplate','country'));
     }
 
     /**

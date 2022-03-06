@@ -90,10 +90,11 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
-													@foreach ($currency as $key => $value)
-															<option 
-															value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
-															>  {{ $value->currency_code }}</option>
+													@foreach ($legal_status as $key => $value)
+														<option value="{{ $value['code'] }}" {{!empty($school->legal_status) ? (old('legal_status', $school->legal_status) == $value['code'] ? 'selected' : '') : (old('legal_status') == $value['code'] ? 'selected' : '')}}>
+															
+														{{ __($value['drop_text']) }}
+														</option>
 													@endforeach
 												</select>
 											</div>

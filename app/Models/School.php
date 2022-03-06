@@ -22,11 +22,13 @@ class School extends BaseModel
      */
     protected $fillable = [
         'school_name',
+        'legal_status',
         'incorporation_date',
         'street',
         'street_number',
         'street2',
         'zip_code',
+        'place',
         'country_code',
         'province_id',
         'phone',
