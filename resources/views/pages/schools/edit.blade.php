@@ -85,13 +85,16 @@
 									</div>
 									<div class="form-group row">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">Organization Type (may be no use)
+										class="col-lg-3 col-sm-3 text-left">Organization Type
 										*:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" name="" id="">
-													<option value="1" {{!empty($data) ? (old('is_active', $data->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($data) ? (old('is_active', $data->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+												<select class="form-control" name="legal_status" id="legal_status">
+													@foreach ($currency as $key => $value)
+															<option 
+															value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
+															>  {{ $value->currency_code }}</option>
+													@endforeach
 												</select>
 											</div>
 										</div>
@@ -365,9 +368,11 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">City:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="place" id="place_caption">City:</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="sstreet" name="sstreet" type="text">
+											<input class="form-control" id="place" name="place" type="text"
+											value="{{!empty($school->place) ? old('place', $school->place) : old('place')}}">
+										
 										</div>
 									</div>
 									<div class="form-group row">
@@ -492,7 +497,8 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">City:</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="sstreet" name="sstreet" type="text">
+											<input class="form-control" id="bank_place" name="bank_place" type="text"
+											value="{{!empty($school->bank_place) ? old('bank_place', $school->bank_place) : old('bank_place')}}">
 										</div>
 									</div>
 									<div class="form-group row">
