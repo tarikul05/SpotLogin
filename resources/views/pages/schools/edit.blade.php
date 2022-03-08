@@ -41,6 +41,7 @@
 
 			<!-- Tabs content -->
 			<div class="tab-content" id="ex1-content">
+				<input type="hidden" id="role_type" name="role_type" value="{{$role_type}}">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<form id="schoolForm" name="schoolForm" class="form-horizontal" role="form"
 					 action="{{!empty($school) ? route('school.update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
@@ -148,7 +149,7 @@
 														<div class="selectdiv">
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
 															<option value="">Select</option>
-															@foreach ($currency as $key => $value)
+																@foreach ($currency as $key => $value)
 																		<option 
 																		value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
 																		>  {{ $value->currency_code }}</option>

@@ -89,10 +89,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
     Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ]);
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ]);
-
+    
+    // School update
+    Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
   });
 
-  // school update
+  // school 
+  Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
   Route::get('school-update', 'SchoolsController@edit');
   Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
   Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);

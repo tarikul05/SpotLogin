@@ -78,7 +78,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['related_school','selected_school'];
+    protected $appends = ['related_school','selected_school','role_type'];
 
 
 
@@ -112,11 +112,6 @@ class User extends Authenticatable
      */
     public function getRelatedSchoolAttribute()
     {
-        if ($this->person_type =='SUPER_ADMIN') {
-            return $school = [
-                'id'=>2
-            ];
-        }
         if (!empty($this->school_id)) {
             return $this->personable->schools[0];
         } 
@@ -147,11 +142,12 @@ class User extends Authenticatable
     /**
      * Get the schools for the user.
      */
-    public function roleType()
+    public function getRoleTypeAttribute()
     {
-        // return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
-        return $this->getRoleNames()[0];
-
+        if ($this->person_type =='SUPER_ADMIN') {
+            return 'SUPER_ADMIN';
+        }
+        return !empty($this->related_school) ? $this->related_school->pivot->role_type : null ;
     }
 
 

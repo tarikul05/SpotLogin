@@ -13,7 +13,9 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
                         <a href="#" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
-                        <a href="#" class="nav-item nav-link">{{ __('School') }}</a>
+                        @if (Route::has('schools'))
+                            <a href="{{ route('schools') }}" class="nav-item nav-link">{{ __('School') }}</a>
+                        @endif
                         <a href="#" class="nav-item nav-link">{{ __('Teachers') }}</a>
                         <a href="#" class="nav-item nav-link">{{ __('Students') }}</a>
                         <div class="nav-item dropdown">

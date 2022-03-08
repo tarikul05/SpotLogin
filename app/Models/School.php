@@ -111,6 +111,27 @@ class School extends BaseModel
         return $this->belongsTo(Country::class);
     }
    
+
+     /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function filter($params)
+    {
+        $query = $this->newQuery();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+        if (isset($params['sort']) && !empty($params['sort'])) {
+            $sortExplode = explode('-', $params['sort']);
+            $query->orderBy($sortExplode[0],$sortExplode[1]);
+        } else { 
+            $query->orderBy('id', 'desc');
+        }
+        return $query;
+    }
     
 
 }
