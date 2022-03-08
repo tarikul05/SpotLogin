@@ -78,7 +78,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['related_school','selected_school','role_type'];
+    protected $appends = ['related_school','selected_school'];
 
 
 
@@ -104,6 +104,25 @@ class User extends Authenticatable
     public function personable()
     {
         return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
+    }
+
+    
+     /**
+     * Get the schools for the user.
+     */
+    public function getRelatedSchoolAttribute()
+    {
+        if ($this->person_type =='SUPER_ADMIN') {
+            return $school = [
+                'id'=>2
+            ];
+        }
+        if (!empty($this->school_id)) {
+            return $this->personable->schools[0];
+        } 
+        return '';
+        
+
     }
 
      /**

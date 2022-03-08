@@ -56,13 +56,14 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="is_active" id="is_active">
+													<option value="">Select</option>
 													<option value="1" {{!empty($school) ? (old('is_active', $school->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
 													<option value="0" {{!empty($school) ? (old('is_active', $school->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 												</select>
 											</div>
 										</div>
 									</div>
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 											<label id="school_code_caption" name="school_code_caption" class="col-lg-3 col-sm-3 text-left">School Code
 													*:</label>
 											<div class="col-sm-7">
@@ -71,7 +72,7 @@
 														value="{{!empty($school->school_code) ? old('school_code', $school->school_code) : old('school_code')}}">
 												
 											</div>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label id="row_hdr_school_name"
 												class="col-lg-3 col-sm-3 text-left">Name of the School
@@ -85,11 +86,11 @@
 									</div>
 									<div class="form-group row">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">Organization Type
-										*:</label>
+										class="col-lg-3 col-sm-3 text-left">Organization Type *:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
+													<option value="">Select</option>
 													@foreach ($legal_status as $key => $value)
 														<option value="{{ $value['code'] }}" {{!empty($school->legal_status) ? (old('legal_status', $school->legal_status) == $value['code'] ? 'selected' : '') : (old('legal_status') == $value['code'] ? 'selected' : '')}}>
 															
@@ -146,7 +147,8 @@
 												<div class="col-sm-2">
 														<div class="selectdiv">
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
-																@foreach ($currency as $key => $value)
+															<option value="">Select</option>
+															@foreach ($currency as $key => $value)
 																		<option 
 																		value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
 																		>  {{ $value->currency_code }}</option>
@@ -203,6 +205,7 @@
 																<select class="form-control" 
 																			id="billing_method_list"
 																			name="billing_method">
+																	<option value="">Select</option>
 																	<option value="M" {{!empty($school->billing_method) ? (old('billing_method', $school->billing_method) == 'M' ? 'selected' : '') : (old('billing_method') == 'M' ? 'selected' : '')}}>{{ __('Monthly')}}</option>
 																	<option value="Y" {{!empty($school->billing_method) ? (old('billing_method', $school->billing_method) == 'Y' ? 'selected' : '') : (old('billing_method') == 'Y' ? 'selected' : '')}}>{{ __('Yearly')}}</option>
 																</select>
@@ -220,6 +223,7 @@
 																<select class="form-control"
 																			id="monthly_job_day"
 																			name="monthly_job_day">
+																			<option value="">Select</option>
 																</select>
 															</div>
 													</div>
@@ -237,6 +241,7 @@
 																<select class="form-control"
 																			id="billing_currency"
 																			name="billing_currency">
+																	<option value="">Select</option>
 																	@foreach ($currency as $key => $value)
 																		<option 
 																		value="{{ $value->currency_code }}" {{!empty($school->billing_currency) ? (old('billing_currency', $school->billing_currency) == $value->currency_code ? 'selected' : '') : (old('billing_currency') == $value->currency_code ? 'selected' : '')}}
@@ -297,6 +302,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="contact_gender_id" id="contact_gender_id">
+													<option value="">Select</option>
 													<option value="1" {{!empty($school->contact_gender_id) ? (old('contact_gender_id', $school->contact_gender_id) == 1 ? 'selected' : '') : (old('contact_gender_id') == 1 ? 'selected' : '')}}>{{ __('Masculin')}}</option>
 													<option value="0" {{!empty($school->contact_gender_id) ? (old('contact_gender_id', $school->contact_gender_id) == 2 ? 'selected' : '') : (old('contact_gender_id') == 2 ? 'selected' : '')}}>{{ __('Féminin')}}</option>
 												</select>
@@ -381,6 +387,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="country_code" id="country_code">
+													<option value="">Select</option>
 													@foreach ($country as $key => $value)
 														<option 
 														value="{{ $value->code }}" {{!empty($school->country_code) ? (old('country_code', $school->country_code) == $value->code ? 'selected' : '') : (old('country_code') == $value->code ? 'selected' : '')}}
@@ -507,6 +514,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="bank_country_code" id="bank_country_code">
+													<option value="">Select</option>
 													@foreach ($country as $key => $value)
 														<option 
 														value="{{ $value->code }}" {{!empty($school->bank_country_code) ? (old('bank_country_code', $school->bank_country_code) == $value->code ? 'selected' : '') : (old('bank_country_code') == $value->code ? 'selected' : '')}}
@@ -585,6 +593,7 @@
 							<div class="col-sm-7">
 								<div class="selectdiv">
 									<select class="form-control" name="is_active" id="is_active">
+										<option value="">Select</option>
 										<option value="1" {{!empty($data) ? (old('is_active', $data->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
 										<option value="0" {{!empty($data) ? (old('is_active', $data->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 									</select>
@@ -724,26 +733,26 @@ function PopulateProcessingDays() {
 
 function validateSchoolForm() {
 
-	var p_school_code = document.getElementById("school_code").value;
+	//var p_school_code = document.getElementById("school_code").value;
 	let error = false;
 
-	if (p_school_code.trim() == '') {
-		errorModalCall("Code d'école invalide.");
-		error = true;
-	}
+	// if (p_school_code.trim() == '') {
+	// 	errorModalCall("Code d'école invalide.");
+	// 	error = true;
+	// }
 	//added for max students and teachers
 	var max_students = document.getElementById("max_students").value;
 	var max_teachers = document.getElementById("max_teachers").value;
 
 	if (max_students.trim() == 0) {
 			//alert("nombre max invalide");
-			errorModalCall('error_message_text');
+			errorModalCall('max_students required');
 			document.getElementById("max_students").focus();
 			error = true;
 	}
 	if (max_teachers.trim() == 0) {
 			//alert("nombre max invalide");	
-			errorModalCall('error_message_text');
+			errorModalCall('max_teachers required');
 			document.getElementById("max_teachers").focus();
 			error = true;
 	}

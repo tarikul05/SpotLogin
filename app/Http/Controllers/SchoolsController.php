@@ -76,37 +76,40 @@ class SchoolsController extends Controller
     {
         $response = [];
         $authUser = $request->user();
-        $data = $request->user();
-        $p_school_id = 2;
-        $school = School::find($p_school_id);
-        $lanCode = 'en';
-        if (Session::has('locale')) {
-            $lanCode = Session::get('locale');
-        }
-        $currency = Currency::all();  
-        $country = Country::all();  
-        $legal_status = config('global.legal_status');
-        
-        
-        $emailTemplate = EmailTemplate::where([
-            ['template_code', 'school'],
-            ['language', $lanCode]
-        ])->first(); 
-        if ($emailTemplate) {
-            $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
-            if (!empty($emailTemplate->body_text)) {
-                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
-                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+        if (!empty($authUser->getRelatedSchoolAttribute())) {
+            $p_school_id = $authUser->getRelatedSchoolAttribute()['id'];
+            $school = School::find($p_school_id);
+            $lanCode = 'en';
+            if (Session::has('locale')) {
+                $lanCode = Session::get('locale');
             }
-        } 
-        
-        if($school->incorporation_date != null){
+            $currency = Currency::all();  
+            $country = Country::all();  
+            $legal_status = config('global.legal_status');
             
-            $school->incorporation_date = str_replace('-', '/', $school->incorporation_date);
-            //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
-        } 
-        return view('pages.schools.edit')
-        ->with(compact('legal_status','currency','school','emailTemplate','country'));
+            
+            $emailTemplate = EmailTemplate::where([
+                ['template_code', 'school'],
+                ['language', $lanCode]
+            ])->first(); 
+            if ($emailTemplate) {
+                $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+                if (!empty($emailTemplate->body_text)) {
+                    $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                    $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+                }
+            } 
+            
+            if($school->incorporation_date != null){
+                
+                $school->incorporation_date = str_replace('-', '/', $school->incorporation_date);
+                //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
+            } 
+            return view('pages.schools.edit')
+            ->with(compact('legal_status','currency','school','emailTemplate','country'));
+            
+        }
+        
     }
 
     /**
