@@ -573,19 +573,19 @@
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="username" name="username" value="{{!empty($AppUI['username']) ? old('username', $AppUI['username']) : old('username')}}" disabled="disabled">      
+								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($school_admin->username) ? old('admin_username', $school_admin->username) : old('admin_username')}}" disabled="disabled">      
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Email')}}:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
+								<input type="text" class="form-control" id="admin_email" name="admin_email" value="{{!empty($school_admin->email) ? old('admin_email', $school_admin->email) : old('admin_email')}}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
 							<div class="col-sm-7">
-								<input type="password" type="text" class="form-control" id="password" name="password" value="">
+								<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
                       
 							</div>
 						</div>
@@ -593,10 +593,10 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Status:</label>
 							<div class="col-sm-7">
 								<div class="selectdiv">
-									<select class="form-control" name="is_active" id="is_active">
+									<select class="form-control" name="admin_is_active" id="admin_is_active">
 										<option value="">Select</option>
-										<option value="1" {{!empty($data) ? (old('is_active', $data->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-										<option value="0" {{!empty($data) ? (old('is_active', $data->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+										<option value="1" {{!empty($school_admin->is_active) ? (old('admin_is_active', $school_admin->is_active) == 1 ? 'selected' : '') : (old('admin_is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+										<option value="0" {{!empty($school_admin->is_active) ? (old('admin_is_active', $school_admin->is_active) == 0 ? 'selected' : '') : (old('admin_is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 									</select>
 								</div>
 							</div>
@@ -608,7 +608,7 @@
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">TO:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($AppUI['email']) ? old('email_to_id', $AppUI['email']) : old('email_to_id')}}">
+								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? old('email_to_id', $school_admin->email) : old('email_to_id')}}">
 							
 							</div>
 						</div>

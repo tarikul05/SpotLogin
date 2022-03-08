@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SchoolTeacher extends BaseModel
 {
   use SoftDeletes;
+  protected $table = 'school_teacher';
+  
     /**
      * The attributes that are mass assignable.
      *

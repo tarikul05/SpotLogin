@@ -7,6 +7,9 @@ use App\Models\School;
 use App\Models\EmailTemplate;
 use App\Models\Currency;
 use App\Models\Country;
+use App\Models\Teacher;
+use App\Models\SchoolTeacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
@@ -95,10 +98,49 @@ class SchoolsController extends Controller
                 $p_school_id = $authUser->getRelatedSchoolAttribute()['id'];
                 $role_type = $authUser->getRoleTypeAttribute();
                 $school = School::find($p_school_id);
+                if ($role_type=='school_admin') {
+                    $school_admin = $authUser;
+                } else {
+                    try{
+                        $teacher = SchoolTeacher::where([
+                            ['school_id', $school->id],
+                            ['is_active', 1],
+                            ['role_type', 'school_admin'],
+                            ['has_user_account', 1]
+                        ])->first();
+                        $school_admin = User::where([
+                            ['person_id', $teacher->id],
+                            ['is_active', 1],
+                            ['person_type', 'App\Models\Teacher']
+                        ])->first();
+                    } catch (\Exception $e) {
+                        //return error message
+                        return redirect()->route('schools')->with('error', __('School admin not exist'));
+                    }
+                }
             } 
         } else {
             $role_type = $authUser->person_type;
+            
+            try{
+                $teacher = SchoolTeacher::where([
+                    ['school_id', $school->id],
+                    ['is_active', 1],
+                    ['role_type', 'school_admin'],
+                    ['has_user_account', 1]
+                ])->first();
+                $school_admin = User::where([
+                    ['person_id', $teacher->id],
+                    ['is_active', 1],
+                    ['person_type', 'App\Models\Teacher']
+                ])->first();
+            } catch (\Exception $e) {
+                //return error message
+                return redirect()->route('schools')->with('error', __('School admin not exist'));
+            }
+            
         }
+        
         
             
         $lanCode = 'en';
@@ -128,7 +170,7 @@ class SchoolsController extends Controller
             //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
         } 
         return view('pages.schools.edit')
-        ->with(compact('legal_status','currency','school','emailTemplate','country','role_type'));
+        ->with(compact('legal_status','currency','school','emailTemplate','country','role_type','school_admin'));
         
     }
 
