@@ -98,12 +98,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     
     // School update
+    Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
   });
 
   // school 
-  Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
-  Route::get('school-update', 'SchoolsController@edit');
+  Route::get('school-update', 'SchoolsController@edit')->name('school-update');
   Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
   Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
   Route::post('update-school-logo', ['as' =>'school.update_logo','uses' =>'SchoolsController@logoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

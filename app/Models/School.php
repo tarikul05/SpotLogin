@@ -8,10 +8,11 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class School extends BaseModel
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes, CreatedUpdatedBy;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
