@@ -45,6 +45,11 @@
         'value'     => '[~~CLIENT_NAME~~]',
         'drop_text'     => 'Client Name',
         'drop_label'     => 'Client Name',
+      ),
+      array(
+        'value'     => '[~~PASSWORD~~]',
+        'drop_text'     => 'Password',
+        'drop_label'     => 'Password',
       )
     ),
     'email_template' => array(
@@ -77,5 +82,6 @@
       ),
      
     ),
+    'user_default_password' => env('USER_DEFAULT_PASSWORD', 12345678),
     
   ];

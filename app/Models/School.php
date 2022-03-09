@@ -110,6 +110,15 @@ class School extends BaseModel
     {
         return $this->belongsTo(Country::class);
     }
+
+
+    /**
+     * Get the logo image.
+    */
+    public function logoImage()
+    {
+        return $this->belongsTo(AttachedFile::class, 'logo_image_id', 'id');
+    }
    
 
      /**

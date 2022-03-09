@@ -20,13 +20,21 @@ use App\Http\Controllers\PermissionController;
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
-
+// AJAX
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
+//email-send school AJAX
+Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');
+// email template  AJAX
+Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
+Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
+Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
+
+
 
 // Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
@@ -34,10 +42,6 @@ Route::match(array('GET', 'POST'), "permission-check", array(
   'uses' => 'AuthController@permission_check',
   'as' => 'check.permission'
 ));
-// email template 
-Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
-Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
-Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
 
 
 Route::get('parameters', 'ParametersController@index')->name('parameters');
@@ -51,6 +55,9 @@ Route::get('setlang/{locale}', function ($locale) {
   session()->put('locale', $locale);
   return redirect()->back();
 });
+
+
+
 
 // auth
 Route::group(['middleware' => ['auth']], function () {
@@ -99,6 +106,8 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('school-update', 'SchoolsController@edit');
   Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
   Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
+  Route::post('update-school-logo', ['as' =>'school.update_logo','uses' =>'SchoolsController@logoUpdate' ]);
+  Route::post('delete-school-logo', ['as' =>'school.delete_logo','uses' =>'SchoolsController@logoDelete' ]);
   
 
 

@@ -33,6 +33,7 @@
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
 					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Contact Information</button>
+					<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">Logo</button>
 					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">User Account</button>
 					<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Parameters</button>
 				</div>
@@ -42,6 +43,8 @@
 			<!-- Tabs content -->
 			<div class="tab-content" id="ex1-content">
 				<input type="hidden" id="role_type" name="role_type" value="{{$role_type}}">
+				<input type="hidden" id="school_id" name="school_id" value="{{$school->id}}">
+				<!--Start of Tab 1 -->
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<form id="schoolForm" name="schoolForm" class="form-horizontal" role="form"
 					 action="{{!empty($school) ? route('school.update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
@@ -563,10 +566,14 @@
 						</fieldset>
 					</form>
 				</div>
+				<!--End of Tab 1-->
+
+				<!--Start of Tab 2 -->
 				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 					<form id="schoolUserForm" name="schoolUserForm" class="form-horizontal" role="form"
 					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
+						<input type="hidden" id="user_id" name="user_id" value="{{!empty($school_admin->id) ? old('user_id', $school_admin->id) : old('user_id')}}">
 						<div class="section_header_class">
 							<label id="course_for_billing_caption">{{ __('User Account')}}</label>
 						</div>
@@ -608,7 +615,7 @@
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">TO:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? old('email_to_id', $school_admin->email) : old('email_to_id')}}">
+								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? $school_admin->email : old('email_to_id')}}">
 							
 							</div>
 						</div>
@@ -648,6 +655,64 @@
 						</div>
 					</form>
 				</div>
+				<!--End of Tab 2-->
+
+				<!--Start of Tab 4 -->
+				<div id="tab_4" class="tab-pane">
+					<div class="row">
+						<div class="col-sm-12 col-xs-12 header-area">
+							<div class="page_header_class">
+								<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
+							</div>
+						</div>
+					
+						<div class="col-md-6">
+							<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
+								<div class="form-group row">
+									<div class="col-sm-8">
+										<fieldset>
+											<div class="profile-image-cropper responsive">
+											<?php if (!empty($school->logoImage->path_name)): ?>
+												<img id="profile_image_user_account" src="{{ $school->logoImage->path_name }}"
+														height="128" width="128" class="img-circle"
+														style="margin-right:10px;">
+											<?php else: ?>
+												<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
+														height="128" width="128" class="img-circle"
+														style="margin-right:10px;">
+											<?php endif; ?>
+
+												
+												<div style="display:flex;flex-direction: column;">
+													<div style="margin:5px;">
+														<span class="btn btn-theme-success">
+															<i class="fa fa-picture-o"></i>
+															<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
+															<input onchange="ChangeImage()"
+																	class="custom-file-input" id="profile_image_file"
+																	type="file" name="profile_image_file"
+																	accept="image/*" style="display: none;">
+														</span>
+													</div>
+													<?php //if (!empty($AppUI->profile_image_id)): ?>
+														<div style="margin:5px;">
+															<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($school->logo_image_id) ? '' : 'display:none;'}}">
+																<i class="fa fa-trash"></i>
+																<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
+															</a>
+														</div>
+													<?php //endif; ?>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+				</div>
+				<!--End of Tab 4-->
 			</div>
 		
 	</div>
@@ -658,7 +723,9 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(function() {
+
+
+$(document).ready(function(){
 	$(".date_picker").datetimepicker({
 		format: "yyyy/mm/dd",
 		autoclose: true,
@@ -676,9 +743,7 @@ $(function() {
 		,extraPlugins: 'Cy-GistInsert'
 		,extraPlugins: 'AppFields'
 	});
-});
 
-$(document).ready(function(){
 	PopulateProcessingDays();
 	$('#billing_method_list').on('change', function () {
 		var value = $(this).val();
@@ -721,8 +786,153 @@ $(document).ready(function(){
 		// 		//successModalCall('in progress....');
 		// }
 	});
+
+	$('#delete_profile_image').click(function (e) {
+		DeleteProfileImage();      // refresh lesson details for billing
+	})
+
+
+
+	$("#send_email_btn").click(function (e) {
+		var user_id = $("#user_id").val();
+		var email_to = $("#email_to_id").val(),
+				school_name = $("#school_name").val(),
+				email_body  = CKEDITOR.instances["body_text"].getData()
+		email_body = email_body.replace(/'/g, "''");
+		email_body = email_body.replace(/&/g, "<<~>>");
+		let loader = $('#pageloader');
+    loader.show();
+
+		var schoolUserForm = document.getElementById("schoolUserForm");
+		var formdata = $("#schoolUserForm").serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+		
+		formdata.push({
+				"name": "_token",
+				"value": csrfToken
+		});
+		formdata.push({
+				"name": "user_id",
+				"value": user_id
+		});
+		formdata.push({
+				"name": "email_body",
+				"value": email_body
+		});
+		formdata.push({
+				"name": "school_name",
+				"value": school_name
+		});
+		//console.log(formdata);
+
+		$.ajax({
+				url: BASE_URL + '/school_email_send',
+				data: formdata,
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				encode: true,
+				success: function(data) {
+					loader.hide();
+					if (data.status) {
+							successModalCall("{{ __('email_sent')}}");
+					} else {
+							errorModalCall(data.msg);
+					}
+
+				}, // sucess
+				error: function(ts) {
+					loader.hide();
+					errorModalCall('error_message_text');
+				}
+		});
+	
+	});    //contact us button click 
 })
 
+
+function UploadImage() {
+	$("#profile_image_file").trigger('click');
+}
+function ChangeImage() {
+	var school_id = $("#school_id").val(),
+			p_file_id = '', data = '';
+	var file_data = $('#profile_image_file').prop('files')[0];
+	var formData = new FormData();
+	formData.append('profile_image_file', file_data);
+	formData.append('type', 'upload_image');
+	formData.append('school_id', school_id);
+	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	let loader = $('#pageloader');
+	loader.show("fast");
+	$.ajax({
+		url: BASE_URL + '/update-school-logo',
+		data: formData,
+		type: 'POST',
+		//dataType: 'json',
+		processData: false,
+		contentType: false,
+		beforeSend: function (xhr) {
+			loader.show("fast");
+		},
+		success: function (result) {
+			loader.hide("fast");
+			var mfile = result.image_file + '?time=' + new Date().getTime();
+			$("#profile_image_user_account").attr("src",mfile);
+			$("#delete_profile_image").show();
+		},// success
+		error: function (reject) {
+			loader.hide("fast");
+			let errors = $.parseJSON(reject.responseText);
+			errors = errors.errors;
+			$.each(errors, function (key, val) {
+				//$("#" + key + "_error").text(val[0]);
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+			});
+		},
+		complete: function() {
+			loader.hide("fast");
+		}
+	});
+}
+
+function DeleteProfileImage() {
+	//delete image
+	var school_id = document.getElementById('school_id').value;
+	let loader = $('#pageloader');
+	$.ajax({
+		url: BASE_URL + '/delete-school-logo',
+		data: 'school_id=' + school_id,
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			loader.show("fast");
+		},
+		success: function(response) {
+			if (response.status == 'success'){
+				loader.hide("fast");
+				$("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
+				$("#delete_profile_image").hide();
+				successModalCall(response.message);
+			}
+						
+		},
+		error: function (reject) {
+			loader.hide("fast");
+			let errors = $.parseJSON(reject.responseText);
+			errors = errors.errors;
+			$.each(errors, function (key, val) {
+				//$("#" + key + "_error").text(val[0]);
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+			});
+		},
+		complete: function() {
+			loader.hide("fast");
+		}
+	});
+
+}
 function PopulateProcessingDays() {
 	var resultHtml = "", mday = 1;
 	while (mday <= 31) {

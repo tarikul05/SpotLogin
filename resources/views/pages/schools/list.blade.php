@@ -26,26 +26,46 @@
       <table id="list_tbl" class="display" style="width:100%">
           <thead>
               <tr>
-                  <th>Name of the School</th>
-                  <th>Type</th>
-                  <th>Incorporation Date </th>
-                  <th>Contact Person</th>
-                  <th>Contact Person e-Mail</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                <th>#</th>
+                <th></th>
+                <th>Name of the School</th>
+                <th>Type</th>
+                <th>Incorporation Date </th>
+                <th>Contact Person</th>
+                <th>Contact Person e-Mail</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
           </thead>
           <tbody>
+            @php ($i = 1)
             @foreach ($schools as $key => $school)
               <tr>
+                <td>{{ $i++ }}</td>
+                <td>
+                  <?php if (!empty($school->logoImage->path_name)): ?>
+                    <img src="{{ $school->logoImage->path_name }}" width='30' height='30' class='img-circle account-img-small'/>
+                  <?php else: ?>
+                    <img src="{{ asset('img/photo_blank.jpg') }}" width='30' height='30' class='img-circle account-img-small'/>
+                  <?php endif; ?>
+                </td>
+
                 <td>{{ $school->school_name }}</td>
                 <td>School</td>
                 <td>{{ $school->incorporation_date }}</td>
                 <td>{{ $school->contact_firstname }}</td>
-                <td>{{ $school->email }}</td>
-                <td>{{ $school->is_active }}</td>
+                <td>{{ $school->email }}</br>
+                {{ $school->email2 }}
+                </td>
                 <td>
-                  <a href="{{ URL::to('/admin/school-update/'.$school->id)}}">edit </a>
+                  @if($school->is_active == 1)
+                    {{__('Active')}}
+                  @else
+                    {{__('Inactive')}}
+                  @endif
+                </td>
+                <td>
+                  <a class="btn btn-sm btn-theme-success" href="{{ URL::to('/admin/school-update/'.$school->id)}}"> {{ __('Edit')}} </a>
                 </td>
               </tr>
             @endforeach
