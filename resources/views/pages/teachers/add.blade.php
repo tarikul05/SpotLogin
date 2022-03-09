@@ -16,7 +16,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">Gestion des professeurs</label>
+						<label id="page_header" name="page_header">{{ __('Teacher Information:') }}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -31,9 +31,7 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Données principales</button>
-				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Cours</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Sections et tarifs</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -41,68 +39,63 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="myForm" method="post" name="myForm" role="form">
+				<form action="" class="form-horizontal" id="add_teacher" method="post" name="add_teacher" role="form">
+					@csrf
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">Données personnelles du professeur</label>
+							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">Visibilité: *</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="availability_select" name="availability_select">
+											<select class="form-control" name="availability_select" id="availability_select">
+												<option value="10">Active</option>
+												<option value="0">Inactive</option>
+												<option value="-9">Deleted</option>
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="snickname" id="nickname_label_id">Pseudo:</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="middlename" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control" id="snickname" maxlength="50" name="snickname" placeholder="Pseudo" type="text" value="">
+										<input class="form-control require" id="middlename" maxlength="50" name="middlename" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="sgender_id" id="gender_label_id">Genre: *</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sgender_id" name="sgender_id">
+											<select class="form-control require" id="gender_id" name="gender_id">
+												<option value="1">Male</option>
+												<option value="2">Female</option>
+												<option value="3">Not specified</option>
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="slastname" id="family_name_label_id">Nom de famille: *</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control" id="slastname" name="slastname" type="text">
+										<input class="form-control require" id="lastname" name="lastname" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="sfirstname" id="first_name_label_id">Prénom: <span class="required_sign">*</span></label>
+									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
 									<div class="col-sm-7">
-										<input class="form-control" id="sfirstname" name="sfirstname" type="text">
-									</div>
-								</div>
-								<div class="form-group row" style="display: none;">
-									<label class="col-lg-3 col-sm-3 text-left" for="smiddlename" id="middle_name_label_id">Deuxième prénom:</label>
-									<div class="col-sm-7">
-										<input class="form-control" id="smiddlename" name="smiddlename" type="text">
+										<input class="form-control require" id="firstname" name="firstname" type="text">
 									</div>
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group row" style="display: none;">
-									<label class="col-lg-3 col-sm-3 text-left" for="sbirthname" id="birth_name_label_id">Nom de jeune fille:</label>
-									<div class="col-sm-7">
-										<input class="form-control" id="sbirthname" name="sbirthname" type="text">
-									</div>
-								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">Date de naissance:</label>
+									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="sbirth_date_div"> 
-											<input id="sbirth_date" name="sbirth_date" type="text" class="form-control">
+										<div class="input-group" id="birth_date_div"> 
+											<input id="birth_date" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -110,29 +103,29 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">Licence Jeunesse et sport:</label>
+									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" id="slicence_js" name="slicence_js" type="text">
+										<input class="form-control" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="semail_user_copy" id="email_caption">Email:</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="semail_user_copy" name="semail_user_copy" type="text">
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" name="email" type="text">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">Dispose d'un compte utilisateur:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
 											<input id="shas_user_account" name="shas_user_account" type="checkbox" value="0">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row" id="authorisation_div">
-										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">Autorisation</span> </label>
+										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
 										<b><input id="authorisation_all" name="authorisation_id" type="radio" value="ALL"> ALL<br>
 										<input id="authorisation_med" name="authorisation_id" type="radio" value="MED"> Medium<br>
@@ -140,7 +133,7 @@
 									</div>
 								</div>
 								<div class="form-group row" id="sbg_color_agenda_div">
-									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">Couleur agenda:</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
 										<input type="text" class="colorpicker dot" />
 									</div>
@@ -148,57 +141,46 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="address_caption">Adresse du professeur</label>
+								<label id="address_caption">{{__('Address') }}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Rue:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="sstreet" name="sstreet" type="text">
+											<input class="form-control" id="street" name="street" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet_number" id="street_number_caption">Numéro de rue:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="sstreet_number" name="sstreet_number" type="text">
-										</div>
-									</div>
-									<div class="form-group row" id="street2_div" style="display: none;">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet2" id="street2_caption">Complément de rue:</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="sstreet2" name="sstreet2" type="text">
+											<input class="form-control" id="street_number" name="street_number" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="szip_code" id="postal_code_caption">Code postal:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="szip_code" name="szip_code" type="text">
+											<input class="form-control" id="zip_code" name="zip_code" type="text">
 										</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="splace" id="locality_caption">Localité:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="splace" name="splace" type="text">
+											<input class="form-control" id="place" name="place" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="scountry_id" id="pays_caption">Pays:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" id="scountry_id" name="scountry_id">
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="form-group row" id="province_id_div" style="display:none;">
-										<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="province_caption">Province:</label>
-										<div class="col-sm-7">
-											<div class="selectdiv">
-												<select class="form-control" id="province_id" name="province_id">
-												</select>
+											<select class="form-control" id="country_code" name="country_code">
+												<option value="CA">Canada</option>
+												<option value="FR">France</option>
+												<option value="CH">Switzerland</option>
+												<option value="US">United States</option>
+											</select>
 											</div>
 										</div>
 									</div>
@@ -206,21 +188,21 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="contact_info_caption">Informations de contact</label>
+								<label id="contact_info_caption">{{ __('Contact information') }}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sphone" id="phone_caption">Téléphone:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="sphone" name="sphone" type="text">
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
 											</div>
 										</div>
 									</div>
 									<div class="form-group row">
 										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label>Téléphone</label> <label class="text-left"></label>
+											<label>{{ __('Phone2') }} :</label> <label class="text-left"></label>
 										</div>
 										<div class="col-sm-7">
 											<div class="input-group">
@@ -229,199 +211,35 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="smobile" id="mobile_caption">Téléphone mobile:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> <input class="form-control" id="smobile" name="smobile" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="form-group row" style="display: none;">
-										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label for="smobile2">Téléphone mobile</label> <label class="text-left"></label>
-										</div>
-										<div class="col-sm-7">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> <input class="form-control" id="smobile2" name="smobile2" type="text">
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> <input class="form-control" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="semail" id="email_caption">Email:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="semail" name="semail" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="form-group row" style="display: none;">
-										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label for="semail2">Email</label> <label class="text-left">(2)</label>
-										</div>
-										<div class="col-sm-7">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="semail2" name="semail2" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="form-group row" style="display: none;">
-										<label class="col-lg-3 col-sm-3 text-left" for="sfax" id="fax_caption">Fax:</label>
-										<div class="col-sm-7">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-print"></i></span> <input class="form-control" id="sfax" name="sfax" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="form-group row" style="display: none;">
-										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label for="sfax2">Fax</label> <label class="text-left">(2)</label>
-										</div>
-										<div class="col-sm-7">
-											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-print"></i></span> <input class="form-control" id="sfax2" name="sfax2" type="text">
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email2" name="email2" type="text">
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="clearfix"></div>
-							<div id="canada_payment_div" style="display: none;">
-								<div id="payment_detail_div">
-									<label class="section_header_class" id="teacher_payment_detail_caption">Coordonnées de paiement professeur</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="etransfer_acc_cap">To pay by e-transfer:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">To pay by check:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="cheque_payee" name="cheque_payee" type="text">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div id="professor_payment_div" style="display: none;">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="name_of_bank_caption">Nom de la banque:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_name" name="sbank_name" type="text">
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">Adresse:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_address" name="sbank_address" type="text">
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" for="sbank_zipcode">Code postal:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_zipcode" name="sbank_zipcode" type="text">
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" for="sbank_place">Localité:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_place" name="sbank_place" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="pays_caption">Pays:</label>
-											<div class="col-sm-7">
-												<div class="selectdiv">
-													<select class="form-control" id="sbank_country_id" name="sbank_country_id">
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="form-group row" id="bank_province_id_div" style="display:none;">
-											<label class="col-lg-3 col-sm-3 text-left" for="bank_province_id" id="bank_province_caption">Province:</label>
-											<div class="col-sm-7">
-												<div class="selectdiv">
-													<select class="form-control" id="bank_province_id" name="bank_province_id">
-													</select>
-												</div>
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="iban_caption">IBAN:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_iban" name="sbank_iban" type="text">
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="account_number">Numéro de compte:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_account" name="sbank_account" type="text">
-											</div>
-										</div>
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" id="swift_number">Numéro SWIFT:</label>
-											<div class="col-sm-7">
-												<input class="form-control" id="sbank_swift" name="sbank_swift" type="text">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="clearfix"></div>
 							<div id="commentaire_div">
 								<div class="section_header_class">
-									<label id="private_comment_caption">Commentaire privé</label>
+									<label id="private_comment_caption">{{__('Private comment') }}</label>
 								</div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">Commentaire privé:</label>
+											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 											<div class="col-sm-7">
 												<textarea class="form-control" cols="60" id="scomment" name="desc" rows="5"></textarea>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-							<div class="section_header_class" style="display: none;">
-								<label id="about_caption">A propos du professeur</label>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group row" id="display_home_flag_div" style="display: none;">
-										<label class="col-lg-3 col-sm-3 text-left" for="display_home_flag" id="disp_on_home_caption" style="display: none;">Afficher sur la page d'accueil:</label>
-										<div class="col-sm-7" style="display: none;">
-											<div class="selectdiv">
-												<select class="form-control m-bot15" id="display_home_flag" name="display_home_flag">
-													<option value="0">
-														No
-													</option>
-													<option value="1">
-														Yes
-													</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div id="display_home_div" style="display: none;">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left" for="scomment" id="comment_caption">À propos de l'élève:</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" id="about_text" maxlength="100" name="about_text" placeholder="About" rows="2"></textarea>
 											</div>
 										</div>
 									</div>
@@ -431,98 +249,21 @@
 					</fieldset>
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-				<form class="form-horizontal" role="form">
-					<input id="selected_month" name="selected_month" type="hidden" value="7"> <input id="selected_year" name="selected_year" type="hidden" value="2016">
-					<div class="clearfix"></div>
-					<div id="teacher_disc_perc_div">
-						<div class="">
-							<label id="perc_deduction_warning_cap_teacher">Saisir le montant de la réduction pour la retenue de charges</label>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" id="teacher_disc_perc_cap">Taux retenue charges:</label>
-							<div class="col-sm-6">
-								<div class="table-responsive">
-									<table class="table list-item" id="tariff_table_id">
-										<tr>
-											<td width="20%"><input class="form-control" id="discount_perc" name="discount_perc" type="text" value="10"></td>
-											<td><button class="btn btn-sm btn-primary" id="changer_btn">Changer</button></td>
-										</tr>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-2 col-sm-2 text-left" id="period_caption">Choix de la période:</label>
-						<div class="col-sm-3">
-							<input class="form-control" id="billing_period_start_date" name="billing_period_start_date">
-						</div>
-						<div class="col-sm-3">
-							<input class="form-control" id="billing_period_end_date" name="billing_period_end_date">
-						</div>
-						<div class="col-sm-2">
-							<button class="btn btn-primary" id="billing_period_search_btn" type="button">Search</button>
-						</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">Cours disponibles à la facturation</label>
-					</div>
-					<div class="table-responsive">
-						<table class="table lessons-list" id="lesson_table">
-							<!--<thead><th colspan="5">Charges/Frix</th></thead>-->
-							<tbody>
-								<tr class="lesson-item-list-empty">
-									<td colspan="12"><label id="lesson_item_empty_caption"></label></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="alert alert-info" id="lesson_footer_div" style="display: none;">
-						<label id="verify_label_id">Veuillez vérifier toutes les entrées avant de pouvoir convertir ces éléments en facture.</label> <button class="btn btn-primary" id="btn_convert_invoice">Générer les factures assistants</button>
-					</div>
-				</form>
-			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form class="form-horizontal" role="form">
-					<label id="row_hdr_buy" style="display: none;"></label> <label id="row_hdr_sale" style="display: none;"></label> <!--<label style="display: none;" id="course_type_caption" name="course_type_caption"></label>-->
-						<!-- <font color="blue">
-							<h5>Tarifs</h5>
-						</font> -->
-					<div class="section_header_class">
-						<label class="tarif_caption" id="tarif_caption">Tarifs</label>
-					</div>
-					<div class="table-responsive">
-						<table class="table list-item" id="tariff_table_rate" width="100%">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th><span id="course_type_caption">Hourly Rate</span></th>
-									<th><span class="tarif_caption" id="tarif_caption">Tarif</span></th>
-									<th class="text-right" id="buy_header">
-										<span id="row_hdr_buy_cap">Buy</span>
-										<h6><span id="buy_buy_caption_info" style="white-space: pre-line1;display:block;">The ‘Buy price’ is the price you ask offer the teacher for his service</span></h6>
-									</th>
-									<th class="text-right">
-										<span id="row_hdr_sell_cap">Sell</span>
-										<h6><span id="buy_sell_caption_info" style="white-space: pre-line;display:block;">The ‘Sell price’ is the price you sell your students the lesson</span></h6>
-									</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-							<tfoot>
-								<tr>
-									<th colspan="5" style="text-align:right"><button class="btn btn-theme-success add-row" type="button"><em class="glyphicon glyphicon-plus"></em><span id="add_new_id">Add</span></button></th>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</form>
+		</div>
+	</div>
+	<!-- success modal-->
+	<div class="modal modal_parameter" id="modal_add_teacher">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p id="modal_alert_body"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal">{{ __('Ok') }}</button>
+				</div>
 			</div>
 		</div>
 	</div>
-
 	<!-- End Tabs content -->
 @endsection
 
@@ -530,7 +271,7 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-	$("#sbirth_date").datetimepicker({
+	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
         todayBtn: true,
@@ -543,6 +284,43 @@ $(function() {
 });
 
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
-  
+
+// save functionality
+$('#save_btn').click(function (e) {
+		var formData = $('#add_teacher').serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var error = '';
+		$( ".form-control.require" ).each(function( key, value ) {
+			var lname = $(this).val();
+			if(lname=='' || lname==null || lname==undefined){
+				$(this).addClass('error');
+				error = 1;
+			}else{
+				$(this).removeClass('error');
+				error = 0;
+			}
+		});
+		formData.push({
+			"name": "_token",
+			"value": csrfToken,
+		});
+		if(error < 1){	
+			$.ajax({
+				url: BASE_URL + '/add-teacher-action',
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				success: function(response){	
+					if(response.status == 1){
+						$('#modal_add_teacher').modal('show');
+						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+					}
+				}
+			})
+		}else{
+			$('#modal_add_teacher').modal('show');
+			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+		}	            
+});  
 </script>
 @endsection
