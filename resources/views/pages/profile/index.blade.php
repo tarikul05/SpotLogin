@@ -149,6 +149,7 @@
 	}); //ready
 
   function UploadImage() {
+    document.getElementById("profile_image_file").value = "";
     $("#profile_image_file").trigger('click');
   }
   function ChangeImage() {
@@ -199,6 +200,7 @@
   })
   function DeleteProfileImage() {
     //delete image
+    document.getElementById("profile_image_file").value = "";
     var p_person_id = document.getElementById('user_id').value;
     let loader = $('#pageloader');
     $.ajax({

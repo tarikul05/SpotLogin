@@ -401,7 +401,7 @@ class SchoolsController extends Controller
             $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
             if(file_exists($storagePath.$file)) unlink($storagePath.$file);
             AttachedFile::find($school->logoImage->id)->delete();
-            $data['logo_image_id'] ='';
+            $data['logo_image_id'] =null;
             if ($school->update($data)) {
                 $result = array(
                     "status"     => 'success',

@@ -853,6 +853,7 @@ $(document).ready(function(){
 
 
 function UploadImage() {
+	document.getElementById("profile_image_file").value = "";
 	$("#profile_image_file").trigger('click');
 }
 function ChangeImage() {
@@ -863,7 +864,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('school_id', school_id);
-	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	
 	let loader = $('#pageloader');
 	loader.show("fast");
 	$.ajax({
@@ -900,6 +901,7 @@ function ChangeImage() {
 function DeleteProfileImage() {
 	//delete image
 	var school_id = document.getElementById('school_id').value;
+	document.getElementById("profile_image_file").value = "";
 	let loader = $('#pageloader');
 	$.ajax({
 		url: BASE_URL + '/delete-school-logo',

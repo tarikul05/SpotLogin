@@ -215,7 +215,7 @@ class ProfileController extends Controller
       $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
       if(file_exists($storagePath.$file)) unlink($storagePath.$file);
       AttachedFile::find($authUser->profileImage->id)->delete();
-      $data['profile_image_id'] ='';
+      $data['profile_image_id'] =null;
       if ($authUser->update($data)) {
         $result = array(
           "status"     => 'success',
