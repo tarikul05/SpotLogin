@@ -26,6 +26,11 @@ class EventLevelController extends Controller
     */
     public function index()
     {   
+        $userSchoolId = Auth::user()->selectedSchoolId();
+        if (empty($userSchoolId)) {
+            return redirect()->route('Home')->with('error', __('School is not selected'));
+        }
+
         $levels = Level::where('is_active', 1)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         return view('pages.event_level.index',compact('levels','eventLastLevelId'));
@@ -40,18 +45,19 @@ class EventLevelController extends Controller
         try{
             if ($request->isMethod('post')){
                 
+                $userSchoolId = Auth::user()->selectedSchoolId();
                 $levelData = $request->all();
                 //echo '<>';print_r($levelData);exit;
                 foreach($levelData['level'] as $level){
                     if(isset($level['id']) && !empty($level['id'])){
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $level['name']
                         ];
                         $eventLevel = Level::where('id', $level['id'])->update($answers);
                     }else{
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $level['name']
                         ];
                         $eventLevel = Level::create($answers);

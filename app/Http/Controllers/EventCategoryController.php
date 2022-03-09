@@ -26,7 +26,12 @@ class EventCategoryController extends Controller
      * @return Response
     */
     public function index()
-    {   
+    {  
+        $userSchoolId = Auth::user()->selectedSchoolId();
+        if (empty($userSchoolId)) {
+            return redirect()->route('Home')->with('error', __('School is not selected'));
+        }
+        
         $eventCat = EventCategory::where('is_active', 1)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
 
@@ -43,18 +48,19 @@ class EventCategoryController extends Controller
             if ($request->isMethod('post')){
                 
                 $categoryData = $request->all();
-
+                $userSchoolId = Auth::user()->selectedSchoolId();
+                
                 foreach($categoryData['category'] as $cat){
                     if(isset($cat['id']) && !empty($cat['id'])){
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $cat['name'],
                             'invoiced_type' => $cat['invoice']
                         ];
                         $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
                     }else{
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $cat['name'],
                             'invoiced_type' => $cat['invoice']
                         ];
