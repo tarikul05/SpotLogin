@@ -30,10 +30,6 @@ Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verif
 
 // Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
-Route::match(array('GET', 'POST'), "permission-check", array(
-  'uses' => 'AuthController@permission_check',
-  'as' => 'check.permission'
-));
 // email template 
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
@@ -56,12 +52,28 @@ Route::get('setlang/{locale}', function ($locale) {
 Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
-    // Add edit language translations from json 
-    Route::get('languages', 'LanguageTranslationController@index')->name('languages');
-    Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
-    Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
-    Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
-    Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
+  Route::match(array('GET', 'POST'), "permission-check", array(
+    'uses' => 'AuthController@permission_check',
+    'as' => 'check.permission'
+  ));
+  // Add edit language translations from json 
+  Route::get('languages', 'LanguageTranslationController@index')->name('languages');
+  Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
+  Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
+  Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
+  Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
+
+  // add parameters for schools
+  Route::get('/event-category', 'EventCategoryController@index')->name('event_category.index');
+  Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('event_category.create');
+  Route::delete('/remove-event-category/{key}', 'EventCategoryController@removeEventCategory')->name('event_category.destroy');
+  Route::get('/event-location', 'EventLocationController@index')->name('event_location.index');
+  Route::post('/add-event-location', 'EventLocationController@addLocation')->name('event_location.create');
+  Route::delete('/remove-event-location/{key}', 'EventLocationController@removeLocation')->name('event_location.destroy');
+  Route::get('/event-level', 'EventLevelController@index')->name('event_level.index');
+  Route::post('/add-event-level', 'EventLevelController@addLevel')->name('event_level.create');
+  Route::delete('/remove-event-level/{key}', 'EventLevelController@removeLevel')->name('event_level.destroy');
 
   Route::prefix('admin')->group(function() {
 
@@ -104,14 +116,5 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 
-// add parameters
 
-Route::get('/event-category', 'EventCategoryController@index')->name('event_category.index');
-Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('event_category.create');
-Route::delete('/remove-event-category/{key}', 'EventCategoryController@removeEventCategory')->name('event_category.destroy');
-Route::get('/event-location', 'EventLocationController@index')->name('event_location.index');
-Route::post('/add-event-location', 'EventLocationController@addLocation')->name('event_location.create');
-Route::delete('/remove-event-location/{key}', 'EventLocationController@removeLocation')->name('event_location.destroy');
-Route::get('/event-level', 'EventLevelController@index')->name('event_level.index');
-Route::post('/add-event-level', 'EventLevelController@addLevel')->name('event_level.create');
-Route::delete('/remove-event-level/{key}', 'EventLevelController@removeLevel')->name('event_level.destroy');
+

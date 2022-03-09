@@ -11,9 +11,9 @@ trait CreatedUpdatedBy
             if (!$model->isDirty('created_by') && auth()->user()) {
                 $model->created_by = auth()->user()->id;
             }
-            if (!$model->isDirty('modified_by')) {
-                $model->modified_by = auth()->user()->id;
-            }
+            // if (!$model->isDirty('modified_by')) {
+            //     $model->modified_by = auth()->user()->id;
+            // }
         });
 
         // updating updated_by when model is updated
