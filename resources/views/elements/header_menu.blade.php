@@ -52,6 +52,9 @@
                                     <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                         data set master
                                     </a> -->
+                                    @can('parameters-list')
+                                        <a class="dropdown-item" href="/parameters/category">{{ __('Parameters') }}</a>
+                                    @endcan
                                     @can('email-template-list')
                                         <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
                                     @endcan

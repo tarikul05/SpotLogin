@@ -20,6 +20,9 @@ class EventCategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:parameters-list|parameters-create-udpate|parameters-delete', ['only' => ['index']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addEventCategory']]);
+        $this->middleware('permission:parameters-delete', ['only' => ['removeEventCategory']]);
     }
      /**
      * Remove the specified resource from storage.
@@ -31,7 +34,7 @@ class EventCategoryController extends Controller
         if (empty($userSchoolId)) {
             return redirect()->route('Home')->with('error', __('School is not selected'));
         }
-        
+
         $eventCat = EventCategory::where('is_active', 1)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
 

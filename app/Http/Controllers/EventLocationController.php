@@ -19,6 +19,9 @@ class EventLocationController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:parameters-list|parameters-create-udpate|parameters-delete', ['only' => ['index']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addEventCategory']]);
+        $this->middleware('permission:parameters-delete', ['only' => ['removeEventCategory']]);
     }
      /**
      * Remove the specified resource from storage.
