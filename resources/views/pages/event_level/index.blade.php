@@ -143,7 +143,7 @@
 		$(this).attr('data-last_id',incre);
 
 		if (!confirm('{{ __("Are you want to delete?") }}')) return
-			
+
 		if(id){
 			$.ajax({
 				url: BASE_URL + '/remove-event-level/'+id,
@@ -195,6 +195,7 @@
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						window.location.reload();
 					}
 				}
 			})

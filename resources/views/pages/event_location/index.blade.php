@@ -141,7 +141,7 @@
 		var lst_id = $(this).attr('data-r_id');
 		var incre = parseInt(lst_id);
 		$(this).attr('data-last_id',incre);
-		
+
 		if (!confirm('{{ __("Are you want to delete?") }}')) return
 
 		if(id){
@@ -198,6 +198,7 @@
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						window.location.reload();
 					}
 				}
 			})
