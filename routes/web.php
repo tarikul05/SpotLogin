@@ -108,6 +108,7 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::middleware(['select_role'])->group(function () {
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
+    Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('Home');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
   });
 

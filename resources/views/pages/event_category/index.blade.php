@@ -105,7 +105,7 @@
 					<p id="modal_alert_body"></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal">{{ __('Ok') }}</button>
+					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
 				</div>
 			</div>
 		</div>

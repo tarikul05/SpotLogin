@@ -367,20 +367,22 @@ class AuthController extends Controller
     public function permission_check(Request $request)
     {
         $user = Auth::user();
-        // dd($user->roleType());
+        // dd($user->getSelectedSchoolAttribute());
         // if (!empty($request->session()->get('selected_role'))) {
-        //     return redirect()->route('teacherHome');
+        //     return redirect()->route('Home');
         // }
         if ($user->person_type == 'App\Models\Student') {
             $user->syncRoles(['student']);
             $request->session()->put('selected_role','student');
-            return redirect()->route('teacherHome');
+            // $request->session()->put('selected_school', $school);
+            return redirect()->route('Home');
 
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
             $tRoleType = $user->schools()[0]->pivot->role_type;
             $user->syncRoles([$tRoleType]);
+            $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
-            return redirect()->route('teacherHome');
+            return redirect()->route('Home');
         }
 
         if ($request->isMethod('post')){
@@ -390,7 +392,7 @@ class AuthController extends Controller
                     $request->session()->put('selected_school', $school);
                     $request->session()->put('selected_role',$school->pivot->role_type);
                     $user->syncRoles([$school->pivot->role_type]);
-                    return redirect()->route('teacherHome');
+                    return redirect()->route('Home');
                 }
             }
         }
