@@ -32,9 +32,9 @@
 		<!-- Tabs navs -->
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<a class="nav-link" href="<?= $BASE_URL;?>/parameters/category">{{ __('Event Category') }}</a>
-				<a class="nav-link" href="<?= $BASE_URL;?>/parameters/location">{{ __('Locations') }}</a>
-				<a class="nav-link active" href="<?= $BASE_URL;?>/parameters/level">{{ __('Level') }}</a>
+				<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Event Category') }}</a>
+				<a class="nav-link" href="{{ route('event_location.index') }}">{{ __('Locations') }}</a>
+				<a class="nav-link active" href="{{ route('event_level.index') }}">{{ __('Level') }}</a>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
