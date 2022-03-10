@@ -20,7 +20,8 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        return view('pages.teachers.list');
+        $teachers = Teacher::where('is_active', 1)->get();
+        return view('pages.teachers.list',compact('teachers'));
     }
 
     /**
