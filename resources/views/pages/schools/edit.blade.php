@@ -16,7 +16,7 @@
 				<div class="row panel-row" style="margin:0;">
 					<div class="col-sm-6 col-xs-12 header-area">
 						<div class="page_header_class">
-							<label id="page_header" name="page_header">School Key Information</label>
+							<label id="page_header" name="page_header">{{ __('School Key Information')}}</label>
 						</div>
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
@@ -32,10 +32,18 @@
 
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
-					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Contact Information</button>
-					<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">Logo</button>
-					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">User Account</button>
-					<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Parameters</button>
+					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+						{{ __('Contact Information')}}
+					</button>
+					<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Logo')}}
+					</button>
+					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+					{{ __('User Account')}}
+					</button>
+					<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">
+					{{ __('Parameters')}}
+					</button>
 				</div>
 			</nav>
 			<!-- Tabs navs -->
@@ -51,7 +59,7 @@
 						@csrf
 						<fieldset>
 							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">Personal data of the school</label>
+								<label id="teacher_personal_data_caption">{{ __('Personal data of the school')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
@@ -79,7 +87,7 @@
 									</div> -->
 									<div class="form-group row">
 										<label id="row_hdr_school_name"
-												class="col-lg-3 col-sm-3 text-left">Name of the School
+												class="col-lg-3 col-sm-3 text-left">{{ __('Name of the School')}}
 												*:</label>
 										<div class="col-sm-7">
 												<input type="text" class="form-control" id="school_name"
@@ -90,7 +98,7 @@
 									</div>
 									<div class="form-group row">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">Organization Type *:</label>
+										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}} *:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
@@ -110,7 +118,7 @@
 									<div class="form-group row">
 
 										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
-											Account Type:
+											{{ __('Account Type')}}:
 										</label>
 										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
 											School
@@ -118,7 +126,7 @@
 									</div>
 									<div class="form-group row">
 										<label id="sender_email_label" name="sender_email_label" 
-										class="col-lg-3 col-sm-3 text-left">Sender email address :</label>
+										class="col-lg-3 col-sm-3 text-left">{{ __('Sender email address')}} :</label>
 										<div class="col-sm-7">
 												<input type="email" id="sender_email"
 												name="sender_email" size="100" class="form-control" 
@@ -126,7 +134,7 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">Incorporation Date:</label>
+										<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{ __('Incorporation Date')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="sbirth_date_div"> 
 												<input id="incorporation_date" name="incorporation_date" type="text" class="form-control date_picker"
@@ -147,7 +155,7 @@
 										<div class="form-group alert alert-info row">
 												<label for="default_currency_code" id="default_currency_lbl"
 														name="default_currency_lbl"
-														class="col-lg-3 col-sm-3 text-end">base currency</label>
+														class="col-lg-3 col-sm-3 text-end">{{ __('Base currency')}}</label>
 												<div class="col-sm-2">
 														<div class="selectdiv">
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
@@ -162,19 +170,19 @@
 												</div>
 												<div class="col-sm-7">
 														<label id="currency_alert_text"
-																name="currency_alert_text">Wanring: Generate all pending invoices before change base currency.</label>
+																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}.</label>
 												</div>
 										</div>
 								</div>
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="address_caption">Subscription (Zero means unlimited)</label>
+								<label id="address_caption">{{ __('Subscription (Zero means unlimited)')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">Maximum Number of Students:</label>
+										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">{{ __('Maximum Number of Students')}}:</label>
 										<div class="col-sm-4">
 											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
 											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : old('max_students')}}">
@@ -184,7 +192,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">Maximum number of teachers:</label>
+										<label class="col-lg-6 col-sm-6 text-left" for="sstreet" id="street_caption">{{ __('Maximum number of teachers')}}:</label>
 										<div class="col-sm-4">
 										<input type="number" min="0" max="5000" class="form-control" id="max_teachers" name="max_teachers"
 										value="{{!empty($school->max_teachers) ? old('max_teachers', $school->max_teachers) : old('max_teachers')}}">
@@ -195,7 +203,7 @@
 								
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="contact_info_caption">Billing Method</label>
+								<label id="contact_info_caption">{{ __('Billing Method')}}</label>
 							</div>
 
 							<div class="row">
@@ -203,7 +211,7 @@
 											<div class="form-group row">
 													<label id="billing_method_lbl" name="billing_method_lbl"
 															for="billing_method_list"
-															class="col-md-4 col-sm-4">Billing Method:</label>
+															class="col-md-4 col-sm-4">{{ __('Billing Method')}}:</label>
 													<div class="col-sm-4">
 															<div class="selectdiv">
 																<select class="form-control" 
@@ -221,13 +229,20 @@
 											<div id="monthly_job_day_div3" class="form-group row">
 													<label id="monthly_job_day_label"
 															name="monthly_job_day_label"
-															class="col-lg-4 col-sm-4 text-left">Issue date (Confusion):</label>
+															class="col-lg-4 col-sm-4 text-left">{{ __('Issue date')}}:</label>
 													<div class="col-sm-4">
 															<div class="selectdiv">
 																<select class="form-control"
 																			id="monthly_job_day"
 																			name="monthly_job_day">
 																			<option value="">Select</option>
+																			@php
+																			for ($loop=1; $loop <= 31 ; $loop++) {
+																				@endphp
+																				<option value="{{ $loop }}" {{ (old('monthly_job_day') ? old('monthly_job_day') : $monthly_issue ?? '') == $loop ? 'selected' : '' }}>{{ $loop }}</option>
+																				@php
+																			}
+																			@endphp
 																</select>
 															</div>
 													</div>
@@ -239,7 +254,7 @@
 									<div class="col-md-6">
 											<div class="form-group row">
 													<label for="billing_currency" id="row_hdr_amount"
-															name="row_hdr_amount" class="col-md-4 col-sm-4">Amount</label>
+															name="row_hdr_amount" class="col-md-4 col-sm-4">{{ __('Amount')}}</label>
 													<div class="col-sm-4 col-xs-6">
 															<div class="selectdiv">
 																<select class="form-control"
@@ -266,7 +281,7 @@
 									<div class="col-md-6">
 											<div class="form-group row">
 													<label id="billing_period_lbl" name="billing_period_lbl"
-															class="col-md-2 col-sm-2">Period</label>
+															class="col-md-2 col-sm-2">{{ __('Period')}}</label>
 													<div class="col-sm-4 col-xs-4">
 															<div class="input-group datetimepicker"
 																	id="billing_date_start_div">
@@ -297,12 +312,12 @@
 
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="address_caption">Contact Person</label>
+								<label id="address_caption">{{ __('Contact Person')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Genre:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="contact_gender_id" id="contact_gender_id">
@@ -314,7 +329,7 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">First Name :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_firstname" name="contact_firstname" type="text"
 											value="{{!empty($school->contact_firstname) ? old('contact_firstname', $school->contact_firstname) : old('contact_firstname')}}">
@@ -324,7 +339,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Family Name :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Family Name')}} :</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_lastname" name="contact_lastname" type="text"
 											value="{{!empty($school->contact_lastname) ? old('contact_lastname', $school->contact_lastname) : old('contact_lastname')}}">
@@ -332,7 +347,7 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Position:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Position')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_position" name="contact_position" type="text"
 											value="{{!empty($school->contact_position) ? old('contact_position', $school->contact_position) : old('contact_position')}}">
@@ -343,12 +358,12 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="address_caption">School Address</label>
+								<label id="address_caption">{{ __('School Address')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Street:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="street" name="street" type="text"
 											value="{{!empty($school->street) ? old('street', $school->street) : old('street')}}">
@@ -356,21 +371,21 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Street No:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street No')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="street_number" name="street_number" type="text"
 											value="{{!empty($school->street_number) ? old('street_number', $school->street_number) : old('street_number')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Street 2:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street 2')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="street2" name="street2" type="text"
 											value="{{!empty($school->street2) ? old('street2', $school->street2) : old('street2')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Postal Code:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="zip_code" name="zip_code" type="text"
 											value="{{!empty($school->zip_code) ? old('zip_code', $school->zip_code) : old('zip_code')}}">
@@ -379,7 +394,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="place" id="place_caption">City:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="place" id="place_caption">{{ __('City')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="place" name="place" type="text"
 											value="{{!empty($school->place) ? old('place', $school->place) : old('place')}}">
@@ -387,7 +402,7 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="country_code_caption">Country:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="country_code_caption">{{ __('Country')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="country_code" id="country_code">
@@ -405,12 +420,12 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="contact_info_caption">Contact information</label>
+								<label id="contact_info_caption">{{ __('Contact Information')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sphone" id="phone_caption">Phone:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sphone" id="phone_caption">{{ __('Phone')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon">
@@ -423,7 +438,7 @@
 									</div>
 									<div class="form-group row">
 										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label>Phone 2</label> <label class="text-left"></label>
+											<label>{{ __('Phone 2')}}</label> <label class="text-left"></label>
 										</div>
 										<div class="col-sm-7">
 											<div class="input-group">
@@ -436,7 +451,7 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="smobile" id="mobile_caption">Mobile:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="smobile" id="mobile_caption">{{ __('Mobile')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon">
@@ -451,7 +466,7 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="semail" id="email_caption">Email:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="semail" id="email_caption">{{ __('Email')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon">
@@ -464,7 +479,7 @@
 									</div>
 									<div class="form-group row">
 										<div class="btn-group col-lg-3 col-sm-3 text-left">
-											<label for="semail2">Email</label> <label class="text-left">(2)</label>
+											<label for="semail2">{{ __('Email')}}</label> <label class="text-left">(2)</label>
 										</div>
 										<div class="col-sm-7">
 											<div class="input-group">
@@ -481,40 +496,40 @@
 							
 							<div class="clearfix"></div>
 							<div class="section_header_class">
-								<label id="contact_info_caption">School Bank Information</label>
+								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Bank Name:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Bank Name')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_name" name="bank_name" type="text"
 												value="{{!empty($school->bank_name) ? old('bank_name', $school->bank_name) : old('bank_name')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Address:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Address')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_address" name="bank_address" type="text"
 												value="{{!empty($school->bank_address) ? old('bank_address', $school->bank_address) : old('bank_address')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Postal Code:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_zipcode" name="bank_zipcode" type="text"
 												value="{{!empty($school->bank_zipcode) ? old('bank_zipcode', $school->bank_zipcode) : old('bank_zipcode')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">City:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('City')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_place" name="bank_place" type="text"
 											value="{{!empty($school->bank_place) ? old('bank_place', $school->bank_place) : old('bank_place')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Country:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Country')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="bank_country_code" id="bank_country_code">
@@ -531,28 +546,28 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Account Holder information:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account Holder information')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_account_holder" name="bank_account_holder" type="text"
 												value="{{!empty($school->bank_account_holder) ? old('bank_account_holder', $school->bank_account_holder) : old('bank_account_holder')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Account No:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_account" name="bank_account" type="text"
 												value="{{!empty($school->bank_account) ? old('bank_account', $school->bank_account) : old('bank_account')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">IBAN No:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('IBAN No')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_iban" name="bank_iban" type="text"
 												value="{{!empty($school->bank_iban) ? old('bank_iban', $school->bank_iban) : old('bank_iban')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">SWIFT A/c No:</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('SWIFT A/c No')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="bank_swift" name="bank_swift" type="text"
 												value="{{!empty($school->bank_swift) ? old('bank_swift', $school->bank_swift) : old('bank_swift')}}">
@@ -597,7 +612,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Status:</label>
+							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Status')}}:</label>
 							<div class="col-sm-7">
 								<div class="selectdiv">
 									<select class="form-control" name="admin_is_active" id="admin_is_active">
@@ -610,17 +625,17 @@
 						</div>
 						<div class="clearfix"></div>
 						<div class="section_header_class">
-							<label id="course_for_billing_caption">Send Activation Email</label>
+							<label id="course_for_billing_caption">{{ __('Send Activation Email')}}</label>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">TO:</label>
+							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? $school_admin->email : old('email_to_id')}}">
 							
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">Subject:</label>
+							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
 							
@@ -640,7 +655,7 @@
 														<span id="body_text_error" class="error"></span>
 														<span class="pull-right">
 															<div class="text-center">
-															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">Send Email</a>
+															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
 															<!-- <button id="send_email_btn" name="send_email_btn" class="btn btn-sm btn-info" ><em class="glyphicon glyphicon-send"></em> envoyer </button> -->
 															</div>
 														</span>
@@ -744,7 +759,6 @@ $(document).ready(function(){
 		,extraPlugins: 'AppFields'
 	});
 
-	PopulateProcessingDays();
 	$('#billing_method_list').on('change', function () {
 		var value = $(this).val();
 
@@ -935,14 +949,7 @@ function DeleteProfileImage() {
 	});
 
 }
-function PopulateProcessingDays() {
-	var resultHtml = "", mday = 1;
-	while (mday <= 31) {
-			resultHtml += '<option value="' + mday + '">' + mday + '</option>';
-			mday++;
-	}
-	$('#monthly_job_day').html(resultHtml);
-}
+
 
 function validateSchoolForm() {
 
@@ -959,13 +966,13 @@ function validateSchoolForm() {
 
 	if (max_students.trim() == 0) {
 			//alert("nombre max invalide");
-			errorModalCall('max_students required');
+			errorModalCall("{{ __('Maximum students required') }}");
 			document.getElementById("max_students").focus();
 			error = true;
 	}
 	if (max_teachers.trim() == 0) {
 			//alert("nombre max invalide");	
-			errorModalCall('max_teachers required');
+			errorModalCall("{{ __('Maximum teacher required') }}");
 			document.getElementById("max_teachers").focus();
 			error = true;
 	}

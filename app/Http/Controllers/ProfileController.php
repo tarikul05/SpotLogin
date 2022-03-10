@@ -66,6 +66,14 @@ class ProfileController extends Controller
     
   }
   
+
+  /**
+   * image process and upload
+   * 
+   * @return json
+   * @author Mamun <lemonpstu09@gmail.com>
+   * @version 0.1 written in 2022-03-10
+   */
   public function __processImg($file,$type,$authUser,$shouldCrop=false,$shouldResize=false) {
     
     $imageNewName = 'user_'.$authUser->id.'_dp.'.$file->getClientOriginalExtension();
@@ -139,7 +147,7 @@ class ProfileController extends Controller
   }
   
   /**
-  * Update the specified resource in storage.
+  * AJAX Action Update the specified resource in storage.
   *
   * @param  \App\Http\Requests\ProfilePhotoUpdateRequest  $request
   * @return \Illuminate\Http\Response
@@ -201,6 +209,13 @@ class ProfileController extends Controller
   }
 
 
+  /**
+   *  AJAX action image delete and unlink
+   * 
+   * @return json
+   * @author Mamun <lemonpstu09@gmail.com>
+   * @version 0.1 written in 2022-03-10
+   */
   public function profilePhotoDelete(Request $request)
   {
     $authUser = $request->user();

@@ -10,6 +10,8 @@ use App\Models\Country;
 use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\User;
+use App\Models\MonthlyInvoiceRun;
+
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
@@ -50,6 +52,14 @@ class SchoolsController extends Controller
             }
         }
     }
+
+    /**
+     *  AJAX action image process and upload
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
 
     public function __processImg($file,$type,$school,$shouldCrop=false,$shouldResize=false) {
     
@@ -122,11 +132,14 @@ class SchoolsController extends Controller
         }
         return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
     }
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     *  Display a listing of the resource.
+     * 
+     * @return view
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
     public function index(Request $request, School $school)
     {
         try{
@@ -180,9 +193,11 @@ class SchoolsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $school
      * @return \Illuminate\Http\Response
-     */
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
     public function edit(Request $request, School $school)
     {
        
@@ -263,6 +278,19 @@ class SchoolsController extends Controller
             $school->incorporation_date = str_replace('-', '/', $school->incorporation_date);
             //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
         } 
+
+
+        $monthly_issue = MonthlyInvoiceRun::where([
+            ['school_id', $school->id],
+            ['active_flag', 1]
+        ])->first();
+        if (!empty($monthly_issue)) {
+            $monthly_issue = $monthly_issue->day_no;
+        } else {
+            $monthly_issue = 0;
+        }
+
+        
         return view('pages.schools.edit')
         ->with(compact('legal_status','currency','school','emailTemplate','country','role_type','school_admin'));
         
@@ -274,12 +302,23 @@ class SchoolsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  School $school
      * @return \Illuminate\Http\Response
-     */
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
     public function update(Request $request, School $school)
     {
         $params = $request->all();
         try{
             $school->update($request->except(['_token']));
+            if (!empty($params['monthly_job_day'])) {
+                
+                $monthly_issue = MonthlyInvoiceRun::updateOrCreate([
+                    'school_id' => $school->id,
+                    'active_flag' =>1
+                ],[
+                    'day_no'=>$params['monthly_job_day']
+                ]);
+            }
             return back()->withInput($request->all())->with('success', __('School updated successfully!'));
         } catch (\Exception $e) {
             //return error message
@@ -288,12 +327,14 @@ class SchoolsController extends Controller
     }
 
      /**
-     * Update the specified resource in storage.
+     * Update the school admin account.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  School $school
      * @return \Illuminate\Http\Response
-     */
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
     public function userUpdate(Request $request, School $school)
     {
         $params = $request->all();
@@ -315,7 +356,7 @@ class SchoolsController extends Controller
                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
             }
 
-            return back()->withInput($request->all())->with('success', __('School updated successfully!'));
+            return back()->withInput($request->all())->with('success', __('School admin account updated successfully!'));
         } catch (\Exception $e) {
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -324,11 +365,12 @@ class SchoolsController extends Controller
 
 
     /**
-     * Update the specified resource in storage.
-    *
-    * @param  \App\Http\Requests\ProfilePhotoUpdateRequest  $request
-    * @return \Illuminate\Http\Response
-    */
+     *  AJAX action to update logo
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
     public function logoUpdate(ProfilePhotoUpdateRequest $request)
     {
         $data = $request->all();
@@ -374,7 +416,7 @@ class SchoolsController extends Controller
                 "status"     => 1,
                 "file_id" => $school->logo_image_id,
                 "image_file" => $path,   
-                'message' => __('Successfully Changed Profile image')
+                'message' => __('Successfully Changed School Logo')
                 );
             }
         
@@ -385,7 +427,13 @@ class SchoolsController extends Controller
         return response()->json($result);
     }
 
-
+    /**
+     *  AJAX action to delete logo and unlink
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
     public function logoDelete(Request $request)
     {
         $data = $request->all();
@@ -405,7 +453,7 @@ class SchoolsController extends Controller
             if ($school->update($data)) {
                 $result = array(
                     "status"     => 'success',
-                    'message' => __('Successfully Changed School logo image')
+                    'message' => __('Successfully Removed School Logo')
                 );
             }
         }
@@ -420,11 +468,11 @@ class SchoolsController extends Controller
 
 
     /**
-     * school email send from admin
+     *  AJAX action to send email to school admin
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-03-09
+     * @version 0.1 written in 2022-03-10
      */
     public function schoolEmailSend(Request $request)
     {
@@ -454,19 +502,19 @@ class SchoolsController extends Controller
                         \Mail::to($user->email)->send(new SportloginEmail($data));
                         $result = array(
                             'status' => true,
-                            'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                            'message' => __('We sent an email.'),
                         );
                         
                         return response()->json($result);
                     } catch (\Exception $e) {
                         $result = array(
                             'status' => true,
-                            'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                            'message' => __('We sent an email.'),
                         );
                         return response()->json($result);
                     }
                 } else{
-                    $result = array('status'=>true,'msg'=>__('email sent'));
+                    $result = array('status'=>true,'msg'=>__('We sent an email.'));
                 }
             }   else {
                 $result = array('status'=>false,'msg'=>__('Username not exist'));
