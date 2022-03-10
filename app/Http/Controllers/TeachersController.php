@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
+use File;
+use App\Models\EventCategory;
+use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class TeachersController extends Controller
 {
@@ -13,7 +20,8 @@ class TeachersController extends Controller
      */
     public function index()
     {
-        return view('pages.teachers.list');
+        $teachers = Teacher::where('is_active', 1)->get();
+        return view('pages.teachers.list',compact('teachers'));
     }
 
     /**
@@ -22,8 +30,39 @@ class TeachersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
+    {   
+        
         return view('pages.teachers.add');
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function AddTeacher(Request $request)
+    {   
+        try{
+            if ($request->isMethod('post')){
+                $teacherData = $request->all();
+                $birthDate=date('Y-m-d H:i:s',strtotime($teacherData['birth_date']));
+                $teacherData['birth_date'] = $birthDate;
+                $teacher = Teacher::create($teacherData);
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        
+        return $result;
     }
 
     /**

@@ -344,19 +344,6 @@ section.why-sportlogin{
 
 /********************ADMIN PANEL DEV CSS******************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 footer{
   padding: 45px 0 60px 0;
   text-align: center;
@@ -368,6 +355,10 @@ footer p a:hover{text-decoration: none;}
 
 .error {
   color: red;
+}
+
+input#shas_user_account {
+  margin-top: 14px;
 }
 
 @media only screen and (max-width: 1200px){
