@@ -34,6 +34,11 @@ return [
 
         // TermCondController controller
         'email-template-list',
-        'email-template-add-udpate'
+        'email-template-add-udpate',
+
+        // EventCategoryController
+        'parameters-list',
+        'parameters-create-udpate',
+        'parameters-delete',
         
         ];

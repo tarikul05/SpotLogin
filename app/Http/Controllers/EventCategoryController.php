@@ -20,13 +20,21 @@ class EventCategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:parameters-list|parameters-create-udpate|parameters-delete', ['only' => ['index']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addEventCategory']]);
+        $this->middleware('permission:parameters-delete', ['only' => ['removeEventCategory']]);
     }
      /**
      * Remove the specified resource from storage.
      * @return Response
     */
     public function index()
-    {   
+    {  
+        $userSchoolId = Auth::user()->selectedSchoolId();
+        if (empty($userSchoolId)) {
+            return redirect()->route('Home')->with('error', __('School is not selected'));
+        }
+
         $eventCat = EventCategory::where('is_active', 1)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
 
@@ -43,18 +51,19 @@ class EventCategoryController extends Controller
             if ($request->isMethod('post')){
                 
                 $categoryData = $request->all();
-
+                $userSchoolId = Auth::user()->selectedSchoolId();
+                
                 foreach($categoryData['category'] as $cat){
                     if(isset($cat['id']) && !empty($cat['id'])){
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $cat['name'],
                             'invoiced_type' => $cat['invoice']
                         ];
                         $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
                     }else{
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $cat['name'],
                             'invoiced_type' => $cat['invoice']
                         ];

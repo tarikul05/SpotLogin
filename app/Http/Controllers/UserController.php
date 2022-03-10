@@ -51,7 +51,7 @@ class UserController extends Controller
             $school_type=trim($data['school_type']);
             
 
-            $roleType = ($school_type=='COACH') ? 'admin_teachers' : 'school_admin';
+            $roleType = ($school_type=='COACH') ? 'teachers_admin' : 'school_admin';
             $scType = ($school_type=='COACH') ? 'C' : 'S';
             $school_code = strtolower($data['username']);
 

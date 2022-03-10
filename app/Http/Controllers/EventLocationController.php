@@ -19,6 +19,9 @@ class EventLocationController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:parameters-list|parameters-create-udpate|parameters-delete', ['only' => ['index']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addEventCategory']]);
+        $this->middleware('permission:parameters-delete', ['only' => ['removeEventCategory']]);
     }
      /**
      * Remove the specified resource from storage.
@@ -26,7 +29,10 @@ class EventLocationController extends Controller
     */
     public function index()
     {   
-        
+        $userSchoolId = Auth::user()->selectedSchoolId();
+        if (empty($userSchoolId)) {
+            return redirect()->route('Home')->with('error', __('School is not selected'));
+        }
         $locations = Location::where('is_active', 1)->get();
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
 
@@ -44,16 +50,18 @@ class EventLocationController extends Controller
             if ($request->isMethod('post')){
                 
                 $locationData = $request->all();
+                $userSchoolId = Auth::user()->selectedSchoolId();
+                
                 foreach($locationData['location'] as $location){
                     if(isset($location['id']) && !empty($location['id'])){
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $location['name']
                         ];
                         $eventLocation = Location::where('id', $location['id'])->update($answers);
                     }else{
                         $answers = [
-                            'school_id' => 1,
+                            'school_id' => $userSchoolId,
                             'title' => $location['name']
                         ];
                         $eventLocation = Location::create($answers);
