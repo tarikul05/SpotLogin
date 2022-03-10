@@ -486,7 +486,7 @@ class SchoolsController extends Controller
             $user = User::find($data['user_id']); 
             if ($user) {
                 //sending email for forgot password
-                if (config('global.email_send') == 0) {
+                if (config('global.email_send') == 1) {
                     
                     try {
                         $data['email'] = $data['email_to_id'];
