@@ -155,13 +155,14 @@ class AuthController extends Controller
                         'status' => 1,
                         'message' => __('user not exist'),
                     );
+                } else {
+                    if (!Hash::check($password, $user->password)) {
+                        $result = array(
+                            'status' => 1,
+                            'message' => __('Login Fail, pls check password'),
+                        );
+                    } 
                 }
-                if (!Hash::check($password, $user->password)) {
-                    $result = array(
-                        'status' => 1,
-                        'message' => __('Login Fail, pls check password'),
-                    );
-                } 
                 
             }
 

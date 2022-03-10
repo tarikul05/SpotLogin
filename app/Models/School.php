@@ -8,10 +8,11 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Country;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
 class School extends BaseModel
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes, CreatedUpdatedBy;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
@@ -22,11 +23,13 @@ class School extends BaseModel
      */
     protected $fillable = [
         'school_name',
+        'legal_status',
         'incorporation_date',
         'street',
         'street_number',
         'street2',
         'zip_code',
+        'place',
         'country_code',
         'province_id',
         'phone',
@@ -86,6 +89,9 @@ class School extends BaseModel
     protected $casts = [
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
+        'incorporation_date' => 'date:Y/m/d',
+        'billing_date_start'=> 'date:Y/m/d',
+        'billing_date_end'=> 'date:Y/m/d'
     ];
 
     
@@ -105,7 +111,37 @@ class School extends BaseModel
     {
         return $this->belongsTo(Country::class);
     }
+
+
+    /**
+     * Get the logo image.
+    */
+    public function logoImage()
+    {
+        return $this->belongsTo(AttachedFile::class, 'logo_image_id', 'id');
+    }
    
+
+     /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function filter($params)
+    {
+        $query = $this->newQuery();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+        if (isset($params['sort']) && !empty($params['sort'])) {
+            $sortExplode = explode('-', $params['sort']);
+            $query->orderBy($sortExplode[0],$sortExplode[1]);
+        } else { 
+            $query->orderBy('id', 'desc');
+        }
+        return $query;
+    }
     
 
 }

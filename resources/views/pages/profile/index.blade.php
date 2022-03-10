@@ -66,7 +66,7 @@
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
                     <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="language_title" name="title" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
+                      <input type="text" class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
                     </div>
                   </div>
                   <div class="form-group row">
@@ -149,6 +149,7 @@
 	}); //ready
 
   function UploadImage() {
+    document.getElementById("profile_image_file").value = "";
     $("#profile_image_file").trigger('click');
   }
   function ChangeImage() {
@@ -199,6 +200,7 @@
   })
   function DeleteProfileImage() {
     //delete image
+    document.getElementById("profile_image_file").value = "";
     var p_person_id = document.getElementById('user_id').value;
     let loader = $('#pageloader');
     $.ajax({

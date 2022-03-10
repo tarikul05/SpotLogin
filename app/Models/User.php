@@ -106,6 +106,20 @@ class User extends Authenticatable
         return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
     }
 
+    
+     /**
+     * Get the schools for the user.
+     */
+    public function getRelatedSchoolAttribute()
+    {
+        if (!empty($this->school_id)) {
+            return $this->personable->schools[0];
+        } 
+        return '';
+        
+
+    }
+
      /**
      * Get the schools for the user.
      */
@@ -138,11 +152,12 @@ class User extends Authenticatable
     /**
      * Get the schools for the user.
      */
-    public function roleType()
+    public function getRoleTypeAttribute()
     {
-        // return !empty($this->selected_school) ? $this->selected_school->pivot->role_type : null ;
-        return $this->getRoleNames()[0];
-
+        if ($this->person_type =='SUPER_ADMIN') {
+            return 'SUPER_ADMIN';
+        }
+        return !empty($this->related_school) ? $this->related_school->pivot->role_type : null ;
     }
 
 

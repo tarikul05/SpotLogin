@@ -20,20 +20,23 @@ use App\Http\Controllers\PermissionController;
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
-
+// AJAX
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
-
-// Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
-
-// email template 
+//email-send school AJAX
+Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');
+// email template  AJAX
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');
 Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
+
+
+
+// Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
 
 Route::get('parameters', 'ParametersController@index')->name('parameters');
@@ -47,6 +50,9 @@ Route::get('setlang/{locale}', function ($locale) {
   session()->put('locale', $locale);
   return redirect()->back();
 });
+
+
+
 
 // auth
 Route::group(['middleware' => ['auth']], function () {
@@ -99,11 +105,21 @@ Route::group(['middleware' => ['auth']], function () {
     // profile update
     Route::get('profile-update', 'ProfileController@userDetailUpdate');
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
-    Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ]);
-    Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ]);
+    Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     
-
+    // School update
+    Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
+    Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
   });
+
+  // school 
+  Route::get('school-update', 'SchoolsController@edit')->name('school-update');
+  Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
+  Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
+  Route::post('update-school-logo', ['as' =>'school.update_logo','uses' =>'SchoolsController@logoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+  Route::post('delete-school-logo', ['as' =>'school.delete_logo','uses' =>'SchoolsController@logoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+  
 
 
   Route::middleware(['select_role'])->group(function () {
