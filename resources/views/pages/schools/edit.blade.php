@@ -64,7 +64,7 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: *</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="is_active" id="is_active">
@@ -72,6 +72,11 @@
 													<option value="1" {{!empty($school) ? (old('is_active', $school->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
 													<option value="0" {{!empty($school) ? (old('is_active', $school->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 												</select>
+												@if ($errors->has('is_active'))
+													<span id="is_active_error" class="error">
+															<strong>{{ $errors->first('is_active') }}.</strong>
+													</span>
+												@endif
 											</div>
 										</div>
 									</div>
@@ -87,18 +92,22 @@
 									</div> -->
 									<div class="form-group row">
 										<label id="row_hdr_school_name"
-												class="col-lg-3 col-sm-3 text-left">{{ __('Name of the School')}}
-												*:</label>
+												class="col-lg-3 col-sm-3 text-left">{{ __('Name of the School')}}*:</label>
 										<div class="col-sm-7">
 												<input type="text" class="form-control" id="school_name"
 														name="school_name"
 														value="{{!empty($school->school_name) ? old('school_name', $school->school_name) : old('school_name')}}">
+												@if ($errors->has('school_name'))
+													<span id="" class="error">
+															<strong>{{ $errors->first('school_name') }}.</strong>
+													</span>
+												@endif
 										</div>
 										
 									</div>
 									<div class="form-group row">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}} *:</label>
+										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
@@ -329,21 +338,29 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :*</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_firstname" name="contact_firstname" type="text"
 											value="{{!empty($school->contact_firstname) ? old('contact_firstname', $school->contact_firstname) : old('contact_firstname')}}">
-																	
+											@if ($errors->has('contact_firstname'))
+												<span id="" class="error">
+														<strong>{{ $errors->first('contact_firstname') }}.</strong>
+												</span>
+											@endif					
 										</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Family Name')}} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Family Name')}} :*</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_lastname" name="contact_lastname" type="text"
 											value="{{!empty($school->contact_lastname) ? old('contact_lastname', $school->contact_lastname) : old('contact_lastname')}}">
-													
+											@if ($errors->has('contact_lastname'))
+												<span id="" class="error">
+														<strong>{{ $errors->first('contact_lastname') }}.</strong>
+												</span>
+											@endif		
 										</div>
 									</div>
 									<div class="form-group row">

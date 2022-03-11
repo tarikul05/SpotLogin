@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as InterventionImageManager;
 use App\Mail\SportloginEmail;
 use App\Http\Requests\ProfilePhotoUpdateRequest;
+use App\Http\Requests\SchoolUpdateRequest;
 
 class SchoolsController extends Controller
 {
@@ -305,7 +306,7 @@ class SchoolsController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
     */
-    public function update(Request $request, School $school)
+    public function update(SchoolUpdateRequest $request, School $school)
     {
         $params = $request->all();
         try{
