@@ -266,7 +266,7 @@ class SchoolsController extends Controller
             ['language', $lanCode]
         ])->first(); 
         if ($emailTemplate) {
-            $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;
+            $http_host=$this->BASE_URL."/";
             if (!empty($emailTemplate->body_text)) {
                 $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
                 $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
