@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Config;
+use Illuminate\Support\Facades\URL;
 
 class SportloginEmail extends Mailable
 {
@@ -21,7 +22,7 @@ class SportloginEmail extends Mailable
      */
     public function __construct($data)
     {
-      $http_host=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['SERVER_NAME']."/" ;   
+      $http_host=URL::to('')."/"; 
       $eol = "\r\n";        
       if (isset($data['body_text'])&& !empty($data['body_text'])) {
         
