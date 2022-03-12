@@ -26,7 +26,15 @@ class LoginRequest extends FormRequest
         return [
             
             'login_username' => 'required',
-            'login_password' => 'required|string|min:4|max:255'
+            'login_password' => [
+                'required',
+                'string',
+                'min:8',             // must be at least 10 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
         ];
     }
 
@@ -36,7 +44,8 @@ class LoginRequest extends FormRequest
             
             'login_username.required' => _('username required'),
             'login_password.required' => _('password required'),
-            'login_password.min' => _('pinimum 4 character required')
+            'login_password.min' => _('pinimum 8 character required'),
+            'login_password.regex' => _('The password format is invalid.')
            
            
         ];
