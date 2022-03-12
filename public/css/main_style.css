@@ -219,7 +219,9 @@ section.why-sportlogin{
     border-radius: 4px!important;
 }
 /* .about-us-cont-bg h1{transform: scale(1.25);} */
-
+small.password_hint {
+    width: 100%;
+}
 /* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
 #pageloader {
     display: none;
