@@ -14,6 +14,7 @@ use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\RegistrationRequest;
 
 
 class UserController extends Controller
@@ -37,9 +38,9 @@ class UserController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
      */
-    public function create(Request $request)
+    public function create(RegistrationRequest $request)
     {
-        
+       dd($request); 
         
         $result = array(
             'status' => 0,
@@ -123,62 +124,62 @@ class UserController extends Controller
 
             
 
-            //sending activation email after successful signed up
-            if (config('global.email_send') == 1) {
+        //sending activation email after successful signed up
+        if (config('global.email_send') == 1) {
+            
+            try {
+                $data = [];
+                $data['email'] = $user->email;
+                $data['name'] = $user->username;
+                $verifyUser = [
+                    'user_id' => $user->id,
+                    'token' => Str::random(10),
+                    'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                ];
                 
-                try {
-                    $data = [];
-                    $data['email'] = $user->email;
-                    $data['name'] = $user->username;
-                    $verifyUser = [
-                        'user_id' => $user->id,
-                        'token' => Str::random(10),
-                        'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
-                    ];
-                    
-            
-                    $verifyUser = VerifyToken::create($verifyUser);
-            
-                    $data['token'] = $verifyUser->token; 
-                    $data['username'] = $user->username; 
-                    $emailTemplateExist = EmailTemplate::where([
-                        ['template_code', 'sign_up_confirmation_email'],
-                        ['language', 'en']
-                    ])->first(); 
+        
+                $verifyUser = VerifyToken::create($verifyUser);
+        
+                $data['token'] = $verifyUser->token; 
+                $data['username'] = $user->username; 
+                $emailTemplateExist = EmailTemplate::where([
+                    ['template_code', 'sign_up_confirmation_email'],
+                    ['language', 'en']
+                ])->first(); 
 
-                    if ($emailTemplateExist) {
-                        $email_body= $emailTemplateExist->body_text;
-                        $data['subject'] = $emailTemplateExist->subject_text;
-                    }  else{
-                        $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                        $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
-                    }  
-                    $data['body_text'] = $email_body;
-                    $data['url'] = route('verify.email',$data['token']); 
-                    \Mail::to($user->email)->send(new SportloginEmail($data));
-                    
-                    $user->is_mail_sent = 1;
-                    $user->save();
-                    $result = array(
-                        'status' => 1,
-                        'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                    );
-                    
-                    return response()->json($result);
-                } catch (\Exception $e) {
-                    $result = array(
-                        'status' => 1,
-                        'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
-                    );
-                    $user->is_active = 1;
-                    $user->save();
-                    return response()->json($result);
-                }
-            } else {
+                if ($emailTemplateExist) {
+                    $email_body= $emailTemplateExist->body_text;
+                    $data['subject'] = $emailTemplateExist->subject_text;
+                }  else{
+                    $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                    $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                }  
+                $data['body_text'] = $email_body;
+                $data['url'] = route('verify.email',$data['token']); 
+                \Mail::to($user->email)->send(new SportloginEmail($data));
+                
+                $user->is_mail_sent = 1;
+                $user->save();
+                $result = array(
+                    'status' => 1,
+                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                );
+                
+                return response()->json($result);
+            } catch (\Exception $e) {
+                $result = array(
+                    'status' => 1,
+                    'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                );
                 $user->is_active = 1;
                 $user->save();
+                return response()->json($result);
             }
-            return response()->json($result);
+        } else {
+            $user->is_active = 1;
+            $user->save();
+        }
+        return response()->json($result);
     }
     
 

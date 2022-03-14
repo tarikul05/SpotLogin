@@ -22,7 +22,10 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
+
+					@can('parameters-create-udpate')
 						<button id="save_btn" name="save_btn" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+					@endcan
 					</div>
 				</div>    
 			</div>          
@@ -31,9 +34,9 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<a class="nav-link active" href="<?= $BASE_URL;?>/event-category">{{ __('Event Category') }}</a>
-				<a class="nav-link" href="<?= $BASE_URL;?>/event-location">{{ __('Locations') }}</a>
-				<a class="nav-link" href="<?= $BASE_URL;?>/event-level">{{ __('Level') }}</a>
+				<a class="nav-link active" href="{{ route('event_category.index') }}">{{ __('Event Category') }}</a>
+				<a class="nav-link" href="{{ route('event_location.index') }}">{{ __('Locations') }}</a>
+				<a class="nav-link" href="{{ route('event_level.index') }}">{{ __('Level') }}</a>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -78,17 +81,21 @@
 										</div>
 									</div>
 									<div class="col-md-2 col-1">
+										@can('parameters-delete')
 										<div class="form-group row">
 											<div class="col-sm-5">
 												<button type="button" class="btn btn-theme-warn delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 										</div>
+										@endcan
 									</div>
 								</div>
 							@php $count++; endforeach @endphp
 						</div>
 						<div class="col-md-2">
+						@can('parameters-create-udpate')
 							<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+						@endcan
 						</div>
 					</div>
 				</form>	
@@ -154,6 +161,7 @@
 		var lst_id = $(this).attr('data-r_id');
 		var incre = parseInt(lst_id);
 		$(this).attr('data-last_id',incre);
+		if (!confirm('{{ __("Are you want to delete?") }}')) return
 
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('category_id');
@@ -211,6 +219,7 @@
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						window.location.reload();
 					}
 				}
 			})

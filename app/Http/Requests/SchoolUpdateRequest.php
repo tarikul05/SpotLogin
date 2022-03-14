@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class SchoolUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,20 +23,20 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            
-            'login_username' => 'required',
-            'login_password' => 'required|string|min:4|max:255'
-        ];
+      return [
+        'school_name' => 'required',
+        'contact_firstname' => 'required',
+        'contact_lastname' => 'required'
+      ];
     }
 
     public function messages()
     {
         return[
             
-            'login_username.required' => _('username required'),
-            'login_password.required' => _('password required'),
-            'login_password.min' => _('pinimum 4 character required')
+            'school_name.required' => __('School name required'),
+            'contact_firstname.required' => __('contact_firstname required'),
+            'contact_lastname.required' => __('contact_lastname required')
            
            
         ];

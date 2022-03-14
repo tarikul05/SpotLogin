@@ -13,7 +13,12 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
                         <a href="#" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
-                        <a href="#" class="nav-item nav-link">{{ __('School') }}</a>
+                        
+                        <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
+                            <a href="{{ route('schools') }}" class="nav-item nav-link">{{ __('Schools') }}</a>
+                        <?php else: ?>
+                            <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
+                        <?php endif; ?>
                         <a href="#" class="nav-item nav-link">{{ __('Teachers') }}</a>
                         <a href="#" class="nav-item nav-link">{{ __('Students') }}</a>
                         <div class="nav-item dropdown">
@@ -52,6 +57,9 @@
                                     <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                         data set master
                                     </a> -->
+                                    @can('parameters-list')
+                                        <a class="dropdown-item" href="{{ route('event_category.index') }}">{{ __('Parameters') }}</a>
+                                    @endcan
                                     @can('email-template-list')
                                         <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
                                     @endcan

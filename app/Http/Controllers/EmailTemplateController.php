@@ -20,7 +20,7 @@ class EmailTemplateController extends Controller
     function __construct()
     {
         parent::__construct();
-        $this->middleware('permission:email-template-list|email-template-add-udpate', ['only' => ['index','templateVariables']]);
+        $this->middleware('permission:email-template-list|email-template-add-udpate', ['only' => ['index']]);
         $this->middleware('permission:email-template-add-udpate', ['only' => ['addUpdate']]);
     }
      /**

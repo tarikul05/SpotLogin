@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
-use App\Models\User;
-use App\Models\Teacher;
 use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
-class SchoolTeacher extends BaseModel
+class MonthlyInvoiceRun extends BaseModel
 {
-  use SoftDeletes;
-  protected $table = 'school_teacher';
-  
+  use SoftDeletes, CreatedUpdatedBy;
+  protected $table = 'monthly_invoice_setup_runday';
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +18,14 @@ class SchoolTeacher extends BaseModel
      */
     protected $fillable = [
         'school_id',
-        'teacher_id'
+        'day_no',
+        'active_flag',
+        'language_preference',
+        'lastrun_start_time',
+        'lastrun_end_time',
+        'process_month',
+        'created_by',
+        'modified_by'
     ];
 
    
@@ -35,29 +40,14 @@ class SchoolTeacher extends BaseModel
         'updated_at' => 'date:Y/m/d H:i',
     ];
 
-     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [];
+  
 
      /**
-     * Get the user for the user enquiry.
+     * Get the school.
      */
     public function school()
     {
-      // return $this->hasOne(School::class,'school_id', 'id')
-      //           ->whereNull('deleted_at')
-      //           ;
       return $this->belongsTo(School::class);
-    }
-    /**
-     * Get the city for the user.
-     */
-    public function teacher()
-    {
-        return $this->belongsTo(Teacher::class);
     }
 
 }

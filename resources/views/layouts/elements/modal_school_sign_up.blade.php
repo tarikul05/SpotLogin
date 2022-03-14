@@ -42,12 +42,20 @@
                   </div>
                   <div class="form-group">
                       <div class="input-group" id="show_hide_password">
-                          <input class="form-control" type="password" id="password" name="password"> 
-                          <div class="input-group-addon">
-                              <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
-                          </div>
+                            <input class="form-control" type="password" id="password" placeholder="password" name="password"> 
+                            <div class="input-group-addon">
+                                <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                            </div>
                       </div>
                   </div>
+                  <small id="" class="password_hint">
+                        <strong>Password Must:</strong></br>
+                        > Be more than 7 Characters</br>
+                        > An Uppercase Character</br>
+                        > A Lowercase Character</br>
+                        > A Number</br>
+                        > A Special character</br>
+                    </small>
                   <div class="checkbox">
                       <label><input type="checkbox" id="terms_condition" name="terms_condition" required>{{ __('I agree with the terms and conditions') }}</label>
                   </div>
@@ -82,7 +90,7 @@ $(document).ready(function () {
             },
             password: {
                 required: true,
-                minlength: 6
+                minlength: 8
             }
         },
         // Specify validation error messages
@@ -93,8 +101,8 @@ $(document).ready(function () {
             username: "{{ __('Please enter your username')}}",
             country_code: "{{ __('Please select country')}}",
             password: {
-            required: "{{ __('Please provide a password')}}",
-            minlength: "{{ __('Your password must be at least 6 characters long')}}"
+                required: "{{ __('Please provide a password')}}",
+                minlength: "{{ __('Your password must be at least 8 characters long')}}"
             },
             email: "{{ __('Please enter a valid email address')}}"
         },
@@ -161,9 +169,14 @@ $(document).ready(function () {
                         }
 
                     }, // sucess
-                    error: function(ts) {
-                        errorModalCall(GetAppMessage('error_message_text'));
-
+                    error: function (reject) {
+                        loader.hide("fast");
+                        let errors = $.parseJSON(reject.responseText);
+                        errors = errors.errors;
+                        $.each(errors, function (key, val) {
+                            //$("#" + key + "_error").text(val[0]);
+                            errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+                        });
                     },
                     complete: function() {
                         loader.hide("fast");

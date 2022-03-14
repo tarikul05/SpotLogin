@@ -26,7 +26,15 @@ class ProfileUpdateRequest extends FormRequest
 		return [
 			'firstname' => 'filled|string',
 			'email' => 'filled|string|email|max:255',
-			'password' => 'nullable|min:8'
+			'password' => [
+								'nullable',
+								'string',
+								'min:8',             // must be at least 8 characters in length
+								'regex:/[a-z]/',      // must contain at least one lowercase letter
+								'regex:/[A-Z]/',      // must contain at least one uppercase letter
+								'regex:/[0-9]/',      // must contain at least one digit
+								'regex:/[@$!%*#?&]/', // must contain a special character
+						],
 		];
 	}
 	
@@ -43,6 +51,7 @@ class ProfileUpdateRequest extends FormRequest
 			'email.email' => __('email format wrong'),
 			'email.max' => __('max 255 character will support'),
 			'password.min' => __('password must be minimum 8 character'),
+			'password.regex' => _('The password format is invalid.')
 		];
 	}
 }

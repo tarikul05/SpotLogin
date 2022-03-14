@@ -45,6 +45,11 @@
         'value'     => '[~~CLIENT_NAME~~]',
         'drop_text'     => 'Client Name',
         'drop_label'     => 'Client Name',
+      ),
+      array(
+        'value'     => '[~~PASSWORD~~]',
+        'drop_text'     => 'Password',
+        'drop_label'     => 'Password',
       )
     ),
     'email_template' => array(
@@ -58,5 +63,25 @@
       'student_activation_email' => 'student_activation_email',
       'teacher' => 'teacher',
     ),
+    'legal_status' => array(
+      array(
+        'code'     => 11,
+        'drop_text' => 'Company (individual reason)'
+      ),
+      array(
+        'code'     => 10,
+        'drop_text'     => 'Society'
+      ),
+      array(
+        'code'     => 20,
+        'drop_text'     => 'Association'
+      ),
+      array(
+        'code'     => 30,
+        'drop_text'     => 'Foundation'
+      ),
+     
+    ),
+    'user_default_password' => env('USER_DEFAULT_PASSWORD', 12345678),
     
   ];
