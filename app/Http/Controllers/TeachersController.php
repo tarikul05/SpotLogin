@@ -7,7 +7,9 @@ use DB;
 use File;
 use App\Models\EventCategory;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 
 
@@ -46,15 +48,55 @@ class TeachersController extends Controller
         DB::beginTransaction();  
         try{
             if ($request->isMethod('post')){
-                $teacherData = $request->all();
-                // dd($teacherData);
-                $birthDate=date('Y-m-d H:i:s',strtotime($teacherData['birth_date']));
-                $teacherData['birth_date'] = $birthDate;
-                $teacher = Teacher::create($teacherData);
+                $alldata = $request->all();
 
-                // $roleType = $teacherData == 
-                // $teacher->save();
-                // $teacher->schools()->attach(1, ['nickname' => 'this is nickname','role_type'=>$roleType, 'has_user_account'=> 1]);
+                $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+                $teacherData = [
+                    'availability_select' => $alldata['availability_select'],
+                    'gender_id' => $alldata['gender_id'],
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'birth_date' => $birthDate,
+                    'licence_js' => $alldata['licence_js'],
+                    'email' => $alldata['email'],
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'place' => $alldata['place'],
+                    'country_code' => $alldata['country_code'],
+                    'phone' => $alldata['phone'],
+                    'mobile' => $alldata['mobile'],
+                ];
+                // dd($alldata);
+                $schoolId = 1;
+                $teacher = Teacher::create($teacherData);
+                $relationalData = [
+                    'role_type'=>$alldata['role_type'], 
+                    'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                    'comment'=> $alldata['comment'],
+                    'nickname'=> $alldata['nickname'],
+                ];
+                $teacher->save();
+                $teacher->schools()->attach($schoolId,$relationalData);
+
+                $usersData = [
+                    'person_id' => $teacher->id,
+                    'person_type' =>'App\Models\Teacher',
+                    'username' =>Str::random(10),
+                    'lastname' => $alldata['lastname'],
+                    'middlename'=>'',
+                    'firstname'=>$alldata['firstname'],
+                    'email'=>$alldata['email'],
+                    // 'password'=>$alldata['password'],
+                    'password'=>Str::random(10),
+                    'is_mail_sent'=>0,
+                    'is_active'=>1,
+                    'is_firstlogin'=>0
+                ];
+
+                $user = User::create($usersData);
+                $user->save();
+               
 
                 $result = array(
                     "status"     => 1,

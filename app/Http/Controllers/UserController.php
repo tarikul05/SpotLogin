@@ -103,7 +103,7 @@ class UserController extends Controller
                 'email'=>$data['email'],
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
-                'is_active'=>0,
+                'is_active'=>1,
                 'is_firstlogin'=>0
             ];
 

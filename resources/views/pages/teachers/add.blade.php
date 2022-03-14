@@ -60,9 +60,9 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="middlename" id="nickname_label_id">{{__('Nickname') }} : *</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="middlename" maxlength="50" name="middlename" placeholder="Pseudo" type="text" value="">
+										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
 								<div class="form-group row">
@@ -120,22 +120,22 @@
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
-											<input id="shas_user_account" name="shas_user_account" type="checkbox" value="0">
+											<input id="shas_user_account" name="has_user_account" type="checkbox" value="1">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="authorisation_id" type="radio" value="ALL"> ALL<br>
-										<input id="authorisation_med" name="authorisation_id" type="radio" value="MED"> Medium<br>
-										<input checked="true" id="authorisation_min" name="authorisation_id" type="radio" value="MIN"> Minimum<br></b>
+										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
+										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium"> Medium<br>
+										<input checked="true" id="authorisation_min" name="role_type" type="radio" value="teachers_minimum"> Minimum<br></b>
 									</div>
 								</div>
 								<div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
-										<input type="text" class="colorpicker dot" />
+										<input type="text" name="bg_color_agenda" class="colorpicker dot" />
 									</div>
 								</div>
 							</div>
@@ -200,7 +200,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 										<div class="btn-group col-lg-3 col-sm-3 text-left">
 											<label>{{ __('Phone2') }} :</label> <label class="text-left"></label>
 										</div>
@@ -209,7 +209,7 @@
 												<span class="input-group-addon"><i class="fa fa-phone"></i></span> <input class="form-control" id="sphone2" name="sphone2" type="text">
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
@@ -239,7 +239,7 @@
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="scomment" name="desc" rows="5"></textarea>
+												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"></textarea>
 											</div>
 										</div>
 									</div>
@@ -259,7 +259,7 @@
 					<p id="modal_alert_body"></p>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="modalClose" class="btn btn-primary" data-dismiss="modal">{{ __('Ok') }}</button>
+					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
 				</div>
 			</div>
 		</div>
