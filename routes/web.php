@@ -27,6 +27,8 @@ Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::clas
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
 Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verify.email');
+Route::post('/change_first_password', [App\Http\Controllers\AuthController::class, 'changeFirstPassword'])->name('change_password.first');
+
 //email-send school AJAX
 Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');
 // email template  AJAX

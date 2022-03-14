@@ -101,8 +101,8 @@ $(document).ready(function () {
             username: "{{ __('Please enter your username')}}",
             country_code: "{{ __('Please select country')}}",
             password: {
-            required: "{{ __('Please provide a password')}}",
-            minlength: "{{ __('Your password must be at least 8 characters long')}}"
+                required: "{{ __('Please provide a password')}}",
+                minlength: "{{ __('Your password must be at least 8 characters long')}}"
             },
             email: "{{ __('Please enter a valid email address')}}"
         },

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Models\User;
 use App\Models\VerifyToken;
 use App\Models\EmailTemplate;
@@ -70,6 +71,37 @@ class AuthController extends Controller
             return redirect(RouteServiceProvider::HOME);
         }
         return view('pages.auth.login', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
+    }
+
+
+    
+    /**
+     * AJAX login submit method
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-03
+     */
+    public function changeFirstPassword(ChangePasswordRequest $request)
+    {
+        $result = array(
+            'status' => 1,
+            'message' => __('Failed to login'),
+        );
+        try {
+            $data = $request->all();
+            $user_name = trim($_POST['reset_username']);
+            $old_password = trim($_POST['old_password']);
+            $new_password = trim($_POST['new_password']);
+            sleep(3);
+            $result = User::change_password($user_name, $old_password,$new_password);
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
     }
 
      
@@ -166,14 +198,6 @@ class AuthController extends Controller
                 
             }
 
-            else if ($data['type'] === "change_first_password") {
-                $user_name = trim($_POST['reset_username']);
-                $old_password = trim($_POST['old_password']);
-                $new_password = trim($_POST['new_password']);
-                sleep(3);
-                $result = User::change_password($user_name, $old_password,$new_password);
-
-            }
             return response()->json($result);
 
         } catch (Exception $e) {

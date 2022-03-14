@@ -36,6 +36,14 @@
               </div>
             </div>
           </div>
+          <small id="" class="password_hint">
+            <strong>Password Must:</strong></br>
+            > Be more than 7 Characters</br>
+            > An Uppercase Character</br>
+            > A Lowercase Character</br>
+            > A Number</br>
+            > A Special character</br>
+          </small>
 
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
@@ -65,11 +73,11 @@ $(document).ready(function() {
       },
       new_password: {
         required: true,
-        minlength: 6
+        minlength: 8
       },
       confirm_password: {
         required: true,
-        minlength: 6
+        minlength: 8
       }
 
     },
@@ -128,7 +136,7 @@ $(document).ready(function() {
         "value": csrfToken
       });
       $.ajax({
-        url: BASE_URL + '/login',
+        url: BASE_URL + '/change_first_password',
         data: formdata,
         type: 'POST',
         dataType: 'json',
@@ -138,6 +146,7 @@ $(document).ready(function() {
           loader.show("fast");
         },
         success: function(data) {
+          loader.hide("fast");
           if (data.status == 0) {
             //var username = $("#login_username").val();
             successModalCall("{{__('Password changed Successfully.')}}");
@@ -150,9 +159,14 @@ $(document).ready(function() {
             errorModalCall("{{__('Invalid username or old password')}}");
           }
         }, // succes
-        error: function(ts) {
-          errorModalCall(GetAppMessage('error_message_text'));
-
+        error: function (reject) {
+          loader.hide("fast");
+          let errors = $.parseJSON(reject.responseText);
+          errors = errors.errors;
+          $.each(errors, function (key, val) {
+              //$("#" + key + "_error").text(val[0]);
+            errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+          });
         },
         complete: function() {
             loader.hide("fast");
