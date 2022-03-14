@@ -41,18 +41,27 @@ class TeachersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function AddTeacher(Request $request)
-    {   
+    { 
+
+        DB::beginTransaction();  
         try{
             if ($request->isMethod('post')){
                 $teacherData = $request->all();
+                // dd($teacherData);
                 $birthDate=date('Y-m-d H:i:s',strtotime($teacherData['birth_date']));
                 $teacherData['birth_date'] = $birthDate;
                 $teacher = Teacher::create($teacherData);
+
+                // $roleType = $teacherData == 
+                // $teacher->save();
+                // $teacher->schools()->attach(1, ['nickname' => 'this is nickname','role_type'=>$roleType, 'has_user_account'=> 1]);
+
                 $result = array(
                     "status"     => 1,
                     'message' => __('Successfully Registered')
                 );
             }
+            DB::commit();
         }catch (Exception $e) {
             DB::rollBack();
             $result= [
