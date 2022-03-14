@@ -12,8 +12,7 @@
             </div>
             <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
                 <form method="POST" action="{{route('reset_password.submit')}}">
-                <!-- <form id="reset_password_form_new" name="reset_password_form_new" method="POST" action="#"> -->
-                    
+                
                     @csrf
                     @if(session()->has('error'))
                         <div class="alert alert-danger invalid-feedback d-block">{{ session()->get('error') }}</div>
@@ -41,6 +40,14 @@
                     <div class="form-group">
                         <input type="password" class="form-control" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
                     </div>
+                    <small id="" class="password_hint">
+                        <strong>Password Must:</strong></br>
+                        > Be more than 7 Characters</br>
+                        > An Uppercase Character</br>
+                        > A Lowercase Character</br>
+                        > A Number</br>
+                        > A Special character</br>
+                    </small>
 
                     <div class="form-group">
                         <input type="password" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
@@ -64,7 +71,7 @@
         rules: {
             reset_password_pass: {
                 required: true, 
-                minlength: 6
+                minlength: 8
             },
             reset_password_confirm_pass: {
                 required: true, 
@@ -77,7 +84,7 @@
             
             reset_password_pass: {
                 required: "{{ __('Please provide a password')}}",
-                minlength: "{{ __('Your password must be at least 6 characters long')}}"
+                minlength: "{{ __('Your password must be at least 8 characters long')}}"
             },
             reset_password_confirm_pass: {
                 required: "{{ __('Please provide confirm password')}}"
@@ -95,54 +102,7 @@
             
 
             var formdata = $("#reset_password_form_new").serializeArray();
-            var username = getUrlParameter('username');
-            var hxunid = getUrlParameter('hxunid');
             
-            formdata.push({"name":"type","value":"reset_password_submit"});
-            formdata.push({"name":"username","value":username});
-            formdata.push({"name":"hxunid","value":hxunid});
-            
-            $.ajax({
-                url: 'forgot_password.php',
-                data: formdata,
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                encode:true,
-                success: function (data) { 
-                        // alert(data.status);
-                    if(data.status){
-                        $.alert({
-                            title: 'Success',
-                            content: data.msg,
-                            type: 'green',
-                            buttons: {
-                                OK: function () {
-                                    window.location.href="/";
-                                }
-                            }
-                        });
-
-                    
-                    } else {
-                        $.alert({
-                            title: 'Alert!',
-                            content: data.msg,
-                            type: 'red'
-                        });
-
-                    }
-
-                },   // sucess
-                error: function (ts) { 
-                    $.alert({
-                        title: 'Alert!',
-                        content: "{{ __('Oops Something went wrong')}}",
-                        type: 'red'
-                    });  
-                }
-            });
-
         }
     });
 

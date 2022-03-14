@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Models\User;
 use App\Models\VerifyToken;
 use App\Models\EmailTemplate;
@@ -351,7 +352,7 @@ class AuthController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
      */
-    public function resetPasswordSubmit(Request $request)
+    public function resetPasswordSubmit(ResetPasswordRequest $request)
     {
         try {
             $data = $request->all();
@@ -360,25 +361,13 @@ class AuthController extends Controller
                             ['deleted_at', null],
                     ])->first();
             if ($user) {
-                $password = $data['reset_password_pass'];
-                $confirm_password = $data['reset_password_confirm_pass'];
-               
-                
-                if ($password==$confirm_password) {
-                    $user->password = $password;
-                    $user->save();
-                    return back()->with('status', "Password changed successfully!");
-                   
-                } else{
-                    return redirect()->back()->withInput()->with('error', __('password not matched'));
-    
-                }
+                $user->password = $data['reset_password_pass'];
+                $user->save();
+                return back()->with('status', "Password changed successfully!");
             }
         } catch (Exception $e) {
             //return error message
             return redirect()->back()->withInput()->with('error', __('Internal server error'));
-    
-
         }
     }
 
