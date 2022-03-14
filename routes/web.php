@@ -128,6 +128,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('Home');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
+    Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
     Route::post('/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
   });
 

@@ -39,8 +39,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
+				<form action="" class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacher',[$teacher->id]): '/'}}" method="post" name="add_teacher" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -63,7 +62,9 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" value="">
+										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" 
+										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
+										>
 									</div>
 								</div>
 								<div class="form-group row">

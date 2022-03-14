@@ -8,6 +8,8 @@ use File;
 use App\Models\EventCategory;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Country;
+use App\Models\SchoolTeacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -32,9 +34,10 @@ class TeachersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
-        
-        return view('pages.teachers.add');
+    {  
+        $countries = Country::active()->get();
+        $genders = config('global.gender'); 
+        return view('pages.teachers.add')->with(compact('countries','genders'));
     }
 
      /**
@@ -144,9 +147,18 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, Teacher $teacher)
     {
-        //
+        $relationalData = SchoolTeacher::where([
+            ['teacher_id',$teacher->id],
+            ['school_id',1]
+        ])->first();
+
+        
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+        // dd($relationalData);
+        return view('pages.teachers.edit')->with(compact('teacher','relationalData','countries','genders'));
     }
 
     /**

@@ -15,7 +15,7 @@
                 <th>Mobile</th>
                 <th>Email</th>
                 <th>Birthdate</th>
-                <th>Created</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,9 @@
                 <td><?= $teacher->mobile; ?></td>
                 <td><?= $teacher->email; ?></td>
                 <td><?= $teacher->birth_date; ?></td>
-                <td><?= $teacher->created_at; ?></td>
+                <td>
+                  <a class="btn btn-sm btn-theme-success" href="{{ route('editTeacher',[$teacher->id]) }}"> {{ __('Edit')}} </a>
+                </td>
             </tr>
             @endforeach
         </tbody>
