@@ -7,6 +7,7 @@ use DB;
 use File;
 use App\Models\EventCategory;
 use App\Models\Teacher;
+use App\Models\School;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\SchoolTeacher;
@@ -17,14 +18,28 @@ use Illuminate\Support\Str;
 
 class TeachersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($schoolId = null)
     {
-        $teachers = Teacher::where('is_active', 1)->get();
+
+        $user = Auth::user();
+        
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $teachers = $school->teachers; 
+        }else {
+            // $schoolId = $user->selectedSchoolId();
+            $teachers = $user->getSelectedSchoolAttribute()->teachers;
+        }
+        // $teachers = Teacher::where('is_active', 1)->get();
         return view('pages.teachers.list',compact('teachers'));
     }
 
@@ -182,5 +197,20 @@ class TeachersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Check users .
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function checkTeacherAccess(School $school)
+    {
+        // $user = Auth::user();
+
+        // if ($user->isSuperAdmin() && empty(Teacher::find($schoolId))) {
+            
+        // }
     }
 }

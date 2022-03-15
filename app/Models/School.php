@@ -94,13 +94,13 @@ class School extends BaseModel
         'billing_date_end'=> 'date:Y/m/d'
     ];
 
-    
-    /**
-     * Get the teachers.
+     /**
+     * Get the Teachers for the Schools.
      */
     public function teachers()
     {
-        return $this->hasMany(Teacher::class);
+        return $this->belongsToMany(Teacher::class)
+                    ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at');
     }
 
 

@@ -113,6 +113,9 @@ Route::group(['middleware' => ['auth']], function () {
     // School update
     Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
+
+    // Teachers
+    Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');
   });
 
   // school 
