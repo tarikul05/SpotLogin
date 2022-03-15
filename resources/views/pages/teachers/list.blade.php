@@ -13,6 +13,7 @@
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('Status') }}</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +22,9 @@
                 <td><?= $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; ?></td>
                 <td><?= $teacher->email; ?></td>
                 <td><?= $teacher->status; ?></td>
+                <td>
+                  <a class="btn btn-sm btn-theme-success" href="{{ route('editTeacher',[$teacher->id]) }}"> {{ __('Edit')}} </a>
+                </td>
             </tr>
             @endforeach
         </tbody>
