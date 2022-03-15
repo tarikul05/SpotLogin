@@ -13,7 +13,7 @@
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('Status') }}</th>
-                <th>Action</th>
+                <th>{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -30,12 +30,10 @@
         </tbody>
         <tfoot>
             <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                <th>{{ __('Name of the Teacher') }}</th>
+                <th>{{ __('Email') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
             </tr>
         </tfoot>
     </table>
