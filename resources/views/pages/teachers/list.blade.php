@@ -10,23 +10,17 @@
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Birthdate</th>
-                <th>Created</th>
+                <th>{{ __('Name of the Teacher') }}</th>
+                <th>{{ __('Email') }}</th>
+                <th>{{ __('Status') }}</th>
             </tr>
         </thead>
         <tbody>
             @foreach($teachers as $teacher)
             <tr>
                 <td><?= $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; ?></td>
-                <td><?= $teacher->phone; ?></td>
-                <td><?= $teacher->mobile; ?></td>
                 <td><?= $teacher->email; ?></td>
-                <td><?= $teacher->birth_date; ?></td>
-                <td><?= $teacher->created_at; ?></td>
+                <td><?= $teacher->status; ?></td>
             </tr>
             @endforeach
         </tbody>
