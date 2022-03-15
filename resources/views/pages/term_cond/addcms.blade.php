@@ -60,6 +60,12 @@
 								<span id="language_id_error" class="error"></span>
 							</div>
 						</div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" value="1" id="request_all" name="request_all">
+								{{ __('Request All School') }}
+							</label>
+						</div>
 					</div>
 				</div>
 				<div class="row">

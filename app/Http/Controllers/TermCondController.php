@@ -46,27 +46,51 @@ class TermCondController extends Controller
  
     public function addUpdate(TermCondRequest $request, TermCondition $emailTemplate)
     {
-        $params = $request->all();  
+        $params = $request->all(); 
         try{
             $template = TermConditionLang::where([
                 ['tc_template_id', $params['tc_template_id']],
                 ['language_id', $params['language_id']],
                 ['is_active', 1]
             ])->first(); 
-            
-            if (empty($template)) {
-                
+            if (isset($params['request_all']) && !empty($params['request_all'])) {
                 $request->merge(['type'=>'A','active_flag'=> 'Y']);
-            
-                $template = TermCondition::create($request->except(['_token']));
-                $request->merge(['tc_template_id'=> $template->id]);
-            
-                TermConditionLang::create($request->except(['_token']));
-                return back()->withInput($request->all())->with('success', __('Term Condition Template added successfully!'));
-            }else{
-                $template->update($request->except(['_token']));
-                return back()->withInput($request->all())->with('success', __('Term Condition Template updated successfully!'));
+                if (empty($template)) {
+                
+                    
+                
+                    $template = TermCondition::create($request->except(['_token']));
+                    $request->merge(['tc_template_id'=> $template->id]);
+                
+                    TermConditionLang::create($request->except(['_token']));
+                    return back()->withInput($request->all())->with('success', __('Term Condition Template added successfully!'));
+                }else{
+                    $template->delete();
+                    $tc = TermCondition::find($params['tc_template_id']);
+                    $tc->delete();
+
+                    $template = TermCondition::create($request->except(['_token']));
+                    $request->merge(['tc_template_id'=> $template->id]);
+                
+                    TermConditionLang::create($request->except(['_token']));
+                    return back()->withInput($request->all())->with('success', __('Term Condition Template added successfully!'));
+                }
+            } else {
+                if (empty($template)) {
+                
+                    $request->merge(['type'=>'A','active_flag'=> 'Y']);
+                
+                    $template = TermCondition::create($request->except(['_token']));
+                    $request->merge(['tc_template_id'=> $template->id]);
+                
+                    TermConditionLang::create($request->except(['_token']));
+                    return back()->withInput($request->all())->with('success', __('Term Condition Template added successfully!'));
+                }else{
+                    $template->update($request->except(['_token']));
+                    return back()->withInput($request->all())->with('success', __('Term Condition Template updated successfully!'));
+                }
             }
+            
         } catch (\Exception $e) {
             //return error message
             return redirect()->withInput($request->all())->back()->with('error', __('Internal server error'));
