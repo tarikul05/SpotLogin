@@ -40,14 +40,14 @@
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<!-- user email check start -->
-				<form action="" class="form-horizontal" action="{{route('teachers.create')}}" method="post" action="" role="form">
+				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
 					@csrf
 					<div class="form-group row">
 						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
-								<input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
+								<input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="email">
 							</div>
 						</div>
 						<div class="col-sm-2 ">
@@ -337,7 +337,7 @@ $('#save_btn').click(function (e) {
 		});
 		if(error < 1){	
 			$.ajax({
-				url: BASE_URL + '/add-teacher-action',
+				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
 				data: formData,
 				type: 'POST',
 				dataType: 'json',

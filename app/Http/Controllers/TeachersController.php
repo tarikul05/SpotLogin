@@ -28,7 +28,6 @@ class TeachersController extends Controller
     {
 
         $user = Auth::user();
-        
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
@@ -47,8 +46,19 @@ class TeachersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, $schoolId = null)
     {  
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
         $exTeacher = $searchEmail = null;
@@ -56,7 +66,7 @@ class TeachersController extends Controller
             $searchEmail = $request->email;
             $exTeacher = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
         }
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','searchEmail'));
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','searchEmail','schoolId'));
     }
 
      /**
@@ -64,9 +74,23 @@ class TeachersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function AddTeacher(Request $request)
+    public function AddTeacher(Request $request, $schoolId = null)
     { 
-        $schoolId = 1;
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+
+        // $schoolId = 1;
         DB::beginTransaction(); 
         try{
             if ($request->isMethod('post')){

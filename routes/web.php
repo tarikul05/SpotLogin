@@ -116,6 +116,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Teachers
     Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');
+    Route::match(array('GET', 'POST'), "/{school}/add-teacher", array(
+      'uses' => 'TeachersController@create',
+      'as' => 'admin.teachers.create'
+    ));
+
   });
 
   // school 
@@ -136,7 +141,7 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'teachers.create'
     ));
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
-    Route::post('/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
+    Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
   });
 
 
