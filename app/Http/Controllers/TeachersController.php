@@ -36,7 +36,6 @@ class TeachersController extends Controller
             }
             $teachers = $school->teachers; 
         }else {
-            // $schoolId = $user->selectedSchoolId();
             $teachers = $user->getSelectedSchoolAttribute()->teachers;
         }
         // $teachers = Teacher::where('is_active', 1)->get();
@@ -48,11 +47,16 @@ class TeachersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {  
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
-        return view('pages.teachers.add')->with(compact('countries','genders'));
+        $exTeacher = $searchEmail = null;
+        if ($request->isMethod('post')){
+            $searchEmail = $request->email;
+            $exTeacher = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
+        }
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','searchEmail'));
     }
 
      /**
@@ -62,63 +66,88 @@ class TeachersController extends Controller
      */
     public function AddTeacher(Request $request)
     { 
-
-        DB::beginTransaction();  
+        $schoolId = 1;
+        DB::beginTransaction(); 
         try{
             if ($request->isMethod('post')){
                 $alldata = $request->all();
+                if (!empty($alldata['user_id'])) {
+                    $relationalData = [
+                        'role_type'=>$alldata['role_type'], 
+                        'has_user_account'=> 1 ,
+                        'comment'=> $alldata['comment'],
+                        'nickname'=> $alldata['nickname'],
+                    ];
+                    $user = User::find($alldata['user_id']);
+                    $teacher = $user->personable;
+                    $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
+                    if (!$exist) {
+                        $teacher->schools()->attach($schoolId,$relationalData);
+                        $msg = 'Successfully Registered';
+                    }else {
+                        $msg = 'This teacher already exist with your school';
+                    }
+                    
 
-                $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
-                $teacherData = [
-                    'availability_select' => $alldata['availability_select'],
-                    'gender_id' => $alldata['gender_id'],
-                    'lastname' => $alldata['lastname'],
-                    'firstname' => $alldata['firstname'],
-                    'birth_date' => $birthDate,
-                    'licence_js' => $alldata['licence_js'],
-                    'email' => $alldata['email'],
-                    'street' => $alldata['street'],
-                    'street_number' => $alldata['street_number'],
-                    'zip_code' => $alldata['zip_code'],
-                    'place' => $alldata['place'],
-                    'country_code' => $alldata['country_code'],
-                    'phone' => $alldata['phone'],
-                    'mobile' => $alldata['mobile'],
-                ];
-                // dd($alldata);
-                $schoolId = 1;
-                $teacher = Teacher::create($teacherData);
-                $relationalData = [
-                    'role_type'=>$alldata['role_type'], 
-                    'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                    'comment'=> $alldata['comment'],
-                    'nickname'=> $alldata['nickname'],
-                ];
-                $teacher->save();
-                $teacher->schools()->attach($schoolId,$relationalData);
+                    // notify user by email about new Teacher role
 
-                $usersData = [
-                    'person_id' => $teacher->id,
-                    'person_type' =>'App\Models\Teacher',
-                    'username' =>Str::random(10),
-                    'lastname' => $alldata['lastname'],
-                    'middlename'=>'',
-                    'firstname'=>$alldata['firstname'],
-                    'email'=>$alldata['email'],
-                    // 'password'=>$alldata['password'],
-                    'password'=>Str::random(10),
-                    'is_mail_sent'=>0,
-                    'is_active'=>1,
-                    'is_firstlogin'=>0
-                ];
 
-                $user = User::create($usersData);
-                $user->save();
+                }else{
+                    $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+                    $teacherData = [
+                        'availability_select' => $alldata['availability_select'],
+                        'gender_id' => $alldata['gender_id'],
+                        'lastname' => $alldata['lastname'],
+                        'firstname' => $alldata['firstname'],
+                        'birth_date' => $birthDate,
+                        'licence_js' => $alldata['licence_js'],
+                        'email' => $alldata['email'],
+                        'street' => $alldata['street'],
+                        'street_number' => $alldata['street_number'],
+                        'zip_code' => $alldata['zip_code'],
+                        'place' => $alldata['place'],
+                        'country_code' => $alldata['country_code'],
+                        'phone' => $alldata['phone'],
+                        'mobile' => $alldata['mobile'],
+                    ];
+                    // dd($alldata);
+                    $teacher = Teacher::create($teacherData);
+                    $relationalData = [
+                        'role_type'=>$alldata['role_type'], 
+                        'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                        'comment'=> $alldata['comment'],
+                        'nickname'=> $alldata['nickname'],
+                    ];
+                    $teacher->save();
+                    $teacher->schools()->attach($schoolId,$relationalData);
+
+                    $usersData = [
+                        'person_id' => $teacher->id,
+                        'person_type' =>'App\Models\Teacher',
+                        'username' =>Str::random(10),
+                        'lastname' => $alldata['lastname'],
+                        'middlename'=>'',
+                        'firstname'=>$alldata['firstname'],
+                        'email'=>$alldata['email'],
+                        // 'password'=>$alldata['password'],
+                        'password'=>Str::random(10),
+                        'is_mail_sent'=>0,
+                        'is_active'=>1,
+                        'is_firstlogin'=>0
+                    ];
+
+                    $user = User::create($usersData);
+                    $user->save();
+
+                    $msg = 'Successfully Registered';
+                }
+
+                    
                
 
                 $result = array(
                     "status"     => 1,
-                    'message' => __('Successfully Registered')
+                    'message' => __($msg)
                 );
             }
             DB::commit();
