@@ -7,7 +7,11 @@ use DB;
 use File;
 use App\Models\EventCategory;
 use App\Models\Teacher;
+use App\Models\User;
+use App\Models\Country;
+use App\Models\SchoolTeacher;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 
 
@@ -30,9 +34,10 @@ class TeachersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
-        
-        return view('pages.teachers.add');
+    {  
+        $countries = Country::active()->get();
+        $genders = config('global.gender'); 
+        return view('pages.teachers.add')->with(compact('countries','genders'));
     }
 
      /**
@@ -41,18 +46,67 @@ class TeachersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function AddTeacher(Request $request)
-    {   
+    { 
+
+        DB::beginTransaction();  
         try{
             if ($request->isMethod('post')){
-                $teacherData = $request->all();
-                $birthDate=date('Y-m-d H:i:s',strtotime($teacherData['birth_date']));
-                $teacherData['birth_date'] = $birthDate;
+                $alldata = $request->all();
+
+                $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+                $teacherData = [
+                    'availability_select' => $alldata['availability_select'],
+                    'gender_id' => $alldata['gender_id'],
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'birth_date' => $birthDate,
+                    'licence_js' => $alldata['licence_js'],
+                    'email' => $alldata['email'],
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'place' => $alldata['place'],
+                    'country_code' => $alldata['country_code'],
+                    'phone' => $alldata['phone'],
+                    'mobile' => $alldata['mobile'],
+                ];
+                // dd($alldata);
+                $schoolId = 1;
                 $teacher = Teacher::create($teacherData);
+                $relationalData = [
+                    'role_type'=>$alldata['role_type'], 
+                    'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                    'comment'=> $alldata['comment'],
+                    'nickname'=> $alldata['nickname'],
+                ];
+                $teacher->save();
+                $teacher->schools()->attach($schoolId,$relationalData);
+
+                $usersData = [
+                    'person_id' => $teacher->id,
+                    'person_type' =>'App\Models\Teacher',
+                    'username' =>Str::random(10),
+                    'lastname' => $alldata['lastname'],
+                    'middlename'=>'',
+                    'firstname'=>$alldata['firstname'],
+                    'email'=>$alldata['email'],
+                    // 'password'=>$alldata['password'],
+                    'password'=>Str::random(10),
+                    'is_mail_sent'=>0,
+                    'is_active'=>1,
+                    'is_firstlogin'=>0
+                ];
+
+                $user = User::create($usersData);
+                $user->save();
+               
+
                 $result = array(
                     "status"     => 1,
                     'message' => __('Successfully Registered')
                 );
             }
+            DB::commit();
         }catch (Exception $e) {
             DB::rollBack();
             $result= [
@@ -93,9 +147,18 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, Teacher $teacher)
     {
-        //
+        $relationalData = SchoolTeacher::where([
+            ['teacher_id',$teacher->id],
+            ['school_id',1]
+        ])->first();
+
+        
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+        // dd($relationalData);
+        return view('pages.teachers.edit')->with(compact('teacher','relationalData','countries','genders'));
     }
 
     /**

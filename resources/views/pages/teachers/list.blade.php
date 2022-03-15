@@ -10,34 +10,30 @@
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Birthdate</th>
-                <th>Created</th>
+                <th>{{ __('Name of the Teacher') }}</th>
+                <th>{{ __('Email') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody>
             @foreach($teachers as $teacher)
             <tr>
                 <td><?= $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; ?></td>
-                <td><?= $teacher->phone; ?></td>
-                <td><?= $teacher->mobile; ?></td>
                 <td><?= $teacher->email; ?></td>
-                <td><?= $teacher->birth_date; ?></td>
-                <td><?= $teacher->created_at; ?></td>
+                <td><?= $teacher->status; ?></td>
+                <td>
+                  <a class="btn btn-sm btn-theme-success" href="{{ route('editTeacher',[$teacher->id]) }}"> {{ __('Edit')}} </a>
+                </td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                <th>{{ __('Name of the Teacher') }}</th>
+                <th>{{ __('Email') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
             </tr>
         </tfoot>
     </table>
