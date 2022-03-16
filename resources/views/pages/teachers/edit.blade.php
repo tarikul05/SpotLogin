@@ -142,22 +142,22 @@
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
-											<input id="shas_user_account"  name="has_user_account" type="checkbox" value="1">
+											<input id="shas_user_account"  name="has_user_account" type="checkbox" value="1" {{!empty($relationalData->has_user_account) ? (old('has_user_account', $relationalData->has_user_account) == 1 ? 'checked' : '') : (old('has_user_account') == 1 ? 'checked' : '')}}>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
-										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium"> Medium<br>
-										<input checked="true" id="authorisation_min" name="role_type" type="radio" value="teachers_minimum"> Minimum<br></b>
+										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_all' ? 'checked' : '') : (old('role_type') == 'teachers_all' ? 'checked' : '')}}> ALL<br>
+										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_medium ' ? 'checked' : '') : (old('role_type') == 'teachers_medium ' ? 'checked' : '')}}> Medium<br>
+										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_minimum' ? 'checked' : '') : (old('role_type') == 'teachers_minimum' ? 'checked' : '')}}> Minimum<br></b>
 									</div>
 								</div>
 								<div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
-										<input type="text" name="bg_color_agenda" class="colorpicker dot" />
+										<input type="text" name="bg_color_agenda" value="{{!empty($relationalData->bg_color_agenda) ? old('bg_color_agenda', $relationalData->bg_color_agenda) : old('bg_color_agenda')}}"  class="colorpicker dot" />
 									</div>
 								</div>
 							</div>
