@@ -277,4 +277,9 @@ class UserController extends Controller
     {
         //
     }
+
+    public function welcome()
+    {
+        return view('welcome');
+    }
 }
