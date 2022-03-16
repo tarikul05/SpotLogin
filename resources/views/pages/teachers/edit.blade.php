@@ -40,6 +40,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
+					<input type="hidden" name="school_id" value="{{$schoolId}}">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -149,16 +150,15 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-									{{$relationalData->role_type}}
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_all' ? 'checked' : '') : (old('role_type') == 'teachers_all' ? 'checked' : '')}}> ALL<br>
-										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_medium ' ? 'checked' : '') : (old('role_type') == 'teachers_medium ' ? 'checked' : '')}}> Medium<br>
-										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_minimum' ? 'checked' : '') : (old('role_type') == 'teachers_minimum' ? 'checked' : '')}}> Minimum<br></b>
+										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{ ($relationalData->role_type == 'teachers_all') ? 'checked' : '' }}> ALL<br>
+										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{($relationalData->role_type == 'teachers_medium') ? 'checked' : '' }}> Medium<br>
+										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{($relationalData->role_type == 'teachers_minimum') ? 'checked' : '' }}> Minimum<br></b>
 									</div>
 								</div>
 								<div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
-										<input type="text" name="bg_color_agenda" value="{{!empty($relationalData->bg_color_agenda) ? old('bg_color_agenda', $relationalData->bg_color_agenda) : old('bg_color_agenda')}}"  class="colorpicker dot" />
+										<input type="text" name="bg_color_agenda" value="{{!empty($relationalData->bg_color_agenda) ? $relationalData->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot" />
 									</div>
 								</div>
 							</div>
@@ -309,7 +309,10 @@ $(function() {
 	});
 });
 
-$(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
+$(function() { 
+	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
+	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
+});
 
 // save functionality
 // $('#save_btn').click(function (e) {

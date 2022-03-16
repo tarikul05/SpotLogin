@@ -90,7 +90,6 @@ class TeachersController extends Controller
             $schoolId = $user->selectedSchoolId();
         }
 
-        // $schoolId = 1;
         DB::beginTransaction(); 
         try{
             if ($request->isMethod('post')){
@@ -243,7 +242,7 @@ class TeachersController extends Controller
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','relationalData','countries','genders'));
+        return view('pages.teachers.edit')->with(compact('teacher','relationalData','countries','genders','schoolId'));
     }
 
     /**
@@ -253,12 +252,51 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Teacher $teacher)
     {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        if ($user->isSuperAdmin()) {
+            $schoolId = $alldata['school_id']; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+
+
+        // dd($schoolId);
+        DB::beginTransaction();
         try{
-            
+             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $teacherData = [
+                'gender_id' => $alldata['gender_id'],
+                'lastname' => $alldata['lastname'],
+                'firstname' => $alldata['firstname'],
+                'birth_date' => $birthDate,
+                'licence_js' => $alldata['licence_js'],
+                'email' => $alldata['email'],
+                'street' => $alldata['street'],
+                'street_number' => $alldata['street_number'],
+                'zip_code' => $alldata['zip_code'],
+                'place' => $alldata['place'],
+                'country_code' => $alldata['country_code'],
+                'phone' => $alldata['phone'],
+                'mobile' => $alldata['mobile'],
+            ];
+            Teacher::where('id', $teacher->id)->update($teacherData);
+
+            $relationalData = [
+                'role_type'=>$alldata['role_type'],
+                // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                'comment'=> $alldata['comment'],
+                'nickname'=> $alldata['nickname'],
+                'bg_color_agenda'=> $alldata['bg_color_agenda'],
+            ];
+            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
+            DB::commit();
             return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
         }catch (\Exception $e) {
+            DB::rollBack();
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
