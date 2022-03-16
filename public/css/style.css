@@ -386,6 +386,11 @@ input.error {
     border-color: #FF8000;
     color: #FFF;
 }
+button#save_btn {
+    position: absolute;
+    top: 140px;
+    right: 14%;
+}
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

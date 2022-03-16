@@ -21,8 +21,7 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
-						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
 				</div>    
 			</div>          
@@ -39,7 +38,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacher',[$teacher->id]): '/'}}" method="post" name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -52,7 +51,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" name="availability_select" id="availability_select">
-												<option value="10">Active</option>
+												<option value="10" >Active</option>
 												<option value="0">Inactive</option>
 												<option value="-9">Deleted</option>
 											</select>
@@ -65,6 +64,11 @@
 										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" 
 										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
 										>
+										@if ($errors->has('nickname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('nickname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
@@ -73,22 +77,37 @@
 										<div class="selectdiv">
 											<select class="form-control require" id="gender_id" name="gender_id">
 												@foreach($genders as $key => $gender)
-								                    <option value="{{ $key }}">{{ $gender }}</option>
+								                    <option value="{{ $key }}" {{!empty($relationalData->gender_id) ? (old('gender_id', $relationalData->gender_id) == $key ? 'selected' : '') : (old('gender_id') == $key ? 'selected' : '')}}>{{ $gender }}</option>
 								                @endforeach
 											</select>
+											@if ($errors->has('gender_id'))
+												<span id="" class="error">
+														<strong>{{ $errors->first('gender_id') }}.</strong>
+												</span>
+											@endif
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="lastname" name="lastname" type="text">
+										<input class="form-control require" value="{{!empty($relationalData->lastname) ? old('lastname', $relationalData->lastname) : old('lastname')}}" id="lastname" name="lastname" type="text">
+										@if ($errors->has('lastname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('lastname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="firstname" name="firstname" type="text">
+										<input class="form-control require" value="{{!empty($relationalData->firstname) ? old('firstname', $relationalData->firstname) : old('firstname')}}" id="firstname" name="firstname" type="text">
+										@if ($errors->has('firstname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('firstname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 							</div>
@@ -97,7 +116,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" value="{{!empty($relationalData->birth_date) ? old('birth_date', $relationalData->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -107,14 +126,15 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" id="licence_js" name="licence_js" type="text">
+										<input class="form-control" value="{{!empty($relationalData->licence_js) ? old('licence_js', $relationalData->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" name="email" type="text">
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<input class="form-control" value="{{!empty($relationalData->email) ? old('email', $relationalData->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
 									</div>
 								</div>
@@ -122,7 +142,7 @@
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
-											<input id="shas_user_account" name="has_user_account" type="checkbox" value="1">
+											<input id="shas_user_account"  name="has_user_account" type="checkbox" value="1">
 										</div>
 									</div>
 								</div>
@@ -150,19 +170,19 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="street" name="street" type="text">
+											<input class="form-control" value="{{!empty($relationalData->street) ? old('street', $relationalData->street) : old('street')}}" id="street" name="street" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="street_number" name="street_number" type="text">
+											<input class="form-control" value="{{!empty($relationalData->street_number) ? old('street_number', $relationalData->street_number) : old('street_number')}}" id="street_number" name="street_number" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="zip_code" name="zip_code" type="text">
+											<input class="form-control" value="{{!empty($relationalData->zip_code) ? old('zip_code', $relationalData->zip_code) : old('zip_code')}}" id="zip_code" name="zip_code" type="text">
 										</div>
 									</div>
 								</div>
@@ -170,7 +190,7 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="place" name="place" type="text">
+											<input class="form-control" value="{{!empty($relationalData->place) ? old('place', $relationalData->place) : old('place')}}" id="place" name="place" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
@@ -179,7 +199,7 @@
 											<div class="selectdiv">
 											<select class="form-control" id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option value="{{ $country->code }}">{{ $country->name }}</option>
+								                    <option value="{{ $country->code }}" {{!empty($relationalData->country_code) ? (old('country_code', $relationalData->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 								                @endforeach
 											</select>
 											</div>
@@ -197,7 +217,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+												<input class="form-control" value="{{!empty($relationalData->phone) ? old('phone', $relationalData->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
 										</div>
 									</div>
@@ -215,7 +236,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> <input class="form-control" id="mobile" name="mobile" type="text">
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
+												<input class="form-control" value="{{!empty($relationalData->mobile) ? old('mobile', $relationalData->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
 									</div>
@@ -225,7 +247,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email2" name="email2" type="text">
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+												<input class="form-control" value="{{!empty($relationalData->email2) ? old('email2', $relationalData->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
 										</div>
 									</div>
@@ -240,7 +263,7 @@
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"></textarea>
+												<textarea class="form-control" value="{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}" cols="60" id="scomment" name="comment" rows="5"></textarea>
 											</div>
 										</div>
 									</div>
@@ -248,6 +271,7 @@
 							</div>
 						</div>
 					</fieldset>
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
 				</form>
 			</div>
 		</div>
@@ -287,41 +311,41 @@ $(function() {
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
 // save functionality
-$('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
-					}
-				}
-			})
-		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
-});  
+// $('#save_btn').click(function (e) {
+// 		var formData = $('#add_teacher').serializeArray();
+// 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+// 		var error = '';
+// 		$( ".form-control.require" ).each(function( key, value ) {
+// 			var lname = $(this).val();
+// 			if(lname=='' || lname==null || lname==undefined){
+// 				$(this).addClass('error');
+// 				error = 1;
+// 			}else{
+// 				$(this).removeClass('error');
+// 				error = 0;
+// 			}
+// 		});
+// 		formData.push({
+// 			"name": "_token",
+// 			"value": csrfToken,
+// 		});
+// 		if(error < 1){	
+// 			$.ajax({
+// 				url: BASE_URL + '/add-teacher-action',
+// 				data: formData,
+// 				type: 'POST',
+// 				dataType: 'json',
+// 				success: function(response){	
+// 					if(response.status == 1){
+// 						$('#modal_add_teacher').modal('show');
+// 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+// 					}
+// 				}
+// 			})
+// 		}else{
+// 			$('#modal_add_teacher').modal('show');
+// 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+// 		}	            
+// });  
 </script>
 @endsection

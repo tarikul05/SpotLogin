@@ -39,9 +39,29 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+				<!-- user email check start -->
+				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
+					@csrf
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
+						<div class="col-sm-5">
+							<div class="input-group">
+								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+								<input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="email">
+							</div>
+						</div>
+						<div class="col-sm-2 ">
+							<button  class="btn btn-primary" type="submit">Check</button>
+						</div>
+					</div>
+				</form>
+				<!-- // user email check end -->
+			@if(!empty($searchEmail))
 				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
 					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
 					@csrf
+
+					<input type="hidden" name="user_id" value="{{ !empty($exTeacher) ? $exTeacher->id : '' }}">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -66,6 +86,7 @@
 										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
+							@if(empty($exTeacher))
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
@@ -90,8 +111,11 @@
 										<input class="form-control require" id="firstname" name="firstname" type="text">
 									</div>
 								</div>
+							@endif
 							</div>
 							<div class="col-md-6">
+
+							@if(empty($exTeacher))
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
@@ -109,14 +133,17 @@
 										<input class="form-control" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
+							@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" name="email" type="text">
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
 										</div>
 									</div>
 								</div>
+
+							@if(empty($exTeacher))
 								<div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
@@ -125,6 +152,7 @@
 										</div>
 									</div>
 								</div>
+							@endif
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
@@ -141,6 +169,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
+					@if(empty($exTeacher))
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
 							</div>
@@ -230,6 +259,7 @@
 									</div>
 								</div>
 							</div>
+					@endif
 							<div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -248,6 +278,7 @@
 						</div>
 					</fieldset>
 				</form>
+			@endif
 			</div>
 		</div>
 	</div>
@@ -306,14 +337,14 @@ $('#save_btn').click(function (e) {
 		});
 		if(error < 1){	
 			$.ajax({
-				url: BASE_URL + '/add-teacher-action',
+				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
 				data: formData,
 				type: 'POST',
 				dataType: 'json',
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						$("#modal_alert_body").text(response.message);
 					}
 				}
 			})

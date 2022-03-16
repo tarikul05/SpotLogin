@@ -113,6 +113,14 @@ Route::group(['middleware' => ['auth']], function () {
     // School update
     Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
+
+    // Teachers
+    Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');
+    Route::match(array('GET', 'POST'), "/{school}/add-teacher", array(
+      'uses' => 'TeachersController@create',
+      'as' => 'admin.teachers.create'
+    ));
+
   });
 
   // school 
@@ -128,8 +136,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('Home');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
+    Route::match(array('GET', 'POST'), "add-teacher", array(
+      'uses' => 'TeachersController@create',
+      'as' => 'teachers.create'
+    ));
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
-    Route::post('/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
+    Route::post('/edit-teacher-action/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
+    Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
   });
 
 
