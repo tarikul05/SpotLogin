@@ -149,7 +149,6 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-									{{$relationalData->role_type}}
 										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_all' ? 'checked' : '') : (old('role_type') == 'teachers_all' ? 'checked' : '')}}> ALL<br>
 										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_medium ' ? 'checked' : '') : (old('role_type') == 'teachers_medium ' ? 'checked' : '')}}> Medium<br>
 										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_minimum' ? 'checked' : '') : (old('role_type') == 'teachers_minimum' ? 'checked' : '')}}> Minimum<br></b>
