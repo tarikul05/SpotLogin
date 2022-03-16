@@ -30,8 +30,19 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-			</div>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+					{{ __('Contact Information') }}
+				</button>
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Sections and prices')}}
+				</button>
+				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Logo')}}
+				</button>
+				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+					{{ __('User Account')}}
+				</button>
+			</div>	
 		</nav>
 		<!-- Tabs navs -->
 
@@ -272,8 +283,216 @@
 							</div>
 						</div>
 					</fieldset>
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
 				</form>
+			</div>
+			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+				<form class="form-horizontal" id="add_price" action=""  method="POST" enctype="multipart/form-data" name="add_price" role="form">
+					@csrf
+					<div class="section_header_class">
+						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
+					</div>
+
+					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>{{__('Type of course')}}</th>
+								<th>{{__('Hourly rate applied')}}</th>
+								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
+								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="background:lightblue;">
+								<td></td>
+								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>Soccer-School2</strong></label></td>
+								<td><label></label></td>
+								<td align="right" colspan="1"></td>
+							</tr>
+							<tr>
+								<td>8<input type="hidden" name="price_id" value="price_8"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 8 élèves</td>
+								<td><input id="price_buy19" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell19" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>9<input type="hidden" name="price_id" value="price_9"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 9 élèves</td>
+								<td><input id="price_buy20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>10<input type="hidden" name="price_id" value="price_10"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 10 élèves</td>
+								<td><input id="price_buy21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr style="background:lightblue;">
+								<td></td>
+								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name22" type="hidden" style="text-align:left" value="Football-School"><label><strong>Football-School</strong></label></td>
+								<td><label></label></td>
+								<td align="right" colspan="1"></td>
+							</tr>
+							<tr>
+								<td>1<input type="hidden" name="price_id" value="price_1"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours privé</td>
+								<td><input id="price_buy22" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell22" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>2<input type="hidden" name="price_id" value="price_2"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 2 élèves</td>
+								<td><input id="price_buy23" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell23" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>3<input type="hidden" name="price_id" value="price_3"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 3 élèves</td>
+								<td><input id="price_buy24" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell24" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>4<input type="hidden" name="price_id" value="price_4"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 4 élèves</td>
+								<td><input id="price_buy25" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell25" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>5<input type="hidden" name="price_id" value="price_5"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 5 élèves</td>
+								<td><input id="price_buy26" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell26" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>6<input type="hidden" name="price_id" value="price_6"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 6 élèves</td>
+								<td><input id="price_buy27" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell27" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>7<input type="hidden" name="price_id" value="price_7"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 7 élèves</td>
+								<td><input id="price_buy28" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell28" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>8<input type="hidden" name="price_id" value="price_8"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 8 élèves</td>
+								<td><input id="price_buy29" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell29" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>9<input type="hidden" name="price_id" value="price_9"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 9 élèves</td>
+								<td><input id="price_buy30" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell30" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>10<input type="hidden" name="price_id" value="price_10"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 10 élèves</td>
+								<td><input id="price_buy31" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell31" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr style="background:lightblue;">
+								<td></td>
+								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name32" type="hidden" style="text-align:left" value="test cat SCHOOL"><label><strong>test cat SCHOOL</strong></label></td>
+								<td><label></label></td>
+								<td align="right" colspan="1"></td>
+							</tr>
+							<tr>
+								<td>1<input type="hidden" name="price_id" value="price_1"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours privé</td>
+								<td><input id="price_buy32" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell32" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>2<input type="hidden" name="price_id" value="price_2"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 2 élèves</td>
+								<td><input id="price_buy33" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell33" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>3<input type="hidden" name="price_id" value="price_3"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 3 élèves</td>
+								<td><input id="price_buy34" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell34" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>4<input type="hidden" name="price_id" value="price_4"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 4 élèves</td>
+								<td><input id="price_buy35" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell35" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>5<input type="hidden" name="price_id" value="price_5"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 5 élèves</td>
+								<td><input id="price_buy36" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell36" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>6<input type="hidden" name="price_id" value="price_6"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 6 élèves</td>
+								<td><input id="price_buy37" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell37" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>7<input type="hidden" name="price_id" value="price_7"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 7 élèves</td>
+								<td><input id="price_buy38" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell38" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>8<input type="hidden" name="price_id" value="price_8"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 8 élèves</td>
+								<td><input id="price_buy39" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell39" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>9<input type="hidden" name="price_id" value="price_9"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 9 élèves</td>
+								<td><input id="price_buy40" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell40" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+							<tr>
+								<td>10<input type="hidden" name="price_id" value="price_10"></td>
+								<td>Lessons/Events..</td>
+								<td>Cours collectif de 10 élèves</td>
+								<td><input id="price_buy41" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								<td><input id="price_sell41" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+							</tr>
+						</tbody>
+						</table>
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+				</form>
+			</div>
+			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+			{{ __('Logo')}}
+			</div>
+			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
+			{{ __('User Account')}}
 			</div>
 		</div>
 	</div>
