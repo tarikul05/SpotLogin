@@ -238,7 +238,13 @@ class TeachersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            
+            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
+        }catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 
     /**
