@@ -77,7 +77,7 @@
 										<div class="selectdiv">
 											<select class="form-control require" id="gender_id" name="gender_id">
 												@foreach($genders as $key => $gender)
-								                    <option value="{{ $key }}" {{!empty($relationalData->gender_id) ? (old('gender_id', $relationalData->gender_id) == $key ? 'selected' : '') : (old('gender_id') == $key ? 'selected' : '')}}>{{ $gender }}</option>
+								                    <option value="{{ $key }}" {{!empty($teacher->gender_id) ? (old('gender_id', $teacher->gender_id) == $key ? 'selected' : '') : (old('gender_id') == $key ? 'selected' : '')}}>{{ $gender }}</option>
 								                @endforeach
 											</select>
 											@if ($errors->has('gender_id'))
@@ -91,7 +91,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" value="{{!empty($relationalData->lastname) ? old('lastname', $relationalData->lastname) : old('lastname')}}" id="lastname" name="lastname" type="text">
+										<input class="form-control require" value="{{!empty($teacher->lastname) ? old('lastname', $teacher->lastname) : old('lastname')}}" id="lastname" name="lastname" type="text">
 										@if ($errors->has('lastname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('lastname') }}.</strong>
@@ -102,7 +102,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
 									<div class="col-sm-7">
-										<input class="form-control require" value="{{!empty($relationalData->firstname) ? old('firstname', $relationalData->firstname) : old('firstname')}}" id="firstname" name="firstname" type="text">
+										<input class="form-control require" value="{{!empty($teacher->firstname) ? old('firstname', $teacher->firstname) : old('firstname')}}" id="firstname" name="firstname" type="text">
 										@if ($errors->has('firstname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('firstname') }}.</strong>
@@ -116,7 +116,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{!empty($relationalData->birth_date) ? old('birth_date', $relationalData->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" value="{{!empty($teacher->birth_date) ? old('birth_date', $teacher->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -134,7 +134,7 @@
 									<div class="col-sm-7">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
-											<input class="form-control" value="{{!empty($relationalData->email) ? old('email', $relationalData->email) : old('email')}}" id="email" name="email" type="text">
+											<input class="form-control" value="{{!empty($teacher->email) ? old('email', $teacher->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
 									</div>
 								</div>
@@ -149,6 +149,7 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
+									{{$relationalData->role_type}}
 										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_all' ? 'checked' : '') : (old('role_type') == 'teachers_all' ? 'checked' : '')}}> ALL<br>
 										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_medium ' ? 'checked' : '') : (old('role_type') == 'teachers_medium ' ? 'checked' : '')}}> Medium<br>
 										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{!empty($relationalData->role_type) ? (old('role_type', $relationalData->role_type) == 'teachers_minimum' ? 'checked' : '') : (old('role_type') == 'teachers_minimum' ? 'checked' : '')}}> Minimum<br></b>
@@ -170,19 +171,19 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" value="{{!empty($relationalData->street) ? old('street', $relationalData->street) : old('street')}}" id="street" name="street" type="text">
+											<input class="form-control" value="{{!empty($teacher->street) ? old('street', $teacher->street) : old('street')}}" id="street" name="street" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" value="{{!empty($relationalData->street_number) ? old('street_number', $relationalData->street_number) : old('street_number')}}" id="street_number" name="street_number" type="text">
+											<input class="form-control" value="{{!empty($teacher->street_number) ? old('street_number', $teacher->street_number) : old('street_number')}}" id="street_number" name="street_number" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" value="{{!empty($relationalData->zip_code) ? old('zip_code', $relationalData->zip_code) : old('zip_code')}}" id="zip_code" name="zip_code" type="text">
+											<input class="form-control" value="{{!empty($teacher->zip_code) ? old('zip_code', $teacher->zip_code) : old('zip_code')}}" id="zip_code" name="zip_code" type="text">
 										</div>
 									</div>
 								</div>
@@ -190,7 +191,7 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" value="{{!empty($relationalData->place) ? old('place', $relationalData->place) : old('place')}}" id="place" name="place" type="text">
+											<input class="form-control" value="{{!empty($teacher->place) ? old('place', $teacher->place) : old('place')}}" id="place" name="place" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
@@ -199,7 +200,7 @@
 											<div class="selectdiv">
 											<select class="form-control" id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option value="{{ $country->code }}" {{!empty($relationalData->country_code) ? (old('country_code', $relationalData->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 								                @endforeach
 											</select>
 											</div>
@@ -218,7 +219,7 @@
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
-												<input class="form-control" value="{{!empty($relationalData->phone) ? old('phone', $relationalData->phone) : old('phone')}}" id="phone" name="phone" type="text">
+												<input class="form-control" value="{{!empty($teacher->phone) ? old('phone', $teacher->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
 										</div>
 									</div>
@@ -237,7 +238,7 @@
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
-												<input class="form-control" value="{{!empty($relationalData->mobile) ? old('mobile', $relationalData->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
+												<input class="form-control" value="{{!empty($teacher->mobile) ? old('mobile', $teacher->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
 									</div>
@@ -248,7 +249,7 @@
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
-												<input class="form-control" value="{{!empty($relationalData->email2) ? old('email2', $relationalData->email2) : old('email2')}}" id="email2" name="email2" type="text">
+												<input class="form-control" value="{{!empty($teacher->email2) ? old('email2', $teacher->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
 										</div>
 									</div>
@@ -263,7 +264,7 @@
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 											<div class="col-sm-7">
-												<textarea class="form-control" value="{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}" cols="60" id="scomment" name="comment" rows="5"></textarea>
+												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"> {{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}} </textarea>
 											</div>
 										</div>
 									</div>
