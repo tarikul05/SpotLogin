@@ -141,6 +141,7 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'teachers.create'
     ));
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
+    Route::post('/edit-teacher-action/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher']);
   });
 

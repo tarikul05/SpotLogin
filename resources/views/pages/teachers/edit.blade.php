@@ -21,8 +21,7 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
-						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
 				</div>    
 			</div>          
@@ -39,7 +38,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacher',[$teacher->id]): '/'}}" method="post" name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -272,6 +271,7 @@
 							</div>
 						</div>
 					</fieldset>
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
 				</form>
 			</div>
 		</div>
