@@ -39,9 +39,7 @@ class UserController extends Controller
      * @version 0.1 written in 2022-02-03
      */
     public function create(RegistrationRequest $request)
-    {
-       dd($request); 
-        
+    {   
         $result = array(
             'status' => 0,
             'message' => __('failed to signup'),
