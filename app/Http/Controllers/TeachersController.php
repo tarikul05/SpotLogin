@@ -38,7 +38,7 @@ class TeachersController extends Controller
             $teachers = $user->getSelectedSchoolAttribute()->teachers;
         }
         // $teachers = Teacher::where('is_active', 1)->get();
-        return view('pages.teachers.list',compact('teachers'));
+        return view('pages.teachers.list',compact('teachers','schoolId'));
     }
 
     /**
@@ -215,11 +215,28 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, Teacher $teacher)
+    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
+    public function edit(Request $request)
     {
+        $schoolId = $request->route('school'); 
+        $teacherId = $request->route('teacher');
+        $teacher = Teacher::find($teacherId);
+
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+
+
         $relationalData = SchoolTeacher::where([
             ['teacher_id',$teacher->id],
-            ['school_id',1]
+            ['school_id',$schoolId]
         ])->first();
 
         

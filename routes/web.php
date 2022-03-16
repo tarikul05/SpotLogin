@@ -105,7 +105,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
 
     // profile update
-    Route::get('profile-update', 'ProfileController@userDetailUpdate');
+    Route::get('profile-update', 'ProfileController@userDetailUpdate')->name('Home');
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
     Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -120,8 +120,12 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'TeachersController@create',
       'as' => 'admin.teachers.create'
     ));
+    Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
 
-  });
+
+  }); //Admin scope end
+
+
 
   // school 
   Route::get('school-update', 'SchoolsController@edit')->name('school-update');
@@ -134,7 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::middleware(['select_role'])->group(function () {
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
-    Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('Home');
+    // Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('Home');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
     Route::match(array('GET', 'POST'), "add-teacher", array(
       'uses' => 'TeachersController@create',

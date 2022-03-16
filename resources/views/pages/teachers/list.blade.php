@@ -23,7 +23,7 @@
                 <td><?= $teacher->email; ?></td>
                 <td><?= $teacher->status; ?></td>
                 <td>
-                  <a class="btn btn-sm btn-theme-success" href="{{ route('editTeacher',[$teacher->id]) }}"> {{ __('Edit')}} </a>
+                  <a class="btn btn-sm btn-theme-success" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"> {{ __('Edit')}} </a>
                 </td>
             </tr>
             @endforeach

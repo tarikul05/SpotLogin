@@ -19,7 +19,10 @@
                         <?php else: ?>
                             <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
                         <?php endif; ?>
-                        <a href="#" class="nav-item nav-link">{{ __('Teachers') }}</a>
+                        
+                        @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                           <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
+                        @endif   
                         <a href="#" class="nav-item nav-link">{{ __('Students') }}</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
