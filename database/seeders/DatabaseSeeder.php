@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
             CountriesTableSeeder::class,
             EmailTemplateTableSeeder::class
         ]);
+        $this->call(LessonPricesTableSeeder::class);
     }
 }
