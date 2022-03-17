@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use File;
 use App\Models\Level;
+use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 
 class EventLevelController extends Controller
@@ -24,16 +25,22 @@ class EventLevelController extends Controller
      * Remove the specified resource from storage.
      * @return Response
     */
-    public function index()
+    public function index($schoolId = null)
     {   
-        $userSchoolId = Auth::user()->selectedSchoolId();
-        if (empty($userSchoolId)) {
-            return redirect()->route('Home')->with('error', __('School is not selected'));
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
         }
 
-        $levels = Level::where('is_active', 1)->get();
+        $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
-        return view('pages.event_level.index',compact('levels','eventLastLevelId'));
+        return view('pages.event_level.index',compact('levels','eventLastLevelId','schoolId'));
     }   
 
     /**
@@ -45,9 +52,14 @@ class EventLevelController extends Controller
         try{
             if ($request->isMethod('post')){
                 
-                $userSchoolId = Auth::user()->selectedSchoolId();
                 $levelData = $request->all();
-                //echo '<>';print_r($levelData);exit;
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $levelData['school_id']; 
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
+
                 foreach($levelData['level'] as $level){
                     if(isset($level['id']) && !empty($level['id'])){
                         $answers = [

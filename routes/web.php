@@ -115,6 +115,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
 
+
+    // add parameters for schools
+    Route::get('/{school}/parameters/category', 'EventCategoryController@index')->name('admin_event_category.index');
+    Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('admin_event_category.create');
+    Route::get('/{school}/parameters/location', 'EventLocationController@index')->name('admin_event_location.index');
+    Route::post('/add-event-location', 'EventLocationController@addLocation')->name('admin_event_location.create');
+    Route::get('/{school}/parameters/level', 'EventLevelController@index')->name('admin_event_level.index');
+    Route::post('/add-event-level', 'EventLevelController@addLevel')->name('admin_event_level.create');
+
+
+
+
     // Teachers
     Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');
     Route::match(array('GET', 'POST'), "/{school}/add-teacher", array(
