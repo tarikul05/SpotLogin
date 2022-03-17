@@ -60,9 +60,11 @@
                                     <a class="dropdown-item" href="/admin/update_core_dataset_options">
                                         data set master
                                     </a> -->
-                                    @can('parameters-list')
-                                        <a class="dropdown-item" href="{{ route('event_category.index') }}">{{ __('Parameters') }}</a>
-                                    @endcan
+                                    @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                                        @can('parameters-list')
+                                            <a class="dropdown-item" href="{{ route('event_category.index') }}">{{ __('Parameters') }}</a>
+                                        @endcan
+                                    @endif
                                     @can('email-template-list')
                                         <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
                                     @endcan
