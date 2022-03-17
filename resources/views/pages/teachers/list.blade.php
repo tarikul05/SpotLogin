@@ -7,6 +7,9 @@
 
 @section('content')
   <div class="m-4">
+    <div class="pull-right">
+        <a style="display: block; margin: 10px;" class="btn btn-theme-success" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>
+    </div>
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -18,6 +21,9 @@
         </thead>
         <tbody>
             @foreach($teachers as $teacher)
+            @php
+            if ($teacher->pivot->role_type == 'school_admin') continue;
+            @endphp
             <tr>
                 <td><?= $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; ?></td>
                 <td><?= $teacher->email; ?></td>
