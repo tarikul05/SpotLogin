@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use File;
 use App\Models\Location;
+use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 
 class EventLocationController extends Controller
@@ -27,16 +28,23 @@ class EventLocationController extends Controller
      * Remove the specified resource from storage.
      * @return Response
     */
-    public function index()
+    public function index($schoolId = null)
     {   
-        $userSchoolId = Auth::user()->selectedSchoolId();
-        if (empty($userSchoolId)) {
-            return redirect()->route('Home')->with('error', __('School is not selected'));
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
         }
-        $locations = Location::where('is_active', 1)->get();
+
+        $locations = Location::active()->where('school_id', $schoolId)->get();
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
 
-        return view('pages.event_location.index',compact('locations','eventLastLocaId'));
+        return view('pages.event_location.index',compact('locations','eventLastLocaId','schoolId'));
     }   
    
     /**
@@ -50,7 +58,12 @@ class EventLocationController extends Controller
             if ($request->isMethod('post')){
                 
                 $locationData = $request->all();
-                $userSchoolId = Auth::user()->selectedSchoolId();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $locationData['school_id']; 
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
                 
                 foreach($locationData['location'] as $location){
                     if(isset($location['id']) && !empty($location['id'])){

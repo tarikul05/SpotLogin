@@ -40,7 +40,6 @@ class UserController extends Controller
      */
     public function create(RegistrationRequest $request)
     {
-        
         $result = array(
             'status' => 0,
             'message' => __('failed to signup'),
@@ -275,5 +274,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function welcome()
+    {
+        return view('welcome');
     }
 }

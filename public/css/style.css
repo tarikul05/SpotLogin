@@ -386,6 +386,40 @@ input.error {
     border-color: #FF8000;
     color: #FFF;
 }
+.teacher_save {
+    position: absolute;
+    top: 140px;
+    right: 14%;
+}
+.tariff_table_rate label {
+    display: inline-block;
+    font-family: 'Gilroy-Medium';
+    color: #657E8E;
+    font-size: 16px;
+    padding: 6px 0px;
+    text-transform: capitalize;
+}
+table.tariff_table_rate {
+    border: 1px solid #E1EFF7!important;
+}
+.tariff_table_rate thead th{
+    color: #152245;
+    font-size: 17px;
+    font-family: 'Gilroy-Bold';
+    font-weight: normal;
+    padding: 1rem 0.5rem;
+}
+.tariff_table_rate thead th.buy,
+.tariff_table_rate thead th.sell{
+    text-align: right;
+    font-size: 12px;
+}
+.tariff_table_rate thead span {
+    width: 100%;
+    text-align: right;
+    float: left;
+    font-size: 17px;
+}
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

@@ -98,6 +98,16 @@ class User extends Authenticatable
         return $this->authority !== 'SUPER_ADMIN';
     }
 
+    /**
+     * Check user has SuperAdmi authority
+     * @return boolean
+     */
+    public function isSuperAdmin()
+    {
+
+        return $this->person_type == 'SUPER_ADMIN';
+    }
+
      /**
      * Get the personable for the user.
      */

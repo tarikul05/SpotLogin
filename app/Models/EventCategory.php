@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
-class EventCategory extends Model
+class EventCategory extends BaseModel
 {
     use HasFactory,SoftDeletes, CreatedUpdatedBy;
     protected $table = 'event_categories';

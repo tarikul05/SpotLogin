@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use File;
 use App\Models\EventCategory;
+use App\Models\School;
 use App\Models\Parameters;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,17 +29,24 @@ class EventCategoryController extends Controller
      * Remove the specified resource from storage.
      * @return Response
     */
-    public function index()
-    {  
-        $userSchoolId = Auth::user()->selectedSchoolId();
-        if (empty($userSchoolId)) {
-            return redirect()->route('Home')->with('error', __('School is not selected'));
+    public function index($schoolId = null)
+    { 
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
         }
 
-        $eventCat = EventCategory::where('is_active', 1)->get();
+
+        $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
 
-        return view('pages.event_category.index',compact('eventCat','eventLastCatId'));
+        return view('pages.event_category.index',compact('eventCat','eventLastCatId','schoolId'));
     }   
     /**
      * Remove the specified resource from storage.
@@ -51,7 +59,12 @@ class EventCategoryController extends Controller
             if ($request->isMethod('post')){
                 
                 $categoryData = $request->all();
-                $userSchoolId = Auth::user()->selectedSchoolId();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $categoryData['school_id']; 
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
                 
                 foreach($categoryData['category'] as $cat){
                     if(isset($cat['id']) && !empty($cat['id'])){

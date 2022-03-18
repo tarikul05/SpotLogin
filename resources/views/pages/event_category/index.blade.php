@@ -34,9 +34,9 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<a class="nav-link active" href="{{ route('event_category.index') }}">{{ __('Event Category') }}</a>
-				<a class="nav-link" href="{{ route('event_location.index') }}">{{ __('Locations') }}</a>
-				<a class="nav-link" href="{{ route('event_level.index') }}">{{ __('Level') }}</a>
+				<a class="nav-link active" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
+				<a class="nav-link" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_location.index',['school'=> $schoolId]) : route('event_location.index') }}">{{ __('Locations') }}</a>
+				<a class="nav-link" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_level.index',['school'=> $schoolId]) : route('event_level.index') }}">{{ __('Level') }}</a>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -207,6 +207,10 @@
 		formData.push({
 			"name": "_token",
 			"value": csrfToken,
+		});
+		formData.push({
+			"name": "school_id",
+			"value": "{{$schoolId}}",
 		});
 
 		if(error < 1){	
