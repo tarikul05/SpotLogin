@@ -40,9 +40,11 @@
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 				</button>
+				@can('teachers-users-update')
 				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
 					{{ __('User Account')}}
 				</button>
+				@endcan
 			</div>	
 		</nav>
 		<!-- Tabs navs -->
