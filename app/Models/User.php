@@ -159,6 +159,17 @@ class User extends Authenticatable
 
     }
 
+
+     /**
+     * Get the schools for the user.
+     */
+    public function selectedSchoolName()
+    {
+        $selectedSchool = self::getSelectedSchoolAttribute();
+        return !empty($selectedSchool)? $selectedSchool->school_name : null;
+
+    }
+
     /**
      * Get the schools for the user.
      */

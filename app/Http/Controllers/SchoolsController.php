@@ -258,7 +258,7 @@ class SchoolsController extends Controller
             $lanCode = Session::get('locale');
         }
         $currency = Currency::all();  
-        $country = Country::all();  
+        $country = Country::active()->get();
         $legal_status = config('global.legal_status');
         
         

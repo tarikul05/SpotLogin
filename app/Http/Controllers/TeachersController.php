@@ -10,15 +10,19 @@ use App\Models\Teacher;
 use App\Models\School;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 use App\Http\Requests\ProfilePhotoUpdateRequest;
 use Illuminate\Support\Facades\URL;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as InterventionImageManager;
+use App\Mail\SportloginEmail;
 
 
 
@@ -334,9 +338,11 @@ class TeachersController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
+            $schoolName = $school->school_name; 
         }else {
             $schoolId = $user->selectedSchoolId();
+            $schoolName = $user->selectedSchoolName(); 
         }
 
 
@@ -344,12 +350,27 @@ class TeachersController extends Controller
             ['teacher_id',$teacher->id],
             ['school_id',$schoolId]
         ])->first();
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'teacher'],
+            ['language', $lanCode]
+        ])->first(); 
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        } 
 
         
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','relationalData','countries','genders','schoolId'));
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName'));
     }
 
     /**
@@ -433,6 +454,110 @@ class TeachersController extends Controller
         // if ($user->isSuperAdmin() && empty(Teacher::find($schoolId))) {
             
         // }
+    }
+
+
+
+    /**
+     *  AJAX action to send email to school admin
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
+    public function teacherEmailSend(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+            
+            $user = User::find($data['user_id']); 
+            if ($user) {
+                //sending email for forgot password
+                if (config('global.email_send') == 1) {
+                    
+                    try {
+                        $data['email'] = $data['email_to_id'];
+                        $data['name'] = $user->username;
+                        $data['username'] = $user->username; 
+                        if (!empty($data['admin_password'])) {
+                            $data['password'] = $data['admin_password']; 
+                        } else {
+                            $data['password'] = config('global.user_default_password');
+                        }
+                        $data['subject'] = $data['subject_text'];
+                        $data['body_text'] = $data['email_body'];
+                        \Mail::to($user->email)->send(new SportloginEmail($data));
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent an email.'),
+                        );
+                        
+                        return response()->json($result);
+                    } catch (\Exception $e) {
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent an email.'),
+                        );
+                        return response()->json($result);
+                    }
+                } else{
+                    $result = array('status'=>true,'msg'=>__('We sent an email.'));
+                }
+            }   else {
+                $result = array('status'=>false,'msg'=>__('Username not exist'));
+            }
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+      /**
+     * Update the school admin account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  School $school
+     * @return \Illuminate\Http\Response
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+    */
+    public function userUpdate(Request $request, User $user)
+    {
+        $params = $request->all();
+        try{
+            $request->merge([
+                'email'=> $params['admin_email'],
+                'is_active'=> $params['admin_is_active']
+            ]);
+            
+
+            $user = User::find($params['user_id']);
+            if ($user) {
+                $request->merge(['username'=> $params['admin_username']]);
+                $user->update($request->except(['_token']));
+
+                if (!empty($params['admin_password'])) {
+                    $user->password = $params['admin_password'];
+                    $user->save();
+                }
+            } else{
+                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+            }
+
+            return back()->withInput($request->all())->with('success', __('Teacher account updated successfully!'));
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 
 

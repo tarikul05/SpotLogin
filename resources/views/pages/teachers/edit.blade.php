@@ -7,6 +7,7 @@
 <!-- color wheel -->
 <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
+<script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
 @section('content')
@@ -52,7 +53,9 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
-					<input type="hidden" name="school_id" value="{{$schoolId}}">
+					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
+					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
+					
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -543,7 +546,92 @@
 				</div>
 			</div>
 			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
-			{{ __('User Account')}}
+				<form id="teacherUserForm" name="teacherUserForm" class="form-horizontal" role="form"
+				 action="{{!empty($teacher) ? route('teacher.user_update',[$teacher->user->id]): '/'}}" method="POST" enctype="multipart/form-data">
+					@csrf
+					<input type="hidden" id="user_id" name="user_id" value="{{!empty($teacher->user->id) ? old('user_id', $teacher->user->id) : old('user_id')}}">
+					<div class="section_header_class">
+						<label id="course_for_billing_caption">{{ __('User Account')}}</label>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($teacher->user->username) ? old('admin_username', $teacher->user->username) : old('admin_username')}}">      
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Email')}}:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="admin_email" name="admin_email" value="{{!empty($teacher->user->email) ? old('admin_email', $teacher->user->email) : old('admin_email')}}">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
+						<div class="col-sm-7">
+							<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
+                  
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Status')}}:</label>
+						<div class="col-sm-7">
+							<div class="selectdiv">
+								<select class="form-control" name="admin_is_active" id="admin_is_active">
+									<option value="">Select</option>
+									<option value="1" {{!empty($teacher->user->is_active) ? (old('admin_is_active', $teacher->user->is_active) == 1 ? 'selected' : '') : (old('admin_is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+									<option value="0" {{!empty($teacher->user->is_active) ? (old('admin_is_active', $teacher->user->is_active) == 0 ? 'selected' : '') : (old('admin_is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<div class="section_header_class">
+						<label id="course_for_billing_caption">{{ __('Send Activation Email')}}</label>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($teacher->user->email) ? $teacher->user->email : old('email_to_id')}}">
+						
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
+						
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-10 col-md-10">
+							<div class="email_template_tbl table-responsive mt-1">
+								<table id="email_template_tbl" name="email_template_tbl" width="100%" border="0" class="email_template school resizable">
+									<tbody>
+										<tr align="left" valign="middle">
+											<td>
+												<div class="form-group-data">
+													<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">
+													{{!empty($emailTemplate->body_text) ? old('body_text', $emailTemplate->body_text) : old('body_text')}}
+													</textarea>
+													<span id="body_text_error" class="error"></span>
+													<span class="pull-right">
+														<div class="text-center">
+														<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
+														<!-- <button id="send_email_btn" name="send_email_btn" class="btn btn-sm btn-info" ><em class="glyphicon glyphicon-send"></em> envoyer </button> -->
+														</div>
+													</span>
+												</div>
+												
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -566,7 +654,7 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(function() {
+$(document).ready(function(){
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -577,10 +665,74 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
+	CKEDITOR.replace( "body_text", {
+		customConfig: '/ckeditor/config_email.js',
+		height: 300
+		,extraPlugins: 'Cy-GistInsert'
+		,extraPlugins: 'AppFields'
+	});
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
-});
+
+
+	$("#send_email_btn").click(function (e) {
+		var user_id = $("#user_id").val();
+		var email_to = $("#email_to_id").val(),
+				school_name = $("#school_name").val(),
+				email_body  = CKEDITOR.instances["body_text"].getData()
+		email_body = email_body.replace(/'/g, "''");
+		email_body = email_body.replace(/&/g, "<<~>>");
+		let loader = $('#pageloader');
+    	loader.show();
+
+		var teacherUserForm = document.getElementById("teacherUserForm");
+		var formdata = $("#teacherUserForm").serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+		
+		formdata.push({
+				"name": "_token",
+				"value": csrfToken
+		});
+		formdata.push({
+				"name": "user_id",
+				"value": user_id
+		});
+		formdata.push({
+				"name": "email_body",
+				"value": email_body
+		});
+		formdata.push({
+				"name": "school_name",
+				"value": school_name
+		});
+		//console.log(formdata);
+
+		$.ajax({
+			url: BASE_URL + '/teacher_email_send',
+			data: formdata,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			encode: true,
+			success: function(data) {
+				loader.hide();
+				if (data.status) {
+						successModalCall("{{ __('email_sent')}}");
+				} else {
+						errorModalCall(data.msg);
+				}
+
+			}, // sucess
+			error: function(ts) {
+				loader.hide();
+				errorModalCall('error_message_text');
+			}
+		});
+	
+	});    //contact us button click 
+})
 
 $(function() { 
 	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
