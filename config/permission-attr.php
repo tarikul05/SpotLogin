@@ -36,9 +36,24 @@ return [
         'email-template-list',
         'email-template-add-udpate',
 
-        // EventCategoryController
+        // Schoool Permission SchoolController
+        'schools-list',
+        'schools-udpate',
+        'schools-user-udpate',
+        'schools-delete',
+        // Event parameters EventCategoryController
         'parameters-list',
         'parameters-create-udpate',
         'parameters-delete',
-        
+
+        // Teacher permission TeachersController
+        'teachers-list',
+        'teachers-create',
+        'teachers-update',
+        'teachers-users-update',
+        'teachers-delete',
+
+
         ];
+
+

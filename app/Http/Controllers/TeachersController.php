@@ -32,6 +32,13 @@ class TeachersController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-users-update|teachers-delete', ['only' => ['index']]);
+        $this->middleware('permission:teachers-create', ['only' => ['create','AddTeacher']]);
+        $this->middleware('permission:teachers-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:teachers-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
+        $this->middleware('permission:teachers-delete', ['only' => ['destroy']]);
+
+
         $this->img_config = [
           'target_path' => [
             'UserImage' => 'photo/user_photo'
@@ -328,11 +335,12 @@ class TeachersController extends Controller
     // public function edit(Request $request, $schoolId = null, Teacher $teacher)
     public function edit(Request $request)
     {
+        $user = Auth::user();
         $schoolId = $request->route('school'); 
         $teacherId = $request->route('teacher');
+
         $teacher = Teacher::find($teacherId);
 
-        $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {

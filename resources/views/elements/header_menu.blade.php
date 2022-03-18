@@ -14,15 +14,19 @@
                     <div class="navbar-nav">
                         <a href="#" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
                         
-                        <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
-                            <a href="{{ route('schools') }}" class="nav-item nav-link">{{ __('Schools') }}</a>
-                        <?php else: ?>
-                            <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
-                        <?php endif; ?>
+                        @can('schools-list')
+                            <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
+                                <a href="{{ route('schools') }}" class="nav-item nav-link">{{ __('Schools') }}</a>
+                            <?php else: ?>
+                                <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
+                            <?php endif; ?>
+                        @endcan
                         
-                        @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                           <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
-                        @endif   
+                        @can('teachers-list')
+                            @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
+                            @endif
+                        @endcan
                         <a href="#" class="nav-item nav-link">{{ __('Students') }}</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>

@@ -181,6 +181,11 @@ class User extends Authenticatable
         return !empty($this->related_school) ? $this->related_school->pivot->role_type : null ;
     }
 
+    public function roleType()
+    {
+        return !empty($this->related_school) ? $this->related_school->pivot->role_type : null ;
+    }
+
 
      /**
      * Get the student for the user.

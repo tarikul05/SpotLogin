@@ -35,6 +35,13 @@ class SchoolsController extends Controller
     function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
+        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
+        $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
+        $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
+
+
+
         $this->img_config = [
             'target_path' => [
               'SchoolLogo' => 'photo/school_photo'
@@ -205,8 +212,8 @@ class SchoolsController extends Controller
         $response = [];
         $authUser = $request->user();
         if ($authUser->person_type != 'SUPER_ADMIN') {
-            if (!empty($authUser->getRelatedSchoolAttribute())) {
-                $p_school_id = $authUser->getRelatedSchoolAttribute()['id'];
+            if (!empty($authUser->selectedSchoolId())) {
+                $p_school_id = $authUser->selectedSchoolId();
                 $role_type = $authUser->getRoleTypeAttribute();
                 $school = School::find($p_school_id);
                 if ($role_type=='school_admin') {
