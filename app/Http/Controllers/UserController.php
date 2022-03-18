@@ -40,7 +40,6 @@ class UserController extends Controller
      */
     public function create(RegistrationRequest $request)
     {
-       dd($request); 
         
         $result = array(
             'status' => 0,
