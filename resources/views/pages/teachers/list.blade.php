@@ -6,13 +6,11 @@
 @endsection
 
 @section('content')
-  <div class="m-4">
-    <div class="pull-right">
-        <a style="display: block; margin: 10px;" class="btn btn-theme-success" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>
-    </div>
+  <div class="container-fluid">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
+                <th>{{ __('#') }}</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -25,23 +23,24 @@
             if ($teacher->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
-                <td><?= $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; ?></td>
-                <td><?= $teacher->email; ?></td>
-                <td><?= $teacher->status; ?></td>
+                <td>{{ $teacher->id; }}
+                <td>{{ $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; }}</td>
+                <td>{{ $teacher->email; }}</td>
+                <td>{{ !empty($teacher->is_active) ? 'Active' : 'Inactive'; }}</td>
                 <td>
-                  <a class="btn btn-sm btn-theme-success" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"> {{ __('Edit')}} </a>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-h txt-grey"></i>
+                        </a>
+                        <div class="dropdown-menu action text-left">
+                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                            <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+                        </div>
+                    </div>  
                 </td>
             </tr>
             @endforeach
         </tbody>
-        <tfoot>
-            <tr>
-                <th>{{ __('Name of the Teacher') }}</th>
-                <th>{{ __('Email') }}</th>
-                <th>{{ __('Status') }}</th>
-                <th>{{ __('Action') }}</th>
-            </tr>
-        </tfoot>
     </table>
   </div>
 @endsection
@@ -51,6 +50,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable();
+        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
     } );
 </script>
 @endsection
