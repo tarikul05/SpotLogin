@@ -48,6 +48,7 @@
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
+			<input type="hidden" id="user_id" name="user_id" value="{{$teacher->user->id}}">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
@@ -489,7 +490,57 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-			{{ __('Logo')}}
+				<div class="row">
+					<div class="col-sm-12 col-xs-12 header-area">
+						<div class="page_header_class">
+							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
+						</div>
+					</div>
+				
+					<div class="col-md-6">
+						<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
+							<div class="form-group row">
+								<div class="col-sm-8">
+									<fieldset>
+										<div class="profile-image-cropper responsive">
+										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
+											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
+													height="128" width="128" class="img-circle"
+													style="margin-right:10px;">
+										<?php else: ?>
+											<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
+													height="128" width="128" class="img-circle"
+													style="margin-right:10px;">
+										<?php endif; ?>
+
+											
+											<div style="display:flex;flex-direction: column;">
+												<div style="margin:5px;">
+													<span class="btn btn-theme-success">
+														<i class="fa fa-picture-o"></i>
+														<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
+														<input onchange="ChangeImage()"
+																class="custom-file-input" id="profile_image_file"
+																type="file" name="profile_image_file"
+																accept="image/*" style="display: none;">
+													</span>
+												</div>
+												<?php //if (!empty($AppUI->profile_image_id)): ?>
+													<div style="margin:5px;">
+														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->user->profile_image_id) ? '' : 'display:none;'}}">
+															<i class="fa fa-trash"></i>
+															<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
+														</a>
+													</div>
+												<?php //endif; ?>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
 			{{ __('User Account')}}
@@ -526,6 +577,9 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
+	$('#delete_profile_image').click(function (e) {
+		DeleteProfileImage();      // refresh lesson details for billing
+	})
 });
 
 $(function() { 
@@ -533,6 +587,89 @@ $(function() {
 	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
 });
 
+function UploadImage() {
+	document.getElementById("profile_image_file").value = "";
+	$("#profile_image_file").trigger('click');
+}
+function ChangeImage() {
+	var user_id = $("#user_id").val(),
+			p_file_id = '', data = '';
+	var file_data = $('#profile_image_file').prop('files')[0];
+	var formData = new FormData();
+	formData.append('profile_image_file', file_data);
+	formData.append('type', 'upload_image');
+	formData.append('user_id', user_id);
+	
+	let loader = $('#pageloader');
+	loader.show("fast");
+	$.ajax({
+		url: BASE_URL + '/update-teacher-photo',
+		data: formData,
+		type: 'POST',
+		//dataType: 'json',
+		processData: false,
+		contentType: false,
+		beforeSend: function (xhr) {
+			loader.show("fast");
+		},
+		success: function (result) {
+			loader.hide("fast");
+			var mfile = result.image_file + '?time=' + new Date().getTime();
+			$("#profile_image_user_account").attr("src",mfile);
+			$("#delete_profile_image").show();
+		},// success
+		error: function (reject) {
+			loader.hide("fast");
+			let errors = $.parseJSON(reject.responseText);
+			errors = errors.errors;
+			$.each(errors, function (key, val) {
+				//$("#" + key + "_error").text(val[0]);
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+			});
+		},
+		complete: function() {
+			loader.hide("fast");
+		}
+	});
+}
+
+function DeleteProfileImage() {
+	//delete image
+	var user_id = document.getElementById('user_id').value;
+	document.getElementById("profile_image_file").value = "";
+	let loader = $('#pageloader');
+	$.ajax({
+		url: BASE_URL + '/delete-teacher-photo',
+		data: 'user_id=' + user_id,
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function (xhr) {
+			loader.show("fast");
+		},
+		success: function(response) {
+			if (response.status == 'success'){
+				loader.hide("fast");
+				$("#profile_image_user_account").attr("src",BASE_URL+'/img/photo_blank.jpg');
+				$("#delete_profile_image").hide();
+				successModalCall(response.message);
+			}
+						
+		},
+		error: function (reject) {
+			loader.hide("fast");
+			let errors = $.parseJSON(reject.responseText);
+			errors = errors.errors;
+			$.each(errors, function (key, val) {
+				//$("#" + key + "_error").text(val[0]);
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+			});
+		},
+		complete: function() {
+			loader.hide("fast");
+		}
+	});
+
+}
 // save functionality
 // $('#save_btn').click(function (e) {
 // 		var formData = $('#add_teacher').serializeArray();

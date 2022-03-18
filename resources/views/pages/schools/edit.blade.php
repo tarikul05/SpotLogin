@@ -832,7 +832,7 @@ $(document).ready(function(){
 		email_body = email_body.replace(/'/g, "''");
 		email_body = email_body.replace(/&/g, "<<~>>");
 		let loader = $('#pageloader');
-    loader.show();
+    	loader.show();
 
 		var schoolUserForm = document.getElementById("schoolUserForm");
 		var formdata = $("#schoolUserForm").serializeArray();
