@@ -18,7 +18,6 @@ use App\Http\Controllers\PermissionController;
 */
 
 Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
-Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 // AJAX
@@ -64,6 +63,8 @@ Route::get('setlang/{locale}', function ($locale) {
 // auth
 Route::group(['middleware' => ['auth']], function () {
 
+
+  Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
   Route::match(array('GET', 'POST'), "permission-check", array(
