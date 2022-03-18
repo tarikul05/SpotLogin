@@ -420,6 +420,82 @@ table.tariff_table_rate {
     float: left;
     font-size: 17px;
 }
+#example th {
+    padding-left: 10px;
+    background-color: transparent;
+    font-weight: bold;
+    font-family: 'Gilroy-Medium';
+}
+#example tr,
+#example tr td {
+    padding-left: 10px;
+    background-color: transparent;
+}
+button.btn.btn-primary.check {
+    margin-left: 10%;
+}
+button#save_btn {
+    font-size: 16px;
+}
+button#save_btn i {
+    font-size: 16px;
+    margin-right: 10px;
+}
+#example_filter label {
+    float: left;
+}
+a.btn.btn-theme-success.add_teacher_btn {
+    max-width: 130px;
+    float: left;
+    margin-left: 10px;
+}
+div#example_filter {
+    margin-bottom: 20px;
+}
+table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid #E1EFF7;
+}
+table.dataTable.no-footer {
+    border: 1px solid #E1EFF7!important;
+}
+.dropdown-menu.action {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+}
+.dropdown-menu.action a {
+    display: flex;
+    padding: 4px 10px;
+    align-items: center;
+    font-family: 'Gilroy-SemiBold';
+    font-weight: normal;
+    font-size: 13px;
+}
+.dropdown-menu.action a:hover {
+    color: #1e2125;
+    background: transparent;
+}
+.dropdown-menu.action i {
+    margin-right: 7px;
+    font-size: 16px;
+}
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

@@ -21,8 +21,8 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
-						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-success"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</div>    
 			</div>          
@@ -51,7 +51,7 @@
 							</div>
 						</div>
 						<div class="col-sm-2 ">
-							<button  class="btn btn-primary" type="submit">Check</button>
+							<button  class="btn btn-primary check" type="submit">Check</button>
 						</div>
 					</div>
 				</form>
