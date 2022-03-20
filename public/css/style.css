@@ -35,7 +35,6 @@ label#page_header {
     color: #0075BF;
     float: left;
     font-size: 28px;
-    font-family: 'Gilroy-Bold';
     padding: 0;
     margin: 0;
     position: relative;
@@ -50,7 +49,6 @@ label#page_header {
 .nav-tabs .nav-link.active {
     padding-left: 0;
     background-color: #fff;
-    font-family: 'Gilroy-Bold';
     font-weight: bold;
     color: #3b75bf;
     cursor: default;
@@ -67,16 +65,17 @@ nav {
 .section_header_class label {
     color: #152245;
     font-size: 20px;
-    font-family: 'Gilroy-Bold';
     margin: 15px 0 40px 0;
     text-align: left;
-    font-weight: normal;
+    font-weight: bold;
 }
 .form-group.row {
     margin-bottom: 20px;
 }
-.form-group.row label{
+.form-group.row label {
     margin-top: 10px;
+    color: #657E8E;
+    font-size: 15px;
 }
 .input-group-addon, .input-group-btn {
     white-space: nowrap;
@@ -121,6 +120,8 @@ nav {
 .form-control{
     box-shadow: none!important;
     outline: none;
+    font-size: 15px;
+    color: #657E8E;
 }
 
 /* add language page css */
@@ -495,6 +496,18 @@ table.dataTable.no-footer {
 .dropdown-menu.action i {
     margin-right: 7px;
     font-size: 16px;
+}
+p.sub_heading {
+    font-size: 15px;
+    float: right;
+    padding-right: 37%;
+    position: relative;
+    top: 15px;
+}
+img#frame {
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
 }
 @media only screen and (max-width: 768px){
     .language_page label,

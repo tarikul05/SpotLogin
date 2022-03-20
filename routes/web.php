@@ -129,9 +129,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/parameters/level', 'EventLevelController@index')->name('admin_event_level.index');
     Route::post('/add-event-level', 'EventLevelController@addLevel')->name('admin_event_level.create');
 
-
-
-
     // Teachers
     Route::get('/{school}/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('adminTeachers');
     Route::match(array('GET', 'POST'), "/{school}/add-teacher", array(
@@ -139,7 +136,14 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.teachers.create'
     ));
     Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
-
+    
+    // Students
+    Route::get('/{school}/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('adminStudents');
+    Route::match(array('GET', 'POST'), "/{school}/add-student", array(
+      'uses' => 'StudentsController@create',
+      'as' => 'admin.teachers.create'
+    ));
+    Route::get('/{school}/edit-student/{teacher}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
   }); //Admin scope end
 
 
@@ -168,6 +172,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
   });
+
+ 
+    Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
+    Route::get('/add-student', [App\Http\Controllers\StudentsController::class, 'create']);
+    // Route::match(array('GET', 'POST'), "add-teacher", array(
+    //   'uses' => 'StudentsController@create',
+    //   'as' => 'student.create'
+    // ));
+    // Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
+    // Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'update'])->name('editStudentAction');
+    // Route::post('/{school}/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent']);
+    
+    // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    // Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
+
 
 
 
