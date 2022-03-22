@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel;
 use App\Models\User;
+use App\Models\School;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,9 +18,13 @@ class VerifyToken extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'token',
-        'expire_date'
+      'person_id',
+      'school_id',
+      'person_type',
+      'token_type',
+      'user_id',
+      'token',
+      'expire_date'
     ];
 
    
@@ -42,6 +47,23 @@ class VerifyToken extends BaseModel
     public function user()
     {
       return $this->belongsTo(User::class);
+    }
+
+     /**
+     * Get the user for the user enquiry.
+     */
+    public function school()
+    {
+      return $this->belongsTo(School::class);
+    }
+
+
+    /**
+     * Get the personable for the user.
+    */
+    public function personable()
+    {
+        return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
     }
 
 }

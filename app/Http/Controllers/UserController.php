@@ -10,6 +10,7 @@ use App\Models\SchoolEmployee;
 use App\Models\VerifyToken;
 use App\Models\Currency;
 use App\Models\EmailTemplate;
+use App\Models\Country;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -211,6 +212,54 @@ class UserController extends Controller
                     echo $status = "Your e-mail is already verified. You can now login.";
                     header( "refresh:2;url=/" );
                 }
+            }else{
+                echo '<h1>Invalid activation Link.</h1>'; die;
+            }
+        } catch (Exception $e) {
+            //return error message
+            echo '<h1>Invalid activation Link.</h1>'; die;
+        }
+    }
+
+
+    /**
+     * after user add from admin verify it by user 
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-22
+     */
+    public function verify_user_added($token)
+    {
+       
+        try{
+            $to = Carbon::now()->format("Y-m-d");
+            $verifyToken = VerifyToken::where([
+                                        ['expire_date', '>=', $to],
+                                        ['token', $token]
+                                    ])->first();
+            
+            if(isset($verifyToken) ){
+                $user_data = $verifyToken->personable;
+                //dd($user_data);
+
+                $countries = Country::active()->get();
+                $genders = config('global.gender'); 
+                $exTeacher = $searchEmail = null;
+                
+                return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+
+                // if(!$user->is_active) {
+                //     $verifyUser->user->is_active = 1;
+                //     $verifyUser->user->save();
+                //     echo '<h1>Account Activated Successfully..please login into your account</h1>';
+                //     header( "refresh:2;url=/" );
+                //     //exit();
+                //     $status = "Your e-mail is verified. You can now login.";
+                // }else{
+                //     echo $status = "Your e-mail is already verified. You can now login.";
+                //     header( "refresh:2;url=/" );
+                // }
             }else{
                 echo '<h1>Invalid activation Link.</h1>'; die;
             }
