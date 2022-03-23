@@ -807,18 +807,6 @@ $(document).ready(function(){
 		else if (x[0].id == "tab_2") {
 			schoolUserForm.submit();
 		} 
-		//else if (x[0].id == "tab_3") {
-		// 		SaveOpeningHour();
-		// } else if (x[0].id == "tab_4") {
-
-		// } else if (x[0].id == "tab_5") {
-		// 		save_update_user_account();
-		// } else if (x[0].id == "student_disc") {
-		// 		update_student_disc_perc();
-		// } else if (x[0].id == "event_category") {
-		// 		save_event_category();
-		// 		//successModalCall('in progress....');
-		// }
 	});
 
 	$('#delete_profile_image').click(function (e) {

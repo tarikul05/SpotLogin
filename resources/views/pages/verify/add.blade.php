@@ -33,12 +33,13 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_user" method="post" role="form"
+				<form action="{{route('user.add')}}" class="form-horizontal" id="add_user" method="post" role="form"
 					 action=""  name="add_user" role="form">
 					@csrf
 
 					<input type="hidden" name="person_id" value="{{ !empty($user_data) ? $user_data->id : '' }}">
           <input type="hidden" name="person_type" value="{{ !empty($verifyToken) ? $verifyToken->person_type : '' }}">
+					<input type="hidden" name="school_id" value="{{ !empty($verifyToken) ? $verifyToken->school_id : '' }}">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -57,15 +58,17 @@
 										<input class="form-control require" id="password" maxlength="50" name="password" placeholder="password" type="text" value="">
 									</div>
 								</div>
-							@if(!empty($user_data))
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control require" id="gender_id" name="gender_id">
+												<option value="">Select</option>
 												@foreach($genders as $key => $gender)
-								                    <option value="{{ $key }}">{{ $gender }}</option>
-								                @endforeach
+													<option value="{{ $key }}"
+													{{!empty($user_data->gender_id) ? (old('gender_id', $user_data->gender_id) == $key ? 'selected' : '') : (old('gender_id') == $key ? 'selected' : '')}}
+													>{{ $gender }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -73,20 +76,17 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="lastname" name="lastname" type="text">
+										<input class="form-control require" id="lastname" name="lastname" type="text" value="{{ !empty($user_data) ? $user_data->lastname : '' }}">
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="firstname" name="firstname" type="text">
+										<input class="form-control require" id="firstname" name="firstname" type="text" value="{{ !empty($user_data) ? $user_data->firstname : '' }}">
 									</div>
 								</div>
-							@endif
 							</div>
 							<div class="col-md-6">
-
-							
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
@@ -95,8 +95,6 @@
 										</div>
 									</div>
 								</div>
-
-							
 							</div>
 							<div class="clearfix"></div>
 					
@@ -125,47 +123,48 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(function() {
+$(document).ready(function(){
 	
+	// save functionality
+	$('#save_btn').click(function (e) {
+		var userForm = document.getElementById("add_user");
+	
+		if (validateUserForm()) {
+			userForm.submit();
+			return false;
+		} else {
+			e.preventDefault(e); 
+		}
+	});
 });
 
 
-// save functionality
-$('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '//add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				}
-			})
+function validateUserForm() {
+  let error = false;
+
+	//added for max students and teachers
+	var username = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
+
+	$( ".form-control.require" ).each(function( key, value ) {
+		var lname = $(this).val();
+		if(lname=='' || lname==null || lname==undefined){
+			$(this).addClass('error');
+			error = true;
 		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
-});  
+			$(this).removeClass('error');
+			error = false;
+		}
+	});
+	if (error) {
+		return false;
+	}            			
+	else
+	{
+		return true;
+	}
+}
+
+ 
 </script>
 @endsection

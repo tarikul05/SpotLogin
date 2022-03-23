@@ -180,6 +180,54 @@ class UserController extends Controller
         }
         return response()->json($result);
     }
+
+    
+
+     /**
+     * signup confirmation 
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-02-03
+     */
+    public function create_verified_user(RegistrationRequest $request)
+    {
+        $result = array(
+            'status' => 0,
+            'message' => __('failed to signup'),
+        );
+        try{
+            $data = $request->all();
+            
+            $usersData = [
+                'person_id' => $teacher->id,
+                'person_type' =>'App\Models\Teacher',
+                'school_id' => $school->id,
+                'username' =>$data['username'],
+                'lastname' => '',
+                'middlename'=>'',
+                'firstname'=>$data['fullname'],
+                'email'=>$data['email'],
+                'password'=>$data['password'],
+                'is_mail_sent'=>0,
+                'is_active'=>1,
+                'is_firstlogin'=>0
+            ];
+
+            $user = User::create($usersData);
+            $user->save();
+            $result = array(
+                "status"     => 1,
+                'message' => __('Successfully Registered')
+            );
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+        return response()->json($result);
+    }
     
 
     /**

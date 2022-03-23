@@ -32,6 +32,7 @@ Route::post('/change_first_password', [App\Http\Controllers\AuthController::clas
 
 // after user add verify it 
 Route::get('/verify-user-account/{token}', 'UserController@verify_user_added')->name('add.verify.email');
+Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add');
 
 
 
