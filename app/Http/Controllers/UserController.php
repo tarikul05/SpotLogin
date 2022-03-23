@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\RegistrationRequest;
+use App\Http\Requests\ActivationRequest;
+use URL;
 
 
 class UserController extends Controller
@@ -188,45 +190,24 @@ class UserController extends Controller
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-02-03
+     * @version 0.1 written in 2022-03-23
      */
-    public function create_verified_user(RegistrationRequest $request)
+    public function create_verified_user(ActivationRequest $request)
     {
-        $result = array(
-            'status' => 0,
-            'message' => __('failed to signup'),
-        );
+        $data = $request->all();
         try{
-            $data = $request->all();
+            $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 0,'is_active'=> 0]);
             
-            $usersData = [
-                'person_id' => $teacher->id,
-                'person_type' =>'App\Models\Teacher',
-                'school_id' => $school->id,
-                'username' =>$data['username'],
-                'lastname' => '',
-                'middlename'=>'',
-                'firstname'=>$data['fullname'],
-                'email'=>$data['email'],
-                'password'=>$data['password'],
-                'is_mail_sent'=>0,
-                'is_active'=>1,
-                'is_firstlogin'=>0
-            ];
-
-            $user = User::create($usersData);
-            $user->save();
-            $result = array(
-                "status"     => 1,
-                'message' => __('Successfully Registered')
-            );
+            $user = User::create($request->except(['_token']));
+            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+           
         } catch (Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
+            //return error message\
+           return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
 
-        return response()->json($result);
+        //return error message
+        return redirect()->back()->withInput($request->all())->with('error', __('failed to signup'));
     }
     
 
@@ -239,7 +220,6 @@ class UserController extends Controller
      */
     public function verify_user($token)
     {
-       
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyUser = VerifyToken::where([
@@ -279,7 +259,6 @@ class UserController extends Controller
      */
     public function verify_user_added($token)
     {
-       
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyToken = VerifyToken::where([
@@ -289,25 +268,25 @@ class UserController extends Controller
             
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
-                //dd($user_data);
 
                 $countries = Country::active()->get();
                 $genders = config('global.gender'); 
-                $exTeacher = $searchEmail = null;
                 
-                return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                
+                if(!$user_data->user) {
+                    return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                }else{
 
-                // if(!$user->is_active) {
-                //     $verifyUser->user->is_active = 1;
-                //     $verifyUser->user->save();
-                //     echo '<h1>Account Activated Successfully..please login into your account</h1>';
-                //     header( "refresh:2;url=/" );
-                //     //exit();
-                //     $status = "Your e-mail is verified. You can now login.";
-                // }else{
-                //     echo $status = "Your e-mail is already verified. You can now login.";
-                //     header( "refresh:2;url=/" );
-                // }
+                    if(!$user_data->user->is_active) {
+                        $user_data->user->is_active = 1;
+                        $user_data->user->save();
+                        return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                    }else{
+                        echo $status = "User already added please login.";
+                        header( "refresh:2;url=/" );
+                    }
+                    
+                }
             }else{
                 echo '<h1>Invalid activation Link.</h1>'; die;
             }

@@ -73,7 +73,7 @@
     </div>
   </nav>
 
-
+  @include('elements/flash-message')
   @yield('content')
 
 

@@ -33,8 +33,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="{{route('user.add')}}" class="form-horizontal" id="add_user" method="post" role="form"
-					 action=""  name="add_user" role="form">
+				<form action="{{route('user.add')}}" class="form-horizontal" id="add_user" name="add_user" method="post" role="form">
 					@csrf
 
 					<input type="hidden" name="person_id" value="{{ !empty($user_data) ? $user_data->id : '' }}">
@@ -49,13 +48,21 @@
                 <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Username') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="username" maxlength="50" name="username" placeholder="username" type="text" value="">
+										<input class="form-control require" id="add_username" maxlength="50" name="username" placeholder="username" type="text">
 									</div>
 								</div>
                 <div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="password" id="nickname_label_id">{{__('Password') }} : *</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="password" id="password_label_id">{{__('Password') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="password" maxlength="50" name="password" placeholder="password" type="text" value="">
+										<input class="form-control require" id="add_password" name="password" placeholder="password" type="password" autocomplete="on">
+										<small id="" class="password_hint">
+                        <strong>Password Must:</strong></br>
+                        > Be more than 7 Characters</br>
+                        > An Uppercase Character</br>
+                        > A Lowercase Character</br>
+                        > A Number</br>
+                        > A Special character</br>
+                    </small>
 									</div>
 								</div>
 								<div class="form-group row">
@@ -91,7 +98,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" value="{{ !empty($user_data) ? $user_data->email : '' }}" name="email" type="text">
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<input class="form-control" id="add_email" value="{{ !empty($user_data) ? $user_data->email : '' }}" name="email" type="text">
 										</div>
 									</div>
 								</div>
@@ -118,18 +126,15 @@
 		</div>
 	</div>
 	<!-- End Tabs content -->
-@endsection
 
-
-@section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
 	
 	// save functionality
 	$('#save_btn').click(function (e) {
 		var userForm = document.getElementById("add_user");
-	
-		if (validateUserForm()) {
+
+		if (validateUserForm()) {	
 			userForm.submit();
 			return false;
 		} else {
@@ -141,28 +146,23 @@ $(document).ready(function(){
 
 function validateUserForm() {
   let error = false;
-
-	//added for max students and teachers
-	var username = document.getElementById("username").value;
-	var password = document.getElementById("password").value;
-
-	$( ".form-control.require" ).each(function( key, value ) {
+	$("#add_user .form-control.require" ).each(function( key, value ) {
 		var lname = $(this).val();
+		
 		if(lname=='' || lname==null || lname==undefined){
+			console.log(lname);
 			$(this).addClass('error');
 			error = true;
 		}else{
 			$(this).removeClass('error');
-			error = false;
 		}
 	});
 	if (error) {
-		return false;
-	}            			
-	else
-	{
+		return false
+	} else {
 		return true;
 	}
+	
 }
 
  

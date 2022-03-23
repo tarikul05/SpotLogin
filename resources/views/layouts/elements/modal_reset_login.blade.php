@@ -20,7 +20,7 @@
 
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
-              <input class="form-control" type="password" placeholder="Old Password" id="old_password" name="old_password" required>
+              <input class="form-control" autocomplete="on" type="password" placeholder="Old Password" id="old_password" name="old_password" required>
               <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
               </div>
@@ -30,7 +30,7 @@
 
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
-              <input class="form-control" type="password" placeholder="New Password" id="new_password" name="new_password" required>
+              <input class="form-control" autocomplete="on" type="password" placeholder="New Password" id="new_password" name="new_password" required>
               <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
               </div>
@@ -47,7 +47,7 @@
 
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
-              <input class="form-control" type="password" placeholder="Confirm Password" id="confirm_password" name="confirm_password" required>
+              <input class="form-control" autocomplete="on" type="password" placeholder="Confirm Password" id="confirm_password" name="confirm_password" required>
               <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
               </div>
