@@ -293,7 +293,7 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-				<form class="form-horizontal" id="add_price" action=""  method="POST" enctype="multipart/form-data" name="add_price" role="form">
+				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
 						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
@@ -310,185 +310,46 @@
 							</tr>
 						</thead>
 						<tbody>
+							@foreach($eventCategory as $key => $category)
 							<tr style="background:lightblue;">
 								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>Soccer-School2</strong></label></td>
+								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td><label></label></td>
 								<td align="right" colspan="1"></td>
 							</tr>
-							<tr>
-								<td>8<input type="hidden" name="price_id" value="price_8"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 8 élèves</td>
-								<td><input id="price_buy19" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell19" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>9<input type="hidden" name="price_id" value="price_9"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 9 élèves</td>
-								<td><input id="price_buy20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>10<input type="hidden" name="price_id" value="price_10"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 10 élèves</td>
-								<td><input id="price_buy21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr style="background:lightblue;">
-								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name22" type="hidden" style="text-align:left" value="Football-School"><label><strong>Football-School</strong></label></td>
-								<td><label></label></td>
-								<td align="right" colspan="1"></td>
-							</tr>
-							<tr>
-								<td>1<input type="hidden" name="price_id" value="price_1"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours privé</td>
-								<td><input id="price_buy22" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell22" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>2<input type="hidden" name="price_id" value="price_2"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 2 élèves</td>
-								<td><input id="price_buy23" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell23" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>3<input type="hidden" name="price_id" value="price_3"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 3 élèves</td>
-								<td><input id="price_buy24" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell24" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>4<input type="hidden" name="price_id" value="price_4"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 4 élèves</td>
-								<td><input id="price_buy25" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell25" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>5<input type="hidden" name="price_id" value="price_5"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 5 élèves</td>
-								<td><input id="price_buy26" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell26" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>6<input type="hidden" name="price_id" value="price_6"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 6 élèves</td>
-								<td><input id="price_buy27" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell27" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>7<input type="hidden" name="price_id" value="price_7"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 7 élèves</td>
-								<td><input id="price_buy28" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell28" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>8<input type="hidden" name="price_id" value="price_8"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 8 élèves</td>
-								<td><input id="price_buy29" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell29" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>9<input type="hidden" name="price_id" value="price_9"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 9 élèves</td>
-								<td><input id="price_buy30" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell30" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>10<input type="hidden" name="price_id" value="price_10"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 10 élèves</td>
-								<td><input id="price_buy31" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell31" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr style="background:lightblue;">
-								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name32" type="hidden" style="text-align:left" value="test cat SCHOOL"><label><strong>test cat SCHOOL</strong></label></td>
-								<td><label></label></td>
-								<td align="right" colspan="1"></td>
-							</tr>
-							<tr>
-								<td>1<input type="hidden" name="price_id" value="price_1"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours privé</td>
-								<td><input id="price_buy32" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell32" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>2<input type="hidden" name="price_id" value="price_2"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 2 élèves</td>
-								<td><input id="price_buy33" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell33" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>3<input type="hidden" name="price_id" value="price_3"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 3 élèves</td>
-								<td><input id="price_buy34" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell34" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>4<input type="hidden" name="price_id" value="price_4"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 4 élèves</td>
-								<td><input id="price_buy35" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell35" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>5<input type="hidden" name="price_id" value="price_5"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 5 élèves</td>
-								<td><input id="price_buy36" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell36" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>6<input type="hidden" name="price_id" value="price_6"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 6 élèves</td>
-								<td><input id="price_buy37" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell37" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>7<input type="hidden" name="price_id" value="price_7"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 7 élèves</td>
-								<td><input id="price_buy38" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell38" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>8<input type="hidden" name="price_id" value="price_8"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 8 élèves</td>
-								<td><input id="price_buy39" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell39" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>9<input type="hidden" name="price_id" value="price_9"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 9 élèves</td>
-								<td><input id="price_buy40" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell40" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
-							<tr>
-								<td>10<input type="hidden" name="price_id" value="price_10"></td>
-								<td>Lessons/Events..</td>
-								<td>Cours collectif de 10 élèves</td>
-								<td><input id="price_buy41" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								<td><input id="price_sell41" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-							</tr>
+								@foreach($lessonPrices as $key => $lessionPrice)
+								<tr>
+									<td>{{$lessionPrice->divider}}
+										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="">
+										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
+										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+									</td>
+									<td>{{__('Lessons/Events..')}}</td>
+									@if($lessionPrice->divider == 1)
+										<td>{{ __('Private session') }}</td>
+									@else
+										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
+									@endif
+									
+									<td><input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+									<td><input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								</tr>
+								<!-- <tr>
+									<td>9<input type="hidden" name="price_id" value="price_9"></td>
+									<td>Lessons/Events..</td>
+									<td>Cours collectif de 9 élèves</td>
+									<td><input id="price_buy20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+									<td><input id="price_sell20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								</tr>
+								<tr>
+									<td>10<input type="hidden" name="price_id" value="price_10"></td>
+									<td>Lessons/Events..</td>
+									<td>Cours collectif de 10 élèves</td>
+									<td><input id="price_buy21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+									<td><input id="price_sell21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+								</tr> -->
+								@endforeach
+							@endforeach
 						</tbody>
 						</table>
 					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>

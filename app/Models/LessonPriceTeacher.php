@@ -10,7 +10,7 @@ class LessonPriceTeacher extends BaseModel
 {
     use HasFactory,SoftDeletes;
     const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'modified_at';
+    const UPDATED_AT = 'updated_at';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,7 @@ class LessonPriceTeacher extends BaseModel
       'price_sell',
       'is_active',
       'created_by',
-      'modified_by'
+      'updated_at'
     ];
 
  
@@ -38,6 +38,6 @@ class LessonPriceTeacher extends BaseModel
      */
     protected $casts = [
         'created_at' => 'date:Y/m/d H:i',
-        'modified_at' => 'date:Y/m/d H:i',
+        'updated_at' => 'date:Y/m/d H:i',
     ];
 }

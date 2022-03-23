@@ -40,4 +40,16 @@ class EventCategory extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
+
+    /**
+     * Scope a query to only include active users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeSchoolInvoiced($query)
+    {
+        $query->active();
+        $query->where('invoiced_type', 'S');
+    }
 }
