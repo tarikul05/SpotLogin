@@ -378,12 +378,20 @@ class TeachersController extends Controller
 
         $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
-        // dd($lessonPrice);
+        $lessonPriceTeachers = LessonPriceTeacher::active()
+                              ->where(['teacher_id' => $teacher->id])
+                              ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                              ->get();
+        $ltprice =[];
+        foreach ($lessonPriceTeachers as $lkey => $lpt) {
+          $ltprice[$lpt->event_category_id][$lpt->lesson_price_student] = $lpt->toArray();
+        }
+        // dd($lessionPriceTeacher);
         
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices'));
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
     }
 
     /**
@@ -488,7 +496,7 @@ class TeachersController extends Controller
                }
              }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
+            return back()->withInput($request->all())->with('success', __('Teacher Lession Price updated successfully!'));
         }catch (\Exception $e) {
             DB::rollBack();
             // dd($e);

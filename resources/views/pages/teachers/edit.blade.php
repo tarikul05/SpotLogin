@@ -320,7 +320,10 @@
 								@foreach($lessonPrices as $key => $lessionPrice)
 								<tr>
 									<td>{{$lessionPrice->divider}}
-										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="">
+										<input type="hidden" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
+										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
+										>
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
@@ -331,8 +334,20 @@
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif
 									
-									<td><input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-									<td><input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" style="text-align:right" class="form-control numeric float" value="0.00"></td>
+									<td>
+										<input type="text" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
+										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
+										style="text-align:right" class="form-control numeric float"
+										>
+									</td>
+									<td>
+										<input type="text" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
+										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
+										style="text-align:right" class="form-control numeric float"
+										>
+									</td>
 								</tr>
 								<!-- <tr>
 									<td>9<input type="hidden" name="price_id" value="price_9"></td>
