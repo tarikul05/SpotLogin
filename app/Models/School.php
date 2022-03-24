@@ -105,6 +105,16 @@ class School extends BaseModel
 
 
     /**
+     * Get the Students for the Schools.
+     */
+    public function students()
+    {
+        return $this->belongsToMany(Student::class)
+                    ->withPivot( 'nickname', 'email', 'billing_method', 'level_id', 'has_user_account', 'licence_arp', 'level_skating_arp', 'level_date_arp', 'licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at');
+    }
+
+
+    /**
      * Get the city for the user.
      */
     public function country()

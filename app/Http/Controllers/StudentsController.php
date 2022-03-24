@@ -155,7 +155,8 @@ class StudentsController extends Controller
         }else {
             $students = $user->getSelectedSchoolAttribute()->students;
         }
-        $students = Teacher::where('is_active', 1)->get();
+        // dd($students);
+        // $students = Student::where('is_active', 1)->get();
         return view('pages.students.list',compact('students','schoolId'));
     }
 
@@ -445,17 +446,31 @@ class StudentsController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
+        $schoolId = $request->route('school'); 
         $studentId = $request->route('student');
         
         $student = Student::find($studentId);
+
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id;
+            $schoolName = $school->school_name; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+            $schoolName = $user->selectedSchoolName(); 
+        }
+
         $relationalData = SchoolStudent::where([
             ['student_id',$studentId]
         ])->first();
         
-        $profile_image = AttachedFile::find($student->profile_image_id);
+        $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
         $countries = Country::active()->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image'));
+        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image','schoolId'));
     }
 
     /**

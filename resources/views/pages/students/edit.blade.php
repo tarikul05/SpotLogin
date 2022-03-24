@@ -37,7 +37,7 @@
 		<!-- Tabs navs -->
 
 		<!-- Tabs content -->
-		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('student.editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
+		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
 		@csrf	
 		<div class="tab-content" id="ex1-content">
