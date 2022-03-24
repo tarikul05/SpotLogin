@@ -21,7 +21,7 @@ class CreateLessonPriceTeachersTable extends Migration
             $table->string('lesson_price_student', 30)->nullable();
             $table->double('price_buy')->nullable();
             $table->double('price_sell')->nullable();
-            $table->dateTime('is_active')->nullable()->useCurrent();
+            $table->tinyInteger('is_active')->nullable()->default(1);
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->softDeletes();

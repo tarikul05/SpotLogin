@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\CreatedUpdatedBy;
 
-class EventCategory extends BaseModel
+class LessonPrice extends BaseModel
 {
-    use HasFactory,SoftDeletes, CreatedUpdatedBy;
-    protected $table = 'event_categories';
+    use HasFactory,SoftDeletes;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
 
@@ -20,10 +18,10 @@ class EventCategory extends BaseModel
      * @var array
      */
     protected $fillable = [
-      'school_id',
-      'title',
-      'invoiced_type',
-      'file_id',
+      'lesson_price_student',
+      'event_category',
+      'event_type',
+      'divider',
       'is_active',
       'created_by',
       'modified_by'
@@ -40,16 +38,4 @@ class EventCategory extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
-
-    /**
-     * Scope a query to only include active users.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return void
-     */
-    public function scopeSchoolInvoiced($query)
-    {
-        $query->active();
-        $query->where('invoiced_type', 'S');
-    }
 }

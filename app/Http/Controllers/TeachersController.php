@@ -11,6 +11,8 @@ use App\Models\School;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\EmailTemplate;
+use App\Models\LessonPrice;
+use App\Models\LessonPriceTeacher;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
 use Illuminate\Support\Facades\Auth;
@@ -425,11 +427,22 @@ class TeachersController extends Controller
             }
         } 
 
+        $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
+        $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
+        $lessonPriceTeachers = LessonPriceTeacher::active()
+                              ->where(['teacher_id' => $teacher->id])
+                              ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                              ->get();
+        $ltprice =[];
+        foreach ($lessonPriceTeachers as $lkey => $lpt) {
+          $ltprice[$lpt->event_category_id][$lpt->lesson_price_student] = $lpt->toArray();
+        }
+        // dd($lessionPriceTeacher);
         
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName'));
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
     }
 
     /**
@@ -506,13 +519,43 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function checkTeacherAccess(School $school)
+    public function priceUpdate(Request $request, Teacher $teacher)
     {
-        // $user = Auth::user();
+      $alldata = $request->all();
 
-        // if ($user->isSuperAdmin() && empty(Teacher::find($schoolId))) {
-            
-        // }
+      // dd($alldata);
+      DB::beginTransaction();
+        try{
+             foreach ($alldata['data'] as $key => $catPrices) {
+              // dd($catPrices);
+               foreach ($catPrices as $pkey => $price) {
+                 // dd($price);
+                 $dataprice = [
+                      'event_category_id' => $key,
+                      'teacher_id' => $teacher->id,
+                      'lesson_price_student' => $price['lesson_price_student'],
+                      'lesson_price_id' => $price['lesson_price_id'],
+                      'price_buy' => $price['price_buy'],
+                      'price_sell' => $price['price_sell'],
+                  ];
+
+                 if (empty($price['id'])) {
+                    $updatedPrice = LessonPriceTeacher::create($dataprice);
+                 }else{
+                    $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                 }
+               }
+             }
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Teacher Lession Price updated successfully!'));
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e);
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+
+
     }
 
 
