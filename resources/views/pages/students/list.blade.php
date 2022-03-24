@@ -18,15 +18,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($students as $teacher)
+            @foreach($students as $student)
             @php
-            if ($teacher->pivot->role_type == 'school_admin') continue;
+            if ($student->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
-                <td>{{ $teacher->id; }}
-                <td>{{ $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; }}</td>
-                <td>{{ $teacher->email; }}</td>
-                <td>{{ !empty($teacher->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ $student->id; }}
+                <td>{{ $student->firstname.' '.$student->middlename.' '.$student->lastname; }}</td>
+                <td>{{ $student->email; }}</td>
+                <td>{{ !empty($student->is_active) ? 'Active' : 'Inactive'; }}</td>
                 <td>
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -34,7 +34,7 @@
                         </a>
                         <div class="dropdown-menu action text-left">
                             @can('students-update')
-                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $student->id]) : route('editTeacher',['teacher' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
                             <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
                         </div>

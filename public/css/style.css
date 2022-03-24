@@ -387,7 +387,7 @@ input.error {
     border-color: #FF8000;
     color: #FFF;
 }
-.teacher_save {
+.teacher_save,#save_btn {
     position: absolute;
     top: 140px;
     right: 14%;

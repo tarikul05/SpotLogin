@@ -175,13 +175,14 @@ Route::group(['middleware' => ['auth']], function () {
 
  
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
-    Route::get('/add-student', [App\Http\Controllers\StudentsController::class, 'create']);
+    Route::get('/add-student', [App\Http\Controllers\StudentsController::class, 'create'])->name('student.create');
+    Route::post('/add-student', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
     // Route::match(array('GET', 'POST'), "add-teacher", array(
     //   'uses' => 'StudentsController@create',
     //   'as' => 'student.create'
     // ));
-    // Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
-    // Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'update'])->name('editStudentAction');
+    Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('student.editStudent');
+    Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'editStudentAction'])->name('student.editStudentAction');
     // Route::post('/{school}/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent']);
     
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

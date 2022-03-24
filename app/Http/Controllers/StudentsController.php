@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use File;
-use App\Models\EventCategory;
-use App\Models\Teacher;
+use App\Models\Student;
 use App\Models\School;
+use App\Models\SchoolStudent;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\EmailTemplate;
@@ -41,10 +41,10 @@ class StudentsController extends Controller
 
         $this->img_config = [
           'target_path' => [
-            'UserImage' => 'photo/user_photo'
+            'StudentImage' => 'photo/student_photo'
           ],
           'target_url' => [
-            'UserImage' => URL::to('').'/uploads/photo/user_photo/'
+            'StudentImage' => URL::to('').'/uploads/photo/student_photo/'
           ],
         ];
         
@@ -146,16 +146,16 @@ class StudentsController extends Controller
     {
 
         $user = Auth::user();
-        // if ($user->isSuperAdmin()) {
-        //     $school = School::active()->find($schoolId);
-        //     if (empty($school)) {
-        //         return redirect()->route('schools')->with('error', __('School is not selected'));
-        //     }
-        //     $students = $school->students; 
-        // }else {
-        //     $students = $user->getSelectedSchoolAttribute()->students;
-        // }
-        // $students = Teacher::where('is_active', 1)->get();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $students = $school->students; 
+        }else {
+            $students = $user->getSelectedSchoolAttribute()->students;
+        }
+        $students = Teacher::where('is_active', 1)->get();
         return view('pages.students.list',compact('students','schoolId'));
     }
 
@@ -192,112 +192,221 @@ class StudentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function AddTeacher(Request $request, $schoolId = null)
+    public function AddStudent(Request $request, $schoolId = null)
     { 
-        $user = Auth::user();
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return [
-                    'status' => 1,
-                    'message' =>  __('School not selected')
-                ];
-            }
-            $schoolId = $school->id; 
-        }else {
-            $schoolId = $user->selectedSchoolId();
-        }
-
+      
+        // $user = Auth::user();
+        // if ($user->isSuperAdmin()) {
+        //     $school = School::active()->find($schoolId);
+        //     if (empty($school)) {
+        //         return [
+        //             'status' => 1,
+        //             'message' =>  __('School not selected')
+        //         ];
+        //     }
+        //     $schoolId = $school->id; 
+        // }else {
+        //     $schoolId = $user->selectedSchoolId();
+        // }
+        
         DB::beginTransaction(); 
         try{
+
+            $authUser = $request->user();
             if ($request->isMethod('post')){
                 $alldata = $request->all();
-                if (!empty($alldata['user_id'])) {
-                    $relationalData = [
-                        'role_type'=>$alldata['role_type'], 
-                        'has_user_account'=> 1 ,
-                        'comment'=> $alldata['comment'],
-                        'nickname'=> $alldata['nickname'],
-                    ];
-                    $user = User::find($alldata['user_id']);
-                    $teacher = $user->personable;
-                    $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
-                    if (!$exist) {
-                        $teacher->schools()->attach($schoolId,$relationalData);
-                        $msg = 'Successfully Registered';
-                    }else {
-                        $msg = 'This teacher already exist with your school';
+                $studentData = [
+                    'is_active' => $alldata['is_active'],
+                    'gender_id' => $alldata['gender_id'],
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'place' => $alldata['place'],
+                    'country_code' => $alldata['country_code'],
+                    'province_id' => $alldata['province_id'],
+                    'billing_street' => $alldata['billing_street'],
+                    'billing_street2' => $alldata['billing_street2'],
+                    'billing_street_number' => $alldata['billing_street_number'],
+                    'billing_zip_code' => $alldata['billing_zip_code'],
+                    'billing_place' => $alldata['billing_place'],
+                    'billing_country_code' => $alldata['billing_country_code'],
+                    'billing_province_id' => $alldata['billing_province_id'],
+                    'phone' => $alldata['phone'],
+                    'phone2' => $alldata['phone2'],
+                    'mobile' => $alldata['mobile'],
+                    'email2' => $alldata['email2'],
+                    'student_email' => $alldata['student_email']
+                ];
+                
+                if($request->file('profile_image_file'))
+                {
+                  $image = $request->file('profile_image_file');
+                  $mime_type = $image->getMimeType();
+                  $extension = $image->getClientOriginalExtension();
+                  if($image->getSize()>0)
+                  { 
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
+                    
+                    if (!empty($path)) {
+                      $fileData = [
+                        'visibility' => 1,
+                        'file_type' =>'image',
+                        'title' => $authUser->username,
+                        'path_name' =>$path,
+                        'file_name' => $imageNewName,
+                        'extension'=>$extension,
+                        'mime_type'=>$mime_type
+                      ];
+                      
+                      $attachedImage = AttachedFile::create($fileData);
+                      $studentData['profile_image_id'] = $attachedImage->id;
+                      
                     }
-                    
-
-                    // notify user by email about new Teacher role
-
-
-                }else{
-                    $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
-                    $teacherData = [
-                        'availability_select' => $alldata['availability_select'],
-                        'gender_id' => $alldata['gender_id'],
-                        'lastname' => $alldata['lastname'],
-                        'firstname' => $alldata['firstname'],
-                        'birth_date' => $birthDate,
-                        'licence_js' => $alldata['licence_js'],
-                        'email' => $alldata['email'],
-                        'street' => $alldata['street'],
-                        'street_number' => $alldata['street_number'],
-                        'zip_code' => $alldata['zip_code'],
-                        'place' => $alldata['place'],
-                        'country_code' => $alldata['country_code'],
-                        'phone' => $alldata['phone'],
-                        'mobile' => $alldata['mobile'],
-                    ];
-                    // dd($alldata);
-                    $teacher = Teacher::create($teacherData);
-                    $relationalData = [
-                        'role_type'=>$alldata['role_type'], 
-                        'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                        'comment'=> $alldata['comment'],
-                        'nickname'=> $alldata['nickname'],
-                    ];
-                    $teacher->save();
-                    $teacher->schools()->attach($schoolId,$relationalData);
-
-                    $usersData = [
-                        'person_id' => $teacher->id,
-                        'person_type' =>'App\Models\Teacher',
-                        'username' =>Str::random(10),
-                        'lastname' => $alldata['lastname'],
-                        'middlename'=>'',
-                        'firstname'=>$alldata['firstname'],
-                        'email'=>$alldata['email'],
-                        // 'password'=>$alldata['password'],
-                        'password'=>Str::random(10),
-                        'is_mail_sent'=>0,
-                        'is_active'=>1,
-                        'is_firstlogin'=>0
-                    ];
-
-                    $user = User::create($usersData);
-                    $user->save();
-
-                    $msg = 'Successfully Registered';
+                  }
                 }
+                
+                $student = Student::create($studentData);
+                $student->save();
+                
+                $schoolStudent = [
+                    'student_id' => $student->id,  
+                    'school_id' => $alldata['school_id'],
+                    'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                    'nickname' => $alldata['nickname'],
+                    'email' => $alldata['email'],
+                    'billing_method' => $alldata['billing_method'],
+                    'level_id' => $alldata['level_id'],
+                    'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
+                    'licence_arp' => $alldata['licence_arp'],
+                    'licence_usp' => $alldata['licence_usp'],
+                    'level_skating_usp' => $alldata['level_skating_usp'],
+                    'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                    'comment' => $alldata['comment'],
+                ];
 
-                    
-               
-
-                $result = array(
-                    "status"     => 1,
-                    'message' => __($msg)
-                );
+                $schoolStudentData = SchoolStudent::create($schoolStudent);
+                $schoolStudentData->save();
             }
             DB::commit();
+            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
         }catch (Exception $e) {
             DB::rollBack();
-            $result= [
-                'status' => 0,
-                'message' =>  __('Internal server error')
-            ];
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }   
+
+        
+        return $result;
+    }
+
+         /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editStudentAction(Request $request, Student $student)
+    { 
+      
+        // $user = Auth::user();
+        // if ($user->isSuperAdmin()) {
+        //     $school = School::active()->find($schoolId);
+        //     if (empty($school)) {
+        //         return [
+        //             'status' => 1,
+        //             'message' =>  __('School not selected')
+        //         ];
+        //     }
+        //     $schoolId = $school->id; 
+        // }else {
+        //     $schoolId = $user->selectedSchoolId();
+        // }
+        
+        DB::beginTransaction(); 
+        try{
+
+            $authUser = $request->user();
+            if ($request->isMethod('post')){
+                $alldata = $request->all();
+                $studentData = [
+                    'is_active' => $alldata['is_active'],
+                    'gender_id' => $alldata['gender_id'],
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'place' => $alldata['place'],
+                    'country_code' => $alldata['country_code'],
+                    'province_id' => $alldata['province_id'],
+                    'billing_street' => $alldata['billing_street'],
+                    'billing_street2' => $alldata['billing_street2'],
+                    'billing_street_number' => $alldata['billing_street_number'],
+                    'billing_zip_code' => $alldata['billing_zip_code'],
+                    'billing_place' => $alldata['billing_place'],
+                    'billing_country_code' => $alldata['billing_country_code'],
+                    'billing_province_id' => $alldata['billing_province_id'],
+                    'phone' => $alldata['phone'],
+                    'phone2' => $alldata['phone2'],
+                    'mobile' => $alldata['mobile'],
+                    'email2' => $alldata['email2'],
+                    'student_email' => $alldata['student_email']
+                ];
+                
+                if($request->file('profile_image_file'))
+                {
+                  $image = $request->file('profile_image_file');
+                  $mime_type = $image->getMimeType();
+                  $extension = $image->getClientOriginalExtension();
+                  if($image->getSize()>0)
+                  { 
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
+                    
+                    if (!empty($path)) {
+                      $fileData = [
+                        'visibility' => 1,
+                        'file_type' =>'image',
+                        'title' => $authUser->username,
+                        'path_name' =>$path,
+                        'file_name' => $imageNewName,
+                        'extension'=>$extension,
+                        'mime_type'=>$mime_type
+                      ];
+                      
+                      $attachedImage = AttachedFile::create($fileData);
+                      $studentData['profile_image_id'] = $attachedImage->id;
+                      
+                    }
+                  }
+                }
+                
+                Student::where('id', $student->id)->update($studentData);
+                
+                $schoolStudent = [
+                    'student_id' => $student->id,  
+                    'school_id' => $alldata['school_id'],
+                    'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                    'nickname' => $alldata['nickname'],
+                    'email' => $alldata['email'],
+                    'billing_method' => $alldata['billing_method'],
+                    'level_id' => $alldata['level_id'],
+                    'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
+                    'licence_arp' => $alldata['licence_arp'],
+                    'licence_usp' => $alldata['licence_usp'],
+                    'level_skating_usp' => $alldata['level_skating_usp'],
+                    'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                    'comment' => $alldata['comment'],
+                ];
+
+                SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
+            }
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+        }catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }   
 
         
@@ -332,53 +441,21 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
     public function edit(Request $request)
     {
         $user = Auth::user();
-        $schoolId = $request->route('school'); 
-        $teacherId = $request->route('teacher');
-
-        $teacher = Teacher::find($teacherId);
-
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return redirect()->route('schools')->with('error', __('School is not selected'));
-            }
-            $schoolId = $school->id;
-            $schoolName = $school->school_name; 
-        }else {
-            $schoolId = $user->selectedSchoolId();
-            $schoolName = $user->selectedSchoolName(); 
-        }
-
-
-        $relationalData = SchoolTeacher::where([
-            ['teacher_id',$teacher->id],
-            ['school_id',$schoolId]
-        ])->first();
-        $lanCode = 'en';
-        if (Session::has('locale')) {
-            $lanCode = Session::get('locale');
-        }
-        $emailTemplate = EmailTemplate::where([
-            ['template_code', 'teacher'],
-            ['language', $lanCode]
-        ])->first(); 
-        if ($emailTemplate) {
-            $http_host=$this->BASE_URL."/";
-            if (!empty($emailTemplate->body_text)) {
-                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
-                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
-            }
-        } 
-
+        $alldata = $request->all();
+        $studentId = $request->route('student');
         
+        $student = Student::find($studentId);
+        $relationalData = SchoolStudent::where([
+            ['student_id',$studentId]
+        ])->first();
+        
+        $profile_image = AttachedFile::find($student->profile_image_id);
         $countries = Country::active()->get();
         $genders = config('global.gender');
-        // dd($relationalData);
-        return view('pages.students.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName'));
+        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image'));
     }
 
     /**
@@ -390,52 +467,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, Teacher $teacher)
     {
-        $user = Auth::user();
-        $alldata = $request->all();
-
-        if ($user->isSuperAdmin()) {
-            $schoolId = $alldata['school_id']; 
-        }else {
-            $schoolId = $user->selectedSchoolId();
-        }
-
-
-        // dd($schoolId);
-        DB::beginTransaction();
-        try{
-             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
-            $teacherData = [
-                'gender_id' => $alldata['gender_id'],
-                'lastname' => $alldata['lastname'],
-                'firstname' => $alldata['firstname'],
-                'birth_date' => $birthDate,
-                'licence_js' => $alldata['licence_js'],
-                'email' => $alldata['email'],
-                'street' => $alldata['street'],
-                'street_number' => $alldata['street_number'],
-                'zip_code' => $alldata['zip_code'],
-                'place' => $alldata['place'],
-                'country_code' => $alldata['country_code'],
-                'phone' => $alldata['phone'],
-                'mobile' => $alldata['mobile'],
-            ];
-            Teacher::where('id', $teacher->id)->update($teacherData);
-
-            $relationalData = [
-                'role_type'=>$alldata['role_type'],
-                // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment'=> $alldata['comment'],
-                'nickname'=> $alldata['nickname'],
-                'bg_color_agenda'=> $alldata['bg_color_agenda'],
-            ];
-            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
-            DB::commit();
-            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
-        }catch (\Exception $e) {
-            DB::rollBack();
-            //return error message
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-        }
+       
     }
 
     /**
@@ -447,189 +479,6 @@ class StudentsController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    /**
-     * Check users .
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function checkTeacherAccess(School $school)
-    {
-        // $user = Auth::user();
-
-        // if ($user->isSuperAdmin() && empty(Teacher::find($schoolId))) {
-            
-        // }
-    }
-
-
-
-    /**
-     *  AJAX action to send email to school admin
-     * 
-     * @return json
-     * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-03-10
-     */
-    public function teacherEmailSend(Request $request)
-    {
-        $result = array(
-            'status' => false,
-            'message' => __('failed to send email'),
-        );
-        try {
-            $data = $request->all();
-            
-            $user = User::find($data['user_id']); 
-            if ($user) {
-                //sending email for forgot password
-                if (config('global.email_send') == 1) {
-                    
-                    try {
-                        $data['email'] = $data['email_to_id'];
-                        $data['name'] = $user->username;
-                        $data['username'] = $user->username; 
-                        if (!empty($data['admin_password'])) {
-                            $data['password'] = $data['admin_password']; 
-                        } else {
-                            $data['password'] = config('global.user_default_password');
-                        }
-                        $data['subject'] = $data['subject_text'];
-                        $data['body_text'] = $data['email_body'];
-                        \Mail::to($user->email)->send(new SportloginEmail($data));
-                        $result = array(
-                            'status' => true,
-                            'message' => __('We sent an email.'),
-                        );
-                        
-                        return response()->json($result);
-                    } catch (\Exception $e) {
-                        $result = array(
-                            'status' => true,
-                            'message' => __('We sent an email.'),
-                        );
-                        return response()->json($result);
-                    }
-                } else{
-                    $result = array('status'=>true,'msg'=>__('We sent an email.'));
-                }
-            }   else {
-                $result = array('status'=>false,'msg'=>__('Username not exist'));
-            }
-
-            return response()->json($result);
-
-        } catch (Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
-        }
-        
-    }
-
-      /**
-     * Update the school admin account.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  School $school
-     * @return \Illuminate\Http\Response
-     * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-03-10
-    */
-    public function userUpdate(Request $request, User $user)
-    {
-        $params = $request->all();
-        try{
-            $request->merge([
-                'email'=> $params['admin_email'],
-                'is_active'=> $params['admin_is_active']
-            ]);
-            
-
-            $user = User::find($params['user_id']);
-            if ($user) {
-                $request->merge(['username'=> $params['admin_username']]);
-                $user->update($request->except(['_token']));
-
-                if (!empty($params['admin_password'])) {
-                    $user->password = $params['admin_password'];
-                    $user->save();
-                }
-            } else{
-                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-            }
-
-            return back()->withInput($request->all())->with('success', __('Teacher account updated successfully!'));
-        } catch (\Exception $e) {
-            //return error message
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-        }
-    }
-
-
-    /**
-    * AJAX Action Update the specified resource in storage.
-    *
-    * @param  \App\Http\Requests\ProfilePhotoUpdateRequest  $request
-    * @return \Illuminate\Http\Response
-    */
-    public function profilePhotoUpdate(ProfilePhotoUpdateRequest $request)
-    {
-        $data = $request->all();
-        $result = array(
-          'status' => 0,
-          "file_id" => '0',
-          "image_file" => '',   
-          'message' => __('failed to change image'),
-        );
-        
-        try{
-            $user = User::find($data['user_id']); 
-            if($request->file('profile_image_file'))
-            {
-            
-                $image = $request->file('profile_image_file');
-                $mime_type = $image->getMimeType();
-                $extension = $image->getClientOriginalExtension();
-                if($image->getSize()>0)
-                { 
-                  list($path, $imageNewName) = $this->__processImg($image,'UserImage',$user); 
-                  
-                  if (!empty($path)) {
-                    $fileData = [
-                      'visibility' => 1,
-                      'file_type' =>'image',
-                      'title' => $user->username,
-                      'path_name' =>$path,
-                      'file_name' => $imageNewName,
-                      'extension'=>$extension,
-                      'mime_type'=>$mime_type
-                    ];
-                    
-                    $attachedImage = AttachedFile::create($fileData);
-                    
-                    $data['profile_image_id'] = $attachedImage->id;
-                    
-                  }
-                }
-            }
-          
-            if ($user->update($data)) {
-                $result = array(
-                  "status"     => 1,
-                  "file_id" => $user->profile_image_id,
-                  "image_file" => $path,   
-                  'message' => __('Successfully Changed Profile image')
-                );
-            }
-          
-        } catch (\Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-        }
-        return response()->json($result);
     }
 
 
