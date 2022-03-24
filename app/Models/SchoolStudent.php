@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SchoolStudent extends BaseModel
 {
+  protected $table = 'school_student';
   use SoftDeletes;
     /**
      * The attributes that are mass assignable.
@@ -18,7 +19,18 @@ class SchoolStudent extends BaseModel
      */
     protected $fillable = [
         'school_id',
-        'student_id'
+        'student_id',
+        'has_user_account',
+        'nickname',
+        'email',
+        'billing_method',
+        'level_id',
+        'level_date_arp',
+        'licence_arp',
+        'licence_usp',
+        'level_skating_usp',
+        'level_date_usp',
+        'comment'
     ];
 
    

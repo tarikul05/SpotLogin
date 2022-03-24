@@ -22,7 +22,6 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</div>    
 			</div>          
@@ -38,13 +37,11 @@
 		<!-- Tabs navs -->
 
 		<!-- Tabs content -->
+		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{ route('student.createAction') }}"  name="add_student" role="form">
+		<input type="hidden" name="school_id" value="{{ $schoolId }}">
+		@csrf	
 		<div class="tab-content" id="ex1-content">
-			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
-					@csrf
-
-					<input type="hidden" name="user_id" value="{{ !empty($exTeacher) ? $exTeacher->id : '' }}">
+				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Student Personal Information') }}</label>
@@ -52,10 +49,10 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" name="availability_select" id="availability_select">
+											<select class="form-control" name="is_active" id="is_active">
 												<option value="10">Active</option>
 												<option value="0">Inactive</option>
 												<option value="-9">Deleted</option>
@@ -66,7 +63,12 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" value="">
+										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Nickname" type="text" value="{{old('nickname')}}">
+										@if ($errors->has('nickname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('nickname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
@@ -75,20 +77,20 @@
 										<div class="selectdiv">
 											<select class="form-control require" id="gender_id" name="gender_id">
 												@foreach($genders as $key => $gender)
-								                    <option value="{{ $key }}">{{ $gender }}</option>
-								                @endforeach
+													<option value="{{ $key }}" {{ old('gender_id') == $key ? 'selected' : ''}}>{{ $gender }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Hourly rate applied') }}</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control"id="billing_method_list" name="billing_method_list">
-												<option value="E">Event-wise</option>
-												<option value="M">Monthly</option>
-												<option value="Y">Yearly</option>
+											<select class="form-control"id="billing_method" name="billing_method">
+												<option value="E" {{ old('billing_method') == 'Y' ? 'selected' : ''}} >Event-wise</option>
+												<option value="M" {{ old('billing_method') == 'M' ? 'selected' : ''}} >Monthly</option>
+												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option>
 											</select>
 										</div>
 									</div>
@@ -97,7 +99,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<input class="form-control" id="email" value="{{old('email')}}" name="email" type="text">
 										</div>
 									</div>
 								</div>
@@ -115,20 +118,30 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="lastname" name="lastname" type="text">
+										<input class="form-control require" id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
+										@if ($errors->has('lastname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('lastname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
+									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="firstname" name="firstname" type="text">
+										<input class="form-control require" id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
+										@if ($errors->has('firstname'))
+											<span id="" class="error">
+													<strong>{{ $errors->first('firstname') }}.</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -138,8 +151,8 @@
 								<div class="form-group row" id="profile_image">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control" type="file" id="formFile" onchange="preview()" style="display:none">
-										<label for="formFile"><img src="{{ asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin"></label>
+										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" onchange="preview()" style="display:none">
+										<label for="profile_image_file"><img src="{{ asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin"></label>
 									</div>
 								</div>
 							</div>
@@ -150,10 +163,10 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="lavel" id="lavel">{{__('Level') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="level_id">{{__('Level') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control m-bot15" id="lavel" name="lavel">
+												<select class="form-control m-bot15" id="level_id" name="level_id">
 													<option value="" selected="">Select Level</option>
 													<option value="1">Gold</option>
 													<option value="2">Silver</option>
@@ -166,10 +179,10 @@
 										</div>
 									</div>
 									<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" id="date_last_level_label_id">{{__('Date last level ASP') }}:</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
-											<div class="input-group" id="date_last_level_div"> 
-												<input id="date_last_level" name="date_last_level" type="text" class="form-control">
+											<div class="input-group"> 
+												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -177,30 +190,30 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="apr_license" id="postal_code_caption">{{__('ARP license') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="licence_arp" id="postal_code_caption">{{__('ARP license') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="apr_license" name="apr_license" type="text">
+											<input class="form-control" id="licence_arp" name="licence_arp" type="text" value="{{old('licence_arp')}}">
 										</div>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="license_number" id="locality_caption">{{__('License number') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="licence_usp" id="locality_caption">{{__('License number') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="license_number" name="license_number" type="text">
+											<input class="form-control" id="licence_usp" name="licence_usp" type="text" value="{{old('licence_usp')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="usp_Level" id="locality_caption">{{__('USP Level') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="usp_Level" name="usp_Level" type="text">
+											<input class="form-control" id="level_skating_usp" name="level_skating_usp" type="text" value="{{old('level_skating_usp')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" id="date_last_level_label_id">{{__('Date last level ASP') }}:</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="date_last_level_usp_div"> 
-												<input id="date_last_level_usp" name="date_last_level_usp" type="text" class="form-control">
+												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -219,7 +232,7 @@
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"></textarea>
+												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{old('comment')}}</textarea>
 											</div>
 										</div>
 									</div>
@@ -227,209 +240,210 @@
 							</div>
 						</div>
 					</fieldset>
-				</form>
-			
-			</div>
-			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-				<div class="section_header_class">
-					<label id="address_caption">{{__('Address') }}</label>
 				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="street" name="street" type="text">
+				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+					<div class="section_header_class">
+						<label id="address_caption">{{__('Address') }}</label>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="street" name="street" value="{{old('street')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="street_number" name="street_number" value="{{old('street_number')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="zip_code" name="zip_code" value="{{old('zip_code')}}" type="text">
+								</div>
 							</div>
 						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="street_number" name="street_number" type="text">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="place" name="place" value="{{old('place')}}" type="text">
+								</div>
 							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="zip_code" name="zip_code" type="text">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
+								<div class="col-sm-7">
+									<div class="selectdiv">
+										<select class="form-control" id="country_code" name="country_code">
+											@foreach($countries as $country)
+												<option value="{{ $country->code }}">{{ $country->name }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
+								<div class="col-sm-7">
+									<div class="selectdiv">
+										<select class="form-control" id="province_id" name="province_id">
+											<option value="">Select Province</option>
+											<option value="3">Alberta</option>
+											<option value="2">British Columbia</option>
+											<option value="5">Manitoba</option>
+											<option value="10">Newfoundland &amp; Labrador</option>
+											<option value="12">Northwest territory</option>
+											<option value="8">Nova Scotia</option>
+											<option value="11">Nunavut</option>
+											<option value="6">Ontario</option>
+											<option value="9">PEI</option>
+											<option value="7">Quebec</option>
+											<option value="4">Saskatchewan</option>
+											<option value="13">Yukon</option>
+										</select>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="place" name="place" type="text">
+					<div class="section_header_class">
+						<label id="address_caption">{{__('Billing address - Same as above') }} <input type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_street" id="street_caption">{{__('Street') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="billing_street" name="billing_street" value="{{old('billing_street')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_street_number" id="street_number_caption">{{__('Street No') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="billing_street_number" name="billing_street_number" value="{{old('billing_street_number')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_street2" id="street_caption">{{__('Street2') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="billing_street2" name="billing_street2" value="{{old('billing_street2')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="billing_zip_code" name="billing_zip_code" value="{{old('billing_zip_code')}}" type="text">
+								</div>
 							</div>
 						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-									<select class="form-control" id="country_code" name="country_code">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_place" id="locality_caption">{{__('City') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="billing_place" name="billing_place" value="{{old('billing_place')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
+								<div class="col-sm-7">
+									<div class="selectdiv">
+									<select class="form-control" id="billing_country_code" name="billing_country_code">
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}">{{ $country->name }}</option>
 										@endforeach
 									</select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
+								<div class="col-sm-7">
+									<div class="selectdiv">
+										<select class="form-control" id="billing_province_id" name="billing_province_id">
+											<option value="">Select Province</option>
+											<option value="3">Alberta</option>
+											<option value="2">British Columbia</option>
+											<option value="5">Manitoba</option>
+											<option value="10">Newfoundland &amp; Labrador</option>
+											<option value="12">Northwest territory</option>
+											<option value="8">Nova Scotia</option>
+											<option value="11">Nunavut</option>
+											<option value="6">Ontario</option>
+											<option value="9">PEI</option>
+											<option value="7">Quebec</option>
+											<option value="4">Saskatchewan</option>
+											<option value="13">Yukon</option>
+										</select>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="Province_code" id="pays_caption">{{__('Province') }} :</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-									<select class="form-control" id="Province_code" name="Province_code">
-										<option value="">Select Province</option>
-										<option value="3">Alberta</option>
-										<option value="2">British Columbia</option>
-										<option value="5">Manitoba</option>
-										<option value="10">Newfoundland &amp; Labrador</option>
-										<option value="12">Northwest territory</option>
-										<option value="8">Nova Scotia</option>
-										<option value="11">Nunavut</option>
-										<option value="6">Ontario</option>
-										<option value="9">PEI</option>
-										<option value="7">Quebec</option>
-										<option value="4">Saskatchewan</option>
-										<option value="13">Yukon</option>
-									</select>
+					</div>
+					<div class="section_header_class">
+						<label id="address_caption">{{__('Contact information') }}</label>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" value="{{old('phone')}}" type="text">
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone2" name="phone2" value="{{old('phone2')}}" type="text">
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{old('mobile')}}" type="text">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="email" name="email" value="{{old('email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" id="mother_email">{{__("Mother’s email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="email2" name="email2" value="{{old('email2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="student_email" id="student_email">{{__("Student's email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox"></span> 
+										<input class="form-control" id="student_email" name="student_email" value="{{old('student_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="section_header_class">
-					<label id="address_caption">{{__('Billing address - Same as above') }} <input onclick="bill_address_same_as_click()" type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="street" name="street" type="text">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="street_number" name="street_number" type="text">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="street2" name="street2" type="text">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="zip_code" name="zip_code" type="text">
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
-							<div class="col-sm-7">
-								<input class="form-control" id="place" name="place" type="text">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-								<select class="form-control" id="country_code" name="country_code">
-									@foreach($countries as $country)
-										<option value="{{ $country->code }}">{{ $country->name }}</option>
-									@endforeach
-								</select>
-								</div>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="Province_code" id="pays_caption">{{__('Province') }} :</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-									<select class="form-control" id="Province_code" name="Province_code">
-										<option value="">Select Province</option>
-										<option value="3">Alberta</option>
-										<option value="2">British Columbia</option>
-										<option value="5">Manitoba</option>
-										<option value="10">Newfoundland &amp; Labrador</option>
-										<option value="12">Northwest territory</option>
-										<option value="8">Nova Scotia</option>
-										<option value="11">Nunavut</option>
-										<option value="6">Ontario</option>
-										<option value="9">PEI</option>
-										<option value="7">Quebec</option>
-										<option value="4">Saskatchewan</option>
-										<option value="13">Yukon</option>
-									</select>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="section_header_class">
-					<label id="address_caption">{{__('Contact information') }}</label>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
-								</div>
-							</div>
-						</div>
-						<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
-								</div>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="phone" name="phone" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="mother_email" id="mother_email">{{__("Mother’s email") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="phone" name="phone" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="student_email" id="student_email">{{__("Student's email") }} :</label>
-							<div class="col-sm-7">
-								<div class="input-group">
-									<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="phone" name="phone" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
+		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+		</form>
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -461,7 +475,7 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	$("#date_last_level").datetimepicker({
+	$("#level_date_arp").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
         todayBtn: true,
@@ -471,7 +485,7 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	$("#date_last_level_usp").datetimepicker({
+	$("#level_date_usp").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
         todayBtn: true,
@@ -482,50 +496,19 @@ $(function() {
 		todayBtn:false,
 	});
 });
-
+$(function() {
+	$('#bill_address_same_as').click(function(){
+		if($(this).is(':checked')){
+			$('#billing_street').val( $('#street').val() );
+			$('#billing_street_number').val( $('#street_number').val() );
+			$('#billing_zip_code').val( $('#zip_code').val() );
+		}
+	});
+});
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
-// save functionality
-$('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				}
-			})
-		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
-});  
-</script>
-<script>
-	function preview() {
-		frame.src = URL.createObjectURL(event.target.files[0]);
-	}
+function preview() {
+	frame.src = URL.createObjectURL(event.target.files[0]);
+}
 </script>
 @endsection
