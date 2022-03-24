@@ -37,9 +37,9 @@ class RegistrationRequest extends FormRequest
 			'email.email' => __('email format wrong'),
 			'email.max' => __('max 255 character will support'),
 			'password.min' => __('password must be minimum 8 character'),
-            'username.required' => _('username required'),
-            'password.required' => _('password required'),
-            'password.regex' => _('The password format is invalid.')
+            'username.required' => __('username required'),
+            'password.required' => __('password required'),
+            'password.regex' => __('The password format is invalid.')
            
            
         ];

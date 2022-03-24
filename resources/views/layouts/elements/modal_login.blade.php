@@ -17,7 +17,7 @@
           </div>
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
-              <input class="form-control" type="password" placeholder="Password" id="login_password" name="login_password" required>
+              <input class="form-control" autocomplete="on" type="password" placeholder="Password" id="login_password" name="login_password" required>
               <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
               </div>

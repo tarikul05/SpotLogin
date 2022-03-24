@@ -14,6 +14,7 @@ use App\Models\EmailTemplate;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
 use App\Models\SchoolTeacher;
+use App\Models\VerifyToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -253,7 +254,6 @@ class TeachersController extends Controller
                         'phone' => $alldata['phone'],
                         'mobile' => $alldata['mobile'],
                     ];
-                    // dd($alldata);
                     $teacher = Teacher::create($teacherData);
                     $relationalData = [
                         'role_type'=>$alldata['role_type'], 
@@ -264,23 +264,74 @@ class TeachersController extends Controller
                     $teacher->save();
                     $teacher->schools()->attach($schoolId,$relationalData);
 
-                    $usersData = [
-                        'person_id' => $teacher->id,
-                        'person_type' =>'App\Models\Teacher',
-                        'username' =>Str::random(10),
-                        'lastname' => $alldata['lastname'],
-                        'middlename'=>'',
-                        'firstname'=>$alldata['firstname'],
-                        'email'=>$alldata['email'],
-                        // 'password'=>$alldata['password'],
-                        'password'=>Str::random(10),
-                        'is_mail_sent'=>0,
-                        'is_active'=>1,
-                        'is_firstlogin'=>0
-                    ];
 
-                    $user = User::create($usersData);
-                    $user->save();
+
+
+                    //sending activation email after successful signed up
+                    if (config('global.email_send') != 1) {
+                        
+                        try {
+                            $data = [];
+                            $data['email'] = $alldata['email'];
+                            $data['username'] = $data['name'] = $alldata['firstname'];
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $teacher->id,
+                                'person_type' => 'App\Models\Teacher',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
+
+                            $emailTemplateExist = EmailTemplate::where([
+                                ['template_code', 'sign_up_confirmation_email'],
+                                ['language', 'en']
+                            ])->first(); 
+
+                            if ($emailTemplateExist) {
+                                $email_body= $emailTemplateExist->body_text;
+                                $data['subject'] = $emailTemplateExist->subject_text;
+                            }  else{
+                                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                            }  
+                            $data['body_text'] = $email_body;
+                            $data['url'] = route('add.verify.email',$data['token']); 
+                            \Mail::to($data['email'])->send(new SportloginEmail($data));
+                            
+                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                            
+                        } catch (\Exception $e) {
+                            $result= [
+                                'status' => 0,
+                                'message' =>  __('Internal server error')
+                            ];
+                            return $result;
+                        }
+                    } else {
+                        $usersData = [
+                            'person_id' => $teacher->id,
+                            'person_type' =>'App\Models\Teacher',
+                            'username' =>Str::random(10),
+                            'lastname' => $alldata['lastname'],
+                            'middlename'=>'',
+                            'firstname'=>$alldata['firstname'],
+                            'email'=>$alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password'=>Str::random(10),
+                            'is_mail_sent'=>0,
+                            'is_active'=>1,
+                            'is_firstlogin'=>0
+                        ];
+    
+                        $user = User::create($usersData);
+                        $user->save();
+                    }
+                    
+                    
 
                     $msg = 'Successfully Registered';
                 }
@@ -416,7 +467,7 @@ class TeachersController extends Controller
         // dd($schoolId);
         DB::beginTransaction();
         try{
-             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $teacherData = [
                 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],

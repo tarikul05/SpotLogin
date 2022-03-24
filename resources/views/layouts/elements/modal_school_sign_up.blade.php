@@ -42,7 +42,7 @@
                   </div>
                   <div class="form-group">
                       <div class="input-group" id="show_hide_password">
-                            <input class="form-control" type="password" id="password" placeholder="password" name="password"> 
+                            <input class="form-control" autocomplete="on" type="password" id="password" placeholder="password" name="password"> 
                             <div class="input-group-addon">
                                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>

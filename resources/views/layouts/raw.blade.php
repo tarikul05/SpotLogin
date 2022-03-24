@@ -21,6 +21,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" type="text/css" href="{{ asset('css/main_style.css') }}">
 
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
   <!-- flag icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/0.8.2/css/flag-icon.min.css">
 
@@ -72,7 +73,7 @@
     </div>
   </nav>
 
-
+  @include('elements/flash-message')
   @yield('content')
 
 
