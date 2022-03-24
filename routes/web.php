@@ -148,7 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('adminStudents');
     Route::match(array('GET', 'POST'), "/{school}/add-student", array(
       'uses' => 'StudentsController@create',
-      'as' => 'admin.teachers.create'
+      'as' => 'admin.student.create'
     ));
     Route::get('/{school}/edit-student/{teacher}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
   }); //Admin scope end
