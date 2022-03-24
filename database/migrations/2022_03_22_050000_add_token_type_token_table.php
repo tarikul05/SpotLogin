@@ -14,7 +14,7 @@ class AddTokenTypeTokenTable extends Migration
     public function up()
     {
         Schema::table('verify_token', function (Blueprint $table) {
-            $table->integer('school_id')>after('id');
+            $table->integer('school_id')->after('id');
             $table->foreign('school_id')->references('id')->on('schools');
             $table->integer('person_id')->default(0)->after('id');
             $table->string('person_type',50)->nullable()->after('id');
