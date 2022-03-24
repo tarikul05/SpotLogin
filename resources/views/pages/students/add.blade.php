@@ -310,7 +310,7 @@
 						</div>
 					</div>
 					<div class="section_header_class">
-						<label id="address_caption">{{__('Billing address - Same as above') }} <input onclick="bill_address_same_as_click()" type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
+						<label id="address_caption">{{__('Billing address - Same as above') }} <input type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -496,7 +496,15 @@ $(function() {
 		todayBtn:false,
 	});
 });
-
+$(function() {
+	$('#bill_address_same_as').click(function(){
+		if($(this).is(':checked')){
+			$('#billing_street').val( $('#street').val() );
+			$('#billing_street_number').val( $('#street_number').val() );
+			$('#billing_zip_code').val( $('#zip_code').val() );
+		}
+	});
+});
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
 function preview() {

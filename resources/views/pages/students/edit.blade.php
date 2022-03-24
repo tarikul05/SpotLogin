@@ -503,6 +503,16 @@ $(function() {
 	});
 });
 
+$(function() {
+	$('#bill_address_same_as').click(function(){
+		if($(this).is(':checked')){
+			$('#billing_street').val( $('#street').val() );
+			$('#billing_street_number').val( $('#street_number').val() );
+			$('#billing_zip_code').val( $('#zip_code').val() );
+		}
+	});
+});
+
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
 function preview() {
