@@ -22,6 +22,7 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</div>    
 			</div>          
@@ -29,7 +30,7 @@
 		<!-- Tabs navs -->
 
 			<!-- user email check start -->
-			<!-- <form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
+			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
 				<div class="form-group row">
 					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} :</label>
@@ -43,9 +44,9 @@
 						<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 					</div>
 				</div>
-			</form> -->
+			</form>
 			<!-- // user email check end -->
-	{{-- @if($searchEmail) --}}
+	@if($searchEmail)
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
@@ -56,7 +57,8 @@
 
 		<!-- Tabs content -->
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{ route('student.createAction') }}"  name="add_student" role="form">
-		<input type="hidden" name="school_id" value="{{ $schoolId }}">
+			<input type="hidden" name="school_id" value="{{ $schoolId }}">
+			<input type="hidden" name="user_id" value="{{ !empty($exUser) ? $exUser->id : '' }}">
 		@csrf	
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -460,9 +462,9 @@
 					</div>
 				</div>
 		</div>
-		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+		<!-- <button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button> -->
 		</form>
-	 {{-- @endif --}}
+	@endif
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -523,48 +525,48 @@ $(function() {
 		}
 	});
 
-	// $('#save_btn').click(function (e) {
-	// 	var formData = $('#add_student').serializeArray();
-	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-	// 	var error = '';
-	// 	$( ".form-control.require" ).each(function( key, value ) {
-	// 		var lname = $(this).val();
-	// 		if(lname=='' || lname==null || lname==undefined){
-	// 			$(this).addClass('error');
-	// 			error = 1;
-	// 		}else{
-	// 			$(this).removeClass('error');
-	// 			error = 0;
-	// 		}
-	// 	});
-	// 	formData.push({
-	// 		"name": "_token",
-	// 		"value": csrfToken,
-	// 	});
-	// 	if(error < 1){	
-	// 		$.ajax({
-	// 			url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-	// 			data: formData,
-	// 			type: 'POST',
-	// 			dataType: 'json',
-	// 			beforeSend: function( xhr ) {
-	// 			    $("#pageloader").show();
-	// 			 },
-	// 			success: function(response){	
-	// 				if(response.status == 1){
-	// 					$('#modal_add_teacher').modal('show');
-	// 					$("#modal_alert_body").text(response.message);
-	// 				}
-	// 			},
-	// 			complete: function( xhr ) {
-	// 			    $("#pageloader").hide();
-	// 			}
-	// 		})
-	// 	}else{
-	// 		$('#modal_add_teacher').modal('show');
-	// 		$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-	// 	}	            
-	// });  
+	$('#save_btn').click(function (e) {
+		var formData = $('#add_student').serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var error = '';
+		$( ".form-control.require" ).each(function( key, value ) {
+			var lname = $(this).val();
+			if(lname=='' || lname==null || lname==undefined){
+				$(this).addClass('error');
+				error = 1;
+			}else{
+				$(this).removeClass('error');
+				error = 0;
+			}
+		});
+		formData.push({
+			"name": "_token",
+			"value": csrfToken,
+		});
+		if(error < 1){	
+			$.ajax({
+				url: BASE_URL + '/{{$schoolId}}/add-student-action',
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				beforeSend: function( xhr ) {
+				    $("#pageloader").show();
+				 },
+				success: function(response){	
+					if(response.status == 1){
+						$('#modal_add_teacher').modal('show');
+						$("#modal_alert_body").text(response.message);
+					}
+				},
+				complete: function( xhr ) {
+				    $("#pageloader").hide();
+				}
+			})
+		}else{
+			$('#modal_add_teacher').modal('show');
+			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+		}	            
+	});  
 
 
 });

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
+use App\Models\VerifyToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -200,26 +201,83 @@ class StudentsController extends Controller
     { 
       
         $user = Auth::user();
-        $alldata = $request->all();
-        // if ($user->isSuperAdmin()) {
-        //     $school = School::active()->find($schoolId);
-        //     if (empty($school)) {
-        //         return [
-        //             'status' => 1,
-        //             'message' =>  __('School not selected')
-        //         ];
-        //     }
-        //     $schoolId = $school->id; 
-        // }else {
-        //     $schoolId = $user->selectedSchoolId();
-        // }
-        $schoolId = $alldata['school_id'];
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+        // $schoolId = $alldata['school_id'];
         
         DB::beginTransaction(); 
         try{
 
-            $authUser = $request->user();
             if ($request->isMethod('post')){
+
+              $alldata = $request->all();
+              $authUser = $request->user();
+              if (!empty($alldata['user_id'])) {
+                $user = User::find($alldata['user_id']);
+                $student = $user->personable;
+                $relationalData = [
+                        'student_id' => $student->id,  
+                        'school_id' => $schoolId,
+                        'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                        'nickname' => $alldata['nickname'],
+                        'email' => $alldata['email'],
+                        'billing_method' => $alldata['billing_method'],
+                        'level_id' => $alldata['level_id'],
+                        'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
+                        'licence_arp' => $alldata['licence_arp'],
+                        'licence_usp' => $alldata['licence_usp'],
+                        'level_skating_usp' => $alldata['level_skating_usp'],
+                        'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                        'comment' => $alldata['comment'],
+                        'is_active'=> 0,
+                    ];
+                    
+                    $exist = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $student->id ])->first();
+                    // dd($exist);
+                    if (!$exist) {
+                        $schoolStudentData = SchoolStudent::create($schoolStudent);
+                        $schoolStudentData->save();
+
+                        // notify user by email about new Teacher role
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $user->email;
+                            $data['username'] = $data['name'] = $user->username;
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $student->id,
+                                'person_type' => 'App\Models\Student',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
+
+                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                                return $result = array(
+                                    "status"     => 0,
+                                    'message' =>  __('Internal server error')
+                                );
+                            }
+                        } 
+                        $msg = 'Successfully Registered';
+                        
+                    }else {
+                        $msg = 'This teacher already exist with your school';
+                    }
+              }else{
                 $studentData = [
                     'is_active' => $alldata['is_active'],
                     'gender_id' => $alldata['gender_id'],
@@ -246,8 +304,7 @@ class StudentsController extends Controller
                     'student_email' => $alldata['student_email']
                 ];
                 
-                if($request->file('profile_image_file'))
-                {
+                if($request->file('profile_image_file')){
                   $image = $request->file('profile_image_file');
                   $mime_type = $image->getMimeType();
                   $extension = $image->getClientOriginalExtension();
@@ -294,12 +351,65 @@ class StudentsController extends Controller
 
                 $schoolStudentData = SchoolStudent::create($schoolStudent);
                 $schoolStudentData->save();
-            }
+                
+                $msg = 'Successfully Registered';
+                //sending activation email after successful signed up
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $data['username'] = $data['name'] = $alldata['firstname'];
+                        
+                        $verifyUser = [
+                            'school_id' => $schoolId,
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token; 
+                        // dd($this->emailSend($data,'sign_up_confirmation_email'));
+                        if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                        }  else {
+                            return $result = array(
+                                "status"     => 0,
+                                'message' =>  __('Internal server error')
+                            );
+                        }
+                    } else {
+                        $usersData = [
+                            'person_id' => $student->id,
+                            'person_type' =>'App\Models\Student',
+                            'username' =>Str::random(10),
+                            'lastname' => $alldata['lastname'],
+                            'middlename'=>'',
+                            'firstname'=>$alldata['firstname'],
+                            'email'=>$alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password'=>Str::random(10),
+                            'is_mail_sent'=>0,
+                            'is_active'=>1,
+                            'is_firstlogin'=>0
+                        ];
+                        $user = User::create($usersData);
+                        $user->save();
+                    }
+              } //end if not exist
+            } //end post check
+            
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            $result = array(
+                    "status"     => 1,
+                    'message' => __($msg)
+                );
         }catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
         }   
 
         
