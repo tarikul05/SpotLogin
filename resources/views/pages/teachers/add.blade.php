@@ -43,15 +43,15 @@
 				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
 					@csrf
 					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
+						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Teachers Find') }} :</label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
-								<input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="email">
+								<input class="form-control" id="email" placeholder="{{ __('email@domain.com') }}" value="{{$searchEmail}}" name="email" type="email">
 							</div>
 						</div>
 						<div class="col-sm-2 ">
-							<button  class="btn btn-primary check" type="submit">Check</button>
+							<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 						</div>
 					</div>
 				</form>
