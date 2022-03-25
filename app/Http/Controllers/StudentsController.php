@@ -155,7 +155,7 @@ class StudentsController extends Controller
         }else {
             $students = $user->getSelectedSchoolAttribute()->students;
         }
-        dd($students);
+        // dd($students);
         // $students = Student::where('is_active', 1)->get();
         return view('pages.students.list',compact('students','schoolId'));
     }
@@ -310,26 +310,21 @@ class StudentsController extends Controller
     public function editStudentAction(Request $request, Student $student)
     { 
       
-        // $user = Auth::user();
-        // if ($user->isSuperAdmin()) {
-        //     $school = School::active()->find($schoolId);
-        //     if (empty($school)) {
-        //         return [
-        //             'status' => 1,
-        //             'message' =>  __('School not selected')
-        //         ];
-        //     }
-        //     $schoolId = $school->id; 
-        // }else {
-        //     $schoolId = $user->selectedSchoolId();
-        // }
+        $authUser = $user = Auth::user();
+        // $authUser = $request->user();
+        $alldata = $request->all();
+
+        if ($user->isSuperAdmin()) {
+            $schoolId = $alldata['school_id']; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
         
         DB::beginTransaction(); 
         try{
 
-            $authUser = $request->user();
+            
             if ($request->isMethod('post')){
-                $alldata = $request->all();
                 $studentData = [
                     'is_active' => $alldata['is_active'],
                     'gender_id' => $alldata['gender_id'],
@@ -387,7 +382,7 @@ class StudentsController extends Controller
                 
                 $schoolStudent = [
                     'student_id' => $student->id,  
-                    'school_id' => $alldata['school_id'],
+                    'school_id' => $schoolId,
                     'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                     'nickname' => $alldata['nickname'],
                     'email' => $alldata['email'],
