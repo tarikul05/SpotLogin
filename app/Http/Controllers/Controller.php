@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use View;
 use Route;
 use Illuminate\Support\Facades\URL;
+use App\Mail\SportloginEmail;
+use App\Models\EmailTemplate;
+
 
 class Controller extends BaseController
 {
@@ -77,6 +80,38 @@ class Controller extends BaseController
         } else {
             return false;
         }
+        
+        
+    }
+
+
+
+     /**
+     * Common function for email send
+     *
+     */
+    public function emailSend($data=[], $template_code=null) {
+        
+        try {
+            $emailTemplateExist = EmailTemplate::where([
+                ['template_code', $template_code],
+                ['language', 'en']
+            ])->first(); 
+
+            if ($emailTemplateExist) {
+                $email_body= $emailTemplateExist->body_text;
+                $data['subject'] = $emailTemplateExist->subject_text;
+            }  else{
+                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+            }  
+            $data['body_text'] = $email_body;
+            $data['url'] = route('add.verify.email',$data['token']); 
+            \Mail::to($data['email'])->send(new SportloginEmail($data));
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        } 
         
         
     }
