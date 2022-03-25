@@ -27,7 +27,12 @@
                                <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
                             @endif
                         @endcan
-                        <a href="#" class="nav-item nav-link">{{ __('Students') }}</a>
+
+                        @can('teachers-list')
+                            @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                               <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
+                            @endif
+                        @endcan
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                             <div class="dropdown-menu">

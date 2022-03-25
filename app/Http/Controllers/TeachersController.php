@@ -35,9 +35,10 @@ class TeachersController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-users-update|teachers-delete', ['only' => ['index']]);
+        $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-view|teachers-users-update|teachers-delete', ['only' => ['index']]);
         $this->middleware('permission:teachers-create', ['only' => ['create','AddTeacher']]);
         $this->middleware('permission:teachers-update', ['only' => ['edit','update']]);
+        $this->middleware('permission:teachers-view', ['only' => ['edit']]);
         $this->middleware('permission:teachers-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
         $this->middleware('permission:teachers-delete', ['only' => ['destroy']]);
 
@@ -182,12 +183,15 @@ class TeachersController extends Controller
 
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
-        $exTeacher = $searchEmail = null;
+        $exTeacher = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
-            $exTeacher = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
+            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
+            $exTeacher = !empty($exUser) ? $exUser->personable : null;
         }
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','searchEmail','schoolId'));
+        // dd($exTeacher); 
+
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId'));
     }
 
      /**

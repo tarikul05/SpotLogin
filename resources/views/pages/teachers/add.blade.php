@@ -61,7 +61,7 @@
 					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
 					@csrf
 
-					<input type="hidden" name="user_id" value="{{ !empty($exTeacher) ? $exTeacher->id : '' }}">
+					<input type="hidden" name="user_id" value="{{ !empty($exUser) ? $exUser->id : '' }}">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -86,7 +86,7 @@
 										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" value="">
 									</div>
 								</div>
-							@if(empty($exTeacher))
+
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
@@ -102,25 +102,23 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="lastname" name="lastname" type="text">
+										<input class="form-control require" value="{{ $exTeacher ? $exTeacher->lastname : '' }}" {{ $exTeacher ? 'disabled' : '' }} id="lastname" name="lastname" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : <span class="required_sign">*</span></label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="firstname" name="firstname" type="text">
+										<input class="form-control require" value="{{ $exTeacher ? $exTeacher->firstname : '' }}" {{ $exTeacher ? 'disabled' : '' }} id="firstname" name="firstname" type="text">
 									</div>
 								</div>
-							@endif
+
 							</div>
 							<div class="col-md-6">
-
-							@if(empty($exTeacher))
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" name="birth_date" value="{{ $exTeacher ? $exTeacher->birth_date : '' }}" {{ $exTeacher ? 'disabled' : '' }} type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -130,10 +128,9 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" id="licence_js" name="licence_js" type="text">
+										<input class="form-control" id="licence_js" value="{{ $exTeacher ? $exTeacher->licence_js : '' }}" {{ $exTeacher ? 'disabled' : '' }}  name="licence_js" type="text">
 									</div>
 								</div>
-							@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
@@ -144,14 +141,14 @@
 								</div>
 
 							@if(empty($exTeacher))
-								<div class="form-group row" id="shas_user_account_div">
+								<!-- <div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
 											<input id="shas_user_account" name="has_user_account" type="checkbox" value="1">
 										</div>
 									</div>
-								</div>
+								</div> -->
 							@endif
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
@@ -169,7 +166,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
-					@if(empty($exTeacher))
+
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
 							</div>
@@ -178,19 +175,19 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="street" name="street" type="text">
+											<input class="form-control" value="{{ $exTeacher ? $exTeacher->street : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="street" name="street" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="street_number" name="street_number" type="text">
+											<input class="form-control" value="{{ $exTeacher ? $exTeacher->street_number : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="street_number" name="street_number" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="zip_code" name="zip_code" type="text">
+											<input class="form-control" value="{{ $exTeacher ? $exTeacher->zip_code : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="zip_code" name="zip_code" type="text">
 										</div>
 									</div>
 								</div>
@@ -198,16 +195,16 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="place" name="place" type="text">
+											<input class="form-control" value="{{ $exTeacher ? $exTeacher->place : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="place" name="place" type="text">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" id="country_code" name="country_code">
+											<select class="form-control" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option value="{{ $country->code }}">{{ $country->name }}</option>
+								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}">{{ $country->name }}</option>
 								                @endforeach
 											</select>
 											</div>
@@ -225,7 +222,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" type="text">
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+												<input class="form-control" value="{{ $exTeacher ? $exTeacher->phone : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="phone" name="phone" type="text">
 											</div>
 										</div>
 									</div>
@@ -243,7 +241,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> <input class="form-control" id="mobile" name="mobile" type="text">
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
+												<input class="form-control" value="{{ $exTeacher ? $exTeacher->mobile : '' }}" {{ $exTeacher ? 'disabled' : '' }}  id="mobile" name="mobile" type="text">
 											</div>
 										</div>
 									</div>
@@ -253,13 +252,13 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email2" name="email2" type="text">
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email2"  name="email2" type="text">
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-					@endif
+
 							<div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>

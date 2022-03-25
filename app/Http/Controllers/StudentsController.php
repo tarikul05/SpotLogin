@@ -155,7 +155,7 @@ class StudentsController extends Controller
         }else {
             $students = $user->getSelectedSchoolAttribute()->students;
         }
-        // dd($students);
+        dd($students);
         // $students = Student::where('is_active', 1)->get();
         return view('pages.students.list',compact('students','schoolId'));
     }
@@ -196,19 +196,19 @@ class StudentsController extends Controller
     public function AddStudent(Request $request, $schoolId = null)
     { 
       
-        // $user = Auth::user();
-        // if ($user->isSuperAdmin()) {
-        //     $school = School::active()->find($schoolId);
-        //     if (empty($school)) {
-        //         return [
-        //             'status' => 1,
-        //             'message' =>  __('School not selected')
-        //         ];
-        //     }
-        //     $schoolId = $school->id; 
-        // }else {
-        //     $schoolId = $user->selectedSchoolId();
-        // }
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
         
         DB::beginTransaction(); 
         try{
@@ -274,7 +274,7 @@ class StudentsController extends Controller
                 
                 $schoolStudent = [
                     'student_id' => $student->id,  
-                    'school_id' => $alldata['school_id'],
+                    'school_id' => $schoolId,
                     'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                     'nickname' => $alldata['nickname'],
                     'email' => $alldata['email'],
