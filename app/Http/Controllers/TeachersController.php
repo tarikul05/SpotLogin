@@ -37,8 +37,8 @@ class TeachersController extends Controller
         parent::__construct();
         $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-view|teachers-users-update|teachers-delete', ['only' => ['index']]);
         $this->middleware('permission:teachers-create', ['only' => ['create','AddTeacher']]);
-        $this->middleware('permission:teachers-update', ['only' => ['edit','update']]);
-        $this->middleware('permission:teachers-view', ['only' => ['edit']]);
+        $this->middleware('permission:teachers-view|teachers-update', ['only' => ['edit']]);
+        $this->middleware('permission:teachers-update', ['only' => ['update']]);
         $this->middleware('permission:teachers-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
         $this->middleware('permission:teachers-delete', ['only' => ['destroy']]);
 

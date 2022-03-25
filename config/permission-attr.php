@@ -48,6 +48,7 @@ return [
 
         // Teacher permission TeachersController
         'teachers-list',
+        'teachers-view',
         'teachers-create',
         'teachers-update',
         'teachers-users-update',

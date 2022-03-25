@@ -289,7 +289,9 @@
 							</div>
 						</div>
 					</fieldset>
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+					@can('teachers-update')
+						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+					@endcan
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
@@ -349,25 +351,14 @@
 										>
 									</td>
 								</tr>
-								<!-- <tr>
-									<td>9<input type="hidden" name="price_id" value="price_9"></td>
-									<td>Lessons/Events..</td>
-									<td>Cours collectif de 9 élèves</td>
-									<td><input id="price_buy20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-									<td><input id="price_sell20" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								</tr>
-								<tr>
-									<td>10<input type="hidden" name="price_id" value="price_10"></td>
-									<td>Lessons/Events..</td>
-									<td>Cours collectif de 10 élèves</td>
-									<td><input id="price_buy21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-									<td><input id="price_sell21" type="text" style="text-align:right" class="form-control numeric float" value="0.00"></td>
-								</tr> -->
 								@endforeach
 							@endforeach
 						</tbody>
 						</table>
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+
+					@can('teachers-update')
+						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+					@endcan
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
@@ -394,7 +385,7 @@
 													style="margin-right:10px;">
 										<?php endif; ?>
 
-											
+											@can('teachers-update')
 											<div style="display:flex;flex-direction: column;">
 												<div style="margin:5px;">
 													<span class="btn btn-theme-success">
@@ -415,6 +406,7 @@
 													</div>
 												<?php //endif; ?>
 											</div>
+											@endcan
 										</div>
 									</fieldset>
 								</div>
