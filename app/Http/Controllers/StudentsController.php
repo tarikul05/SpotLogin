@@ -182,12 +182,13 @@ class StudentsController extends Controller
 
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
-        $exTeacher = $searchEmail = null;
+        $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
-            $exTeacher = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
+            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
+            $exStudent = !empty($exUser) ? $exUser->personable : null;
         }
-        return view('pages.students.add')->with(compact('countries','genders','exTeacher','searchEmail','schoolId'));
+        return view('pages.students.add')->with(compact('countries','genders','exStudent','searchEmail','schoolId'));
     }
 
      /**

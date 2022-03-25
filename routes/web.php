@@ -104,17 +104,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('permissions', "PermissionController");
         
     // Language 
-
     Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
     Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
-
 
     // email template 
     Route::get('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
     Route::post('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
 
-
-    
     // tc template 
     Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
@@ -183,19 +179,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('update-teacher-photo', ['as' =>'teacher.update_photo','uses' =>'TeachersController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
+
+    Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   });
 
  
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
     Route::get('/add-student', [App\Http\Controllers\StudentsController::class, 'create'])->name('student.create');
     Route::post('/add-student', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
+    Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
+    Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'editStudentAction'])->name('editStudentAction');
     // Route::match(array('GET', 'POST'), "add-teacher", array(
     //   'uses' => 'StudentsController@create',
     //   'as' => 'student.create'
     // ));
-    Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
-    Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'editStudentAction'])->name('editStudentAction');
-    // Route::post('/{school}/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent']);
     
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -205,3 +202,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 });
+
+
+

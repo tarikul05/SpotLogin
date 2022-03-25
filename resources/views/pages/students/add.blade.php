@@ -28,6 +28,24 @@
 		</header>
 		<!-- Tabs navs -->
 
+			<!-- user email check start -->
+			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
+				@csrf
+				<div class="form-group row">
+					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} :</label>
+					<div class="col-sm-5">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+							<input class="form-control" id="email" placeholder="{{ __('email@domain.com') }}" value="{{$searchEmail}}" name="email" type="email">
+						</div>
+					</div>
+					<div class="col-sm-2 ">
+						<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
+					</div>
+				</div>
+			</form>
+			<!-- // user email check end -->
+	@if($searchEmail)
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
@@ -444,6 +462,7 @@
 		</div>
 		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 		</form>
+	@endif
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -495,8 +514,7 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
-});
-$(function() {
+
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
 			$('#billing_street').val( $('#street').val() );
@@ -504,6 +522,51 @@ $(function() {
 			$('#billing_zip_code').val( $('#zip_code').val() );
 		}
 	});
+
+	// $('#save_btn').click(function (e) {
+	// 	var formData = $('#add_student').serializeArray();
+	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	// 	var error = '';
+	// 	$( ".form-control.require" ).each(function( key, value ) {
+	// 		var lname = $(this).val();
+	// 		if(lname=='' || lname==null || lname==undefined){
+	// 			$(this).addClass('error');
+	// 			error = 1;
+	// 		}else{
+	// 			$(this).removeClass('error');
+	// 			error = 0;
+	// 		}
+	// 	});
+	// 	formData.push({
+	// 		"name": "_token",
+	// 		"value": csrfToken,
+	// 	});
+	// 	if(error < 1){	
+	// 		$.ajax({
+	// 			url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
+	// 			data: formData,
+	// 			type: 'POST',
+	// 			dataType: 'json',
+	// 			beforeSend: function( xhr ) {
+	// 			    $("#pageloader").show();
+	// 			 },
+	// 			success: function(response){	
+	// 				if(response.status == 1){
+	// 					$('#modal_add_teacher').modal('show');
+	// 					$("#modal_alert_body").text(response.message);
+	// 				}
+	// 			},
+	// 			complete: function( xhr ) {
+	// 			    $("#pageloader").hide();
+	// 			}
+	// 		})
+	// 	}else{
+	// 		$('#modal_add_teacher').modal('show');
+	// 		$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+	// 	}	            
+	// });  
+
+
 });
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
