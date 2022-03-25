@@ -447,8 +447,10 @@
 						</div>
 					</div>
 				</div>
-		</div>
-		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+			</div>
+			@can('students-update')
+				<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+			@endcan
 		</form>
 	</div>
 	<!-- success modal-->

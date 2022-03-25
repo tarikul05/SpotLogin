@@ -33,7 +33,7 @@
                             <i class="fa fa-ellipsis-h txt-grey"></i>
                         </a>
                         <div class="dropdown-menu action text-left">
-                            @can('teachers-update')
+                            @can('teachers-view')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
                             <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>

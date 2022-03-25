@@ -28,7 +28,7 @@
                             @endif
                         @endcan
 
-                        @can('teachers-list')
+                        @can('students-list')
                             @if($AppUI['person_type'] != 'SUPER_ADMIN')
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif

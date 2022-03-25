@@ -32,11 +32,13 @@ class StudentsController extends Controller
     public function __construct()
     {
         parent::__construct();
-        // $this->middleware('permission:students-list|students-create|students-update|students-users-update|students-delete', ['only' => ['index']]);
-        // $this->middleware('permission:students-create', ['only' => ['create','AddTeacher']]);
-        // $this->middleware('permission:students-update', ['only' => ['edit','update']]);
-        // $this->middleware('permission:students-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
-        // $this->middleware('permission:students-delete', ['only' => ['destroy']]);
+
+       $this->middleware('permission:students-list|students-create|students-update|students-view|students-users-update|students-delete', ['only' => ['index']]);
+        $this->middleware('permission:students-create', ['only' => ['create','AddTeacher']]);
+        $this->middleware('permission:students-view|students-update', ['only' => ['edit']]);
+        $this->middleware('permission:students-update', ['only' => ['update']]);
+        $this->middleware('permission:students-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
+        $this->middleware('permission:students-delete', ['only' => ['destroy']]);
 
 
         $this->img_config = [

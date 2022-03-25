@@ -33,7 +33,7 @@
                             <i class="fa fa-ellipsis-h txt-grey"></i>
                         </a>
                         <div class="dropdown-menu action text-left">
-                            @can('teachers-update')
+                            @can('students-view')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
                             <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
@@ -52,7 +52,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable();
-        @can('teachers-create')
+        @can('students-create')
         $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
         @endcan
     } );

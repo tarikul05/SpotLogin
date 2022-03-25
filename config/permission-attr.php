@@ -54,6 +54,14 @@ return [
         'teachers-users-update',
         'teachers-delete',
 
+        // Student permission StudentsController
+        'students-list',
+        'students-view',
+        'students-create',
+        'students-update',
+        // 'students-users-update',
+        // 'students-delete',
+
 
         ];
 
