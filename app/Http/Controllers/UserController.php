@@ -11,6 +11,7 @@ use App\Models\VerifyToken;
 use App\Models\Currency;
 use App\Models\EmailTemplate;
 use App\Models\Country;
+use App\Models\SchoolTeacher;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -276,14 +277,30 @@ class UserController extends Controller
                 if(!$user_data->user) {
                     return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
                 }else{
-
+                    
                     if(!$user_data->user->is_active) {
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
                         return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
-                    }else{
-                        echo $status = "User already added please login.";
-                        header( "refresh:2;url=/" );
+                    }
+                    if($user_data->user->is_active ==3) {
+                        $user_data->user->is_active = 1;
+                        $user_data->user->save();
+                        return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                        
+                    }
+                    else{
+
+                        $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
+                        if ($exist) {
+                            return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                        } else {
+                            echo $status = "User already added please login.";
+                            header( "refresh:2;url=/" );
+                        }
+
+                        
+                        
                     }
                     
                 }
@@ -294,6 +311,39 @@ class UserController extends Controller
             //return error message
             echo '<h1>Invalid activation Link.</h1>'; die;
         }
+    }
+
+     /**
+     * after user add from admin verify it by user 
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-22
+     */
+    public function active_school(Request $request)
+    {
+        $data = $request->all();
+        try{
+
+            $user_data = [
+                'is_active'=> 3
+            ];
+            User::where(['id'=>$data['user_id']])->update($user_data);
+            $relationalData = [
+                'is_active'=> 1
+            ];
+            if ($data['person_type'] =='App\Models\Teacher') {
+                SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+            }
+            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+           
+        } catch (Exception $e) {
+            //return error message\
+           return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+
+        //return error message
+        return redirect()->back()->withInput($request->all())->with('error', __('failed to signup'));
     }
 
     /**

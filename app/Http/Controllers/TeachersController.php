@@ -225,20 +225,45 @@ class TeachersController extends Controller
                         'has_user_account'=> 1 ,
                         'comment'=> $alldata['comment'],
                         'nickname'=> $alldata['nickname'],
+                        'is_active'=> 0,
                     ];
                     $user = User::find($alldata['user_id']);
                     $teacher = $user->personable;
                     $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
-                    if (!$exist) {
+                    if ($exist) {
                         $teacher->schools()->attach($schoolId,$relationalData);
-                        $msg = 'Successfully Registered';
+                        // notify user by email about new Teacher role
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $user->email;
+                            $data['username'] = $data['name'] = $user->username;
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $teacher->id,
+                                'person_type' => 'App\Models\Teacher',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
+
+                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                                return $result = array(
+                                    "status"     => 0,
+                                    'message' =>  __('Internal server error')
+                                );
+                            }
+                            $msg = 'Successfully Registered';
+                        } 
+                        
                     }else {
                         $msg = 'This teacher already exist with your school';
                     }
                     
-
-                    // notify user by email about new Teacher role
-
+                    
+                    
 
                 }else{
                     $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
@@ -269,51 +294,30 @@ class TeachersController extends Controller
                     $teacher->schools()->attach($schoolId,$relationalData);
 
 
-
-
                     //sending activation email after successful signed up
-                    if (config('global.email_send') != 1) {
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $data['username'] = $data['name'] = $alldata['firstname'];
                         
-                        try {
-                            $data = [];
-                            $data['email'] = $alldata['email'];
-                            $data['username'] = $data['name'] = $alldata['firstname'];
-                            
-                            $verifyUser = [
-                                'school_id' => $schoolId,
-                                'person_id' => $teacher->id,
-                                'person_type' => 'App\Models\Teacher',
-                                'token' => Str::random(10),
-                                'token_type' => 'VERIFY_SIGNUP',
-                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
-                            ];
-                            $verifyUser = VerifyToken::create($verifyUser);
-                            $data['token'] = $verifyUser->token; 
+                        $verifyUser = [
+                            'school_id' => $schoolId,
+                            'person_id' => $teacher->id,
+                            'person_type' => 'App\Models\Teacher',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token; 
 
-                            $emailTemplateExist = EmailTemplate::where([
-                                ['template_code', 'sign_up_confirmation_email'],
-                                ['language', 'en']
-                            ])->first(); 
-
-                            if ($emailTemplateExist) {
-                                $email_body= $emailTemplateExist->body_text;
-                                $data['subject'] = $emailTemplateExist->subject_text;
-                            }  else{
-                                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
-                            }  
-                            $data['body_text'] = $email_body;
-                            $data['url'] = route('add.verify.email',$data['token']); 
-                            \Mail::to($data['email'])->send(new SportloginEmail($data));
-                            
+                        if ($this->emailSend($data,'sign_up_confirmation_email')) {
                             $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
-                            
-                        } catch (\Exception $e) {
-                            $result= [
-                                'status' => 0,
+                        }  else {
+                            return $result = array(
+                                "status"     => 0,
                                 'message' =>  __('Internal server error')
-                            ];
-                            return $result;
+                            );
                         }
                     } else {
                         $usersData = [
@@ -330,19 +334,13 @@ class TeachersController extends Controller
                             'is_active'=>1,
                             'is_firstlogin'=>0
                         ];
-    
                         $user = User::create($usersData);
                         $user->save();
                     }
-                    
-                    
-
                     $msg = 'Successfully Registered';
                 }
 
-                    
-               
-
+                
                 $result = array(
                     "status"     => 1,
                     'message' => __($msg)
@@ -355,9 +353,7 @@ class TeachersController extends Controller
                 'status' => 0,
                 'message' =>  __('Internal server error')
             ];
-        }   
-
-        
+        }  
         return $result;
     }
 
