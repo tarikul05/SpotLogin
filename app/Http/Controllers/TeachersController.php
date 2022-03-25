@@ -159,6 +159,7 @@ class TeachersController extends Controller
         }else {
             $teachers = $user->getSelectedSchoolAttribute()->teachers;
         }
+        // dd($teachers);
         // $teachers = Teacher::where('is_active', 1)->get();
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
@@ -230,7 +231,8 @@ class TeachersController extends Controller
                     $user = User::find($alldata['user_id']);
                     $teacher = $user->personable;
                     $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
-                    if ($exist) {
+                    // dd($exist);
+                    if (!$exist) {
                         $teacher->schools()->attach($schoolId,$relationalData);
                         // notify user by email about new Teacher role
                         if (config('global.email_send') == 1) {
@@ -255,8 +257,8 @@ class TeachersController extends Controller
                                     'message' =>  __('Internal server error')
                                 );
                             }
-                            $msg = 'Successfully Registered';
                         } 
+                        $msg = 'Successfully Registered';
                         
                     }else {
                         $msg = 'This teacher already exist with your school';

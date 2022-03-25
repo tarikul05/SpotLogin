@@ -340,11 +340,17 @@ $('#save_btn').click(function (e) {
 				data: formData,
 				type: 'POST',
 				dataType: 'json',
+				beforeSend: function( xhr ) {
+				    $("#pageloader").show();
+				 },
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_add_teacher').modal('show');
 						$("#modal_alert_body").text(response.message);
 					}
+				},
+				complete: function( xhr ) {
+				    $("#pageloader").hide();
 				}
 			})
 		}else{
