@@ -29,7 +29,7 @@
 		<!-- Tabs navs -->
 
 			<!-- user email check start -->
-			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
+			<!-- <form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
 				<div class="form-group row">
 					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} :</label>
@@ -43,9 +43,9 @@
 						<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 					</div>
 				</div>
-			</form>
+			</form> -->
 			<!-- // user email check end -->
-	@if($searchEmail)
+	{{-- @if($searchEmail) --}}
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
@@ -462,7 +462,7 @@
 		</div>
 		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 		</form>
-	@endif
+	 {{-- @endif --}}
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
