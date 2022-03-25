@@ -200,25 +200,26 @@ class StudentsController extends Controller
     { 
       
         $user = Auth::user();
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return [
-                    'status' => 1,
-                    'message' =>  __('School not selected')
-                ];
-            }
-            $schoolId = $school->id; 
-        }else {
-            $schoolId = $user->selectedSchoolId();
-        }
+        $alldata = $request->all();
+        // if ($user->isSuperAdmin()) {
+        //     $school = School::active()->find($schoolId);
+        //     if (empty($school)) {
+        //         return [
+        //             'status' => 1,
+        //             'message' =>  __('School not selected')
+        //         ];
+        //     }
+        //     $schoolId = $school->id; 
+        // }else {
+        //     $schoolId = $user->selectedSchoolId();
+        // }
+        $schoolId = $alldata['school_id'];
         
         DB::beginTransaction(); 
         try{
 
             $authUser = $request->user();
             if ($request->isMethod('post')){
-                $alldata = $request->all();
                 $studentData = [
                     'is_active' => $alldata['is_active'],
                     'gender_id' => $alldata['gender_id'],
