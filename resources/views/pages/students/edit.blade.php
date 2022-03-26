@@ -167,13 +167,9 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="" selected="">Select Level</option>
-													<option value="1" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '1' ? 'selected' : '') : (old('level_id') == '1' ? 'selected' : '')}}>Gold</option>
-													<option value="2" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '2' ? 'selected' : '') : (old('level_id') == '2' ? 'selected' : '')}}>Silver</option>
-													<option value="7" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '7' ? 'selected' : '') : (old('level_id') == '7' ? 'selected' : '')}}>Bronze</option>
-													<option value="8" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '8' ? 'selected' : '') : (old('level_id') == '8' ? 'selected' : '')}}>Professional</option>
-													<option value="10" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '10' ? 'selected' : '') : (old('level_id') == '10' ? 'selected' : '')}}>Beginner</option>
-													<option value="11" {{!empty($relationalData->level_id) ? (old('level_id', $relationalData->level_id) == '11' ? 'selected' : '') : (old('level_id') == '11' ? 'selected' : '')}}>Junior-below 5 yrsasdd</option>
+													@foreach($levels as $key => $level)
+														<option value="{{ $level->id }}"  {{ ($relationalData->level_id == $level->id) ? 'selected' : ''}}>{{ $level->title }}</option>
+													@endforeach
 												</select>
 											</div>
 										</div>

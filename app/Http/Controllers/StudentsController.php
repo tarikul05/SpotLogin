@@ -10,6 +10,7 @@ use App\Models\School;
 use App\Models\SchoolStudent;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Level;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
 use Illuminate\Support\Facades\Auth;
@@ -148,17 +149,13 @@ class StudentsController extends Controller
     {
 
         $user = Auth::user();
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return redirect()->route('schools')->with('error', __('School is not selected'));
-            }
-            $students = $school->students; 
-        }else {
-            $students = $user->getSelectedSchoolAttribute()->students;
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        // dd($students);
-        // $students = Student::where('is_active', 1)->get();
+        $students = $school->students; 
+
         return view('pages.students.list',compact('students','schoolId'));
     }
 
@@ -181,6 +178,7 @@ class StudentsController extends Controller
         }
 
         $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender'); 
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
@@ -188,7 +186,7 @@ class StudentsController extends Controller
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             $exStudent = !empty($exUser) ? $exUser->personable : null;
         }
-        return view('pages.students.add')->with(compact('countries','genders','exStudent','searchEmail','schoolId'));
+        return view('pages.students.add')->with(compact('countries','genders','exStudent','searchEmail','schoolId','levels'));
     }
 
      /**
@@ -468,8 +466,9 @@ class StudentsController extends Controller
         
         $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
         $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image','schoolId'));
+        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image','schoolId','levels'));
     }
 
     /**

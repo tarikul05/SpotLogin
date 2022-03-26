@@ -185,13 +185,9 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="" selected="">Select Level</option>
-													<option value="1">Gold</option>
-													<option value="2">Silver</option>
-													<option value="7">Bronze</option>
-													<option value="8">Professional</option>
-													<option value="10">Beginner</option>
-													<option value="11">Junior-below 5 yrsasdd</option>
+													@foreach($levels as $key => $level)
+														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
+													@endforeach
 												</select>
 											</div>
 										</div>
