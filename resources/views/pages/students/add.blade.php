@@ -81,7 +81,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Nickname" type="text" value="{{old('nickname')}}">
+										<input class="form-control require" required="true" id="nickname" maxlength="50" name="nickname" placeholder="Nickname" type="text" value="{{old('nickname')}}">
 										@if ($errors->has('nickname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('nickname') }}.</strong>
@@ -93,7 +93,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control require" id="gender_id" name="gender_id">
+											<select class="form-control require" require id="gender_id" name="gender_id">
 												@foreach($genders as $key => $gender)
 													<option value="{{ $key }}" {{ old('gender_id') == $key ? 'selected' : ''}}>{{ $gender }}</option>
 												@endforeach
@@ -136,7 +136,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
+										<input class="form-control require" required="true" id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
 										@if ($errors->has('lastname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('lastname') }}.</strong>
@@ -147,7 +147,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
+										<input class="form-control require" required="true" id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
 										@if ($errors->has('firstname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('firstname') }}.</strong>
