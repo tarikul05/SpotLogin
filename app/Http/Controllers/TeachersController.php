@@ -24,7 +24,6 @@ use App\Http\Requests\ProfilePhotoUpdateRequest;
 use Illuminate\Support\Facades\URL;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as InterventionImageManager;
 use App\Mail\SportloginEmail;
 
 
@@ -42,105 +41,10 @@ class TeachersController extends Controller
         $this->middleware('permission:teachers-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
         $this->middleware('permission:teachers-delete', ['only' => ['destroy']]);
 
-
-        $this->img_config = [
-          'target_path' => [
-            'UserImage' => 'photo/user_photo'
-          ],
-          'target_url' => [
-            'UserImage' => URL::to('').'/uploads/photo/user_photo/'
-          ],
-        ];
-        
-        // create the folder if it does not exist
-        foreach ($this->img_config['target_path'] as $img_dir) {
-          if (!is_dir($img_dir)) {
-            if (!mkdir($img_dir, 0777, true)) {
-              die('Failed to create folders...');
-            }
-          }
-        }
     
     }
 
-    /**
-    * image process and upload
-    * 
-    * @return json
-    * @author Mamun <lemonpstu09@gmail.com>
-    * @version 0.1 written in 2022-03-10
-    */
-    public function __processImg($file,$type,$authUser,$shouldCrop=false,$shouldResize=false) {
-        
-        $imageNewName = 'user_'.$authUser->id.'_dp.'.$file->getClientOriginalExtension();
-        $uploadedPath = $this->img_config['target_path'][$type];
-        
-        $filePath = $uploadedPath.'/'.date('Y/m/d') . '/'. $imageNewName;
-        $fileContent = null;
-        
-        if ($shouldCrop) {
-          $interventionImage = InterventionImageManager::make($file->getRealPath());
-          
-          if (!$width && !$height) {
-            $height = $interventionImage->height();
-            $width = $interventionImage->width();
-            
-            if ($height <= $width) {
-              $width = $height;
-            } else {
-              $height = $width;
-            }
-          } else {
-            if (!$width) {
-              $width = $interventionImage->width();
-            }
-            
-            if (!$height) {
-              $height = $interventionImage->height();
-            }
-          }
-          
-          $croppedImage = $interventionImage->fit($width, $height);
-          // $croppedImage = $interventionImage->fit($width, $height, function ($constraint) {
-          //     $constraint->upsize();
-          // });
-          $croppedImageStream = $croppedImage->stream();
-          
-          $fileContent = $croppedImageStream->__toString();
-        } else if($shouldResize){
-          $interventionImage = InterventionImageManager::make($file->getRealPath());
-          if (!isset($width) && !isset($height)) {
-            $height = $interventionImage->height();
-            $width = $interventionImage->width();
-            
-            if ($height <= $width) {
-              $width = $height;
-            } else {
-              $height = $width;
-            }
-          } else {
-            if (!isset($width)) {
-              $width = $interventionImage->width();
-            }
-            
-            if (!isset($height)) {
-              $height = $interventionImage->height();
-            }
-          }
-          $resizedImage = $interventionImage->resize($width, $height, function ($constraint) {
-            $constraint->aspectRatio();
-          });
-          $resizedImageStream = $resizedImage->stream();
-          $fileContent = $resizedImageStream->__toString();
-        } else {
-          $fileContent = file_get_contents($file);
-        }
-        $result = Storage::disk('local')->put($filePath, $fileContent);
-        if (!$result) {
-          throw new HttpResponseException(response()->error('Image could not be uploaded', Response::HTTP_BAD_REQUEST));
-        }
-        return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
-    }
+   
     /**
      * Display a listing of the resource.
      *
