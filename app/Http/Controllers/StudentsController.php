@@ -366,12 +366,29 @@ class StudentsController extends Controller
         $relationalData = SchoolStudent::where([
             ['student_id',$studentId]
         ])->first();
+
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'student'],
+            ['language', $lanCode]
+        ])->first(); 
+
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        } 
         
         $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image','schoolId','levels'));
+        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels'));
     }
 
     /**
@@ -434,5 +451,46 @@ class StudentsController extends Controller
           $result['message'] = __('Internal server error');
         }
         return response()->json($result);
+    }
+
+
+
+      /**
+     * Update the student user account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  School $school
+     * @return \Illuminate\Http\Response
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-28
+    */
+    public function userUpdate(Request $request, User $user)
+    {
+        $params = $request->all();
+        try{
+            $request->merge([
+                'email'=> $params['admin_email'],
+                'is_active'=> $params['admin_is_active']
+            ]);
+            
+
+            $user = User::find($params['user_id']);
+            if ($user) {
+                $request->merge(['username'=> $params['admin_username']]);
+                $user->update($request->except(['_token']));
+
+                if (!empty($params['admin_password'])) {
+                    $user->password = $params['admin_password'];
+                    $user->save();
+                }
+            } else{
+                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+            }
+
+            return back()->withInput($request->all())->with('success', __('Teacher account updated successfully!'));
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 }
