@@ -150,7 +150,7 @@ class TeachersController extends Controller
                                 'person_type' => 'App\Models\Teacher',
                                 'token' => Str::random(10),
                                 'token_type' => 'VERIFY_SIGNUP',
-                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token; 
@@ -212,7 +212,7 @@ class TeachersController extends Controller
                             'person_type' => 'App\Models\Teacher',
                             'token' => Str::random(10),
                             'token_type' => 'VERIFY_SIGNUP',
-                            'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token; 

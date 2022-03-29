@@ -247,7 +247,7 @@ class AuthController extends Controller
                             $verifyUser = [
                                 'user_id' => $user->id,
                                 'token' => Str::random(5),
-                                'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
                             
                     
