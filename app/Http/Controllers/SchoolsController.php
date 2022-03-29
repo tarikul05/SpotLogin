@@ -408,12 +408,17 @@ class SchoolsController extends Controller
                         }
                         $data['subject'] = $data['subject_text'];
                         $data['body_text'] = $data['email_body'];
-                        \Mail::to($user->email)->send(new SportloginEmail($data));
-                        $result = array(
-                            'status' => true,
-                            'message' => __('We sent an email.'),
-                        );
-                        
+                        if ($this->emailSendWithoutTemplate($data,$user->email)) {
+                            $result = array(
+                                'status' => true,
+                                'message' => __('We sent an email.'),
+                            );
+                        }  else {
+                            return $result = array(
+                                "status"     => false,
+                                'message' =>  __('Internal server error')
+                            );
+                        }
                         return response()->json($result);
                     } catch (\Exception $e) {
                         $result = array(

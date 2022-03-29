@@ -122,9 +122,14 @@ class Controller extends BaseController
     public function emailSend($data=[], $template_code=null) {
         
         try {
+            $lang = 'en'; 
+            if (isset($data['p_lang'])) {
+                $lang = $data['p_lang']; 
+            }
+
             $emailTemplateExist = EmailTemplate::where([
                 ['template_code', $template_code],
-                ['language', 'en']
+                ['language', $lang]
             ])->first(); 
 
             if ($emailTemplateExist) {
@@ -132,11 +137,37 @@ class Controller extends BaseController
                 $data['subject'] = $emailTemplateExist->subject_text;
             }  else{
                 $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                if (isset($data['subject'])) {
+                    $data['subject']=$data['subject'];
+                } else {
+                    $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                }
+                
             }  
             $data['body_text'] = $email_body;
-            $data['url'] = route('add.verify.email',$data['token']); 
+            if (isset($data['token'])) {
+                $data['url'] = route('add.verify.email',$data['token']); 
+            }
+            if (isset($data['url'])) {
+                $data['url'] = $data['url']; 
+            }
             \Mail::to($data['email'])->send(new SportloginEmail($data));
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        } 
+        
+        
+    }
+
+     /**
+     * Common function for email send
+     *
+     */
+    public function emailSendWithoutTemplate($data=[], $to_email = null) {
+        
+        try {
+            \Mail::to($to_email)->send(new SportloginEmail($data));
             return true;
         } catch (\Exception $e) {
             return false;

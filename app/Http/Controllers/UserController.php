@@ -144,28 +144,25 @@ class UserController extends Controller
         
                 $data['token'] = $verifyUser->token; 
                 $data['username'] = $user->username; 
-                $emailTemplateExist = EmailTemplate::where([
-                    ['template_code', 'sign_up_confirmation_email'],
-                    ['language', 'en']
-                ])->first(); 
-
-                if ($emailTemplateExist) {
-                    $email_body= $emailTemplateExist->body_text;
-                    $data['subject'] = $emailTemplateExist->subject_text;
-                }  else{
-                    $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                    $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
-                }  
-                $data['body_text'] = $email_body;
-                $data['url'] = route('verify.email',$data['token']); 
-                \Mail::to($user->email)->send(new SportloginEmail($data));
                 
-                $user->is_mail_sent = 1;
-                $user->save();
-                $result = array(
-                    'status' => 1,
-                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                );
+                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                $data['url'] = route('verify.email',$data['token']); 
+                
+                
+
+                if ($this->emailSend($data,'forsign_up_confirmation_emailgot_password_email')) {
+                    $user->is_mail_sent = 1;
+                    $user->save();
+                    $result = array(
+                        'status' => 1,
+                        'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                    );
+                }  else {
+                    $result = array(
+                        "status"     => 0,
+                        'message' =>  __('Internal server error')
+                    );
+                }
                 
                 return response()->json($result);
             } catch (\Exception $e) {

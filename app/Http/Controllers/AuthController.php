@@ -255,29 +255,25 @@ class AuthController extends Controller
                     
                             $data['token'] = $verifyUser->token; 
                             $data['username'] = $user->username; 
-                            $emailTemplateExist = EmailTemplate::where([
-                                ['template_code', 'forgot_password_email'],
-                                ['language', $p_lang]
-                            ])->first(); 
-
-                            if ($emailTemplateExist) {
-                                $email_body= $emailTemplateExist->body_text;
-                                $data['subject'] = $emailTemplateExist->subject_text;
-                            }  else{
-                                $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                                $data['subject']='Reset Password';
-                            }  
-                            $data['body_text'] = $email_body;
+                            $data['subject']='Reset Password';
                             $data['url'] = route('reset_password.email',$data['token']); 
-                            \Mail::to($user->email)->send(new SportloginEmail($data));
                             
-                            $user->is_mail_sent = 1;
-                            $user->save();
-                            $result = array(
-                                'status' => true,
-                                'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                            );
+                            $data['p_lang'] = $p_lang; 
                             
+
+                            if ($this->emailSend($data,'forgot_password_email')) {
+                                $user->is_mail_sent = 1;
+                                $user->save();
+                                $result = array(
+                                    'status' => true,
+                                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                                );
+                            }  else {
+                                $result = array(
+                                    "status"     => false,
+                                    'message' =>  __('Internal server error')
+                                );
+                            }
                             return response()->json($result);
                         } catch (\Exception $e) {
                             $result = array(
