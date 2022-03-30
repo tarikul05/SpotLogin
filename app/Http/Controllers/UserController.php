@@ -287,8 +287,15 @@ class UserController extends Controller
                         
                     }
                     else{
+                        if ($verifyToken->person_type =='App\Models\Student') {
+                            $exist = SchoolStudent::where(['is_active'=> 0,'student_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
+                        
+                        }
+                        else {
+                            $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
+                        
+                        }
 
-                        $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
                         if ($exist) {
                             return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
                         } else {
@@ -331,6 +338,9 @@ class UserController extends Controller
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
                 SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+            }
+            if ($data['person_type'] =='App\Models\Student') {
+                SchoolTeacher::where(['is_active'=> 0,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
            
