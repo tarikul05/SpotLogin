@@ -71,9 +71,8 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" name="is_active" id="is_active">
-												<option value="10">Active</option>
+												<option value="1">Active</option>
 												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
 											</select>
 										</div>
 									</div>
@@ -431,7 +430,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="email" name="email" value="{{old('email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="father_email" name="father_email" value="{{old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>

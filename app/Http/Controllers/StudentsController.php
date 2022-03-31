@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\Level;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
+use App\Models\VerifyToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -102,7 +103,7 @@ class StudentsController extends Controller
       
         $user = Auth::user();
         $alldata = $request->all();
-        //dd($alldata);
+        
         // if ($user->isSuperAdmin()) {
         //     $school = School::active()->find($schoolId);
         //     if (empty($school)) {
@@ -124,7 +125,6 @@ class StudentsController extends Controller
                 
                 if (!empty($alldata['user_id'])) {
                     $relationalData = [
-                        'role_type'=>$alldata['role_type'], 
                         'has_user_account'=> 1 ,
                         'comment'=> $alldata['comment'],
                         'nickname'=> $alldata['nickname'],
@@ -243,46 +243,48 @@ class StudentsController extends Controller
                     $schoolStudentData = SchoolStudent::create($schoolStudent);
                     $schoolStudentData->save();
 
-
-                    //sending activation email after successful signed up
-                    if (config('global.email_send') == 1) {
-                        $data = [];
-                        $data['email'] = $alldata['email'];
-                        $data['username'] = $data['name'] = $alldata['firstname'];
+                    if (!empty($alldata['email'])) {
                         
-                        $verifyUser = [
-                            'school_id' => $schoolId,
-                            'person_id' => $student->id,
-                            'person_type' => 'App\Models\Student',
-                            'token' => Str::random(10),
-                            'token_type' => 'VERIFY_SIGNUP',
-                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                        ];
-                        $verifyUser = VerifyToken::create($verifyUser);
-                        $data['token'] = $verifyUser->token; 
+                        //sending activation email after successful signed up
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $alldata['email'];
+                            $data['username'] = $data['name'] = $alldata['nickname'];
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $student->id,
+                                'person_type' => 'App\Models\Student',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
 
-                        if ($this->emailSend($data,'sign_up_confirmation_email')) {
-                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
-                        }  else {
-                            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                            if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                                $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                            }  else {
+                                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                            }
+                        } else {
+                            $usersData = [
+                                'person_id' => $student->id,
+                                'person_type' =>'App\Models\Student',
+                                'username' =>Str::random(10),
+                                'lastname' => $alldata['lastname'],
+                                'middlename'=>'',
+                                'firstname'=>$alldata['firstname'],
+                                'email'=>$alldata['email'],
+                                // 'password'=>$alldata['password'],
+                                'password'=>Str::random(10),
+                                'is_mail_sent'=>0,
+                                'is_active'=>1,
+                                'is_firstlogin'=>0
+                            ];
+                            $user = User::create($usersData);
+                            $user->save();
                         }
-                    } else {
-                        $usersData = [
-                            'person_id' => $student->id,
-                            'person_type' =>'App\Models\Student',
-                            'username' =>Str::random(10),
-                            'lastname' => $alldata['lastname'],
-                            'middlename'=>'',
-                            'firstname'=>$alldata['firstname'],
-                            'email'=>$alldata['email'],
-                            // 'password'=>$alldata['password'],
-                            'password'=>Str::random(10),
-                            'is_mail_sent'=>0,
-                            'is_active'=>1,
-                            'is_firstlogin'=>0
-                        ];
-                        $user = User::create($usersData);
-                        $user->save();
                     }
                 }
             }
