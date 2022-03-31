@@ -266,24 +266,26 @@ class UserController extends Controller
             
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
+                $school = $verifyToken->school;
+                
 
                 $countries = Country::active()->get();
                 $genders = config('global.gender'); 
                 
                 
                 if(!$user_data->user) {
-                    return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                    return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
                     
                     if(!$user_data->user->is_active) {
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                        return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                     }
                     if($user_data->user->is_active ==3) {
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                        return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         
                     }
                     else{
@@ -297,7 +299,7 @@ class UserController extends Controller
                         }
 
                         if ($exist) {
-                            return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                            return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         } else {
                             echo $status = "User already added please login.";
                             header( "refresh:2;url=/" );
