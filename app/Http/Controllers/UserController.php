@@ -274,6 +274,9 @@ class UserController extends Controller
                 
                 
                 if(!$user_data->user) {
+                    if ($verifyToken->person_type =='App\Models\Student') {
+                        $user_data->email = $user_data->student_email;
+                    }
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
                     

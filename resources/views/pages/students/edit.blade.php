@@ -39,6 +39,7 @@
 		<!-- Tabs content -->
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
+		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 		@csrf	
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -607,8 +608,8 @@ $(function() {
 		let loader = $('#pageloader');
     	loader.show();
 
-		var schoolUserForm = document.getElementById("schoolUserForm");
-		var formdata = $("#schoolUserForm").serializeArray();
+		var schoolUserForm = document.getElementById("studentUserForm");
+		var formdata = $("#studentUserForm").serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
 		
@@ -631,7 +632,7 @@ $(function() {
 		//console.log(formdata);
 
 		$.ajax({
-				url: BASE_URL + '/school_email_send',
+				url: BASE_URL + '/student_email_send',
 				data: formdata,
 				type: 'POST',
 				dataType: 'json',

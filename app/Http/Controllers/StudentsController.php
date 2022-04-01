@@ -191,7 +191,8 @@ class StudentsController extends Controller
                         'phone2' => $alldata['phone2'],
                         'mobile' => $alldata['mobile'],
                         'email2' => $alldata['email2'],
-                        'student_email' => $alldata['student_email']
+                        'student_email' => !empty($alldata['student_email']) ? $alldata['student_email'] : $alldata['email'],
+                        
                     ];
                     
                     if($request->file('profile_image_file'))
@@ -584,5 +585,77 @@ class StudentsController extends Controller
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
+    }
+
+
+    /**
+     *  AJAX action to send email to school admin
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
+    public function studentEmailSend(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+            
+            $user = User::find($data['user_id']); 
+            if ($user) {
+                //sending email for forgot password
+                if (config('global.email_send') == 1) {
+                    
+                    try {
+                        $data['email'] = $data['email_to_id'];
+                        $data['name'] = $user->username;
+                        $data['username'] = $user->username; 
+                        if (!empty($data['admin_password'])) {
+                            $data['password'] = $data['admin_password']; 
+                        } else {
+                            $data['password'] = config('global.user_default_password');
+                        }
+                        $data['subject'] = $data['subject_text'];
+                        $data['body_text'] = $data['email_body'];
+                        if ($this->emailSendWithoutTemplate($data,$user->email)) {
+                            $result = array(
+                                'status' => true,
+                                'message' => __('We sent an email.'),
+                            );
+                        }  else {
+                            return $result = array(
+                                "status"     => false,
+                                'message' =>  __('Internal server error')
+                            );
+                        }
+                        
+                        
+                        
+                        return response()->json($result);
+                    } catch (\Exception $e) {
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent an email.'),
+                        );
+                        return response()->json($result);
+                    }
+                } else{
+                    $result = array('status'=>true,'msg'=>__('We sent an email.'));
+                }
+            }   else {
+                $result = array('status'=>false,'msg'=>__('Username not exist'));
+            }
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
     }
 }
