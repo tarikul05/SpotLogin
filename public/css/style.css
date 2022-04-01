@@ -42,6 +42,9 @@ label#page_header {
     border: 0px;
     width: 100%;
 } 
+label.page_header.bold {
+    font-weight: bold;
+}
 .nav-tabs .nav-link {
     padding-left: 0;
 }
@@ -510,6 +513,7 @@ img#frame {
     height: 150px;
     border-radius: 100%;
 }
+
 @media only screen and (max-width: 768px){
     .language_page label,
     .email_template_page label,

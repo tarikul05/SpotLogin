@@ -360,7 +360,44 @@ footer p a:hover{text-decoration: none;}
 input#shas_user_account {
   margin-top: 14px;
 }
-
+.student_list .ms-options > ul {
+  padding-left: 10px;
+  list-style: none;
+}
+.student_list .ms-options > ul li{
+  padding: 3px 27px 3px 0;
+}
+.student_list .ms-options > ul li label{
+  padding-top: 3px;
+  padding-left: 25px!important;
+  background: transparent!important;
+  padding-bottom: 0px;
+}
+.student_list .ms-options {
+  min-height: auto!important;
+}
+.student_list .ms-options-wrap > button:focus, 
+.student_list .ms-options-wrap > button {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  margin-top: 1px;
+  color: #657E8E;
+  outline: none;
+  white-space: nowrap;
+  padding: 0.375rem 0.75rem;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
 @media only screen and (max-width: 1200px){
   h1{font-size: 68px;}
   h2{font-size: 48px;}
