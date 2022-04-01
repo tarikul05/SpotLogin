@@ -202,10 +202,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
 
-
-
-
+    Route::get('/add-lesson', [App\Http\Controllers\LessonsController::class, 'create'])->name('lesson.create');
+    Route::get('/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('student.off');
+    Route::get('/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coach.off');
 });
-
-
 
