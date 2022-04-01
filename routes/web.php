@@ -41,8 +41,12 @@ Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 
 //email-send school AJAX
 Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');
 
-//email-send school AJAX
+//email-send teacher AJAX
 Route::post('teacher_email_send', [App\Http\Controllers\TeachersController::class, 'teacherEmailSend'])->name('teacher_email_send.submit');
+
+
+//email-send student AJAX
+Route::post('student_email_send', [App\Http\Controllers\StudentsController::class, 'studentEmailSend'])->name('student_email_send.submit');
 
 // email template  AJAX
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
@@ -196,7 +200,7 @@ Route::group(['middleware' => ['auth']], function () {
     
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-    // Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
+    Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
 
 
 

@@ -165,11 +165,11 @@ $(document).ready(function() {
            
            
             $("#loginModal").modal('hide');
-            successModalCall("{{ __('Logged In Successfully') }}");
+            //successModalCall("{{ __('Logged In Successfully') }}");
             
             setTimeout(function() {
               window.location.href = "../teachers";
-            }, 2000);
+            }, 1000);
 
 
 

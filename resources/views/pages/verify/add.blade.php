@@ -11,7 +11,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('User Information:') }}</label>
+						<label id="page_header" name="page_header">Creating user for {{ $school->school_name }}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">

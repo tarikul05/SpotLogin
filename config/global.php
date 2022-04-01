@@ -84,9 +84,10 @@
     ),
     'user_default_password' => env('USER_DEFAULT_PASSWORD', 12345678),
     'gender'=>[
-        1 => 'Male',
-        2 => 'Femail',
-        3 => 'Not specified',
-      ],
+      1 => 'Male',
+      2 => 'Femail',
+      3 => 'Not specified',
+    ],
+    'token_validity' => 2, //days
     
   ];

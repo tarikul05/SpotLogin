@@ -136,7 +136,7 @@ class UserController extends Controller
                 $verifyUser = [
                     'user_id' => $user->id,
                     'token' => Str::random(10),
-                    'expire_date' => Carbon::now()->addDays(2)->format("Y-m-d")
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
                 
         
@@ -144,28 +144,25 @@ class UserController extends Controller
         
                 $data['token'] = $verifyUser->token; 
                 $data['username'] = $user->username; 
-                $emailTemplateExist = EmailTemplate::where([
-                    ['template_code', 'sign_up_confirmation_email'],
-                    ['language', 'en']
-                ])->first(); 
-
-                if ($emailTemplateExist) {
-                    $email_body= $emailTemplateExist->body_text;
-                    $data['subject'] = $emailTemplateExist->subject_text;
-                }  else{
-                    $email_body='<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                    $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
-                }  
-                $data['body_text'] = $email_body;
-                $data['url'] = route('verify.email',$data['token']); 
-                \Mail::to($user->email)->send(new SportloginEmail($data));
                 
-                $user->is_mail_sent = 1;
-                $user->save();
-                $result = array(
-                    'status' => 1,
-                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                );
+                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                $data['url'] = route('verify.email',$data['token']); 
+                
+                
+
+                if ($this->emailSend($data,'forsign_up_confirmation_emailgot_password_email')) {
+                    $user->is_mail_sent = 1;
+                    $user->save();
+                    $result = array(
+                        'status' => 1,
+                        'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
+                    );
+                }  else {
+                    $result = array(
+                        "status"     => 0,
+                        'message' =>  __('Internal server error')
+                    );
+                }
                 
                 return response()->json($result);
             } catch (\Exception $e) {
@@ -269,31 +266,43 @@ class UserController extends Controller
             
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
+                $school = $verifyToken->school;
+                
 
                 $countries = Country::active()->get();
                 $genders = config('global.gender'); 
                 
                 
                 if(!$user_data->user) {
-                    return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                    if ($verifyToken->person_type =='App\Models\Student') {
+                        $user_data->email = $user_data->student_email;
+                    }
+                    return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
                     
                     if(!$user_data->user->is_active) {
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.add')->with(compact('countries','genders','user_data','verifyToken'));
+                        return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                     }
                     if($user_data->user->is_active ==3) {
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                        return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         
                     }
                     else{
+                        if ($verifyToken->person_type =='App\Models\Student') {
+                            $exist = SchoolStudent::where(['is_active'=> 0,'student_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
+                        
+                        }
+                        else {
+                            $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
+                        
+                        }
 
-                        $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
                         if ($exist) {
-                            return view('pages.verify.active_school_user')->with(compact('countries','genders','user_data','verifyToken'));
+                            return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         } else {
                             echo $status = "User already added please login.";
                             header( "refresh:2;url=/" );
@@ -334,6 +343,9 @@ class UserController extends Controller
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
                 SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+            }
+            if ($data['person_type'] =='App\Models\Student') {
+                SchoolTeacher::where(['is_active'=> 0,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
            

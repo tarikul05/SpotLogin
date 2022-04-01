@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\Level;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
+use App\Models\VerifyToken;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -22,7 +23,6 @@ use App\Http\Requests\ProfilePhotoUpdateRequest;
 use Illuminate\Support\Facades\URL;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as InterventionImageManager;
 use App\Mail\SportloginEmail;
 
 
@@ -40,106 +40,10 @@ class StudentsController extends Controller
         $this->middleware('permission:students-update', ['only' => ['update']]);
         $this->middleware('permission:students-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
         $this->middleware('permission:students-delete', ['only' => ['destroy']]);
-
-
-        $this->img_config = [
-          'target_path' => [
-            'StudentImage' => 'photo/student_photo'
-          ],
-          'target_url' => [
-            'StudentImage' => URL::to('').'/uploads/photo/student_photo/'
-          ],
-        ];
-        
-        // create the folder if it does not exist
-        foreach ($this->img_config['target_path'] as $img_dir) {
-          if (!is_dir($img_dir)) {
-            if (!mkdir($img_dir, 0777, true)) {
-              die('Failed to create folders...');
-            }
-          }
-        }
     
     }
 
-    /**
-    * image process and upload
-    * 
-    * @return json
-    * @author Mamun <lemonpstu09@gmail.com>
-    * @version 0.1 written in 2022-03-10
-    */
-    public function __processImg($file,$type,$authUser,$shouldCrop=false,$shouldResize=false) {
-        
-        $imageNewName = 'user_'.$authUser->id.'_dp.'.$file->getClientOriginalExtension();
-        $uploadedPath = $this->img_config['target_path'][$type];
-        
-        $filePath = $uploadedPath.'/'.date('Y/m/d') . '/'. $imageNewName;
-        $fileContent = null;
-        
-        if ($shouldCrop) {
-          $interventionImage = InterventionImageManager::make($file->getRealPath());
-          
-          if (!$width && !$height) {
-            $height = $interventionImage->height();
-            $width = $interventionImage->width();
-            
-            if ($height <= $width) {
-              $width = $height;
-            } else {
-              $height = $width;
-            }
-          } else {
-            if (!$width) {
-              $width = $interventionImage->width();
-            }
-            
-            if (!$height) {
-              $height = $interventionImage->height();
-            }
-          }
-          
-          $croppedImage = $interventionImage->fit($width, $height);
-          // $croppedImage = $interventionImage->fit($width, $height, function ($constraint) {
-          //     $constraint->upsize();
-          // });
-          $croppedImageStream = $croppedImage->stream();
-          
-          $fileContent = $croppedImageStream->__toString();
-        } else if($shouldResize){
-          $interventionImage = InterventionImageManager::make($file->getRealPath());
-          if (!isset($width) && !isset($height)) {
-            $height = $interventionImage->height();
-            $width = $interventionImage->width();
-            
-            if ($height <= $width) {
-              $width = $height;
-            } else {
-              $height = $width;
-            }
-          } else {
-            if (!isset($width)) {
-              $width = $interventionImage->width();
-            }
-            
-            if (!isset($height)) {
-              $height = $interventionImage->height();
-            }
-          }
-          $resizedImage = $interventionImage->resize($width, $height, function ($constraint) {
-            $constraint->aspectRatio();
-          });
-          $resizedImageStream = $resizedImage->stream();
-          $fileContent = $resizedImageStream->__toString();
-        } else {
-          $fileContent = file_get_contents($file);
-        }
-        $result = Storage::disk('local')->put($filePath, $fileContent);
-        if (!$result) {
-          throw new HttpResponseException(response()->error('Image could not be uploaded', Response::HTTP_BAD_REQUEST));
-        }
-        return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
-    }
+   
     /**
      * Display a listing of the resource.
      *
@@ -199,6 +103,7 @@ class StudentsController extends Controller
       
         $user = Auth::user();
         $alldata = $request->all();
+        
         // if ($user->isSuperAdmin()) {
         //     $school = School::active()->find($schoolId);
         //     if (empty($school)) {
@@ -212,86 +117,177 @@ class StudentsController extends Controller
         //     $schoolId = $user->selectedSchoolId();
         // }
         $schoolId = $alldata['school_id'];
-        
         DB::beginTransaction(); 
         try{
 
             $authUser = $request->user();
             if ($request->isMethod('post')){
-                $studentData = [
-                    'is_active' => $alldata['is_active'],
-                    'gender_id' => $alldata['gender_id'],
-                    'lastname' => $alldata['lastname'],
-                    'firstname' => $alldata['firstname'],
-                    'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
-                    'street' => $alldata['street'],
-                    'street_number' => $alldata['street_number'],
-                    'zip_code' => $alldata['zip_code'],
-                    'place' => $alldata['place'],
-                    'country_code' => $alldata['country_code'],
-                    'province_id' => $alldata['province_id'],
-                    'billing_street' => $alldata['billing_street'],
-                    'billing_street2' => $alldata['billing_street2'],
-                    'billing_street_number' => $alldata['billing_street_number'],
-                    'billing_zip_code' => $alldata['billing_zip_code'],
-                    'billing_place' => $alldata['billing_place'],
-                    'billing_country_code' => $alldata['billing_country_code'],
-                    'billing_province_id' => $alldata['billing_province_id'],
-                    'phone' => $alldata['phone'],
-                    'phone2' => $alldata['phone2'],
-                    'mobile' => $alldata['mobile'],
-                    'email2' => $alldata['email2'],
-                    'student_email' => $alldata['student_email']
-                ];
                 
-                if($request->file('profile_image_file'))
-                {
-                  $image = $request->file('profile_image_file');
-                  $mime_type = $image->getMimeType();
-                  $extension = $image->getClientOriginalExtension();
-                  if($image->getSize()>0)
-                  { 
-                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
-                    
-                    if (!empty($path)) {
-                      $fileData = [
-                        'visibility' => 1,
-                        'file_type' =>'image',
-                        'title' => $authUser->username,
-                        'path_name' =>$path,
-                        'file_name' => $imageNewName,
-                        'extension'=>$extension,
-                        'mime_type'=>$mime_type
-                      ];
-                      
-                      $attachedImage = AttachedFile::create($fileData);
-                      $studentData['profile_image_id'] = $attachedImage->id;
-                      
-                    }
-                  }
-                }
-                
-                $student = Student::create($studentData);
-                $student->save();
-                
-                $schoolStudent = [
-                    'student_id' => $student->id,  
-                    'school_id' => $schoolId,
-                    'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
-                    'nickname' => $alldata['nickname'],
-                    'email' => $alldata['email'],
-                    'billing_method' => $alldata['billing_method'],
-                    'level_id' => $alldata['level_id'],
-                    'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
-                    'licence_arp' => $alldata['licence_arp'],
-                    'licence_usp' => $alldata['licence_usp'],
-                    'level_skating_usp' => $alldata['level_skating_usp'],
-                    'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
-                    'comment' => $alldata['comment'],
-                ];
+                if (!empty($alldata['user_id'])) {
+                    $relationalData = [
+                        'has_user_account'=> 1 ,
+                        'comment'=> $alldata['comment'],
+                        'nickname'=> $alldata['nickname'],
+                        'is_active'=> 0,
+                    ];
+                    $user = User::find($alldata['user_id']);
+                    $student = $user->personable;
+                    $exist = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $student->id ])->first();
+                    // dd($exist);
+                    if (!$exist) {
+                        $student->schools()->attach($schoolId,$relationalData);
+                        // notify user by email about new Teacher role
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $user->email;
+                            $data['username'] = $data['name'] = $user->username;
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $student->id,
+                                'person_type' => 'App\Models\Student',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
 
-                $schoolStudentData = SchoolStudent::create($schoolStudent);
-                $schoolStudentData->save();
+                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                            }
+                        } 
+                        $msg = 'Successfully Registered';
+                        
+                    }else {
+                        $msg = 'This teacher already exist with your school';
+                    }
+                    
+                    
+                    
+
+                }else{
+                
+                    $studentData = [
+                        'is_active' => $alldata['is_active'],
+                        'gender_id' => $alldata['gender_id'],
+                        'lastname' => $alldata['lastname'],
+                        'firstname' => $alldata['firstname'],
+                        'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
+                        'street' => $alldata['street'],
+                        'street_number' => $alldata['street_number'],
+                        'zip_code' => $alldata['zip_code'],
+                        'place' => $alldata['place'],
+                        'country_code' => $alldata['country_code'],
+                        'province_id' => $alldata['province_id'],
+                        'billing_street' => $alldata['billing_street'],
+                        'billing_street2' => $alldata['billing_street2'],
+                        'billing_street_number' => $alldata['billing_street_number'],
+                        'billing_zip_code' => $alldata['billing_zip_code'],
+                        'billing_place' => $alldata['billing_place'],
+                        'billing_country_code' => $alldata['billing_country_code'],
+                        'billing_province_id' => $alldata['billing_province_id'],
+                        'phone' => $alldata['phone'],
+                        'phone2' => $alldata['phone2'],
+                        'mobile' => $alldata['mobile'],
+                        'email2' => $alldata['email2'],
+                        'student_email' => !empty($alldata['student_email']) ? $alldata['student_email'] : $alldata['email'],
+                        
+                    ];
+                    
+                    if($request->file('profile_image_file'))
+                    {
+                        $image = $request->file('profile_image_file');
+                        $mime_type = $image->getMimeType();
+                        $extension = $image->getClientOriginalExtension();
+                        if($image->getSize()>0)
+                        { 
+                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
+                            
+                            if (!empty($path)) {
+                            $fileData = [
+                                'visibility' => 1,
+                                'file_type' =>'image',
+                                'title' => $authUser->username,
+                                'path_name' =>$path,
+                                'file_name' => $imageNewName,
+                                'extension'=>$extension,
+                                'mime_type'=>$mime_type
+                            ];
+                            
+                            $attachedImage = AttachedFile::create($fileData);
+                            $studentData['profile_image_id'] = $attachedImage->id;
+                            
+                            }
+                        }
+                    }
+                    
+                    $student = Student::create($studentData);
+                    $student->save();
+                    
+                    $schoolStudent = [
+                        'student_id' => $student->id,  
+                        'school_id' => $schoolId,
+                        'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                        'nickname' => $alldata['nickname'],
+                        'email' => $alldata['email'],
+                        'billing_method' => $alldata['billing_method'],
+                        'level_id' => $alldata['level_id'],
+                        'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
+                        'licence_arp' => $alldata['licence_arp'],
+                        'licence_usp' => $alldata['licence_usp'],
+                        'level_skating_usp' => $alldata['level_skating_usp'],
+                        'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                        'comment' => $alldata['comment'],
+                    ];
+
+                    $schoolStudentData = SchoolStudent::create($schoolStudent);
+                    $schoolStudentData->save();
+
+                    if (!empty($alldata['email'])) {
+                        
+                        //sending activation email after successful signed up
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $alldata['email'];
+                            $data['username'] = $data['name'] = $alldata['nickname'];
+                            
+                            $verifyUser = [
+                                'school_id' => $schoolId,
+                                'person_id' => $student->id,
+                                'person_type' => 'App\Models\Student',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
+
+                            if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                                $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                            }  else {
+                                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                            }
+                        } else {
+                            $usersData = [
+                                'person_id' => $student->id,
+                                'person_type' =>'App\Models\Student',
+                                'username' =>Str::random(10),
+                                'lastname' => $alldata['lastname'],
+                                'middlename'=>'',
+                                'firstname'=>$alldata['firstname'],
+                                'email'=>$alldata['email'],
+                                // 'password'=>$alldata['password'],
+                                'password'=>Str::random(10),
+                                'is_mail_sent'=>0,
+                                'is_active'=>1,
+                                'is_firstlogin'=>0
+                            ];
+                            $user = User::create($usersData);
+                            $user->save();
+                        }
+                    }
+                }
             }
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Student added successfully!'));
@@ -463,12 +459,29 @@ class StudentsController extends Controller
         $relationalData = SchoolStudent::where([
             ['student_id',$studentId]
         ])->first();
+
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'student'],
+            ['language', $lanCode]
+        ])->first(); 
+
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        } 
         
         $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('countries','genders','student','relationalData','profile_image','schoolId','levels'));
+        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels'));
     }
 
     /**
@@ -531,5 +544,118 @@ class StudentsController extends Controller
           $result['message'] = __('Internal server error');
         }
         return response()->json($result);
+    }
+
+
+
+      /**
+     * Update the student user account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  School $school
+     * @return \Illuminate\Http\Response
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-28
+    */
+    public function userUpdate(Request $request, User $user)
+    {
+        $params = $request->all();
+        try{
+            $request->merge([
+                'email'=> $params['admin_email'],
+                'is_active'=> $params['admin_is_active']
+            ]);
+            
+
+            $user = User::find($params['user_id']);
+            if ($user) {
+                $request->merge(['username'=> $params['admin_username']]);
+                $user->update($request->except(['_token']));
+
+                if (!empty($params['admin_password'])) {
+                    $user->password = $params['admin_password'];
+                    $user->save();
+                }
+            } else{
+                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+            }
+
+            return back()->withInput($request->all())->with('success', __('Teacher account updated successfully!'));
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+
+    /**
+     *  AJAX action to send email to school admin
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
+    public function studentEmailSend(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+            
+            $user = User::find($data['user_id']); 
+            if ($user) {
+                //sending email for forgot password
+                if (config('global.email_send') == 1) {
+                    
+                    try {
+                        $data['email'] = $data['email_to_id'];
+                        $data['name'] = $user->username;
+                        $data['username'] = $user->username; 
+                        if (!empty($data['admin_password'])) {
+                            $data['password'] = $data['admin_password']; 
+                        } else {
+                            $data['password'] = config('global.user_default_password');
+                        }
+                        $data['subject'] = $data['subject_text'];
+                        $data['body_text'] = $data['email_body'];
+                        if ($this->emailSendWithoutTemplate($data,$user->email)) {
+                            $result = array(
+                                'status' => true,
+                                'message' => __('We sent an email.'),
+                            );
+                        }  else {
+                            return $result = array(
+                                "status"     => false,
+                                'message' =>  __('Internal server error')
+                            );
+                        }
+                        
+                        
+                        
+                        return response()->json($result);
+                    } catch (\Exception $e) {
+                        $result = array(
+                            'status' => true,
+                            'message' => __('We sent an email.'),
+                        );
+                        return response()->json($result);
+                    }
+                } else{
+                    $result = array('status'=>true,'msg'=>__('We sent an email.'));
+                }
+            }   else {
+                $result = array('status'=>false,'msg'=>__('Username not exist'));
+            }
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
     }
 }
