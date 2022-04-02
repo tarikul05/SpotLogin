@@ -153,6 +153,11 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.student.create'
     ));
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
+
+    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'create'])->name('lesson.create');
+    Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('student.off');
+    Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coach.off');
+
   }); //Admin scope end
 
 
