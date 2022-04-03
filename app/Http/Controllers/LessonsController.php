@@ -7,8 +7,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Teacher;
+use App\Models\Event;
+use App\Models\EventDetails;
 use App\Models\School;
+use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
+use App\Models\EventCategory;
+use App\Models\Location;
+use App\Models\LessonPrice;
 
 class LessonsController extends Controller
 {
@@ -28,16 +34,77 @@ class LessonsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $schoolId = null)
+    public function addLesson(Request $request, $schoolId = null)
     {
-        // $user = Auth::user();
-        // $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        // $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
-        // $students = $school->students;    
-        return view('pages.calendar.add_lesson')->with(compact('schoolId'));
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
+        $locations = Location::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        $lessonPrice = LessonPrice::active()->get();
+        return view('pages.calendar.add_lesson')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice'));
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addLessonAction(Request $request, $schoolId = null)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $user = Auth::user();
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $school = School::active()->find($schoolId);
+                if (empty($school)) {
+                    return redirect()->route('schools')->with('error', __('School is not selected'));
+                }
+
+                $studentOffData = $request->all();
+                $start_date = str_replace('/', '-', $studentOffData['start_date']);
+                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+
+                $data = [
+                    'title' => $studentOffData['title'],
+                    'school_id' => $schoolId,
+                    'event_type' => 51,
+                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
+                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'description' => $studentOffData['description']
+                ];
+
+                $event = Event::create($data);
+
+                foreach($categoryData['category'] as $cat){
+                    $dataDetails = [
+                        'event_id'   => $event->id,
+                        'student_id' => $schoolId,
+                    ];
+                    $eventDetails = EventDetails::create($dataDetails);
+                    
+                }
+                 
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }  
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
     }
 
     /**
@@ -47,14 +114,70 @@ class LessonsController extends Controller
      */
     public function studentOff(Request $request, $schoolId = null)
     {
-        // $user = Auth::user();
-        // $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        // $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
-        // $students = $school->students;    
-        return view('pages.calendar.student_off')->with(compact('schoolId'));
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        return view('pages.calendar.student_off')->with(compact('schoolId','students'));
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function studentOffAction(Request $request, $schoolId = null)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $user = Auth::user();
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $school = School::active()->find($schoolId);
+                if (empty($school)) {
+                    return redirect()->route('schools')->with('error', __('School is not selected'));
+                }
+
+                $studentOffData = $request->all();
+                $start_date = str_replace('/', '-', $studentOffData['start_date']);
+                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+
+                $data = [
+                    'title' => $studentOffData['title'],
+                    'school_id' => $schoolId,
+                    'event_type' => 51,
+                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
+                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'description' => $studentOffData['description']
+                ];
+
+                $event = Event::create($data);
+
+                $dataDetails = [
+                    'event_id' => $event->id,
+                    'school_id' => $schoolId,
+                    'teacher_id' => $schoolId,
+                ];
+                
+                $eventDetails = EventDetails::create($dataDetails);
+                 
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }  
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
     }
 
         /**
@@ -64,14 +187,70 @@ class LessonsController extends Controller
      */
     public function coachOff(Request $request, $schoolId = null)
     {
-        // $user = Auth::user();
-        // $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        // $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
-        // $students = $school->students;    
-        return view('pages.calendar.coach_off')->with(compact('schoolId'));
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
+        return view('pages.calendar.coach_off')->with(compact('schoolId','professors'));
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function coachOffAction(Request $request, $schoolId = null)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $user = Auth::user();
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $school = School::active()->find($schoolId);
+                if (empty($school)) {
+                    return redirect()->route('schools')->with('error', __('School is not selected'));
+                }
+
+                $coachOffData = $request->all();
+
+                $start_date = str_replace('/', '-', $coachOffData['start_date']);
+                $end_date = str_replace('/', '-', $coachOffData['end_date']);
+
+                $data = [
+                    'title' => $coachOffData['title'],
+                    'school_id' => $schoolId,
+                    'event_type' => 50,
+                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
+                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
+                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
+                    'description' => $coachOffData['description']
+                ];
+                
+                $event = Event::create($data);
+
+                $dataDetails = [
+                    'event_id' => $event->id,
+                    'teacher_id' => $coachOffData['teacher_select'],
+                ];
+                
+                $eventDetails = EventDetails::create($dataDetails);
+                 
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }  
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
     }
 
     /**

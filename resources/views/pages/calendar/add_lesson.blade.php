@@ -38,8 +38,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -52,14 +51,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
-											<option category_type="T" value="10">Ice Skating-School</option>
-											<option category_type="S" value="11">Soccer-School</option>
-											<option category_type="T" value="92">Ice Skating-Teacher</option>
-											<option category_type="S" value="109">Football-School</option>
-											<option category_type="T" value="110">Football-Coach</option>
-											<option category_type="S" value="111">test cat SCHOOL</option>
-											<option category_type="T" value="118">sacasc</option>
-											<option category_type="T" value="119">test</option>
+												@foreach($eventCategory as $key => $eventcat)
+													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -69,13 +63,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
-												<option value="0"></option>
-												<option value="26">kolkatass</option>
-												<option value="27">joka</option>
-												<option value="31">Tollygunge</option>
-												<option value="32">Diamond Park</option>
-												<option value="33">Ballygunge</option>
-												<option value="37">pune</option>
+												@foreach($locations as $key => $location)
+													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -85,11 +75,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
-												<option value="EC7E9C27-1B10-11EC-9CF6-067B4964D503">Arindam (Biswas)</option>
-												<option value="3330B801-1EC4-11EC-9CF6-067B4964D503">suparna (dutta)</option>
-												<option value="14086343-9DB8-11EA-8FFD-0A608F1BF91B">teacher (min)</option>
-												<option value="6503D09C-9DB7-11EA-8FFD-0A608F1BF91B">teacher (all)</option>
-												<option value="CC6AB82C-9DB7-11EA-8FFD-0A608F1BF91B">teacher (med)</option>
+												@foreach($professors as $key => $professor)
+													<option value="{{ $professor->id }}" {{ old('teacher_select') == $professor->id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -98,10 +86,10 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
-											<select class="form-control" id="student" name="student">
-												<option value="0">Arindam Student (Bronze)</option>
-												<option value="1">Arindam1 Biswas1</option>
-												<option value="2">avijit chakraborty</option>
+											<select class="form-control" id="student" name="student[]" multiple="multiple">
+												@foreach($students as $key => $student)
+													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -111,7 +99,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -132,7 +120,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -181,16 +169,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
-												<option value="price_1">Private session</option>
-												<option value="price_2">Group lessons for 2 students</option>
-												<option value="price_3">Group lessons for 3 students</option>
-												<option value="price_4">Group lessons for 4 students</option>
-												<option value="price_5">Group lessons for 5 students</option>
-												<option value="price_6">Group lessons for 6 students</option>
-												<option value="price_7">Group lessons for 7 students</option>
-												<option value="price_8">Group lessons for 8 students</option>
-												<option value="price_9">Group lessons for 9 students</option>
-												<option value="price_10">Group lessons for 10 students</option>
+												@foreach($lessonPrice as $key => $lessprice)
+													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
