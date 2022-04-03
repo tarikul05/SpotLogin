@@ -81,11 +81,11 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::create($data);
-
-                foreach($categoryData['category'] as $cat){
+                foreach($studentOffData['student'] as $std){
+                   echo $std;
                     $dataDetails = [
                         'event_id'   => $event->id,
-                        'student_id' => $schoolId,
+                        'student_id' => $std,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                     

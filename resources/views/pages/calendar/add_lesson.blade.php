@@ -17,12 +17,6 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('Lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
-				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="float-end btn-group">
-						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-					</div>
 				</div>    
 			</div>          
 		</header>
@@ -200,6 +194,7 @@
 							</div>
 						</div>
 					</fieldset>
+					<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 				</form>
 			</div>
 		</div>
@@ -236,48 +231,5 @@ $('#student').multiselect({
 	search: true
 });
 
-// save functionality
-$('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				beforeSend: function( xhr ) {
-				    $("#pageloader").show();
-				 },
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				},
-				complete: function( xhr ) {
-				    $("#pageloader").hide();
-				}
-			})
-		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
-});  
 </script>
 @endsection
