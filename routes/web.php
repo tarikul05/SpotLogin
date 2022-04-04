@@ -78,6 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
   Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
+  Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
   Route::match(array('GET', 'POST'), "permission-check", array(
