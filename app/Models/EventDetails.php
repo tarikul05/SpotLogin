@@ -22,7 +22,7 @@ class EventDetails extends BaseModel
     protected $fillable = [
       'event_id',
       'teacher_id',
-      'school_id',
+      'student_id',
       'visibility_id',
       'participation_id',
       'is_locked',

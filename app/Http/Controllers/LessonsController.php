@@ -34,6 +34,86 @@ class LessonsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function addEvent(Request $request, $schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
+        $locations = Location::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        $lessonPrice = LessonPrice::active()->get();
+        return view('pages.calendar.add_event')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice'));
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addEventAction(Request $request, $schoolId = null)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $user = Auth::user();
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $school = School::active()->find($schoolId);
+                if (empty($school)) {
+                    return redirect()->route('schools')->with('error', __('School is not selected'));
+                }
+
+                $studentOffData = $request->all();
+                $start_date = str_replace('/', '-', $studentOffData['start_date']);
+                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+
+                $data = [
+                    'title' => $studentOffData['title'],
+                    'school_id' => $schoolId,
+                    'event_type' => 51,
+                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
+                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'price_currency' => $studentOffData['sprice_currency'],
+                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
+                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'description' => $studentOffData['description']
+                ];
+
+                $event = Event::create($data);
+                foreach($studentOffData['student'] as $std){
+                    $dataDetails = [
+                        'event_id'   => $event->id,
+                        'teacher_id' => $studentOffData['teacher_select'],
+                        'student_id' => $std,
+                    ];
+                    $eventDetails = EventDetails::create($dataDetails);
+                }
+                 
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }  
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
+    }
+   
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function addLesson(Request $request, $schoolId = null)
     {
         $user = Auth::user();
@@ -75,20 +155,22 @@ class LessonsController extends Controller
                     'school_id' => $schoolId,
                     'event_type' => 51,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
+                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'price_currency' => $studentOffData['sprice_currency'],
+                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
+                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
                     'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
                     'description' => $studentOffData['description']
                 ];
 
                 $event = Event::create($data);
                 foreach($studentOffData['student'] as $std){
-                   echo $std;
                     $dataDetails = [
                         'event_id'   => $event->id,
+                        'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
-                    
                 }
                  
                 $result = array(
