@@ -3,11 +3,16 @@
 @section('head_links')
 <!-- datetimepicker -->
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
-<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
+<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/> 
+
+<link href="{{ asset('css/datetimepicker-lang/bootstrap-datetimepicker.css')}}" rel="stylesheet">
+
 <link href="{{ asset('css/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <script src="{{ asset('js/fullcalendar.js')}}"></script>
+<link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
+admin_main_style.css
 @endsection
 
 @section('content')
@@ -143,26 +148,23 @@
 	var loading=1;
   var lang_id='fr';
 	$('#datepicker_month').datetimepicker({            
-    inline: true,
+    inline: false,
     locale: lang_id,
-    //format: 'DD/MM/YYYY',
     icons: {
         time: "fa fa-clock-o",
         date: "fa fa-calendar",
         up: "fa fa-arrow-up",
-        down: "fa fa-arrow-down"
+        down: "fa fa-arrow-down",
+        left: "",
+        right: ""
     },
-
-
     format: "DD/MM/YYYY",
     autoclose: true,
     todayBtn: true,
 		minuteStep: 10,
 		minView: 2,
-		// maxView: 3,
-		//viewSelect: 3,
-		// todayBtn:false,
-    pickTime: false
+    pickTime: false,
+    todayBtn: false 
       
   });
   moment.locale(lang_id, {
@@ -217,9 +219,10 @@
 		$('#back_btn').click(function (e) {							
 	   	window.history.back();
 		});
-    loading=0;
-    console.log('a) loading='+loading);
-    RerenderEvents();
+        loading=0;
+        console.log('a) loading='+loading);
+        RerenderEvents();
+        RenderCalendar();
     
 		
 		
@@ -227,6 +230,7 @@
 
   function RerenderEvents(){
 	  if (loading == 0){ 
+      console.log('sss');
       $("#agenda_table tr:gt(0)").remove();
       $('#calendar').fullCalendar('rerenderEvents');								
     }
@@ -302,6 +306,523 @@
         //$('#calendar').fullCalendar('rerenderEvents');
     }       
   }
+
+
+
+
+
+
+
+  var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+  var json_events = [{
+        title: 'All Day Event',
+        start: new Date(y, m, 1)
+    }, {
+        title: 'Long Event',
+        start: new Date(y, m, d - 5),
+        end: new Date(y, m, d - 2),
+        className: 'red'
+    }, {
+        id: 999,
+        title: 'Repeating Event',
+        start: new Date(y, m, d - 3, 16, 0),
+        allDay: false,
+        className: 'red'
+    }, {
+        id: 999,
+        title: 'Repeating Event',
+        start: new Date(y, m, d + 4, 16, 0),
+        allDay: false
+    }, {
+        title: 'Meeting',
+        start: new Date(y, m, d, 10, 30),
+        allDay: false
+    }, {
+        title: 'Lunch',
+        start: new Date(y, m, d, 12, 0),
+        end: new Date(y, m, d, 14, 0),
+        allDay: false
+    }, {
+        title: 'Birthday Party',
+        start: new Date(y, m, d + 1, 19, 0),
+        end: new Date(y, m, d + 1, 22, 30),
+        allDay: false
+    }, {
+        title: 'Click for Google',
+        start: new Date(y, m, 28),
+        end: new Date(y, m, 29),
+        url: 'http://google.com/'
+    }];
+
+    var defview='agendaWeek';   //'month';//'agendaWeek'
+    var v_calc_height=((screen.height/100)*50.00);
+    var currentTimezone = 'local';
+    var currentLangCode = 'fr';
+  function RenderCalendar(){    
+        //console.log('RenderCalendar: defview'+defview);
+		/* initialize the calendar
+		-----------------------------------------------------------------*/
+		$('#calendar').fullCalendar({
+			timeFormat: 'HH(:mm)',   
+            axisFormat: 'HH(:mm)',            
+			slotDuration: '00:30:00',
+			slotLabelFormat: 'H:mm',
+            events: json_events,	  
+			//events: JSON.parse(json_events),
+			utc: false,            
+            defaultView: defview,
+            
+            buttonText: {
+            prev: '<',
+            next: '>'
+            },       
+			header: false,
+            
+            views: {
+                agenda: {
+                    columnFormat: 'ddd MMM DD'
+                },
+                week: {
+                    columnFormat: 'ddd MMM DD'
+                },
+                month: {
+                    columnFormat: 'ddd'
+                },
+                day: {
+                    columnFormat: 'ddd DD MMM'
+                }
+            },
+            
+            handleWindowResize: true,
+            eventTextColor: '#000000',
+            firstDay: '1',      //monday
+            height: 'parent', // calendar content height excluding header
+            contentHeight: v_calc_height, // calendar content height excluding header
+            
+            timezone: currentTimezone, 
+            locale: currentLangCode,
+			buttonIcons: true, // show the prev/next text
+			allDayDefault: true,
+			defaultTimedEventDuration: '00:30:00',
+			forceEventDuration: true,
+			nextDayThreshold: '00:00',
+            nowIndicator: true,
+            loading: function(bool) {
+				$('#loading').toggle(bool)
+			},
+  
+            // // to customize cell text
+            // eventRender: function(event, el) {
+        
+            //     var flag=true;
+            //     var event_found=1;
+            //     var student_found=1;
+            //     var teacher_found=1;
+            //     var search_found=1;
+            //     var date_found=1;
+            //     var location_found=1;
+            //     /* Start datepicker - change date */    
+            //     console.log('rendering...event_id='+event.id);
+            //     var dt=moment(event.start).format('DD/MM/YYYY');
+                
+            //     //$('#datepicker_month').data("DateTimePicker").date(dt)
+            //     /* END datepicker - change date */
+            
+            //     //ProgressIncrement(); //display progress bar
+            //     if (document.getElementById("event_type").value != '0') {
+            //         event_found=0;
+            //         $.each($("#event_type option:selected"), function(){ 
+            //             var name=$(this).text();
+            //             if (event.event_type_name.indexOf(name) >= 0){
+            //                 event_found=1;
+            //                 //break;
+            //             }                      
+                        
+            //         });
+            //     }                
+            //     // event_type=50 - teacher's vacation
+            //     //incase teacher's vacation student will not be checked
+            //     if (event.event_type != 50) {
+            //         if (document.getElementById("event_student_id").value == '') { 
+            //             student_found=0;
+            //         }
+            //         else {
+                        
+            //                 if (document.getElementById("event_student_id").value !='0') {
+            //                     student_found=0;
+            //                     $.each($("#event_student option:selected"), function(){ 
+            //                         var id=$(this).val();
+            //                         if (event.student_id_list.indexOf(id) >= 0){
+            //                             student_found=1;
+            //                             //break;
+            //                         }
+            //                         });
+            //                 }
+                        
+            //         }
+            //     }	//event_type <> 50
+                
+            //     // event_type=51 - student's vacation
+            //     //incase student's vacation student will not be checked
+            //     if (event.event_type != 51) {
+            //         if (document.getElementById("event_teacher_id").value == '') { 
+            //             teacher_found=0;
+            //         }
+            //         else {
+            //             if (document.getElementById("event_teacher_id").value !='0') {
+            //                 if (no_of_teachers != 1){ 
+            //                 teacher_found=0;
+            //                 $.each($("#event_teacher option:selected"), function(){ 
+            //                     var id=$(this).val();
+            //                     if (event.teacher_id.indexOf(id) >= 0){
+            //                         teacher_found=1;
+            //                         //break;
+            //                     }                      
+            //                 });
+            //                 }	//no_of_teachers		
+            //             }
+            //         }
+            //     }
+            //     /* START listmonth view - display off past dated events */
+            //     var view = $('#calendar').fullCalendar('getView');
+            //     var viewname=view.name;
+            //     if ((viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
+            //     date_found=1;
+            //     var curdate=new Date();
+            //     if (moment(event.start).format('YYYYMMDD') < moment(curdate).format('YYYYMMDD') ){
+            //         //alert('event.start='+moment(event.start).format('YYYYMMDD')+' curdate='+moment(curdate).format('YYYYMMDD'));
+            //         //flag=false;    
+            //         date_found = 0;
+            //     } 
+            //     }		  
+            //     /* END listmonth view - display off past dated events */
+            
+            //     var loc_str=document.getElementById("event_location_id").value;
+            //     console.log('event.location='+event.location+' loc_str='+loc_str);
+            //     if (loc_str == '') {
+            //         location_found=0;
+            //         }
+            //     else {
+            //             if (loc_str.substring(0, 1) !='0') {
+            //                 //if (no_of_teachers != 1){ 
+            //                 location_found=0;
+            //                 $.each($("#event_location option:selected"), function(){ 
+            //                     var id=$(this).val();
+            //                     var loc_id=event.location;
+            //                     if (event.location == null){
+            //                         location_found=0;
+            //                     }
+            //                     else {
+            //                         try {
+            //                             if (loc_id.indexOf(id) >= 0){
+            //                                 location_found=1;
+            //                             }
+            //                         }
+            //                         catch (e){
+            //                             location_found=0;
+            //                             }
+            //                     }
+            //                 });
+            //                 //}	//no_of_teachers		
+            //             }		
+            //     }
+
+
+
+            
+            //     /* search START */ 
+            //     var search_text = $('#search_text').val();
+            //     if ((event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
+            //     if (search_text.length > 2){
+            //         search_found=0;
+            //         //if ((event.tooltip.toLowerCase().indexOf(search_text) >= 0) || (event.tooltip.toLowerCase().indexOf(search_text) >= 0)) {
+            //         //if (event.tooltip.toLowerCase().indexOf(search_text) >= 0) {
+            //         if (event.text_for_search.indexOf(search_text) >= 0) {
+            //             //if (event.tooltip.indexOf(search_text) >= 0) {
+            //         search_found=1;
+            //         //flag=true; 
+            //         } else {
+            //             search_found=0;
+            //             //flag=false;
+            //         }
+            //     }
+            //     } // 
+            //     /* search END */
+            //     console.log('event_id='+event.id+';event_found='+event_found+';student_found='+student_found+';teacher_found='+teacher_found+';date_found='+date_found+';location_found='+location_found+';search_found='+search_found);
+
+            //     if ((event_found == 1) && (student_found == 1) && (teacher_found == 1) && (search_found == 1) && (date_found == 1) && (location_found == 1) ) 
+            //     {
+            //         flag = true;
+            //     } else {
+            //         flag = false;
+            //     }
+
+            //     if (flag == true){
+                    
+            //         stime=moment(event.start).format('HH:mm');
+            //         etime=moment(event.end).format('HH:mm');
+            //             if (moment(event.end).isValid() == false){
+            //                 etime=stime;
+            //             }
+            //         foundRecords=1; //found valid record;
+            //         //lockRecords=0;
+                    
+            //         //locked event icon
+            //         //add icon first line of events
+            //         //var icon ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
+                    
+            //         var icon ='<span class="fa fa-lock txt-orange"></span>';
+            //         //$(el).find('.fc-title').append("<br/>" + event.description); 
+            //         if (event.is_locked == '1'){        
+            //         //icon ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
+            //         $(el).find('div.fc-content').prepend(icon);
+            //         //$(el).find('div.fc-title').append("<br/>"); 
+            //         /*
+            //         if (event.allDay) {
+            //                 $(el).find('div.fc-content').prepend(icon);
+            //         } else {
+            //                 $(el).find('.fc-time').prepend(icon);
+            //         }*/
+            //             lockRecords=1;
+            //             //$(el).find('.fc-time').prepend(icon);
+            //         } else if (event.event_mode == '0'){
+                        
+            //             //icon ='<img src="../images/icons/draft.png" width="12" height="12"/>';
+            //             icon ='<i class="fa fa-file"></i> ';
+            //             //$(el).find('.fc-time').prepend(icon);
+            //         } else{
+            //             icon='';
+            //         }
+            //         //group header
+            //         /* commented group header as requested by Matt on 02-Aug issue log# 10.2                        
+            //         if (prevdt != moment(event.start).format('DD-MM-YYYY') )
+            //         {
+            //             //class="form-group"
+            //             resultHtml+='<b><tr class="agenda_list_header"><td colspan="7">Date: '+moment(event.start).format('dddd DD-MMMM-YYYY',currentLangCode)+'</tr>';
+            //         }
+            //         */
+            //         prevdt = moment(event.start).format('DD-MM-YYYY');
+            //         //event_img_id="event_img_"+moment(event.start).format('YYYYMMDD');
+            //         //$("#"+event_img_id).show();
+            //         //$("#"+event_img_id).css('display','block');
+                    
+            //         //populate agenda_table - soumen
+            //         //resultHtml+='<tr onClick="OpenEvent()" class="agenda_event_row" href="'+event.url+'">';
+                    
+            //         resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
+            //         //onClick="OpenEvent()"
+            //         resultHtml+='<td href="'+event.url+'">'+icon+moment(event.start).format('DD-MM-YYYY')+'</td>';
+            //         //resultHtml+='<td>'+stime+' - '+etime+'</td>';
+            //         resultHtml+='<td>'+stime+'</td>';
+            //         resultHtml+='<td>'+etime+'</td>';
+            //         if ( event.no_of_students <= 1 ){
+            //             resultHtml+='<td>'+event.no_of_students+' :</td>';
+            //         }else{
+            //             resultHtml+='<td>'+event.no_of_students+' :</td>';
+            //         }
+            //         resultHtml+='<td>'+event.title+'</td>';
+            //         resultHtml+='<td>'+event.cours_name+'</td>';
+            //         resultHtml+='<td>'+event.duration_minutes+' minutes</td>';
+            //         resultHtml+='<td>'+event.teacher_name+'</td>';
+            //         resultHtml+='</tr>';
+                
+            //     }
+            //     resultHtml_rows=resultHtml;
+            //     el.attr('title', event.tooltip);
+            //     //el.attr('timetext', event.title);
+            //     //$('#timetext').text(event.cours_name);
+            //     $(el).find('#timetext').append(' '+event.event_type_name);
+                
+            //     return flag;                
+                    
+            // },           
+
+            // eventClick: function(event, jsEvent, view) {
+            //     if (event.url) {
+            //         //alert(event.url);
+            //         SetEventCookies();
+            //         //commented by soumen on 15-Jun fr phase 2 changes
+            //         //window.location(event.url);
+                    
+            //         //console.log($(this).getBoundingClientRect());
+            //         document.getElementById('edit_view_url').value=event.url;
+            //         document.getElementById('confirm_event_id').value=event.event_auto_id;
+            //         //if (event.is_locked == 0) {
+            //         if (event.action_type == 'edit') {
+            //             $('#event_btn_edit_text').text(GetAppMessage('event_btn_edit_text'));
+            //             if (event.can_lock == 'Y') {
+            //                 $('#btn_confirm').show();
+            //             } else {
+            //                 $('#btn_confirm').hide();
+            //             }
+                        
+            //         } else {
+            //             $('#event_btn_edit_text').text(GetAppMessage('event_btn_view_text'));
+            //             $('#btn_confirm').hide();
+            //         }
+                    
+            //         stime=moment(event.start).format('HH:mm');
+            //         etime=moment(event.end).format('HH:mm');
+            //             if (moment(event.end).isValid() == false){
+            //                 etime=stime;
+            //             }
+                    
+            //         //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
+            //         if (stime == '00:00') {
+            //                 $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+            //             }
+            //         else {
+            //             $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+            //             }
+                    
+                    
+            //         $("#btn_edit_view").attr("href", event.url);
+            //         $("#EventModal").modal('show');
+            //         return false;
+            //         }
+            // },
+
+            // eventAfterAllRender: function() {
+            //     DisplayCalendarTitle();
+            //     var resultHtmlHeader='';
+            //     //add header
+            //     /* commened header by soumen */
+                
+            //     row_hdr_date=$("#row_hdr_date").text();
+            //     row_hdr_start_time=$("#row_hdr_start_time").text();
+            //     row_hdr_end_time=$("#row_hdr_end_time").text();
+            //     row_hdr_no_of_students=$("#row_hdr_no_of_students").text();
+            //     row_hdr_student_name=$("#row_hdr_student_name").text();
+            //     row_hdr_course=$("#row_hdr_course").text();
+            //     row_hdr_duration_id=$("#row_hdr_duration_id").text();
+            //     row_hdr_teacher_id=$("#row_hdr_teacher_id").text();
+                
+            //     resultHtmlHeader+='<table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="agenda_table_class tablesorter">';
+            //     resultHtmlHeader+='<thead>';
+            //     resultHtmlHeader+='<tr>';
+            //     resultHtmlHeader+='<th width="12%">'+row_hdr_date+'</th>';
+            //     resultHtmlHeader+='<th width="6%">'+row_hdr_start_time+'</th>';
+            //     resultHtmlHeader+='<th width="6%">'+row_hdr_end_time+'</th>';
+            //     resultHtmlHeader+='<th width="10%">'+row_hdr_no_of_students+'</th>';
+            //     resultHtmlHeader+='<th width="19%">'+row_hdr_student_name+'</th>';
+            //     resultHtmlHeader+='<th width="19%">'+row_hdr_course+'</th>';
+            //     resultHtmlHeader+='<th width="10%">'+row_hdr_duration_id+'</th>';                
+            //     resultHtmlHeader+='<th width="8%">'+row_hdr_teacher_id+'</th>';
+            //     resultHtmlHeader+='</tr>';
+            //     resultHtmlHeader+='</thead>';
+                
+            //     //resultHtmlHeader+=resultHtml;
+            //     resultHtmlHeader+=resultHtml_rows;
+            //     resultHtml_rows='';
+                
+            //     resultHtmlHeader+="</table>";
+            //     resultHtmlHeader+="<script>";
+            //     resultHtmlHeader+="$('#agenda_table').DataTable({";
+            //     resultHtmlHeader+='"stateSave": true,';
+            //     resultHtmlHeader+='"paging":   false,';
+            //     resultHtmlHeader+='"searching": false,';
+            //     resultHtmlHeader+='"ordering": true,';
+            //     resultHtmlHeader+='"info":     false,';
+            //     //resultHtmlHeader+="dom: 'Bfrtip',";       // uncomment to enable datatable export
+            //     //resultHtmlHeader+="buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],"; // uncomment to enable datatable export
+            //     resultHtmlHeader+='"processing": true});';
+            //     resultHtmlHeader+='<\/script>';
+                
+            //     $('#agenda_list').html(resultHtmlHeader);
+            //     //$('#agenda_table').append(resultHtmlHeader); //Fill Events
+            //     //$("#agenda_table").children().html(resultHtmlHeader);
+            //     //$("#agenda_table > tbody").html(resultHtmlHeader);
+                
+            //     resultHtml='';
+            //     document.getElementById("btn_copy_events").style.display = "none";
+            //     document.getElementById("btn_goto_planning").style.display = "none";
+            //     document.getElementById("btn_delete_events").style.display = "none";
+                
+            //     var user_role=document.getElementById("user_role").value;
+                
+            //     if (foundRecords == 1)
+            //         {
+            //             if (user_role == 'student') {
+            //                 document.getElementById("btn_copy_events").style.display = "none";        
+            //             } else {
+            //                 document.getElementById("btn_copy_events").style.display = "block";
+            //             }
+            //         }
+
+            //     if ((foundRecords == 1) && (lockRecords == 0))
+            //         {
+            //             if (user_role == 'student') {
+            //                 document.getElementById("btn_delete_events").style.display = "none";    
+            //             } else {
+            //                 //Delete button will be visible if events are available and all events are in unlock mode
+            //                 //alert('delete button will visible');
+            //                 document.getElementById("btn_delete_events").style.display = "block";
+            //             }
+            //         }
+            //     else
+            //     {
+            //         document.getElementById("btn_delete_events").style.display = "none";
+            //     }
+            //     lockRecords=0;
+                    
+            //     var view = $('#calendar').fullCalendar('getView'); 
+            //     if ((foundRecords == 0) && (document.getElementById("copy_date_from").value.length != 0) 
+            //             && (document.getElementById("copy_view_mode").value == view.name) )
+            //         {
+            //         document.getElementById("btn_goto_planning").style.display = "block";
+            //         }
+                    
+            //     foundRecords=0;
+                
+            //     CheckPermisson();
+                
+            //     $('#agenda_table tr').click(function(){
+                    
+            //         //alert('agenda_table tr Render soumen');
+                    
+            //         //var x=$(this).attr('href');
+            //         if ((typeof $(this).attr('href') === "undefined")) {
+            //             return false;
+            //         }
+            //         //alert(x);
+            //         if ($(this).attr('href') != "") {
+            //             SetEventCookies();
+            //             window.location = $(this).attr('href');    
+            //         }
+                    
+            //         return false;
+            //     });
+                                    
+            // },
+                
+            // viewRender: function( view, el ) {
+            //     //alert('RerenderEvents events');
+            //     $("#agenda_table tr:gt(0)").remove();
+            //     resultHtml='';
+            //     prevdt='';
+            //     //view change event - here needs to refresh data
+            //     document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
+            //     document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
+                
+            //     if (document.getElementById("prevnext").value == 'yes'){
+            //         document.getElementById("view_mode").value = 'list';
+            //         $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
+            //         $('#calendar').fullCalendar().find('.fc-day-header').hide();
+            //     }
+            //     else
+            //     {
+            //         document.getElementById("view_mode").value = view.name;
+            //     }
+            //     if  (firstload != '0'){
+            //         getFreshEvents();
+            //     }
+            // }
+        })    //full calendar initialization
+        
+    } //full calender - RenderCalendar
 
 	
 </script>
