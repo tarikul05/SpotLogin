@@ -10,6 +10,9 @@
 <link href="{{ asset('css/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+
 <script src="{{ asset('js/fullcalendar.js')}}"></script>
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 admin_main_style.css
@@ -376,8 +379,8 @@ admin_main_style.css
             defaultView: defview,
             
             buttonText: {
-            prev: '<',
-            next: '>'
+                prev: '<',
+                next: '>'
             },       
 			header: false,
             
@@ -640,50 +643,50 @@ admin_main_style.css
                     
             // },           
 
-            // eventClick: function(event, jsEvent, view) {
-            //     if (event.url) {
-            //         //alert(event.url);
-            //         SetEventCookies();
-            //         //commented by soumen on 15-Jun fr phase 2 changes
-            //         //window.location(event.url);
+            eventClick: function(event, jsEvent, view) {
+                if (event.url) {
+                    //alert(event.url);
+                    SetEventCookies();
+                    //commented by soumen on 15-Jun fr phase 2 changes
+                    //window.location(event.url);
                     
-            //         //console.log($(this).getBoundingClientRect());
-            //         document.getElementById('edit_view_url').value=event.url;
-            //         document.getElementById('confirm_event_id').value=event.event_auto_id;
-            //         //if (event.is_locked == 0) {
-            //         if (event.action_type == 'edit') {
-            //             $('#event_btn_edit_text').text(GetAppMessage('event_btn_edit_text'));
-            //             if (event.can_lock == 'Y') {
-            //                 $('#btn_confirm').show();
-            //             } else {
-            //                 $('#btn_confirm').hide();
-            //             }
+                    //console.log($(this).getBoundingClientRect());
+                    document.getElementById('edit_view_url').value=event.url;
+                    document.getElementById('confirm_event_id').value=event.event_auto_id;
+                    //if (event.is_locked == 0) {
+                    if (event.action_type == 'edit') {
+                        $('#event_btn_edit_text').text(GetAppMessage('event_btn_edit_text'));
+                        if (event.can_lock == 'Y') {
+                            $('#btn_confirm').show();
+                        } else {
+                            $('#btn_confirm').hide();
+                        }
                         
-            //         } else {
-            //             $('#event_btn_edit_text').text(GetAppMessage('event_btn_view_text'));
-            //             $('#btn_confirm').hide();
-            //         }
+                    } else {
+                        $('#event_btn_edit_text').text(GetAppMessage('event_btn_view_text'));
+                        $('#btn_confirm').hide();
+                    }
                     
-            //         stime=moment(event.start).format('HH:mm');
-            //         etime=moment(event.end).format('HH:mm');
-            //             if (moment(event.end).isValid() == false){
-            //                 etime=stime;
-            //             }
+                    stime=moment(event.start).format('HH:mm');
+                    etime=moment(event.end).format('HH:mm');
+                        if (moment(event.end).isValid() == false){
+                            etime=stime;
+                        }
                     
-            //         //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
-            //         if (stime == '00:00') {
-            //                 $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
-            //             }
-            //         else {
-            //             $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
-            //             }
+                    //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
+                    if (stime == '00:00') {
+                            $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+                        }
+                    else {
+                        $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        }
                     
                     
-            //         $("#btn_edit_view").attr("href", event.url);
-            //         $("#EventModal").modal('show');
-            //         return false;
-            //         }
-            // },
+                    $("#btn_edit_view").attr("href", event.url);
+                    $("#EventModal").modal('show');
+                    return false;
+                    }
+            },
 
             // eventAfterAllRender: function() {
             //     DisplayCalendarTitle();
@@ -824,6 +827,58 @@ admin_main_style.css
         
     } //full calender - RenderCalendar
 
+
+
+    function PopulateEventTypeDropdown(){
+            
+        var add_new_id=$("#add_new_id").text();
+        
+        var all_event_text=$("#all_event_text").text();
+                
+        $('#event_type').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: all_event_text,
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Event type ',
+            allSelectedText: all_event_text,
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('Event changed triggered!');
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (option,checked) {
+                    document.getElementById("event_type_id").value='0';
+                    document.getElementById("event_type_all_flag").value='1';
+                    SetEventCookies();
+                    RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('Event onDeSelectAll triggered!');
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    SetEventCookies();
+                    RerenderEvents();
+                },
+                selectAllValue: 0
+        });
+
+        $('#event_type').multiselect('selectAll', false);   
+        $('#event_type').multiselect('refresh');	
+                
+    }   // populate event type
 	
 </script>
 @endsection
