@@ -31,7 +31,8 @@ img.admin_logo {
     height: 40px;
     margin-right: 20px;
 }
-label#page_header {
+label#page_header,
+#cal_title{
     color: #0075BF;
     float: left;
     font-size: 28px;
@@ -106,7 +107,66 @@ nav {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.glyphicon-plus:before {
+    content: "\2b";
+}
 
+#button_menu_div.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+    transform: translate3d(0px, 35px, 0px) !important;
+
+}
+
+#button_menu_div.show > .dropdown-menu {
+    display: block;
+}
+#button_menu_div .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+}
+.btn .caret {
+    margin-left: 0;
+}
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
 .dot {
   height: 35px;
   width: 35px;

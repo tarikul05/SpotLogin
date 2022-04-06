@@ -35,19 +35,29 @@ admin_main_style.css
 				<div class="row panel-row" style="margin:0;">
 					<div class="col-sm-6 col-xs-12 header-area">
 							<div class="page_header_class">
-									<label id="page_header" name="page_header">
-										{{__('Agenda')}}: Apr 4 – 10, 2022
-									</label>
+                                <label for="calendar" id="cal_title" style="display: block;">
+                                    {{__('Agenda')}}: 
+                                </label>
 							</div>
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
-							<div class="pull-right btn-group">
-                <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
-                <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
-                  <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                  <span id ="btn_export_events_cap">Excel</span>
-                </a>
-							</div>
+                        <div class="pull-right btn-group">
+                            
+                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
+                            <div id="button_menu_div" class="btn-group buttons pull-right" >
+                                <!-- <div class="btn-group"> -->
+                                    <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
+							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
+                                    <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
+                                    <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
+                                        <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
+                                        <span id ="btn_export_events_cap">Excel</span>
+                                    </a>
+                                <!-- </div> -->
+                            </div>
+                            
+                            
+                        </div>
 					</div>    
 				</div>                 
 			</header>
@@ -58,7 +68,7 @@ admin_main_style.css
           <section class="panel" style="border: 0;box-shadow: none;">
             <label id="loading" style="display:none;">Loading....</label> 
             <form action="#" method="post">
-                                                        
+            <input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
               
 
               <div class="clearfix"></div>
@@ -173,183 +183,14 @@ admin_main_style.css
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-	var loading=1;
-  var lang_id='fr';
-	$('#datepicker_month').datetimepicker({            
-    inline: false,
-    locale: lang_id,
-    icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-arrow-up",
-        down: "fa fa-arrow-down",
-        left: "",
-        right: ""
-    },
-    format: "DD/MM/YYYY",
-    autoclose: true,
-    todayBtn: true,
-		minuteStep: 10,
-		minView: 2,
-    pickTime: false,
-    todayBtn: false 
-      
-  });
-  moment.locale(lang_id, {
-	  week: { dow: 1 } // Monday is the first day of the week
-	});
-  $('#search_text').on('input', function(){
-		var search_text=$(this).val();
-		if (search_text.length > 0){
-			$('#calendar').fullCalendar('rerenderEvents');
-		}
-  });
-  // $("#datepicker_month").on("dp.change", function() {
-  //     var dt=$('#datepicker_month').data('DateTimePicker').date();
-  //     dt=dt.format('YYYY-MM-DD');
-  //     $('#calendar').fullCalendar( 'gotoDate', dt);
-  //     //alert(dt);
-  // });
-  //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
-	$('#btn_prev').on('click', function() {
-        $('#calendar').fullCalendar('prev');
-	});
-
-	$('#btn_today').on('click', function() {
-        $('#calendar').fullCalendar('today');        
-	});
-
-	$('#btn_next').on('click', function() {
-        $('#calendar').fullCalendar('next');
-	});
-
-	$('#btn_month').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'month');
-	});
-
-	$('#btn_week').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'agendaWeek');
-	});
-
-	$('#btn_day').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'agendaDay');
-	});
-  $('#btn_list').on('click', function() {
-    getFreshEvents('ListView');	   
-		$('#calendar').fullCalendar('changeView', 'listYear');	   
-	   
-	});
-  $('#list_button').on('click', function() {
-        CallListView();
-	});
-
-	$(document).ready(function(){
-		$('#back_btn').click(function (e) {							
-	   	window.history.back();
-		});
-        loading=0;
-        console.log('a) loading='+loading);
-        RerenderEvents();
-        RenderCalendar();
-        PopulateEventTypeDropdown();
-        PopulateLocationDropdown();
-        PopulateStudentDropdown();
-        PopulateTeacherDropdown();
-    
-		
-		
-	}); //ready
-
-  function RerenderEvents(){
-	  if (loading == 0){ 
-      console.log('sss');
-      $("#agenda_table tr:gt(0)").remove();
-      $('#calendar').fullCalendar('rerenderEvents');								
-    }
-  }
-
-
-  function getFreshEvents(p_view=''){
-    //alert('getrefresh..: Start');
-    var start_date=document.getElementById("date_from").value;
-    var end_date=document.getElementById("date_to").value;
-    
-    
-    document.getElementById("prevnext").value = '';
-    $.ajax({
-      url: 'agenda_data.php',
-      type: 'POST', 
-      data: 'type=fetch&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-      async: false,
-      success: function(s){
-              json_events = s;
-      },
-      error: function(ts) { 
-          errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
-          // alert(ts.responseText) 
-      }
-    });
-    //alert('get refresh');
-    $("#agenda_table tr:gt(0)").remove();
-    $('#calendar').fullCalendar('removeEvents');
-    $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
-    if (document.getElementById("view_mode").value == 'list'){
-        //remove 
-        $('#calendar').fullCalendar().find('.fc-day-header').hide();
-        $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
-        document.getElementById("agenda_list").style.display = "block";
-        }
-    else
-    {
-        resultHtml='';
-        prevdt=''; 
-        document.getElementById("prevnext").value='';
-        document.getElementById("agenda_list").style.display = "none";
-        $('#calendar').fullCalendar().find('.fc-day-header').show();
-        $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
-    }
-    
-  } 
-
-  function CallListView(){  
-    if (document.getElementById("view_mode").value != 'list')
-    {
-        document.getElementById("view_mode").value = 'list';
-        $('.fc-MyListButton-button').text('Calender');
-        //remove 
-        //$('#calendar').fullCalendar().find('.fc-day-header').parents('table').html('');
-        $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
-        $('#calendar').fullCalendar().find('.fc-day-header').hide();
-        //$('#calendar').fullCalendar('option', 'contentHeight', 0);
-        document.getElementById("agenda_list").style.display = "block";
-    
-    }
-    else{
-        //alert('refresh');
-        $('.fc-MyListButton-button').text('list');
-        document.getElementById("view_mode").value = '';
-        document.getElementById("agenda_list").style.display = "none";
-        $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
-        $('#calendar').fullCalendar().find('.fc-day-header').show();
-        
-        //getFreshEvents();   // scroll bar is not appearing hence refresh calendar - resolved hence commented
-        
-        //$('#calendar').fullCalendar(options).slideToggle();
-        //$('#calendar').fullCalendar('rerenderEvents');
-    }       
-  }
-
-
-
-
-
-
-
-  var date = new Date();
+    var loading=1;
+    var lang_id='fr';
+    var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
-  var json_events = [{
+    var user_role=document.getElementById("user_role").value;
+    var json_events = [{
         title: 'All Day Event',
         start: new Date(y, m, 1)
     }, {
@@ -393,6 +234,206 @@ admin_main_style.css
     var v_calc_height=((screen.height/100)*50.00);
     var currentTimezone = 'local';
     var currentLangCode = 'fr';
+	$('#datepicker_month').datetimepicker({            
+        inline: false,
+        locale: lang_id,
+        icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down",
+            left: "",
+            right: ""
+        },
+        format: "DD/MM/YYYY",
+        autoclose: true,
+        todayBtn: true,
+        minuteStep: 10,
+        minView: 2,
+        pickTime: false,
+        todayBtn: false 
+      
+    });
+    moment.locale(lang_id, {
+	  week: { dow: 1 } // Monday is the first day of the week
+	});
+    $('#search_text').on('input', function(){
+		var search_text=$(this).val();
+		if (search_text.length > 0){
+			$('#calendar').fullCalendar('rerenderEvents');
+		}
+    });
+    // $("#datepicker_month").on("dp.change", function() {
+    //     var dt=$('#datepicker_month').data('DateTimePicker').date();
+    //     dt=dt.format('YYYY-MM-DD');
+    //     $('#calendar').fullCalendar( 'gotoDate', dt);
+    //     //alert(dt);
+    // });
+    //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
+	$('#btn_prev').on('click', function() {
+        $('#calendar').fullCalendar('prev');
+	});
+
+	$('#btn_today').on('click', function() {
+        $('#calendar').fullCalendar('today');        
+	});
+
+	$('#btn_next').on('click', function() {
+        $('#calendar').fullCalendar('next');
+	});
+
+	$('#btn_month').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'month');
+	});
+
+	$('#btn_week').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'agendaWeek');
+	});
+
+	$('#btn_day').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'agendaDay');
+	});
+    $('#btn_list').on('click', function() {
+        getFreshEvents('ListView');	   
+		$('#calendar').fullCalendar('changeView', 'listYear');	   
+	   
+	});
+    $('#list_button').on('click', function() {
+        CallListView();
+	});
+
+	$(document).ready(function(){
+		$('#back_btn').click(function (e) {							
+	   	    window.history.back();
+		});
+        loading=0;
+        //console.log('a) loading='+loading);
+        RerenderEvents();
+        RenderCalendar();
+        PopulateEventTypeDropdown();
+        PopulateLocationDropdown();
+        PopulateStudentDropdown();
+        PopulateTeacherDropdown();
+        DisplayCalendarTitle();
+
+        var menuHtml='';
+        $("#event_type option").each(function(key,value)
+        {
+            
+            if ( (value.value == 51) && (user_role == 'student') ){
+                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+            }
+            
+            // cours - events - PopulateButtonMenuList
+            if ( (value.value == 10) && (user_role != 'student') ){
+                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+            }        
+            if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
+                if (value.id != 10) {
+                    menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                }
+                
+            }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
+                menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+            }
+            
+             
+            // Add $(this).val() to your list
+        });
+        menuHtml+='</ul>';
+        $('#button_menu_div').append(menuHtml); 
+    
+		
+		
+	}); //ready
+
+    function RerenderEvents(){
+	    if (loading == 0){ 
+            console.log('sss');
+            $("#agenda_table tr:gt(0)").remove();
+            $('#calendar').fullCalendar('rerenderEvents');								
+        }
+    }
+
+
+    function getFreshEvents(p_view=''){
+        //alert('getrefresh..: Start');
+        var start_date=document.getElementById("date_from").value;
+        var end_date=document.getElementById("date_to").value;
+        
+        
+        document.getElementById("prevnext").value = '';
+        $.ajax({
+        url: 'agenda_data.php',
+        type: 'POST', 
+        data: 'type=fetch&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+        async: false,
+        success: function(s){
+                json_events = s;
+        },
+        error: function(ts) { 
+            errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
+            // alert(ts.responseText) 
+        }
+        });
+        //alert('get refresh');
+        $("#agenda_table tr:gt(0)").remove();
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
+        if (document.getElementById("view_mode").value == 'list'){
+            //remove 
+            $('#calendar').fullCalendar().find('.fc-day-header').hide();
+            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
+            document.getElementById("agenda_list").style.display = "block";
+            }
+        else
+        {
+            resultHtml='';
+            prevdt=''; 
+            document.getElementById("prevnext").value='';
+            document.getElementById("agenda_list").style.display = "none";
+            $('#calendar').fullCalendar().find('.fc-day-header').show();
+            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
+        }
+        
+    } 
+
+    function CallListView(){  
+        if (document.getElementById("view_mode").value != 'list')
+        {
+            document.getElementById("view_mode").value = 'list';
+            $('.fc-MyListButton-button').text('Calender');
+            //remove 
+            //$('#calendar').fullCalendar().find('.fc-day-header').parents('table').html('');
+            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
+            $('#calendar').fullCalendar().find('.fc-day-header').hide();
+            //$('#calendar').fullCalendar('option', 'contentHeight', 0);
+            document.getElementById("agenda_list").style.display = "block";
+        
+        }
+        else{
+            //alert('refresh');
+            $('.fc-MyListButton-button').text('list');
+            document.getElementById("view_mode").value = '';
+            document.getElementById("agenda_list").style.display = "none";
+            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
+            $('#calendar').fullCalendar().find('.fc-day-header').show();
+            
+            //getFreshEvents();   // scroll bar is not appearing hence refresh calendar - resolved hence commented
+            
+            //$('#calendar').fullCalendar(options).slideToggle();
+            //$('#calendar').fullCalendar('rerenderEvents');
+        }       
+    }
+
+
+    
     function RenderCalendar(){    
         //console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
@@ -851,7 +892,16 @@ admin_main_style.css
             //     if  (firstload != '0'){
             //         getFreshEvents();
             //     }
-            // }
+            // },
+            eventDidMount: info => {
+                info.el.addEventListener('contextmenu', (ev) => {
+                    ev.preventDefault();
+                    this.$refs.copyMenu.open(ev, info.event)
+                    return false;
+                }, false);
+            }
+            
+
         })    //full calendar initialization
         
     } //full calender - RenderCalendar
@@ -959,7 +1009,7 @@ admin_main_style.css
     }   // populate event type
     function PopulateTeacherDropdown(){
          
-         $('#event_teacher').multiselect({
+        $('#event_teacher').multiselect({
              includeSelectAllOption:true,
              selectAllText: 'All Teachers',
              maxHeight:true,
@@ -1009,10 +1059,10 @@ admin_main_style.css
          $('#event_teacher').multiselect('selectAll', false);   
          $('#event_teacher').multiselect('refresh');	
                   
-     }   // populate event type
-     function PopulateStudentDropdown(){
+    }   // populate event type
+    function PopulateStudentDropdown(){
          
-         $('#event_student').multiselect({
+        $('#event_student').multiselect({
              includeSelectAllOption:true,
              selectAllText: 'All Location',
              maxHeight:true,
@@ -1057,12 +1107,18 @@ admin_main_style.css
             //     RerenderEvents();
             // },
              selectAllValue: 0
-         });
+        });
  
          $('#event_student').multiselect('selectAll', false);   
          $('#event_student').multiselect('refresh');	
                   
-     }   // populate event type
+    }   // populate event type
+
+
+    function DisplayCalendarTitle() {
+        var view = $('#calendar').fullCalendar('getView');
+        $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
+    };
 	
 </script>
 @endsection

@@ -7,6 +7,7 @@ use App\Models\Language;
 use App\Models\Location;
 use App\Models\Student;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
 class AgendaController extends Controller
 {
     /**
@@ -25,6 +26,16 @@ class AgendaController extends Controller
     */
     public function index()
     {
+
+        $user = Auth::user();
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::orderBy('id')->get();
         $students = Student::orderBy('id')->get();
@@ -38,7 +49,7 @@ class AgendaController extends Controller
         $e['id'] = 1;
         array_push($events, $e);
 
-        return view('pages.agenda.index')->with(compact('students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
 

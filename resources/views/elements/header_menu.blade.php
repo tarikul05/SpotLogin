@@ -62,7 +62,7 @@
                             </a>
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu header">
                                     <!-- <a class="dropdown-item" href="/email/email_template">
                                         Modèle d'email
                                     </a>
