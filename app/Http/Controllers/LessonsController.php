@@ -15,6 +15,7 @@ use App\Models\SchoolStudent;
 use App\Models\EventCategory;
 use App\Models\Location;
 use App\Models\LessonPrice;
+use DB;
 
 class LessonsController extends Controller
 {
@@ -57,6 +58,7 @@ class LessonsController extends Controller
      */
     public function addEventAction(Request $request, $schoolId = null)
     {
+        DB::beginTransaction();
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
@@ -92,18 +94,16 @@ class LessonsController extends Controller
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
+
+                DB::commit();
                  
-                $result = array(
-                    "status"     => 1,
-                    'message' => __('Successfully Registered')
-                );
+                 // return back()->withInput($request->all())->with('success', __('Successfully Registered'));
+                 return back()->with('success', __('Successfully Registered'));
+                
             }  
         }catch (Exception $e) {
             DB::rollBack();
-            $result= [
-                'status' => 0,
-                'message' =>  __('Internal server error')
-            ];
+            return back()->withInput($request->all())->with('error', __('Internal server error'));
         }   
 
         return $result;
@@ -137,6 +137,7 @@ class LessonsController extends Controller
      */
     public function addLessonAction(Request $request, $schoolId = null)
     {
+        DB::beginTransaction();
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
@@ -172,6 +173,7 @@ class LessonsController extends Controller
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
+                DB::commit();
                  
                 $result = array(
                     "status"     => 1,
@@ -213,6 +215,7 @@ class LessonsController extends Controller
      */
     public function studentOffAction(Request $request, $schoolId = null)
     {
+        DB::beginTransaction();
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
@@ -245,6 +248,7 @@ class LessonsController extends Controller
                 ];
                 
                 $eventDetails = EventDetails::create($dataDetails);
+                DB::commit();
                  
                 $result = array(
                     "status"     => 1,
@@ -318,7 +322,8 @@ class LessonsController extends Controller
                 ];
                 
                 $eventDetails = EventDetails::create($dataDetails);
-                 
+                
+                DB::commit();
                 $result = array(
                     "status"     => 1,
                     'message' => __('Successfully Registered')
