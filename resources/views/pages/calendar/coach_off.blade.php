@@ -32,8 +32,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
+				<form class="form-horizontal" id="coach_off" method="post" action="{{ route('coachOff.createAction',[$schoolId]) }}"  name="coach_off" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -54,11 +53,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
-												<option value="EC7E9C27-1B10-11EC-9CF6-067B4964D503">Arindam (Biswas)</option>
-												<option value="3330B801-1EC4-11EC-9CF6-067B4964D503">suparna (dutta)</option>
-												<option value="14086343-9DB8-11EA-8FFD-0A608F1BF91B">teacher (min)</option>
-												<option value="6503D09C-9DB7-11EA-8FFD-0A608F1BF91B">teacher (all)</option>
-												<option value="CC6AB82C-9DB7-11EA-8FFD-0A608F1BF91B">teacher (med)</option>
+												@foreach($professors as $key => $professor)
+													<option value="{{ $professor->id }}" {{ old('teacher_select') == $professor->id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -68,7 +65,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -81,7 +78,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -91,9 +88,9 @@
 								</div>
 								<div class="form-group row">
 									<div id="all_day_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="has_user_account" type="checkbox" value="1">
+											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="1">
 										</div>
 									</div>
 								</div>

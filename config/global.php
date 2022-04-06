@@ -88,6 +88,14 @@
       2 => 'Femail',
       3 => 'Not specified',
     ],
+    
     'token_validity' => 2, //days
+
+    'event_type' =>[
+      10  => 'lesson',
+      100 =>'Event',
+      50  => 'Coach time off',
+      51  => 'Student time off',
+    ],
     
   ];

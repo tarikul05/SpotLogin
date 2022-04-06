@@ -155,10 +155,14 @@ Route::group(['middleware' => ['auth']], function () {
     ));
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
-    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'create'])->name('lesson.create');
-    Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('student.off');
-    Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coach.off');
-
+    Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
+    Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
+    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.add');
+    Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
+    Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create');
+    Route::post('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction');
+    Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create');
+    Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
   }); //Admin scope end
 
 
@@ -208,8 +212,13 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
 
-    Route::get('/add-lesson', [App\Http\Controllers\LessonsController::class, 'create'])->name('lesson.create');
-    Route::get('/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('student.off');
-    Route::get('/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coach.off');
+    Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
+    Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
+    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
+    Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
+    Route::get('/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create');
+    Route::post('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction');
+    Route::get('/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create');
+    Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
 });
 
