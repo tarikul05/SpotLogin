@@ -15,7 +15,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
+						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
 				</div>    
 			</div>          
@@ -41,18 +41,6 @@
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" id="category_select" name="category_select">
-												@foreach($eventCategory as $key => $eventcat)
-													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
-												@endforeach
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -61,6 +49,14 @@
 													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
 												@endforeach
 											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-7">
+										<div class="input-group"> 
+											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
 										</div>
 									</div>
 								</div>
@@ -131,30 +127,10 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
-									<div class="col-sm-2">
-										<div class="input-group"> 
-											<input id="end_time" name="end_time" type="text" class="form-control" value="{{old('duration')}}">
-										</div>
-									</div>		
-								</div>
-								<div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="all_day" name="has_user_account" type="checkbox" value="1">
-										</div>
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0">No charge</option>
-												<option value="1">Hourly rate</option>
-												<option value="2">Price per student</option>
-											</select>
 										</div>
 									</div>
 								</div>
@@ -170,7 +146,6 @@
 										</div>
 									</div>
 								</div>
-								<div id="price_per_student" style="display:none;">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
@@ -217,20 +192,22 @@
 										</div>
 									</div>
 								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
+									<div class="col-sm-4">
+										<div class="input-group" id="extra_charges_div"> 
+											<span class="input-group-addon">
+												<i class="fa fa-calendar1"></i>
+											</span>
+											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
 							<div class="col-md-7 offset-md-2">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-									<div class="col-sm-7">
-										<div class="input-group"> 
-											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
-										</div>
-									</div>
-								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
