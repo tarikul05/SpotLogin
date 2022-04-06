@@ -35,7 +35,7 @@
                         @endcan
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu header">
                                 <a href="#" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>

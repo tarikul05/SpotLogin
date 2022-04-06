@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Language;
-
+use App\Models\Location;
+use App\Models\Student;
+use App\Models\Teacher;
 class AgendaController extends Controller
 {
     /**
@@ -24,6 +26,9 @@ class AgendaController extends Controller
     public function index()
     {
         $alllanguages = Language::orderBy('sort_order')->get();
+        $locations = Location::orderBy('id')->get();
+        $students = Student::orderBy('id')->get();
+        $teachers = Teacher::orderBy('id')->get();
 
         $event_types = config('global.event_type'); 
 
@@ -33,7 +38,7 @@ class AgendaController extends Controller
         $e['id'] = 1;
         array_push($events, $e);
 
-        return view('pages.agenda.index')->with(compact('alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('students','teachers','locations','alllanguages','events','event_types'));
 
     }   
 

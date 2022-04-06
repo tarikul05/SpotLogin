@@ -300,7 +300,8 @@ table.tc_template .detail_header {
     -ms-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
-.dropdown-menu.show {
+.dropdown-menu.header.show,
+.dropdown-menu.list.show {
     display: block;
     background: #35404d;
     max-width: 180px;
@@ -310,7 +311,8 @@ table.tc_template .detail_header {
     padding-top: 0;
     padding-bottom: 0;
 }
-.dropdown-menu a {
+.dropdown-menu.header a,
+.dropdown-menu.list a {
     font-size: 12px;
     padding: 12px;
     -webkit-transition: all 0.3s ease;
@@ -332,7 +334,8 @@ table.tc_template .detail_header {
     padding-top: 16px;
     padding-bottom: 17px;
 }
-.dropdown-menu a:hover{
+.dropdown-menu.header a:hover,
+.dropdown-menu.list a:hover{
     color: #479CCF;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -464,7 +467,8 @@ table.dataTable thead th, table.dataTable thead td {
 table.dataTable.no-footer {
     border: 1px solid #E1EFF7!important;
 }
-.dropdown-menu.action {
+.dropdown-menu.action.header,
+.dropdown-menu.action.list {
     position: absolute;
     top: 100%;
     left: 0;
@@ -485,7 +489,8 @@ table.dataTable.no-footer {
     -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
     box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
 }
-.dropdown-menu.action a {
+.dropdown-menu.action.header a,
+.dropdown-menu.action.list a {
     display: flex;
     padding: 4px 10px;
     align-items: center;
@@ -493,11 +498,13 @@ table.dataTable.no-footer {
     font-weight: normal;
     font-size: 13px;
 }
-.dropdown-menu.action a:hover {
+.dropdown-menu.action.header a:hover,
+.dropdown-menu.action.list a:hover {
     color: #1e2125;
     background: transparent;
 }
-.dropdown-menu.action i {
+.dropdown-menu.action.header i,
+.dropdown-menu.action.list i {
     margin-right: 7px;
     font-size: 16px;
 }

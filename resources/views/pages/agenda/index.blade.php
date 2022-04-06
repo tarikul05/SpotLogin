@@ -10,16 +10,16 @@
 <link href="{{ asset('css/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
-
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
+</script>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
 
 <script src="{{ asset('js/fullcalendar.js')}}"></script>
@@ -86,8 +86,13 @@ admin_main_style.css
                           <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
                               
                               <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" ></select>
-                              </div>                                                    
+                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                    @foreach($locations as $key => $location)
+                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
+                                    @endforeach    
+                                </select>
+                              
+                            </div>                                                    
 
 
                               <div id="event_type_div" name="event_type_div" class="selectdiv">
@@ -100,13 +105,19 @@ admin_main_style.css
                               </div>                                                    
                           
                               <div id="event_student_div" name="event_student_div" class="selectdiv">
-                                  <!--<select class="multiple-control" name="event_student" id="event_student" style="margin-bottom: 15px;"></select>-->
-                                  <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;"></select>
+                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
+                                    @foreach($students as $key => $student)
+                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
+                                    @endforeach
+                                </select>
                               </div>
                           
                               <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
-                                  <!--<select class="form-control" name="event_teacher" id="event_teacher" style="margin-bottom: 15px;"></select>-->
-                                  <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;"></select>
+                                    <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
+                                        @foreach($teachers as $key => $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
+                                        @endforeach
+                                    </select>
                               </div>
     
     
@@ -241,6 +252,9 @@ admin_main_style.css
         RerenderEvents();
         RenderCalendar();
         PopulateEventTypeDropdown();
+        PopulateLocationDropdown();
+        PopulateStudentDropdown();
+        PopulateTeacherDropdown();
     
 		
 		
@@ -845,15 +859,8 @@ admin_main_style.css
 
 
     function PopulateEventTypeDropdown(){
-        console.log('ssss');
-        var add_new_id=$("#add_new_id").text();
-        
-               
+         
         $('#event_type').multiselect({
-
-          
-
-
             includeSelectAllOption:true,
             selectAllText: 'All Events',
             maxHeight:true,
@@ -897,6 +904,165 @@ admin_main_style.css
         $('#event_type').multiselect('refresh');	
                 
     }   // populate event type
+    function PopulateLocationDropdown(){
+         
+        $('#event_location').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Location',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Location',
+            allSelectedText: 'All Location',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+        onChange: function(option, checked) {
+            console.log('onChange location triggered!');
+            document.getElementById("event_location_id").value=getLocationIDs();
+            document.getElementById("event_location_all_flag").value='0';
+            SetEventCookies();
+            RerenderEvents();
+        },
+        onSelectAll: function (options,checked) {
+            if (options){
+                console.log('location onSelectAll triggered!'+options);
+                document.getElementById("event_location_id").value='0';
+                document.getElementById("event_location_all_flag").value='1';
+                }
+            else {
+                console.log('location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+            
+                }
+            //SetEventCookies();
+            RerenderEvents();
+        },
+        onDeselectAll: function() {
+            console.log('NOT WORKING location onDeSelectAll triggered!');
+            document.getElementById("event_location_id").value='';
+            document.getElementById("event_location_all_flag").value='0';
+            SetEventCookies();
+            RerenderEvents();
+        },
+            selectAllValue: 0
+        });
+
+        $('#event_location').multiselect('selectAll', false);   
+        $('#event_location').multiselect('refresh');	
+                 
+    }   // populate event type
+    function PopulateTeacherDropdown(){
+         
+         $('#event_teacher').multiselect({
+             includeSelectAllOption:true,
+             selectAllText: 'All Teachers',
+             maxHeight:true,
+             enableFiltering:false,
+             nSelectedText  : 'Selected Teacher',
+             allSelectedText: 'All Teachers',
+             enableCaseInsensitiveFiltering:false,
+             // enables full value filtering
+             enableFullValueFiltering:false,
+             filterPlaceholder: 'Search',
+             numberDisplayed: 3,
+             buttonWidth: '100%',
+             // possible options: 'text', 'value', 'both'
+             filterBehavior: 'text',
+            // onChange: function(option, checked) {
+            //     console.log('onChange location triggered!');
+            //     document.getElementById("event_location_id").value=getLocationIDs();
+            //     document.getElementById("event_location_all_flag").value='0';
+            //     SetEventCookies();
+            //     RerenderEvents();
+            // },
+            // onSelectAll: function (options,checked) {
+            //     if (options){
+            //         console.log('location onSelectAll triggered!'+options);
+            //         document.getElementById("event_location_id").value='0';
+            //         document.getElementById("event_location_all_flag").value='1';
+            //         }
+            //     else {
+            //         console.log('location onDeSelectAll triggered!');
+            //         document.getElementById("event_location_id").value='';
+            //         document.getElementById("event_location_all_flag").value='0';
+                
+            //         }
+            //     //SetEventCookies();
+            //     RerenderEvents();
+            // },
+            // onDeselectAll: function() {
+            //     console.log('NOT WORKING location onDeSelectAll triggered!');
+            //     document.getElementById("event_location_id").value='';
+            //     document.getElementById("event_location_all_flag").value='0';
+            //     SetEventCookies();
+            //     RerenderEvents();
+            // },
+             selectAllValue: 0
+         });
+ 
+         $('#event_teacher').multiselect('selectAll', false);   
+         $('#event_teacher').multiselect('refresh');	
+                  
+     }   // populate event type
+     function PopulateStudentDropdown(){
+         
+         $('#event_student').multiselect({
+             includeSelectAllOption:true,
+             selectAllText: 'All Location',
+             maxHeight:true,
+             enableFiltering:false,
+             nSelectedText  : 'Selected Student',
+             allSelectedText: 'All Students',
+             enableCaseInsensitiveFiltering:false,
+             // enables full value filtering
+             enableFullValueFiltering:false,
+             filterPlaceholder: 'Search',
+             numberDisplayed: 3,
+             buttonWidth: '100%',
+             // possible options: 'text', 'value', 'both'
+             filterBehavior: 'text',
+            // onChange: function(option, checked) {
+            //     console.log('onChange location triggered!');
+            //     document.getElementById("event_location_id").value=getLocationIDs();
+            //     document.getElementById("event_location_all_flag").value='0';
+            //     SetEventCookies();
+            //     RerenderEvents();
+            // },
+            // onSelectAll: function (options,checked) {
+            //     if (options){
+            //         console.log('location onSelectAll triggered!'+options);
+            //         document.getElementById("event_location_id").value='0';
+            //         document.getElementById("event_location_all_flag").value='1';
+            //         }
+            //     else {
+            //         console.log('location onDeSelectAll triggered!');
+            //         document.getElementById("event_location_id").value='';
+            //         document.getElementById("event_location_all_flag").value='0';
+                
+            //         }
+            //     //SetEventCookies();
+            //     RerenderEvents();
+            // },
+            // onDeselectAll: function() {
+            //     console.log('NOT WORKING location onDeSelectAll triggered!');
+            //     document.getElementById("event_location_id").value='';
+            //     document.getElementById("event_location_all_flag").value='0';
+            //     SetEventCookies();
+            //     RerenderEvents();
+            // },
+             selectAllValue: 0
+         });
+ 
+         $('#event_student').multiselect('selectAll', false);   
+         $('#event_student').multiselect('refresh');	
+                  
+     }   // populate event type
 	
 </script>
 @endsection

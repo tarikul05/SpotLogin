@@ -537,7 +537,7 @@ div#calendar thead th{
   max-height: 136px;
   overflow-y: scroll;
   top: auto;
-  bottom: 100%;
+  /* bottom: 100%; */
 }
 .multiselect-container.dropdown-menu > .active > a, .multiselect-container.dropdown-menu > .active > a:focus, .multiselect-container.dropdown-menu > .active > a:hover{
   color: #fff;
