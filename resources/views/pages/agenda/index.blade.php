@@ -13,6 +13,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+
+
+
 <script src="{{ asset('js/fullcalendar.js')}}"></script>
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 admin_main_style.css
@@ -82,7 +91,12 @@ admin_main_style.css
 
 
                               <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" ></select>
+                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
+                                    @foreach($event_types as $key => $event_type)
+                                        <option value="{{ $key }}">{{ $event_type }}</option>
+                                    @endforeach
+                            
+                                </select>
                               </div>                                                    
                           
                               <div id="event_student_div" name="event_student_div" class="selectdiv">
@@ -226,6 +240,7 @@ admin_main_style.css
         console.log('a) loading='+loading);
         RerenderEvents();
         RenderCalendar();
+        PopulateEventTypeDropdown();
     
 		
 		
@@ -364,7 +379,7 @@ admin_main_style.css
     var v_calc_height=((screen.height/100)*50.00);
     var currentTimezone = 'local';
     var currentLangCode = 'fr';
-  function RenderCalendar(){    
+    function RenderCalendar(){    
         //console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
@@ -830,18 +845,21 @@ admin_main_style.css
 
 
     function PopulateEventTypeDropdown(){
-            
+        console.log('ssss');
         var add_new_id=$("#add_new_id").text();
         
-        var all_event_text=$("#all_event_text").text();
-                
+               
         $('#event_type').multiselect({
+
+          
+
+
             includeSelectAllOption:true,
-            selectAllText: all_event_text,
+            selectAllText: 'All Events',
             maxHeight:true,
             enableFiltering:false,
             nSelectedText  : 'Selected Event type ',
-            allSelectedText: all_event_text,
+            allSelectedText: 'All Events',
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
@@ -850,29 +868,29 @@ admin_main_style.css
             buttonWidth: '100%',
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
-            onChange: function(option, checked) {
-                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    console.log('Event changed triggered!');
-                    document.getElementById("event_type_id").value=getEventIDs();
-                    document.getElementById("event_type_all_flag").value='0';
-                    SetEventCookies();
-                    RerenderEvents();
-            },
-            onSelectAll: function (option,checked) {
-                    document.getElementById("event_type_id").value='0';
-                    document.getElementById("event_type_all_flag").value='1';
-                    SetEventCookies();
-                    RerenderEvents();
-            },
-            onDeselectAll: function(option,checked) {
-                console.log('Event onDeSelectAll triggered!');
-                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    document.getElementById("event_type_id").value=getEventIDs();
-                    document.getElementById("event_type_all_flag").value='0';
-                    SetEventCookies();
-                    RerenderEvents();
-                },
-                selectAllValue: 0
+            // onChange: function(option, checked) {
+            //         //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+            //         console.log('Event changed triggered!');
+            //         document.getElementById("event_type_id").value=getEventIDs();
+            //         document.getElementById("event_type_all_flag").value='0';
+            //         SetEventCookies();
+            //         RerenderEvents();
+            // },
+            // onSelectAll: function (option,checked) {
+            //         document.getElementById("event_type_id").value='0';
+            //         document.getElementById("event_type_all_flag").value='1';
+            //         SetEventCookies();
+            //         RerenderEvents();
+            // },
+            // onDeselectAll: function(option,checked) {
+            //     console.log('Event onDeSelectAll triggered!');
+            //         //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+            //         document.getElementById("event_type_id").value=getEventIDs();
+            //         document.getElementById("event_type_all_flag").value='0';
+            //         SetEventCookies();
+            //         RerenderEvents();
+            //     },
+            selectAllValue: 0
         });
 
         $('#event_type').multiselect('selectAll', false);   

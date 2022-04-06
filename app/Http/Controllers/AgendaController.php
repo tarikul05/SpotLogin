@@ -23,7 +23,9 @@ class AgendaController extends Controller
     */
     public function index()
     {
-        $language = Language::orderBy('sort_order')->get();
+        $alllanguages = Language::orderBy('sort_order')->get();
+
+        $event_types = config('global.event_type'); 
 
 
         $events = array();
@@ -31,11 +33,7 @@ class AgendaController extends Controller
         $e['id'] = 1;
         array_push($events, $e);
 
-        
-        return view('pages.agenda.index', [
-            'alllanguages' => $language,
-            'events' => json_encode($events)
-        ]);
+        return view('pages.agenda.index')->with(compact('alllanguages','events','event_types'));
 
     }   
 
