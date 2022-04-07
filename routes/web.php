@@ -78,7 +78,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 
   Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
-  Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
   Route::match(array('GET', 'POST'), "permission-check", array(
@@ -211,7 +210,10 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
-
+    
+    Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+    Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+  
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
     Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
     Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');

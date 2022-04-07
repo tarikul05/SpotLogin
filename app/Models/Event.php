@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
+use App\Models\Teacher;
 
 class Event extends BaseModel
 {
@@ -58,4 +59,13 @@ class Event extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
+
+
+    /**
+     * Get the city for the user.
+     */
+    public function teacher()
+    {
+      return $this->belongsTo(Teacher::class, 'teacher_id', 'id');
+    }
 }
