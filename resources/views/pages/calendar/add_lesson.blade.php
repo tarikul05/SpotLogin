@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 @endsection
 
 @section('content')
@@ -101,7 +103,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control" value="{{old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -122,7 +124,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control" value="{{old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -134,7 +136,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
 									<div class="col-sm-2">
 										<div class="input-group"> 
-											<input id="end_time" name="end_time" type="text" class="form-control" value="{{old('duration')}}">
+											<input id="duration" name="duration" type="text" class="form-control" value="{{old('duration')}}">
 										</div>
 									</div>		
 								</div>
@@ -303,6 +305,101 @@ $('#sis_paying').on('change', function() {
 		$('#price_per_student').show();
 	}
 });
+$('.timepicker').timepicker({
+    timeFormat: 'HH:mm',
+    interval: 15,
+    minTime: '0',
+    maxTime: '23:59',
+    defaultTime: '11',
+    startTime: '00:00',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true
+});
 
+
+$("#start_time").on('change', function (e) {
+	console.log('change');
+    CalcDuration();
+});
+
+$("#end_time").on('change', function (e) {
+	console.log('change2');
+    CalcDuration();
+});
+
+// $('#duration').keypress(function (e) {
+// 	return NumbersOnly(e);
+// 	//onkeypress="return NumbersOnly(event)"
+// });
+
+
+function CalcDuration(){
+    var el_start = $('#start_time'),
+    el_end = $('#end_time'),
+    el_duration = $('#duration');
+    
+        if (el_end.val() < el_start.val()) {
+            $('#end_time').val(el_start.val());
+            el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+        }
+        else{
+            el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
+        }
+    }
+
+function recalculate_end_time(start_value, duration) {
+    if (validateStringHours(start_value) && parseInt(duration, 10) == duration) {
+        var start_minutes = +(parseInt(string_left(start_value, 2), 10) * 60) + parseInt(string_right(start_value, 2), 10) + parseInt(duration, 10),
+            start_hours_number = parseInt((start_minutes / 60).toString(), 10),
+            start_hours = start_hours_number;
+            if (start_hours > 23) {start_hours = start_hours - 24;}
+            return string_right('00' + start_hours.toString(), 2) + ':' + string_right('00' + (start_minutes - (start_hours_number * 60)).toString(), 2); 
+    }
+    return 0;
+}
+function recalculate_duration(start_value, end_value) {
+    if (validateStringHours(start_value) && validateStringHours(end_value)) {
+        return -(parseInt(string_left(start_value, 2), 10) * 60)
+                - parseInt(string_right(start_value, 2), 10)
+                + (parseInt(string_left(end_value, 2), 10) * 60)
+                + (parseInt(string_right(end_value, 2), 10));
+    }
+    return 0;
+}
+
+$('#start_time, #end_time, #duration').on('change', function(e){  
+	console.log('ddd');              
+var event_source = $(this).attr('id');
+var el_duration = $('#duration');
+//alert(event_source);
+if (event_source === 'start_time'){
+	
+	if(!el_duration.val()){el_duration.val('15');}
+	$('#end_time').val(recalculate_end_time($('#start_time').val(), el_duration.val()));
+}
+
+var el_start = $('#start_time'),
+	el_end = $('#end_time');
+	//                    alert(event_source);
+	if (event_source === 'end_time' || event_source === 'start_time') {
+		
+		if (el_end.val() < el_start.val()) {
+			$('#end_time').val(el_start.val());
+		};
+			
+		el_duration.val(recalculate_duration(el_start.val(), el_end.val())); 
+	} else {
+		if (!(parseInt(el_duration.val(), 10) == el_duration.val())) {
+			el_duration.val(20);
+			$('#end_time').val(el_start.val());
+		} else {
+			if (parseInt(el_duration.val(), 10) >= (60*24)) {
+				el_duration.val(((60*24) - 1));
+			}
+			$('#end_time').val(recalculate_end_time(el_start.val(), el_duration.val()));
+		}        
+	}
+});
 </script>
 @endsection

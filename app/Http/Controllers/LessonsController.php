@@ -76,11 +76,13 @@ class LessonsController extends Controller
                     'event_type' => 51,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'duration_minutes' => $studentOffData['duration'],
                     'price_currency' => $studentOffData['sprice_currency'],
                     'price_amount_buy' => $studentOffData['sprice_amount_buy'],
                     'price_amount_sell' => $studentOffData['sprice_amount_sell'],
                     'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
-                    'description' => $studentOffData['description']
+                    'description' => $studentOffData['description'],
+                    'location_id' => $studentOffData['location']
                 ];
 
                 $event = Event::create($data);
@@ -89,6 +91,8 @@ class LessonsController extends Controller
                         'event_id'   => $event->id,
                         'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
+                        'buy_price' => $studentOffData['sprice_amount_buy'],
+                        'sell_price' => $studentOffData['sprice_amount_sell']
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
