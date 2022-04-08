@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 @endsection
 
 @section('content')
@@ -97,7 +99,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control" value="{{old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -118,7 +120,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control" value="{{old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -240,7 +242,8 @@ $(function() {
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	$("#end_date").datetimepicker({
+
+	$('#end_date').datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
         todayBtn: true,
@@ -267,7 +270,33 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
+
+	$('.timepicker').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '0',
+		maxTime: '23:59',
+		defaultTime: '11',
+		startTime: '00:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+	});
 })
+
+$( document ).ready(function() {
+	var value = $('#sis_paying').val();
+	$('#hourly').hide();
+	$('#price_per_student').hide();
+	$('#sprice_amount_buy').val(0);
+	$('#sprice_amount_sell').val(0);
+	if(value == 1){
+		$('#hourly').show();
+	}else if(value == 2){
+		$('#price_per_student').show();
+	}
+})
+
 
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
@@ -280,6 +309,5 @@ $('#sis_paying').on('change', function() {
 		$('#price_per_student').show();
 	}
 });
-
 </script>
 @endsection
