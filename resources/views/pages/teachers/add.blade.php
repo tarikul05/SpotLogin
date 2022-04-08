@@ -382,6 +382,17 @@ $('#save_btn').click(function (e) {
 		var formData = $('#add_teacher').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var error = '';
+		
+		$( ".form-control.numeric" ).each(function( key, value ) {
+			var lname = +$(this).val();
+			if(lname=='' || lname==null || lname==undefined || lname==0 ){
+				$(this).addClass('error');
+				error = 2;
+			}else{
+				$(this).removeClass('error');
+			}
+		});
+		
 		$( ".form-control.require" ).each(function( key, value ) {
 			var lname = $(this).val();
 			if(lname=='' || lname==null || lname==undefined){
@@ -389,9 +400,11 @@ $('#save_btn').click(function (e) {
 				error = 1;
 			}else{
 				$(this).removeClass('error');
-				error = 0;
 			}
 		});
+
+		
+
 		formData.push({
 			"name": "_token",
 			"value": csrfToken,
@@ -415,6 +428,10 @@ $('#save_btn').click(function (e) {
 				    $("#pageloader").hide();
 				}
 			})
+		}else if (error == 2){
+			$("#nav-rate-tab").click();
+			$('#modal_add_teacher').modal('show');
+			$("#modal_alert_body").text('{{ __('warning: you didnt fill the lesson and rate page, the lessons will be invoiced at 0') }}');
 		}else{
 			$("#nav-home-tab").click();
 			$('#modal_add_teacher').modal('show');
