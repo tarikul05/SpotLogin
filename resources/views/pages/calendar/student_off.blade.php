@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
+
 @endsection
 
 @section('content')
