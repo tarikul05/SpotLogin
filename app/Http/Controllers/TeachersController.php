@@ -94,9 +94,11 @@ class TeachersController extends Controller
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
             $exTeacher = !empty($exUser) ? $exUser->personable : null;
         }
-        // dd($exTeacher); 
 
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId'));
+        $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
+        $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
+
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices'));
     }
 
      /**

@@ -28,18 +28,8 @@
 			</div>          
 		</header>
 		<!-- Tabs navs -->
-
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
-
-		<!-- Tabs content -->
-		<div class="tab-content" id="ex1-content">
-			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<!-- user email check start -->
+		<div>
+			<!-- user email check start -->
 				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
 					@csrf
 					<div class="form-group row">
@@ -56,11 +46,23 @@
 					</div>
 				</form>
 				<!-- // user email check end -->
-			@if(!empty($searchEmail))
-				<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
-					@csrf
+		</div>
 
+	@if(!empty($searchEmail))
+		<nav>
+			<div class="nav nav-tabs" id="nav-tab" role="tablist">
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+				<button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button>
+			</div>
+		</nav>
+		<!-- Tabs navs -->
+
+		<!-- Tabs content -->
+		<form action="" class="form-horizontal" id="add_teacher" method="post" role="form"
+			 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}"  name="add_teacher" role="form">
+			@csrf
+			<div class="tab-content" id="ex1-content">
+				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<input type="hidden" name="user_id" value="{{ !empty($exUser) ? $exUser->id : '' }}">
 					<fieldset>
 						<div class="section_header_class">
@@ -276,10 +278,70 @@
 							</div>
 						</div>
 					</fieldset>
-				</form>
-			@endif
+				</div>
+				<div class="tab-pane fade show" id="tab_rate" role="tabpanel" aria-labelledby="tab_1">
+					<div class="section_header_class">
+						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
+					</div>
+
+					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>{{__('Type of course')}}</th>
+								<th>{{__('Hourly rate applied')}}</th>
+								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
+								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach($eventCategory as $key => $category)
+							<tr style="background:lightblue;">
+								<td></td>
+								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td><label></label></td>
+								<td align="right" colspan="1"></td>
+							</tr>
+								@foreach($lessonPrices as $key => $lessionPrice)
+								<tr>
+									<td>{{$lessionPrice->divider}}
+										<input type="hidden" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
+										value=""
+										>
+										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
+										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+									</td>
+									<td>{{__('Lessons/Events..')}}</td>
+									@if($lessionPrice->divider == 1)
+										<td>{{ __('Private session') }}</td>
+									@else
+										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
+									@endif
+									
+									<td>
+										<input type="text" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
+										value="0.00"
+										style="text-align:right" class="form-control numeric float"
+										>
+									</td>
+									<td>
+										<input type="text" 
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
+										value="0.00"
+										style="text-align:right" class="form-control numeric float"
+										>
+									</td>
+								</tr>
+								@endforeach
+							@endforeach
+						</tbody>
+						</table>
+				</div>
 			</div>
-		</div>
+		</form>
+	@endif
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -354,6 +416,7 @@ $('#save_btn').click(function (e) {
 				}
 			})
 		}else{
+			$("#nav-home-tab").click();
 			$('#modal_add_teacher').modal('show');
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}	            
