@@ -13,12 +13,12 @@
               <form id="signup_form" name="signup_form" method="POST" action="#">
                   <div class="form-group custom-selection">
                       <select class="selectpicker" id="school_type" name="school_type" required>
-                          <option value="COACH">{{ __('Coach') }}</option>
+                          <option value="COACH">{{ __('Single coach') }}</option>
                           <option value="SCHOOL">{{ __('School') }}</option>
                       </select>
                   </div>
                   <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Fullname" id="fullname" name="fullname"
+                      <input type="text" class="form-control" placeholder="Account name (full name / Name of the school)" id="fullname" name="fullname"
                           required>
                   </div>
                   <div class="form-group">
