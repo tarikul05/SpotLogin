@@ -94,9 +94,11 @@ class TeachersController extends Controller
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Teacher' ])->first();
             $exTeacher = !empty($exUser) ? $exUser->personable : null;
         }
-        // dd($exTeacher); 
 
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId'));
+        $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
+        $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
+
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices'));
     }
 
      /**
@@ -245,6 +247,26 @@ class TeachersController extends Controller
                     }
                     $msg = 'Successfully Registered';
                 }
+
+
+                foreach ($alldata['data'] as $key => $catPrices) {
+                   foreach ($catPrices as $pkey => $price) {
+                     $dataprice = [
+                          'event_category_id' => $key,
+                          'teacher_id' => $teacher->id,
+                          'lesson_price_student' => $price['lesson_price_student'],
+                          'lesson_price_id' => $price['lesson_price_id'],
+                          'price_buy' => $price['price_buy'],
+                          'price_sell' => $price['price_sell'],
+                      ];
+
+                     if (empty($price['id'])) {
+                        $updatedPrice = LessonPriceTeacher::create($dataprice);
+                     }else{
+                        $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                     }
+                   }
+                 }
 
                 
                 $result = array(
