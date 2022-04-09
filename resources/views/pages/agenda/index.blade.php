@@ -44,6 +44,9 @@ admin_main_style.css
                         <div class="pull-right btn-group">
 
 
+                            <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
+							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
+													    
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
                                             
                             <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
@@ -181,6 +184,27 @@ admin_main_style.css
 		
 		</form>
 	</div>
+</div>
+
+<!-- Modal on event click -->	
+<div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+        <div class="modal-dialog EventModalClass" id="EventModalWin">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">                    
+                    <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                    <p style="font-size: 20px;"></p>
+                    <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
+                    <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;"><span id="event_btn_edit_text">Edit<span></a>
+                </div>
+            </div>
+	    </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 	<!-- End Tabs content -->
@@ -663,15 +687,10 @@ admin_main_style.css
 
             eventClick: function(event, jsEvent, view) {
                 if (event.url) {
-                    //alert(event.url);
-                    SetEventCookies();
-                    //commented by soumen on 15-Jun fr phase 2 changes
-                    //window.location(event.url);
-                    
-                    //console.log($(this).getBoundingClientRect());
+                    //SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
-                    document.getElementById('confirm_event_id').value=event.event_auto_id;
-                    //if (event.is_locked == 0) {
+                    document.getElementById('confirm_event_id').value=event.id;
+                    
                     if (event.action_type == 'edit') {
                         $('#event_btn_edit_text').text(GetAppMessage('event_btn_edit_text'));
                         if (event.can_lock == 'Y') {
@@ -697,13 +716,13 @@ admin_main_style.css
                         }
                     else {
                         $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
-                        }
+                    }
                     
                     
                     $("#btn_edit_view").attr("href", event.url);
                     $("#EventModal").modal('show');
                     return false;
-                    }
+                }
             },
 
             // eventAfterAllRender: function() {
@@ -1107,8 +1126,47 @@ admin_main_style.css
                     }
                 
             }
-            }
+        }
     }
+
+
+    function view_edit_event(){
+        var event_url=document.getElementById('edit_view_url').value;
+        //alert(event_url);
+        window.location=event_url;
+    }
+        
+    function confirm_event(){
+        var p_event_auto_id=document.getElementById('confirm_event_id').value;
+        var data = 'type=confirm_event&p_event_auto_id=' + p_event_auto_id;
+        console.log(data);
+        var status = '';
+        $.ajax({
+            url: 'agenda_data.php',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+                    //document.getElementById(v_status_id).innerHTML = payment_status;
+                    successModalCall(GetAppMessage('event_confirm_message'));
+                    getFreshEvents();
+                    //$('#calendar').fullCalendar('rerenderEvents');
+                }
+                else {
+                    errorModalCall(GetAppMessage('error_message_text'));
+                }
+            },   //success
+            error: function (ts) { ts.responseText+'-'+errorModalCall(GetAppMessage('error_message_text'));
+            //alert(ts.responseText + ' Update Invoice Payment Status=' + status) 
+            }
+        }); //ajax-type            
+
+    }	
+
+
 	
 </script>
 @endsection
