@@ -26,7 +26,7 @@ class AgendaController extends Controller
      * Agenda calendar
      * @return Response
     */
-    public function index($schoolId = null)
+    public function index(Request $request,$schoolId = null)
     {
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
@@ -50,7 +50,45 @@ class AgendaController extends Controller
         $event_types = config('global.event_type'); 
 
         $eventData = Event::active()->where('school_id', $schoolId)->get();
+        $data = $request->all();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (isset($data['start_date'])) {
+            $query = $eventData->filter($data);
+            $eventData = $query->get();
+            
+        }
         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //dd($eventData);
         $events = array();   
         foreach ($eventData as $key => $fetch) {
@@ -60,6 +98,13 @@ class AgendaController extends Controller
             $e['title']=(substr($fetch->title,0,1)==',') ? substr($fetch->title,1) : substr($fetch->title,0);
             $e['start'] = $fetch->date_start;
             $e['end'] = $fetch->date_end;
+            if (isset($data['zone'])) {
+                $e['start'] = $fetch->date_start.$data['zone'];
+                $e['end'] = $fetch->date_end.$data['zone'];
+                
+            }
+            
+            
             $allday = ($fetch->fullday_flag == "true") ? true : false;
             $e['allDay'] = $allday;
 
@@ -171,6 +216,62 @@ class AgendaController extends Controller
      * @version 0.1 written in 2022-04-09
      */
     public function confirmEvent(Request $request)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+
+
+            $p_event_auto_id = $data['p_event_auto_id'];
+            // $data['school_id']
+            // $p_user_id = Auth::user()->id;
+
+            $event = [
+                'is_locked' => 1
+            ];
+            $event = Event::where('id', $p_event_auto_id)->update($event);
+
+
+            $eventDetail = [
+                'is_locked' => 1,
+            ];
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+            
+            $eventDetail = [
+                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+            ];
+            $eventdetail = $eventdetail->update($eventDetail);
+
+            if ($eventdetail)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getEvent(Request $request)
     {
         $result = array(
             'status' => 'failed',

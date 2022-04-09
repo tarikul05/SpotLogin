@@ -77,5 +77,107 @@ class Event extends BaseModel
     {
         return $this->belongsTo(EventCategory::class);
     }
+
+
+     /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function filter($params)
+    {
+        $query = $this->newQuery();
+        $request = request();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+
+        $fromFilterDate = null;
+        $toFilterDate = null;
+        $sortingParams = [];
+        
+
+        if (isset($params['sort'])) { 
+            $sortingParams = explode(',', $params['sort']);
+            unset($params['sort']);
+        }
+        
+        $query->where('deleted_at', null);
+        foreach ($params as $key => $value) { 
+            if (in_array($key, $this->partialFilterable)) { 
+                if (!empty($value)) {
+                    $query->where($key, 'LIKE', "%{$value}%");
+                }
+                
+            } elseif (in_array($key, $this->exactFilterable)) {
+                if (!empty($value)) {
+                    $query->where($key, '=', $value);
+                }
+                
+            } 
+        }
+
+        if (!empty($sortingParams)) { 
+            
+            $column = null;
+            $direction = null;
+
+            foreach ($sortingParams as $sortingParam) {
+                $columnAndDirection = explode(':', str_replace(' ', '', $sortingParam));
+
+                if (!empty($columnAndDirection[0])) {
+                    $column = $columnAndDirection[0];
+                } else {
+                    continue;
+                }
+
+                if (!empty($columnAndDirection[1])) {
+                    $direction = $columnAndDirection[1];
+                } else {
+                    $direction = 'asc';
+                }
+
+                if (in_array($column, $this->fillable)) {
+                    $query->orderBy($column, $direction);
+                }
+            }
+
+        } 
+
+
+        if (isset($params['start_date'])) {
+          $fromFilterDate = str_replace('/', '-',$params['start_date']);
+          
+          if (!$toFilterDate) {
+              $toFilterDate = now();
+          }
+        } 
+      
+        if (isset($params['end_date'])) {
+          $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+          
+          if (!$fromFilterDate) {
+              $fromFilterDate = now();
+          }
+        }
+        try {
+          if ($fromFilterDate && $toFilterDate) {
+              $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
+                  $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
+                      ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
+                      ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
+                          $sq->where('date_start', '<', $fromFilterDate)
+                              ->where('date_end', '>', $toFilterDate);
+                      })
+                      ;
+              });
+          }
+        } catch (\Exception $e) {
+          
+        }
+        return $query;
+    }
+
     
 }
