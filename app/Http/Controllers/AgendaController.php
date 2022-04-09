@@ -184,16 +184,30 @@ class AgendaController extends Controller
             // $data['school_id']
             // $p_user_id = Auth::user()->id;
 
-            // $query = "call confirm_event_proc('$p_app_id','$p_school_id','$p_event_auto_id','$p_user_id');";
-            // //echo "<script>alert($query);</script>";die;exit;
-            // $result = mysql_query($query) or die($return = 'Error:-3> ' . mysql_error());
-            if ($result)
-                echo json_encode(array('status' => 'success'));
-            else
-                echo json_encode(array('status' => 'failed'));
-            
-            
+            $event = [
+                'is_locked' => 1
+            ];
+            $event = Event::where('id', $p_event_auto_id)->update($event);
 
+
+            $eventDetail = [
+                'is_locked' => 1,
+            ];
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+            
+            $eventDetail = [
+                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+            ];
+            $eventdetail = $eventdetail->update($eventDetail);
+
+            if ($eventdetail)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
             return response()->json($result);
 
         } catch (Exception $e) {
