@@ -49,46 +49,61 @@ class AgendaController extends Controller
 
         $event_types = config('global.event_type'); 
 
-        $eventData = Event::orderBy('id')->get()->toArray();
+        $eventData = Event::active()->where('school_id', $schoolId)->get();
         
         //dd($eventData);
         $events = array();   
         foreach ($eventData as $key => $fetch) {
             $e = array();   
-            $e['id'] = $fetch['id'];
+            $e['id'] = $fetch->id;
             
-            $e['title']=(substr($fetch['title'],0,1)==',') ? substr($fetch['title'],1) : substr($fetch['title'],0);
-            $e['start'] = $fetch['date_start'];
-            $e['end'] = $fetch['date_end'];
-            $allday = ($fetch['fullday_flag'] == "true") ? true : false;
+            $e['title']=(substr($fetch->title,0,1)==',') ? substr($fetch->title,1) : substr($fetch->title,0);
+            $e['start'] = $fetch->date_start;
+            $e['end'] = $fetch->date_end;
+            $allday = ($fetch->fullday_flag == "true") ? true : false;
             $e['allDay'] = $allday;
-            
-            //$e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
-            $e['event_type'] = ($fetch['event_type']);
-            // $e['event_type_name'] = ($fetch['event_type_name']);
-            // $e['cours_name'] = ($fetch['cours_name']);
-            $e['teacher_id'] = ($fetch['teacher_id']);
-            // $e['teacher_name'] = ($fetch['teacher_name']);
-            $e['duration_minutes'] = $fetch['duration_minutes'];
-            $e['no_of_students'] = $fetch['no_of_students'];
-            $e['is_locked'] = $fetch['is_locked'];
+
+            if (isset($fetch->teacher)) {
+                $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
+                $e['teacher_name'] = $fetch->teacher['Kazi'];
+            }
+            $e['event_type'] = $fetch->event_type;
+            $e['event_type_name'] = ($event_types[$e['event_type']]);
+            if (isset($fetch->eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = $fetch->eventCategory['title'];
+                $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
+                $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
+                $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+                $e['content'] = ($e['cours_name']);
+            }
+
+            if($fetch->event_mode==0){
+                $e['event_mode_desc'] = 'Draft';
+            } else {
+                $e['event_mode_desc'] = '';
+            }
+            $e['teacher_id'] = $fetch->teacher_id; 
+            $e['duration_minutes'] = $fetch->duration_minutes;
+            $e['no_of_students'] = $fetch->no_of_students;
+            $e['is_locked'] = $fetch->is_locked;
             // $e['student_id_list'] = $fetch['student_id_list'];
-            // $e['text_for_search']=strtolower($fetch['event_type_name'].$fetch['cours_name'].' '.$fetch['teacher_name'].' - '.$fetch['title']);
-            // $e['tooltip']=$fetch['event_mode_desc'].$fetch['cours_name'].' Duration: '.$fetch['duration_minutes'].' '.$fetch['teacher_name'].' - '.$fetch['title'];
-            // $e['event_auto_id'] = ($fetch['event_auto_id']);
-            $e['event_mode'] = ($fetch['event_mode']);
-            // $e['content'] = ($fetch['cours_name']);
-            //$e['can_lock'] = ($fetch['can_lock']);
-            $e['description'] = $e['title'];
-            // $e['location'] = (is_null($fetch['location']) ? 0 : $fetch['location']) ;
-            $e['category_id'] = (is_null($fetch['event_category']) ? 0 : $fetch['event_category']) ;
-            // $e['event_category_name'] = $fetch['event_category_name'];
-            // $e['created_user'] = $fetch['created_user'];
+            $e['event_auto_id'] = ($fetch->id);
+            $e['event_mode'] = $fetch->event_mode;
             
-            // //$e['rendering'] = 'background';
+
+            // if (now()>$fetch->date_end) {
+            //     $e['can_lock'] = 'Y';
+            // } else{
+            //     $e['can_lock'] = 'N';
+            // }
+            $e['description'] = $e['title'];
+            $e['location'] = (is_null($fetch->location_id) ? 0 : $fetch->location_id) ;
+            $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
+            $e['created_user'] = $fetch->created_by;
             
             $page_name='../admin/events_entry.html?event_type=';
-            if ($fetch['is_locked'] == 1){
+            if ($fetch->is_locked == 1){
                 $action_type='view';
                 $page_name='/{school}/add-event?event_type=';
             }
@@ -101,7 +116,7 @@ class AgendaController extends Controller
                     $page_name='../admin/events_entry_view.html?event_type=';
                 }
                 if ($user_role == 'teacher'){
-                    if (($person_id == $fetch['teacher_id']) || ($_SESSION['user_authorisation'] == 'ALL') ){
+                    if (($user->id == $fetch->teacher_id)){
                         $action_type='edit';
                         $page_name='../admin/events_entry.html?event_type=';
                     }else{
@@ -110,8 +125,8 @@ class AgendaController extends Controller
                     }
                 } 
                 /* only own vacation entry can be edited by user - Teacher */
-                if ($fetch['event_type'] == 50) {
-                    if ( ($user->id == $fetch['created_by']) || ($user->id == $fetch['teacher_id']) || ($user->id == $fetch['teacher_id'] )) {
+                if ($fetch->event_type == 50) {
+                    if ( ($user->id == $fetch->created_by) || ($user->id == $fetch->teacher_id) || ($user->id == $fetch->teacher_id )) {
                         $action_type='edit';
                         $page_name='../admin/events_entry.html?event_type=';
                     } else {
@@ -121,8 +136,8 @@ class AgendaController extends Controller
                     }   
                 }
                 /* only own vacation entry can be edited by user - Student */
-                if ($fetch['event_type'] == 51) {
-                    if (($user->id == $fetch['created_by']) || ($user->id == $fetch['student_id']) || ($user->id == $fetch['student_id'] )) {
+                if ($fetch->event_type == 51) {
+                    if (($user->id == $fetch->created_by) || ($user->id == $fetch->student_id) || ($user->id == $fetch->student_id )) {
                         $action_type='edit';
                         $page_name='../admin/events_entry.html?event_type=';
                     } else {
@@ -134,12 +149,13 @@ class AgendaController extends Controller
                 }
                 
             };
-            $e['url'] = $page_name.$fetch['event_type'].'&event_id='.$fetch['id'].'&action='.$action_type;
+            $e['url'] = $page_name.$fetch->event_type.'&event_id='.$fetch->id.'&action='.$action_type;
             
             $e['action_type'] = $action_type;
 
             array_push($events, $e);
         }
+        //dd($events);
         $events =json_encode($events);
         return view('pages.agenda.index')->with(compact('user_role','students','teachers','locations','alllanguages','events','event_types'));
 
