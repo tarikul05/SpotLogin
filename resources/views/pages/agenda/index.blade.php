@@ -43,7 +43,7 @@ admin_main_style.css
 					<div class="col-sm-6 col-xs-12 btn-area">
                         <div class="pull-right btn-group">
 
-
+                            <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
 													    
@@ -198,7 +198,9 @@ admin_main_style.css
                     <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
                     <p style="font-size: 20px;"></p>
                     <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
-                    <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;"><span id="event_btn_edit_text">Edit<span></a>
+                    <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
+                        <span id="event_btn_edit_text">View<span>
+                    </a>
                 </div>
             </div>
 	    </div>
@@ -692,7 +694,7 @@ admin_main_style.css
                     document.getElementById('confirm_event_id').value=event.id;
                     
                     if (event.action_type == 'edit') {
-                        $('#event_btn_edit_text').text(GetAppMessage('event_btn_edit_text'));
+                        $('#event_btn_edit_text').text("{{__('Edit')}}");
                         if (event.can_lock == 'Y') {
                             $('#btn_confirm').show();
                         } else {
@@ -700,7 +702,7 @@ admin_main_style.css
                         }
                         
                     } else {
-                        $('#event_btn_edit_text').text(GetAppMessage('event_btn_view_text'));
+                        $('#event_btn_edit_text').text("{{__('View')}}");
                         $('#btn_confirm').hide();
                     }
                     
@@ -1138,29 +1140,33 @@ admin_main_style.css
         
     function confirm_event(){
         var p_event_auto_id=document.getElementById('confirm_event_id').value;
-        var data = 'type=confirm_event&p_event_auto_id=' + p_event_auto_id;
+        var school_id=document.getElementById('school_id').value;
+        var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
         console.log(data);
         var status = '';
         $.ajax({
-            url: 'agenda_data.php',
+            url: BASE_URL + '/confirm_event',
             data: data,
             type: 'POST',
             dataType: 'json',
-            async: false,
+            beforeSend: function( xhr ) {
+                $("#pageloader").show();
+            },
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    //document.getElementById(v_status_id).innerHTML = payment_status;
-                    successModalCall(GetAppMessage('event_confirm_message'));
+                    successModalCall('event_confirm_message');
                     getFreshEvents();
-                    //$('#calendar').fullCalendar('rerenderEvents');
                 }
                 else {
-                    errorModalCall(GetAppMessage('error_message_text'));
+                    errorModalCall('error_message_text');
                 }
             },   //success
-            error: function (ts) { ts.responseText+'-'+errorModalCall(GetAppMessage('error_message_text'));
-            //alert(ts.responseText + ' Update Invoice Payment Status=' + status) 
+            complete: function( xhr ) {
+                $("#pageloader").hide();
+            },
+            error: function (ts) { 
+                ts.responseText+'-'+errorModalCall('error_message_text');
             }
         }); //ajax-type            
 

@@ -157,8 +157,51 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
-        return view('pages.agenda.index')->with(compact('user_role','students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
+
+
+    
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function confirmEvent(Request $request)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+
+
+            $p_event_auto_id = $data['p_event_auto_id'];
+            // $data['school_id']
+            // $p_user_id = Auth::user()->id;
+
+            // $query = "call confirm_event_proc('$p_app_id','$p_school_id','$p_event_auto_id','$p_user_id');";
+            // //echo "<script>alert($query);</script>";die;exit;
+            // $result = mysql_query($query) or die($return = 'Error:-3> ' . mysql_error());
+            if ($result)
+                echo json_encode(array('status' => 'success'));
+            else
+                echo json_encode(array('status' => 'failed'));
+            
+            
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
 
 }
