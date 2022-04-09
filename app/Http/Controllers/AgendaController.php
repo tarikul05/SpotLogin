@@ -102,36 +102,36 @@ class AgendaController extends Controller
             $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
             $e['created_user'] = $fetch->created_by;
             
-            $page_name='../admin/events_entry.html?event_type=';
+            $page_name='/'.$schoolId.'/add-event?event_type=';
             if ($fetch->is_locked == 1){
                 $action_type='view';
-                $page_name='/{school}/add-event?event_type=';
+                $page_name='/'.$schoolId.'/add-event?event_type=';
             }
             else {
                 $action_type='edit';
-                $page_name='../admin/events_entry.html?event_type=';
+                $page_name='/'.$schoolId.'/edit-event?event_type=';
                 
                 if ($user_role == 'student'){
                     $action_type='view';
-                    $page_name='../admin/events_entry_view.html?event_type=';
+                    $page_name='/'.$schoolId.'/view-event?event_type=';
                 }
                 if ($user_role == 'teacher'){
                     if (($user->id == $fetch->teacher_id)){
                         $action_type='edit';
-                        $page_name='../admin/events_entry.html?event_type=';
+                        $page_name='/'.$schoolId.'/view-event?event_type=';
                     }else{
                         $action_type='view';
-                        $page_name='../admin/events_entry_view.html?event_type=';
+                        $page_name='/'.$schoolId.'/view-event?event_type=';
                     }
                 } 
                 /* only own vacation entry can be edited by user - Teacher */
                 if ($fetch->event_type == 50) {
                     if ( ($user->id == $fetch->created_by) || ($user->id == $fetch->teacher_id) || ($user->id == $fetch->teacher_id )) {
                         $action_type='edit';
-                        $page_name='../admin/events_entry.html?event_type=';
+                        $page_name='/'.$schoolId.'/edit-event?event_type=';
                     } else {
                         $action_type='view';
-                        $page_name='../admin/events_entry_view.html?event_type=';
+                        $page_name='/'.$schoolId.'/view-event?event_type=';
         
                     }   
                 }
@@ -139,10 +139,10 @@ class AgendaController extends Controller
                 if ($fetch->event_type == 51) {
                     if (($user->id == $fetch->created_by) || ($user->id == $fetch->student_id) || ($user->id == $fetch->student_id )) {
                         $action_type='edit';
-                        $page_name='../admin/events_entry.html?event_type=';
+                        $page_name='/'.$schoolId.'/edit-event?event_type=';
                     } else {
                         $action_type='view';
-                        $page_name='../admin/events_entry_view.html?event_type=';
+                        $page_name='/'.$schoolId.'/view-event?event_type=';
         
                     }   
                     
