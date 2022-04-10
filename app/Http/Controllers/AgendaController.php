@@ -114,20 +114,29 @@ class AgendaController extends Controller
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_type_name'] = ($event_types[$e['event_type']]);
-            if (isset($fetch->eventCategory)) {
-                $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
-                $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
-                $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
-                $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
-                $e['content'] = ($e['cours_name']);
-            }
-
+            $e['event_category'] ='';
+            $e['event_category_name'] ='';
+            $e['cours_name'] = '';
+            $e['text_for_search']='';
+            $e['tooltip']='';
+            $e['content'] ='';
             if($fetch->event_mode==0){
                 $e['event_mode_desc'] = 'Draft';
             } else {
                 $e['event_mode_desc'] = '';
             }
+
+            if (isset($fetch->eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = $fetch->eventCategory['title'];
+                
+            }
+            $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
+            $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
+            $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+            $e['content'] = ($e['cours_name']);
+
+            
             $e['teacher_id'] = $fetch->teacher_id; 
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;

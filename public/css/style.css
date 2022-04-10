@@ -96,6 +96,13 @@ nav {
     border: 1px solid #B3D6EC;
     border-radius: 4px;
 }
+.search_text_box {
+    background-image: url('../img/search_icon.png')!important;
+    background-position: right!important;
+    background-repeat: no-repeat!important;
+    width: 100%;
+    /* border-radius: 100px; --round corner */
+  }
 .glyphicon {
     position: relative;
     top: 1px;

@@ -24,7 +24,7 @@
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
-<script src="{{ asset('js/fullcalendar.js')}}"></script>
+<script src="{{ asset('js/fullcalendar.min.js')}}"></script>
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 admin_main_style.css
 @endsection
@@ -48,21 +48,42 @@ admin_main_style.css
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
-													    
+							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
+                            <input type="hidden" name="person_id" id="person_id" value="">
+							<input type="hidden" name="evt_t_id" id="evt_t_id" value="">
+						    
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
                                             
-                            <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
-                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
-                            <input type="hidden" name="event_location_id" size="14px" id="event_location_id" value="0">
-										 
+                            	 
                             <input type="hidden" name="date_from" id="date_from" value="">
                             <input type="hidden" name="date_to" id="date_to" value="">
                             <input type="hidden" name="view_mode" size="14px" id="view_mode" value="">
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
+                            
+
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
-                                                           
+                            <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
+                            <input type="hidden" name="copy_event_id" id="copy_event_id" value="">
+                            <input type="hidden" name="copy_student_id" id="copy_student_id" value="">
+                            <input type="hidden" name="copy_teacher_id" id="copy_teacher_id" value="">
+                            <input type="hidden" name="copy_view_mode" id="copy_view_mode" value="">
                             
-                            
+
+                            <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
+                            <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
+                            <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
+                            <input type="hidden" name="event_location_id" size="14px" id="event_location_id" value="0">
+                            <input type="hidden" name="event_category_id" size="14px" id="event_category_id" value="0">
+
+
+                            <input type="hidden" name="event_type_all_flag" size="14px" id="event_type_all_flag" value="1">
+                            <input type="hidden" name="event_student_all_flag" size="14px" id="event_student_all_flag" value="1">
+                            <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
+                            <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
+                            <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
+
+                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
+                            	
                             <div id="button_menu_div" class="btn-group buttons pull-right" >
                                 <!-- <div class="btn-group"> -->
                                     <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
@@ -87,9 +108,7 @@ admin_main_style.css
           <section class="panel" style="border: 0;box-shadow: none;">
             <label id="loading" style="display:none;">Loading....</label> 
             <form action="#" method="post">
-            <input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
-              
-
+            
               <div class="clearfix"></div>
               <div class="row">
                   <div class="col-md-9">
@@ -279,7 +298,14 @@ admin_main_style.css
 	});
     $('#search_text').on('input', function(){
 		var search_text=$(this).val();
+        
+
 		if (search_text.length > 0){
+            console.log(search_text);
+			$('#calendar').fullCalendar('rerenderEvents');
+		}
+        if (search_text.length == 0){
+            //console.log(search_text);
 			$('#calendar').fullCalendar('rerenderEvents');
 		}
     });
@@ -636,8 +662,8 @@ admin_main_style.css
                         //if (event.tooltip.toLowerCase().indexOf(search_text) >= 0) {
                         if (event.text_for_search.indexOf(search_text) >= 0) {
                             //if (event.tooltip.indexOf(search_text) >= 0) {
-                        search_found=1;
-                        //flag=true; 
+                            search_found=1;
+                            //flag=true; 
                         } else {
                             search_found=0;
                             //flag=false;
