@@ -25,6 +25,8 @@
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
 <script src="{{ asset('js/fullcalendar.min.js')}}"></script>
+<script src="{{ asset('js/jquery.table2excel.js')}}"></script>
+
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 admin_main_style.css
 @endsection
@@ -309,6 +311,20 @@ admin_main_style.css
 			$('#calendar').fullCalendar('rerenderEvents');
 		}
     });
+
+    $("#btn_export_events").click(function () {
+        
+        $("#agenda_table").table2excel({
+            // exclude CSS class
+            //exclude: ".noExl",
+            name: "Sheet",
+            filename: "events.xls" //do not include extension
+        });
+        return false;
+       
+        
+    }) 
+    //Convert HTML Table to CSV Method : END
     // $("#datepicker_month").on("dp.change", function() {
     //     var dt=$('#datepicker_month').data('DateTimePicker').date();
     //     dt=dt.format('YYYY-MM-DD');
