@@ -328,4 +328,93 @@ class AgendaController extends Controller
         
     }
 
+     /**
+     *  AJAX delete multiple event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-10
+     */
+    public function deleteMultipleEvent(Request $request)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+
+
+        //     $p_from_date= trim($_POST['p_from_date']);
+        //     $p_to_date= trim($_POST['p_to_date']);
+        
+        //     $p_event_type_id= trim($_POST['p_event_type_id']);
+        //     $p_teacher_id= trim($_POST['p_teacher_id']);
+        //     $p_student_id= trim($_POST['p_student_id']);
+        //     $p_user_id=$_SESSION['user_id'];
+            
+        // //    PROCEDURE `copy_events_proc`(p_view_mode varchar(11),p_source_from_date varchar(11), p_source_end_date varchar(11), 
+        // //p_target_from_date varchar(11), p_target_end_date varchar(11),	
+        // //p_zone varchar(30),event_type_id varchar(64),p_student_id varchar(64), p_teacher_id varchar(64)
+            
+        //     $query = "call delete_multiple_events_proc('".$p_app_id."','".$p_school_id."','".$p_from_date."','".$p_to_date."','".$p_event_type_id."','".$p_teacher_id."','".$p_student_id."','".$p_user_id."');";
+        //     //echo "<script>alert(".$query.");<scrip>"; die;exit;
+            
+        //     $result = mysql_query($query) or die( $return = 'Error:-3> ' . mysql_error());
+        //     $row = mysql_fetch_array($result);
+        //     $num_rows= mysql_num_rows($result);
+            
+        //     if ($num_rows == 0) {
+        //         $data = array(
+        //                 "status"     => 1
+        //             );		
+        //     } else
+        //         {
+        //         $data = array(
+        //                 "status"     => 0
+        //             );		
+                    
+        //         }
+        //     echo json_encode($data);
+
+
+
+            $p_event_auto_id = $data['p_event_auto_id'];
+            
+
+            $event = [
+                'is_locked' => 1
+            ];
+            $event = Event::where('id', $p_event_auto_id)->update($event);
+
+
+            $eventDetail = [
+                'is_locked' => 1,
+            ];
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+            
+            $eventDetail = [
+                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+            ];
+            $eventdetail = $eventdetail->update($eventDetail);
+
+            if ($eventdetail)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+    
+
 }

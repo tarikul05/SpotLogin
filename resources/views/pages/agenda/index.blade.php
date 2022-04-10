@@ -325,6 +325,68 @@ admin_main_style.css
         
     }) 
     //Convert HTML Table to CSV Method : END
+    //capture events criteria
+    $('#btn_copy_events').click(function (e) {
+        document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
+        document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
+		document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
+		
+		//document.getElementById("copy_event_id").value = document.getElementById("event_type_id").value;
+		document.getElementById("copy_event_id").value =getEventIDs();
+        
+		//document.getElementById("copy_student_id").value = document.getElementById("event_student_id").value;
+		document.getElementById("copy_student_id").value = getStudentIDs();
+		
+        //document.getElementById("copy_teacher_id").value = document.getElementById("event_teacher_id").value;
+		document.getElementById("copy_teacher_id").value = getTeacherIDs();
+		
+        return false;
+    })
+
+    //delete multiple events based on date, events type, teacher and student etc
+    $('#btn_delete_events').click(function (e) {
+	
+    document.getElementById("btn_delete_events").style.display = "none";
+        var user_role=document.getElementById("user_role").value;
+        if (user_role == 'student') {
+            //alert("You don't have permission to delete events");
+            errorModalCall('permission_issue_common_text');
+            return false;
+        }
+        
+        var p_from_date=document.getElementById("date_from").value,
+        p_to_date=document.getElementById("date_to").value;
+        var p_event_type_id=getEventIDs();
+        var p_student_id=getStudentIDs();
+        var p_teacher_id=getTeacherIDs();
+
+        //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+        e.preventDefault();
+        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        return false;
+    })
+
+    function delete_multiple_events(p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
+        var data='type=delete_multiple_events'+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        //console.log(data);
+            //e.preventDefault();
+            $.ajax({type: "POST",
+                url: BASE_URL + '/delete_multiple_events',
+                data: data,
+                dataType: "JSON",
+                success:function(result){
+                    var status =  result.status;
+                    //alert(status);
+                    getFreshEvents();      //refresh calendar 
+                    
+                },   //success
+                error: function(ts) { 
+                    errorModalCall('delete_multiple_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+                    // alert(ts.responseText)
+                }
+            }); //ajax-type
+    }
+    
     // $("#datepicker_month").on("dp.change", function() {
     //     var dt=$('#datepicker_month').data('DateTimePicker').date();
     //     dt=dt.format('YYYY-MM-DD');
@@ -1140,6 +1202,16 @@ admin_main_style.css
         var view = $('#calendar').fullCalendar('getView');
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
+
+    function getEventIDs(){
+		var selected_ids = [];
+        $.each($("#event_type option:selected"), function(){         
+            selected_ids.push($(this).val());
+        });		
+		//console.log('selected='+selected_ids.join("|"));
+		return selected_ids.join("|");
+	}
+
 
     function getStudentIDs(){	
         var selected_ids = [];
