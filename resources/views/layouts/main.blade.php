@@ -25,6 +25,8 @@
     var HTTP_HOST = '{{ $_SERVER['HTTP_HOST'] }}';
     var MESSAGE_CONFIRM_DELETE = '{{ __('MESSAGE_CONFIRM_DELETE') }}';
 </script>
+<script src="{{ asset('js/common-scripts.js')}}"></script>
+
 <style>
     .se-pre-con {
         position: fixed;
@@ -56,7 +58,6 @@
 @section('footer_js')
 @show
 <!-- js comes form inner page end -->
-<script src="{{ asset('js/common-scripts.js')}}"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     setTimeout(function () { 

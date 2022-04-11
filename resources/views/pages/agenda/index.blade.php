@@ -346,7 +346,7 @@ admin_main_style.css
     //delete multiple events based on date, events type, teacher and student etc
     $('#btn_delete_events').click(function (e) {
 	
-    document.getElementById("btn_delete_events").style.display = "none";
+        document.getElementById("btn_delete_events").style.display = "none";
         var user_role=document.getElementById("user_role").value;
         if (user_role == 'student') {
             //alert("You don't have permission to delete events");
@@ -368,7 +368,7 @@ admin_main_style.css
 
     function delete_multiple_events(p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
         var data='type=delete_multiple_events'+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
-        //console.log(data);
+        
             //e.preventDefault();
             $.ajax({type: "POST",
                 url: BASE_URL + '/delete_multiple_events',
