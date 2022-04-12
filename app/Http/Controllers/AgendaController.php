@@ -343,62 +343,21 @@ class AgendaController extends Controller
         );
         try {
             $data = $request->all();
-
-
             $p_from_date= trim($data['p_from_date']);
             $p_to_date= trim($data['p_to_date']);
         
             $p_event_type_id= trim($data['p_event_type_id']);
             $p_teacher_id= trim($data['p_teacher_id']);
             $p_student_id= trim($data['p_student_id']);
-            $p_user_id=Auth::user()->id;;
+            $p_user_id=Auth::user()->id;
+
             
-        //    PROCEDURE `copy_events_proc`(p_view_mode varchar(11),p_source_from_date varchar(11), p_source_end_date varchar(11), 
-        //p_target_from_date varchar(11), p_target_end_date varchar(11),	
-        //p_zone varchar(30),event_type_id varchar(64),p_student_id varchar(64), p_teacher_id varchar(64)
-            
-            $query = "call delete_multiple_events_proc('".$p_app_id."','".$p_school_id."','".$p_from_date."','".$p_to_date."','".$p_event_type_id."','".$p_teacher_id."','".$p_student_id."','".$p_user_id."');";
-            //echo "<script>alert(".$query.");<scrip>"; die;exit;
-            
-        //     $result = mysql_query($query) or die( $return = 'Error:-3> ' . mysql_error());
-        //     $row = mysql_fetch_array($result);
-        //     $num_rows= mysql_num_rows($result);
-            
-        //     if ($num_rows == 0) {
-        //         $data = array(
-        //                 "status"     => 1
-        //             );		
-        //     } else
-        //         {
-        //         $data = array(
-        //                 "status"     => 0
-        //             );		
-                    
-        //         }
-        //     echo json_encode($data);
-
-
-
-            $p_event_auto_id = $data['p_event_auto_id'];
-            
-
-            $event = [
-                'is_locked' => 1
-            ];
-            $event = Event::where('id', $p_event_auto_id)->update($event);
-
-
-            $eventDetail = [
-                'is_locked' => 1,
-            ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
-            
-            $eventDetail = [
-                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
-            ];
-            $eventdetail = $eventdetail->update($eventDetail);
-
-            if ($eventdetail)
+            if (isset($data['p_from_date'])) {
+                $query = new Event;
+                $eventData = $query->multiDelete($data)->delete();
+            }
+      
+            if ($eventData)
             {
                 $result = array(
                     "status"     => 'success',
