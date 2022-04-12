@@ -122,7 +122,52 @@ header.panel-heading {
   background: #FFF;
 }
 
+/********************ADMIN PANEL DEV CSS******************/
+/* .navbar{padding: 0 1rem 0 0;}
+.menu-left .nav-link{padding: 1rem;color:#FFF!important;}
+.menu-left .active>.nav-link{background: #0075BF; color: #152245!important;}*/
+.wrap{padding:30px 0;margin-top:54px;}
+.btn{padding:.75rem;font-family: 'Gilroy-Medium'; font-weight: normal;font-size: 14px;line-height: 1.25;height:35px;}
+.btn-area .btn-group .btn,.btn-area .btn{margin-left: 5px!important;border-radius: 4px!important;}
+.btn-area input, .btn-area .form-control{margin-left: 5px;margin-bottom:0;}
+.btn.btn-default{color: #152245;border: 1px solid #B3D6EC;}
+.btn-theme-outline{background:#FFF;border:1px solid #B3D6EC;color:#152245;}
+.btn-theme-success{background-color: #97CC04;border-color: #97CC04;color:#FFF;}
+.btn-theme-warn{background-color: #FF8000;border-color: #FF8000;color:#FFF;}
+.btn-primary {color: #fff;background-color: #0075BF;border-color: #0075BF;}
+.form-group {margin-bottom: .5rem;}
+.form-control{height:35px;padding:.75rem;background: #fff !important;border:1px solid #B3D6EC;color:#152245;box-shadow:none!important;}
+label{font-family: 'Gilroy-Medium'; font-weight:normal;}
+.selectdiv {
+    position: relative;
+    float: left;
+}
+select::-ms-expand {
+    display: none;
+}
 
+.selectdiv:after {
+    font-family: FontAwesome;
+    content: "\f078";
+    line-height: 1;
+    color: #0075BF;
+    background: #fff;
+    width: 25px;
+    height: 33px;
+    right: -4px;
+    top: 1px;
+    border-radius: 0 4px 4px 0;
+    padding: 10px 0;
+    text-align: center;
+    margin: 0;
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+.selectdiv{width: 100%;}
+.tab-content .selectdiv:after, table .selectdiv:after,.table .selectdiv:after{
+    right: 1px;
+}
 
 /***LOGIN SIGNUP MODAL CSS***/
 /* .modal{overflow-y: scroll;} */
