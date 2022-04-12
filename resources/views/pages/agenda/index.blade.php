@@ -640,14 +640,21 @@ admin_main_style.css
                 console.log('rendering...event_id='+event.id);
                 var dt=moment(event.start).format('DD/MM/YYYY');
                 
+                
                 //$('#datepicker_month').data("DateTimePicker").date(dt)
                 /* END datepicker - change date */
             
                 //ProgressIncrement(); //display progress bar
                 if (document.getElementById("event_type").value != '0') {
+                    console.log('rendering...event_id='+dt);
                     event_found=0;
+                    
                     $.each($("#event_type option:selected"), function(){ 
                         var name=$(this).text();
+                        console.log('dasda----------------')
+                        console.log($(this).text())
+                        console.log('adsda----------------')
+
                         if (event.event_type_name.indexOf(name) >= 0){
                             event_found=1;
                             //break;
@@ -770,6 +777,9 @@ admin_main_style.css
                 } else {
                     flag = false;
                 }
+                console.log('----------------')
+                console.log(event_found)
+                console.log('----------------')
 
                 if (flag == true){
                     
@@ -989,13 +999,13 @@ admin_main_style.css
                     getFreshEvents();
                 }
             },
-            eventDidMount: info => {
-                info.el.addEventListener('contextmenu', (ev) => {
-                    ev.preventDefault();
-                    this.$refs.copyMenu.open(ev, info.event)
-                    return false;
-                }, false);
-            }
+            // eventDidMount: info => {
+            //     info.el.addEventListener('contextmenu', (ev) => {
+            //         ev.preventDefault();
+            //         this.$refs.copyMenu.open(ev, info.event)
+            //         return false;
+            //     }, false);
+            // }
             
 
         })    //full calendar initialization
@@ -1021,28 +1031,28 @@ admin_main_style.css
             buttonWidth: '100%',
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
-            // onChange: function(option, checked) {
-            //         //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-            //         console.log('Event changed triggered!');
-            //         document.getElementById("event_type_id").value=getEventIDs();
-            //         document.getElementById("event_type_all_flag").value='0';
-            //         SetEventCookies();
-            //         RerenderEvents();
-            // },
-            // onSelectAll: function (option,checked) {
-            //         document.getElementById("event_type_id").value='0';
-            //         document.getElementById("event_type_all_flag").value='1';
-            //         SetEventCookies();
-            //         RerenderEvents();
-            // },
-            // onDeselectAll: function(option,checked) {
-            //     console.log('Event onDeSelectAll triggered!');
-            //         //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-            //         document.getElementById("event_type_id").value=getEventIDs();
-            //         document.getElementById("event_type_all_flag").value='0';
-            //         SetEventCookies();
-            //         RerenderEvents();
-            //     },
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('Event changed triggered!');
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (option,checked) {
+                    document.getElementById("event_type_id").value='0';
+                    document.getElementById("event_type_all_flag").value='1';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('Event onDeSelectAll triggered!');
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+                },
             selectAllValue: 0
         });
 
