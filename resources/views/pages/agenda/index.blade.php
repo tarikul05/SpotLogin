@@ -268,6 +268,11 @@ admin_main_style.css
     var user_role=document.getElementById("user_role").value;
 
     var json_events = @json($events);
+
+    console.log("aa------------------");
+    console.log(json_events);
+    console.log("aa------------------");
+
    
     var defview='agendaWeek';   //'month';//'agendaWeek'
     var currentTimezone = 'local';
@@ -495,21 +500,26 @@ admin_main_style.css
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
         var school_id=document.getElementById('school_id').value;
-        json_events = json_events;
         document.getElementById("prevnext").value = '';
+        var json_events = @json($events);
         $.ajax({
             url: BASE_URL + '/'+school_id+'/get_event',
             type: 'POST', 
             data: 'type=fetch&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            async: false,
             success: function(s){
-               
-                json_events = @json(s);
+                
+                json_events = s;
+                console.log("------------------");
+                console.log(json_events);
+                console.log("------------------");
             },
             error: function(ts) { 
                 errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText) 
             }
         });
+        
         //alert('get refresh');
         $("#agenda_table tr:gt(0)").remove();
         $('#calendar').fullCalendar('removeEvents');

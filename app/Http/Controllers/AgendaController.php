@@ -415,8 +415,10 @@ class AgendaController extends Controller
 
             array_push($events, $e);
         }
+        
+        $events =json_encode($events);
         //dd($events);
-        return $events =json_encode($events);
+        return response()->json($events);
         
     } 
 
