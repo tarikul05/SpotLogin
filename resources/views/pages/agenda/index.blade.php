@@ -1081,7 +1081,7 @@ admin_main_style.css
             console.log('onChange location triggered!');
             document.getElementById("event_location_id").value=getLocationIDs();
             document.getElementById("event_location_all_flag").value='0';
-            SetEventCookies();
+            //SetEventCookies();
             RerenderEvents();
         },
         onSelectAll: function (options,checked) {
@@ -1130,35 +1130,35 @@ admin_main_style.css
              buttonWidth: '100%',
              // possible options: 'text', 'value', 'both'
              filterBehavior: 'text',
-            // onChange: function(option, checked) {
-            //     console.log('onChange location triggered!');
-            //     document.getElementById("event_location_id").value=getLocationIDs();
-            //     document.getElementById("event_location_all_flag").value='0';
-            //     SetEventCookies();
-            //     RerenderEvents();
-            // },
-            // onSelectAll: function (options,checked) {
-            //     if (options){
-            //         console.log('location onSelectAll triggered!'+options);
-            //         document.getElementById("event_location_id").value='0';
-            //         document.getElementById("event_location_all_flag").value='1';
-            //         }
-            //     else {
-            //         console.log('location onDeSelectAll triggered!');
-            //         document.getElementById("event_location_id").value='';
-            //         document.getElementById("event_location_all_flag").value='0';
+            onChange: function(option, checked) {
+                console.log('onChange location triggered!');
+                document.getElementById("event_location_id").value=getLocationIDs();
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
+                if (options){
+                    console.log('location onSelectAll triggered!'+options);
+                    document.getElementById("event_location_id").value='0';
+                    document.getElementById("event_location_all_flag").value='1';
+                    }
+                else {
+                    console.log('location onDeSelectAll triggered!');
+                    document.getElementById("event_location_id").value='';
+                    document.getElementById("event_location_all_flag").value='0';
                 
-            //         }
-            //     //SetEventCookies();
-            //     RerenderEvents();
-            // },
-            // onDeselectAll: function() {
-            //     console.log('NOT WORKING location onDeSelectAll triggered!');
-            //     document.getElementById("event_location_id").value='';
-            //     document.getElementById("event_location_all_flag").value='0';
-            //     SetEventCookies();
-            //     RerenderEvents();
-            // },
+                    }
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onDeselectAll: function() {
+                console.log('NOT WORKING location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
              selectAllValue: 0
          });
  
@@ -1183,35 +1183,35 @@ admin_main_style.css
              buttonWidth: '100%',
              // possible options: 'text', 'value', 'both'
              filterBehavior: 'text',
-            // onChange: function(option, checked) {
-            //     console.log('onChange location triggered!');
-            //     document.getElementById("event_location_id").value=getLocationIDs();
-            //     document.getElementById("event_location_all_flag").value='0';
-            //     SetEventCookies();
-            //     RerenderEvents();
-            // },
-            // onSelectAll: function (options,checked) {
-            //     if (options){
-            //         console.log('location onSelectAll triggered!'+options);
-            //         document.getElementById("event_location_id").value='0';
-            //         document.getElementById("event_location_all_flag").value='1';
-            //         }
-            //     else {
-            //         console.log('location onDeSelectAll triggered!');
-            //         document.getElementById("event_location_id").value='';
-            //         document.getElementById("event_location_all_flag").value='0';
+            onChange: function(option, checked) {
+                console.log('onChange location triggered!');
+                document.getElementById("event_location_id").value=getLocationIDs();
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
+                if (options){
+                    console.log('location onSelectAll triggered!'+options);
+                    document.getElementById("event_location_id").value='0';
+                    document.getElementById("event_location_all_flag").value='1';
+                    }
+                else {
+                    console.log('location onDeSelectAll triggered!');
+                    document.getElementById("event_location_id").value='';
+                    document.getElementById("event_location_all_flag").value='0';
                 
-            //         }
-            //     //SetEventCookies();
-            //     RerenderEvents();
-            // },
-            // onDeselectAll: function() {
-            //     console.log('NOT WORKING location onDeSelectAll triggered!');
-            //     document.getElementById("event_location_id").value='';
-            //     document.getElementById("event_location_all_flag").value='0';
-            //     SetEventCookies();
-            //     RerenderEvents();
-            // },
+                    }
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onDeselectAll: function() {
+                console.log('NOT WORKING location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
              selectAllValue: 0
         });
  
