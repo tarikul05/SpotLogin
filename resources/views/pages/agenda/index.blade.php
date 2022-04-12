@@ -346,7 +346,7 @@ admin_main_style.css
     //delete multiple events based on date, events type, teacher and student etc
     $('#btn_delete_events').click(function (e) {
 	
-        document.getElementById("btn_delete_events").style.display = "none";
+        
         var user_role=document.getElementById("user_role").value;
         if (user_role == 'student') {
             //alert("You don't have permission to delete events");
@@ -375,6 +375,7 @@ admin_main_style.css
                 data: data,
                 dataType: "JSON",
                 success:function(result){
+                    document.getElementById("btn_delete_events").style.display = "none";
                     var status =  result.status;
                     //alert(status);
                     getFreshEvents();      //refresh calendar 
@@ -493,15 +494,16 @@ admin_main_style.css
         //alert('getrefresh..: Start');
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
-        
-        
+        var school_id=document.getElementById('school_id').value;
+        json_events = json_events;
         document.getElementById("prevnext").value = '';
         $.ajax({
-            url: BASE_URL + '/get_event',
+            url: BASE_URL + '/'+school_id+'/get_event',
             type: 'POST', 
             data: 'type=fetch&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
             success: function(s){
-                json_events = s;
+               
+                json_events = @json(s);
             },
             error: function(ts) { 
                 errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -520,6 +522,7 @@ admin_main_style.css
         }
         else
         {
+            
             resultHtml='';
             prevdt=''; 
             document.getElementById("prevnext").value='';

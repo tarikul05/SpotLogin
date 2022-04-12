@@ -142,14 +142,14 @@ class Event extends BaseModel
      */
     public function filter($params)
     {
+
         $query = $this->newQuery();
         $request = request();
         if (empty($params) || !is_array($params)) {
             return $query;
         }
 
-        $fromFilterDate = null;
-        $toFilterDate = null;
+        
         $sortingParams = [];
         
 
@@ -160,17 +160,9 @@ class Event extends BaseModel
         
         $query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
-            if (in_array($key, $this->partialFilterable)) { 
-                if (!empty($value)) {
-                    $query->where($key, 'LIKE', "%{$value}%");
-                }
-                
-            } elseif (in_array($key, $this->exactFilterable)) {
-                if (!empty($value)) {
-                    $query->where($key, '=', $value);
-                }
-                
-            } 
+            if (!empty($value)) {
+                $query->where($key, '=', $value);
+            }
         }
 
         if (!empty($sortingParams)) { 
@@ -202,6 +194,9 @@ class Event extends BaseModel
 
 
         if (isset($params['start_date'])) {
+            $fromFilterDate = null;
+            $toFilterDate = null;
+        
           $fromFilterDate = str_replace('/', '-',$params['start_date']);
           
           if (!$toFilterDate) {
@@ -210,6 +205,8 @@ class Event extends BaseModel
         } 
       
         if (isset($params['end_date'])) {
+            $fromFilterDate = null;
+            $toFilterDate = null;
           $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
           
           if (!$fromFilterDate) {
