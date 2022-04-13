@@ -131,7 +131,7 @@ admin_main_style.css
                   </div>
                   <div class="col-md-3">
                       <!-- Datepicker -->
-                      <div id="datepicker_month" style1="height:30%;padding:0;width:100%;"></div>
+                      <div id="datepicker_month"></div>
                       <div>
                           <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
                               
@@ -281,7 +281,7 @@ admin_main_style.css
     var lockRecords=0;
     var zone =getTimeZone();
 	$('#datepicker_month').datetimepicker({            
-        inline: false,
+        inline: true,
         locale: lang_id,
         icons: {
             time: "fa fa-clock-o",
@@ -293,11 +293,11 @@ admin_main_style.css
         },
         format: "DD/MM/YYYY",
         autoclose: true,
-        todayBtn: true,
-        minuteStep: 10,
+        // todayBtn: true,
+        // minuteStep: 10,
         minView: 2,
         pickTime: false,
-        todayBtn: false 
+        // todayBtn: false 
       
     });
     moment.locale(lang_id, {
@@ -392,11 +392,48 @@ admin_main_style.css
                 }
             }); //ajax-type
     }
-    
-    // $("#datepicker_month").on("dp.change", function() {
-    //     var dt=$('#datepicker_month').data('DateTimePicker').date();
-    //     dt=dt.format('YYYY-MM-DD');
-    //     $('#calendar').fullCalendar( 'gotoDate', dt);
+
+
+    $("#datepicker_month").on("change.datetimepicker", ({
+  date,
+  oldDate
+}) => {
+  console.log("New date", date);
+  console.log("Old date", oldDate);
+  alert("Changed date")
+
+})
+
+
+$("#datepicker_month").datetimepicker()
+.on('changeDate', function(ev){
+    //console.log(ev.date.format(ev.date._f));
+    var dt=$(this).datetimepicker('getDate');
+    var jsDate = $(this).datetimepicker('getDate');
+    if (jsDate !== null) { // if any date selected in datepicker
+        jsDate instanceof Date; // -> true
+        jsDate.getDate();
+        jsDate.getMonth();
+        jsDate.getFullYear();
+        console.log(jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate());
+        dt=jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate();
+        $('#calendar').fullCalendar( 'gotoDate', dt);
+        
+    }
+    //var dt=ev.timeStamp;
+    //var dt=$('#datepicker_month').data('DateTimePicker').date();
+    //    dt=dt.format('YYYY-MM-DD');
+        //$('#calendar').fullCalendar( 'gotoDate', dt);
+     //  alert(dt);
+});
+    // $('#datepicker_month').on('change', function(e){  
+	// 	//$("#end_date").val($("#start_date").val());  
+	//    //});	
+    //     //$("#datepicker_month").datetimepicker().on("dp.change", function() {
+    //     //var dt=$('#datepicker_month').data('DateTimePicker').date();
+    //     //dt=dt.format('YYYY-MM-DD');
+    //     //$('#calendar').fullCalendar( 'gotoDate', dt);
+    //     console.log($('#datepicker_month'));
     //     //alert(dt);
     // });
     //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
