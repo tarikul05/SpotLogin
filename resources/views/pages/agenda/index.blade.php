@@ -48,6 +48,9 @@ admin_main_style.css
                         <div class="pull-right btn-group">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
+                            <input type="hidden" name="max_teachers" id="max_teachers" value="{{$school->max_teachers}}">
+                            
+                            
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
 							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
@@ -248,6 +251,7 @@ admin_main_style.css
 <script>
 
     // set default data
+    var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
     var firstload = '0';    // check first time loading or not
     var prevdt='';          // for rendering for heading
@@ -275,11 +279,54 @@ admin_main_style.css
 
    
     var defview='agendaWeek';   //'month';//'agendaWeek'
+    // try {
+    //     if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
+    //         defview=getCookie("cal_view_mode");
+    //     }
+    // } catch(err) {
+    //     defview="agendaWeek";
+    // }
+    var dt = new Date();
+    // set default data    
+    // GET THE MONTH AND YEAR OF THE SELECTED DATE.
+    var month = dt.getMonth(),year = dt.getFullYear();
+
+    var FirstDay = new Date(year, month, 1);
+    var LastDay = new Date(year, month+1, 1);
+
+    if (defview == 'month') {
+        // GET THE FIRST AND LAST DATE OF THE MONTH.
+        document.getElementById("date_from").value = formatDate(FirstDay);
+        document.getElementById("date_to").value = formatDate(LastDay);
+    } else {
+        document.getElementById("date_from").value=moment(startOfWeek(dt)).format('YYYY-MM-DD');
+        //document.getElementById("date_from").value=startOfWeek(dt);
+        document.getElementById("date_to").value = moment(endOfWeek(dt)).format('YYYY-MM-DD');        
+    }
+    // if (getCookie("date_from") != ""){
+    //     document.getElementById("date_from").value = getCookie("date_from");
+    //     document.getElementById("date_to").value = getCookie("date_to");
+    //     FirstDay=document.getElementById("date_from").value;
+    //     LastDay=document.getElementById("date_to").value;
+    // }
+    document.getElementById("view_mode").value='';
+    // if (getCookie("view_mode") != "list"){
+    //     document.getElementById("view_mode").value = getCookie("view_mode");
+    // }    
+
+    // if (getCookie("prevnext") != ""){
+    //     document.getElementById("prevnext").value = getCookie("prevnext");
+    // }  
+
+
     var currentTimezone = 'local';
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=0;
     var zone =getTimeZone();
+    if ((no_of_teachers == 1) || (user_role == "student")){
+		document.getElementById('event_teacher_div').style.display="none";
+	}
 	$('#datepicker_month').datetimepicker({            
         inline: true,
         locale: lang_id,
@@ -293,16 +340,122 @@ admin_main_style.css
         },
         format: "DD/MM/YYYY",
         autoclose: true,
-        // todayBtn: true,
-        // minuteStep: 10,
         minView: 2,
-        pickTime: false,
-        // todayBtn: false 
+        pickTime: false
       
     });
     moment.locale(lang_id, {
 	  week: { dow: 1 } // Monday is the first day of the week
 	});
+
+    $(document).ready(function(){
+        if (user_role == "student") {
+			document.getElementById('event_type').style.display="none";
+			document.getElementById('event_student_div').style.display="none";
+			document.getElementById('event_teacher').style.display="none";
+		}
+		$('#back_btn').click(function (e) {							
+	   	    window.history.back();
+		});
+        loading=0;
+        //console.log('a) loading='+loading);
+        RerenderEvents();
+        RenderCalendar();
+        PopulateEventTypeDropdown();
+        PopulateLocationDropdown();
+        PopulateStudentDropdown();
+        PopulateTeacherDropdown();
+        DisplayCalendarTitle();
+        document.getElementById("copy_event_id").value =getEventIDs();
+        document.getElementById("copy_student_id").value = getStudentIDs();
+        document.getElementById("copy_teacher_id").value = getTeacherIDs();
+
+        var menuHtml='';
+        $("#event_type option").each(function(key,value)
+        {
+            
+            if ( (value.value == 51) && (user_role == 'student') ){
+                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+            }
+            
+            // cours - events - PopulateButtonMenuList
+            if ( (value.value == 10) && (user_role != 'student') ){
+                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+            }        
+            if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
+                if (value.id != 10) {
+                    menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                }
+                
+            }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
+                menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+            }
+            
+             
+            // Add $(this).val() to your list
+        });
+        menuHtml+='</ul>';
+        $('#button_menu_div').append(menuHtml); 
+    
+		
+		
+	}); //ready
+
+    function startOfWeek(date)
+    {
+        var diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+        return new Date(date.setDate(diff)); 
+    }
+    function endOfWeek(date)
+    {
+        var stdt=startOfWeek(date);
+        var diff = stdt.getDate() + 6;
+        return new Date(date.setDate(diff)); 
+    }
+    function view_edit_event(){
+        var event_url=document.getElementById('edit_view_url').value;
+        //alert(event_url);
+        window.location=event_url;
+    }
+    function confirm_event(){
+        var p_event_auto_id=document.getElementById('confirm_event_id').value;
+        var school_id=document.getElementById('school_id').value;
+        var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
+        console.log(data);
+        var status = '';
+        $.ajax({
+            url: BASE_URL + '/confirm_event',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function( xhr ) {
+                $("#pageloader").show();
+            },
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+                    successModalCall('event_confirm_message');
+                    getFreshEvents();
+                }
+                else {
+                    errorModalCall('error_message_text');
+                }
+            },   //success
+            complete: function( xhr ) {
+                $("#pageloader").hide();
+            },
+            error: function (ts) { 
+                ts.responseText+'-'+errorModalCall('error_message_text');
+            }
+        }); //ajax-type            
+
+    }
     $('#search_text').on('input', function(){
 		var search_text=$(this).val();
         
@@ -316,6 +469,306 @@ admin_main_style.css
 			$('#calendar').fullCalendar('rerenderEvents');
 		}
     });
+    $("#datepicker_month").datetimepicker()
+    .on('changeDate', function(ev){
+        //console.log(ev.date.format(ev.date._f));
+        var dt=$(this).datetimepicker('getDate');
+        var jsDate = $(this).datetimepicker('getDate');
+        if (jsDate !== null) { // if any date selected in datepicker
+            jsDate instanceof Date; // -> true
+            jsDate.getDate();
+            jsDate.getMonth();
+            jsDate.getFullYear();
+            console.log(jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate());
+            dt=jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate();
+            $('#calendar').fullCalendar( 'gotoDate', dt);
+            
+        }
+    });
+
+    //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
+	$('#btn_prev').on('click', function() {
+        $('#calendar').fullCalendar('prev');
+	});
+
+	$('#btn_today').on('click', function() {
+        $('#calendar').fullCalendar('today');        
+	});
+
+	$('#btn_next').on('click', function() {
+        $('#calendar').fullCalendar('next');
+	});
+
+	$('#btn_month').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'month');
+	});
+
+	$('#btn_week').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'agendaWeek');
+	});
+
+	$('#btn_day').on('click', function() {
+        $('#calendar').fullCalendar('changeView', 'agendaDay');
+	});
+    $('#btn_list').on('click', function() {
+        getFreshEvents('ListView');	   
+		$('#calendar').fullCalendar('changeView', 'listYear');	   
+	   
+	});
+    $('#list_button').on('click', function() {
+        CallListView();
+	});
+
+    $('body').on('click', 'button.fc-prev-button', function() {
+        //alert('prev is clicked, do something');
+        $('.fc-MyListButton-button').text('list');
+        if (document.getElementById("view_mode").value == 'list')
+        {
+            document.getElementById("prevnext").value = 'yes';
+        }
+        else
+        {
+            document.getElementById("prevnext").value == '';
+        }        
+    });
+    $('body').on('click', 'button.fc-next-button', function() {
+        //alert('next is clicked, do something');
+        $('.fc-MyListButton-button').text('list');
+        if (document.getElementById("view_mode").value == 'list')
+        {
+            document.getElementById("prevnext").value = 'yes';
+        }
+        else
+        {
+            document.getElementById("prevnext").value == '';
+        }        
+    });
+
+    // if ((firstload == "0") && (getCookie("date_from") != "")) {        
+    //     var sdt = getCookie("date_from");
+    //     $('#calendar').fullCalendar( 'gotoDate', sdt);        
+    // }
+    firstload ='1';
+
+    // if ((user_auth == "MIN"))
+    // {
+    //     document.getElementById("event_teacher").disabled="disabled";
+    // }
+
+
+    function PopulateEventTypeDropdown(){
+         
+         $('#event_type').multiselect({
+             includeSelectAllOption:true,
+             selectAllText: 'All Events',
+             maxHeight:true,
+             enableFiltering:false,
+             nSelectedText  : 'Selected Event type ',
+             allSelectedText: 'All Events',
+             enableCaseInsensitiveFiltering:false,
+             // enables full value filtering
+             enableFullValueFiltering:false,
+             filterPlaceholder: 'Search',
+             numberDisplayed: 3,
+             buttonWidth: '100%',
+             // possible options: 'text', 'value', 'both'
+             filterBehavior: 'text',
+             onChange: function(option, checked) {
+                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                     console.log('Event changed triggered!');
+                     document.getElementById("event_type_id").value=getEventIDs();
+                     document.getElementById("event_type_all_flag").value='0';
+                     //SetEventCookies();
+                     RerenderEvents();
+             },
+             onSelectAll: function (option,checked) {
+                     document.getElementById("event_type_id").value='0';
+                     document.getElementById("event_type_all_flag").value='1';
+                     //SetEventCookies();
+                     RerenderEvents();
+             },
+             onDeselectAll: function(option,checked) {
+                 console.log('Event onDeSelectAll triggered!');
+                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                     document.getElementById("event_type_id").value=getEventIDs();
+                     document.getElementById("event_type_all_flag").value='0';
+                     //SetEventCookies();
+                     RerenderEvents();
+                 },
+             selectAllValue: 0
+         });
+ 
+         $('#event_type').multiselect('selectAll', false);   
+         $('#event_type').multiselect('refresh');	
+                 
+     }   // populate event type
+    function PopulateLocationDropdown(){
+          
+        $('#event_location').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Location',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Location',
+            allSelectedText: 'All Location',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                console.log('onChange location triggered!');
+                document.getElementById("event_location_id").value=getLocationIDs();
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
+                if (options){
+                    console.log('location onSelectAll triggered!'+options);
+                    document.getElementById("event_location_id").value='0';
+                    document.getElementById("event_location_all_flag").value='1';
+                }
+                else {
+                    console.log('location onDeSelectAll triggered!');
+                    document.getElementById("event_location_id").value='';
+                    document.getElementById("event_location_all_flag").value='0';
+                 
+                }
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onDeselectAll: function() {
+                console.log('NOT WORKING location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            selectAllValue: 0
+        });
+ 
+        $('#event_location').multiselect('selectAll', false);   
+        $('#event_location').multiselect('refresh');	
+                  
+    }   // populate event type
+    function PopulateTeacherDropdown(){
+          
+        $('#event_teacher').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Teachers',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Teacher',
+            allSelectedText: 'All Teachers',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                console.log('onChange location triggered!');
+                document.getElementById("event_location_id").value=getLocationIDs();
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
+                if (options){
+                    console.log('location onSelectAll triggered!'+options);
+                    document.getElementById("event_location_id").value='0';
+                    document.getElementById("event_location_all_flag").value='1';
+                }
+                else {
+                    console.log('location onDeSelectAll triggered!');
+                    document.getElementById("event_location_id").value='';
+                    document.getElementById("event_location_all_flag").value='0';
+                 
+                }
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onDeselectAll: function() {
+                console.log('NOT WORKING location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            selectAllValue: 0
+        });
+  
+        $('#event_teacher').multiselect('selectAll', false);   
+        $('#event_teacher').multiselect('refresh');	
+                   
+    }   // populate event type
+    function PopulateStudentDropdown(){
+          
+        $('#event_student').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Location',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Student',
+            allSelectedText: 'All Students',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                console.log('onChange location triggered!');
+                document.getElementById("event_location_id").value=getLocationIDs();
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
+                if (options){
+                     console.log('location onSelectAll triggered!'+options);
+                     document.getElementById("event_location_id").value='0';
+                     document.getElementById("event_location_all_flag").value='1';
+                }
+                else {
+                    console.log('location onDeSelectAll triggered!');
+                    document.getElementById("event_location_id").value='';
+                    document.getElementById("event_location_all_flag").value='0';
+                 
+                }
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            onDeselectAll: function() {
+                console.log('NOT WORKING location onDeSelectAll triggered!');
+                document.getElementById("event_location_id").value='';
+                document.getElementById("event_location_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            selectAllValue: 0
+        });
+  
+        $('#event_student').multiselect('selectAll', false);   
+        $('#event_student').multiselect('refresh');	
+                   
+    }   // populate event type
+
+    function RerenderEvents(){
+	    if (loading == 0){ 
+            $("#agenda_table tr:gt(0)").remove();
+            $('#calendar').fullCalendar('rerenderEvents');								
+        }
+    }
+ 
 
     $("#btn_export_events").click(function () {
         
@@ -394,142 +847,19 @@ admin_main_style.css
     }
 
 
-    $("#datepicker_month").on("change.datetimepicker", ({
-  date,
-  oldDate
-}) => {
-  console.log("New date", date);
-  console.log("Old date", oldDate);
-  alert("Changed date")
-
-})
 
 
-$("#datepicker_month").datetimepicker()
-.on('changeDate', function(ev){
-    //console.log(ev.date.format(ev.date._f));
-    var dt=$(this).datetimepicker('getDate');
-    var jsDate = $(this).datetimepicker('getDate');
-    if (jsDate !== null) { // if any date selected in datepicker
-        jsDate instanceof Date; // -> true
-        jsDate.getDate();
-        jsDate.getMonth();
-        jsDate.getFullYear();
-        console.log(jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate());
-        dt=jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate();
-        $('#calendar').fullCalendar( 'gotoDate', dt);
-        
-    }
-    //var dt=ev.timeStamp;
-    //var dt=$('#datepicker_month').data('DateTimePicker').date();
-    //    dt=dt.format('YYYY-MM-DD');
-        //$('#calendar').fullCalendar( 'gotoDate', dt);
-     //  alert(dt);
-});
-    // $('#datepicker_month').on('change', function(e){  
-	// 	//$("#end_date").val($("#start_date").val());  
-	//    //});	
-    //     //$("#datepicker_month").datetimepicker().on("dp.change", function() {
-    //     //var dt=$('#datepicker_month').data('DateTimePicker').date();
-    //     //dt=dt.format('YYYY-MM-DD');
-    //     //$('#calendar').fullCalendar( 'gotoDate', dt);
-    //     console.log($('#datepicker_month'));
-    //     //alert(dt);
-    // });
-    //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
-	$('#btn_prev').on('click', function() {
-        $('#calendar').fullCalendar('prev');
-	});
 
-	$('#btn_today').on('click', function() {
-        $('#calendar').fullCalendar('today');        
-	});
-
-	$('#btn_next').on('click', function() {
-        $('#calendar').fullCalendar('next');
-	});
-
-	$('#btn_month').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'month');
-	});
-
-	$('#btn_week').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'agendaWeek');
-	});
-
-	$('#btn_day').on('click', function() {
-        $('#calendar').fullCalendar('changeView', 'agendaDay');
-	});
-    $('#btn_list').on('click', function() {
-        getFreshEvents('ListView');	   
-		$('#calendar').fullCalendar('changeView', 'listYear');	   
-	   
-	});
-    $('#list_button').on('click', function() {
-        CallListView();
-	});
-
-	$(document).ready(function(){
-		$('#back_btn').click(function (e) {							
-	   	    window.history.back();
-		});
-        loading=0;
-        //console.log('a) loading='+loading);
-        RerenderEvents();
-        RenderCalendar();
-        PopulateEventTypeDropdown();
-        PopulateLocationDropdown();
-        PopulateStudentDropdown();
-        PopulateTeacherDropdown();
-        DisplayCalendarTitle();
-
-        var menuHtml='';
-        $("#event_type option").each(function(key,value)
-        {
-            
-            if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
-            }
-            
-            // cours - events - PopulateButtonMenuList
-            if ( (value.value == 10) && (user_role != 'student') ){
-                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
-            }        
-            if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
-                if (value.id != 10) {
-                    menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
-                
-            }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-            }
-            
-             
-            // Add $(this).val() to your list
-        });
-        menuHtml+='</ul>';
-        $('#button_menu_div').append(menuHtml); 
     
-		
-		
-	}); //ready
+    
+    
+
+	
     function getTimeZone() {
         var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
         return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
     }
-    function RerenderEvents(){
-	    if (loading == 0){ 
-            console.log('sss');
-            $("#agenda_table tr:gt(0)").remove();
-            $('#calendar').fullCalendar('rerenderEvents');								
-        }
-    }
+    
 
 
     function getFreshEvents(p_view=''){
@@ -552,7 +882,7 @@ $("#datepicker_month").datetimepicker()
                 console.log("------------------");
             },
             error: function(ts) { 
-                errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
+                //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText) 
             }
         });
@@ -579,6 +909,35 @@ $("#datepicker_month").datetimepicker()
         }
         
     } 
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+    
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+    
+        return [year, month, day].join('-');
+    }
+
+    function isElemOverDiv() {
+        var trashEl = jQuery('#trash');
+
+        var ofs = trashEl.offset();
+
+        var x1 = ofs.left;
+        var x2 = ofs.left + trashEl.outerWidth(true);
+        var y1 = ofs.top;
+        var y2 = ofs.top + trashEl.outerHeight(true);
+
+        if (currentMousePos.x >= x1 && currentMousePos.x <= x2 &&
+            currentMousePos.y >= y1 && currentMousePos.y <= y2) {
+            return true;
+        }
+        return false;
+    }
 
     function CallListView(){  
         if (document.getElementById("view_mode").value != 'list')
@@ -761,28 +1120,26 @@ $("#datepicker_month").datetimepicker()
                     location_found=0;
                 }
                 else {
-                        if (loc_str.substring(0, 1) !='0') {
-                            //if (no_of_teachers != 1){ 
-                            location_found=0;
-                            $.each($("#event_location option:selected"), function(){ 
-                                var id=$(this).val();
-                                var loc_id=event.location;
-                                if (event.location == null){
+                    if (loc_str.substring(0, 1) !='0') {
+                        location_found=0;
+                        $.each($("#event_location option:selected"), function(){ 
+                            var id=$(this).val();
+                            var loc_id=event.location;
+                            if (event.location == null){
+                                location_found=0;
+                            }
+                            else {
+                                try {
+                                    if (loc_id.indexOf(id) >= 0){
+                                        location_found=1;
+                                    }
+                                }
+                                catch (e){
                                     location_found=0;
                                 }
-                                else {
-                                    try {
-                                        if (loc_id.indexOf(id) >= 0){
-                                            location_found=1;
-                                        }
-                                    }
-                                    catch (e){
-                                        location_found=0;
-                                        }
-                                }
-                            });
-                            //}	//no_of_teachers		
-                        }		
+                            }
+                        });		
+                    }		
                 }
 
 
@@ -1035,228 +1392,15 @@ $("#datepicker_month").datetimepicker()
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
-            },
-            // eventDidMount: info => {
-            //     info.el.addEventListener('contextmenu', (ev) => {
-            //         ev.preventDefault();
-            //         this.$refs.copyMenu.open(ev, info.event)
-            //         return false;
-            //     }, false);
-            // }
-            
-
+            }
         })    //full calendar initialization
+        CheckPermisson();
         
     } //full calender - RenderCalendar
 
 
 
-    function PopulateEventTypeDropdown(){
-         
-        $('#event_type').multiselect({
-            includeSelectAllOption:true,
-            selectAllText: 'All Events',
-            maxHeight:true,
-            enableFiltering:false,
-            nSelectedText  : 'Selected Event type ',
-            allSelectedText: 'All Events',
-            enableCaseInsensitiveFiltering:false,
-            // enables full value filtering
-            enableFullValueFiltering:false,
-            filterPlaceholder: 'Search',
-            numberDisplayed: 3,
-            buttonWidth: '100%',
-            // possible options: 'text', 'value', 'both'
-            filterBehavior: 'text',
-            onChange: function(option, checked) {
-                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    console.log('Event changed triggered!');
-                    document.getElementById("event_type_id").value=getEventIDs();
-                    document.getElementById("event_type_all_flag").value='0';
-                    //SetEventCookies();
-                    RerenderEvents();
-            },
-            onSelectAll: function (option,checked) {
-                    document.getElementById("event_type_id").value='0';
-                    document.getElementById("event_type_all_flag").value='1';
-                    //SetEventCookies();
-                    RerenderEvents();
-            },
-            onDeselectAll: function(option,checked) {
-                console.log('Event onDeSelectAll triggered!');
-                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    document.getElementById("event_type_id").value=getEventIDs();
-                    document.getElementById("event_type_all_flag").value='0';
-                    //SetEventCookies();
-                    RerenderEvents();
-                },
-            selectAllValue: 0
-        });
-
-        $('#event_type').multiselect('selectAll', false);   
-        $('#event_type').multiselect('refresh');	
-                
-    }   // populate event type
-    function PopulateLocationDropdown(){
-         
-        $('#event_location').multiselect({
-            includeSelectAllOption:true,
-            selectAllText: 'All Location',
-            maxHeight:true,
-            enableFiltering:false,
-            nSelectedText  : 'Selected Location',
-            allSelectedText: 'All Location',
-            enableCaseInsensitiveFiltering:false,
-            // enables full value filtering
-            enableFullValueFiltering:false,
-            filterPlaceholder: 'Search',
-            numberDisplayed: 3,
-            buttonWidth: '100%',
-            // possible options: 'text', 'value', 'both'
-            filterBehavior: 'text',
-        onChange: function(option, checked) {
-            console.log('onChange location triggered!');
-            document.getElementById("event_location_id").value=getLocationIDs();
-            document.getElementById("event_location_all_flag").value='0';
-            //SetEventCookies();
-            RerenderEvents();
-        },
-        onSelectAll: function (options,checked) {
-            if (options){
-                console.log('location onSelectAll triggered!'+options);
-                document.getElementById("event_location_id").value='0';
-                document.getElementById("event_location_all_flag").value='1';
-                }
-            else {
-                console.log('location onDeSelectAll triggered!');
-                document.getElementById("event_location_id").value='';
-                document.getElementById("event_location_all_flag").value='0';
-            
-                }
-            //SetEventCookies();
-            RerenderEvents();
-        },
-        onDeselectAll: function() {
-            console.log('NOT WORKING location onDeSelectAll triggered!');
-            document.getElementById("event_location_id").value='';
-            document.getElementById("event_location_all_flag").value='0';
-            SetEventCookies();
-            RerenderEvents();
-        },
-            selectAllValue: 0
-        });
-
-        $('#event_location').multiselect('selectAll', false);   
-        $('#event_location').multiselect('refresh');	
-                 
-    }   // populate event type
-    function PopulateTeacherDropdown(){
-         
-        $('#event_teacher').multiselect({
-             includeSelectAllOption:true,
-             selectAllText: 'All Teachers',
-             maxHeight:true,
-             enableFiltering:false,
-             nSelectedText  : 'Selected Teacher',
-             allSelectedText: 'All Teachers',
-             enableCaseInsensitiveFiltering:false,
-             // enables full value filtering
-             enableFullValueFiltering:false,
-             filterPlaceholder: 'Search',
-             numberDisplayed: 3,
-             buttonWidth: '100%',
-             // possible options: 'text', 'value', 'both'
-             filterBehavior: 'text',
-            onChange: function(option, checked) {
-                console.log('onChange location triggered!');
-                document.getElementById("event_location_id").value=getLocationIDs();
-                document.getElementById("event_location_all_flag").value='0';
-                //SetEventCookies();
-                RerenderEvents();
-            },
-            onSelectAll: function (options,checked) {
-                if (options){
-                    console.log('location onSelectAll triggered!'+options);
-                    document.getElementById("event_location_id").value='0';
-                    document.getElementById("event_location_all_flag").value='1';
-                    }
-                else {
-                    console.log('location onDeSelectAll triggered!');
-                    document.getElementById("event_location_id").value='';
-                    document.getElementById("event_location_all_flag").value='0';
-                
-                    }
-                //SetEventCookies();
-                RerenderEvents();
-            },
-            onDeselectAll: function() {
-                console.log('NOT WORKING location onDeSelectAll triggered!');
-                document.getElementById("event_location_id").value='';
-                document.getElementById("event_location_all_flag").value='0';
-                //SetEventCookies();
-                RerenderEvents();
-            },
-             selectAllValue: 0
-         });
- 
-         $('#event_teacher').multiselect('selectAll', false);   
-         $('#event_teacher').multiselect('refresh');	
-                  
-    }   // populate event type
-    function PopulateStudentDropdown(){
-         
-        $('#event_student').multiselect({
-             includeSelectAllOption:true,
-             selectAllText: 'All Location',
-             maxHeight:true,
-             enableFiltering:false,
-             nSelectedText  : 'Selected Student',
-             allSelectedText: 'All Students',
-             enableCaseInsensitiveFiltering:false,
-             // enables full value filtering
-             enableFullValueFiltering:false,
-             filterPlaceholder: 'Search',
-             numberDisplayed: 3,
-             buttonWidth: '100%',
-             // possible options: 'text', 'value', 'both'
-             filterBehavior: 'text',
-            onChange: function(option, checked) {
-                console.log('onChange location triggered!');
-                document.getElementById("event_location_id").value=getLocationIDs();
-                document.getElementById("event_location_all_flag").value='0';
-                //SetEventCookies();
-                RerenderEvents();
-            },
-            onSelectAll: function (options,checked) {
-                if (options){
-                    console.log('location onSelectAll triggered!'+options);
-                    document.getElementById("event_location_id").value='0';
-                    document.getElementById("event_location_all_flag").value='1';
-                    }
-                else {
-                    console.log('location onDeSelectAll triggered!');
-                    document.getElementById("event_location_id").value='';
-                    document.getElementById("event_location_all_flag").value='0';
-                
-                    }
-                //SetEventCookies();
-                RerenderEvents();
-            },
-            onDeselectAll: function() {
-                console.log('NOT WORKING location onDeSelectAll triggered!');
-                document.getElementById("event_location_id").value='';
-                document.getElementById("event_location_all_flag").value='0';
-                //SetEventCookies();
-                RerenderEvents();
-            },
-             selectAllValue: 0
-        });
- 
-         $('#event_student').multiselect('selectAll', false);   
-         $('#event_student').multiselect('refresh');	
-                  
-    }   // populate event type
-
+   
 
     function DisplayCalendarTitle() {
         var view = $('#calendar').fullCalendar('getView');
@@ -1316,45 +1460,9 @@ $("#datepicker_month").datetimepicker()
     }
 
 
-    function view_edit_event(){
-        var event_url=document.getElementById('edit_view_url').value;
-        //alert(event_url);
-        window.location=event_url;
-    }
+    
         
-    function confirm_event(){
-        var p_event_auto_id=document.getElementById('confirm_event_id').value;
-        var school_id=document.getElementById('school_id').value;
-        var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
-        console.log(data);
-        var status = '';
-        $.ajax({
-            url: BASE_URL + '/confirm_event',
-            data: data,
-            type: 'POST',
-            dataType: 'json',
-            beforeSend: function( xhr ) {
-                $("#pageloader").show();
-            },
-            success: function (result) {
-                status = result.status;
-                if (status == 'success') {
-                    successModalCall('event_confirm_message');
-                    getFreshEvents();
-                }
-                else {
-                    errorModalCall('error_message_text');
-                }
-            },   //success
-            complete: function( xhr ) {
-                $("#pageloader").hide();
-            },
-            error: function (ts) { 
-                ts.responseText+'-'+errorModalCall('error_message_text');
-            }
-        }); //ajax-type            
-
-    }
+    
     
     function CheckPermisson(){
         var user_role=document.getElementById("user_role").value;
@@ -1373,6 +1481,139 @@ $("#datepicker_month").datetimepicker()
 			
         }
     } 
+
+
+    //creating events
+    $('#btn_goto_planning').click(function (e) {
+        
+        var source_start_date=document.getElementById("copy_date_from").value,
+        source_end_date=document.getElementById("copy_date_to").value,
+        event_type=document.getElementById("copy_event_id").value,
+        student_id=document.getElementById("copy_student_id").value,
+        teacher_id=document.getElementById("copy_teacher_id").value,
+        target_start_date=document.getElementById("date_from").value,
+        target_end_date=document.getElementById("date_to").value,
+        view_mode = document.getElementById("view_mode").value;
+        
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        //console.log(data);
+            e.preventDefault();
+			$.ajax({type: "POST",
+                url: "copy_paste_events.php",
+                data: data,
+				dataType: "JSON",
+				async: false,
+                success:function(result){
+				    var status =  result.status;
+                    //alert(status);
+					if(status == 0)
+					{
+                        document.getElementById("copy_date_from").value = '';
+                        document.getElementById("copy_date_to").value = '';
+                        document.getElementById("copy_event_id").value = '';
+                        document.getElementById("copy_student_id").value ='';
+                        document.getElementById("copy_teacher_id").value = '';					   
+                        document.getElementById("copy_view_mode").value = '';
+					       
+					    getFreshEvents();      //refresh calendar                          
+					}
+					else
+					{
+						alert('failed.. ');
+					}
+                },   //success
+                error: function(ts) { 
+                    // alert(ts.responseText)
+                    errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
+                 }
+            }); //ajax-type
+        return false;
+    })
+
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length,c.length);
+            }
+        }
+        return "";
+    } 
+
+
+    function SetEventCookies(){
+		if (loading == 0) {
+	
+			//document.getElementById("event_type_id").value=getEventIDs();
+			//document.getElementById("event_student_id").value=getStudentIDs();
+			//document.getElementById("event_teacher_id").value=getTeacherIDs();
+			//document.getElementById("event_location_id").value=getLocationIDs();
+			//console.log("event_location_id="+document.getElementById("event_location_id").value);
+			//if (document.getElementById("event_location_id").value == ''){
+			//	document.getElementById("event_location_all_flag").value='0';
+			//}
+			console.log("LOCATION: event_location_id="+document.getElementById("event_location_id").value);
+			
+			document.cookie = "event_type_id="+document.getElementById("event_type_id").value+";path=/";
+			document.cookie = "event_student_id="+document.getElementById("event_student_id").value+";path=/";
+			document.cookie = "event_teacher_id="+document.getElementById("event_teacher_id").value+";path=/";
+			document.cookie = "date_from="+document.getElementById("date_from").value+";path=/";
+			document.cookie = "date_to="+document.getElementById("date_to").value+";path=/";
+
+			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
+			
+			var cal_view_mode=$('#calendar').fullCalendar('getView');
+			console.log("cal_view_mode="+cal_view_mode.name);
+			
+			if (cal_view_mode.name === undefined) {
+					document.cookie = "cal_view_mode="+"agendaWeek"+";path=/";
+				}
+			else {
+				document.cookie = "cal_view_mode="+cal_view_mode.name+";path=/";
+				}
+			
+			document.cookie = "prevnext="+document.getElementById("prevnext").value+";path=/";
+		}    
+    }
+
+
+window.addEventListener( "pageshow", function ( event ) {
+	var historyTraversal = event.persisted || 
+                         ( typeof window.performance != "undefined" && 
+                              window.performance.navigation.type === 2 );
+							  
+	  if ( historyTraversal ) {
+		// Handle page restore.
+		//RerenderEvents();
+		var isFirefox = typeof InstallTrigger !== 'undefined';
+		//if (isFirefox) {
+			console.log('before firefox.. reload.');
+			//alert('firefox.. reload.');
+			//getFreshEvents();
+			
+			window.location.reload(false);
+			//}
+	  }
+});
+
+window.addEventListener('focus', function (event) {
+    console.log('has focus');
+	//RerenderEvents();
+});
+
+window.addEventListener('blur', function (event) {
+    console.log('lost focus');
+});
+
+
+
+
 
 
 	

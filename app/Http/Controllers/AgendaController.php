@@ -211,7 +211,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
-        return view('pages.agenda.index')->with(compact('schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
 
