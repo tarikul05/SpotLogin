@@ -34,7 +34,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+				<form class="form-horizontal" id="add_event" method="post" action="{{ route('event.createAction',[$schoolId]) }}"  name="add_event" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -48,7 +48,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
 												@foreach($locations as $key => $location)
-													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+												<option value="{{ $location->id }}" {{!empty($eventData->location_id) ? (old('location', $eventData->location_id) == $location->id ? 'selected' : '') : (old('location') == $location->id ? 'selected' : '')}}>{{ $location->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -58,7 +58,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group"> 
-											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($eventData->title) ? old('title', $eventData->title) : old('title')}}">
 										</div>
 									</div>
 								</div>
@@ -68,7 +68,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
-													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+												<option value="{{ $professor->teacher_id }}" {{!empty($eventData->teacher_id) ? (old('teacher_select', $eventData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->nickname }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -80,7 +80,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $key => $student)
-													<option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -91,7 +91,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($eventData->date_start) ? old('start_date', date('d/m/Y', strtotime($eventData->date_start))) : old('start_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -112,7 +112,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($eventData->date_end) ? old('end_date', date('d/m/Y', strtotime($eventData->date_end))) : old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -132,7 +132,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="has_user_account" type="checkbox" value="1">
+											<input id="all_day" name="has_user_account" type="checkbox" value="1" {{ !empty($eventData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
 								</div>
@@ -142,7 +142,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
-													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+												<option value="{{ $lessprice->lesson_price_student }}" {{!empty($eventData->no_of_students) ? (old('sevent_price', 'price_'.$eventData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>Group lessons for {{ $lessprice->divider }} students</option>
 												@endforeach
 											</select>
 										</div>
@@ -179,7 +179,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -190,7 +190,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -214,7 +214,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group"> 
-											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{old('description')}}</textarea>
+											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($eventData->description) ? old('description', $eventData->description) : old('description')}}</textarea>
 										</div>
 									</div>
 								</div>
@@ -263,8 +263,6 @@ $( document ).ready(function() {
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
 	if(value == 1){
 		$('#hourly').show();
 	}else if(value == 2){
@@ -288,8 +286,6 @@ $( document ).ready(function() {
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
 	if(value == 1){
 		$('#hourly').show();
 	}else if(value == 2){
@@ -301,8 +297,6 @@ $( document ).ready(function() {
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
 	if(this.value == 1){
 		$('#hourly').show();
 	}else if(this.value == 2){
