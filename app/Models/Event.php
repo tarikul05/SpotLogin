@@ -61,6 +61,19 @@ class Event extends BaseModel
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
+    
+
+    /**
+     * The attributes that are partially match filterable.
+     *
+     * @var array
+     */
+    protected $arrayFilterable = [
+        'event_type',
+        'teacher_id',
+        'student_id'
+    ];
+
 
     /**
      * Get the teacher for event.
@@ -144,7 +157,6 @@ class Event extends BaseModel
     {
 
         $query = $this->newQuery();
-        $request = request();
         if (empty($params) || !is_array($params)) {
             return $query;
         }
@@ -161,7 +173,27 @@ class Event extends BaseModel
         $query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
-                $query->where($key, '=', $value);
+                
+                if (in_array($key, $this->arrayFilterable)) { 
+                    if (isset($value) && strpos($value, '|') !== false){
+                        $value = explode('|', $value);
+                    }
+                    if ($key=='teacher_id') {
+                        //dd($value);
+                    }
+                    if (is_array($value)) {
+                        $query->whereIn($key, $value);
+                       // unset($params['authority:in']);
+                    }  else { 
+                        $query->where($key, '=', $value);
+                    } 
+                    
+                    // $query->where($key, 'LIKE', "%{$value}%");
+                } 
+                else {
+                    $query->where($key, '=', $value);
+                }
+                
             }
         }
 
@@ -212,6 +244,128 @@ class Event extends BaseModel
           if (!$fromFilterDate) {
               $fromFilterDate = now();
           }
+        }
+        try {
+          if ($fromFilterDate && $toFilterDate) {
+              $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
+                  $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
+                      ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
+                      ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
+                          $sq->where('date_start', '<', $fromFilterDate)
+                              ->where('date_end', '>', $toFilterDate);
+                      })
+                      ;
+              });
+          }
+        } catch (\Exception $e) {
+          
+        }
+        return $query;
+    }
+
+
+
+
+
+
+     /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function filter_for_copy($params)
+    {
+
+        $query = $this->newQuery();
+        $request = request();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+
+        
+        $sortingParams = [];
+        
+
+        if (isset($params['sort'])) { 
+            $sortingParams = explode(',', $params['sort']);
+            unset($params['sort']);
+        }
+        
+        $query->where('deleted_at', null);
+        foreach ($params as $key => $value) { 
+            if (!empty($value)) {
+                
+                if (in_array($key, $this->arrayFilterable)) { 
+                    if (isset($value) && strpos($value, '|') !== false){
+                        $value = explode('|', $value);
+                    }
+                    if ($key=='teacher_id') {
+                        //dd($value);
+                    }
+                    if (is_array($value)) {
+                        $query->whereIn($key, $value);
+                       // unset($params['authority:in']);
+                    }  else { 
+                        $query->where($key, '=', $value);
+                    } 
+                    
+                    // $query->where($key, 'LIKE', "%{$value}%");
+                } 
+                else {
+                    $query->where($key, '=', $value);
+                }
+                
+            }
+        }
+
+        if (!empty($sortingParams)) { 
+            
+            $column = null;
+            $direction = null;
+
+            foreach ($sortingParams as $sortingParam) {
+                $columnAndDirection = explode(':', str_replace(' ', '', $sortingParam));
+
+                if (!empty($columnAndDirection[0])) {
+                    $column = $columnAndDirection[0];
+                } else {
+                    continue;
+                }
+
+                if (!empty($columnAndDirection[1])) {
+                    $direction = $columnAndDirection[1];
+                } else {
+                    $direction = 'asc';
+                }
+
+                if (in_array($column, $this->fillable)) {
+                    $query->orderBy($column, $direction);
+                }
+            }
+
+        } 
+
+
+        if (!empty($params['source_start_date'])) {
+            $fromFilterDate = null;
+            $toFilterDate = null;
+        
+            $fromFilterDate = str_replace('/', '-',$params['source_start_date']);
+          
+            if (!$toFilterDate) {
+                $toFilterDate = now();
+            }
+        } 
+      
+        if (!empty($params['source_end_date'])) {
+            $fromFilterDate = null;
+            $toFilterDate = null;
+            $toFilterDate = str_replace('/', '-', $params['source_end_date'])." 23:59";
+          
+            if (!$fromFilterDate) {
+                $fromFilterDate = now();
+            }
         }
         try {
           if ($fromFilterDate && $toFilterDate) {

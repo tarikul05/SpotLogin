@@ -789,14 +789,11 @@ admin_main_style.css
         document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
 		document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
 		
-		//document.getElementById("copy_event_id").value = document.getElementById("event_type_id").value;
 		document.getElementById("copy_event_id").value =getEventIDs();
         
-		//document.getElementById("copy_student_id").value = document.getElementById("event_student_id").value;
 		document.getElementById("copy_student_id").value = getStudentIDs();
 		
-        //document.getElementById("copy_teacher_id").value = document.getElementById("event_teacher_id").value;
-		document.getElementById("copy_teacher_id").value = getTeacherIDs();
+        document.getElementById("copy_teacher_id").value = getTeacherIDs();
 		
         return false;
     })
@@ -877,9 +874,9 @@ admin_main_style.css
             success: function(s){
                 
                 json_events = s;
-                console.log("------------------");
+                console.log("aaaa------------------");
                 console.log(json_events);
-                console.log("------------------");
+                console.log("aaaa------------------");
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -1485,7 +1482,7 @@ admin_main_style.css
 
     //creating events
     $('#btn_goto_planning').click(function (e) {
-        
+        var school_id=document.getElementById('school_id').value;
         var source_start_date=document.getElementById("copy_date_from").value,
         source_end_date=document.getElementById("copy_date_to").value,
         event_type=document.getElementById("copy_event_id").value,
@@ -1497,9 +1494,12 @@ admin_main_style.css
         
         var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
         //console.log(data);
+        //return false;
             e.preventDefault();
-			$.ajax({type: "POST",
-                url: "copy_paste_events.php",
+			$.ajax({
+                type: "POST",
+                url: BASE_URL + '/'+school_id+'/copy_paste_events',
+                //url: "copy_paste_events.php",
                 data: data,
 				dataType: "JSON",
 				async: false,

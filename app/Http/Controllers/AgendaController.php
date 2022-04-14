@@ -271,6 +271,130 @@ class AgendaController extends Controller
         }
         
     }
+    
+    /**
+     *  AJAX copy event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-14
+     */
+    public function copyPasteEvent(Request $request,$schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+
+        $result = array(
+            "status"     => 1,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+
+
+            // $p_app_id=$_SESSION['global_app_id'];
+            // $p_school_id=$_SESSION['global_school_id'];
+            // $p_lang_id=$_SESSION['Language'];
+
+
+            
+            $data['school_id'] = $schoolId;
+            $data['event_type']= trim($data['event_type']);
+            $data['teacher_id']= trim($data['teacher_id']);
+            $data['student_id']= trim($data['student_id']);
+            //$view_mode= trim($data['view_mode']);
+            
+            //dd($data);
+            $query = new Event;
+            $eventData = $query->filter_for_copy($data);
+            
+            $eventData = $query->get();
+            
+            
+
+            $target_start_date= trim($data['target_start_date']);
+            // exit();
+            // $target_end_date= trim($data['target_end_date']);
+
+            $target_start_date = str_replace('/', '-', $target_start_date);
+            // exit();
+            // $target_end_date = str_replace('/', '-', $target_end_date);
+
+
+
+            // $zone= trim($data['zone']);
+            
+            
+            
+            // $events = array();   
+            foreach ($eventData as $key => $fetch) {
+
+                //echo $fetch->date_start;
+                $date_start = strtotime($fetch->date_start);
+                $date_start =$target_start_date.' '.date('H:i:s', $date_start);
+
+                $date_end = strtotime($fetch->date_end);
+                $date_end =$target_start_date.' '.date('H:i:s', $date_end);
+                //exit();
+                $data = [
+                    'title' => $fetch->title,
+                    'school_id' => $schoolId,
+                    'event_type' => $fetch->event_type,
+                    'date_start' => $date_start,
+                    'date_end' => $date_end,
+                    'duration_minutes' => $fetch->duration_minutes,
+                    'price_currency' => $fetch->price_currency,
+                    'price_amount_buy' => $fetch->price_amount_buy,
+                    'price_amount_sell' => $fetch->price_amount_sell,
+                    'fullday_flag' => $fetch->fullday_flag,
+                    'description' => $fetch->description,
+                    'location_id' => $fetch->location_id,
+                    'teacher_id' => $fetch->teacher_id,
+                    'event_price' => $fetch->event_price,
+                    'event_price' => $fetch->event_price
+                ];
+                $event = Event::create($data);
+
+            }
+            //dd($eventData);
+
+
+            // $source_start_date= trim($data['source_start_date']);
+            // $source_end_date= trim($data['source_end_date']);
+
+            
+
+            
+            // $event = Event::create($data);
+
+
+
+            //$p_event_auto_id = $data['p_event_auto_id'];
+            // $data['school_id']
+            // $p_user_id = Auth::user()->id;
+
+          
+            
+            
+                $result = array(
+                    "status"     => 0,
+                    'message' => __('Confirmed'),
+                );
+            
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
 
 
     /**
@@ -287,6 +411,14 @@ class AgendaController extends Controller
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $event_types = config('global.event_type'); 
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
         }
         $eventData = Event::active()->where('school_id', $schoolId)->get();
         $data = $request->all();
