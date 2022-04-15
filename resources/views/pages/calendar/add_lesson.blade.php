@@ -72,7 +72,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
-													<option value="{{ $professor->id }}" {{ old('teacher_select') == $professor->id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -84,7 +84,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $key => $student)
-													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+													<option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
 												@endforeach
 											</select>
 										</div>

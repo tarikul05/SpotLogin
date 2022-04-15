@@ -290,7 +290,7 @@
 								<th>#</th>
 								<th>{{__('Type of course')}}</th>
 								<th>{{__('Hourly rate applied')}}</th>
-								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
+								<!-- <th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th> -->
 								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
 							</tr>
 						</thead>
@@ -319,18 +319,18 @@
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif
 									
-									<td>
+									<!-- <td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
 										value="0.00"
 										style="text-align:right" class="form-control numeric float"
 										>
-									</td>
+									</td> -->
 									<td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
 										value="0.00"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" class="form-control numeric float requr"
 										>
 									</td>
 								</tr>
@@ -381,18 +381,23 @@ $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: t
 $('#save_btn').click(function (e) {
 		var formData = $('#add_teacher').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
+		var error = 2;
+		// var priceFlag = 2;
 		
-		$( ".form-control.numeric" ).each(function( key, value ) {
+		$( ".form-control.requr" ).each(function( key, value ) {
 			var lname = +$(this).val();
-			if(lname=='' || lname==null || lname==undefined || lname==0 ){
-				$(this).addClass('error');
-				error = 2;
-			}else{
-				$(this).removeClass('error');
+			console.log(key, lname)
+			if (lname > 0 ) {
+				error = 0;
 			}
+
+			// if(lname=='' || lname==null || lname==undefined || lname==0 ){
+			// 	$(this).addClass('error');
+			// 	error = 2;
+			// }else{
+			// 	$(this).removeClass('error');
+			// }
 		});
-		
 		$( ".form-control.require" ).each(function( key, value ) {
 			var lname = $(this).val();
 			if(lname=='' || lname==null || lname==undefined){
