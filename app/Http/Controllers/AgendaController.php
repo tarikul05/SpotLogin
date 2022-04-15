@@ -306,7 +306,7 @@ class AgendaController extends Controller
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
             $data['student_id']= trim($data['student_id']);
-            //$view_mode= trim($data['view_mode']);
+            $view_mode= trim($data['view_mode']);
             
             //dd($data);
             $query = new Event;
@@ -324,6 +324,22 @@ class AgendaController extends Controller
             // exit();
             // $target_end_date = str_replace('/', '-', $target_end_date);
 
+            $source_start_date= trim($data['source_start_date']);
+            $source_end_date= trim($data['source_end_date']);
+
+            if ($view_mode =='AGENDADAY') {
+                $day_diff = 0;
+                
+
+            } else {
+                $now = strtotime($target_start_date);
+                $your_date = strtotime($source_start_date);
+                $datediff = $now - $your_date;
+                $day_diff = round($datediff / (60 * 60 * 24));
+
+                //$day_diff = $target_start_date-$source_start_date; //= 10
+            }
+
 
 
             // $zone= trim($data['zone']);
@@ -334,11 +350,31 @@ class AgendaController extends Controller
             foreach ($eventData as $key => $fetch) {
 
                 //echo $fetch->date_start;
-                $date_start = strtotime($fetch->date_start);
-                $date_start =$target_start_date.' '.date('H:i:s', $date_start);
+                if ($day_diff ==0) {
+                    $date_start = strtotime($fetch->date_start);
+                    $date_start =$target_start_date.' '.date('H:i:s', $date_start);
 
-                $date_end = strtotime($fetch->date_end);
-                $date_end =$target_start_date.' '.date('H:i:s', $date_end);
+                    $date_end = strtotime($fetch->date_end);
+                    $date_end =$target_start_date.' '.date('H:i:s', $date_end);
+                } 
+                else { // $day_diff add
+
+                    //$myDate = "2014-01-16";
+                    $nDays = $day_diff;
+                    $date_start = strtotime($fetch->date_start . '+ '.$nDays.'days');
+                    $date_start = date('Y-m-d H:i:s', $date_start); //format new date 
+                    $nDays = $day_diff;
+                    $date_end = strtotime($fetch->date_end . '+ '.$nDays.'days');
+                    $date_end = date('Y-m-d H:i:s', $date_end); //format new date 
+
+
+                    // $date_start = strtotime($fetch->date_start);
+                    // $date_start =$target_start_date.' '.date('H:i:s', $date_start);
+
+                    // $date_end = strtotime($fetch->date_end);
+                    // $date_end =$target_start_date.' '.date('H:i:s', $date_end);
+                }
+                
                 //exit();
                 $data = [
                     'title' => $fetch->title,
@@ -363,8 +399,7 @@ class AgendaController extends Controller
             //dd($eventData);
 
 
-            // $source_start_date= trim($data['source_start_date']);
-            // $source_end_date= trim($data['source_end_date']);
+            
 
             
 

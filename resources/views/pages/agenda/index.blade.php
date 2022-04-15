@@ -63,6 +63,10 @@ admin_main_style.css
                             <input type="hidden" name="date_from" id="date_from" value="">
                             <input type="hidden" name="date_to" id="date_to" value="">
                             <input type="hidden" name="view_mode" size="14px" id="view_mode" value="">
+
+                            <input type="hidden" name="week_day" id="week_day" value="">
+                            <input type="hidden" name="month_day" id="month_day" value="">
+
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
                             
 
@@ -72,6 +76,8 @@ admin_main_style.css
                             <input type="hidden" name="copy_student_id" id="copy_student_id" value="">
                             <input type="hidden" name="copy_teacher_id" id="copy_teacher_id" value="">
                             <input type="hidden" name="copy_view_mode" id="copy_view_mode" value="">
+                            <input type="hidden" name="copy_week_day" id="copy_week_day" value="">
+                            <input type="hidden" name="copy_month_day" id="copy_month_day" value="">
                             
 
                             <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
@@ -273,19 +279,17 @@ admin_main_style.css
 
     var json_events = @json($events);
 
-    console.log("aa------------------");
-    console.log(json_events);
-    console.log("aa------------------");
+   
 
    
     var defview='agendaWeek';   //'month';//'agendaWeek'
-    // try {
-    //     if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
-    //         defview=getCookie("cal_view_mode");
-    //     }
-    // } catch(err) {
-    //     defview="agendaWeek";
-    // }
+    try {
+        if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
+            defview=getCookie("cal_view_mode");
+        }
+    } catch(err) {
+        defview="agendaWeek";
+    }
     var dt = new Date();
     // set default data    
     // GET THE MONTH AND YEAR OF THE SELECTED DATE.
@@ -293,6 +297,8 @@ admin_main_style.css
 
     var FirstDay = new Date(year, month, 1);
     var LastDay = new Date(year, month+1, 1);
+
+    
 
     if (defview == 'month') {
         // GET THE FIRST AND LAST DATE OF THE MONTH.
@@ -303,20 +309,20 @@ admin_main_style.css
         //document.getElementById("date_from").value=startOfWeek(dt);
         document.getElementById("date_to").value = moment(endOfWeek(dt)).format('YYYY-MM-DD');        
     }
-    // if (getCookie("date_from") != ""){
-    //     document.getElementById("date_from").value = getCookie("date_from");
-    //     document.getElementById("date_to").value = getCookie("date_to");
-    //     FirstDay=document.getElementById("date_from").value;
-    //     LastDay=document.getElementById("date_to").value;
-    // }
+    if (getCookie("date_from") != ""){
+        document.getElementById("date_from").value = getCookie("date_from");
+        document.getElementById("date_to").value = getCookie("date_to");
+        FirstDay=document.getElementById("date_from").value;
+        LastDay=document.getElementById("date_to").value;
+    }
     document.getElementById("view_mode").value='';
-    // if (getCookie("view_mode") != "list"){
-    //     document.getElementById("view_mode").value = getCookie("view_mode");
-    // }    
+    if (getCookie("view_mode") != "list"){
+        document.getElementById("view_mode").value = getCookie("view_mode");
+    }    
 
-    // if (getCookie("prevnext") != ""){
-    //     document.getElementById("prevnext").value = getCookie("prevnext");
-    // }  
+    if (getCookie("prevnext") != ""){
+        document.getElementById("prevnext").value = getCookie("prevnext");
+    }  
 
 
     var currentTimezone = 'local';
@@ -341,14 +347,7 @@ admin_main_style.css
         format: "DD/MM/YYYY",
         autoclose: true,
         minView: 2,
-        pickTime: false,
-        onSelect: function(dateText, inst) { 
-            var date = $(this).datepicker('getDate'),
-                day  = date.getDate(),  
-                month = date.getMonth() + 1,              
-                year =  date.getFullYear();
-            alert(day + '-' + month + '-' + year);
-        }
+        pickTime: false
       
     });
     moment.locale(lang_id, {
@@ -554,10 +553,10 @@ admin_main_style.css
         }        
     });
 
-    // if ((firstload == "0") && (getCookie("date_from") != "")) {        
-    //     var sdt = getCookie("date_from");
-    //     $('#calendar').fullCalendar( 'gotoDate', sdt);        
-    // }
+    if ((firstload == "0") && (getCookie("date_from") != "")) {        
+        var sdt = getCookie("date_from");
+        $('#calendar').fullCalendar( 'gotoDate', sdt);        
+    }
     firstload ='1';
 
     // if ((user_auth == "MIN"))
@@ -798,6 +797,10 @@ admin_main_style.css
         document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
         document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
 		document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
+
+
+        document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
+        document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
 		
 		document.getElementById("copy_event_id").value =getEventIDs();
         
@@ -1184,6 +1187,9 @@ admin_main_style.css
                     
                     stime=moment(event.start).format('HH:mm');
                     etime=moment(event.end).format('HH:mm');
+
+                    
+
                     if (moment(event.end).isValid() == false){
                         etime=stime;
                     }
@@ -1528,6 +1534,8 @@ admin_main_style.css
                         document.getElementById("copy_student_id").value ='';
                         document.getElementById("copy_teacher_id").value = '';					   
                         document.getElementById("copy_view_mode").value = '';
+                        document.getElementById("copy_week_day").value = '';
+                        document.getElementById("copy_month_day").value = '';
 					       
 					    getFreshEvents();      //refresh calendar                          
 					}
