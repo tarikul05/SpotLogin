@@ -329,7 +329,7 @@ admin_main_style.css
 	}
 	$('#datepicker_month').datetimepicker({            
         inline: true,
-        locale: lang_id,
+        //locale: lang_id,
         icons: {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",
@@ -341,7 +341,14 @@ admin_main_style.css
         format: "DD/MM/YYYY",
         autoclose: true,
         minView: 2,
-        pickTime: false
+        pickTime: false,
+        onSelect: function(dateText, inst) { 
+            var date = $(this).datepicker('getDate'),
+                day  = date.getDate(),  
+                month = date.getMonth() + 1,              
+                year =  date.getFullYear();
+            alert(day + '-' + month + '-' + year);
+        }
       
     });
     moment.locale(lang_id, {
@@ -375,7 +382,7 @@ admin_main_style.css
         {
             
             if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/add-lesson?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 menuHtml+='<ul class="dropdown-menu" role="menu">';                            
@@ -394,7 +401,7 @@ admin_main_style.css
                 }
                 
             }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                menuHtml+='<li><a  href="../admin/events_entry.html?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson?event_type='+value.value+'&action=new"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
             }
             
              
@@ -471,16 +478,19 @@ admin_main_style.css
     });
     $("#datepicker_month").datetimepicker()
     .on('changeDate', function(ev){
-        //console.log(ev.date.format(ev.date._f));
+        
         var dt=$(this).datetimepicker('getDate');
+        
         var jsDate = $(this).datetimepicker('getDate');
+        console.log(jsDate.getMonth());
         if (jsDate !== null) { // if any date selected in datepicker
             jsDate instanceof Date; // -> true
             jsDate.getDate();
             jsDate.getMonth();
+            var month = jsDate.getMonth() + 1;   
             jsDate.getFullYear();
-            console.log(jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate());
-            dt=jsDate.getFullYear()+'-'+jsDate.getMonth()+'-'+jsDate.getDate();
+            console.log(jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate());
+            dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
         }
@@ -1168,9 +1178,7 @@ admin_main_style.css
                 } else {
                     flag = false;
                 }
-                console.log('----------------')
-                console.log(event_found)
-                console.log('----------------')
+                
 
                 if (flag == true){
                     
@@ -1288,6 +1296,9 @@ admin_main_style.css
                 
                 //resultHtmlHeader+=resultHtml;
                 resultHtmlHeader+=resultHtml_rows;
+                console.log('lllll----------------')
+                console.log(resultHtml_rows)
+                console.log('lllll----------------')
                 resultHtml_rows='';
                 
                 resultHtmlHeader+="</table>";
@@ -1304,6 +1315,9 @@ admin_main_style.css
                 resultHtmlHeader+='<\/script>';
                 
                 $('#agenda_list').html(resultHtmlHeader);
+
+
+                
                 
 
                 resultHtml='';
