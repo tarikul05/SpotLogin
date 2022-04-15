@@ -256,7 +256,8 @@ class TeachersController extends Controller
                           'teacher_id' => $teacher->id,
                           'lesson_price_student' => $price['lesson_price_student'],
                           'lesson_price_id' => $price['lesson_price_id'],
-                          'price_buy' => $price['price_buy'],
+                          // 'price_buy' => $price['price_buy'],
+                          'price_buy' => $price['price_sell'],
                           'price_sell' => $price['price_sell'],
                       ];
 
