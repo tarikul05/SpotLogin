@@ -17,7 +17,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
+						<label id="page_header" class="page_header bold" name="page_header">{{ __('Lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
 				</div>    
 			</div>          
@@ -34,7 +34,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.editAction',[$lessonlId]) }}"  name="add_lesson" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -43,22 +43,26 @@
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="location" name="location">
-												@foreach($locations as $key => $location)
-													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+											<select class="form-control" id="category_select" name="category_select">
+												@foreach($eventCategory as $key => $eventcat)
+													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
-											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+										<div class="selectdiv">
+											<select class="form-control" id="location" name="location">
+												@foreach($locations as $key => $location)
+													<option value="{{ $location->id }}" {{!empty($lessonData->location_id) ? (old('location', $lessonData->location_id) == $location->id ? 'selected' : '') : (old('location') == $location->id ? 'selected' : '')}}>{{ $location->title }}</option>
+												@endforeach
+											</select>
 										</div>
 									</div>
 								</div>
@@ -68,7 +72,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
-													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+													<option value="{{ $professor->teacher_id }}" {{!empty($lessonData->teacher_id) ? (old('teacher_select', $lessonData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->nickname }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -80,7 +84,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $key => $student)
-													<option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -91,7 +95,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($lessonData->date_start) ? old('start_date', date('d/m/Y', strtotime($lessonData->date_start))) : old('start_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -99,7 +103,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -112,7 +116,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($lessonData->date_end) ? old('end_date', date('d/m/Y', strtotime($lessonData->date_end))) : old('end_date')}}" autocomplete="off" readonly>
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -120,7 +124,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -129,10 +133,30 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
+									<div class="col-sm-2">
+										<div class="input-group"> 
+											<input id="duration" name="duration" type="text" class="form-control" value="{{!empty($lessonData->duration_minutes) ? old('duration', $lessonData->duration_minutes) : old('duration')}}">
+										</div>
+									</div>		
+								</div>
+								<div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="has_user_account" type="checkbox" value="1">
+											<input id="all_day" name="has_user_account" type="checkbox" value="1" {{ !empty($lessonData->fullday_flag) ? 'checked' : '';  }}>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
+									<div class="col-sm-7">
+										<div class="selectdiv">
+											<select class="form-control" id="sis_paying" name="sis_paying">
+												<option value="0">No charge</option>
+												<option value="1">Hourly rate</option>
+												<option value="2">Price per student</option>
+											</select>
 										</div>
 									</div>
 								</div>
@@ -142,12 +166,13 @@
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
-													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+													<option value="{{ $lessprice->lesson_price_student }}" {{!empty($lessonData->no_of_students) ? (old('sevent_price', 'price_'.$lessonData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>Group lessons for {{ $lessprice->divider }} students</option>
 												@endforeach
 											</select>
 										</div>
 									</div>
 								</div>
+								<div id="price_per_student" style="display:none;">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
@@ -194,16 +219,6 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
-									<div class="col-sm-4">
-										<div class="input-group" id="extra_charges_div"> 
-											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
-											</span>
-											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
-										</div>
-									</div>
 								</div>
 							</div>
 							<div class="section_header_class">
@@ -211,10 +226,18 @@
 							</div>
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-7">
+										<div class="input-group"> 
+											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($lessonData->title) ? old('title', $lessonData->title) : old('title')}}">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group"> 
-											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{old('description')}}</textarea>
+											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($lessonData->description) ? old('description', $lessonData->description) : old('description')}}</textarea>
 										</div>
 									</div>
 								</div>
@@ -243,16 +266,9 @@ $(function() {
 		todayBtn:false,
 	});
 
-	$('#end_date').datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
+	$('#start_date').on('change', function(e){  
+		$("#end_date").val($("#start_date").val());  
+	});	
 });
 
 $('#student').multiselect({
@@ -281,22 +297,109 @@ $( document ).ready(function() {
 		dynamic: false,
 		dropdown: true,
 		scrollbar: true,
+		change:function(time){
+			CalcDuration();
+		}
+	});
+	
+	function CalcDuration(){
+		var el_start = $('#start_time'),
+		el_end = $('#end_time'),
+		el_duration = $('#duration');
+		
+			if (el_end.val() < el_start.val()) {
+				$('#end_time').val(el_start.val());
+				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+			}
+			else{
+				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
+			}
+		}
+
+	function recalculate_end_time(start_value, duration) {
+		if (validateStringHours(start_value) && parseInt(duration, 10) == duration) {
+			var start_minutes = +(parseInt(string_left(start_value, 2), 10) * 60) + parseInt(string_right(start_value, 2), 10) + parseInt(duration, 10),
+				start_hours_number = parseInt((start_minutes / 60).toString(), 10),
+				start_hours = start_hours_number;
+				if (start_hours > 23) {start_hours = start_hours - 24;}
+				return string_right('00' + start_hours.toString(), 2) + ':' + string_right('00' + (start_minutes - (start_hours_number * 60)).toString(), 2); 
+		}
+		return 0;
+	}
+	function recalculate_duration(start_value, end_value) {
+		if (validateStringHours(start_value) && validateStringHours(end_value)) {
+			return -(parseInt(string_left(start_value, 2), 10) * 60)
+					- parseInt(string_right(start_value, 2), 10)
+					+ (parseInt(string_left(end_value, 2), 10) * 60)
+					+ (parseInt(string_right(end_value, 2), 10));
+		}
+		return 0;
+	}
+
+	function validateStringHours(s_hours) {
+            if (s_hours == '24:00') {return true;}
+            var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+            return re.test(s_hours);
+	}
+	function string_left(str, n){
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else
+			return String(str).substring(0,n);
+	}
+
+	function string_right(str, n){
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else {
+			var iLen = String(str).length;
+			return String(str).substring(iLen, iLen - n);
+		}
+	}
+
+	function filterParseDigits(str) {
+		return str.replace(/[^\d]/g, '');
+	}
+
+	function validateStringHours(s_hours) {
+		if (s_hours == '24:00') {return true;}
+		var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+		return re.test(s_hours);
+	}
+
+	$('#start_time, #end_time, #duration').on('change', function(e){  
+	var event_source = $(this).attr('id');
+	var el_duration = $('#duration');
+	if (event_source === 'start_time'){
+		if(!el_duration.val()){el_duration.val('15');}
+		$('#end_time').val(recalculate_end_time($('#start_time').val(), el_duration.val()));
+	}
+
+	var el_start = $('#start_time'),
+		el_end = $('#end_time');
+
+		if (event_source === 'end_time' || event_source === 'start_time') {	
+			if (el_end.val() < el_start.val()) {
+				$('#end_time').val(el_start.val());
+			};		
+			el_duration.val(recalculate_duration(el_start.val(), el_end.val())); 
+		} else {
+			if (!(parseInt(el_duration.val(), 10) == el_duration.val())) {
+				el_duration.val(20);
+				$('#end_time').val(el_start.val());
+			} else {
+				if (parseInt(el_duration.val(), 10) >= (60*24)) {
+					el_duration.val(((60*24) - 1));
+				}
+				$('#end_time').val(recalculate_end_time(el_start.val(), el_duration.val()));
+			}        
+		}
 	});
 })
-
-$( document ).ready(function() {
-	var value = $('#sis_paying').val();
-	$('#hourly').hide();
-	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
-	if(value == 1){
-		$('#hourly').show();
-	}else if(value == 2){
-		$('#price_per_student').show();
-	}
-})
-
 
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
@@ -309,5 +412,8 @@ $('#sis_paying').on('change', function() {
 		$('#price_per_student').show();
 	}
 });
+
+
+
 </script>
 @endsection
