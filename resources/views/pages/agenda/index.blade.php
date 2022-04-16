@@ -1010,7 +1010,7 @@ admin_main_style.css
             axisFormat: 'HH(:mm)',            
 			slotDuration: '00:30:00',
 			slotLabelFormat: 'H:mm',
-            defaultView: 'agendaWeek',
+            defaultView: defview,
             defaultDate: '2022-04-12',
             utc: false,  
             buttonText: {
