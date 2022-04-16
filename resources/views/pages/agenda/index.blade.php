@@ -282,13 +282,13 @@ admin_main_style.css
    
 
    
-    var defview='agendaWeek';   //'month';//'agendaWeek'
+    var defview='month';   //'month';//'agendaWeek'
     try {
         if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
             defview=getCookie("cal_view_mode");
         }
     } catch(err) {
-        defview="agendaWeek";
+        defview="month";
     }
     var dt = new Date();
     // set default data    
