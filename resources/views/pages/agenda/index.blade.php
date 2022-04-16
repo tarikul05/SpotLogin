@@ -23,8 +23,7 @@
 
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-
-<script src="{{ asset('js/fullcalendar.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
 <script src="{{ asset('js/jquery.table2excel.js')}}"></script>
 
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
@@ -1005,16 +1004,15 @@ admin_main_style.css
         //console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
-		$('#calendar').fullCalendar({
-			timeFormat: 'HH(:mm)',   
+
+        $('#calendar').fullCalendar({
+            timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
 			slotDuration: '00:30:00',
 			slotLabelFormat: 'H:mm',
-            //events: json_events,	  
-			events: JSON.parse(json_events),
-			utc: false,            
-            defaultView: defview,
-            
+            defaultView: 'agendaWeek',
+            defaultDate: '2022-04-12',
+            utc: false,  
             buttonText: {
                 prev: '<',
                 next: '>'
@@ -1034,8 +1032,7 @@ admin_main_style.css
                 day: {
                     columnFormat: 'ddd DD MMM'
                 }
-            },
-            
+            }, 
             handleWindowResize: true,
             eventTextColor: '#000000',
             firstDay: '1',      //monday
@@ -1045,11 +1042,87 @@ admin_main_style.css
             timezone: currentTimezone, 
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
-			allDayDefault: true,
+			// allDayDefault: true,
 			defaultTimedEventDuration: '00:30:00',
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
+            loading: function(bool) {
+				$('#loading').toggle(bool)
+			},
+
+            // eventRender: function(eventObj, $el) {
+            //     $el.popover({
+            //         title: eventObj.title,
+            //         content: eventObj.description,
+            //         trigger: 'hover',
+            //         placement: 'top',
+            //         container: 'body'
+            //     });
+            // },
+            events: JSON.parse(json_events),
+
+            // events: [
+            //     {
+            //         title: 'Meeting',
+            //         description: 'description for Meeting',
+            //         start: '2022-04-12T14:30:00'
+            //     },
+            //     {
+            //         title: 'Birthday Party',
+            //         description: 'description for Birthday Party',
+            //         start: '2022-04-13T07:00:00',
+            //         end: '2022-04-13T09:00:00'
+            //     }
+            // ]
+        // });
+
+
+		// $('#calendar1').fullCalendar({
+		// 	timeFormat: 'HH(:mm)',   
+        //     axisFormat: 'HH(:mm)',            
+		// 	slotDuration: '00:30:00',
+		// 	slotLabelFormat: 'H:mm',
+        //     //events: json_events,	  
+		// 	events: JSON.parse(json_events),
+		// 	utc: false,            
+        //     defaultView: defview,
+            
+        //     buttonText: {
+        //         prev: '<',
+        //         next: '>'
+        //     },       
+		// 	header: false,
+            
+        //     views: {
+        //         agenda: {
+        //             columnFormat: 'ddd MMM DD'
+        //         },
+        //         week: {
+        //             columnFormat: 'ddd MMM DD'
+        //         },
+        //         month: {
+        //             columnFormat: 'ddd'
+        //         },
+        //         day: {
+        //             columnFormat: 'ddd DD MMM'
+        //         }
+        //     },
+            
+        //     handleWindowResize: true,
+        //     eventTextColor: '#000000',
+        //     firstDay: '1',      //monday
+        //     height: 'parent', // calendar content height excluding header
+        //     contentHeight: v_calc_height, // calendar content height excluding header
+            
+        //     timezone: currentTimezone, 
+        //     locale: currentLangCode,
+		// 	buttonIcons: true, // show the prev/next text
+		// 	allDayDefault: true,
+		// 	defaultTimedEventDuration: '00:30:00',
+		// 	forceEventDuration: true,
+		// 	nextDayThreshold: '00:00',
+        //     nowIndicator: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
 			},
