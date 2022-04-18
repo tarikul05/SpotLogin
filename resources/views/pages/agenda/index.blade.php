@@ -281,13 +281,13 @@ admin_main_style.css
    
 
    
-    var defview='month';   //'month';//'agendaWeek'
+    var defview='agendaWeek';   //'month';//'agendaWeek'
     try {
         if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
             defview=getCookie("cal_view_mode");
         }
     } catch(err) {
-        defview="month";
+        defview="agendaWeek";
     }
     var dt = new Date();
     // set default data    
@@ -363,7 +363,6 @@ admin_main_style.css
 	   	    window.history.back();
 		});
         loading=0;
-        //console.log('a) loading='+loading);
         RerenderEvents();
         RenderCalendar();
         PopulateEventTypeDropdown();
@@ -454,7 +453,6 @@ admin_main_style.css
         var p_event_auto_id=document.getElementById('confirm_event_id').value;
         var school_id=document.getElementById('school_id').value;
         var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
-        console.log(data);
         var status = '';
         $.ajax({
             url: BASE_URL + '/confirm_event',
@@ -488,11 +486,9 @@ admin_main_style.css
         
 
 		if (search_text.length > 0){
-            console.log(search_text);
 			$('#calendar').fullCalendar('rerenderEvents');
 		}
         if (search_text.length == 0){
-            //console.log(search_text);
 			$('#calendar').fullCalendar('rerenderEvents');
 		}
     });
@@ -502,14 +498,12 @@ admin_main_style.css
         var dt=$(this).datetimepicker('getDate');
         
         var jsDate = $(this).datetimepicker('getDate');
-        console.log(jsDate.getMonth());
         if (jsDate !== null) { // if any date selected in datepicker
             jsDate instanceof Date; // -> true
             jsDate.getDate();
             jsDate.getMonth();
             var month = jsDate.getMonth() + 1;   
             jsDate.getFullYear();
-            console.log(jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate());
             dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
@@ -908,9 +902,6 @@ admin_main_style.css
             success: function(s){
                 
                 json_events = s;
-                console.log("aaaa------------------");
-                console.log(json_events);
-                console.log("aaaa------------------");
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -1011,8 +1002,9 @@ admin_main_style.css
 			slotDuration: '00:30:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            defaultDate: '2022-04-12',
+            //defaultDate: '2022-04-12',
             utc: false,  
+            editable: true,
             buttonText: {
                 prev: '<',
                 next: '>'
@@ -1138,7 +1130,6 @@ admin_main_style.css
                 var date_found=1;
                 var location_found=1;
                 /* Start datepicker - change date */    
-                console.log('rendering...event_id='+event.id);
                 var dt=moment(event.start).format('DD/MM/YYYY');
                 
                 
@@ -1147,14 +1138,10 @@ admin_main_style.css
             
                 //ProgressIncrement(); //display progress bar
                 if (document.getElementById("event_type").value != '0') {
-                    console.log('rendering...event_id='+dt);
                     event_found=0;
                     
                     $.each($("#event_type option:selected"), function(){ 
                         var name=$(this).text();
-                        console.log('dasda----------------')
-                        console.log($(this).text())
-                        console.log('adsda----------------')
 
                         if (event.event_type_name.indexOf(name) >= 0){
                             event_found=1;
@@ -1209,18 +1196,22 @@ admin_main_style.css
                 /* START listmonth view - display off past dated events */
                 var view = $('#calendar').fullCalendar('getView');
                 var viewname=view.name;
+                
                 if ((viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
                     date_found=1;
                     var curdate=new Date();
-                    if (moment(event.start).format('YYYYMMDD') < moment(curdate).format('YYYYMMDD') ){
+                    
+                    // if (moment(event.start).format('YYYYMMDD') < moment(curdate).format('YYYYMMDD') ){
                         
-                        date_found = 0;
-                    } 
+                    //     date_found = 0;
+                    // } 
+                    // console.log('viewname----------------')
+                    // console.log(moment(curdate).format('YYYYMMDD'))
+                    // console.log('viewname----------------')
                 }		  
                 /* END listmonth view - display off past dated events */
             
                 var loc_str=document.getElementById("event_location_id").value;
-                console.log('event.location='+event.location+' loc_str='+loc_str);
                 if (loc_str == '') {
                     location_found=0;
                 }
@@ -1268,14 +1259,22 @@ admin_main_style.css
                     }
                 } // 
                 /* search END */
-                console.log('event_id='+event.id+';event_found='+event_found+';student_found='+student_found+';teacher_found='+teacher_found+';date_found='+date_found+';location_found='+location_found+';search_found='+search_found);
+                //console.log('event_id='+event.id+';event_found='+event_found+';student_found='+student_found+';teacher_found='+teacher_found+';date_found='+date_found+';location_found='+location_found+';search_found='+search_found);
 
-                if ((event_found == 1) && (student_found == 1) && (teacher_found == 1) && (search_found == 1) && (date_found == 1) && (location_found == 1) ) 
+                if ((event_found == 1) && 
+                    (student_found == 1) && 
+                    (teacher_found == 1) && 
+                    (search_found == 1) && 
+                    (date_found == 1) && 
+                    (location_found == 1) ) 
                 {
                     flag = true;
                 } else {
                     flag = false;
                 }
+                console.log('lllll----------------')
+                console.log(location_found)
+                console.log('lllll----------------')
                 
 
                 if (flag == true){
@@ -1318,6 +1317,7 @@ admin_main_style.css
                     resultHtml+='</tr>';
                 
                 }
+                
                 resultHtml_rows=resultHtml;
                 el.attr('title', event.tooltip);
                 //el.attr('timetext', event.title);
@@ -1397,9 +1397,7 @@ admin_main_style.css
                 
                 //resultHtmlHeader+=resultHtml;
                 resultHtmlHeader+=resultHtml_rows;
-                console.log('lllll----------------')
-                console.log(resultHtml_rows)
-                console.log('lllll----------------')
+                
                 resultHtml_rows='';
                 
                 resultHtmlHeader+="</table>";
@@ -1408,11 +1406,11 @@ admin_main_style.css
                 resultHtmlHeader+='"stateSave": true,';
                 resultHtmlHeader+='"paging":   false,';
                 resultHtmlHeader+='"searching": false,';
-                resultHtmlHeader+='"ordering": true,';
-                resultHtmlHeader+='"info":     false,';
+                resultHtmlHeader+='"order": [[2, "asc"]],';
+                resultHtmlHeader+='"bInfo":     false,';
                 //resultHtmlHeader+="dom: 'Bfrtip',";       // uncomment to enable datatable export
                 //resultHtmlHeader+="buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],"; // uncomment to enable datatable export
-                resultHtmlHeader+='"processing": true});';
+                resultHtmlHeader+='"bProcessing": true});';
                 resultHtmlHeader+='<\/script>';
                 
                 $('#agenda_list').html(resultHtmlHeader);
@@ -1675,7 +1673,7 @@ admin_main_style.css
 			//if (document.getElementById("event_location_id").value == ''){
 			//	document.getElementById("event_location_all_flag").value='0';
 			//}
-			console.log("LOCATION: event_location_id="+document.getElementById("event_location_id").value);
+			//console.log("LOCATION: event_location_id="+document.getElementById("event_location_id").value);
 			
 			document.cookie = "event_type_id="+document.getElementById("event_type_id").value+";path=/";
 			document.cookie = "event_student_id="+document.getElementById("event_student_id").value+";path=/";
@@ -1686,7 +1684,7 @@ admin_main_style.css
 			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
-			console.log("cal_view_mode="+cal_view_mode.name);
+			//console.log("cal_view_mode="+cal_view_mode.name);
 			
 			if (cal_view_mode.name === undefined) {
 					document.cookie = "cal_view_mode="+"agendaWeek"+";path=/";
