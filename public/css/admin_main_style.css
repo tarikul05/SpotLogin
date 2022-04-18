@@ -412,7 +412,44 @@ input#shas_user_account {
   .software-capabilities li{font-size: 18px;}
   footer p a {font-size: 24px;}
 }
-
+button.btn.btn-theme-back {
+  background: #FFF;
+  border: 1px solid #B3D6EC;
+  color: #152245;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.25;
+  height: 35px;
+}
+.view_part .form-group.row label {
+  margin-top: 0px;
+}
+.view_part .form-group.row {
+  margin-bottom: 10px;
+}
+.view_part .col-sm-7 {
+  vertical-align: middle;
+  line-height: 25px;
+  text-align: left;
+}
+.alert-warning {
+  color: #657E8E;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+button.btn.btn-sm.btn-warning {
+  float: right;
+  padding: 0.75rem;
+  font-family: 'Gilroy-Medium';
+  font-weight: normal;
+  font-size: 14px;
+  line-height: .2;
+  height: 35px;
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+  margin-top: -5px;
+}
 @media only screen and (max-width: 991px){
   h1{font-size: 48px;}
   h2{font-size: 42px;}
