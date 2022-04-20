@@ -135,7 +135,12 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.edit_event')->with(compact('eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        if (!empty($eventData)){
+            return view('pages.calendar.edit_event')->with(compact('eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        }else{
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error')); 
+        }
+        
     }
 
      /**
