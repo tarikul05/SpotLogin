@@ -111,111 +111,112 @@ admin_main_style.css
 					</div>    
 				</div>                 
 			</header>
-      <div class="clearfix"></div>
-      <div class="row" style="margin:0;">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          @csrf
-          <section class="panel" style="border: 0;box-shadow: none;">
-            <label id="loading" style="display:none;">Loading....</label> 
-            <form action="#" method="post">
-            
-              <div class="clearfix"></div>
-              <div class="row">
-                  <div class="col-md-9">
-                      <!-- fullcalendar -->
-                      <div id="calendar"></div>
+            <div class="clearfix"></div>
+            <div class="row" style="margin:0;">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    @csrf
+                    <section class="panel" style="border: 0;box-shadow: none;">
+                        <label id="loading" style="display:none;">Loading....</label> 
+                        <form action="#" method="post">
+                        
+                            <div class="clearfix"></div>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <!-- fullcalendar -->
+                                    <div id="calendar"></div>
 
-                      <div style="margin-top: 15px;">
-                          <div class="btn-group" style="margin-right:5px;">
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">Today</button>
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
-                          </div>
-                          <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">Day</button>
-                          <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
-                          <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
-                          <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
-                      </div>   
-                  </div>
-                  <div class="col-md-3">
-                      <!-- Datepicker -->
-                      <div id="datepicker_month"></div>
-                      <div>
-                          <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
-                              
-                              <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
-                                    @foreach($locations as $key => $location)
-                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
-                                    @endforeach    
-                                </select>
-                              
-                            </div>                                                    
+                                    <div style="margin-top: 15px;">
+                                        <div class="btn-group" style="margin-right:5px;">
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">Today</button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
+                                        </div>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">Day</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
+                                    </div>   
+                                </div>
+                                <div class="col-md-3">
+                                    <!-- Datepicker -->
+                                    <div id="datepicker_month"></div>
+                                        <div>
+                                            <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
+                                            
+                                                <div id="event_location_div" name="event_location_div" class="selectdiv">
+                                                    <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                                        @foreach($locations as $key => $location)
+                                                            <option value="{{ $location->id }}">{{ $location->title }}</option>
+                                                        @endforeach    
+                                                    </select>
+                                                
+                                                </div>                                                    
 
 
-                              <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
-                                    @foreach($event_types as $key => $event_type)
-                                        <option value="{{ $key }}">{{ $event_type }}</option>
-                                    @endforeach
+                                                <div id="event_type_div" name="event_type_div" class="selectdiv">
+                                                    <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
+                                                        @foreach($event_types as $key => $event_type)
+                                                            <option value="{{ $key }}">{{ $event_type }}</option>
+                                                        @endforeach
+                                                
+                                                    </select>
+                                                </div>                                                    
+                                            
+                                                <div id="event_student_div" name="event_student_div" class="selectdiv">
+                                                    <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
+                                                        @foreach($students as $key => $student)
+                                                            <option value="{{ $student->id }}">{{ $student->firstname }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            
+                                                <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                                    <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
+                                                        @foreach($teachers as $key => $teacher)
+                                                            <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                        
+                        
+                                                <div id="list-button" class="pull-right form-inline">
+                                                    <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style="margin-top: 25px;">
                             
-                                </select>
-                              </div>                                                    
-                          
-                              <div id="event_student_div" name="event_student_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
-                                    @foreach($students as $key => $student)
-                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
-                                    @endforeach
-                                </select>
-                              </div>
-                          
-                              <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
-                                    <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
-                                        @foreach($teachers as $key => $teacher)
-                                            <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
-                                        @endforeach
-                                    </select>
-                              </div>
-    
-    
-                              <div id="list-button" class="pull-right form-inline">
-                                  <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
-                              </div>
-                          </div> 
-                      </div>
-                  </div>
-              </div>
-
-
-              <div style="margin-top: 25px;">
-                  
-                <div id="agenda_list" width="350px" border="1" style="display:none;margin-top: auto;">
-                <!-- class="display row-border" -->
-                    <table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="table-responsive agenda_table_class tablesorter">
-                        <thead>
-                        <tr href="">
-                        <th width="8%"><label id="row_hdr_date">Date</label></th>
-                        <th width="10%">Heure de d`part</th>
-                        <th width="10%">Heure de fin</th>
-                        <th width="15%">Nombre d`tudiants</th>
-                        <th width="20%">Nom de l`tudiant (s)</th>
-                        <th width="17%">Cours</th>
-                        <th width="10%">Dur`e en minutes</th>
-                        <th width="10%">Professeur</th>
-                        </tr>
-                        </thead>
-                    <!--
-                    <tbody id="agenda_table_body" name="agenda_table_body">
-                    </tbody>                        
-                    -->                         
-                    </table>
+                                <div id="agenda_list" width="350px" border="1" style="display:none;margin-top: auto;">
+                                    <!-- class="display row-border" -->
+                                    <table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="table-responsive agenda_table_class tablesorter">
+                                        <thead>
+                                        <tr href="">
+                                        <th width="8%"><label id="row_hdr_date">Date</label></th>
+                                        <th width="10%">Heure de d`part</th>
+                                        <th width="10%">Heure de fin</th>
+                                        <th width="15%">Nombre d`tudiants</th>
+                                        <th width="20%">Nom de l`tudiant (s)</th>
+                                        <th width="17%">Cours</th>
+                                        <th width="10%">Dur`e en minutes</th>
+                                        <th width="10%">Professeur</th>
+                                        </tr>
+                                        </thead>
+                                    <!--
+                                    <tbody id="agenda_table_body" name="agenda_table_body">
+                                    </tbody>                        
+                                    -->                         
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
                 </div>
-              </div>
-            </form>
-          </section>
-        </div>
-      </div>
+            </div>
 		
 		
 		</form>
