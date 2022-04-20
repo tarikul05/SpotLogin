@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 use App\Models\Teacher;
+use App\Models\School;
 use App\Models\EventCategory;
 
 class Event extends BaseModel
@@ -82,6 +83,14 @@ class Event extends BaseModel
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    /**
+     * Get the teacher for event.
+     */
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 
      /**

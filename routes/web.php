@@ -59,6 +59,10 @@ Route::post('confirm_event', [App\Http\Controllers\AgendaController::class, 'con
 Route::post('/{school}/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/{school}/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::post('/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event1.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent1'])->name('event1.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
 
 Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
