@@ -71,9 +71,14 @@ class Controller extends BaseController
         
 
         $this->middleware(function ($request, $next) {
-
+            $schoolId ='';
+            $data = $request->all();
+            if (isset($data['school_id'])) {
+                $schoolId =$data['school_id'];
+            }
             if (Auth::check() && $this->isAuthorized()) {
                 $user = Auth::user();
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
 
                 $this->AppUI = Auth::user();
             }
@@ -82,7 +87,8 @@ class Controller extends BaseController
                 'action' => $this->action,
                 'CURRENT_URL' => $this->CURRENT_URL,
                 'BASE_URL' => $this->BASE_URL,
-                'AppUI' => $this->AppUI
+                'AppUI' => $this->AppUI,
+                'schoolId' => $schoolId
             );
             View::share($data);
             return $next($request);

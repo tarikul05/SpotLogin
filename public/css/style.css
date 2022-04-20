@@ -31,7 +31,8 @@ img.admin_logo {
     height: 40px;
     margin-right: 20px;
 }
-label#page_header {
+label#page_header,
+#cal_title{
     color: #0075BF;
     float: left;
     font-size: 28px;
@@ -95,6 +96,13 @@ nav {
     border: 1px solid #B3D6EC;
     border-radius: 4px;
 }
+.search_text_box {
+    background-image: url('../img/search_icon.png')!important;
+    background-position: right!important;
+    background-repeat: no-repeat!important;
+    width: 100%;
+    /* border-radius: 100px; --round corner */
+  }
 .glyphicon {
     position: relative;
     top: 1px;
@@ -106,7 +114,66 @@ nav {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.glyphicon-plus:before {
+    content: "\2b";
+}
 
+#button_menu_div.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+    transform: translate3d(0px, 35px, 0px) !important;
+
+}
+
+#button_menu_div.show > .dropdown-menu {
+    display: block;
+}
+#button_menu_div .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+    box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
+}
+.btn .caret {
+    margin-left: 0;
+}
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
 .dot {
   height: 35px;
   width: 35px;
@@ -303,7 +370,8 @@ table.tc_template .detail_header {
     -ms-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
-.dropdown-menu.show {
+.dropdown-menu.header.show,
+.dropdown-menu.list.show {
     display: block;
     background: #35404d;
     max-width: 180px;
@@ -313,7 +381,8 @@ table.tc_template .detail_header {
     padding-top: 0;
     padding-bottom: 0;
 }
-.dropdown-menu a {
+.dropdown-menu.header a,
+.dropdown-menu.list a {
     font-size: 12px;
     padding: 12px;
     -webkit-transition: all 0.3s ease;
@@ -335,7 +404,8 @@ table.tc_template .detail_header {
     padding-top: 16px;
     padding-bottom: 17px;
 }
-.dropdown-menu a:hover{
+.dropdown-menu.header a:hover,
+.dropdown-menu.list a:hover{
     color: #479CCF;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -467,7 +537,8 @@ table.dataTable thead th, table.dataTable thead td {
 table.dataTable.no-footer {
     border: 1px solid #E1EFF7!important;
 }
-.dropdown-menu.action {
+.dropdown-menu.action.header,
+.dropdown-menu.action.list {
     position: absolute;
     top: 100%;
     left: 0;
@@ -488,7 +559,8 @@ table.dataTable.no-footer {
     -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
     box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
 }
-.dropdown-menu.action a {
+.dropdown-menu.action.header a,
+.dropdown-menu.action.list a {
     display: flex;
     padding: 4px 10px;
     align-items: center;
@@ -496,11 +568,13 @@ table.dataTable.no-footer {
     font-weight: normal;
     font-size: 13px;
 }
-.dropdown-menu.action a:hover {
+.dropdown-menu.action.header a:hover,
+.dropdown-menu.action.list a:hover {
     color: #1e2125;
     background: transparent;
 }
-.dropdown-menu.action i {
+.dropdown-menu.action.header i,
+.dropdown-menu.action.list i {
     margin-right: 7px;
     font-size: 16px;
 }
