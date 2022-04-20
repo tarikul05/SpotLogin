@@ -32,7 +32,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="coach_off" method="post" action=""  name="coach_off" role="form">
+				<form class="form-horizontal" id="coach_off" method="post" action="{{ route('coachOff.editAction',['school'=> $schoolId,'id'=> $coachoffId]) }}"  name="coach_off" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">

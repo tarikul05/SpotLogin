@@ -136,9 +136,9 @@ class LessonsController extends Controller
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
         if (!empty($eventData)){
-            return view('pages.calendar.edit_event')->with(compact('eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
         }else{
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error')); 
+            return redirect()->route('agenda',['school'=> $schoolId]);
         }
         
     }
@@ -344,7 +344,11 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        if (!empty($lessonData)){
+            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
@@ -519,10 +523,14 @@ class LessonsController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
 
-        $studoffId = $request->route('id'); 
-        $studentOffData = Event::active()->where(['id'=>$studoffId, 'event_type' => 51])->first();
+        $studentOffId = $request->route('id'); 
+        $studentOffData = Event::active()->where(['id'=>$studentOffId, 'event_type' => 51])->first();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-        return view('pages.calendar.edit_student_off')->with(compact('studentOffData','schoolId','students'));
+        if (!empty($studentOffData)){
+            return view('pages.calendar.edit_student_off')->with(compact('studentOffId','studentOffData','schoolId','students'));
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
@@ -683,7 +691,11 @@ class LessonsController extends Controller
         $coachoffId = $request->route('id'); 
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
-        return view('pages.calendar.edit_coach_off')->with(compact('coachoffData','schoolId','professors'));
+        if (!empty($coachoffData)){
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
