@@ -35,31 +35,31 @@
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-2 col-sm-2 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<label class="col-lg-2 col-sm-2 text-left">{{__('Title') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($coachoffData->title) ? $coachoffData->title : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-2 col-sm-2 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									<label class="col-lg-2 col-sm-2 text-left">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
 										{{!empty($coachoffData->nickname) ? $coachoffData->nickname : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-2 col-sm-2 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
+									<label class="col-lg-2 col-sm-2 text-left">{{__('Start date') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($coachoffData->date_start) ? date('l jS F-Y', strtotime($coachoffData->date_start)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-2 col-sm-2 text-left" for="availability_select" id="visibility_label_id">{{__('End Date') }} :</label>
+									<label class="col-lg-2 col-sm-2 text-left">{{__('End Date') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($coachoffData->date_end) ? date('l jS F-Y', strtotime($coachoffData->date_end)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-2 col-sm-2 text-left" for="availability_select" id="visibility_label_id">{{__('All day') }} :</label>
+									<label class="col-lg-2 col-sm-2 text-left">{{__('All day') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($coachoffData->fullday_flag) ? 'Yes' : 'Non(No)' }}
 									</div>
@@ -72,7 +72,7 @@
 								<div class="form-group row">
 									<div class="col-sm-7">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left">{{__('Description') }} :</label>
 										<div class="col-sm-7 descrip">
 											{{ !empty($coachoffData->description) ? $coachoffData->description : ''; }}
 										</div>

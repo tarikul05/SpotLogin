@@ -166,7 +166,10 @@ nav {
     margin-top:10px;
 }
 .table-responsive {
-    margin-top: 80px;
+    margin-top: 5px;
+}
+table#attn_tbl {
+    border: 1px solid #E1EFF7!important;
 }
 .selectbox {
     position: relative;
