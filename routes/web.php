@@ -54,6 +54,16 @@ Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateControll
 Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::class, 'getTcTemplate'])->name('tc.fetch_cms_template');
 
 
+//confirm event AJAX
+Route::post('confirm_event', [App\Http\Controllers\AgendaController::class, 'confirmEvent'])->name('confirm_event.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/{school}/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/{school}/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+
 
 // Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
 
@@ -222,7 +232,10 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
-
+    
+    Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+    Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+  
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
     Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');

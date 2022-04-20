@@ -45,6 +45,9 @@
         <img src="{{ asset('img/logo.png') }}" width="36">
       </a>
       <ul class="navbar-nav ml-auto align-items-center" style="flex-direction: row!important;">
+        <li class="nav-item active">
+          <a class="px-2 nav-link login_btn" href="#ourSolutions" >{{ __('Our solutions') }}</a>
+        </li>
         <li class="nav-item">
           <select id="setLan" class="selectpicker" data-width="fit" >
             @foreach ($language as $key => $lan)
@@ -78,6 +81,7 @@
   <div id="pageloader">
       <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
   </div>
+
   <footer>
     <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>

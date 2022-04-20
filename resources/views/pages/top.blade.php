@@ -115,4 +115,21 @@
     </div>
   </div>
 </section>
+
+<section class="light-grey-bg about-us" id="ourSolutions">
+  <div class="container-fluid p-0" style="max-width: 100%;">
+    <div class="row no-gutters">
+      <div class="col-lg-6 col-md-12 order-1 order-lg-2">
+        <div class="about-us-cont-bg" style="background: url({{ asset('img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png') }}); background-size: cover;background-position: center;">
+          <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="78">Sportlogin</h1>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
+        <h2 class="gilroy-regular txtdarkblue mb-4">Our solutions</h2>
+        <p class="gilroy-light txtdarkblue"><b>Single coach :</b> Now, if a user chooses a single coach account, they don’t have access to the “teacher” tab in the header. So a single teacher account cannot become a school account for now.</p>
+        <p class="gilroy-light txtdarkblue"><b>School :</b> But if the user selects school accounts, they don’t have a limit on the amount of teachers they can add. So they can move from 2 teachers to 10 teachers if they want, the only different will be when they decide to go premium, they will have to pay for the right account type.</p>
+      </div>
+    </div>
+  </div>
+</section>
 @endsection

@@ -12,7 +12,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
-                        <a href="#" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
+                        <a href="{{ route('agenda',[$schoolId]) }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
                         
                         @can('schools-list')
                             <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
@@ -35,7 +35,7 @@
                         @endcan
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu header">
                                 <a href="#" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
@@ -62,7 +62,7 @@
                             </a>
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu header">
                                     <!-- <a class="dropdown-item" href="/email/email_template">
                                         Modèle d'email
                                     </a>
