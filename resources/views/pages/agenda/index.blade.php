@@ -1651,6 +1651,7 @@ admin_main_style.css
         var school_id=document.getElementById('school_id').value;
         var source_start_date=document.getElementById("copy_date_from").value,
         source_end_date=document.getElementById("copy_date_to").value,
+        event_school=document.getElementById("copy_school_id").value,
         event_type=document.getElementById("copy_event_id").value,
         student_id=document.getElementById("copy_student_id").value,
         teacher_id=document.getElementById("copy_teacher_id").value,
@@ -1658,13 +1659,13 @@ admin_main_style.css
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
         //console.log(data);
         //return false;
             e.preventDefault();
 			$.ajax({
                 type: "POST",
-                url: BASE_URL + '/'+school_id+'/copy_paste_events',
+                url: BASE_URL + '/copy_paste_events',
                 //url: "copy_paste_events.php",
                 data: data,
 				dataType: "JSON",
@@ -1676,6 +1677,7 @@ admin_main_style.css
 					{
                         document.getElementById("copy_date_from").value = '';
                         document.getElementById("copy_date_to").value = '';
+                        document.getElementById("copy_school_id").value = '';
                         document.getElementById("copy_event_id").value = '';
                         document.getElementById("copy_student_id").value ='';
                         document.getElementById("copy_teacher_id").value = '';					   

@@ -257,18 +257,19 @@ class AgendaController extends Controller
     public function copyPasteEvent(Request $request,$schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($schoolId);
-        if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
-        }
+        $data = $request->all();
+        // $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        // $school = School::active()->find($schoolId);
+        // if (empty($school)) {
+        //     return redirect()->route('schools')->with('error', __('School is not selected'));
+        // }
 
         $result = array(
             "status"     => 1,
             'message' => __('failed to send email'),
         );
         try {
-            $data = $request->all();
+            
 
 
             // $p_app_id=$_SESSION['global_app_id'];
@@ -277,7 +278,7 @@ class AgendaController extends Controller
 
 
             
-            $data['school_id'] = $schoolId;
+            $data['school_id'] = trim($data['school_id']);
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
             $data['student_id']= trim($data['student_id']);
@@ -353,7 +354,7 @@ class AgendaController extends Controller
                 //exit();
                 $data = [
                     'title' => $fetch->title,
-                    'school_id' => $schoolId,
+                    'school_id' => $fetch->school_id,
                     'event_type' => $fetch->event_type,
                     'date_start' => $date_start,
                     'date_end' => $date_end,
@@ -369,6 +370,21 @@ class AgendaController extends Controller
                     'event_price' => $fetch->event_price
                 ];
                 $event = Event::create($data);
+
+                $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
+                
+
+                foreach($eventDetailsStudentId as $std){
+                    $dataDetails = [
+                        'event_id'   => $event->id,
+                        'teacher_id' => $fetch->teacher_id,
+                        'student_id' => $std['student_id'],
+                        'buy_price' => $fetch->price_amount_buy,
+                        'sell_price' => $fetch->price_amount_sell,
+                    ];
+                    $eventDetails = EventDetails::create($dataDetails);
+                }
+
 
             }
             //dd($eventData);
