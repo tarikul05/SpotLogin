@@ -46,48 +46,17 @@ class AgendaController extends Controller
         $locations = Location::orderBy('id')->get();
         $students = Student::orderBy('id')->get();
         $teachers = Teacher::orderBy('id')->get();
+        $schools = School::orderBy('id')->get();
 
         $event_types = config('global.event_type'); 
 
         $eventData = Event::active()->where('school_id', $schoolId)->get();
         $data = $request->all();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         if (isset($data['start_date'])) {
             $query = $eventData->filter($data);
             $eventData = $query->get();
             
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //dd($eventData);
         $events = array();   
@@ -211,7 +180,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
-        return view('pages.agenda.index')->with(compact('school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
 
@@ -607,9 +576,10 @@ class AgendaController extends Controller
             $p_from_date= trim($data['p_from_date']);
             $p_to_date= trim($data['p_to_date']);
         
-            $p_event_type_id= trim($data['p_event_type_id']);
-            $p_teacher_id= trim($data['p_teacher_id']);
-            $p_student_id= trim($data['p_student_id']);
+            $data['school_id']= trim($data['p_event_school_id']);
+            $data['event_type']= trim($data['p_event_type_id']);
+            $data['teacher_id']= trim($data['p_teacher_id']);
+            $data['student_id']= trim($data['p_student_id']);
             $p_user_id=Auth::user()->id;
 
             

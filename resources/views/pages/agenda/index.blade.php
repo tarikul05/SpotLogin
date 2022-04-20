@@ -71,6 +71,7 @@ admin_main_style.css
 
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
+                            <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
                             <input type="hidden" name="copy_event_id" id="copy_event_id" value="">
                             <input type="hidden" name="copy_student_id" id="copy_student_id" value="">
                             <input type="hidden" name="copy_teacher_id" id="copy_teacher_id" value="">
@@ -78,7 +79,7 @@ admin_main_style.css
                             <input type="hidden" name="copy_week_day" id="copy_week_day" value="">
                             <input type="hidden" name="copy_month_day" id="copy_month_day" value="">
                             
-
+                            <input type="hidden" name="event_school_id" size="14px" id="event_school_id" value="0">
                             <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
                             <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
@@ -86,6 +87,7 @@ admin_main_style.css
                             <input type="hidden" name="event_category_id" size="14px" id="event_category_id" value="0">
 
 
+                            <input type="hidden" name="event_school_all_flag" size="14px" id="event_school_all_flag" value="1">
                             <input type="hidden" name="event_type_all_flag" size="14px" id="event_type_all_flag" value="1">
                             <input type="hidden" name="event_student_all_flag" size="14px" id="event_student_all_flag" value="1">
                             <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
@@ -138,52 +140,59 @@ admin_main_style.css
                                     </div>   
                                 </div>
                                 <div class="col-md-3">
+                                    <div id="school_div" name="school_div" class="selectdiv">
+                                        <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
+                                            @foreach($schools as $key => $this_school)
+                                                <option value="{{ $this_school->id }}">{{ $this_school->school_name }}</option>
+                                            @endforeach    
+                                        </select>
+                                    
+                                    </div>  
                                     <!-- Datepicker -->
                                     <div id="datepicker_month"></div>
-                                        <div>
-                                            <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
+                                    <div>
+                                        <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
+                                        
+                                            <div id="event_location_div" name="event_location_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                                    @foreach($locations as $key => $location)
+                                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
+                                                    @endforeach    
+                                                </select>
                                             
-                                                <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                                    <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
-                                                        @foreach($locations as $key => $location)
-                                                            <option value="{{ $location->id }}">{{ $location->title }}</option>
-                                                        @endforeach    
-                                                    </select>
-                                                
-                                                </div>                                                    
+                                            </div>                                                    
 
 
-                                                <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                                    <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
-                                                        @foreach($event_types as $key => $event_type)
-                                                            <option value="{{ $key }}">{{ $event_type }}</option>
-                                                        @endforeach
-                                                
-                                                    </select>
-                                                </div>                                                    
+                                            <div id="event_type_div" name="event_type_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
+                                                    @foreach($event_types as $key => $event_type)
+                                                        <option value="{{ $key }}">{{ $event_type }}</option>
+                                                    @endforeach
                                             
-                                                <div id="event_student_div" name="event_student_div" class="selectdiv">
-                                                    <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
-                                                        @foreach($students as $key => $student)
-                                                            <option value="{{ $student->id }}">{{ $student->firstname }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            
-                                                <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
-                                                    <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
-                                                        @foreach($teachers as $key => $teacher)
-                                                            <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                        
-                        
-                                                <div id="list-button" class="pull-right form-inline">
-                                                    <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
-                                                </div>
-                                            </div> 
-                                        </div>
+                                                </select>
+                                            </div>                                                    
+                                        
+                                            <div id="event_student_div" name="event_student_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
+                                                    @foreach($students as $key => $student)
+                                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        
+                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
+                                                    @foreach($teachers as $key => $teacher)
+                                                        <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                    
+                    
+                                            <div id="list-button" class="pull-right form-inline">
+                                                <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
+                                            </div>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
@@ -225,25 +234,25 @@ admin_main_style.css
 
 <!-- Modal on event click -->	
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      
-      <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
-        <div class="modal-dialog EventModalClass" id="EventModalWin">
-            <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
-                    <p style="font-size: 20px;"></p>
-                    <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
-                    <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
-                        <span id="event_btn_edit_text">View<span>
-                    </a>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        
+        <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+            <div class="modal-dialog EventModalClass" id="EventModalWin">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-4">                    
+                        <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                        <p style="font-size: 20px;"></p>
+                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
+                        <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
+                            <span id="event_btn_edit_text">View<span>
+                        </a>
+                    </div>
                 </div>
             </div>
-	    </div>
-      </div>
+        </div>
+        </div>
     </div>
-  </div>
 </div>
 
 	<!-- End Tabs content -->
@@ -356,6 +365,7 @@ admin_main_style.css
 
     $(document).ready(function(){
         if (user_role == "student") {
+            document.getElementById('event_school').style.display="none";
 			document.getElementById('event_type').style.display="none";
 			document.getElementById('event_student_div').style.display="none";
 			document.getElementById('event_teacher').style.display="none";
@@ -366,11 +376,13 @@ admin_main_style.css
         loading=0;
         RerenderEvents();
         RenderCalendar();
+        PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
         PopulateLocationDropdown();
         PopulateStudentDropdown();
         PopulateTeacherDropdown();
         DisplayCalendarTitle();
+        document.getElementById("copy_school_id").value =getSchoolIDs();
         document.getElementById("copy_event_id").value =getEventIDs();
         document.getElementById("copy_student_id").value = getStudentIDs();
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
@@ -580,53 +592,102 @@ admin_main_style.css
     //     document.getElementById("event_teacher").disabled="disabled";
     // }
 
+    // populate school
+    function PopulateSchoolDropdown(){
+         
+        $('#event_school').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Schools',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected School ',
+            allSelectedText: 'All Schools',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('Event changed triggered!');
+                    document.getElementById("event_school_id").value=getSchoolIDs();
+                    document.getElementById("event_school_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (option,checked) {
+                    document.getElementById("event_school_id").value='0';
+                    document.getElementById("event_school_all_flag").value='1';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('Event onDeSelectAll triggered!');
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    document.getElementById("event_school_id").value=getSchoolIDs();
+                    document.getElementById("event_school_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+                },
+            selectAllValue: 0
+        });
 
+        $('#event_school').multiselect('selectAll', false);   
+        $('#event_school').multiselect('refresh');	
+                
+    } 
+
+    // populate event type
     function PopulateEventTypeDropdown(){
          
-         $('#event_type').multiselect({
-             includeSelectAllOption:true,
-             selectAllText: 'All Events',
-             maxHeight:true,
-             enableFiltering:false,
-             nSelectedText  : 'Selected Event type ',
-             allSelectedText: 'All Events',
-             enableCaseInsensitiveFiltering:false,
-             // enables full value filtering
-             enableFullValueFiltering:false,
-             filterPlaceholder: 'Search',
-             numberDisplayed: 3,
-             buttonWidth: '100%',
-             // possible options: 'text', 'value', 'both'
-             filterBehavior: 'text',
-             onChange: function(option, checked) {
-                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                     console.log('Event changed triggered!');
-                     document.getElementById("event_type_id").value=getEventIDs();
-                     document.getElementById("event_type_all_flag").value='0';
-                     //SetEventCookies();
-                     RerenderEvents();
-             },
-             onSelectAll: function (option,checked) {
-                     document.getElementById("event_type_id").value='0';
-                     document.getElementById("event_type_all_flag").value='1';
-                     //SetEventCookies();
-                     RerenderEvents();
-             },
-             onDeselectAll: function(option,checked) {
-                 console.log('Event onDeSelectAll triggered!');
-                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                     document.getElementById("event_type_id").value=getEventIDs();
-                     document.getElementById("event_type_all_flag").value='0';
-                     //SetEventCookies();
-                     RerenderEvents();
-                 },
-             selectAllValue: 0
-         });
- 
-         $('#event_type').multiselect('selectAll', false);   
-         $('#event_type').multiselect('refresh');	
+        $('#event_type').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Events',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Event type ',
+            allSelectedText: 'All Events',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('Event changed triggered!');
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (option,checked) {
+                    document.getElementById("event_type_id").value='0';
+                    document.getElementById("event_type_all_flag").value='1';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('Event onDeSelectAll triggered!');
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+                },
+            selectAllValue: 0
+        });
+
+        $('#event_type').multiselect('selectAll', false);   
+        $('#event_type').multiselect('refresh');	
                  
-     }   // populate event type
+    }   
+    // populate location
     function PopulateLocationDropdown(){
           
         $('#event_location').multiselect({
@@ -679,7 +740,8 @@ admin_main_style.css
         $('#event_location').multiselect('selectAll', false);   
         $('#event_location').multiselect('refresh');	
                   
-    }   // populate event type
+    }   
+    // populate teacher
     function PopulateTeacherDropdown(){
           
         $('#event_teacher').multiselect({
@@ -732,7 +794,8 @@ admin_main_style.css
         $('#event_teacher').multiselect('selectAll', false);   
         $('#event_teacher').multiselect('refresh');	
                    
-    }   // populate event type
+    }   
+    // populate student
     function PopulateStudentDropdown(){
           
         $('#event_student').multiselect({
@@ -818,10 +881,9 @@ admin_main_style.css
         document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
         document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
 		
-		document.getElementById("copy_event_id").value =getEventIDs();
-        
+		document.getElementById("copy_school_id").value =getSchoolIDs();
+        document.getElementById("copy_event_id").value =getEventIDs();
 		document.getElementById("copy_student_id").value = getStudentIDs();
-		
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 		
         return false;
@@ -840,18 +902,19 @@ admin_main_style.css
         
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
+        var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
 
-    function delete_multiple_events(p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
-        var data='type=delete_multiple_events'+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+    function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
+        var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -1517,6 +1580,15 @@ admin_main_style.css
         var view = $('#calendar').fullCalendar('getView');
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
+
+    function getSchoolIDs(){
+		var selected_ids = [];
+        $.each($("#event_school option:selected"), function(){         
+            selected_ids.push($(this).val());
+        });		
+		//console.log('selected='+selected_ids.join("|"));
+		return selected_ids.join("|");
+	}
 
     function getEventIDs(){
 		var selected_ids = [];
