@@ -1253,19 +1253,24 @@ admin_main_style.css
                         $.each($("#event_school option:selected"), function(){ 
                             var id=$(this).val();
                             var event_school_id=event.event_school_id;
-                            console.log(id);	
+                            //console.log(id);	
                             if (event.event_school_id == null){
                                 school_found=0;
                             }
                             else {
+                                // if (event.event_school_id.indexOf(id) >= 0){
+                                //     school_found=1;
+                                //     //break;
+                                // }  
                                 try {
-                                    console.log(event_school_id.indexOf(id));
-                                    // if (event_school_id.indexOf(id) >= 0){
+                                    //console.log();
+                                    if (event.event_school_id == id){
+                                        school_found=1;
+                                        //break;
+                                    }
+                                    // if (event_school_id >= 0){
                                     //     school_found=1;
                                     // }
-                                    if (event_school_id >= 0){
-                                        school_found=1;
-                                    }
                                 }
                                 catch (e){
                                     school_found=0;
