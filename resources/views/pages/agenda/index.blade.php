@@ -47,7 +47,7 @@ admin_main_style.css
                         <div class="pull-right btn-group">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
-                            <input type="hidden" name="max_teachers" id="max_teachers" value="{{$school->max_teachers}}">
+                            <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
                             
                             
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
@@ -79,7 +79,7 @@ admin_main_style.css
                             <input type="hidden" name="copy_week_day" id="copy_week_day" value="">
                             <input type="hidden" name="copy_month_day" id="copy_month_day" value="">
                             
-                            <input type="hidden" name="event_school_id" size="14px" id="event_school_id" value="0">
+                            <input type="hidden" name="event_school_id" size="14px" id="event_school_id" value="{{$schoolId}}">
                             <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
                             <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
@@ -143,7 +143,8 @@ admin_main_style.css
                                     <div id="event_school_div" name="event_school_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
-                                                <option value="{{ $this_school->id }}">{{ $this_school->school_name }}</option>
+                                                <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }} 
+                                                    value="{{ $this_school->id }}">{{ $this_school->school_name }}</option>
                                             @endforeach    
                                         </select>
                                     
@@ -643,8 +644,10 @@ admin_main_style.css
             },
             selectAllValue: 0
         });
-
-        $('#event_school').multiselect('selectAll', false);   
+        if (document.getElementById("event_school_id").value ==0) {
+            $('#event_school').multiselect('selectAll', false);   
+        }
+         
         $('#event_school').multiselect('refresh');	
                 
     } 

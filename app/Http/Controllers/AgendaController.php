@@ -34,7 +34,7 @@ class AgendaController extends Controller
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
+            $schoolId = 0;
         }
         $user_role = 'superadmin';
         if ($user->person_type == 'App\Models\Student') {
