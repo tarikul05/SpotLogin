@@ -94,7 +94,8 @@ class LessonsController extends Controller
                         'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
                         'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell']
+                        'sell_price' => $studentOffData['sprice_amount_sell'],
+                        'price_currency' => $studentOffData['sprice_currency']
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
@@ -134,7 +135,12 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.edit_event')->with(compact('eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        if (!empty($eventData)){
+            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
+        
     }
 
      /**
@@ -180,7 +186,8 @@ class LessonsController extends Controller
                         'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
                         'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell']
+                        'sell_price' => $studentOffData['sprice_amount_sell'],
+                        'price_currency' => $studentOffData['sprice_currency']
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
@@ -199,6 +206,30 @@ class LessonsController extends Controller
         return $result;
     }
    
+
+        /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewEvent(Request $request, $schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $eventlId = $request->route('event'); 
+        $eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventlId, 'event_type' => 100,'events.is_active' => 1])->first();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$eventlId, 'event_type' => 100,'events.is_active' => 1])->get();
+        $professors = DB::table('events')->select('school_teacher.nickname')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$eventlId, 'event_type' => 100,'events.is_active' => 1])->first();
+        $eventCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$eventlId, 'event_type' => 100,'events.is_active' => 1])->first();
+        $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$eventlId, 'event_type' => 100,'events.is_active' => 1,'locations.is_active' => 1])->first();
+        $lessonPrice = LessonPrice::active()->get();
+        return view('pages.calendar.view_event')->with(compact('eventData','schoolId','eventCategory','locations','professors','studentOffList','lessonPrice'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -269,7 +300,8 @@ class LessonsController extends Controller
                         'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
                         'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell']
+                        'sell_price' => $studentOffData['sprice_amount_sell'],
+                        'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
@@ -312,7 +344,11 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        if (!empty($lessonData)){
+            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
@@ -364,7 +400,8 @@ class LessonsController extends Controller
                         'teacher_id' => $studentOffData['teacher_select'],
                         'student_id' => $std,
                         'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell']
+                        'sell_price' => $studentOffData['sprice_amount_sell'],
+                        'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null
                     ];
                     $eventDetails = EventDetails::where('event_id', $event->id)->update($dataDetails);
                 }
@@ -378,6 +415,30 @@ class LessonsController extends Controller
         }   
 
         return $result;
+    }
+
+
+        /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewLesson(Request $request, $schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $lessonlId = $request->route('lesson'); 
+        $lessonData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
+        $professors = DB::table('events')->select('school_teacher.nickname')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
+        $lessonCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
+        $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1,'locations.is_active' => 1])->first();
+        $lessonPrice = LessonPrice::active()->get();
+        return view('pages.calendar.view_lesson')->with(compact('lessonData','schoolId','lessonCategory','locations','professors','studentOffList','lessonPrice'));
     }
 
     /**
@@ -462,10 +523,14 @@ class LessonsController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
 
-        $studoffId = $request->route('id'); 
-        $studentOffData = Event::active()->where(['id'=>$studoffId, 'event_type' => 51])->first();
+        $studentOffId = $request->route('id'); 
+        $studentOffData = Event::active()->where(['id'=>$studentOffId, 'event_type' => 51])->first();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-        return view('pages.calendar.edit_student_off')->with(compact('studentOffData','schoolId','students'));
+        if (!empty($studentOffData)){
+            return view('pages.calendar.edit_student_off')->with(compact('studentOffId','studentOffData','schoolId','students'));
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
@@ -519,6 +584,26 @@ class LessonsController extends Controller
         }   
 
         return $result;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewStudentOff(Request $request, $schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+
+        $studoffId = $request->route('id'); 
+        $studentOffData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->first();
+        $studentOffList = DB::table('events')->select('school_student.nickname')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->get();
+        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId'));
     }
 
     /**
@@ -606,7 +691,11 @@ class LessonsController extends Controller
         $coachoffId = $request->route('id'); 
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
-        return view('pages.calendar.edit_coach_off')->with(compact('coachoffData','schoolId','professors'));
+        if (!empty($coachoffData)){
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
+        }else{
+            return redirect()->route('agenda',['school'=> $schoolId]);
+        }
     }
 
      /**
@@ -659,6 +748,24 @@ class LessonsController extends Controller
         }   
 
         return $result;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewCoachOff(Request $request, $schoolId = null)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $coachoffId = $request->route('id'); 
+        $coachoffData = DB::table('events')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$coachoffId, 'event_type' => 50,'events.is_active' => 1])->first();
+        return view('pages.calendar.view_coach_off')->with(compact('coachoffData','schoolId'));
     }
 
     /**
