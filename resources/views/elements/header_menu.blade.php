@@ -12,7 +12,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
-                        <a href="{{ route('agenda',[$schoolId]) }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
+                       <?php  ?>
+                        @php 
+                        $url = route('agenda');
+                        if(!empty($schoolId)){ 
+                            $url = route('agenda.id',[$schoolId]);
+                        }
+                        @endphp
+                        <a href="{{ $url }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
                         
                         @can('schools-list')
                             <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>

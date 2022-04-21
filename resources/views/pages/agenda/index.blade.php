@@ -47,7 +47,7 @@ admin_main_style.css
                         <div class="pull-right btn-group">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
-                            <input type="hidden" name="max_teachers" id="max_teachers" value="{{$school->max_teachers}}">
+                            <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
                             
                             
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
@@ -71,6 +71,7 @@ admin_main_style.css
 
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
+                            <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
                             <input type="hidden" name="copy_event_id" id="copy_event_id" value="">
                             <input type="hidden" name="copy_student_id" id="copy_student_id" value="">
                             <input type="hidden" name="copy_teacher_id" id="copy_teacher_id" value="">
@@ -78,7 +79,7 @@ admin_main_style.css
                             <input type="hidden" name="copy_week_day" id="copy_week_day" value="">
                             <input type="hidden" name="copy_month_day" id="copy_month_day" value="">
                             
-
+                            <input type="hidden" name="event_school_id" size="14px" id="event_school_id" value="{{$schoolId}}">
                             <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
                             <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
@@ -86,6 +87,7 @@ admin_main_style.css
                             <input type="hidden" name="event_category_id" size="14px" id="event_category_id" value="0">
 
 
+                            <input type="hidden" name="event_school_all_flag" size="14px" id="event_school_all_flag" value="0">
                             <input type="hidden" name="event_type_all_flag" size="14px" id="event_type_all_flag" value="1">
                             <input type="hidden" name="event_student_all_flag" size="14px" id="event_student_all_flag" value="1">
                             <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
@@ -111,111 +113,120 @@ admin_main_style.css
 					</div>    
 				</div>                 
 			</header>
-      <div class="clearfix"></div>
-      <div class="row" style="margin:0;">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          @csrf
-          <section class="panel" style="border: 0;box-shadow: none;">
-            <label id="loading" style="display:none;">Loading....</label> 
-            <form action="#" method="post">
-            
-              <div class="clearfix"></div>
-              <div class="row">
-                  <div class="col-md-9">
-                      <!-- fullcalendar -->
-                      <div id="calendar"></div>
+            <div class="clearfix"></div>
+            <div class="row" style="margin:0;">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    @csrf
+                    <section class="panel" style="border: 0;box-shadow: none;">
+                        <label id="loading" style="display:none;">Loading....</label> 
+                        <form action="#" method="post">
+                        
+                            <div class="clearfix"></div>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <!-- fullcalendar -->
+                                    <div id="calendar"></div>
 
-                      <div style="margin-top: 15px;">
-                          <div class="btn-group" style="margin-right:5px;">
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">Today</button>
-                              <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
-                          </div>
-                          <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">Day</button>
-                          <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
-                          <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
-                          <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
-                      </div>   
-                  </div>
-                  <div class="col-md-3">
-                      <!-- Datepicker -->
-                      <div id="datepicker_month"></div>
-                      <div>
-                          <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
-                              
-                              <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
-                                    @foreach($locations as $key => $location)
-                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
-                                    @endforeach    
-                                </select>
-                              
-                            </div>                                                    
+                                    <div style="margin-top: 15px;">
+                                        <div class="btn-group" style="margin-right:5px;">
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">Today</button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
+                                        </div>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">Day</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
+                                    </div>   
+                                </div>
+                                <div class="col-md-3">
+                                    <div id="event_school_div" name="event_school_div" class="selectdiv">
+                                        <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
+                                            @foreach($schools as $key => $this_school)
+                                                <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }} 
+                                                    value="{{ $this_school->id }}">{{ $this_school->school_name }}</option>
+                                            @endforeach    
+                                        </select>
+                                    
+                                    </div>  
+                                    <!-- Datepicker -->
+                                    <div id="datepicker_month"></div>
+                                    <div>
+                                        <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
+                                        
+                                            <div id="event_location_div" name="event_location_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                                    @foreach($locations as $key => $location)
+                                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
+                                                    @endforeach    
+                                                </select>
+                                            
+                                            </div>                                                    
 
 
-                              <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
-                                    @foreach($event_types as $key => $event_type)
-                                        <option value="{{ $key }}">{{ $event_type }}</option>
-                                    @endforeach
+                                            <div id="event_type_div" name="event_type_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
+                                                    @foreach($event_types as $key => $event_type)
+                                                        <option value="{{ $key }}">{{ $event_type }}</option>
+                                                    @endforeach
+                                            
+                                                </select>
+                                            </div>                                                    
+                                        
+                                            <div id="event_student_div" name="event_student_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
+                                                    @foreach($students as $key => $student)
+                                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        
+                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
+                                                    @foreach($teachers as $key => $teacher)
+                                                        <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                    
+                    
+                                            <div id="list-button" class="pull-right form-inline">
+                                                <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style="margin-top: 25px;">
                             
-                                </select>
-                              </div>                                                    
-                          
-                              <div id="event_student_div" name="event_student_div" class="selectdiv">
-                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
-                                    @foreach($students as $key => $student)
-                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
-                                    @endforeach
-                                </select>
-                              </div>
-                          
-                              <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
-                                    <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
-                                        @foreach($teachers as $key => $teacher)
-                                            <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
-                                        @endforeach
-                                    </select>
-                              </div>
-    
-    
-                              <div id="list-button" class="pull-right form-inline">
-                                  <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
-                              </div>
-                          </div> 
-                      </div>
-                  </div>
-              </div>
-
-
-              <div style="margin-top: 25px;">
-                  
-                <div id="agenda_list" width="350px" border="1" style="display:none;margin-top: auto;">
-                <!-- class="display row-border" -->
-                    <table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="table-responsive agenda_table_class tablesorter">
-                        <thead>
-                        <tr href="">
-                        <th width="8%"><label id="row_hdr_date">Date</label></th>
-                        <th width="10%">Heure de d`part</th>
-                        <th width="10%">Heure de fin</th>
-                        <th width="15%">Nombre d`tudiants</th>
-                        <th width="20%">Nom de l`tudiant (s)</th>
-                        <th width="17%">Cours</th>
-                        <th width="10%">Dur`e en minutes</th>
-                        <th width="10%">Professeur</th>
-                        </tr>
-                        </thead>
-                    <!--
-                    <tbody id="agenda_table_body" name="agenda_table_body">
-                    </tbody>                        
-                    -->                         
-                    </table>
+                                <div id="agenda_list" width="350px" border="1" style="display:none;margin-top: auto;">
+                                    <!-- class="display row-border" -->
+                                    <table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="table-responsive agenda_table_class tablesorter">
+                                        <thead>
+                                        <tr href="">
+                                        <th width="8%"><label id="row_hdr_date">Date</label></th>
+                                        <th width="10%">Heure de d`part</th>
+                                        <th width="10%">Heure de fin</th>
+                                        <th width="15%">Nombre d`tudiants</th>
+                                        <th width="20%">Nom de l`tudiant (s)</th>
+                                        <th width="17%">Cours</th>
+                                        <th width="10%">Dur`e en minutes</th>
+                                        <th width="10%">Professeur</th>
+                                        </tr>
+                                        </thead>
+                                    <!--
+                                    <tbody id="agenda_table_body" name="agenda_table_body">
+                                    </tbody>                        
+                                    -->                         
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
                 </div>
-              </div>
-            </form>
-          </section>
-        </div>
-      </div>
+            </div>
 		
 		
 		</form>
@@ -224,25 +235,25 @@ admin_main_style.css
 
 <!-- Modal on event click -->	
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      
-      <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
-        <div class="modal-dialog EventModalClass" id="EventModalWin">
-            <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
-                    <p style="font-size: 20px;"></p>
-                    <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
-                    <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
-                        <span id="event_btn_edit_text">View<span>
-                    </a>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        
+        <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+            <div class="modal-dialog EventModalClass" id="EventModalWin">
+                <div class="modal-content">
+                    <div class="modal-body text-center p-4">                    
+                        <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                        <p style="font-size: 20px;"></p>
+                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
+                        <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
+                            <span id="event_btn_edit_text">View<span>
+                        </a>
+                    </div>
                 </div>
             </div>
-	    </div>
-      </div>
+        </div>
+        </div>
     </div>
-  </div>
 </div>
 
 	<!-- End Tabs content -->
@@ -355,6 +366,7 @@ admin_main_style.css
 
     $(document).ready(function(){
         if (user_role == "student") {
+            document.getElementById('event_school').style.display="none";
 			document.getElementById('event_type').style.display="none";
 			document.getElementById('event_student_div').style.display="none";
 			document.getElementById('event_teacher').style.display="none";
@@ -365,11 +377,13 @@ admin_main_style.css
         loading=0;
         RerenderEvents();
         RenderCalendar();
+        PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
         PopulateLocationDropdown();
         PopulateStudentDropdown();
         PopulateTeacherDropdown();
         DisplayCalendarTitle();
+        document.getElementById("copy_school_id").value =getSchoolIDs();
         document.getElementById("copy_event_id").value =getEventIDs();
         document.getElementById("copy_student_id").value = getStudentIDs();
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
@@ -579,53 +593,113 @@ admin_main_style.css
     //     document.getElementById("event_teacher").disabled="disabled";
     // }
 
+    // populate school
+    function PopulateSchoolDropdown(){
+         
+        $('#event_school').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Schools',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected School ',
+            allSelectedText: 'All Schools',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('School changed triggered!');
+                    document.getElementById("event_school_id").value=getSchoolIDs();
+                    document.getElementById("event_school_all_flag").value='0';
+                    
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (options,checked) {
 
+                if (options){
+                    console.log('school onSelectAll triggered!'+options);
+                    document.getElementById("event_school_id").value='0';
+                    document.getElementById("event_school_all_flag").value='1';
+                }
+                else {
+                    console.log('school onDeSelectAll triggered!');
+                    document.getElementById("event_school_id").value='';
+                    document.getElementById("event_school_all_flag").value='0';
+                 
+                }
+                RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('school onDeSelectAll triggered!');
+                  document.getElementById("event_school_id").value='';
+                document.getElementById("event_school_all_flag").value='0';
+                //SetEventCookies();
+                RerenderEvents();
+            },
+            selectAllValue: 0
+        });
+        if (document.getElementById("event_school_id").value ==0) {
+            $('#event_school').multiselect('selectAll', false);   
+        }
+         
+        $('#event_school').multiselect('refresh');	
+                
+    } 
+
+    // populate event type
     function PopulateEventTypeDropdown(){
          
-         $('#event_type').multiselect({
-             includeSelectAllOption:true,
-             selectAllText: 'All Events',
-             maxHeight:true,
-             enableFiltering:false,
-             nSelectedText  : 'Selected Event type ',
-             allSelectedText: 'All Events',
-             enableCaseInsensitiveFiltering:false,
-             // enables full value filtering
-             enableFullValueFiltering:false,
-             filterPlaceholder: 'Search',
-             numberDisplayed: 3,
-             buttonWidth: '100%',
-             // possible options: 'text', 'value', 'both'
-             filterBehavior: 'text',
-             onChange: function(option, checked) {
-                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                     console.log('Event changed triggered!');
-                     document.getElementById("event_type_id").value=getEventIDs();
-                     document.getElementById("event_type_all_flag").value='0';
-                     //SetEventCookies();
-                     RerenderEvents();
-             },
-             onSelectAll: function (option,checked) {
-                     document.getElementById("event_type_id").value='0';
-                     document.getElementById("event_type_all_flag").value='1';
-                     //SetEventCookies();
-                     RerenderEvents();
-             },
-             onDeselectAll: function(option,checked) {
-                 console.log('Event onDeSelectAll triggered!');
-                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                     document.getElementById("event_type_id").value=getEventIDs();
-                     document.getElementById("event_type_all_flag").value='0';
-                     //SetEventCookies();
-                     RerenderEvents();
-                 },
-             selectAllValue: 0
-         });
- 
-         $('#event_type').multiselect('selectAll', false);   
-         $('#event_type').multiselect('refresh');	
+        $('#event_type').multiselect({
+            includeSelectAllOption:true,
+            selectAllText: 'All Events',
+            maxHeight:true,
+            enableFiltering:false,
+            nSelectedText  : 'Selected Event type ',
+            allSelectedText: 'All Events',
+            enableCaseInsensitiveFiltering:false,
+            // enables full value filtering
+            enableFullValueFiltering:false,
+            filterPlaceholder: 'Search',
+            numberDisplayed: 3,
+            buttonWidth: '100%',
+            // possible options: 'text', 'value', 'both'
+            filterBehavior: 'text',
+            onChange: function(option, checked) {
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    console.log('Event changed triggered!');
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onSelectAll: function (option,checked) {
+                    document.getElementById("event_type_id").value='0';
+                    document.getElementById("event_type_all_flag").value='1';
+                    //SetEventCookies();
+                    RerenderEvents();
+            },
+            onDeselectAll: function(option,checked) {
+                console.log('Event onDeSelectAll triggered!');
+                    //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
+                    document.getElementById("event_type_id").value=getEventIDs();
+                    document.getElementById("event_type_all_flag").value='0';
+                    //SetEventCookies();
+                    RerenderEvents();
+                },
+            selectAllValue: 0
+        });
+
+        $('#event_type').multiselect('selectAll', false);   
+        $('#event_type').multiselect('refresh');	
                  
-     }   // populate event type
+    }   
+    // populate location
     function PopulateLocationDropdown(){
           
         $('#event_location').multiselect({
@@ -678,7 +752,8 @@ admin_main_style.css
         $('#event_location').multiselect('selectAll', false);   
         $('#event_location').multiselect('refresh');	
                   
-    }   // populate event type
+    }   
+    // populate teacher
     function PopulateTeacherDropdown(){
           
         $('#event_teacher').multiselect({
@@ -697,31 +772,31 @@ admin_main_style.css
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
             onChange: function(option, checked) {
-                console.log('onChange location triggered!');
-                document.getElementById("event_location_id").value=getLocationIDs();
-                document.getElementById("event_location_all_flag").value='0';
+                console.log('onChange teacher triggered!');
+                document.getElementById("event_teacher_id").value=getTeacherIDs();
+                document.getElementById("event_teacher_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
-                    console.log('location onSelectAll triggered!'+options);
-                    document.getElementById("event_location_id").value='0';
-                    document.getElementById("event_location_all_flag").value='1';
+                    console.log('teacher onSelectAll triggered!'+options);
+                    document.getElementById("event_teacher_id").value='0';
+                    document.getElementById("event_teacher_all_flag").value='1';
                 }
                 else {
-                    console.log('location onDeSelectAll triggered!');
-                    document.getElementById("event_location_id").value='';
-                    document.getElementById("event_location_all_flag").value='0';
+                    console.log('teacher onDeSelectAll triggered!');
+                    document.getElementById("event_teacher_id").value='';
+                    document.getElementById("event_teacher_all_flag").value='0';
                  
                 }
                 //SetEventCookies();
                 RerenderEvents();
             },
             onDeselectAll: function() {
-                console.log('NOT WORKING location onDeSelectAll triggered!');
-                document.getElementById("event_location_id").value='';
-                document.getElementById("event_location_all_flag").value='0';
+                console.log('NOT WORKING teacher onDeSelectAll triggered!');
+                document.getElementById("event_teacher_id").value='';
+                document.getElementById("event_teacher_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
             },
@@ -731,12 +806,13 @@ admin_main_style.css
         $('#event_teacher').multiselect('selectAll', false);   
         $('#event_teacher').multiselect('refresh');	
                    
-    }   // populate event type
+    }   
+    // populate student
     function PopulateStudentDropdown(){
           
         $('#event_student').multiselect({
             includeSelectAllOption:true,
-            selectAllText: 'All Location',
+            selectAllText: 'All Students',
             maxHeight:true,
             enableFiltering:false,
             nSelectedText  : 'Selected Student',
@@ -750,31 +826,31 @@ admin_main_style.css
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
             onChange: function(option, checked) {
-                console.log('onChange location triggered!');
-                document.getElementById("event_location_id").value=getLocationIDs();
-                document.getElementById("event_location_all_flag").value='0';
+                console.log('onChange student triggered!');
+                document.getElementById("event_student_id").value=getStudentIDs();
+                document.getElementById("event_student_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
-                     console.log('location onSelectAll triggered!'+options);
-                     document.getElementById("event_location_id").value='0';
-                     document.getElementById("event_location_all_flag").value='1';
+                     console.log('student onSelectAll triggered!'+options);
+                     document.getElementById("event_student_id").value='0';
+                     document.getElementById("event_student_all_flag").value='1';
                 }
                 else {
-                    console.log('location onDeSelectAll triggered!');
-                    document.getElementById("event_location_id").value='';
-                    document.getElementById("event_location_all_flag").value='0';
+                    console.log('student onDeSelectAll triggered!');
+                    document.getElementById("event_student_id").value='';
+                    document.getElementById("event_student_all_flag").value='0';
                  
                 }
                 //SetEventCookies();
                 RerenderEvents();
             },
             onDeselectAll: function() {
-                console.log('NOT WORKING location onDeSelectAll triggered!');
-                document.getElementById("event_location_id").value='';
-                document.getElementById("event_location_all_flag").value='0';
+                console.log('NOT WORKING student onDeSelectAll triggered!');
+                document.getElementById("event_student_id").value='';
+                document.getElementById("event_student_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
             },
@@ -788,6 +864,7 @@ admin_main_style.css
 
     function RerenderEvents(){
 	    if (loading == 0){ 
+            
             $("#agenda_table tr:gt(0)").remove();
             $('#calendar').fullCalendar('rerenderEvents');								
         }
@@ -817,10 +894,9 @@ admin_main_style.css
         document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
         document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
 		
-		document.getElementById("copy_event_id").value =getEventIDs();
-        
+		document.getElementById("copy_school_id").value =getSchoolIDs();
+        document.getElementById("copy_event_id").value =getEventIDs();
 		document.getElementById("copy_student_id").value = getStudentIDs();
-		
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 		
         return false;
@@ -839,18 +915,19 @@ admin_main_style.css
         
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
+        var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
 
-    function delete_multiple_events(p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
-        var data='type=delete_multiple_events'+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+    function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
+        var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -892,12 +969,14 @@ admin_main_style.css
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
         var school_id=document.getElementById('school_id').value;
+        var p_event_school_id=document.getElementById("event_school_id").value;
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $.ajax({
-            url: BASE_URL + '/'+school_id+'/get_event',
+            //url: BASE_URL + '/'+school_id+'/get_event',
+            url: BASE_URL + '/get_event',
             type: 'POST', 
-            data: 'type=fetch&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            data: 'type=fetch&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
             // async: false,
             success: function(s){
                 
@@ -906,6 +985,7 @@ admin_main_style.css
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText) 
+                console.log(ts.responseText);
             }
         });
         
@@ -992,7 +1072,7 @@ admin_main_style.css
 
     
     function RenderCalendar(){    
-        //console.log('RenderCalendar: defview'+defview);
+        console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
 
@@ -1039,82 +1119,7 @@ admin_main_style.css
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
-            loading: function(bool) {
-				$('#loading').toggle(bool)
-			},
-
-            // eventRender: function(eventObj, $el) {
-            //     $el.popover({
-            //         title: eventObj.title,
-            //         content: eventObj.description,
-            //         trigger: 'hover',
-            //         placement: 'top',
-            //         container: 'body'
-            //     });
-            // },
             events: JSON.parse(json_events),
-
-            // events: [
-            //     {
-            //         title: 'Meeting',
-            //         description: 'description for Meeting',
-            //         start: '2022-04-12T14:30:00'
-            //     },
-            //     {
-            //         title: 'Birthday Party',
-            //         description: 'description for Birthday Party',
-            //         start: '2022-04-13T07:00:00',
-            //         end: '2022-04-13T09:00:00'
-            //     }
-            // ]
-        // });
-
-
-		// $('#calendar1').fullCalendar({
-		// 	timeFormat: 'HH(:mm)',   
-        //     axisFormat: 'HH(:mm)',            
-		// 	slotDuration: '00:30:00',
-		// 	slotLabelFormat: 'H:mm',
-        //     //events: json_events,	  
-		// 	events: JSON.parse(json_events),
-		// 	utc: false,            
-        //     defaultView: defview,
-            
-        //     buttonText: {
-        //         prev: '<',
-        //         next: '>'
-        //     },       
-		// 	header: false,
-            
-        //     views: {
-        //         agenda: {
-        //             columnFormat: 'ddd MMM DD'
-        //         },
-        //         week: {
-        //             columnFormat: 'ddd MMM DD'
-        //         },
-        //         month: {
-        //             columnFormat: 'ddd'
-        //         },
-        //         day: {
-        //             columnFormat: 'ddd DD MMM'
-        //         }
-        //     },
-            
-        //     handleWindowResize: true,
-        //     eventTextColor: '#000000',
-        //     firstDay: '1',      //monday
-        //     height: 'parent', // calendar content height excluding header
-        //     contentHeight: v_calc_height, // calendar content height excluding header
-            
-        //     timezone: currentTimezone, 
-        //     locale: currentLangCode,
-		// 	buttonIcons: true, // show the prev/next text
-		// 	allDayDefault: true,
-		// 	defaultTimedEventDuration: '00:30:00',
-		// 	forceEventDuration: true,
-		// 	nextDayThreshold: '00:00',
-        //     nowIndicator: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
 			},
@@ -1124,6 +1129,7 @@ admin_main_style.css
         
                 var flag=true;
                 var event_found=1;
+                var school_found=1;
                 var student_found=1;
                 var teacher_found=1;
                 var search_found=1;
@@ -1210,7 +1216,7 @@ admin_main_style.css
                     // console.log('viewname----------------')
                 }		  
                 /* END listmonth view - display off past dated events */
-            
+                
                 var loc_str=document.getElementById("event_location_id").value;
                 if (loc_str == '') {
                     location_found=0;
@@ -1239,11 +1245,51 @@ admin_main_style.css
                 }
 
 
+                var event_school=document.getElementById("event_school_id").value;
+                
+                if (event_school == '') {
+                    school_found=0;
+                }
+                else {
+                    if (event_school.substring(0, 1) !='0') {
+                        school_found=0;
+                        $.each($("#event_school option:selected"), function(){ 
+                            var id=$(this).val();
+                            var event_school_id=event.event_school_id;
+                            //console.log(id);	
+                            if (event.event_school_id == null){
+                                school_found=0;
+                            }
+                            else {
+                                // if (event.event_school_id.indexOf(id) >= 0){
+                                //     school_found=1;
+                                //     //break;
+                                // }  
+                                try {
+                                    //console.log();
+                                    if (event.event_school_id == id){
+                                        school_found=1;
+                                        //break;
+                                    }
+                                    // if (event_school_id >= 0){
+                                    //     school_found=1;
+                                    // }
+                                }
+                                catch (e){
+                                    school_found=0;
+                                }
+                            }
+                        });		
+                    }	
+                    	
+                }
+
+
 
             
                 /* search START */ 
                 var search_text = $('#search_text').val();
-                if ((event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
+                if ((school_found == 1) && (event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
                     if (search_text.length > 2){
                         search_found=0;
                         //if ((event.tooltip.toLowerCase().indexOf(search_text) >= 0) || (event.tooltip.toLowerCase().indexOf(search_text) >= 0)) {
@@ -1261,7 +1307,8 @@ admin_main_style.css
                 /* search END */
                 //console.log('event_id='+event.id+';event_found='+event_found+';student_found='+student_found+';teacher_found='+teacher_found+';date_found='+date_found+';location_found='+location_found+';search_found='+search_found);
 
-                if ((event_found == 1) && 
+                if ((school_found == 1) && 
+                    (event_found == 1) && 
                     (student_found == 1) && 
                     (teacher_found == 1) && 
                     (search_found == 1) && 
@@ -1272,9 +1319,9 @@ admin_main_style.css
                 } else {
                     flag = false;
                 }
-                console.log('lllll----------------')
-                console.log(location_found)
-                console.log('lllll----------------')
+                // console.log('lllll----------------')
+                // console.log(location_found)
+                // console.log('lllll----------------')
                 
 
                 if (flag == true){
@@ -1353,8 +1400,8 @@ admin_main_style.css
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                            $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
-                        }
+                        $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+                    }
                     else {
                         $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
                     }
@@ -1517,6 +1564,15 @@ admin_main_style.css
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
 
+    function getSchoolIDs(){
+		var selected_ids = [];
+        $.each($("#event_school option:selected"), function(){         
+            selected_ids.push($(this).val());
+        });		
+		//console.log('selected='+selected_ids.join("|"));
+		return selected_ids.join("|");
+	}
+
     function getEventIDs(){
 		var selected_ids = [];
         $.each($("#event_type option:selected"), function(){         
@@ -1598,6 +1654,7 @@ admin_main_style.css
         var school_id=document.getElementById('school_id').value;
         var source_start_date=document.getElementById("copy_date_from").value,
         source_end_date=document.getElementById("copy_date_to").value,
+        event_school=document.getElementById("copy_school_id").value,
         event_type=document.getElementById("copy_event_id").value,
         student_id=document.getElementById("copy_student_id").value,
         teacher_id=document.getElementById("copy_teacher_id").value,
@@ -1605,13 +1662,13 @@ admin_main_style.css
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
         //console.log(data);
         //return false;
             e.preventDefault();
 			$.ajax({
                 type: "POST",
-                url: BASE_URL + '/'+school_id+'/copy_paste_events',
+                url: BASE_URL + '/copy_paste_events',
                 //url: "copy_paste_events.php",
                 data: data,
 				dataType: "JSON",
@@ -1623,6 +1680,7 @@ admin_main_style.css
 					{
                         document.getElementById("copy_date_from").value = '';
                         document.getElementById("copy_date_to").value = '';
+                        document.getElementById("copy_school_id").value = '';
                         document.getElementById("copy_event_id").value = '';
                         document.getElementById("copy_student_id").value ='';
                         document.getElementById("copy_teacher_id").value = '';					   

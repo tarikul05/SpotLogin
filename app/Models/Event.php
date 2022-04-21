@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 use App\Models\Teacher;
+use App\Models\School;
 use App\Models\EventCategory;
 
 class Event extends BaseModel
@@ -69,6 +70,7 @@ class Event extends BaseModel
      * @var array
      */
     protected $arrayFilterable = [
+        'school_id',
         'event_type',
         'teacher_id',
         'student_id'
@@ -81,6 +83,14 @@ class Event extends BaseModel
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    /**
+     * Get the teacher for event.
+     */
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 
      /**
@@ -121,6 +131,34 @@ class Event extends BaseModel
             
             if (!$fromFilterDate) {
                 $fromFilterDate = now();
+            }
+        }
+
+
+        $query->where('deleted_at', null);
+        foreach ($params as $key => $value) { 
+            if (!empty($value)) {
+                
+                if (in_array($key, $this->arrayFilterable)) { 
+                    if (isset($value) && strpos($value, '|') !== false){
+                        $value = explode('|', $value);
+                    }
+                    if ($key=='teacher_id') {
+                        //dd($value);
+                    }
+                    if (is_array($value)) {
+                        $query->whereIn($key, $value);
+                       // unset($params['authority:in']);
+                    }  else { 
+                        $query->where($key, '=', $value);
+                    } 
+                    
+                    // $query->where($key, 'LIKE', "%{$value}%");
+                } 
+                else {
+                    $query->where($key, '=', $value);
+                }
+                
             }
         }
 

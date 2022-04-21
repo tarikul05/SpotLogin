@@ -8,6 +8,8 @@ use App\Models\Location;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Event;
+use App\Models\EventDetails;
+
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 class AgendaController extends Controller
@@ -32,7 +34,7 @@ class AgendaController extends Controller
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
+            $schoolId = 0;
         }
         $user_role = 'superadmin';
         if ($user->person_type == 'App\Models\Student') {
@@ -46,48 +48,18 @@ class AgendaController extends Controller
         $locations = Location::orderBy('id')->get();
         $students = Student::orderBy('id')->get();
         $teachers = Teacher::orderBy('id')->get();
+        $schools = School::orderBy('id')->get();
 
         $event_types = config('global.event_type'); 
 
-        $eventData = Event::active()->where('school_id', $schoolId)->get();
+        //$eventData = Event::active()->where('school_id', $schoolId)->get();
+        $eventData = Event::active()->get();
         $data = $request->all();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         if (isset($data['start_date'])) {
             $query = $eventData->filter($data);
             $eventData = $query->get();
             
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //dd($eventData);
         $events = array();   
@@ -114,6 +86,8 @@ class AgendaController extends Controller
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_type_name'] = ($event_types[$e['event_type']]);
+            $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
+            $e['event_school_name'] = $fetch->school['school_name'];
             $e['event_category'] ='';
             $e['event_category_name'] ='';
             $e['cours_name'] = '';
@@ -141,7 +115,8 @@ class AgendaController extends Controller
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            // $e['student_id_list'] = $fetch['student_id_list'];
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            $e['student_id_list'] = $eventDetailsStudentId;
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
             
@@ -211,7 +186,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
-        return view('pages.agenda.index')->with(compact('school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
 
@@ -282,18 +257,19 @@ class AgendaController extends Controller
     public function copyPasteEvent(Request $request,$schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($schoolId);
-        if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
-        }
+        $data = $request->all();
+        // $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        // $school = School::active()->find($schoolId);
+        // if (empty($school)) {
+        //     return redirect()->route('schools')->with('error', __('School is not selected'));
+        // }
 
         $result = array(
             "status"     => 1,
             'message' => __('failed to send email'),
         );
         try {
-            $data = $request->all();
+            
 
 
             // $p_app_id=$_SESSION['global_app_id'];
@@ -302,7 +278,7 @@ class AgendaController extends Controller
 
 
             
-            $data['school_id'] = $schoolId;
+            $data['school_id'] = trim($data['school_id']);
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
             $data['student_id']= trim($data['student_id']);
@@ -378,7 +354,7 @@ class AgendaController extends Controller
                 //exit();
                 $data = [
                     'title' => $fetch->title,
-                    'school_id' => $schoolId,
+                    'school_id' => $fetch->school_id,
                     'event_type' => $fetch->event_type,
                     'date_start' => $date_start,
                     'date_end' => $date_end,
@@ -394,6 +370,21 @@ class AgendaController extends Controller
                     'event_price' => $fetch->event_price
                 ];
                 $event = Event::create($data);
+
+                $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
+                
+
+                foreach($eventDetailsStudentId as $std){
+                    $dataDetails = [
+                        'event_id'   => $event->id,
+                        'teacher_id' => $fetch->teacher_id,
+                        'student_id' => $std['student_id'],
+                        'buy_price' => $fetch->price_amount_buy,
+                        'sell_price' => $fetch->price_amount_sell,
+                    ];
+                    $eventDetails = EventDetails::create($dataDetails);
+                }
+
 
             }
             //dd($eventData);
@@ -441,12 +432,14 @@ class AgendaController extends Controller
      */
     public function getEvent(Request $request,$schoolId = null)
     {
+        $data = $request->all();
+        
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($schoolId);
-        if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
-        }
+        // $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        // $school = School::active()->find($schoolId);
+        // if (empty($school)) {
+        //     return redirect()->route('schools')->with('error', __('School is not selected'));
+        // }
         $event_types = config('global.event_type'); 
         $user_role = 'superadmin';
         if ($user->person_type == 'App\Models\Student') {
@@ -455,13 +448,16 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        $eventData = Event::active()->where('school_id', $schoolId)->get();
-        $data = $request->all();
-        $data['school_id'] = $schoolId;
+        //$eventData = Event::active()->where('school_id', $schoolId)->get();
+        
+        //$data['school_id'] = $schoolId;
+        //dd($data);
 
         $query = new Event;
         $eventData = $query->filter($data);
         $eventData = $query->get();
+
+       
         
         $events = array();   
         foreach ($eventData as $key => $fetch) {
@@ -487,6 +483,8 @@ class AgendaController extends Controller
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_type_name'] = ($event_types[$e['event_type']]);
+            $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
+            $e['event_school_name'] = $fetch->school['school_name'];
             $e['event_category'] ='';
             $e['event_category_name'] ='';
             $e['cours_name'] = '';
@@ -514,7 +512,8 @@ class AgendaController extends Controller
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            // $e['student_id_list'] = $fetch['student_id_list'];
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            $e['student_id_list'] = $eventDetailsStudentId;
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
             
@@ -582,9 +581,9 @@ class AgendaController extends Controller
 
             array_push($events, $e);
         }
-        
+        //dd($data);
         $events =json_encode($events);
-        //dd($events);
+        
         return response()->json($events);
         
     } 
@@ -607,9 +606,10 @@ class AgendaController extends Controller
             $p_from_date= trim($data['p_from_date']);
             $p_to_date= trim($data['p_to_date']);
         
-            $p_event_type_id= trim($data['p_event_type_id']);
-            $p_teacher_id= trim($data['p_teacher_id']);
-            $p_student_id= trim($data['p_student_id']);
+            $data['school_id']= trim($data['p_event_school_id']);
+            $data['event_type']= trim($data['p_event_type_id']);
+            $data['teacher_id']= trim($data['p_teacher_id']);
+            $data['student_id']= trim($data['p_student_id']);
             $p_user_id=Auth::user()->id;
 
             
