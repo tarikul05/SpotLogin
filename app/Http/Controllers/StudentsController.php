@@ -89,7 +89,9 @@ class StudentsController extends Controller
             $searchEmail = $request->email;
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             $exStudent = !empty($exUser) ? $exUser->personable : null;
+            // print_r($searchEmail); exit;
         }
+
         return view('pages.students.add')->with(compact('countries','genders','exStudent','searchEmail','schoolId','levels'));
     }
 
@@ -104,19 +106,21 @@ class StudentsController extends Controller
         $user = Auth::user();
         $alldata = $request->all();
         
-        // if ($user->isSuperAdmin()) {
-        //     $school = School::active()->find($schoolId);
-        //     if (empty($school)) {
-        //         return [
-        //             'status' => 1,
-        //             'message' =>  __('School not selected')
-        //         ];
-        //     }
-        //     $schoolId = $school->id; 
-        // }else {
-        //     $schoolId = $user->selectedSchoolId();
-        // }
-        $schoolId = $alldata['school_id'];
+        if ($user->isSuperAdmin()) {
+            $schoolId = $alldata['school_id'];
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id; 
+        }else {
+            $schoolId = $user->selectedSchoolId();
+        }
+        // print_r($schoolId); exit;
+        // $schoolId = $alldata['school_id'];
         DB::beginTransaction(); 
         try{
 
@@ -188,10 +192,16 @@ class StudentsController extends Controller
                         'billing_country_code' => $alldata['billing_country_code'],
                         'billing_province_id' => $alldata['billing_province_id'],
                         'phone' => $alldata['phone'],
-                        'phone2' => $alldata['phone2'],
+                        'father_phone' => $alldata['father_phone'],
+                        'father_email' => $alldata['father_email'],
+                        'father_notify' => $alldata['father_notify'],
+                        'mother_phone' => $alldata['mother_phone'],
+                        'mother_email' => $alldata['mother_email'],
+                        'mother_notify' => $alldata['mother_notify'],
                         'mobile' => $alldata['mobile'],
+                        'email' => $alldata['email'],
                         'email2' => $alldata['email2'],
-                        'student_email' => !empty($alldata['student_email']) ? $alldata['student_email'] : $alldata['email'],
+                        'student_notify' => $alldata['student_notify'],
                         
                     ];
                     

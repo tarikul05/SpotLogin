@@ -33,7 +33,7 @@
 				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
 					@csrf
 					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Teachers Find') }} :</label>
+						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Teachers Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i> : </label>
 						<div class="col-sm-5">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -363,6 +363,7 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

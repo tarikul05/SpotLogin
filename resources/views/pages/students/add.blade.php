@@ -29,10 +29,10 @@
 		<!-- Tabs navs -->
 
 			<!-- user email check start -->
-			<!-- <form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
+			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
 				<div class="form-group row">
-					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} :</label>
+					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i> :</label>
 					<div class="col-sm-5">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -43,7 +43,7 @@
 						<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 					</div>
 				</div>
-			</form> -->
+			</form>
 			<!-- // user email check end -->
 	{{-- @if($searchEmail) --}}
 		<nav>
@@ -404,7 +404,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone" name="phone" value="{{old('phone')}}" type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="father_phone" name="father_phone" value="{{old('father_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -412,7 +412,7 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="phone2" name="phone2" value="{{old('phone2')}}" type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mother_phone" name="mother_phone" value="{{old('mother_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -430,24 +430,24 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="father_email" name="father_email" value="{{old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" name="father_notify"></span> <input class="form-control" id="father_email" name="father_email" value="{{old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" id="mother_email">{{__("Mother’s email") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="mother_email">{{__("Mother’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> <input class="form-control" id="email2" name="email2" value="{{old('email2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" name="mother_notify"></span> <input class="form-control" id="mother_email" name="mother_email" value="{{old('mother_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="student_email" id="student_email">{{__("Student's email") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="email2" >{{__("Student's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> 
-										<input class="form-control" id="student_email" name="student_email" value="{{old('student_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" name="student_notify"></span> 
+										<input class="form-control" id="email2" name="email2" value="{{old('email2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
