@@ -89,10 +89,15 @@ class StudentsController extends Controller
             $searchEmail = $request->email;
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             $exStudent = !empty($exUser) ? $exUser->personable : null;
-            // print_r($searchEmail); exit;
+            $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
+            if ($alreadyFlag) {
+                return back()->with('warning', __('This user already have in your school with "'.$searchEmail.'" email'));
+            }
+            // echo "<pre>";
+            // print_r($exStudent); exit;
         }
 
-        return view('pages.students.add')->with(compact('countries','genders','exStudent','searchEmail','schoolId','levels'));
+        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels'));
     }
 
      /**
@@ -170,7 +175,7 @@ class StudentsController extends Controller
                     
                     
 
-                }else{
+                }else {
                 
                     $studentData = [
                         'is_active' => $alldata['is_active'],
@@ -191,17 +196,17 @@ class StudentsController extends Controller
                         'billing_place' => $alldata['billing_place'],
                         'billing_country_code' => $alldata['billing_country_code'],
                         'billing_province_id' => $alldata['billing_province_id'],
-                        'phone' => $alldata['phone'],
+                        // 'phone' => $alldata['phone'],
                         'father_phone' => $alldata['father_phone'],
                         'father_email' => $alldata['father_email'],
-                        'father_notify' => $alldata['father_notify'],
+                        'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0 ,
                         'mother_phone' => $alldata['mother_phone'],
                         'mother_email' => $alldata['mother_email'],
-                        'mother_notify' => $alldata['mother_notify'],
+                        'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0 ,
                         'mobile' => $alldata['mobile'],
                         'email' => $alldata['email'],
                         'email2' => $alldata['email2'],
-                        'student_notify' => $alldata['student_notify'],
+                        'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
                         
                     ];
                     
@@ -231,14 +236,14 @@ class StudentsController extends Controller
                             }
                         }
                     }
-                    
+                  // print_r($studentData); exit;  
                     $student = Student::create($studentData);
                     $student->save();
                     
                     $schoolStudent = [
                         'student_id' => $student->id,  
                         'school_id' => $schoolId,
-                        'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                        'has_user_account' => isset($alldata['has_user_account']) && !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                         'nickname' => $alldata['nickname'],
                         'email' => $alldata['email'],
                         'billing_method' => $alldata['billing_method'],
@@ -352,13 +357,20 @@ class StudentsController extends Controller
                     'billing_place' => $alldata['billing_place'],
                     'billing_country_code' => $alldata['billing_country_code'],
                     'billing_province_id' => $alldata['billing_province_id'],
-                    'phone' => $alldata['phone'],
-                    'phone2' => $alldata['phone2'],
+                    'father_phone' => $alldata['father_phone'],
+                    'father_email' => $alldata['father_email'],
+                    'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0 ,
+                    'mother_phone' => $alldata['mother_phone'],
+                    'mother_email' => $alldata['mother_email'],
+                    'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0 ,
                     'mobile' => $alldata['mobile'],
+                    'email' => $alldata['email'],
                     'email2' => $alldata['email2'],
-                    'student_email' => $alldata['student_email']
+                    'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
                 ];
-                
+                // echo "<pre>";
+                // print_r($alldata['mother_notify']);
+                // print_r($studentData); exit;
                 if($request->file('profile_image_file'))
                 {
                   $image = $request->file('profile_image_file');
