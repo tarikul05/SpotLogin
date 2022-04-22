@@ -286,7 +286,7 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
-	
+
 	var start_time = new Date("{{$lessonData->date_start}}").toLocaleTimeString()
 	var end_time = new Date("{{$lessonData->date_end}}").toLocaleTimeString()
 	$('.timepicker1').timepicker({
@@ -319,20 +319,6 @@ $( document ).ready(function() {
 		}
 	});
 
-	$('.timepicker').timepicker({
-		timeFormat: 'HH:mm',
-		interval: 15,
-		minTime: '0',
-		maxTime: '23:59',
-		defaultTime: '11',
-		startTime: '00:00',
-		dynamic: false,
-		dropdown: true,
-		scrollbar: true,
-		change:function(time){
-			CalcDuration();
-		}
-	});
 	
 	function CalcDuration(){
 		var el_start = $('#start_time'),
