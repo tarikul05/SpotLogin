@@ -15,6 +15,7 @@ use App\Models\SchoolStudent;
 use App\Models\EventCategory;
 use App\Models\Location;
 use App\Models\LessonPrice;
+use App\Models\Currency;
 use DB;
 
 class LessonsController extends Controller
@@ -48,7 +49,10 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.add_event')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice'));
+
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
+
+        return view('pages.calendar.add_event')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
     }
 
      /**
@@ -135,8 +139,10 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
+
         if (!empty($eventData)){
-            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
@@ -248,7 +254,9 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.add_lesson')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice'));
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
+
+        return view('pages.calendar.add_lesson')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
     }
 
      /**
@@ -344,8 +352,9 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
         if (!empty($lessonData)){
-            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice'));
+            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
