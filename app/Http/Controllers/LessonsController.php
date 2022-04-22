@@ -72,35 +72,35 @@ class LessonsController extends Controller
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
 
-                $studentOffData = $request->all();
-                $start_date = str_replace('/', '-', $studentOffData['start_date']).' '.$studentOffData['start_time'];
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' '.$studentOffData['end_time'];
+                $eventData = $request->all();
+                $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
+                $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
 
                 $data = [
-                    'title' => $studentOffData['title'],
+                    'title' => $eventData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 100,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
-                    'price_currency' => $studentOffData['sprice_currency'],
-                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
-                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
-                    'extra_charges' => $studentOffData['extra_charges'],
-                    'fullday_flag' => !empty($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
-                    'description' => $studentOffData['description'],
-                    'location_id' => $studentOffData['location'],
-                    'teacher_id' => $studentOffData['teacher_select'],
+                    'price_currency' => $eventData['sprice_currency'],
+                    'price_amount_buy' => $eventData['sprice_amount_buy'],
+                    'price_amount_sell' => $eventData['sprice_amount_sell'],
+                    'extra_charges' => $eventData['extra_charges'],
+                    'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
+                    'description' => $eventData['description'],
+                    'location_id' => $eventData['location'],
+                    'teacher_id' => $eventData['teacher_select'],
                 ];
 
                 $event = Event::create($data);
-                foreach($studentOffData['student'] as $std){
+                foreach($eventData['student'] as $std){
                     $dataDetails = [
                         'event_id'   => $event->id,
-                        'teacher_id' => $studentOffData['teacher_select'],
+                        'teacher_id' => $eventData['teacher_select'],
                         'student_id' => $std,
-                        'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell'],
-                        'price_currency' => $studentOffData['sprice_currency']
+                        'buy_price' => $eventData['sprice_amount_buy'],
+                        'sell_price' => $eventData['sprice_amount_sell'],
+                        'price_currency' => $eventData['sprice_currency']
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
@@ -168,36 +168,36 @@ class LessonsController extends Controller
                 }
 
                 $eventId = $request->route('event'); 
-                $studentOffData = $request->all();
-                $start_date = str_replace('/', '-', $studentOffData['start_date']).' '.$studentOffData['start_time'];
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' '.$studentOffData['end_time'];
+                $eventData = $request->all();
+                $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
+                $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
 
                 $data = [
-                    'title' => $studentOffData['title'],
+                    'title' => $eventData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 100,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
-                    'price_currency' => !empty($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null,
-                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
-                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
-                    'extra_charges' => $studentOffData['extra_charges'],
-                    'fullday_flag' => !empty($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
-                    'description' => $studentOffData['description'],
-                    'location_id' => $studentOffData['location'],
-                    'teacher_id' => $studentOffData['teacher_select'],
+                    'price_currency' => !empty($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
+                    'price_amount_buy' => $eventData['sprice_amount_buy'],
+                    'price_amount_sell' => $eventData['sprice_amount_sell'],
+                    'extra_charges' => $eventData['extra_charges'],
+                    'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
+                    'description' => $eventData['description'],
+                    'location_id' => $eventData['location'],
+                    'teacher_id' => $eventData['teacher_select'],
                 ];
 
                 $event = Event::where('id', $eventId)->update($data);
 
-                foreach($studentOffData['student'] as $std){
+                foreach($eventData['student'] as $std){
                     $dataDetails = [
                         'event_id'   => $eventId,
-                        'teacher_id' => $studentOffData['teacher_select'],
+                        'teacher_id' => $eventData['teacher_select'],
                         'student_id' => $std,
-                        'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell'],
-                        'price_currency' => !empty($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null,
+                        'buy_price' => $eventData['sprice_amount_buy'],
+                        'sell_price' => $eventData['sprice_amount_sell'],
+                        'price_currency' => !empty($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                     ];
                     $eventDetails = EventDetails::where('event_id', $eventId)->update($dataDetails);
                 }
@@ -280,40 +280,40 @@ class LessonsController extends Controller
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
 
-                $studentOffData = $request->all();
-                $start_date = str_replace('/', '-', $studentOffData['start_date']).' '.$studentOffData['start_time'];
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' '.$studentOffData['end_time'];
-                $stu_num = explode("_", $studentOffData['sevent_price']);
+                $lessonData = $request->all();
+                $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
+                $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
+                $stu_num = explode("_", $lessonData['sevent_price']);
 
 
                 $data = [
-                    'title' => $studentOffData['title'],
+                    'title' => $lessonData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 10,
-                    'event_category' => $studentOffData['category_select'],
-                    'teacher_id' => $studentOffData['teacher_select'],
+                    'event_category' => $lessonData['category_select'],
+                    'teacher_id' => $lessonData['teacher_select'],
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
-                    'duration_minutes' => $studentOffData['duration'],
-                    'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null,
-                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
-                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'duration_minutes' => $lessonData['duration'],
+                    'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
+                    'price_amount_buy' => $lessonData['sprice_amount_buy'],
+                    'price_amount_sell' => $lessonData['sprice_amount_sell'],
+                    'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
-                    'description' => $studentOffData['description'],
-                    'location_id' => $studentOffData['location']
+                    'description' => $lessonData['description'],
+                    'location_id' => $lessonData['location']
                 ];
 
                 $event = Event::create($data);
                 
-                foreach($studentOffData['student'] as $std){
+                foreach($lessonData['student'] as $std){
                     $dataDetails = [
                         'event_id'   => $event->id,
-                        'teacher_id' => $studentOffData['teacher_select'],
+                        'teacher_id' => $lessonData['teacher_select'],
                         'student_id' => $std,
-                        'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell'],
-                        'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null
+                        'buy_price' => $lessonData['sprice_amount_buy'],
+                        'sell_price' => $lessonData['sprice_amount_sell'],
+                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
@@ -382,39 +382,39 @@ class LessonsController extends Controller
                 }
 
                 $lessonlId = $request->route('lesson');
-                $studentOffData = $request->all();
-                $start_date = str_replace('/', '-', $studentOffData['start_date']).' '.$studentOffData['start_time'];
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' '.$studentOffData['end_time'];
-                $stu_num = explode("_", $studentOffData['sevent_price']);
+                $lessonData = $request->all();
+                $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
+                $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
+                $stu_num = explode("_", $lessonData['sevent_price']);
 
                 $data = [
-                    'title' => $studentOffData['title'],
+                    'title' => $lessonData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 10,
-                    'event_category' => $studentOffData['category_select'],
-                    'teacher_id' => $studentOffData['teacher_select'],
+                    'event_category' => $lessonData['category_select'],
+                    'teacher_id' => $lessonData['teacher_select'],
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
-                    'duration_minutes' => $studentOffData['duration'],
-                    'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null,
-                    'price_amount_buy' => $studentOffData['sprice_amount_buy'],
-                    'price_amount_sell' => $studentOffData['sprice_amount_sell'],
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'duration_minutes' => $lessonData['duration'],
+                    'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
+                    'price_amount_buy' => $lessonData['sprice_amount_buy'],
+                    'price_amount_sell' => $lessonData['sprice_amount_sell'],
+                    'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
-                    'description' => $studentOffData['description'],
-                    'location_id' => $studentOffData['location']
+                    'description' => $lessonData['description'],
+                    'location_id' => $lessonData['location']
                 ];
 
                 $event = Event::where('id', $lessonlId)->update($data);
 
-                foreach($studentOffData['student'] as $std){
+                foreach($lessonData['student'] as $std){
                     $dataDetails = [
                         'event_id'   => $lessonlId,
-                        'teacher_id' => $studentOffData['teacher_select'],
+                        'teacher_id' => $lessonData['teacher_select'],
                         'student_id' => $std,
-                        'buy_price' => $studentOffData['sprice_amount_buy'],
-                        'sell_price' => $studentOffData['sprice_amount_sell'],
-                        'price_currency' => isset($studentOffData['sprice_currency']) ? $studentOffData['sprice_currency'] : null
+                        'buy_price' => $lessonData['sprice_amount_buy'],
+                        'sell_price' => $lessonData['sprice_amount_sell'],
+                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
                     ];
                     $eventDetails = EventDetails::where('event_id', $lessonlId)->update($dataDetails);
                 }
