@@ -78,7 +78,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
-											<select class="form-control" id="student" name="student[]" multiple="multiple">
+											<select class="form-control" id="student" name="student[]" multiple="multiple" required>
 												@foreach($students as $key => $student)
 													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
 												@endforeach
@@ -132,7 +132,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="has_user_account" type="checkbox" value="1" {{ !empty($eventData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="all_day" name="fullday_flag" type="checkbox" value="1" {{ !empty($eventData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
 								</div>
@@ -189,7 +189,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>

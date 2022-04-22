@@ -144,7 +144,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="has_user_account" type="checkbox" value="1" {{ !empty($lessonData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="all_day" name="fullday_flag" type="checkbox" value="1" {{ !empty($lessonData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
 								</div>
@@ -192,7 +192,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($lessonData->price_amount_buy) ? old('sprice_amount_buy', $lessonData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -203,7 +203,7 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($lessonData->price_amount_sell) ? old('sprice_amount_sell', $lessonData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -267,8 +267,6 @@ $( document ).ready(function() {
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
 	if(value == 1){
 		$('#hourly').show();
 	}else if(value == 2){
@@ -410,8 +408,6 @@ $( document ).ready(function() {
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
 	if(this.value == 1){
 		$('#hourly').show();
 	}else if(this.value == 2){
