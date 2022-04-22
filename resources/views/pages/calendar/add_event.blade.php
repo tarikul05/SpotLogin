@@ -34,7 +34,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('event.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -152,7 +152,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency" disabled="">
+											<select class="form-control" id="sprice_currency" name="sprice_currency">
 												<option value="CHF">CHF</option>
 												<option value="DEM">DEM</option>
 												<option value="EUR">EUR</option>

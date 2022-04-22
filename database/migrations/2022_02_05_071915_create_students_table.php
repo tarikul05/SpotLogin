@@ -24,10 +24,16 @@ class CreateStudentsTable extends Migration {
 			$table->string('firstname', 250)->nullable();
 			$table->dateTime('birth_date')->nullable();
 			$table->string('phone', 50)->nullable();
-			$table->string('phone2', 50)->nullable();
 			$table->string('mobile', 50)->nullable();
-			$table->string('mobile2', 50)->nullable();
+			$table->string('email', 50)->nullable();
 			$table->string('email2', 50)->nullable();
+			$table->boolean('student_notify')->nullable()->default(0);
+			$table->string('father_phone', 50)->nullable();
+			$table->string('father_email', 50)->nullable();
+			$table->boolean('father_notify')->nullable()->default(0);
+			$table->string('mother_phone', 50)->nullable();
+			$table->string('mother_email', 50)->nullable();
+			$table->boolean('mother_notify')->nullable()->default(0);
 			$table->string('street', 120)->nullable();
 			$table->string('street_number', 20)->nullable();
 			$table->string('street2', 100)->nullable();

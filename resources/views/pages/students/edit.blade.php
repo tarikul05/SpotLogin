@@ -31,7 +31,7 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button>
+				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -386,11 +386,11 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" >{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
-										<input class="form-control" id="phone" name="phone" value="{{!empty($student->phone) ? old('phone', $student->phone) : old('phone')}}" type="text">
+										<input class="form-control" id="father_phone" name="father_phone" value="{{!empty($student->father_phone) ? old('father_phone', $student->father_phone) : old('father_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -399,7 +399,7 @@
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
-										<input class="form-control" id="phone2" name="phone2" value="{{!empty($student->phone2) ? old('phone2', $student->phone2) : old('phone2')}}" type="text">
+										<input class="form-control" id="mother_phone" name="mother_phone" value="{{!empty($student->mother_phone) ? old('mother_phone', $student->mother_phone) : old('mother_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -418,26 +418,26 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> 
-										<input class="form-control" id="femail" name="femail" value="{{!empty($relationalData->email) ? old('email', $relationalData->email) : old('email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span> 
+										<input class="form-control" id="father_email" name="father_email" value="{{!empty($student->father_email) ? old('father_email', $student->father_email) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" id="mother_email">{{__("Mother’s email") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> 
+										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span> 
+										<input class="form-control" id="mother_email" name="mother_email" value="{{!empty($student->mother_email) ? old('mother_email', $student->mother_email) : old('mother_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="student_email" >{{__("Student's email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox" name="student_notify" value="1" {{ !empty($student->student_notify) ? 'checked' : '' }} ></span> 
 										<input class="form-control" id="email2" name="email2" value="{{!empty($student->email2) ? old('email2', $student->email2) : old('email2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="student_email" id="student_email">{{__("Student's email") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"></span> 
-										<input class="form-control" id="student_email" name="student_email" value="{{!empty($student->student_email) ? old('student_email', $student->student_email) : old('student_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
@@ -447,7 +447,7 @@
 
 
 				<!--Start of Tab 3 -->
-				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+				<!-- <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 					<form id="studentUserForm" name="studentUserForm" class="form-horizontal" role="form"
 					 action="{{!empty($student) ? route('student.user_update',[$student->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
@@ -519,7 +519,6 @@
 														<span class="pull-right">
 															<div class="text-center">
 															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
-															<!-- <button id="send_email_btn" name="send_email_btn" class="btn btn-sm btn-info" ><em class="glyphicon glyphicon-send"></em> envoyer </button> -->
 															</div>
 														</span>
 													</div>
@@ -532,7 +531,7 @@
 							</div>
 						</div>
 					</form>
-				</div>
+				</div> -->
 				<!--End of Tab 3-->
 			</div>
 			@can('students-update')

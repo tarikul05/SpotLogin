@@ -172,18 +172,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
     Route::post('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction');
+    Route::get('/{school}/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view');
     Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
     Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
     Route::get('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit');
     Route::post('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction');
+    Route::get('/{school}/view-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'viewLesson'])->name('lesson.view');
     Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create');
     Route::post('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction');
     Route::get('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOff'])->name('studentOff.edit');
     Route::post('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOffAction'])->name('studentOff.editAction');
+    Route::get('/{school}/view-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewStudentOff'])->name('studentOff.view');
     Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create');
     Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
     Route::get('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit');
     Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
+    Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
   }); //Admin scope end
 
 
@@ -240,18 +244,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
     Route::post('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction');
+    Route::get('/{school}/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view');
     Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
     Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
     Route::get('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit');
     Route::post('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction');
+    Route::get('/{school}/view-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'viewLesson'])->name('lesson.view');
     Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create');
     Route::post('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction');
+    Route::get('/{school}/view-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewStudentOff'])->name('studentOff.view');
     Route::get('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOff'])->name('studentOff.edit');
     Route::post('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOffAction'])->name('studentOff.editAction');
     Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create');
     Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
     Route::get('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit');
     Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
-
+    Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');  
 });
 
