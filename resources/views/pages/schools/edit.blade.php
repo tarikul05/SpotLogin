@@ -38,11 +38,11 @@
 					<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 					</button>
-					@can('schools-user-udpate')
+					<!-- @can('schools-user-udpate')
 						<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
 						{{ __('User Account')}}
 						</button>
-					@endcan
+					@endcan -->
 					@can('parameters-list')
 						<a class="nav-link" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
 					@endcan
@@ -604,7 +604,7 @@
 				<!--End of Tab 1-->
 
 				<!--Start of Tab 2 -->
-				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+				<!-- <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 					<form id="schoolUserForm" name="schoolUserForm" class="form-horizontal" role="form"
 					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
@@ -676,7 +676,6 @@
 														<span class="pull-right">
 															<div class="text-center">
 															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
-															<!-- <button id="send_email_btn" name="send_email_btn" class="btn btn-sm btn-info" ><em class="glyphicon glyphicon-send"></em> envoyer </button> -->
 															</div>
 														</span>
 													</div>
@@ -689,7 +688,7 @@
 							</div>
 						</div>
 					</form>
-				</div>
+				</div> -->
 				<!--End of Tab 2-->
 
 				<!--Start of Tab 4 -->

@@ -141,23 +141,24 @@ class SchoolsController extends Controller
         } else {
             $role_type = $authUser->person_type;
             
-            try{
-                $teacher = SchoolTeacher::where([
-                    ['school_id', $school->id],
-                    ['is_active', 1],
-                    ['role_type', 'school_admin'],
-                    ['has_user_account', 1]
-                ])->first();
-                $school_admin = User::where([
-                    ['person_id', $teacher->id],
-                    ['is_active', 1],
-                    ['person_type', 'App\Models\Teacher']
-                ])->first();
-            } catch (\Exception $e) {
-                //return error message
-                return redirect()->route('schools')->with('error', __('School admin not exist'));
-            }
-            
+            // try{
+            //     $teacher = SchoolTeacher::where([
+            //         ['school_id', $school->id],
+            //         ['is_active', 1],
+            //         ['role_type', 'school_admin'],
+            //         ['has_user_account', 1]
+            //     ])->first();
+            //     $school_admin = User::where([
+            //         ['person_id', $teacher->id],
+            //         ['is_active', 1],
+            //         ['person_type', 'App\Models\Teacher']
+            //     ])->first();
+            // } catch (\Exception $e) {
+            //     //return error message
+            //     return redirect()->route('schools')->with('error', __('School admin not exist'));
+            // }
+
+            $school_admin = null;
         }
         
             
