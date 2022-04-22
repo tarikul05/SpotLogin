@@ -661,6 +661,7 @@ class LessonsController extends Controller
                 $data = [
                     'title' => $coachOffData['title'],
                     'school_id' => $schoolId,
+                    'teacher_id' => $coachOffData['teacher_select'],
                     'event_type' => 50,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
@@ -730,8 +731,8 @@ class LessonsController extends Controller
 
                 $coachOffData = $request->all();
 
-                $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+                $start_date = str_replace('/', '-', $coachOffData['start_date']);
+                $end_date = str_replace('/', '-', $coachOffData['end_date']);
                 $coachoffId = $request->route('id'); 
 
                 $data = [
@@ -741,17 +742,18 @@ class LessonsController extends Controller
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
                     'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
-                    'description' => $coachOffData['description']
+                    'description' => $coachOffData['description'],
+                    'teacher_id' => $coachOffData['teacher_select']
                 ];
                 
                 $event = Event::where('id', $coachoffId)->update($data);
 
                 $dataDetails = [
-                    'event_id' => $event->id,
+                    'event_id' => $coachoffId,
                     'teacher_id' => $coachOffData['teacher_select'],
                 ];
                 
-                $eventDetails = EventDetails::where('event_id', $event->id)->update($dataDetails);
+                $eventDetails = EventDetails::where('event_id', $coachoffId)->update($dataDetails);
                 
                 DB::commit();
                 return back()->with('success', __('Successfully Registered'));
