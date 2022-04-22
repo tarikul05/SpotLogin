@@ -177,22 +177,10 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency" disabled="">
-												<option value="CHF">CHF</option>
-												<option value="DEM">DEM</option>
-												<option value="EUR">EUR</option>
-												<option value="GBP">GBP</option>
-												<option value="USD">USD</option>
-												<option value="AUD">AUD</option>
-												<option value="CAD">CAD</option>
-												<option value="SGD">SGD</option>
-												<option value="JPY">JPY</option>
-												<option value="CNY">CNY</option>
-												<option value="TRY">TRY</option>
-												<option value="RUB">RUB</option>
-												<option value="DKK">DKK</option>
-												<option value="RON">RON</option>
-												<option value="CZK">CZK</option>
+											<select class="form-control" id="sprice_currency" name="sprice_currency">
+												@foreach($currency as $key => $curr)
+													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>

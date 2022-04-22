@@ -135,7 +135,7 @@ class AgendaController extends Controller
             if ($fetch->is_locked == 1){
                 $action_type='view';
                 if ($fetch->event_type==10) { //lesson
-                    $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                    $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                 }
                 if ($fetch->event_type==100) { //event
                     $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
@@ -150,7 +150,7 @@ class AgendaController extends Controller
             else {
                 $action_type='edit';
                 if ($fetch->event_type==10) { //lesson
-                    $page_name='/'.$fetch->school_id.'/edit-lession/'.$fetch->id;
+                    $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
                 }
                 if ($fetch->event_type==100) { //event
                     $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
@@ -165,7 +165,7 @@ class AgendaController extends Controller
                 if ($user_role == 'student'){
                     $action_type='view';
                     if ($fetch->event_type==10) { //lesson
-                        $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                        $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                     }
                     if ($fetch->event_type==100) { //event
                         $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
@@ -181,7 +181,7 @@ class AgendaController extends Controller
                     if (($user->id == $fetch->teacher_id)){
                         $action_type='edit';
                         if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/edit-lession/'.$fetch->id;
+                            $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
                         }
                         if ($fetch->event_type==100) { //event
                             $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
@@ -195,7 +195,7 @@ class AgendaController extends Controller
                     }else{
                         $action_type='view';
                         if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                            $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                         }
                         if ($fetch->event_type==100) { //event
                             $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
@@ -594,7 +594,7 @@ class AgendaController extends Controller
             if ($fetch->is_locked == 1){
                 $action_type='view';
                 if ($fetch->event_type==10) { //lesson
-                    $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                    $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                 }
                 if ($fetch->event_type==100) { //event
                     $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
@@ -609,7 +609,7 @@ class AgendaController extends Controller
             else {
                 $action_type='edit';
                 if ($fetch->event_type==10) { //lesson
-                    $page_name='/'.$fetch->school_id.'/edit-lession/'.$fetch->id;
+                    $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
                 }
                 if ($fetch->event_type==100) { //event
                     $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
@@ -624,7 +624,7 @@ class AgendaController extends Controller
                 if ($user_role == 'student'){
                     $action_type='view';
                     if ($fetch->event_type==10) { //lesson
-                        $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                        $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                     }
                     if ($fetch->event_type==100) { //event
                         $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
@@ -640,7 +640,7 @@ class AgendaController extends Controller
                     if (($user->id == $fetch->teacher_id)){
                         $action_type='edit';
                         if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/edit-lession/'.$fetch->id;
+                            $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
                         }
                         if ($fetch->event_type==100) { //event
                             $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
@@ -654,7 +654,7 @@ class AgendaController extends Controller
                     }else{
                         $action_type='view';
                         if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/view-lession/'.$fetch->id;
+                            $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
                         }
                         if ($fetch->event_type==100) { //event
                             $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
