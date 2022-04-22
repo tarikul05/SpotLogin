@@ -99,7 +99,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -120,7 +120,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -269,16 +269,32 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	$('.timepicker').timepicker({
+	var start_time = new Date("{{$eventData->date_start}}").toLocaleTimeString()
+	var end_time = new Date("{{$eventData->date_end}}").toLocaleTimeString()
+console.log(start_time, end_time)
+
+	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
 		minTime: '0',
 		maxTime: '23:59',
-		defaultTime: '11',
+		defaultTime: start_time,
 		startTime: '00:00',
 		dynamic: false,
 		dropdown: true,
-		scrollbar: true,
+		scrollbar: true
+	});
+
+	$('.timepicker2').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '0',
+		maxTime: '23:59',
+		defaultTime: end_time,
+		startTime: '00:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true
 	});
 })
 

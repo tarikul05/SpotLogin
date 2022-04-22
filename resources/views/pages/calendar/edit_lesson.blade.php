@@ -103,7 +103,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -124,7 +124,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
+												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -286,6 +286,38 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
+	
+	var start_time = new Date("{{$lessonData->date_start}}").toLocaleTimeString()
+	var end_time = new Date("{{$lessonData->date_end}}").toLocaleTimeString()
+	$('.timepicker1').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '0',
+		maxTime: '23:59',
+		defaultTime: start_time,
+		startTime: '00:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change:function(time){
+			CalcDuration();
+		}
+	});
+
+	$('.timepicker2').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '0',
+		maxTime: '23:59',
+		defaultTime: end_time,
+		startTime: '00:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change:function(time){
+			CalcDuration();
+		}
+	});
 
 	$('.timepicker').timepicker({
 		timeFormat: 'HH:mm',
