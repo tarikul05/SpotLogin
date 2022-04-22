@@ -34,7 +34,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventlId]) }}"  name="add_event" role="form">
+				<form class="form-horizontal" id="add_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="add_event" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
