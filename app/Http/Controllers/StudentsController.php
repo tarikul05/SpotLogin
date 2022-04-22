@@ -89,8 +89,9 @@ class StudentsController extends Controller
             $searchEmail = $request->email;
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             $exStudent = !empty($exUser) ? $exUser->personable : null;
-            $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
-            if ($alreadyFlag) {
+            $alreadyFlag =null;
+            if ($exStudent) {
+                $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
                 return back()->with('warning', __('This user already have in your school with "'.$searchEmail.'" email'));
             }
             // echo "<pre>";
