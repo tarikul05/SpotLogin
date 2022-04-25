@@ -155,7 +155,7 @@ class User extends Authenticatable
     public function selectedSchoolId()
     {
         $selectedSchool = self::getSelectedSchoolAttribute();
-        return !empty($selectedSchool)? $selectedSchool->id : null;
+        return !empty($selectedSchool)? $selectedSchool->id : $this->school_id;
 
     }
 
