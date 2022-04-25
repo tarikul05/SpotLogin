@@ -92,12 +92,23 @@ class AgendaController extends Controller
                 $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
+            $e['event_category_name'] = '';
+            if (isset($fetch->eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = $fetch->eventCategory['title'];
+                
+            }
             $e['event_type'] = $fetch->event_type;
-            $e['event_type_name'] = ($event_types[$e['event_type']]);
+        
+            $event_type_name = $event_types[$e['event_type']];
+            if ($e['event_type'] == 10) {
+                $event_type_name = $event_types[$e['event_type']].' : '.$e['event_category_name'];
+            }
+
+            $e['event_type_name'] = ($event_type_name);
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
-            $e['event_category'] ='';
-            $e['event_category_name'] ='';
+            
             $e['cours_name'] = '';
             $e['text_for_search']='';
             $e['tooltip']='';
@@ -108,11 +119,7 @@ class AgendaController extends Controller
                 $e['event_mode_desc'] = '';
             }
 
-            if (isset($fetch->eventCategory)) {
-                $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
-                
-            }
+            
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
@@ -551,11 +558,22 @@ class AgendaController extends Controller
                 $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
+            $e['event_category_name'] = '';
+            if (isset($fetch->eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = $fetch->eventCategory['title'];
+                
+            }
             $e['event_type'] = $fetch->event_type;
-            $e['event_type_name'] = ($event_types[$e['event_type']]);
+        
+            $event_type_name = $event_types[$e['event_type']];
+            if ($e['event_type'] == 10) {
+                $event_type_name = $event_types[$e['event_type']].' : '.$e['event_category_name'];
+            }
+            $e['event_type_name'] = ($event_type_name);
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
-            $e['event_category'] ='';
+            
             $e['event_category_name'] ='';
             $e['cours_name'] = '';
             $e['text_for_search']='';
@@ -567,11 +585,7 @@ class AgendaController extends Controller
                 $e['event_mode_desc'] = '';
             }
 
-            if (isset($fetch->eventCategory)) {
-                $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
-                
-            }
+            
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
