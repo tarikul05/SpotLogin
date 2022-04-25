@@ -286,6 +286,7 @@ admin_main_style.css
     var m = date.getMonth();
     var y = date.getFullYear();
     var user_role=document.getElementById("user_role").value;
+    var user_auth='';
 
     var json_events = @json($events);
 
@@ -624,7 +625,7 @@ admin_main_style.css
 
                 if (options){
                     console.log('school onSelectAll triggered!'+options);
-                    document.getElementById("event_school_id").value='0';
+                    document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='1';
                 }
                 else {
