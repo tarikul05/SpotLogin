@@ -67,10 +67,14 @@ class AgendaController extends Controller
         foreach ($event_types_all as $key => $value) {
             
             if ($key == 10) {
-                foreach ($eventCategories as $cat => $eventCat) {
-                   $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
+                if ($eventCategories) {
+                    foreach ($eventCategories as $cat => $eventCat) {
+                        $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
+                     }
                 }
                 $event_types[$key]= $value;
+                
+                
             } else{
                 $event_types[$key]= $value;
             }
@@ -282,7 +286,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
-        unset($event_types[10]);
+        //unset($event_types[10]);
         return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
