@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Event;
 use App\Models\EventDetails;
+use App\Models\EventCategory;
 
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
@@ -56,9 +57,25 @@ class AgendaController extends Controller
         $locations = Location::orderBy('id')->get();
         $students = Student::orderBy('id')->get();
         $teachers = Teacher::orderBy('id')->get();
+
+        $eventCategories = EventCategory::active()->where('school_id', $schoolId)->orderBy('id')->get();
         
 
-        $event_types = config('global.event_type'); 
+        $event_types_all = config('global.event_type');
+        $event_types = []; 
+       
+        foreach ($event_types_all as $key => $value) {
+            
+            if ($key == 10) {
+                foreach ($eventCategories as $cat => $eventCat) {
+                   $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
+                }
+                $event_types[$key]= $value;
+            } else{
+                $event_types[$key]= $value;
+            }
+        }
+        //dd($event_types);
 
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
         $eventData = Event::active()->get();
@@ -93,19 +110,21 @@ class AgendaController extends Controller
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
             $e['event_category_name'] = '';
-            if (isset($fetch->eventCategory)) {
+            $eventCategory = EventCategory::find($fetch->event_category);
+            
+            if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
+                $e['event_category_name'] = trim($eventCategory->title);
                 
             }
             $e['event_type'] = $fetch->event_type;
         
-            $event_type_name = $event_types[$e['event_type']];
+            $event_type_name = $event_types_all[$e['event_type']];
             if ($e['event_type'] == 10) {
-                $event_type_name = $event_types[$e['event_type']].' : '.$e['event_category_name'];
+                $event_type_name = $event_types_all[$e['event_type']].' : '.$e['event_category_name'];
             }
 
-            $e['event_type_name'] = ($event_type_name);
+            $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
             
@@ -263,6 +282,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
+        unset($event_types[10]);
         return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
@@ -559,9 +579,11 @@ class AgendaController extends Controller
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
             $e['event_category_name'] = '';
-            if (isset($fetch->eventCategory)) {
+            $eventCategory = EventCategory::find($fetch->event_category);
+            
+            if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
+                $e['event_category_name'] = trim($eventCategory->title);
                 
             }
             $e['event_type'] = $fetch->event_type;
@@ -570,7 +592,7 @@ class AgendaController extends Controller
             if ($e['event_type'] == 10) {
                 $event_type_name = $event_types[$e['event_type']].' : '.$e['event_category_name'];
             }
-            $e['event_type_name'] = ($event_type_name);
+            $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
             
