@@ -125,6 +125,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
     Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
 
+    // currency 
+    Route::get('/currency', [App\Http\Controllers\CurrencyController::class, 'index'])->name('list.currency');
+    Route::post('/add-currency', [App\Http\Controllers\CurrencyController::class, 'addUpdate'])->name('add.currency');
+
+
     // email template 
     Route::get('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
     Route::post('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
