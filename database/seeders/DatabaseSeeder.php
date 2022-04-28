@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
             EmailTemplateTableSeeder::class
         ]);
         $this->call(LessonPricesTableSeeder::class);
+        $this->call(CurrencyTableSeeder::class);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Event;
 use App\Models\EventDetails;
+use App\Models\EventCategory;
 
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
@@ -34,23 +35,51 @@ class AgendaController extends Controller
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
             $schoolId = 0;
         }
         $user_role = 'superadmin';
+        $schools = School::orderBy('id')->get();
         if ($user->person_type == 'App\Models\Student') {
             $user_role = 'student';
+            $schools = $user->schools();
         }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
+            $schools = $user->schools();
         }
+        
 
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::orderBy('id')->get();
         $students = Student::orderBy('id')->get();
         $teachers = Teacher::orderBy('id')->get();
-        $schools = School::orderBy('id')->get();
 
-        $event_types = config('global.event_type'); 
+        $eventCategories = EventCategory::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        
+
+        $event_types_all = config('global.event_type');
+        $event_types = []; 
+       
+        foreach ($event_types_all as $key => $value) {
+            
+            if ($key == 10) {
+                if ($eventCategories) {
+                    foreach ($eventCategories as $cat => $eventCat) {
+                        $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
+                     }
+                }
+                $event_types[$key]= $value;
+                
+                
+            } else{
+                $event_types[$key]= $value;
+            }
+        }
+        //dd($event_types);
 
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
         $eventData = Event::active()->get();
@@ -79,17 +108,30 @@ class AgendaController extends Controller
             
             $allday = ($fetch->fullday_flag == "true") ? true : false;
             $e['allDay'] = $allday;
-
+            $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
                 $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
+            $e['event_category_name'] = '';
+            $eventCategory = EventCategory::find($fetch->event_category);
+            
+            if (!empty($eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = trim($eventCategory->title);
+                
+            }
             $e['event_type'] = $fetch->event_type;
-            $e['event_type_name'] = ($event_types[$e['event_type']]);
+        
+            $event_type_name = $event_types_all[$e['event_type']];
+            if ($e['event_type'] == 10) {
+                $event_type_name = $event_types_all[$e['event_type']].' : '.$e['event_category_name'];
+            }
+
+            $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
-            $e['event_category'] ='';
-            $e['event_category_name'] ='';
+            
             $e['cours_name'] = '';
             $e['text_for_search']='';
             $e['tooltip']='';
@@ -100,11 +142,7 @@ class AgendaController extends Controller
                 $e['event_mode_desc'] = '';
             }
 
-            if (isset($fetch->eventCategory)) {
-                $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
-                
-            }
+            
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
@@ -248,6 +286,7 @@ class AgendaController extends Controller
         }
         //dd($events);
         $events =json_encode($events);
+        //unset($event_types[10]);
         return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
 
     }   
@@ -538,16 +577,29 @@ class AgendaController extends Controller
             
             $allday = ($fetch->fullday_flag == "true") ? true : false;
             $e['allDay'] = $allday;
-
+            $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
                 $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
                 $e['teacher_name'] = $fetch->teacher['Kazi'];
             }
+            $e['event_category_name'] = '';
+            $eventCategory = EventCategory::find($fetch->event_category);
+            
+            if (!empty($eventCategory)) {
+                $e['event_category'] = $fetch->event_category;
+                $e['event_category_name'] = trim($eventCategory->title);
+                
+            }
             $e['event_type'] = $fetch->event_type;
-            $e['event_type_name'] = ($event_types[$e['event_type']]);
+        
+            $event_type_name = $event_types[$e['event_type']];
+            if ($e['event_type'] == 10) {
+                $event_type_name = $event_types[$e['event_type']].' : '.$e['event_category_name'];
+            }
+            $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
-            $e['event_category'] ='';
+            
             $e['event_category_name'] ='';
             $e['cours_name'] = '';
             $e['text_for_search']='';
@@ -559,11 +611,7 @@ class AgendaController extends Controller
                 $e['event_mode_desc'] = '';
             }
 
-            if (isset($fetch->eventCategory)) {
-                $e['event_category'] = $fetch->event_category;
-                $e['event_category_name'] = $fetch->eventCategory['title'];
-                
-            }
+            
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];

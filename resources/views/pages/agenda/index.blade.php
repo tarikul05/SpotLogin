@@ -286,6 +286,7 @@ admin_main_style.css
     var m = date.getMonth();
     var y = date.getFullYear();
     var user_role=document.getElementById("user_role").value;
+    var user_auth='';
 
     var json_events = @json($events);
 
@@ -400,7 +401,7 @@ admin_main_style.css
             }
             
             // cours - events - PopulateButtonMenuList
-            if ( (value.value == 10) && (user_role != 'student') ){
+            if (user_role != 'student'){
                 menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
@@ -624,7 +625,7 @@ admin_main_style.css
 
                 if (options){
                     console.log('school onSelectAll triggered!'+options);
-                    document.getElementById("event_school_id").value='0';
+                    document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='1';
                 }
                 else {
