@@ -1086,6 +1086,7 @@ admin_main_style.css
             //defaultDate: '2022-04-12',
             utc: false,  
             editable: true,
+            selectable: true,
             buttonText: {
                 prev: '<',
                 next: '>'
@@ -1550,6 +1551,13 @@ admin_main_style.css
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
+            },
+            dayClick: function(date, jsEvent, view, resource) {
+              // alert('clicked ' + date.format() + ' on resource ' + resource.id);
+              alert('clicked ' + date.format() + ' on resource ');
+            },
+            select: function(startDate, endDate, jsEvent, view, resource) {
+              alert('selected ' + startDate.format() + ' to ' + endDate.format() + ' on resource ');
             }
         })    //full calendar initialization
         CheckPermisson();
