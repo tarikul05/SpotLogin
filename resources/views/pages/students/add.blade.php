@@ -45,7 +45,7 @@
 				</div>
 			</form>
 			<!-- // user email check end -->
-	@if($searchEmail)
+	{{-- @if($searchEmail) --}}
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
@@ -458,7 +458,7 @@
 		</div>
 		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 		</form>
-	 @endif
+	{{-- @endif --}} 
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">

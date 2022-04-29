@@ -228,19 +228,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
 
-    Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    // Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   });
 
  
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
-    Route::get('/add-student', [App\Http\Controllers\StudentsController::class, 'create'])->name('student.create');
-    Route::post('/add-student', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
+    Route::post('/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
     Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
     Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'editStudentAction'])->name('editStudentAction');
-    // Route::match(array('GET', 'POST'), "add-teacher", array(
-    //   'uses' => 'StudentsController@create',
-    //   'as' => 'student.create'
-    // ));
+    Route::match(array('GET', 'POST'), "add-student", array(
+      'uses' => 'StudentsController@create',
+      'as' => 'student.create'
+    ));
     
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

@@ -59,7 +59,6 @@ class StudentsController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
         $students = $school->students; 
-
         return view('pages.students.list',compact('students','schoolId'));
     }
 
@@ -92,7 +91,9 @@ class StudentsController extends Controller
             $alreadyFlag =null;
             if ($exStudent) {
                 $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
-                return back()->with('warning', __('This user already have in your school with "'.$searchEmail.'" email'));
+                if ($alreadyFlag) {
+                    return back()->with('warning', __('This user already have in your school with "'.$searchEmail.'" email'));
+                }
             }
             // echo "<pre>";
             // print_r($exStudent); exit;

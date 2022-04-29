@@ -26,7 +26,7 @@
                 <td>{{ $student->id; }}
                 <td>{{ $student->firstname.' '.$student->middlename.' '.$student->lastname; }}</td>
                 <td>{{ $student->email; }}</td>
-                <td>{{ !empty($student->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ !empty($student->is_active) && !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 <td>
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
