@@ -1570,7 +1570,16 @@ admin_main_style.css
 		var selected_ids = [];
         $.each($("#event_school option:selected"), function(){         
             selected_ids.push($(this).val());
-        });		
+        });	
+        if (selected_ids.length > 1) {
+            $('#event_location_div').hide();
+            $('#event_teacher_div').hide();
+            $('#event_student_div').hide();
+        } else {
+            $('#event_location_div').show();
+            $('#event_teacher_div').show();
+            $('#event_student_div').show();
+        }	
 		//console.log('selected='+selected_ids.join("|"));
 		return selected_ids.join("|");
 	}
