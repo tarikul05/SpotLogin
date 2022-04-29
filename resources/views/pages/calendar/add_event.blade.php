@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
@@ -34,7 +35,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('event.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+				<form class="form-horizontal" id="add_event" method="post" action="{{ route('event.createAction',[$schoolId]) }}"  name="add_event" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -297,5 +298,52 @@ $('#sis_paying').on('change', function() {
 		$('#price_per_student').show();
 	}
 });
+
+
+$('#add_event').on('submit', function() {
+	var title = $('#Title').val();
+	var professor = $('#teacher_select').val();
+	var selected = $("#student :selected").map((_, e) => e.value).get();
+	var startDate = $('#start_date').val();
+	var endDate = $('#end_date').val();
+
+	var errMssg = '';
+	
+	if(title == ''){
+		var errMssg = 'Title required';
+		$('#Title').addClass('error');
+	}else{
+		$('#Title').removeClass('error');
+	}
+
+	if( selected < 1){
+		var errMssg = 'Select student';
+		$('.student_list').addClass('error');
+	}else{
+		$('.student_list').removeClass('error');
+	}
+
+	if(startDate == ''){
+		var errMssg = 'Start date required';
+		$('#start_date').addClass('error');
+	}else{
+		$('#start_date').removeClass('error');
+	}
+
+	if(endDate == ''){
+		var errMssg = 'Ednd date required';
+		$('#end_date').addClass('error');
+	}else{
+		$('#end_date').removeClass('error');
+	}
+
+	if(errMssg == ""){
+		return true;
+	}else{
+		return false;	
+	}
+
+});
+
 </script>
 @endsection

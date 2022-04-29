@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -34,7 +35,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="add_lesson" role="form">
+				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -83,10 +84,10 @@
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
-												@foreach($students as $key => $student)
-													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+												@foreach($students as $sub)
+													<option value="{{ $sub->id }}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
-											</select>
+			  								</select>
 										</div>
 									</div>
 								</div>
@@ -153,9 +154,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0">No charge</option>
-												<option value="1">Hourly rate</option>
-												<option value="2">Price per student</option>
+												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
+												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Hourly rate</option>
+												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option>
 											</select>
 										</div>
 									</div>
@@ -193,6 +194,7 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($lessonData->price_amount_buy) ? old('sprice_amount_buy', $lessonData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+											<input type="hidden" name="attendBuyPrice" value="{{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}">
 										</div>
 									</div>
 								</div>
@@ -204,10 +206,70 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($lessonData->price_amount_sell) ? old('sprice_amount_sell', $lessonData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}">
 										</div>
 									</div>
 								</div>
 								</div>
+							</div>
+							<div class="section_header_class">
+								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
+							</div>
+							<div class="col-md-7 offset-md-2">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<div class="table-responsive">
+													<table id="attn_tbl" class="table">
+														<tbody>
+															<tr>
+																<th width="5%" style="text-align:left"></th>
+																<th width="15%" style="text-align:left">
+																	<span>{{ __('Student') }}</span>
+																</th>
+																<th width="15%" style="text-align:left">
+																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
+																</th>
+																<th width="15%" style="text-align:right;">
+																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
+																</th>
+																<th width="15%" style="text-align:right">
+																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
+																</th>
+															</tr>
+															
+															@foreach($studentOffList as $student)
+															<tr>
+																<td>{{ $student->id }}</td>
+																<td>
+																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
+																</td>
+																<td>
+																	<div class="selectdiv">
+																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->id }}">
+																			<option value="0" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Scheduled</option>
+																			<option value="199" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 199 ? 'selected' : '') : (old('student_attn') == 199 ? 'selected' : '')}}>Absent</option>
+																			<option value="200" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 200 ? 'selected' : '') : (old('student_attn') == 200 ? 'selected' : '')}}>Present</option>
+																		</select>
+																	</div>
+																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
+																</td>
+																<td style="text-align:right"> {{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}</td>
+																<td style="text-align:right">{{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}</td>
+															</tr>
+															@endforeach
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
+								<button class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -262,6 +324,23 @@ $(function() {
 $('#student').multiselect({
 	search: true
 });
+
+$('#student').on('change', function(event) {
+	var cnt = $('#student option:selected').length;
+	var price=document.getElementById("sis_paying").value;
+	
+	//if ((action == "new") && (price == 1)){
+	if (price == 1){                   
+		if (cnt >= 10) {
+			document.getElementById("sevent_price").value='price_10';
+		}
+		else
+		{
+			document.getElementById("sevent_price").value='price_'+cnt;
+		}
+		
+	} 
+})
 
 $( document ).ready(function() {
 	var value = $('#sis_paying').val();
@@ -415,7 +494,118 @@ $('#sis_paying').on('change', function() {
 	}
 });
 
+// save functionality
+$('.student_attn').change(function (e) {
+	var stuId = $(this).attr('data-id');
+	var typeId = $(this).val();
 
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
+	$.ajax({
+		url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$lessonlId}}',
+		data: { type:1, stuId:stuId, typeId:typeId },
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function( xhr ) {
+			$("#pageloader").show();
+		},
+		success: function(response){	
+			if(response.status == 1){
+				
+			}
+		},
+		complete: function( xhr ) {
+			$("#pageloader").hide();
+		}
+	})
+			            
+}); 
+
+
+// save functionality
+$('#mark_present_btn').click(function (e) {
+	if (confirm("Mark all student as present ?")) {
+		var data = [];
+		$('.student_attn').val('200');
+		$('.student_attn').each(function(){ 
+			data.push({stuId : $(this).attr('data-id'), typeId : 200 })
+		});	
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		$.ajax({
+			url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$lessonlId}}',
+			data: { type:2, data:data },
+			type: 'POST',
+			dataType: 'json',
+			beforeSend: function( xhr ) {
+				$("#pageloader").show();
+			},
+			success: function(response){	
+				if(response.status == 1){
+					
+				}
+			},
+			complete: function( xhr ) {
+				$("#pageloader").hide();
+			}
+		})
+	}
+			            
+}); 
+
+$('#edit_lesson').on('submit', function() {
+	var title = $('#Title').val();
+	var professor = $('#teacher_select').val();
+	var selected = $("#student :selected").map((_, e) => e.value).get();
+	var startDate = $('#start_date').val();
+	var endDate = $('#end_date').val();
+
+	var errMssg = '';
+	
+	if(title == ''){
+		var errMssg = 'Title required';
+		$('#Title').addClass('error');
+	}else{
+		$('#Title').removeClass('error');
+	}
+
+	if( selected < 1){
+		var errMssg = 'Select student';
+		$('.student_list').addClass('error');
+	}else{
+		$('.student_list').removeClass('error');
+	}
+
+	if(startDate == ''){
+		var errMssg = 'Start date required';
+		$('#start_date').addClass('error');
+	}else{
+		$('#start_date').removeClass('error');
+	}
+
+	if(endDate == ''){
+		var errMssg = 'Ednd date required';
+		$('#end_date').addClass('error');
+	}else{
+		$('#end_date').removeClass('error');
+	}
+
+	if(errMssg == ""){
+		return true;
+	}else{
+		return false;	
+	}
+
+});
 
 </script>
 @endsection
