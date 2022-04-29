@@ -457,7 +457,21 @@ input#shas_user_account {
   border-radius: 0.25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
+#button_lock_and_save_div {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+button#button_lock_and_save {
+  padding: 0.75rem;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: .25;
+  height: 35px;
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
 
 /*****FULL CALENDER CSS***/
 input[type=input].search-collapse-input{
