@@ -152,7 +152,7 @@ class AuthController extends Controller
                             $country_code = $user->teacher['country_code'];
                         }
                         else if (isset($user->student)) {
-                            $country_code = $user->student['country_code'];
+                            $country_code = $user->['country_code'];
                         }
                         else if (isset($user->parent)) {
                             $country_code = $user->parent['country_code'];

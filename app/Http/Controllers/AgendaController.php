@@ -7,6 +7,8 @@ use App\Models\Language;
 use App\Models\Location;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
@@ -760,6 +762,90 @@ class AgendaController extends Controller
         return response()->json($events);
         
     } 
+
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getLocations(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $locations = Location::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $locations =json_encode($locations);
+       
+    }
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getStudents(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        
+        //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $locations =json_encode($students);
+       
+    }
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getTeachers(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        //$students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        //$locations = Teacher::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $professors =json_encode($professors);
+       
+    }
+    
 
      /**
      *  AJAX delete multiple event

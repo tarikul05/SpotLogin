@@ -92,7 +92,7 @@ class UserController extends Controller
 
             $teacher = Teacher::create($teacherData);
             $teacher->save();
-            $teacher->schools()->attach($school->id, ['nickname' => 'this is nickname','role_type'=>$roleType, 'has_user_account'=> 1]);
+            $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1]);
             
             $usersData = [
                 'person_id' => $teacher->id,

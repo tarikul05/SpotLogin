@@ -380,9 +380,21 @@ admin_main_style.css
         RenderCalendar();
         PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
-        PopulateLocationDropdown();
-        PopulateStudentDropdown();
-        PopulateTeacherDropdown();
+        var selected_school_ids = [];
+        $.each($("#event_school option:selected"), function(){         
+            selected_school_ids.push($(this).val());
+        });	
+        if (selected_school_ids.length == 1) {
+            PopulateLocationDropdown(document.getElementById("event_school_id").value);
+            PopulateStudentDropdown(document.getElementById("event_school_id").value)
+            PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+        } else{
+            PopulateLocationDropdown();
+            PopulateStudentDropdown();
+            PopulateTeacherDropdown();
+        }
+
+        
         DisplayCalendarTitle();
         document.getElementById("copy_school_id").value =getSchoolIDs();
         document.getElementById("copy_event_id").value =getEventIDs();
@@ -618,6 +630,16 @@ admin_main_style.css
                     document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='0';
                     
+                    var selected_ids = [];
+                    $.each($("#event_school option:selected"), function(){         
+                        selected_ids.push($(this).val());
+                    });	
+                    if (selected_ids.length == 1) {
+                        PopulateLocationDropdown(document.getElementById("event_school_id").value);
+                        PopulateStudentDropdown(document.getElementById("event_school_id").value)
+                        PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                    }
+                    
                     //SetEventCookies();
                     RerenderEvents();
             },
@@ -701,8 +723,46 @@ admin_main_style.css
                  
     }   
     // populate location
-    function PopulateLocationDropdown(){
-          
+    function PopulateLocationDropdown(school_id=null){
+
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_location').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_locations',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                    });
+                    $('#event_location').html(resultHtml);
+                    $("#event_location").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
         $('#event_location').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Location',
@@ -735,7 +795,7 @@ admin_main_style.css
                     console.log('location onDeSelectAll triggered!');
                     document.getElementById("event_location_id").value='';
                     document.getElementById("event_location_all_flag").value='0';
-                 
+                
                 }
                 //SetEventCookies();
                 RerenderEvents();
@@ -749,14 +809,57 @@ admin_main_style.css
             },
             selectAllValue: 0
         });
- 
         $('#event_location').multiselect('selectAll', false);   
         $('#event_location').multiselect('refresh');	
-                  
+            
+    
+        
+          
+        
+ 
+             
     }   
     // populate teacher
-    function PopulateTeacherDropdown(){
-          
+    function PopulateTeacherDropdown(school_id=null){
+        
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_teacher').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_teachers',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.teacher_id+'">'+value.nickname+'</option>'; 
+                    });
+                    $('#event_teacher').html(resultHtml);
+                    $("#event_teacher").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
         $('#event_teacher').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Teachers',
@@ -809,8 +912,45 @@ admin_main_style.css
                    
     }   
     // populate student
-    function PopulateStudentDropdown(){
-          
+    function PopulateStudentDropdown(school_id=null){
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_student').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_students',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
+                    });
+                    $('#event_student').html(resultHtml);
+                    $("#event_student").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        } 
         $('#event_student').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Students',
