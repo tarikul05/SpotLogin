@@ -263,6 +263,23 @@ $('#student').multiselect({
 	search: true
 });
 
+$('#student').on('change', function(event) {
+	var cnt = $('#student option:selected').length;
+	var price=document.getElementById("sis_paying").value;
+	
+	//if ((action == "new") && (price == 1)){
+	if (price == 1){                   
+		if (cnt >= 10) {
+			document.getElementById("sevent_price").value='price_10';
+		}
+		else
+		{
+			document.getElementById("sevent_price").value='price_'+cnt;
+		}
+		
+	} 
+})
+
 $( document ).ready(function() {
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
@@ -401,7 +418,50 @@ $('#sis_paying').on('change', function() {
 	}
 });
 
+$('#add_lesson').on('submit', function() {
+	var title = $('#Title').val();
+	var professor = $('#teacher_select').val();
+	var selected = $("#student :selected").map((_, e) => e.value).get();
+	var startDate = $('#start_date').val();
+	var endDate = $('#end_date').val();
 
+	var errMssg = '';
+	
+	if(title == ''){
+		var errMssg = 'Title required';
+		$('#Title').addClass('error');
+	}else{
+		$('#Title').removeClass('error');
+	}
+
+	if( selected < 1){
+		var errMssg = 'Select student';
+		$('.student_list').addClass('error');
+	}else{
+		$('.student_list').removeClass('error');
+	}
+
+	if(startDate == ''){
+		var errMssg = 'Start date required';
+		$('#start_date').addClass('error');
+	}else{
+		$('#start_date').removeClass('error');
+	}
+
+	if(endDate == ''){
+		var errMssg = 'Ednd date required';
+		$('#end_date').addClass('error');
+	}else{
+		$('#end_date').removeClass('error');
+	}
+
+	if(errMssg == ""){
+		return true;
+	}else{
+		return false;	
+	}
+
+});
 
 </script>
 @endsection
