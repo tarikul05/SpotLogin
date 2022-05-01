@@ -167,6 +167,12 @@ admin_main_style.css
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types as $key => $event_type)
+                                                        <option id = value="{{ $key }}">{{ $event_type }}</option>
+                                                    @endforeach
+                                            
+                                                </select>
+                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 15px;" >
+                                                    @foreach($event_types_all as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                             
@@ -402,9 +408,9 @@ admin_main_style.css
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
-        $("#event_type option").each(function(key,value)
+        $("#event_types_all option").each(function(key,value)
         {
-            
+            //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
                 menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
@@ -413,7 +419,7 @@ admin_main_style.css
             }
             
             // cours - events - PopulateButtonMenuList
-            if (user_role != 'student'){
+            if ((value.value == 10) && user_role != 'student'){
                 menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
@@ -424,7 +430,7 @@ admin_main_style.css
                 //     menuHtml+='<li><a  href="../admin/'+{{$schoolId}}+'/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
-                // if (value.id == 10) {
+                // if (value.value == 10) {
                 //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
@@ -440,7 +446,8 @@ admin_main_style.css
                     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 }
                 
-            }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
+            }
+            else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
                 if (value.value == 50) {
                     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 }
