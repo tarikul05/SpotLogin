@@ -250,7 +250,7 @@ admin_main_style.css
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
                         <p style="font-size: 20px;"></p>
-                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
+                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Validate<span></button>
                         <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_edit_text">View<span>
                         </a>

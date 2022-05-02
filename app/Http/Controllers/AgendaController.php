@@ -161,11 +161,11 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
             
 
-            // if (now()>$fetch->date_end) {
-            //     $e['can_lock'] = 'Y';
-            // } else{
-            //     $e['can_lock'] = 'N';
-            // }
+            if (now()>$fetch->date_end) {
+                $e['can_lock'] = 'Y';
+            } else{
+                $e['can_lock'] = 'N';
+            }
             $e['description'] = $e['title'];
             $e['location'] = (is_null($fetch->location_id) ? 0 : $fetch->location_id) ;
             $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
@@ -630,11 +630,11 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
             
 
-            // if (now()>$fetch->date_end) {
-            //     $e['can_lock'] = 'Y';
-            // } else{
-            //     $e['can_lock'] = 'N';
-            // }
+            if (now()>$fetch->date_end) {
+                $e['can_lock'] = 'Y';
+            } else{
+                $e['can_lock'] = 'N';
+            }
             $e['description'] = $e['title'];
             $e['location'] = (is_null($fetch->location_id) ? 0 : $fetch->location_id) ;
             $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
