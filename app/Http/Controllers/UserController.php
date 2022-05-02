@@ -127,7 +127,7 @@ class UserController extends Controller
             
 
         //sending activation email after successful signed up
-        if (config('global.email_send') == 100) {
+        if (config('global.email_send') == 1) {
             
             try {
                 $data = [];
