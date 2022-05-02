@@ -771,12 +771,12 @@ $(document).ready(function(){
 		todayBtn:false,
 	});
 
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	// CKEDITOR.replace( "body_text", {
+	// 	customConfig: '/ckeditor/config_email.js',
+	// 	height: 300
+	// 	,extraPlugins: 'Cy-GistInsert'
+	// 	,extraPlugins: 'AppFields'
+	// });
 
 	$('#billing_method_list').on('change', function () {
 		var value = $(this).val();
