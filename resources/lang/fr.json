@@ -159,6 +159,7 @@
     "jpeg,png,jpg,gif,svg needed": "jpeg,png,jpg,gif,svg needed",
     "language_id required": "language_id required",
     "max 255 character will suppor": "max 255 character will suppor",
+    "omg": null,
     "password not matched": "password not matched",
     "reminder_email_unpaid": "reminder email unpaid",
     "reset_pass_email": "reset pass email",
