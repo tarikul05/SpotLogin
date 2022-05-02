@@ -188,6 +188,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
+							@role('superadmin')
 							<div class="section_header_class">
 								<label id="address_caption">{{ __('Subscription (Zero means unlimited)')}}</label>
 							</div>
@@ -212,7 +213,7 @@
 									</div>
 								</div>
 							</div>
-								
+							@endrole	
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Billing Method')}}</label>
