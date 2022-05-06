@@ -10,7 +10,10 @@ use App\Models\Teacher;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
-
+use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
+use App\Models\LessonPrice;
+use App\Models\Currency;
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 class AgendaController extends Controller
@@ -41,6 +44,13 @@ class AgendaController extends Controller
         if (empty($school)) {
             $schoolId = 0;
         }
+        // This part is copied from add lesson 
+        $eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        $lessonPrice = LessonPrice::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
         if ($user->person_type == 'App\Models\Student') {
@@ -287,7 +297,7 @@ class AgendaController extends Controller
         //dd($events);
         $events =json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
 
     }   
 
