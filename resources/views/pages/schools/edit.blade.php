@@ -188,6 +188,7 @@
 								</div>
 							</div>
 							<div class="clearfix"></div>
+							@role('superadmin')
 							<div class="section_header_class">
 								<label id="address_caption">{{ __('Subscription (Zero means unlimited)')}}</label>
 							</div>
@@ -212,7 +213,7 @@
 									</div>
 								</div>
 							</div>
-								
+							@endrole	
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Billing Method')}}</label>
@@ -771,12 +772,12 @@ $(document).ready(function(){
 		todayBtn:false,
 	});
 
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	// CKEDITOR.replace( "body_text", {
+	// 	customConfig: '/ckeditor/config_email.js',
+	// 	height: 300
+	// 	,extraPlugins: 'Cy-GistInsert'
+	// 	,extraPlugins: 'AppFields'
+	// });
 
 	$('#billing_method_list').on('change', function () {
 		var value = $(this).val();

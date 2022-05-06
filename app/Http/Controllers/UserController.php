@@ -134,7 +134,10 @@ class UserController extends Controller
                 $data['email'] = $user->email;
                 $data['name'] = $user->username;
                 $verifyUser = [
-                    'user_id' => $user->id,
+                    'school_id' => $school->id,
+                    'person_id' => $teacher->id,
+                    'person_type' => 'App\Models\Teacher',
+                    'token_type' => 'VERIFY_SIGNUP',
                     'token' => Str::random(10),
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
