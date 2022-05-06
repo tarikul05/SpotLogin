@@ -70,6 +70,8 @@ Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class,
 
 Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::class, 'validateMultipleEvent'])->name('multiple_event.validate')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 
 
 

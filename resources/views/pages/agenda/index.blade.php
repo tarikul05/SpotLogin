@@ -98,6 +98,7 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" >
                                 <!-- <div class="btn-group"> -->
+                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate</span></a>
                                     <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
 							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
                                     <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
@@ -1070,9 +1071,56 @@ admin_main_style.css
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmModalCall('Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
+
+
+    //validate multiple events based on date, events type, teacher and student etc
+    $('#btn_validate_events').click(function (e) {
+	
+        
+        var user_role=document.getElementById("user_role").value;
+        if (user_role == 'student') {
+            //alert("You don't have permission to delete events");
+            errorModalCall('permission_issue_common_text');
+            return false;
+        }
+        
+        var p_from_date=document.getElementById("date_from").value,
+        p_to_date=document.getElementById("date_to").value;
+        var p_event_school_id=getSchoolIDs();
+        var p_event_type_id=getEventIDs();
+        var p_student_id=getStudentIDs();
+        var p_teacher_id=getTeacherIDs();
+
+        //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+        e.preventDefault();
+        confirmModalCall('Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        return false;
+    })
+
+    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
+        var data='p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        
+            //e.preventDefault();
+            $.ajax({type: "POST",
+                url: BASE_URL + '/validate_multiple_events',
+                data: data,
+                dataType: "JSON",
+                success:function(result){
+                    document.getElementById("btn_validate_events").style.display = "none";
+                    var status =  result.status;
+                    //alert(status);
+                    getFreshEvents();      //refresh calendar 
+                    
+                },   //success
+                error: function(ts) { 
+                    errorModalCall('validate_multiple_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+                    // alert(ts.responseText)
+                }
+            }); //ajax-type
+    }
 
     function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
         var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
@@ -1619,6 +1667,7 @@ admin_main_style.css
                 document.getElementById("btn_copy_events").style.display = "none";
                 document.getElementById("btn_goto_planning").style.display = "none";
                 document.getElementById("btn_delete_events").style.display = "none";
+                document.getElementById("btn_validate_events").style.display = "none";
                 
                 var user_role=document.getElementById("user_role").value;
                 
@@ -1628,6 +1677,8 @@ admin_main_style.css
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
+                        document.getElementById("btn_validate_events").style.display = "block";
+                
                     }
                 }
 
@@ -1635,15 +1686,20 @@ admin_main_style.css
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_delete_events").style.display = "none";    
+                        document.getElementById("btn_validate_events").style.display = "none";    
+                        
+                        
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
                         //alert('delete button will visible');
                         document.getElementById("btn_delete_events").style.display = "block";
+                        document.getElementById("btn_validate_events").style.display = "block";
                     }
                 }
                 else
                 {
                     document.getElementById("btn_delete_events").style.display = "none";
+                    //document.getElementById("btn_validate_events").style.display = "none";
                 }
                 lockRecords=0;
                     

@@ -306,7 +306,7 @@ class AgendaController extends Controller
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to validate'),
         );
         try {
             $data = $request->all();
@@ -858,7 +858,7 @@ class AgendaController extends Controller
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to delete'),
         );
         try {
             $data = $request->all();
@@ -875,6 +875,70 @@ class AgendaController extends Controller
             if (isset($data['p_from_date'])) {
                 $query = new Event;
                 $eventData = $query->multiDelete($data)->delete();
+            }
+      
+            if ($eventData)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+
+
+     /**
+     *  AJAX validate multiple event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-05-06
+     */
+    public function validateMultipleEvent(Request $request)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to validate'),
+        );
+        try {
+            $data = $request->all();
+            $param = [];
+            $param['p_from_date']= trim($data['p_from_date']);
+            $param['p_to_date']= trim($data['p_to_date']);
+        
+            //$param['school_id']= trim($data['p_event_school_id']);
+            //$param['event_type']= trim($data['p_event_type_id']);
+            //$param['teacher_id']= trim($data['p_teacher_id']);
+            //$param['student_id']= trim($data['p_student_id']);
+            //$p_user_id=Auth::user()->id;
+
+            
+            if (isset($param['p_from_date'])) {
+                $query = new Event;
+
+                $event = [
+                    'is_locked' => 1
+                ];
+                $eventData = $query->multiValidate($param)->update($event);
+                // $eventDetail = [
+                //     'is_locked' => 1,
+                // ];
+                // $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+                
+                // $eventDetail = [
+                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+                // ];
+                // $eventdetail = $eventdetail->update($eventDetail);
             }
       
             if ($eventData)
