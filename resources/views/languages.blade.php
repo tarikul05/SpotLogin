@@ -72,7 +72,6 @@
 
 @section('footer_js') 
 <script type="text/javascript">
-    $('#lanTable').DataTable();
 
     $.ajaxSetup({
         headers: {
@@ -87,8 +86,7 @@
     //     }
     // });
 
-    $('.translate').each(function(index, el) {
-
+    $("body").find('.translate').each(function(index, el) {
         var code = $(this).data('code');
         new DarkEditable(this, {
               type: "text",
@@ -96,7 +94,7 @@
           })
     });
 
-    $('.translate').on('click',function(event) {
+    $("body").find('.translate').on('click',function(event) {
         event.preventDefault();
         const popover = new DarkEditable(this, {})
     });
@@ -123,5 +121,6 @@
             });
         }
     });
+$('#lanTable').DataTable({"pageLength": 50});
 </script>
 @endsection

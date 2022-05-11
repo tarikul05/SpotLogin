@@ -7,6 +7,8 @@ use App\Models\Language;
 use App\Models\Location;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
@@ -169,11 +171,11 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
             
 
-            // if (now()>$fetch->date_end) {
-            //     $e['can_lock'] = 'Y';
-            // } else{
-            //     $e['can_lock'] = 'N';
-            // }
+            if (now()>$fetch->date_end) {
+                $e['can_lock'] = 'Y';
+            } else{
+                $e['can_lock'] = 'N';
+            }
             $e['description'] = $e['title'];
             $e['location'] = (is_null($fetch->location_id) ? 0 : $fetch->location_id) ;
             $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
@@ -297,7 +299,7 @@ class AgendaController extends Controller
         //dd($events);
         $events =json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
 
     }   
 
@@ -314,7 +316,7 @@ class AgendaController extends Controller
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to validate'),
         );
         try {
             $data = $request->all();
@@ -638,11 +640,11 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
             
 
-            // if (now()>$fetch->date_end) {
-            //     $e['can_lock'] = 'Y';
-            // } else{
-            //     $e['can_lock'] = 'N';
-            // }
+            if (now()>$fetch->date_end) {
+                $e['can_lock'] = 'Y';
+            } else{
+                $e['can_lock'] = 'N';
+            }
             $e['description'] = $e['title'];
             $e['location'] = (is_null($fetch->location_id) ? 0 : $fetch->location_id) ;
             $e['category_id'] = (is_null($fetch->event_category) ? 0 : $fetch->event_category) ;
@@ -771,6 +773,90 @@ class AgendaController extends Controller
         
     } 
 
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getLocations(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $locations = Location::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $locations =json_encode($locations);
+       
+    }
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getStudents(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        
+        //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $locations =json_encode($students);
+       
+    }
+
+    /**
+     *  AJAX confirm event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-04-09
+     */
+    public function getTeachers(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        //$students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        //$locations = Teacher::active()->where('school_id', $schoolId)->orderBy('id')->get();
+        return $professors =json_encode($professors);
+       
+    }
+    
+
      /**
      *  AJAX delete multiple event
      * 
@@ -782,7 +868,7 @@ class AgendaController extends Controller
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to delete'),
         );
         try {
             $data = $request->all();
@@ -799,6 +885,70 @@ class AgendaController extends Controller
             if (isset($data['p_from_date'])) {
                 $query = new Event;
                 $eventData = $query->multiDelete($data)->delete();
+            }
+      
+            if ($eventData)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+
+
+     /**
+     *  AJAX validate multiple event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-05-06
+     */
+    public function validateMultipleEvent(Request $request)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to validate'),
+        );
+        try {
+            $data = $request->all();
+            $param = [];
+            $param['p_from_date']= trim($data['p_from_date']);
+            $param['p_to_date']= trim($data['p_to_date']);
+        
+            //$param['school_id']= trim($data['p_event_school_id']);
+            //$param['event_type']= trim($data['p_event_type_id']);
+            //$param['teacher_id']= trim($data['p_teacher_id']);
+            //$param['student_id']= trim($data['p_student_id']);
+            //$p_user_id=Auth::user()->id;
+
+            
+            if (isset($param['p_from_date'])) {
+                $query = new Event;
+
+                $event = [
+                    'is_locked' => 1
+                ];
+                $eventData = $query->multiValidate($param)->update($event);
+                // $eventDetail = [
+                //     'is_locked' => 1,
+                // ];
+                // $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+                
+                // $eventDetail = [
+                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+                // ];
+                // $eventdetail = $eventdetail->update($eventDetail);
             }
       
             if ($eventData)

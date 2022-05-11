@@ -193,7 +193,10 @@ nav {
     font-size: 15px;
     color: #657e8e;
 }
-
+.error {
+    border: 2px solid red;
+    border-radius: 6px;
+}
 /* add language page css */
 
 .page_title {

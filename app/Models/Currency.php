@@ -12,6 +12,8 @@ class Currency extends BaseModel
     protected $table = 'currencies';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
+    protected $primaryKey = 'currency_code';
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +42,14 @@ class Currency extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
+
+    /**
+     * Get the country.
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class,'country_code', 'code');
+    }
 
       /**
      * Scope a query to only include users of a given type.

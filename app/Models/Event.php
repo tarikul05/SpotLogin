@@ -185,6 +185,92 @@ class Event extends BaseModel
     }
 
 
+    /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function multiValidate($params)
+    {
+        $query = $this->newQuery();
+        $request = request();
+        $authUser = $request->user();
+        
+        $fromFilterDate = null;
+        $toFilterDate = null;
+
+        if (isset($params['p_from_date'])) {
+            $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
+            
+            if (!$toFilterDate) {
+                $toFilterDate = now();
+            }
+            unset($params['p_from_date']);
+        } 
+        
+        if (isset($params['p_to_date'])) {
+            $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
+            
+            if (!$fromFilterDate) {
+                $fromFilterDate = now();
+            }
+            unset($params['p_to_date']);
+        }
+
+        
+
+
+        $query->where('deleted_at', null);
+        foreach ($params as $key => $value) { 
+            if (!empty($value)) {
+                
+                if (in_array($key, $this->arrayFilterable)) { 
+                    if (isset($value) && strpos($value, '|') !== false){
+                        $value = explode('|', $value);
+                    }
+                    if ($key=='teacher_id') {
+                        //dd($value);
+                    }
+                    if (is_array($value)) {
+                        $query->whereIn($key, $value);
+                       // unset($params['authority:in']);
+                    }  else { 
+                        $query->where($key, '=', $value);
+                    } 
+                    
+                    // $query->where($key, 'LIKE', "%{$value}%");
+                } 
+                else {
+                    $query->where($key, '=', $value);
+                }
+                
+            }
+        }
+
+        try {
+
+            if ($fromFilterDate && $toFilterDate) {
+                
+                if ($fromFilterDate && $toFilterDate) {
+                    $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
+                        $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
+                            ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
+                            ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
+                                $sq->where('date_start', '<', $fromFilterDate)
+                                    ->where('date_end', '>', $toFilterDate);
+                            })
+                            ;
+                    });
+                }
+            }
+        } catch (\Exception $e) {
+            
+        }
+        return $query;
+    }
+
+
      /**
      * filter data based request parameters
      * 

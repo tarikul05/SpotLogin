@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Currency;
+use App\Models\Country;
 
 class CurrencyController extends Controller
 {
@@ -23,9 +24,12 @@ class CurrencyController extends Controller
     public function index()
     {
         $currencyList = Currency::all();
+        $countries = Country::active()->get();
+        // dd($country);
 
         return view('pages.currency.add', [
             'allcurrency' => $currencyList,
+            'countries' => $countries,
             'title' => 'currency',
             'pageInfo'=>['siteTitle'=>'']
         ]);
@@ -41,9 +45,10 @@ class CurrencyController extends Controller
             $request->merge(['name'=> $params['currency_title'] ,'currency_code'=> $lanCode ,'flag_class'=>'flag-icon flag-icon-'.$lanCode]);
 
             $this->validate($request, [
+                'country_code' => 'required',
                 'currency_code' => 'required',
                 'currency_title' => 'required',
-                'sort_order' => 'required',
+                // 'sort_order' => 'required',
             ]);
 
             $currency = Currency::where('currency_code', $lanCode)->first();

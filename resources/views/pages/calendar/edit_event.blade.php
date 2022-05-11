@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -34,7 +35,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="add_event" role="form">
+				<form class="form-horizontal" id="edit_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="edit_event" role="form">
 					@csrf
 					<fieldset>
 						<div class="section_header_class">
@@ -78,11 +79,11 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
-											<select class="form-control" id="student" name="student[]" multiple="multiple" required>
-												@foreach($students as $key => $student)
-													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+											<select class="form-control" id="student" name="student[]" multiple="multiple">
+												@foreach($students as $sub)
+													<option value="{{ $sub->id}}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
-											</select>
+			  								</select>
 										</div>
 									</div>
 								</div>
@@ -168,6 +169,7 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+											<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
 										</div>
 									</div>
 								</div>
@@ -179,6 +181,7 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
 										</div>
 									</div>
 								</div>
@@ -190,6 +193,62 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) / ($eventData->no_of_students); }}">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="section_header_class">
+								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
+							</div>
+							<div class="col-md-7 offset-md-2">
+								<div class="form-group row">
+									<div class="col-sm-12">
+										<div class="form-group row">
+											<div class="col-sm-12">
+												<div class="table-responsive">
+													<table id="attn_tbl" class="table">
+														<tbody>
+															<tr>
+																<th width="5%" style="text-align:left"></th>
+																<th width="15%" style="text-align:left">
+																	<span>{{ __('Student') }}</span>
+																</th>
+																<th width="15%" style="text-align:left">
+																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
+																</th>
+																<th width="15%" style="text-align:right;">
+																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
+																</th>
+																<th width="15%" style="text-align:right">
+																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
+																</th>
+															</tr>
+															
+															@foreach($studentOffList as $student)
+															<tr>
+																<td>{{ $student->id }}</td>
+																<td>
+																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
+																</td>
+																<td>
+																	<div class="selectdiv">
+																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->id }}">
+																			<option value="0" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Scheduled</option>
+																			<option value="199" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 199 ? 'selected' : '') : (old('student_attn') == 199 ? 'selected' : '')}}>Absent</option>
+																			<option value="200" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 200 ? 'selected' : '') : (old('student_attn') == 200 ? 'selected' : '')}}>Present</option>
+																		</select>
+																	</div>
+																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
+																</td>
+																<td style="text-align:right"> {{ ($eventData->price_amount_buy) / ($eventData->no_of_students); }}</td>
+																<td style="text-align:right"> {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
+															</tr>
+															@endforeach
+														</tbody>
+													</table>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -259,7 +318,6 @@ $( document ).ready(function() {
 
 	var start_time = new Date("{{$eventData->date_start}}").toLocaleTimeString()
 	var end_time = new Date("{{$eventData->date_end}}").toLocaleTimeString()
-console.log(start_time, end_time)
 
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
@@ -306,6 +364,119 @@ $('#sis_paying').on('change', function() {
 	}else if(this.value == 2){
 		$('#price_per_student').show();
 	}
+});
+
+// save functionality
+$('.student_attn').change(function (e) {
+	var stuId = $(this).attr('data-id');
+	var typeId = $(this).val();
+
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
+	$.ajax({
+		url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$eventId}}',
+		data: { type:1, stuId:stuId, typeId:typeId },
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function( xhr ) {
+			$("#pageloader").show();
+		},
+		success: function(response){	
+			if(response.status == 1){
+				
+			}
+		},
+		complete: function( xhr ) {
+			$("#pageloader").hide();
+		}
+	})
+			            
+}); 
+
+
+// save functionality
+$('#mark_present_btn').click(function (e) {
+	if (confirm("Mark all student as present ?")) {
+		var data = [];
+		$('.student_attn').val('200');
+		$('.student_attn').each(function(){ 
+			data.push({stuId : $(this).attr('data-id'), typeId : 200 })
+		});	
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		
+		$.ajax({
+			url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$eventId}}',
+			data: { type:2, data:data },
+			type: 'POST',
+			dataType: 'json',
+			beforeSend: function( xhr ) {
+				$("#pageloader").show();
+			},
+			success: function(response){	
+				if(response.status == 1){
+					
+				}
+			},
+			complete: function( xhr ) {
+				$("#pageloader").hide();
+			}
+		})
+	}
+			            
+});
+
+$('#edit_event').on('submit', function() {
+	var title = $('#Title').val();
+	var professor = $('#teacher_select').val();
+	var selected = $("#student :selected").map((_, e) => e.value).get();
+	var startDate = $('#start_date').val();
+	var endDate = $('#end_date').val();
+
+	var errMssg = '';
+	
+	if(title == ''){
+		var errMssg = 'Title required';
+		$('#Title').addClass('error');
+	}else{
+		$('#Title').removeClass('error');
+	}
+
+	if( selected < 1){
+		var errMssg = 'Select student';
+		$('.student_list').addClass('error');
+	}else{
+		$('.student_list').removeClass('error');
+	}
+
+	if(startDate == ''){
+		var errMssg = 'Start date required';
+		$('#start_date').addClass('error');
+	}else{
+		$('#start_date').removeClass('error');
+	}
+
+	if(endDate == ''){
+		var errMssg = 'Ednd date required';
+		$('#end_date').addClass('error');
+	}else{
+		$('#end_date').removeClass('error');
+	}
+
+	if(errMssg == ""){
+		return true;
+	}else{
+		return false;	
+	}
+
 });
 </script>
 @endsection

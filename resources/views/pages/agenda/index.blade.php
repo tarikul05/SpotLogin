@@ -94,6 +94,7 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" >
                                 <!-- <div class="btn-group"> -->
+                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate</span></a>
                                     <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
 							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
                                     <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
@@ -163,6 +164,12 @@ admin_main_style.css
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types as $key => $event_type)
+                                                        <option id = value="{{ $key }}">{{ $event_type }}</option>
+                                                    @endforeach
+                                            
+                                                </select>
+                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 15px;" >
+                                                    @foreach($event_types_all as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                             
@@ -484,7 +491,7 @@ admin_main_style.css
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
                         <p style="font-size: 20px;"></p>
-                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Confirm<span></button>
+                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Validate<span></button>
                         <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_edit_text">View<span>
                         </a>
@@ -620,9 +627,21 @@ admin_main_style.css
         RenderCalendar();
         PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
-        PopulateLocationDropdown();
-        PopulateStudentDropdown();
-        PopulateTeacherDropdown();
+        var selected_school_ids = [];
+        $.each($("#event_school option:selected"), function(){         
+            selected_school_ids.push($(this).val());
+        });	
+        if (selected_school_ids.length == 1) {
+            PopulateLocationDropdown(document.getElementById("event_school_id").value);
+            PopulateStudentDropdown(document.getElementById("event_school_id").value)
+            PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+        } else{
+            PopulateLocationDropdown();
+            PopulateStudentDropdown();
+            PopulateTeacherDropdown();
+        }
+
+        
         DisplayCalendarTitle();
         document.getElementById("copy_school_id").value =getSchoolIDs();
         document.getElementById("copy_event_id").value =getEventIDs();
@@ -630,9 +649,9 @@ admin_main_style.css
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
-        $("#event_type option").each(function(key,value)
+        $("#event_types_all option").each(function(key,value)
         {
-            
+            //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
                 menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
@@ -641,7 +660,7 @@ admin_main_style.css
             }
             
             // cours - events - PopulateButtonMenuList
-            if (user_role != 'student'){
+            if ((value.value == 10) && user_role != 'student'){
                 menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
@@ -652,7 +671,7 @@ admin_main_style.css
                 //     menuHtml+='<li><a  href="../admin/'+{{$schoolId}}+'/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
-                // if (value.id == 10) {
+                // if (value.value == 10) {
                 //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
@@ -668,7 +687,8 @@ admin_main_style.css
                     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 }
                 
-            }else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
+            }
+            else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
                 if (value.value == 50) {
                     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 }
@@ -858,6 +878,16 @@ admin_main_style.css
                     document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='0';
                     
+                    var selected_ids = [];
+                    $.each($("#event_school option:selected"), function(){         
+                        selected_ids.push($(this).val());
+                    });	
+                    if (selected_ids.length == 1) {
+                        PopulateLocationDropdown(document.getElementById("event_school_id").value);
+                        PopulateStudentDropdown(document.getElementById("event_school_id").value)
+                        PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                    }
+                    
                     //SetEventCookies();
                     RerenderEvents();
             },
@@ -941,8 +971,46 @@ admin_main_style.css
                  
     }   
     // populate location
-    function PopulateLocationDropdown(){
-          
+    function PopulateLocationDropdown(school_id=null){
+
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_location').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_locations',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                    });
+                    $('#event_location').html(resultHtml);
+                    $("#event_location").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
         $('#event_location').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Location',
@@ -975,7 +1043,7 @@ admin_main_style.css
                     console.log('location onDeSelectAll triggered!');
                     document.getElementById("event_location_id").value='';
                     document.getElementById("event_location_all_flag").value='0';
-                 
+                
                 }
                 //SetEventCookies();
                 RerenderEvents();
@@ -989,14 +1057,57 @@ admin_main_style.css
             },
             selectAllValue: 0
         });
- 
         $('#event_location').multiselect('selectAll', false);   
         $('#event_location').multiselect('refresh');	
-                  
+            
+    
+        
+          
+        
+ 
+             
     }   
     // populate teacher
-    function PopulateTeacherDropdown(){
-          
+    function PopulateTeacherDropdown(school_id=null){
+        
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_teacher').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_teachers',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.teacher_id+'">'+value.nickname+'</option>'; 
+                    });
+                    $('#event_teacher').html(resultHtml);
+                    $("#event_teacher").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
         $('#event_teacher').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Teachers',
@@ -1049,8 +1160,45 @@ admin_main_style.css
                    
     }   
     // populate student
-    function PopulateStudentDropdown(){
-          
+    function PopulateStudentDropdown(school_id=null){
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_student').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_students',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
+                    });
+                    $('#event_student').html(resultHtml);
+                    $("#event_student").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        } 
         $('#event_student').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Students',
@@ -1163,9 +1311,56 @@ admin_main_style.css
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('confirm_event_delete_text',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmModalCall('Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
+
+
+    //validate multiple events based on date, events type, teacher and student etc
+    $('#btn_validate_events').click(function (e) {
+	
+        
+        var user_role=document.getElementById("user_role").value;
+        if (user_role == 'student') {
+            //alert("You don't have permission to delete events");
+            errorModalCall('permission_issue_common_text');
+            return false;
+        }
+        
+        var p_from_date=document.getElementById("date_from").value,
+        p_to_date=document.getElementById("date_to").value;
+        var p_event_school_id=getSchoolIDs();
+        var p_event_type_id=getEventIDs();
+        var p_student_id=getStudentIDs();
+        var p_teacher_id=getTeacherIDs();
+
+        //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+        e.preventDefault();
+        confirmModalCall('Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        return false;
+    })
+
+    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
+        var data='p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        
+            //e.preventDefault();
+            $.ajax({type: "POST",
+                url: BASE_URL + '/validate_multiple_events',
+                data: data,
+                dataType: "JSON",
+                success:function(result){
+                    document.getElementById("btn_validate_events").style.display = "none";
+                    var status =  result.status;
+                    //alert(status);
+                    getFreshEvents();      //refresh calendar 
+                    
+                },   //success
+                error: function(ts) { 
+                    errorModalCall('validate_multiple_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+                    // alert(ts.responseText)
+                }
+            }); //ajax-type
+    }
 
     function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
         var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
@@ -1713,6 +1908,7 @@ admin_main_style.css
                 document.getElementById("btn_copy_events").style.display = "none";
                 document.getElementById("btn_goto_planning").style.display = "none";
                 document.getElementById("btn_delete_events").style.display = "none";
+                document.getElementById("btn_validate_events").style.display = "none";
                 
                 var user_role=document.getElementById("user_role").value;
                 
@@ -1722,6 +1918,8 @@ admin_main_style.css
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
+                        document.getElementById("btn_validate_events").style.display = "block";
+                
                     }
                 }
 
@@ -1729,15 +1927,20 @@ admin_main_style.css
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_delete_events").style.display = "none";    
+                        document.getElementById("btn_validate_events").style.display = "none";    
+                        
+                        
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
                         //alert('delete button will visible');
                         document.getElementById("btn_delete_events").style.display = "block";
+                        document.getElementById("btn_validate_events").style.display = "block";
                     }
                 }
                 else
                 {
                     document.getElementById("btn_delete_events").style.display = "none";
+                    //document.getElementById("btn_validate_events").style.display = "none";
                 }
                 lockRecords=0;
                     
@@ -1831,7 +2034,16 @@ admin_main_style.css
 		var selected_ids = [];
         $.each($("#event_school option:selected"), function(){         
             selected_ids.push($(this).val());
-        });		
+        });	
+        if (selected_ids.length > 1) {
+            $('#event_location_div').hide();
+            $('#event_teacher_div').hide();
+            $('#event_student_div').hide();
+        } else {
+            $('#event_location_div').show();
+            $('#event_teacher_div').show();
+            $('#event_student_div').show();
+        }	
 		//console.log('selected='+selected_ids.join("|"));
 		return selected_ids.join("|");
 	}

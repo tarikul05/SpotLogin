@@ -150,7 +150,7 @@
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
-																<td>Present</td>
+																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
 																<td>{{ $student->buy_price }}</td>
 																<td style="text-align:center">{{ $student->sell_price }}</td>
 																<td style="text-align:center">{{ $lessonData->extra_charges }}</td>

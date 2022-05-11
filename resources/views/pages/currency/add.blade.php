@@ -21,9 +21,21 @@
 							<input type="hidden" id="currency_code_data" name="currency_code_data" value="">
 						</div> 
 						<div class="form-group row">
-							<label class="col-lg-4 col-sm-4 text-end">{{ __('Currency code')}}: </label>
+							<label class="col-lg-4 col-sm-4 text-end">{{ __('Country')}}: </label>
 							<div class="col-sm-6">
 								<div class="selectdiv form-group-data">
+									<select class="form-control" id="country_code"  name="country_code">
+										@foreach($countries as $key => $country)
+											<option value="{{ $country->code }}">{{ $country->name }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-4 col-sm-4 text-end">{{ __('Currency code')}}: </label>
+							<div class="col-sm-6">
+								<div class="form-group-data">
 									<input type="text" class="form-control" id="currency_code" name="currency_code">
 									
 								</div>
@@ -38,7 +50,7 @@
 						<div class="form-group row">
 							<label class="col-lg-4 col-sm-4 text-end">{{ __('Currency short order')}}: </label>
 							<div class="col-sm-6 form-group-data">
-								<input type="text" class="form-control" id="sort_order" name="sort_order">
+								<input type="number" class="form-control" id="sort_order" name="sort_order">
                  
 							</div>
 						</div>
@@ -67,7 +79,8 @@
 									<tr>
 										<th scope="col">{{__('Currency code')}}</th>
 										<th scope="col">{{__('Name')}}</th>
-										<th scope="col">{{__('Currency short order')}}</th>
+										<th scope="col">{{__('Country')}}</th>
+										<th scope="col">{{__('Short order')}}</th>
 										<th scope="col">{{__('Status')}}</th>
 										<th scope="col"></th>
 									</tr>
@@ -80,6 +93,7 @@
 										<tr>
 											<th>{{ $value->currency_code }}</th>
 											<td>{{ $value->name }}</td>
+											<td data-code="{{$value->country_code}}">{{ $value->country->name }}</td>
 											<td>{{ $value->sort_order }}</td>
 											<td data-active="{{ $value->is_active }}">
 												@if($value->is_active == 1)
@@ -129,23 +143,17 @@
 				document.getElementById("currency_code").focus();
 				error = true;
     	}
-			if (currency_title == null || currency_title == "") {
-				document.getElementById("currency_title").focus();
-				$('#currency_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
-				error = true;             
+		if (currency_title == null || currency_title == "") {
+			document.getElementById("currency_title").focus();
+			$('#currency_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+			error = true;             
     	}
-    	if (sort_order == null || sort_order  == "") {		
-				$('#sort_order').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
-				document.getElementById("sort_order").focus();
-				error = true;
-    	}
+ 
 
-			if (error) {
-				return false;
-			}            			
-    	else
-    	{
-				return true;
+		if (error) {
+			return false;
+		}else{
+			return true;
     	}
     }  
 
@@ -164,10 +172,11 @@
         document.getElementById("currency_code").disabled = true;
         document.getElementById("currency_code").value=document.getElementById("currency_table").rows[p_row].cells[0].innerHTML;
         document.getElementById("currency_title").value=document.getElementById("currency_table").rows[p_row].cells[1].innerHTML;
-        document.getElementById("sort_order").value=document.getElementById("currency_table").rows[p_row].cells[2].innerHTML;
-        document.getElementById("is_active").value=document.getElementById("currency_table").rows[p_row].cells[3].getAttribute('data-active');
-				document.getElementById("row_id").value=p_row;
-				document.getElementById("currency_code_data").value=document.getElementById("currency_table").rows[p_row].cells[0].innerHTML;
+        document.getElementById("country_code").value=document.getElementById("currency_table").rows[p_row].cells[2].getAttribute('data-code');
+        document.getElementById("sort_order").value=document.getElementById("currency_table").rows[p_row].cells[3].innerHTML;
+        document.getElementById("is_active").value=document.getElementById("currency_table").rows[p_row].cells[4].getAttribute('data-active');
+		document.getElementById("row_id").value=p_row;
+		document.getElementById("currency_code_data").value=document.getElementById("currency_table").rows[p_row].cells[0].innerHTML;
         
         document.getElementById("currency_title").focus();
         return false;

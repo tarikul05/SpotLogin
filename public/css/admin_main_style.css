@@ -656,6 +656,66 @@ input#shas_user_account {
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+#button_lock_and_save_div {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+button#button_lock_and_save {
+    padding: 0.75rem;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 0.25;
+    height: 35px;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+ul.dropdown-menu.show {
+    max-width: 260px !important;
+    right: 0;
+    left: auto !important;
+}
+ul.dropdown-menu.show li a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+ul.dropdown-menu.show li:hover {
+    background: #f5f5f5;
+}
+ul.dropdown-menu.show li a i {
+    font-size: 21px;
+    padding-right: 7px;
+    font-weight: bold;
+}
+a#btn_delete_events {
+    line-height: 25px;
+}
+em.glyphicon.glyphicon-plus {
+    font-size: 20px;
+    padding-right: 4px;
+    font-weight: bold;
+}
+button#btn_copy_events {
+    padding-top: 2px;
+}
+button.btn.btn-theme-success.dropdown-toggle {
+    height: 37px !important;
+}
+a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
+    padding-top: 5px;
+}
+a.btn.btn-theme-success.dropdown-toggle.btn-add-event i {
+    padding-right: 9px;
+    font-size: 20px;
+    font-weight: bold;
+}
 
 /*****FULL CALENDER CSS***/
 input[type="input"].search-collapse-input {
@@ -909,6 +969,7 @@ button.btn.btn-sm.btn-warning {
     border-color: #eea236;
     margin-top: -5px;
 }
+
 #addAgendaModal .modal-dialog {
     max-width: 900px;
 }
@@ -928,6 +989,7 @@ button.btn.btn-sm.btn-warning {
     z-index: 9999 !important;
     min-width: 100px;
 }
+
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
