@@ -12,8 +12,6 @@ use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
-use App\Models\SchoolTeacher;
-use App\Models\SchoolStudent;
 use App\Models\LessonPrice;
 use App\Models\Currency;
 use App\Models\School;

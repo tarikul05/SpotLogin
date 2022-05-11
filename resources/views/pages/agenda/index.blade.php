@@ -2441,85 +2441,71 @@ $('#add_lesson').on('submit', function() {
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
 	var errMssg = '';
-	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
-	}else{
-		$('#Title').removeClass('error');
-	}
-	if( selected < 1){
-		var errMssg = 'Select student';
-		$('.student_list').addClass('error');
-	}else{
-		$('.student_list').removeClass('error');
-	}
-	if(startDate == ''){
-		var errMssg = 'Start date required';
-		$('#start_date').addClass('error');
-	}else{
-		$('#start_date').removeClass('error');
-	}
-	if(endDate == ''){
-		var errMssg = 'Ednd date required';
-		$('#end_date').addClass('error');
-	}else{
-		$('#end_date').removeClass('error');
-	}
-	if(errMssg == ""){
-		return true;
-	}else{
-		return false;	
-	}
+	var type = $("#agenda_select").val();
+
+    if(type == 1 || type == 2){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if( selected < 1){
+            var errMssg = 'Select student';
+            $('.student_list').addClass('error');
+        }else{
+            $('.student_list').removeClass('error');
+        }
+        if(startDate == ''){
+            var errMssg = 'Start date required';
+            $('#start_date').addClass('error');
+        }else{
+            $('#start_date').removeClass('error');
+        }
+        if(endDate == ''){
+            var errMssg = 'Ednd date required';
+            $('#end_date').addClass('error');
+        }else{
+            $('#end_date').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }else if(type == 3){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if( selected < 1){
+            var errMssg = 'Select student';
+            $('.student_list').addClass('error');
+        }else{
+            $('.student_list').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }else if(type == 4){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }
 });
 //save functionality of student_off
-$('#student_off').on('submit', function() {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-
-        if(error == 0){
-            return true;
-        }else{
-            return false;	
-        }
-	            
-});  
-
-// save functionality of coach_off
-$('#coach_off').on('submit', function() {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-
-        
-        if(error == 0){
-            return true;
-        }else{
-            return false;	
-        }
-	            
-}); 
 
 $('#agenda_select').on('change', function() {
     if(this.value != ''){
@@ -2554,7 +2540,6 @@ $('#agenda_select').on('change', function() {
             $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", "{{ route('studentOff.createAction',[$schoolId]) }}");
-            $( "form.form-horizontal" ).attr("id", "student_off" );
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
         }else if(this.value == 4){
@@ -2563,7 +2548,6 @@ $('#agenda_select').on('change', function() {
             $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", "{{ route('coachOff.createAction',[$schoolId]) }}");
-            $( "form.form-horizontal" ).attr("id", "coach_off" );
             $('.show_coach_off.hide_on_off').show();
         }
 	}else{
