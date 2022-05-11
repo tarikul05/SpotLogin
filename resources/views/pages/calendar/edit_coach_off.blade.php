@@ -161,34 +161,7 @@ $('#save_btn').click(function (e) {
 				$(this).removeClass('error');
 				error = 0;
 			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				beforeSend: function( xhr ) {
-				    $("#pageloader").show();
-				 },
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				},
-				complete: function( xhr ) {
-				    $("#pageloader").hide();
-				}
-			})
-		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
+		});	            
 });  
 </script>
 @endsection

@@ -924,6 +924,10 @@ button.btn.btn-sm.btn-warning {
 #addAgendaModal .multiselect-container > li > a > label {
     padding: 3px 20px 3px 10px;
 }
+.ui-timepicker-container.ui-timepicker-standard {
+    z-index: 9999 !important;
+    min-width: 100px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
