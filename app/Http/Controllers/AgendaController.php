@@ -325,12 +325,21 @@ class AgendaController extends Controller
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id);
             
-            $eventDetail = [
-                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+            $eventDetailPresent = [
+                'is_locked' => 1,
+                'participation_id' => 200,
             ];
-            $eventdetail = $eventdetail->update($eventDetail);
+            $eventDetailAbsent = [
+                'is_locked' => 1,
+                'participation_id' => 199,
+            ];
+            if ($eventdetail->participation_id == 0) {
+                $eventdetail = $eventdetail->update($eventDetailPresent);
+            } else {
+                $eventdetail = $eventdetail->update($eventDetailAbsent);
+            }
 
             if ($eventdetail)
             {
@@ -929,11 +938,32 @@ class AgendaController extends Controller
                 $event = [
                     'is_locked' => 1
                 ];
-                $eventData = $query->multiValidate($param)->update($event);
-                // $eventDetail = [
-                //     'is_locked' => 1,
-                // ];
-                // $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
+                $eventData = $query->multiValidate($param)->get();
+               
+                foreach ($eventData as $key => $p_event_auto_id) {
+
+                    $event = [
+                        'is_locked' => 1
+                    ];
+                    $event = Event::where('id', $p_event_auto_id->id)->update($event);
+        
+        
+                    $eventDetailPresent = [
+                        'is_locked' => 1,
+                        'participation_id' => 200,
+                    ];
+                    $eventDetailAbsent = [
+                        'is_locked' => 1,
+                        'participation_id' => 199,
+                    ];
+                    $eventdetail = EventDetails::where('event_id', $p_event_auto_id->id);
+                    if ($eventdetail->participation_id == 0) {
+                        $eventdetail = $eventdetail->update($eventDetailPresent);
+                    } else {
+                        $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    }
+                }
+                
                 
                 // $eventDetail = [
                 //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
