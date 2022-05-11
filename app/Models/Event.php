@@ -293,8 +293,37 @@ class Event extends BaseModel
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
+        if (isset($params['type'])) { 
+            unset($params['type']);
+        }
+        if (isset($params['zone'])) { 
+            unset($params['zone']);
+        }
+        if (isset($params['start_date'])) {
+            //$fromFilterDate = null;
+            //$toFilterDate = null;
         
-        $query->where('deleted_at', null);
+          //$fromFilterDate = str_replace('/', '-',$params['start_date']);
+          $fromFilterDate = $params['start_date'];
+        //   if (!$toFilterDate) {
+        //       $toFilterDate = now();
+        //   }
+          unset($params['start_date']);
+        } 
+      
+        if (isset($params['end_date'])) {
+           // $fromFilterDate = null;
+            //$toFilterDate = null;
+            $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            $toFilterDate = $params['end_date'];
+          
+            //   if (!$fromFilterDate) {
+            //       $fromFilterDate = now();
+            //   }
+            unset($params['end_date']);
+        }
+        
+        //$query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
@@ -349,26 +378,7 @@ class Event extends BaseModel
         } 
 
 
-        if (isset($params['start_date'])) {
-            $fromFilterDate = null;
-            $toFilterDate = null;
         
-          $fromFilterDate = str_replace('/', '-',$params['start_date']);
-          
-          if (!$toFilterDate) {
-              $toFilterDate = now();
-          }
-        } 
-      
-        if (isset($params['end_date'])) {
-            $fromFilterDate = null;
-            $toFilterDate = null;
-          $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
-          
-          if (!$fromFilterDate) {
-              $fromFilterDate = now();
-          }
-        }
         try {
           if ($fromFilterDate && $toFilterDate) {
               $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
@@ -384,6 +394,7 @@ class Event extends BaseModel
         } catch (\Exception $e) {
           
         }
+        //dd($query->toSql());
         return $query;
     }
 

@@ -316,10 +316,10 @@ class AgendaController extends Controller
             // $data['school_id']
             // $p_user_id = Auth::user()->id;
 
-            $event = [
+            $eventUpdate = [
                 'is_locked' => 1
             ];
-            $event = Event::where('id', $p_event_auto_id)->update($event);
+            $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
 
 
             $eventDetail = [
@@ -366,7 +366,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-14
      */
-    public function copyPasteEvent(Request $request,$schoolId = null)
+    public function copyPasteEvent(Request $request,$schoolId = null, Event $event)
     {
         $user = Auth::user();
         $data = $request->all();
@@ -397,10 +397,10 @@ class AgendaController extends Controller
             $view_mode= trim($data['view_mode']);
             
             //dd($data);
-            $query = new Event;
-            $eventData = $query->filter_for_copy($data);
+            //$query = new Event;
+            $eventData = $event->filter_for_copy($data);
             
-            $eventData = $query->get();
+            $eventData = $eventData->get();
             
             
 
@@ -481,14 +481,14 @@ class AgendaController extends Controller
                     'event_price' => $fetch->event_price,
                     'event_price' => $fetch->event_price
                 ];
-                $event = Event::create($data);
+                $eventData = Event::create($data);
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
                 
 
                 foreach($eventDetailsStudentId as $std){
                     $dataDetails = [
-                        'event_id'   => $event->id,
+                        'event_id'   => $eventData->id,
                         'teacher_id' => $fetch->teacher_id,
                         'student_id' => $std['student_id'],
                         'buy_price' => $fetch->price_amount_buy,
@@ -542,7 +542,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-09
      */
-    public function getEvent(Request $request,$schoolId = null)
+    public function getEvent(Request $request,$schoolId = null, Event $event)
     {
         $data = $request->all();
         
@@ -565,9 +565,10 @@ class AgendaController extends Controller
         //$data['school_id'] = $schoolId;
         //dd($data);
 
-        $query = new Event;
-        $eventData = $query->filter($data);
-        $eventData = $query->get();
+        //$query1 = new Event;
+        $eventData = $event->filter($data);
+        //dd($eventData->count());
+        $eventData = $eventData->get();
 
        
         
@@ -765,7 +766,7 @@ class AgendaController extends Controller
 
             array_push($events, $e);
         }
-        //dd($data);
+        
         $events =json_encode($events);
         
         return response()->json($events);
@@ -863,7 +864,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-10
      */
-    public function deleteMultipleEvent(Request $request)
+    public function deleteMultipleEvent(Request $request, Event $event)
     {
         $result = array(
             'status' => 'failed',
@@ -882,8 +883,8 @@ class AgendaController extends Controller
 
             
             if (isset($data['p_from_date'])) {
-                $query = new Event;
-                $eventData = $query->multiDelete($data)->delete();
+                
+                $eventData = $event->multiDelete($data)->delete();
             }
       
             if ($eventData)
@@ -913,7 +914,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-05-06
      */
-    public function validateMultipleEvent(Request $request)
+    public function validateMultipleEvent(Request $request, Event $event)
     {
         $result = array(
             'status' => 'failed',
@@ -933,19 +934,19 @@ class AgendaController extends Controller
 
             
             if (isset($param['p_from_date'])) {
-                $query = new Event;
+                //$query = new Event;
 
-                $event = [
+                $eventUpdate = [
                     'is_locked' => 1
                 ];
-                $eventData = $query->multiValidate($param)->get();
+                $eventData = $event->multiValidate($param)->get();
                
                 foreach ($eventData as $key => $p_event_auto_id) {
 
-                    $event = [
+                    $eventUpdate = [
                         'is_locked' => 1
                     ];
-                    $event = Event::where('id', $p_event_auto_id->id)->update($event);
+                    $eventData = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
         
         
                     $eventDetailPresent = [
