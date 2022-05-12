@@ -998,7 +998,7 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
                     });
-                    $('#event_location').html(resultHtml);
+                    $('#event_location, #location').html(resultHtml);
                     $("#event_location").multiselect('destroy');
                     
                 },   //success
@@ -1095,7 +1095,7 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.teacher_id+'">'+value.nickname+'</option>'; 
                     });
-                    $('#event_teacher').html(resultHtml);
+                    $('#event_teacher, #teacher_select').html(resultHtml);
                     $("#event_teacher").multiselect('destroy');
                     
                 },   //success
@@ -1997,23 +1997,22 @@ admin_main_style.css
                 }
             },
             dayClick: function(date, jsEvent, view, resource) {
-                $('#start_date').val('');
-                $('#end_date').val('');
-                $("#addAgendaModal").modal('show');
-                const [day, month, year] = date.format().split('-');
-                const result = [year, month, day].join('/');
-                $('#start_date').val(result);
-                $('#end_date').val('');
+                // $('#start_date').val('');
+                // $('#end_date').val('');
+                // $("#addAgendaModal").modal('show');
+                // const [day, month, year] = date.format().split('-');
+                // const result = [year, month, day].join('/');
+                // $('#start_date').val(result);
+                // $('#end_date').val('');
+                // console.log('xxx',date,jsEvent,view,resource)
             },
             select: function(startDate, endDate, jsEvent, view, resource) {
                 $('#start_date').val('');
                 $('#end_date').val('');
                 $("#addAgendaModal").modal('show');
-                const [sday, smonth, syear] = startDate.format().split('-');
-                const startresult = [syear, smonth, sday].join('/');
+                const startresult = startDate.format('DD/MM/YYYY');
                 $('#start_date').val(startresult);
-                const [eday, emonth, eyear] = endDate.format().split('-');
-                const endresult = [eyear, emonth, eday].join('/');
+                const endresult = endDate.subtract(1, 'day').format('DD/MM/YYYY');
                 $('#end_date').val(endresult);
             }
         })    //full calendar initialization
