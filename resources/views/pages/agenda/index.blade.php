@@ -2012,7 +2012,7 @@ admin_main_style.css
                 $("#addAgendaModal").modal('show');
                 const startresult = startDate.format('DD/MM/YYYY');
                 $('#start_date').val(startresult);
-                const endresult = endDate.subtract(1, 'day').format('DD/MM/YYYY');
+                const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
                 $('#end_date').val(endresult);
             }
         })    //full calendar initialization
