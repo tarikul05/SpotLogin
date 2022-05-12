@@ -71,9 +71,28 @@ class Event extends BaseModel
      */
     protected $arrayFilterable = [
         'school_id',
+        'visibility_id',
         'event_type',
+        'event_category',
+        'duration_minutes',
+        'is_paying',
+        'event_price',
+        'title',
+        'original_event_id',
+        'is_locked',
+        'price_amount_sell',
         'teacher_id',
-        'student_id'
+        'student_id',
+        'price_currency',
+        'price_amount_buy',
+        'fullday_flag',
+        'no_of_students',
+        'event_mode',
+        'extra_charges',
+        'location_id',
+        'is_active',
+        'created_by',
+        'modified_by'
     ];
 
 
@@ -155,9 +174,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }
@@ -241,9 +260,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }
@@ -343,9 +362,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }
@@ -447,9 +466,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }

@@ -277,6 +277,15 @@ table .selectdiv:after,
 .modal-content {
     border-radius: 0.75rem;
 }
+.modal-body.text-center.p-4 ul {
+    margin: 0 auto;
+    text-align: center;
+    width: 84%;
+}
+li.light-blue-txt.gilroy-bold {
+    list-style: decimal;
+    text-align: left;
+}
 .modal-content h3 {
     font-size: 38px;
 }

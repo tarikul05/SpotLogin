@@ -68,7 +68,7 @@ admin_main_style.css
 
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
                             
-
+                            <input type="hidden" name="get_event_id" id="get_event_id" value="">
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -1093,15 +1093,16 @@ admin_main_style.css
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
+        var p_event_id=document.getElementById("get_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmMultipleValidateModalCall(p_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
-    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
-        var data='p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id,p_event_id){
+        var data='p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id+'&p_event_id='+p_event_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -1177,6 +1178,26 @@ admin_main_style.css
             success: function(s){
                 
                 json_events = s;
+                var selected_ids = [];
+                Object.keys(JSON.parse(json_events)).forEach(function(key) {
+                    let teacher_name =JSON.parse(json_events)[key].cours_name; 
+                    let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                    let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                    if (cours_name == null) {
+                        cours_name = '';
+                    }  
+                    if (duration_minutes == null) {
+                        duration_minutes = 0;
+                    }
+                    if (teacher_name == null) {
+                        teacher_name = '';
+                    }     
+                    selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                    //console.log('selected='+selected_ids.join("|"));
+                    
+                });
+                selected_ids.join("|");
+                document.getElementById("get_event_id").value = selected_ids;
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
