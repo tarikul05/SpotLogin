@@ -1186,8 +1186,8 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
                     });
-                    $('#event_student').html(resultHtml);
-                    $("#event_student").multiselect('destroy');
+                    $('#event_student, #student').html(resultHtml);
+                    $("#event_student, #student").multiselect('destroy');
                     
                 },   //success
                 complete: function( xhr ) {
@@ -2284,9 +2284,9 @@ $(function() {
 		todayBtn:false,
 	});
 });
-$('#student').multiselect({
-	search: true
-});
+// $('#student').multiselect({
+// 	search: true
+// });
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
