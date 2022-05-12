@@ -244,18 +244,19 @@ admin_main_style.css
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div class="modal-content">
-                        <div class="modal-body"> 
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-sm-3 text-left">Agenda Type :</label>
-                                <div class="col-sm-7">
-                                    <div class="selectdiv">
-                                        <select class="form-control" id="agenda_select">
-                                            <option value="">Select Type</option>
-                                            <option value="1">Lesson</option>
-                                            <option value="2">Event</option>
-                                            <option value="3">Student Off</option>
-                                            <option value="4">Coach off</option>
-                                        </select>
+                        <div class="modal-body">
+                            <div class="col-md-10 offset-md-1" style="padding-left:0"> 
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-sm-3 text-left">Agenda Type :</label>
+                                    <div class="col-sm-7">
+                                        <div class="selectdiv">
+                                            <select class="form-control" id="agenda_select">
+                                                <option value="1">Lesson</option>
+                                                <option value="2">Event</option>
+                                                <option value="3">Student Off</option>
+                                                <option value="4">Coach off</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>                   
@@ -265,9 +266,7 @@ admin_main_style.css
                                         @csrf
                                         <fieldset>
                                             <div class="row">
-                                                <div class="section_header_class">
-                                                    <label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
-                                                </div>
+                                                <hr class="line"></hr>
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
@@ -453,15 +452,13 @@ admin_main_style.css
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <div class="section_header_class">
-                                                    <label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
-                                                </div>
+                                                <hr class="line"></hr>
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="input-group"> 
-                                                                <textarea class="form-control" cols="60" id="description" name="description" rows="5">{{old('description')}}</textarea>
+                                                                <textarea class="form-control" cols="60" id="description" name="description" rows="3">{{old('description')}}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1187,7 +1184,7 @@ admin_main_style.css
                         resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
                     });
                     $('#event_student, #student').html(resultHtml);
-                    $("#event_student, #student").multiselect('destroy');
+                    $("#event_student").multiselect('destroy');
                     
                 },   //success
                 complete: function( xhr ) {
@@ -2284,9 +2281,9 @@ $(function() {
 		todayBtn:false,
 	});
 });
-// $('#student').multiselect({
-// 	search: true
-// });
+$('#student').multiselect({
+	search: true
+});
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
@@ -2504,7 +2501,30 @@ $('#add_lesson').on('submit', function() {
         }
     }
 });
-//save functionality of student_off
+
+$(document).ready(function() {
+    var agenda_select = $("#agenda_select").val();
+    if(agenda_select != ''){
+		$('#agenda_form_area').show();
+        if(agenda_select == 1){
+            $('#start_date').on('change', function(e){  
+                $("#end_date").val($("#start_date").val());  
+            });
+            $( "#end_date" ).attr("readonly", "readonly");;	
+            $('.lesson').show();
+            $('.event').hide();
+            $('#sis_paying').val(0);
+            $('#price_per_student').hide();
+            $('.hide_on_off').show();
+            $('.event.hide_on_off').hide();
+            $("form.form-horizontal").attr("action", "{{ route('lesson.createAction',[$schoolId]) }}");
+            $('.hide_coach_off').show();
+            $('.show_coach_off.hide_on_off').show();
+        }
+	}else{
+        $('#agenda_form_area').hide();
+    }
+});
 
 $('#agenda_select').on('change', function() {
     if(this.value != ''){

@@ -979,8 +979,21 @@ button.btn.btn-sm.btn-warning {
 #addAgendaModal button#save_btn {
     font-size: 16px;
     min-width: 90px;
-    top: 100px;
-    right: 25px;
+    top: 0;
+    right: 0;
+    position: relative;
+    float: right;
+}
+#addAgendaModal .form-group.row {
+    margin-bottom: 10px;
+}
+#addAgendaModal hr.line {
+    border: 0.1px solid #000;
+    height: 0;
+    opacity: 1;
+}
+#addAgendaModal ul.dropdown-menu.show {
+    max-width: 100% !important;
 }
 #addAgendaModal .multiselect-container > li > a > label {
     padding: 3px 20px 3px 10px;
