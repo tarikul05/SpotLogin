@@ -31,7 +31,7 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -444,10 +444,10 @@
 						</div>
 					</div>
 				</div>
-
+				</form>
 
 				<!--Start of Tab 3 -->
-				<!-- <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 					<form id="studentUserForm" name="studentUserForm" class="form-horizontal" role="form"
 					 action="{{!empty($student) ? route('student.user_update',[$student->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
@@ -458,7 +458,7 @@
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($student->user->username) ? old('admin_username', $student->user->username) : old('admin_username')}}" disabled="disabled">      
+								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($student->user->username) ? old('admin_username', $student->user->username) : old('admin_username')}}" readonly>      
 							</div>
 						</div>
 						<div class="form-group row">
@@ -531,13 +531,13 @@
 							</div>
 						</div>
 					</form>
-				</div> -->
+				</div> 
 				<!--End of Tab 3-->
 			</div>
 			@can('students-update')
 				<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 			@endcan
-		</form>
+		
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -558,7 +558,7 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(function() {
+$(document).ready(function(){
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -653,6 +653,18 @@ $(function() {
 		});
 	
 	});    //contact us button click 
+
+	$('#save_btn').click(function (e) {
+		var x = document.getElementsByClassName("tab-pane active");
+		var studentForm = document.getElementById("add_student");
+		var studentUserForm = document.getElementById("studentUserForm");
+		console.log(studentUserForm);
+		if (x[0].id == "tab_3") {
+			studentUserForm.submit();
+		} else{
+			studentForm.submit();
+		} 
+	});
 });
 
 $(function() {

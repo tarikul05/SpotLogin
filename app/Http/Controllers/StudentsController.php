@@ -421,7 +421,7 @@ class StudentsController extends Controller
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
         }catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -604,7 +604,7 @@ class StudentsController extends Controller
                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
             }
 
-            return back()->withInput($request->all())->with('success', __('Teacher account updated successfully!'));
+            return back()->withInput($request->all())->with('success', __('Student account updated successfully!'));
         } catch (\Exception $e) {
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
