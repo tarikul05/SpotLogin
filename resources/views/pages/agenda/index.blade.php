@@ -883,6 +883,7 @@ admin_main_style.css
                         PopulateLocationDropdown(document.getElementById("event_school_id").value);
                         PopulateStudentDropdown(document.getElementById("event_school_id").value)
                         PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                        $('#agenda_select').trigger('change');
                     }
                     
                     //SetEventCookies();
