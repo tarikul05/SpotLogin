@@ -4,29 +4,25 @@
 <!-- datetimepicker -->
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/> 
-
 <link href="{{ asset('css/datetimepicker-lang/bootstrap-datetimepicker.css')}}" rel="stylesheet">
-
 <link href="{{ asset('css/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
 </script>
-
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
-
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
 <script src="{{ asset('js/jquery.table2excel.js')}}"></script>
-
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
+<!-- add new assets for modal of add event,lesson -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<!-- end the assets area -->
 admin_main_style.css
 @endsection
 
@@ -238,6 +234,247 @@ admin_main_style.css
 		
 		</form>
 	</div>
+</div>
+
+
+<!-- Modal for add event,lesson,student and coach off -->	
+<div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="col-md-10 offset-md-1" style="padding-left:0"> 
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-sm-3 text-left">Agenda Type :</label>
+                                    <div class="col-sm-7">
+                                        <div class="selectdiv">
+                                            <select class="form-control" id="agenda_select">
+                                                <option value="1">Lesson</option>
+                                                <option value="2">Event</option>
+                                                <option value="3">Student Off</option>
+                                                <option value="4">Coach off</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <div class="tab-content" id="agenda_form_area" style="display:none">
+                                <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+                                    <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+                                        @csrf
+                                        <fieldset>
+                                            <div class="row">
+                                                <hr class="line"></hr>
+                                                <div class="col-md-10 offset-md-1">
+                                                    <div class="form-group row lesson hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="category_select" name="category_select">
+                                                                    @foreach($eventCategoryList as $key => $eventcat)
+                                                                        <option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="location" name="location">
+                                                                    @foreach($locations as $key => $location)
+                                                                        <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="input-group"> 
+                                                                <input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row show_coach_off hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="teacher_select" name="teacher_select">
+                                                                    @foreach($professors as $key => $professor)
+                                                                        <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row hide_coach_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv student_list">
+                                                                <select class="form-control" id="student" name="student[]" multiple="multiple">
+                                                                    @foreach($studentsbySchool as $key => $student)
+                                                                        <option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
+                                                        <div class="col-sm-7 row">
+                                                            <div class="col-sm-6">
+                                                                <div class="input-group" id="start_date_div"> 
+                                                                    <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>	
+                                                            <div class="col-sm-4 offset-md-1 hide_on_off">
+                                                                <div class="input-group"> 
+                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>	
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
+                                                        <div class="col-sm-7 row">
+                                                            <div class="col-sm-6">
+                                                                <div class="input-group" id="end_date_div"> 
+                                                                    <input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off" readonly>
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>	
+                                                            <div class="col-sm-4 offset-md-1 hide_on_off">
+                                                                <div class="input-group"> 
+                                                                    <input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>	
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row lesson hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
+                                                        <div class="col-sm-2">
+                                                            <div class="input-group"> 
+                                                                <input id="duration" name="duration" type="text" class="form-control" value="{{old('duration')}}">
+                                                            </div>
+                                                        </div>		
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row lesson hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="sis_paying" name="sis_paying">
+                                                                    <option value="0">No charge</option>
+                                                                    <option value="1">Hourly rate</option>
+                                                                    <option value="2">Price per student</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row" id="hourly" style="display:none">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="sevent_price" name="sevent_price">
+                                                                    @foreach($lessonPrice as $key => $lessprice)
+                                                                        <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="price_per_student" style="display:none;">
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
+                                                            <div class="col-sm-7">
+                                                                <div class="selectdiv">
+                                                                    <select class="form-control" id="sprice_currency" name="sprice_currency">
+                                                                        @foreach($currency as $key => $curr)
+                                                                            <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group" id="sprice_amount_buy_div"> 
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-calendar1"></i>
+                                                                    </span>
+                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group" id="sprice_amount_sell_div"> 
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-calendar1"></i>
+                                                                    </span>
+                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row event hide_on_off">
+                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group" id="extra_charges_div"> 
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar1"></i>
+                                                            </span>
+                                                            <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <hr class="line"></hr>
+                                                <div class="col-md-10 offset-md-1">
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="input-group"> 
+                                                                <textarea class="form-control" cols="60" id="description" name="description" rows="3">{{old('description')}}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal on event click -->	
@@ -758,7 +995,7 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
                     });
-                    $('#event_location').html(resultHtml);
+                    $('#event_location, #location').html(resultHtml);
                     $("#event_location").multiselect('destroy');
                     
                 },   //success
@@ -855,7 +1092,7 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.teacher_id+'">'+value.nickname+'</option>'; 
                     });
-                    $('#event_teacher').html(resultHtml);
+                    $('#event_teacher, #teacher_select').html(resultHtml);
                     $("#event_teacher").multiselect('destroy');
                     
                 },   //success
@@ -946,7 +1183,7 @@ admin_main_style.css
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
                     });
-                    $('#event_student').html(resultHtml);
+                    $('#event_student, #student').html(resultHtml);
                     $("#event_student").multiselect('destroy');
                     
                 },   //success
@@ -1303,6 +1540,7 @@ admin_main_style.css
             //defaultDate: '2022-04-12',
             utc: false,  
             editable: true,
+            selectable: true,
             buttonText: {
                 prev: '<',
                 next: '>'
@@ -1775,6 +2013,25 @@ admin_main_style.css
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
+            },
+            dayClick: function(date, jsEvent, view, resource) {
+                // $('#start_date').val('');
+                // $('#end_date').val('');
+                // $("#addAgendaModal").modal('show');
+                // const [day, month, year] = date.format().split('-');
+                // const result = [year, month, day].join('/');
+                // $('#start_date').val(result);
+                // $('#end_date').val('');
+                // console.log('xxx',date,jsEvent,view,resource)
+            },
+            select: function(startDate, endDate, jsEvent, view, resource) {
+                $('#start_date').val('');
+                $('#end_date').val('');
+                $("#addAgendaModal").modal('show');
+                const startresult = startDate.format('DD/MM/YYYY');
+                $('#start_date').val(startresult);
+                const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
+                $('#end_date').val(endresult);
             }
         })    //full calendar initialization
         CheckPermisson();
@@ -2019,11 +2276,325 @@ window.addEventListener('blur', function (event) {
     console.log('lost focus');
 });
 
-
-
-
-
-
-	
 </script>
+
+<!-- add lesson,event,school and coach off js start here -->
+<script type="text/javascript">
+$(function() {
+	$("#start_date").datetimepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+    $('#end_date').datetimepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+});
+$('#student').multiselect({
+	search: true
+});
+$('#student').on('change', function(event) {
+	var cnt = $('#student option:selected').length;
+	var price=document.getElementById("sis_paying").value;
+	
+	//if ((action == "new") && (price == 1)){
+	if (price == 1){                   
+		if (cnt >= 10) {
+			document.getElementById("sevent_price").value='price_10';
+		}
+		else
+		{
+			document.getElementById("sevent_price").value='price_'+cnt;
+		}
+		
+	} 
+})
+$( document ).ready(function() {
+	var value = $('#sis_paying').val();
+	$('#hourly').hide();
+	$('#price_per_student').hide();
+	$('#sprice_amount_buy').val(0);
+	$('#sprice_amount_sell').val(0);
+	if(value == 1){
+		$('#hourly').show();
+	}else if(value == 2){
+		$('#price_per_student').show();
+	}
+	$('.timepicker').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 15,
+		minTime: '0',
+		maxTime: '23:59',
+		defaultTime: '11',
+		startTime: '00:00',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change:function(time){
+			CalcDuration();
+		}
+	});
+	
+	function CalcDuration(){
+		var el_start = $('#start_time'),
+		el_end = $('#end_time'),
+		el_duration = $('#duration');
+		
+			if (el_end.val() < el_start.val()) {
+				$('#end_time').val(el_start.val());
+				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+			}
+			else{
+				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
+			}
+		}
+	function recalculate_end_time(start_value, duration) {
+		if (validateStringHours(start_value) && parseInt(duration, 10) == duration) {
+			var start_minutes = +(parseInt(string_left(start_value, 2), 10) * 60) + parseInt(string_right(start_value, 2), 10) + parseInt(duration, 10),
+				start_hours_number = parseInt((start_minutes / 60).toString(), 10),
+				start_hours = start_hours_number;
+				if (start_hours > 23) {start_hours = start_hours - 24;}
+				return string_right('00' + start_hours.toString(), 2) + ':' + string_right('00' + (start_minutes - (start_hours_number * 60)).toString(), 2); 
+		}
+		return 0;
+	}
+	function recalculate_duration(start_value, end_value) {
+		if (validateStringHours(start_value) && validateStringHours(end_value)) {
+			return -(parseInt(string_left(start_value, 2), 10) * 60)
+					- parseInt(string_right(start_value, 2), 10)
+					+ (parseInt(string_left(end_value, 2), 10) * 60)
+					+ (parseInt(string_right(end_value, 2), 10));
+		}
+		return 0;
+	}
+	function validateStringHours(s_hours) {
+            if (s_hours == '24:00') {return true;}
+            var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+            return re.test(s_hours);
+	}
+	function string_left(str, n){
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else
+			return String(str).substring(0,n);
+	}
+	function string_right(str, n){
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else {
+			var iLen = String(str).length;
+			return String(str).substring(iLen, iLen - n);
+		}
+	}
+	function filterParseDigits(str) {
+		return str.replace(/[^\d]/g, '');
+	}
+	function validateStringHours(s_hours) {
+		if (s_hours == '24:00') {return true;}
+		var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+		return re.test(s_hours);
+	}
+	$('#start_time, #end_time, #duration').on('change', function(e){  
+	var event_source = $(this).attr('id');
+	var el_duration = $('#duration');
+	if (event_source === 'start_time'){
+		if(!el_duration.val()){el_duration.val('15');}
+		$('#end_time').val(recalculate_end_time($('#start_time').val(), el_duration.val()));
+	}
+	var el_start = $('#start_time'),
+		el_end = $('#end_time');
+		if (event_source === 'end_time' || event_source === 'start_time') {	
+			if (el_end.val() < el_start.val()) {
+				$('#end_time').val(el_start.val());
+			};		
+			el_duration.val(recalculate_duration(el_start.val(), el_end.val())); 
+		} else {
+			if (!(parseInt(el_duration.val(), 10) == el_duration.val())) {
+				el_duration.val(20);
+				$('#end_time').val(el_start.val());
+			} else {
+				if (parseInt(el_duration.val(), 10) >= (60*24)) {
+					el_duration.val(((60*24) - 1));
+				}
+				$('#end_time').val(recalculate_end_time(el_start.val(), el_duration.val()));
+			}        
+		}
+	});
+})
+$('#sis_paying').on('change', function() {
+	$('#hourly').hide();
+	$('#price_per_student').hide();
+	$('#sprice_amount_buy').val(0);
+	$('#sprice_amount_sell').val(0);
+	if(this.value == 1){
+		$('#hourly').show();
+	}else if(this.value == 2){
+		$('#price_per_student').show();
+	}
+});
+
+
+
+$('#add_lesson').on('submit', function() {
+	var title = $('#Title').val();
+	var professor = $('#teacher_select').val();
+	var selected = $("#student :selected").map((_, e) => e.value).get();
+	var startDate = $('#start_date').val();
+	var endDate = $('#end_date').val();
+	var errMssg = '';
+	var type = $("#agenda_select").val();
+
+    if(type == 1 || type == 2){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if( selected < 1){
+            var errMssg = 'Select student';
+            $('.student_list').addClass('error');
+        }else{
+            $('.student_list').removeClass('error');
+        }
+        if(startDate == ''){
+            var errMssg = 'Start date required';
+            $('#start_date').addClass('error');
+        }else{
+            $('#start_date').removeClass('error');
+        }
+        if(endDate == ''){
+            var errMssg = 'Ednd date required';
+            $('#end_date').addClass('error');
+        }else{
+            $('#end_date').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }else if(type == 3){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if( selected < 1){
+            var errMssg = 'Select student';
+            $('.student_list').addClass('error');
+        }else{
+            $('.student_list').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }else if(type == 4){
+        if(title == ''){
+            var errMssg = 'Title required';
+            $('#Title').addClass('error');
+        }else{
+            $('#Title').removeClass('error');
+        }
+        if(errMssg == ""){
+            return true;
+        }else{
+            return false;	
+        }
+    }
+});
+
+$(document).ready(function() {
+    var agenda_select = $("#agenda_select").val();
+    if(agenda_select != ''){
+		$('#agenda_form_area').show();
+        if(agenda_select == 1){
+            $('#start_date').on('change', function(e){  
+                $("#end_date").val($("#start_date").val());  
+            });
+            $( "#end_date" ).attr("readonly", "readonly");;	
+            $('.lesson').show();
+            $('.event').hide();
+            $('#sis_paying').val(0);
+            $('#price_per_student').hide();
+            $('.hide_on_off').show();
+            $('.event.hide_on_off').hide();
+            $("form.form-horizontal").attr("action", "{{ route('lesson.createAction',[$schoolId]) }}");
+            $('.hide_coach_off').show();
+            $('.show_coach_off.hide_on_off').show();
+        }
+	}else{
+        $('#agenda_form_area').hide();
+    }
+});
+
+$('#agenda_select').on('change', function() {
+    if(this.value != ''){
+		$('#agenda_form_area').show();
+
+        if(this.value == 1){
+            $('#start_date').on('change', function(e){  
+                $("#end_date").val($("#start_date").val());  
+            });
+            $( "#end_date" ).attr("readonly", "readonly");;	
+            $('.lesson').show();
+            $('.event').hide();
+            $('#sis_paying').val(0);
+            $('#price_per_student').hide();
+            $('.hide_on_off').show();
+            $('.event.hide_on_off').hide();
+            $("form.form-horizontal").attr("action", "{{ route('lesson.createAction',[$schoolId]) }}");
+            $('.hide_coach_off').show();
+            $('.show_coach_off.hide_on_off').show();
+        }else if(this.value == 2){
+            $( "#end_date" ).attr("disabled", false );
+            $('.lesson').hide();
+            $('.event').show();
+            $('#price_per_student').show();
+            $('.hide_on_off').show();
+            $('.lesson.hide_on_off').hide();
+            $("form.form-horizontal").attr("action", "{{ route('event.createAction',[$schoolId]) }}");
+            $('.hide_coach_off').show();
+            $('.show_coach_off.hide_on_off').show();
+        }else if(this.value == 3){
+            $('.hide_on_off').hide();
+            $('#price_per_student').hide();
+            $( "#end_date" ).attr("disabled", false );
+            $("form.form-horizontal").attr("action", "{{ route('studentOff.createAction',[$schoolId]) }}");
+            $('.hide_coach_off').show();
+            $('.show_coach_off.hide_on_off').hide();
+        }else if(this.value == 4){
+            $('.hide_on_off').hide();
+            $('.hide_coach_off').hide();
+            $('#price_per_student').hide();
+            $( "#end_date" ).attr("disabled", false );
+            $("form.form-horizontal").attr("action", "{{ route('coachOff.createAction',[$schoolId]) }}");
+            $('.show_coach_off.hide_on_off').show();
+        }
+	}else{
+        $('#agenda_form_area').hide();
+    }
+});
+
+</script>
+
 @endsection
