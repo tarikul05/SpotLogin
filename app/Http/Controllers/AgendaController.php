@@ -37,9 +37,9 @@ class AgendaController extends Controller
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
-        if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
-        }
+        // if (empty($school)) {
+        //     return redirect()->route('schools')->with('error', __('School is not selected'));
+        // }
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             $schoolId = 0;
@@ -49,7 +49,8 @@ class AgendaController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        // $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = [];
         // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
