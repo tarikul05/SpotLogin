@@ -334,8 +334,7 @@ class AgendaController extends Controller
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id);
-            
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->get()[0];
             $eventDetailPresent = [
                 'is_locked' => 1,
                 'participation_id' => 200,
@@ -966,7 +965,7 @@ class AgendaController extends Controller
                         'is_locked' => 1,
                         'participation_id' => 199,
                     ];
-                    $eventdetail = EventDetails::where('event_id', $p_event_auto_id->id);
+                    $eventdetail = EventDetails::where('event_id', $p_event_auto_id->id)->get()[0];
                     if ($eventdetail->participation_id == 0) {
                         $eventdetail = $eventdetail->update($eventDetailPresent);
                     } else {
