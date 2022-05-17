@@ -266,7 +266,7 @@ admin_main_style.css
                                         @csrf
                                         <fieldset>
                                             <div class="row">
-                                                <hr class="line"></hr>
+                                                
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
@@ -452,7 +452,7 @@ admin_main_style.css
                                                     </div>
                                                 </div>
                                                 </div>
-                                                <hr class="line"></hr>
+                                                
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
@@ -884,6 +884,7 @@ admin_main_style.css
                         PopulateLocationDropdown(document.getElementById("event_school_id").value);
                         PopulateStudentDropdown(document.getElementById("event_school_id").value)
                         PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                        $('#agenda_select').trigger('change');
                     }
                     
                     //SetEventCookies();
@@ -2527,6 +2528,17 @@ $('#add_lesson').on('submit', function() {
 
 $(document).ready(function() {
     var agenda_select = $("#agenda_select").val();
+    var selected_school_ids = [];
+    $.each($("#event_school option:selected"), function(){         
+        selected_school_ids.push($(this).val());
+    });
+    
+    if (selected_school_ids.length == 1) {
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-lesson';
+    }else{
+        var page_action = 'javascript:void(0)';
+    }
+    
     if(agenda_select != ''){
 		$('#agenda_form_area').show();
         if(agenda_select == 1){
@@ -2540,7 +2552,7 @@ $(document).ready(function() {
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
-            $("form.form-horizontal").attr("action", "{{ route('lesson.createAction',[$schoolId]) }}");
+            $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
         }
@@ -2552,8 +2564,16 @@ $(document).ready(function() {
 $('#agenda_select').on('change', function() {
     if(this.value != ''){
 		$('#agenda_form_area').show();
-
+        var selected_school_ids = [];
+        $.each($("#event_school option:selected"), function(){         
+            selected_school_ids.push($(this).val());
+        });
         if(this.value == 1){
+            if (selected_school_ids.length == 1) {
+                var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-lesson';
+            }else{
+                var page_action = 'javascript:void(0)';
+            }
             $('#start_date').on('change', function(e){  
                 $("#end_date").val($("#start_date").val());  
             });
@@ -2564,32 +2584,47 @@ $('#agenda_select').on('change', function() {
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
-            $("form.form-horizontal").attr("action", "{{ route('lesson.createAction',[$schoolId]) }}");
+            $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
         }else if(this.value == 2){
+            if (selected_school_ids.length == 1) {
+                var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
+            }else{
+                var page_action = 'javascript:void(0)';
+            }
             $( "#end_date" ).attr("disabled", false );
             $('.lesson').hide();
             $('.event').show();
             $('#price_per_student').show();
             $('.hide_on_off').show();
             $('.lesson.hide_on_off').hide();
-            $("form.form-horizontal").attr("action", "{{ route('event.createAction',[$schoolId]) }}");
+            $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
         }else if(this.value == 3){
+            if (selected_school_ids.length == 1) {
+                var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
+            }else{
+                var page_action = 'javascript:void(0)';
+            }
             $('.hide_on_off').hide();
             $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
-            $("form.form-horizontal").attr("action", "{{ route('studentOff.createAction',[$schoolId]) }}");
+            $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
         }else if(this.value == 4){
+            if (selected_school_ids.length == 1) {
+                var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
+            }else{
+                var page_action = 'javascript:void(0)';
+            }
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
             $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
-            $("form.form-horizontal").attr("action", "{{ route('coachOff.createAction',[$schoolId]) }}");
+            $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
         }
 	}else{
