@@ -164,7 +164,7 @@ admin_main_style.css
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types as $key => $event_type)
-                                                        <option id = value="{{ $key }}">{{ $event_type }}</option>
+                                                        <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                             
                                                 </select>
@@ -738,8 +738,9 @@ admin_main_style.css
                 status = result.status;
                 if (status == 'success') {
                     successModalCall('event_confirm_message');
-                    window.location.reload(false);
+                    //window.location.reload(false);
                     getFreshEvents();
+                   // window.location.reload(false);
                 }
                 else {
                     errorModalCall('error_message_text');
@@ -1351,9 +1352,11 @@ admin_main_style.css
                 success:function(result){
                     document.getElementById("btn_validate_events").style.display = "none";
                     var status =  result.status;
+                    //$('#calendar').fullCalendar('removeEvents');
+                    //$('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
                     //alert(status);
                     getFreshEvents();      //refresh calendar 
-                    window.location.reload(false);
+                    //window.location.reload(false);
                     
                 },   //success
                 error: function(ts) { 
@@ -1374,8 +1377,10 @@ admin_main_style.css
                 success:function(result){
                     document.getElementById("btn_delete_events").style.display = "none";
                     var status =  result.status;
+                    
                     //alert(status);
                     getFreshEvents();      //refresh calendar 
+                   // window.location.reload(false);
                     
                 },   //success
                 error: function(ts) { 
@@ -1438,6 +1443,28 @@ admin_main_style.css
                 });
                 selected_ids.join("|");
                 document.getElementById("get_event_id").value = selected_ids;
+
+                //alert('get refresh');
+                $("#agenda_table tr:gt(0)").remove();
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
+                $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
+                if (document.getElementById("view_mode").value == 'list'){
+                    //remove 
+                    $('#calendar').fullCalendar().find('.fc-day-header').hide();
+                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
+                    document.getElementById("agenda_list").style.display = "block";
+                }
+                else
+                {
+                    
+                    resultHtml='';
+                    prevdt=''; 
+                    document.getElementById("prevnext").value='';
+                    document.getElementById("agenda_list").style.display = "none";
+                    $('#calendar').fullCalendar().find('.fc-day-header').show();
+                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
+                }
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -1446,26 +1473,7 @@ admin_main_style.css
             }
         });
         
-        //alert('get refresh');
-        $("#agenda_table tr:gt(0)").remove();
-        $('#calendar').fullCalendar('removeEvents');
-        $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
-        if (document.getElementById("view_mode").value == 'list'){
-            //remove 
-            $('#calendar').fullCalendar().find('.fc-day-header').hide();
-            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
-            document.getElementById("agenda_list").style.display = "block";
-        }
-        else
-        {
-            
-            resultHtml='';
-            prevdt=''; 
-            document.getElementById("prevnext").value='';
-            document.getElementById("agenda_list").style.display = "none";
-            $('#calendar').fullCalendar().find('.fc-day-header').show();
-            $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
-        }
+        
         
     } 
 
@@ -2186,6 +2194,7 @@ admin_main_style.css
                         document.getElementById("copy_view_mode").value = '';
                         document.getElementById("copy_week_day").value = '';
                         document.getElementById("copy_month_day").value = '';
+                        //window.location.reload(false);
 					       
 					    getFreshEvents();      //refresh calendar                          
 					}
