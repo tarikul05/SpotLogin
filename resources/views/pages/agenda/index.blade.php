@@ -164,7 +164,7 @@ admin_main_style.css
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types as $key => $event_type)
-                                                        <option id = value="{{ $key }}">{{ $event_type }}</option>
+                                                        <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                             
                                                 </select>
@@ -740,6 +740,7 @@ admin_main_style.css
                     successModalCall('event_confirm_message');
                     window.location.reload(false);
                     getFreshEvents();
+                    window.location.reload(false);
                 }
                 else {
                     errorModalCall('error_message_text');
@@ -1374,8 +1375,10 @@ admin_main_style.css
                 success:function(result){
                     document.getElementById("btn_delete_events").style.display = "none";
                     var status =  result.status;
+                    
                     //alert(status);
                     getFreshEvents();      //refresh calendar 
+                    window.location.reload(false);
                     
                 },   //success
                 error: function(ts) { 
@@ -2186,6 +2189,7 @@ admin_main_style.css
                         document.getElementById("copy_view_mode").value = '';
                         document.getElementById("copy_week_day").value = '';
                         document.getElementById("copy_month_day").value = '';
+                        window.location.reload(false);
 					       
 					    getFreshEvents();      //refresh calendar                          
 					}
