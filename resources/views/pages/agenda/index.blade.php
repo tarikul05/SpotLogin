@@ -1542,7 +1542,7 @@ admin_main_style.css
             defaultView: 'month',
             //defaultDate: '2022-04-12',
             utc: false,  
-            editable: true,
+            editable: false,
             selectable: true,
             buttonText: {
                 prev: '<',
