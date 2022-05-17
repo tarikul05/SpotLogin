@@ -738,6 +738,7 @@ admin_main_style.css
                 status = result.status;
                 if (status == 'success') {
                     successModalCall('event_confirm_message');
+                    window.location.reload(false);
                     getFreshEvents();
                 }
                 else {
@@ -1351,6 +1352,7 @@ admin_main_style.css
                     var status =  result.status;
                     //alert(status);
                     getFreshEvents();      //refresh calendar 
+                    window.location.reload(false);
                     
                 },   //success
                 error: function(ts) { 

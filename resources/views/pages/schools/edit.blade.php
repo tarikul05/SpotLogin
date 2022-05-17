@@ -214,6 +214,7 @@
 								</div>
 							</div>
 							@endrole	
+							@unlessrole('superadmin')
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Billing Method')}}</label>
@@ -322,6 +323,7 @@
 									</div>
 							</div>
 							<!-- End Billing Methid -->
+							@endunlessrole
 
 							<div class="clearfix"></div>
 							<div class="section_header_class">
