@@ -2032,9 +2032,13 @@ admin_main_style.css
                 $('#end_date').val('');
                 $("#addAgendaModal").modal('show');
                 const startresult = startDate.format('DD/MM/YYYY');
+                const startTime = startDate.format('HH:mm');
                 $('#start_date').val(startresult);
+                $('#start_time').val(startTime);
+                const endTime = endDate.format('HH:mm');
                 const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
                 $('#end_date').val(endresult);
+                $('#end_time').val(endTime).trigger('change');
             }
         })    //full calendar initialization
         CheckPermisson();
