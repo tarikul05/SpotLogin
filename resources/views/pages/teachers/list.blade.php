@@ -23,10 +23,13 @@
             if ($teacher->pivot->role_type == 'school_admin' || $teacher->pivot->role_type == 'teachers_admin') continue;
             @endphp
             <tr>
-                <td>{{ $teacher->id; }}
+                <td>{{ $teacher->id; }} </td>
                 <td>{{ $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; }}</td>
-                <td>{{ $teacher->email; }}</td>
-                <td>{{ !empty($teacher->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ $teacher->email; }} {{ $teacher->pivot->school_id}}</td>
+                <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                @if($teacher->pivot->deleted_at)
+                    <td>{{__('Deleted')}}</td>
+                @else
                 <td>
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,10 +39,19 @@
                             @can('teachers-view')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
+
+                            @can('teachers-delete')
+                            <form method="post" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                                @method('delete')
+                                @csrf
+                                <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
+                            </form>
+                            @endcan
                             <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
                         </div>
                     </div>  
                 </td>
+                @endif
             </tr>
             @endforeach
         </tbody>
