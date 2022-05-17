@@ -437,9 +437,14 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $schoolId = $request->route('school'); 
+        $teacherId = $request->route('teacher');
+        // dd(SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->get());
+        SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->delete();
+        return redirect()->back()
+            ->with('success', 'Deleted successfully');
     }
 
     /**

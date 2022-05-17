@@ -244,7 +244,7 @@ select::-ms-expand {
     content: "\f078";
     line-height: 1;
     color: #0075bf;
-    background: #fff;
+    background: transparent;
     width: 25px;
     height: 33px;
     right: -4px;
@@ -276,6 +276,15 @@ table .selectdiv:after,
 }
 .modal-content {
     border-radius: 0.75rem;
+}
+.modal-body.text-center.p-4 ul {
+    margin: 0 auto;
+    text-align: center;
+    width: 84%;
+}
+li.light-blue-txt.gilroy-bold {
+    list-style: decimal;
+    text-align: left;
 }
 .modal-content h3 {
     font-size: 38px;
@@ -716,6 +725,7 @@ a.btn.btn-theme-success.dropdown-toggle.btn-add-event i {
     font-size: 20px;
     font-weight: bold;
 }
+
 /*****FULL CALENDER CSS***/
 input[type="input"].search-collapse-input {
     width: 30px !important;
@@ -968,6 +978,44 @@ button.btn.btn-sm.btn-warning {
     border-color: #eea236;
     margin-top: -5px;
 }
+
+#addAgendaModal .modal-dialog {
+    max-width: 900px;
+}
+#addAgendaModal .modal-content {
+    border: 0;
+}
+#addAgendaModal button#save_btn {
+    font-size: 16px;
+    min-width: 90px;
+    top: 0;
+    right: 0;
+    position: relative;
+    float: right;
+}
+#addAgendaModal .form-group.row {
+    margin-bottom: 10px;
+}
+#addAgendaModal hr.line {
+    border: 0.1px solid #000;
+    height: 0;
+    opacity: 1;
+}
+#addAgendaModal ul.dropdown-menu.show {
+    max-width: 100% !important;
+}
+#addAgendaModal .multiselect-container > li > a > label {
+    padding: 3px 20px 3px 10px;
+}
+#addAgendaModal .selectdiv .btn-group {
+    margin-bottom: 0px;
+    min-height: 36.5px;
+}
+.ui-timepicker-container.ui-timepicker-standard {
+    z-index: 9999 !important;
+    min-width: 100px;
+}
+
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;

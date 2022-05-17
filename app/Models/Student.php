@@ -116,7 +116,7 @@ class Student extends BaseModel
     public function schools()
     {
         return $this->belongsToMany(School::class)
-                    ->withPivot( 'nickname', 'billing_method', 'has_user_account', 'level_id', 'licence_arp', 'level_skating_arp', 'level_date_arp','licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at');
+                    ->withPivot('id', 'nickname', 'billing_method', 'has_user_account', 'level_id', 'licence_arp', 'level_skating_arp', 'level_date_arp','licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at','deleted_at');
     }
 
 

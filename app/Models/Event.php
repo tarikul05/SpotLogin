@@ -71,9 +71,28 @@ class Event extends BaseModel
      */
     protected $arrayFilterable = [
         'school_id',
+        'visibility_id',
         'event_type',
+        'event_category',
+        'duration_minutes',
+        'is_paying',
+        'event_price',
+        'title',
+        'original_event_id',
+        'is_locked',
+        'price_amount_sell',
         'teacher_id',
-        'student_id'
+        'student_id',
+        'price_currency',
+        'price_amount_buy',
+        'fullday_flag',
+        'no_of_students',
+        'event_mode',
+        'extra_charges',
+        'location_id',
+        'is_active',
+        'created_by',
+        'modified_by'
     ];
 
 
@@ -155,9 +174,95 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
+                
+            }
+        }
+
+        try {
+
+            if ($fromFilterDate && $toFilterDate) {
+                
+                if ($fromFilterDate && $toFilterDate) {
+                    $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
+                        $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
+                            ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
+                            ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
+                                $sq->where('date_start', '<', $fromFilterDate)
+                                    ->where('date_end', '>', $toFilterDate);
+                            })
+                            ;
+                    });
                 }
+            }
+        } catch (\Exception $e) {
+            
+        }
+        return $query;
+    }
+
+
+    /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function multiValidate($params)
+    {
+        $query = $this->newQuery();
+        $request = request();
+        $authUser = $request->user();
+        
+        $fromFilterDate = null;
+        $toFilterDate = null;
+
+        if (isset($params['p_from_date'])) {
+            $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
+            
+            if (!$toFilterDate) {
+                $toFilterDate = now();
+            }
+            unset($params['p_from_date']);
+        } 
+        
+        if (isset($params['p_to_date'])) {
+            $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
+            
+            if (!$fromFilterDate) {
+                $fromFilterDate = now();
+            }
+            unset($params['p_to_date']);
+        }
+
+        
+
+
+        $query->where('deleted_at', null);
+        foreach ($params as $key => $value) { 
+            if (!empty($value)) {
+                
+                if (in_array($key, $this->arrayFilterable)) { 
+                    if (isset($value) && strpos($value, '|') !== false){
+                        $value = explode('|', $value);
+                    }
+                    if ($key=='teacher_id') {
+                        //dd($value);
+                    }
+                    if (is_array($value)) {
+                        $query->whereIn($key, $value);
+                       // unset($params['authority:in']);
+                    }  else { 
+                        $query->where($key, '=', $value);
+                    } 
+                    
+                    // $query->where($key, 'LIKE', "%{$value}%");
+                } 
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }
@@ -207,8 +312,37 @@ class Event extends BaseModel
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
+        if (isset($params['type'])) { 
+            unset($params['type']);
+        }
+        if (isset($params['zone'])) { 
+            unset($params['zone']);
+        }
+        if (isset($params['start_date'])) {
+            //$fromFilterDate = null;
+            //$toFilterDate = null;
         
-        $query->where('deleted_at', null);
+          //$fromFilterDate = str_replace('/', '-',$params['start_date']);
+          $fromFilterDate = $params['start_date'];
+        //   if (!$toFilterDate) {
+        //       $toFilterDate = now();
+        //   }
+          unset($params['start_date']);
+        } 
+      
+        if (isset($params['end_date'])) {
+           // $fromFilterDate = null;
+            //$toFilterDate = null;
+            $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            $toFilterDate = $params['end_date'];
+          
+            //   if (!$fromFilterDate) {
+            //       $fromFilterDate = now();
+            //   }
+            unset($params['end_date']);
+        }
+        
+        //$query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
@@ -228,9 +362,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }
@@ -263,26 +397,7 @@ class Event extends BaseModel
         } 
 
 
-        if (isset($params['start_date'])) {
-            $fromFilterDate = null;
-            $toFilterDate = null;
         
-          $fromFilterDate = str_replace('/', '-',$params['start_date']);
-          
-          if (!$toFilterDate) {
-              $toFilterDate = now();
-          }
-        } 
-      
-        if (isset($params['end_date'])) {
-            $fromFilterDate = null;
-            $toFilterDate = null;
-          $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
-          
-          if (!$fromFilterDate) {
-              $fromFilterDate = now();
-          }
-        }
         try {
           if ($fromFilterDate && $toFilterDate) {
               $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
@@ -298,6 +413,7 @@ class Event extends BaseModel
         } catch (\Exception $e) {
           
         }
+        //dd($query->toSql());
         return $query;
     }
 
@@ -350,9 +466,9 @@ class Event extends BaseModel
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
                 } 
-                else {
-                    $query->where($key, '=', $value);
-                }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
                 
             }
         }

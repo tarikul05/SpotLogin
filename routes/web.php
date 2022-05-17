@@ -70,6 +70,8 @@ Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class,
 
 Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::class, 'validateMultipleEvent'])->name('multiple_event.validate')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 
 
 
@@ -219,6 +221,8 @@ Route::group(['middleware' => ['auth']], function () {
     ));
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
     Route::post('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
+    Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
+
     //AJAX action
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 

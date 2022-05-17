@@ -12,7 +12,8 @@ use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
-
+use App\Models\LessonPrice;
+use App\Models\Currency;
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
 class AgendaController extends Controller
@@ -36,13 +37,21 @@ class AgendaController extends Controller
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
-        if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
-        }
+        // if (empty($school)) {
+        //     return redirect()->route('schools')->with('error', __('School is not selected'));
+        // }
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             $schoolId = 0;
         }
+        // This part is copied from add lesson 
+        $eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        $lessonPrice = LessonPrice::active()->get();
+        // $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = [];
+        // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
         if ($user->person_type == 'App\Models\Student') {
@@ -289,7 +298,7 @@ class AgendaController extends Controller
         //dd($events);
         $events =json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','event_types_all'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
 
     }   
 
@@ -306,7 +315,7 @@ class AgendaController extends Controller
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to validate'),
         );
         try {
             $data = $request->all();
@@ -316,21 +325,29 @@ class AgendaController extends Controller
             // $data['school_id']
             // $p_user_id = Auth::user()->id;
 
-            $event = [
+            $eventUpdate = [
                 'is_locked' => 1
             ];
-            $event = Event::where('id', $p_event_auto_id)->update($event);
+            $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
 
 
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->update($eventDetail);
-            
-            $eventDetail = [
-                'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->get()[0];
+            $eventDetailPresent = [
+                'is_locked' => 1,
+                'participation_id' => 200,
             ];
-            $eventdetail = $eventdetail->update($eventDetail);
+            $eventDetailAbsent = [
+                'is_locked' => 1,
+                'participation_id' => 199,
+            ];
+            if ($eventdetail->participation_id == 0) {
+                $eventdetail = $eventdetail->update($eventDetailPresent);
+            } else {
+                $eventdetail = $eventdetail->update($eventDetailAbsent);
+            }
 
             if ($eventdetail)
             {
@@ -357,7 +374,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-14
      */
-    public function copyPasteEvent(Request $request,$schoolId = null)
+    public function copyPasteEvent(Request $request,$schoolId = null, Event $event)
     {
         $user = Auth::user();
         $data = $request->all();
@@ -388,10 +405,10 @@ class AgendaController extends Controller
             $view_mode= trim($data['view_mode']);
             
             //dd($data);
-            $query = new Event;
-            $eventData = $query->filter_for_copy($data);
+            //$query = new Event;
+            $eventData = $event->filter_for_copy($data);
             
-            $eventData = $query->get();
+            $eventData = $eventData->get();
             
             
 
@@ -472,14 +489,14 @@ class AgendaController extends Controller
                     'event_price' => $fetch->event_price,
                     'event_price' => $fetch->event_price
                 ];
-                $event = Event::create($data);
+                $eventData = Event::create($data);
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
                 
 
                 foreach($eventDetailsStudentId as $std){
                     $dataDetails = [
-                        'event_id'   => $event->id,
+                        'event_id'   => $eventData->id,
                         'teacher_id' => $fetch->teacher_id,
                         'student_id' => $std['student_id'],
                         'buy_price' => $fetch->price_amount_buy,
@@ -533,7 +550,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-09
      */
-    public function getEvent(Request $request,$schoolId = null)
+    public function getEvent(Request $request,$schoolId = null, Event $event)
     {
         $data = $request->all();
         
@@ -556,9 +573,10 @@ class AgendaController extends Controller
         //$data['school_id'] = $schoolId;
         //dd($data);
 
-        $query = new Event;
-        $eventData = $query->filter($data);
-        $eventData = $query->get();
+        //$query1 = new Event;
+        $eventData = $event->filter($data);
+        //dd($eventData->count());
+        $eventData = $eventData->get();
 
        
         
@@ -756,7 +774,7 @@ class AgendaController extends Controller
 
             array_push($events, $e);
         }
-        //dd($data);
+        
         $events =json_encode($events);
         
         return response()->json($events);
@@ -854,11 +872,11 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-10
      */
-    public function deleteMultipleEvent(Request $request)
+    public function deleteMultipleEvent(Request $request, Event $event)
     {
         $result = array(
             'status' => 'failed',
-            'message' => __('failed to send email'),
+            'message' => __('failed to delete'),
         );
         try {
             $data = $request->all();
@@ -873,8 +891,93 @@ class AgendaController extends Controller
 
             
             if (isset($data['p_from_date'])) {
-                $query = new Event;
-                $eventData = $query->multiDelete($data)->delete();
+                
+                $eventData = $event->multiDelete($data)->delete();
+            }
+      
+            if ($eventData)
+            {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+
+
+     /**
+     *  AJAX validate multiple event
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-05-06
+     */
+    public function validateMultipleEvent(Request $request, Event $event)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to validate'),
+        );
+        try {
+            $data = $request->all();
+            $param = [];
+            $param['p_from_date']= trim($data['p_from_date']);
+            $param['p_to_date']= trim($data['p_to_date']);
+        
+            //$param['school_id']= trim($data['p_event_school_id']);
+            //$param['event_type']= trim($data['p_event_type_id']);
+            //$param['teacher_id']= trim($data['p_teacher_id']);
+            //$param['student_id']= trim($data['p_student_id']);
+            //$p_user_id=Auth::user()->id;
+
+            
+            if (isset($param['p_from_date'])) {
+                //$query = new Event;
+
+                $eventUpdate = [
+                    'is_locked' => 1
+                ];
+                $eventData = $event->multiValidate($param)->get();
+               
+                foreach ($eventData as $key => $p_event_auto_id) {
+
+                    $eventUpdate = [
+                        'is_locked' => 1
+                    ];
+                    $eventData = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
+        
+        
+                    $eventDetailPresent = [
+                        'is_locked' => 1,
+                        'participation_id' => 200,
+                    ];
+                    $eventDetailAbsent = [
+                        'is_locked' => 1,
+                        'participation_id' => 199,
+                    ];
+                    $eventdetail = EventDetails::where('event_id', $p_event_auto_id->id)->get()[0];
+                    if ($eventdetail->participation_id == 0) {
+                        $eventdetail = $eventdetail->update($eventDetailPresent);
+                    } else {
+                        $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    }
+                }
+                
+                
+                // $eventDetail = [
+                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
+                // ];
+                // $eventdetail = $eventdetail->update($eventDetail);
             }
       
             if ($eventData)

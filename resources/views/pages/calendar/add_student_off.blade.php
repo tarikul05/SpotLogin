@@ -149,7 +149,7 @@ $('#student').multiselect({
 });
 
 // save functionality
-$('#save_btn').click(function (e) {
+$('#student_off').on('submit', function() {
 		var formData = $('#add_teacher').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var error = '';
