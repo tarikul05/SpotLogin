@@ -1552,8 +1552,8 @@ admin_main_style.css
             defaultView: defview,
             //defaultView: 'month',
             //defaultDate: '2022-04-12',
-            utc: false,  
-            //editable: true,
+            utc: false, 
+            editable: false,
             selectable: true,
             buttonText: {
                 prev: '<',
