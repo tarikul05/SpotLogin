@@ -1424,7 +1424,7 @@ admin_main_style.css
             data: 'type=fetch&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
             // async: false,
             success: function(s){
-                
+                SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
