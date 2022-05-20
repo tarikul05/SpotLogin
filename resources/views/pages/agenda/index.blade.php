@@ -2041,15 +2041,20 @@ admin_main_style.css
             select: function(startDate, endDate, jsEvent, view, resource) {
                 $('#start_date').val('');
                 $('#end_date').val('');
-                $("#addAgendaModal").modal('show');
-                const startresult = startDate.format('DD/MM/YYYY');
-                const startTime = startDate.format('HH:mm');
-                $('#start_date').val(startresult);
-                $('#start_time').val(startTime);
-                const endTime = endDate.format('HH:mm');
-                const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
-                $('#end_date').val(endresult);
-                $('#end_time').val(endTime).trigger('change');
+                if (getSchoolIDs('is_multi')) {
+                    alert('{{ __("Please select One school for add event or lesson ") }}')
+                }else{
+                    $("#addAgendaModal").modal('show');
+                    const startresult = startDate.format('DD/MM/YYYY');
+                    const startTime = startDate.format('HH:mm');
+                    $('#start_date').val(startresult);
+                    $('#start_time').val(startTime);
+                    const endTime = endDate.format('HH:mm');
+                    const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
+                    $('#end_date').val(endresult);
+                    $('#end_time').val(endTime).trigger('change');
+                }
+                    
             }
         })    //full calendar initialization
         CheckPermisson();
@@ -2065,11 +2070,15 @@ admin_main_style.css
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
 
-    function getSchoolIDs(){
+    function getSchoolIDs(count=null){
 		var selected_ids = [];
         $.each($("#event_school option:selected"), function(){         
             selected_ids.push($(this).val());
         });	
+
+        if (count == 'count') return selected_ids.length
+        if (count == 'is_multi') return !!(selected_ids.length > 1)
+
         if (selected_ids.length > 1) {
             $('#event_location_div').hide();
             $('#event_teacher_div').hide();
@@ -2079,9 +2088,10 @@ admin_main_style.css
             $('#event_teacher_div').show();
             $('#event_student_div').show();
         }	
-		//console.log('selected='+selected_ids.join("|"));
 		return selected_ids.join("|");
 	}
+// console.log("call func",getSchoolIDs('count'))
+// console.log("call func",getSchoolIDs('is_multi'))
 
     function getEventIDs(){
 		var selected_ids = [];
