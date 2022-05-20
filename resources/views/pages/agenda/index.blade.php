@@ -1424,24 +1424,29 @@ admin_main_style.css
             data: 'type=fetch&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
             // async: false,
             success: function(s){
-                
+                SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
+                const type_removed = [50, 51];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
-                    let teacher_name =JSON.parse(json_events)[key].cours_name; 
-                    let cours_name = JSON.parse(json_events)[key].duration_minutes; 
-                    let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
-                    if (cours_name == null) {
-                        cours_name = '';
-                    }  
-                    if (duration_minutes == null) {
-                        duration_minutes = 0;
+                    if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
+                        
+                        let teacher_name =JSON.parse(json_events)[key].cours_name; 
+                        let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                        if (cours_name == null) {
+                            cours_name = '';
+                        }  
+                        if (duration_minutes == null) {
+                            duration_minutes = 0;
+                        }
+                        if (teacher_name == null) {
+                            teacher_name = '';
+                        }     
+                        selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        //console.log('selected='+selected_ids.join("|"));
+                        
                     }
-                    if (teacher_name == null) {
-                        teacher_name = '';
-                    }     
-                    selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                    //console.log('selected='+selected_ids.join("|"));
                     
                 });
                 selected_ids.join("|");
