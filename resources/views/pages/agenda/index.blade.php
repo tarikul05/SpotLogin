@@ -1191,6 +1191,7 @@ admin_main_style.css
                     });
                     $('#event_student, #student').html(resultHtml);
                     $("#event_student").multiselect('destroy');
+                    $('#student').multiselect({ search: true })
                     
                 },   //success
                 complete: function( xhr ) {
@@ -2337,9 +2338,9 @@ $(function() {
 		todayBtn:false,
 	});
 });
-$('#student').multiselect({
-	search: true
-});
+// $('#student').multiselect({
+// 	search: true
+// });
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
