@@ -184,7 +184,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="level_id">{{__('Level') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control m-bot15" id="level_id" name="level_id">
+												<select class="form-control m-bot15" required="true" id="level_id" name="level_id">
 													@foreach($levels as $key => $level)
 														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
 													@endforeach

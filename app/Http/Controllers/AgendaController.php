@@ -837,6 +837,24 @@ class AgendaController extends Controller
     }
 
     /**
+     *  AJAX confirm category
+     * 
+     * @return json
+     */
+    public function getEventCategory(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+     
+        $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+
+        return $eventCategory =json_encode($eventCat);
+       
+    }
+
+    /**
      *  AJAX confirm event
      * 
      * @return json

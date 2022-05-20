@@ -634,6 +634,7 @@ admin_main_style.css
             PopulateLocationDropdown(document.getElementById("event_school_id").value);
             PopulateStudentDropdown(document.getElementById("event_school_id").value)
             PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+            PopulateEventCategoryDropdown(document.getElementById("event_school_id").value)
         } else{
             PopulateLocationDropdown();
             PopulateStudentDropdown();
@@ -972,7 +973,54 @@ admin_main_style.css
         $('#event_type').multiselect('selectAll', false);   
         $('#event_type').multiselect('refresh');	
                  
-    }   
+    } 
+
+    // populate location
+    function PopulateEventCategoryDropdown(school_id=null){
+
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#event_location').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_event_category',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        
+                    }
+                    var resultHtml ='';
+                    var i='0';
+                    $.each(data, function(key,value){
+                        resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                    });
+                    $('#category_select').html(resultHtml);
+                    // $("#event_location").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
+             
+    }  
+
+
+
     // populate location
     function PopulateLocationDropdown(school_id=null){
 

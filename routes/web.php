@@ -62,6 +62,7 @@ Route::post('/{school}/copy_paste_events', [App\Http\Controllers\AgendaControlle
 Route::post('/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event1.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_locations', [App\Http\Controllers\AgendaController::class, 'getLocations'])->name('event.get_locations')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_teachers', [App\Http\Controllers\AgendaController::class, 'getTeachers'])->name('event.get_teachers')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/get_event_category', [App\Http\Controllers\AgendaController::class, 'getEventCategory'])->name('event.get_event_category')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_students', [App\Http\Controllers\AgendaController::class, 'getStudents'])->name('event.get_students')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event1.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
