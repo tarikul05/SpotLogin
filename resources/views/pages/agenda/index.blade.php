@@ -1906,7 +1906,12 @@ admin_main_style.css
                     if (event.action_type == 'edit') {
                         $('#event_btn_edit_text').text("{{__('Edit')}}");
                         if (event.can_lock == 'Y') {
-                            $('#btn_confirm').show();
+                            const type_removed = [50, 51];
+                            if(type_removed.includes(event.event_type) != true){ 
+                                $('#btn_confirm').show();
+                            } else {
+                                $('#btn_confirm').hide(); 
+                            }
                         } else {
                             $('#btn_confirm').hide();
                         }
