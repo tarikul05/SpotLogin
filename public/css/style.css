@@ -73,7 +73,7 @@ nav {
     font-weight: bold;
 }
 .form-group.row {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 .form-group.row label {
     margin-top: 10px;
@@ -81,6 +81,19 @@ nav {
     font-size: 15px;
     padding: 0;
 }
+.form-group.row p {
+    margin: 3px 0px;
+    color: #657e8e;
+    font-size: 15px;
+    padding: 0;
+}
+.form-group.row label.currency_display,
+.form-group.row p label {
+    margin-top: 0px;
+}
+/* .form-group.row .text-right {
+    text-align: right;
+} */
 .input-group-addon,
 .input-group-btn {
     white-space: nowrap;
