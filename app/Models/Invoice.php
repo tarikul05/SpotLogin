@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
+use App\Models\Invoice;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\CreatedUpdatedBy;
 
-class Invloce extends BaseModel
+class Invoice extends BaseModel
 {
     use HasFactory, SoftDeletes, CreatedUpdatedBy;
 

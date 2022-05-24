@@ -20,6 +20,8 @@
             </tr>
         </thead>
         <tbody>
+          @if (!empty($invoices))
+        
             @foreach($invoices as $invoice)
             @php
             if ($invoice->pivot->role_type == 'school_admin') continue;
@@ -44,6 +46,7 @@
                 </td>
             </tr>
             @endforeach
+          @endif
         </tbody>
     </table>
   </div>
@@ -54,7 +57,7 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable();
-        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.invoice.create',['school'=> $schoolId]) : route('invoice.create') }}">{{__("Add New")}}</a>')
+        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
        
     } );
 </script>
