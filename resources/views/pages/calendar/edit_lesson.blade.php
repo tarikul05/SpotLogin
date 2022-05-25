@@ -269,7 +269,7 @@
 							</div>
 
 							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
-								<button class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
+								<button type="button" class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -606,6 +606,41 @@ $('#edit_lesson').on('submit', function() {
 	}
 
 });
+
+
+$("#button_lock_and_save").on('click', function(event) {
+	event.preventDefault();
+	confirm_event();
+});
+function confirm_event(){
+        var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
+        var status = '';
+        $.ajax({
+            url: BASE_URL + '/confirm_event',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function( xhr ) {
+                $("#pageloader").show();
+            },
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+                    successModalCall('{{ __("Event has been validated ")}}');
+                }
+                else {
+                    errorModalCall('{{ __("Event validation error ")}}');
+                }
+            },   //success
+            complete: function( xhr ) {
+                $("#pageloader").hide();
+            },
+            error: function (ts) { 
+                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+            }
+        }); //ajax-type            
+
+    }
 
 </script>
 @endsection
