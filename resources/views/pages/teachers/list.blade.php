@@ -41,7 +41,7 @@
                             @endcan
 
                             @can('teachers-delete')
-                            <form method="post" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('delete')
                                 @csrf
                                 <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
