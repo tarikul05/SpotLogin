@@ -740,20 +740,21 @@ admin_main_style.css
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    successModalCall('event_confirm_message');
+                    successModalCall('{{ __("Event has been validated ")}}');
                     //window.location.reload(false);
                     getFreshEvents();
                    // window.location.reload(false);
+                   $('#EventModal').modal('hide')
                 }
                 else {
-                    errorModalCall('error_message_text');
+                    errorModalCall('{{ __("Event validation error ")}}');
                 }
             },   //success
             complete: function( xhr ) {
                 $("#pageloader").hide();
             },
             error: function (ts) { 
-                ts.responseText+'-'+errorModalCall('error_message_text');
+                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
         }); //ajax-type            
 
