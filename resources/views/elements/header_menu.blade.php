@@ -53,7 +53,9 @@
                         </div>
                         <a href="#" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
-                            <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
+                            @if(count($AppUI->schools()) > 1)
+                                <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
+                            @endif
                         @endunlessrole
                         
                     </div>
