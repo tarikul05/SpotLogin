@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Country;
 use App\Models\School;
 use App\Models\Invoice;
-
-
 
 class InvoiceController extends Controller
 {
@@ -42,4 +41,16 @@ class InvoiceController extends Controller
         //dd($invoices);
         return view('pages.invoices.list',compact('invoices','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
     }
+
+    public function add()
+    {
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.add', [
+            'title' => 'Invoice',
+            'pageInfo'=>['siteTitle'=>'']
+        ])->with(compact('genders','countries'));
+       
+    } 
 }
+

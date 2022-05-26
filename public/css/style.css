@@ -73,7 +73,7 @@ nav {
     font-weight: bold;
 }
 .form-group.row {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 .form-group.row label {
     margin-top: 10px;
@@ -81,6 +81,19 @@ nav {
     font-size: 15px;
     padding: 0;
 }
+.form-group.row p {
+    margin: 3px 0px;
+    color: #657e8e;
+    font-size: 15px;
+    padding: 0;
+}
+.form-group.row label.currency_display,
+.form-group.row p label {
+    margin-top: 0px;
+}
+/* .form-group.row .text-right {
+    text-align: right;
+} */
 .input-group-addon,
 .input-group-btn {
     white-space: nowrap;
@@ -465,11 +478,20 @@ input.error {
     border-color: #ff8000;
     color: #fff;
 }
-.teacher_save,
-#save_btn {
+.teacher_save {
     position: absolute;
     top: 140px;
     right: 14%;
+}
+.btn_area {
+    position: absolute;
+    top: 130px;
+    right: 7%;
+    display: flex;
+    grid-gap: 15px;
+}
+a#delete_btn {
+    display: none !important;
 }
 .tariff_table_rate label {
     display: inline-block;

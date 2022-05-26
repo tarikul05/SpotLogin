@@ -241,6 +241,11 @@ admin_main_style.css
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div class="modal-content">
@@ -398,7 +403,13 @@ admin_main_style.css
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sevent_price" name="sevent_price">
                                                                     @foreach($lessonPrice as $key => $lessprice)
-                                                                        <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+                                                                        <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>    
+                                                                        @if($lessprice->lesson_price_student == 'price_1')
+                                                                            Private Group
+                                                                        @else
+                                                                            Group lessons for {{ $lessprice->divider }} students
+                                                                        @endif	
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -472,6 +483,20 @@ admin_main_style.css
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- success modal-->
+<div class="modal modal_parameter" id="modal_lesson_price">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="modal_alert_body"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
             </div>
         </div>
     </div>
@@ -889,6 +914,7 @@ admin_main_style.css
                         PopulateLocationDropdown(document.getElementById("event_school_id").value);
                         PopulateStudentDropdown(document.getElementById("event_school_id").value)
                         PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                        PopulateEventCategoryDropdown(document.getElementById("event_school_id").value)
                         $('#agenda_select').trigger('change');
                     }
                     
@@ -2102,7 +2128,8 @@ admin_main_style.css
                 $('#start_date').val('');
                 $('#end_date').val('');
                 if (getSchoolIDs('is_multi')) {
-                    alert('{{ __("Please select One school for add event or lesson ") }}')
+                    $('#modal_lesson_price').modal('show');
+                    $("#modal_alert_body").text("Please select One school for add event or lesson");
                 }else{
                     $("#addAgendaModal").modal('show');
                     const startresult = startDate.format('DD/MM/YYYY');
@@ -2398,18 +2425,16 @@ $(function() {
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
-	
-	//if ((action == "new") && (price == 1)){
-	if (price == 1){                   
-		if (cnt >= 10) {
-			document.getElementById("sevent_price").value='price_10';
-		}
-		else
-		{
-			document.getElementById("sevent_price").value='price_'+cnt;
-		}
+                
+    if (cnt >= 10) {
+        document.getElementById("sevent_price").value='price_10';
+    }
+    else
+    {
+        document.getElementById("sevent_price").value='price_'+cnt;
+    }
 		
-	} 
+	
 })
 $( document ).ready(function() {
 	var value = $('#sis_paying').val();
@@ -2541,7 +2566,7 @@ $('#sis_paying').on('change', function() {
 
 
 
-$('#add_lesson').on('submit', function() {
+$('#add_lesson').on('submit', function(e) {
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
 	var selected = $("#student :selected").map((_, e) => e.value).get();
@@ -2551,6 +2576,36 @@ $('#add_lesson').on('submit', function() {
 	var type = $("#agenda_select").val();
 
     if(type == 1 || type == 2){
+        if(type==1){
+            var formData = $('#add_lesson').serializeArray();
+            var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+            formData.push({
+                "name": "_token",
+                "value": csrfToken,
+            });
+
+            var bill_type = $('#sis_paying').val();
+            
+            if(bill_type == 1){
+                $.ajax({
+                    url: BASE_URL + '/check-lesson-price',
+                    async: false, 
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.status == 1){
+                            var errMssg = '';	
+                        }else{
+                            var errMssg = 'error';
+                            $('#modal_lesson_price').modal('show');
+                            $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
+                            e.preventDefault();
+                        }
+                    }
+                })
+            }
+        }
         if(title == ''){
             var errMssg = 'Title required';
             $('#Title').addClass('error');

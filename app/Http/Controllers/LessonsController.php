@@ -891,4 +891,32 @@ class LessonsController extends Controller
     {
         //
     }
+
+
+    /**
+     * check if price exist for student 
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function lessonPriceCheck(Request $request)
+    {   
+        if ($request->isMethod('post')){
+            $lessonData = $request->all();
+            $stu_num = explode("_", $lessonData['sevent_price']);    
+            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+            if (!empty($lessonPriceTeacher)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('Successfully get price for this teacher')
+                ];
+            }else{
+                return [
+                    'status' => 0,
+                    'message' =>  __('No price for this teacher')
+                ];
+            }
+        }
+
+    }
 }
