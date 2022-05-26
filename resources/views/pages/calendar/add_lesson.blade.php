@@ -238,7 +238,7 @@
 							</div>
 						</div>
 					</fieldset>
-					<button class="btn btn-theme-outline" href="#" onclick="goBack();" id="back_btn">Back</button>
+					<a class="btn btn-theme-outline" href="#" onclick="goBack();" id="back_btn">Back</a>
 					<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 				</form>
 			</div>

@@ -910,6 +910,7 @@ admin_main_style.css
                         PopulateLocationDropdown(document.getElementById("event_school_id").value);
                         PopulateStudentDropdown(document.getElementById("event_school_id").value)
                         PopulateTeacherDropdown(document.getElementById("event_school_id").value)
+                        PopulateEventCategoryDropdown(document.getElementById("event_school_id").value)
                         $('#agenda_select').trigger('change');
                     }
                     
@@ -2560,7 +2561,7 @@ $('#sis_paying').on('change', function() {
 
 
 
-$('#add_lesson').on('submit', function() {
+$('#add_lesson').on('submit', function(e) {
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
 	var selected = $("#student :selected").map((_, e) => e.value).get();
