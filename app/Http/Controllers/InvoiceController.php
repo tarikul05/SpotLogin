@@ -4,23 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Country;
+use App\Models\School;
 
 class InvoiceController extends Controller
 {
-    /**
-     * create a new instance of the class
-     *
-     * @return void
-     */
-    function __construct()
+
+    public function __construct()
     {
-      parent::__construct();
+        parent::__construct();    
     }
-     /**
-     * Remove the specified resource from storage.
-     * @return Response
-    */
-    public function index()
+
+   
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request,$schoolId = null)
+    {
+
+        $user = $request->user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        // $school = School::active()->find($schoolId);
+        // if (empty($school)) {
+        //     $schoolId = 0;
+        // }
+        $invoices = $school->invoices; 
+        return view('pages.invoices.list',compact('invoices','schoolId'));
+    }
+
+    public function add()
     {
         $genders = config('global.gender');
         $countries = Country::active()->get();
@@ -30,5 +47,5 @@ class InvoiceController extends Controller
         ])->with(compact('genders','countries'));
        
     } 
- 
 }
+

@@ -11,49 +11,42 @@
         <thead>
             <tr>
                 <th>{{ __('#') }}</th>
-                <th>{{ __('Name of the Teacher') }}</th>
-                <th>{{ __('Email') }}</th>
+                <th>{{ __('Date') }}</th>
+                <th>{{ __('Type') }}</th>
+                <th>{{ __('Event') }}</th>
+                <th>{{ __('Amount') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($teachers as $teacher)
+          @if (!empty($invoices))
+        
+            @foreach($invoices as $invoice)
             @php
-            if ($teacher->pivot->role_type == 'school_admin' || $teacher->pivot->role_type == 'teachers_admin') continue;
+            if ($invoice->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
-                <td>{{ $teacher->id; }} </td>
-                <td>{{ $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; }}</td>
-                <td>{{ $teacher->email; }} {{ $teacher->pivot->school_id}}</td>
-                <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
-                @if($teacher->pivot->deleted_at)
-                    <td>{{__('Deleted')}}</td>
-                @else
+                <td>{{ $invoice->id; }}
+                <td>{{ $invoice->firstname.' '.$invoice->middlename.' '.$invoice->lastname; }}</td>
+                <td>{{ $invoice->email; }}</td>
+                <td>{{ !empty($invoice->is_active) && !empty($invoice->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 <td>
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-ellipsis-h txt-grey"></i>
                         </a>
                         <div class="dropdown-menu list action text-left">
-                            @can('teachers-view')
-                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
-                            @endcan
-
-                            @can('teachers-delete')
-                            <form method="post" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                                @method('delete')
-                                @csrf
-                                <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
-                            </form>
-                            @endcan
+                            
+                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('editStudent',['invoice' => $invoice->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                           
                             <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
                         </div>
                     </div>  
                 </td>
-                @endif
             </tr>
             @endforeach
+          @endif
         </tbody>
     </table>
   </div>
@@ -64,9 +57,8 @@
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable();
-        @can('teachers-create')
-        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
-        @endcan
+        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
+       
     } );
 </script>
 @endsection
