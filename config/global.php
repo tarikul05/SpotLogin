@@ -97,5 +97,21 @@
       50  => 'Coach time off',
       51  => 'Student time off',
     ],
+
+    'invoice_type' =>[
+      0  => 'Manuel',
+      1 =>'Student',
+      2  => 'Professor',
+      9  => 'School',
+    ],
+    'payment_status' =>[
+      0  => 'Unpaid',
+      1 =>'Paid'
+    ],
+    'invoice_status' =>[
+      1  => 'Creation',
+      10 =>'Issued or Approved',
+      100 =>'Paid'
+    ],
     
   ];
