@@ -478,11 +478,20 @@ input.error {
     border-color: #ff8000;
     color: #fff;
 }
-.teacher_save,
-#save_btn {
+.teacher_save {
     position: absolute;
     top: 140px;
     right: 14%;
+}
+.btn_area {
+    position: absolute;
+    top: 130px;
+    right: 7%;
+    display: flex;
+    grid-gap: 15px;
+}
+a#delete_btn {
+    display: none !important;
 }
 .tariff_table_rate label {
     display: inline-block;

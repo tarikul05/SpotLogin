@@ -241,6 +241,11 @@ admin_main_style.css
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div class="modal-content">
@@ -488,9 +493,7 @@ admin_main_style.css
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <p id="modal_alert_body">
-                    {{__('Price setup is not available for this event category and coach. please check and update.')}}
-                </p>
+                <p id="modal_alert_body"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
@@ -2124,7 +2127,8 @@ admin_main_style.css
                 $('#start_date').val('');
                 $('#end_date').val('');
                 if (getSchoolIDs('is_multi')) {
-                    alert('{{ __("Please select One school for add event or lesson ") }}')
+                    $('#modal_lesson_price').modal('show');
+                    $("#modal_alert_body").text("Please select One school for add event or lesson");
                 }else{
                     $("#addAgendaModal").modal('show');
                     const startresult = startDate.format('DD/MM/YYYY');
@@ -2594,6 +2598,7 @@ $('#add_lesson').on('submit', function(e) {
                         }else{
                             var errMssg = 'error';
                             $('#modal_lesson_price').modal('show');
+                            $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
                             e.preventDefault();
                         }
                     }

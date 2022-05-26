@@ -238,8 +238,10 @@
 							</div>
 						</div>
 					</fieldset>
-					<a class="btn btn-theme-outline" href="#" onclick="goBack();" id="back_btn">Back</a>
-					<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					<div class="btn_area">
+						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					</div>
 				</form>
 			</div>
 		</div>
