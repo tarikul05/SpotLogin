@@ -33,7 +33,11 @@
                     <td class="txt-grey text-center">{{ $i }} </td>
                     <td>{{ $invoice->date_invoice; }}</td>
                     <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
-                    <td>{{ $invoice->invoice_name; }}</td>
+                    @if ($invoice->invoice_type == 1)
+                        <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
+                    @else
+                        <td>{{ $invoice->invoice_name.'-'.$invoice->seller_name }}</td>
+                    @endif
                     <td>{{ $invoice->total_amount; }}</td>
                     @if ($invoice->payment_status_flag == 0)
                         <td class="text-center">
@@ -49,8 +53,9 @@
                         </td>
                     @endif
                     @if ($invoice->invoice_status > 1)
+
                         <td class="text-center">
-                            <i class="far fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                            <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
                             <span class="small txt-grey pull-left">
                                 <span class="change_button">Change</span>
                             </span>
@@ -66,10 +71,38 @@
                                 <i class="fa fa-ellipsis-h txt-grey"></i>
                             </a>
                             <div class="dropdown-menu list action text-left">
-                                
-                                <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                            @php
+                                $edit_view_url = '';
+                                //invoice_creation_type = y means manual invoice
+                                if ($invoice->invoice_creation_type == 'Y') {
+                                    $edit_view_url = '../invoice/invoice_manual.html?id='.$invoice->id;
+                                } else {
+                                    $edit_view_url = '../invoice/invoice_modification.html?id='.$invoice->id;
+                                }
+                            @endphp
                             
-                                <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+
+                            @if ($invoice->invoice_status > 1)
+                                <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                    <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
+                                    {{ __('View')}}
+                                </a>
+                                <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
+                                    <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
+                                    {{ __('PDF')}}
+                                </a>
+                            @else
+                                <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                    <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                    {{ __('Edit')}}
+                                </a>
+                            @endif
+
+                            @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
+                                <a class="dropdown-item txt-grey send_email" href="" onclick="SendPayRemiEmail('{{$invoice->id}}','{{$invoice->invoice_type}}')"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                            @endif
+                                
+                            
                             </div>
                         </div>  
                     </td>
