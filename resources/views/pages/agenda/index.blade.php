@@ -398,7 +398,13 @@ admin_main_style.css
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sevent_price" name="sevent_price">
                                                                     @foreach($lessonPrice as $key => $lessprice)
-                                                                        <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+                                                                        <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>    
+                                                                        @if($lessprice->lesson_price_student == 'price_1')
+                                                                            Private Group
+                                                                        @else
+                                                                            Group lessons for {{ $lessprice->divider }} students
+                                                                        @endif	
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -472,6 +478,22 @@ admin_main_style.css
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- success modal-->
+<div class="modal modal_parameter" id="modal_lesson_price">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="modal_alert_body">
+                    {{__('Price setup is not available for this event category and coach. please check and update.')}}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
             </div>
         </div>
     </div>
@@ -2397,18 +2419,16 @@ $(function() {
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
-	
-	//if ((action == "new") && (price == 1)){
-	if (price == 1){                   
-		if (cnt >= 10) {
-			document.getElementById("sevent_price").value='price_10';
-		}
-		else
-		{
-			document.getElementById("sevent_price").value='price_'+cnt;
-		}
+                
+    if (cnt >= 10) {
+        document.getElementById("sevent_price").value='price_10';
+    }
+    else
+    {
+        document.getElementById("sevent_price").value='price_'+cnt;
+    }
 		
-	} 
+	
 })
 $( document ).ready(function() {
 	var value = $('#sis_paying').val();
@@ -2550,6 +2570,35 @@ $('#add_lesson').on('submit', function() {
 	var type = $("#agenda_select").val();
 
     if(type == 1 || type == 2){
+        if(type==1){
+            var formData = $('#add_lesson').serializeArray();
+            var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+            formData.push({
+                "name": "_token",
+                "value": csrfToken,
+            });
+
+            var bill_type = $('#sis_paying').val();
+            
+            if(bill_type == 1){
+                $.ajax({
+                    url: BASE_URL + '/check-lesson-price',
+                    async: false, 
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.status == 1){
+                            var errMssg = '';	
+                        }else{
+                            var errMssg = 'error';
+                            $('#modal_lesson_price').modal('show');
+                            e.preventDefault();
+                        }
+                    }
+                })
+            }
+        }
         if(title == ''){
             var errMssg = 'Title required';
             $('#Title').addClass('error');
