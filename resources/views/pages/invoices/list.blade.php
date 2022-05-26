@@ -32,19 +32,19 @@
                 <tr>
                     <td class="txt-grey text-center">{{ $i }} </td>
                     <td>{{ $invoice->date_invoice; }}</td>
-                    <td>{{ $invoice->invoice_type; }}</td>
+                    <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
                     <td>{{ $invoice->invoice_name; }}</td>
                     <td>{{ $invoice->total_amount; }}</td>
                     @if ($invoice->payment_status_flag == 0)
                         <td class="text-center">
                             <div id="status_{{$invoice->id}}">
-                                <span class="text-warn gilroy-semibold">{{$invoice->payment_status}}</scan>
+                                <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
                             </div>
                         </td>
                     @else
                         <td class="text-center">
                             <div id="status_{{$invoice->id}}">
-                                <span class="text-suces gilroy-semibold">{{$invoice->payment_status}}</scan>
+                                <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
                             </div>
                         </td>
                     @endif

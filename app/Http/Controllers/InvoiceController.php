@@ -35,8 +35,11 @@ class InvoiceController extends Controller
         // if (empty($school)) {
         //     $schoolId = 0;
         // }
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
         $invoices = Invoice::active()->where('school_id',$schoolId)->get();
         //dd($invoices);
-        return view('pages.invoices.list',compact('invoices','schoolId'));
+        return view('pages.invoices.list',compact('invoices','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
     }
 }
