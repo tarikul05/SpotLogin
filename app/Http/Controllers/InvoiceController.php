@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\School;
+use App\Models\Invoice;
 
 
 
@@ -34,7 +35,8 @@ class InvoiceController extends Controller
         // if (empty($school)) {
         //     $schoolId = 0;
         // }
-        $invoices = $school->invoices; 
+        $invoices = Invoice::active()->where('school_id',$schoolId)->get();
+        //dd($invoices);
         return view('pages.invoices.list',compact('invoices','schoolId'));
     }
 }
