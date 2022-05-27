@@ -2569,6 +2569,8 @@ $('#sis_paying').on('change', function() {
 $('#add_lesson').on('submit', function(e) {
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
+    var evetCat = $('#category_select option:selected').val();
+    var evetLoc = $('#location option:selected').val();
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
@@ -2606,12 +2608,28 @@ $('#add_lesson').on('submit', function(e) {
                 })
             }
         }
+        
         if(title == ''){
             var errMssg = 'Title required';
             $('#Title').addClass('error');
         }else{
             $('#Title').removeClass('error');
         }
+
+        if( evetCat == undefined || evetCat == ''){
+            var errMssg = '{{ __("Select event category") }}';
+            $('#category_select').addClass('error');
+        }else{
+            $('#category_select').removeClass('error');
+        }
+
+        if( evetLoc == undefined || evetLoc == ''){
+            var errMssg = '{{ __("Select Location") }}';
+            $('#location').addClass('error');
+        }else{
+            $('#location').removeClass('error');
+        }
+
         if( selected < 1){
             var errMssg = 'Select student';
             $('.student_list').addClass('error');
