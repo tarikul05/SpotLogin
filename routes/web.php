@@ -48,6 +48,10 @@ Route::post('teacher_email_send', [App\Http\Controllers\TeachersController::clas
 //email-send student AJAX
 Route::post('student_email_send', [App\Http\Controllers\StudentsController::class, 'studentEmailSend'])->name('student_email_send.submit');
 
+//email-send school AJAX
+Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailSend'])->name('pay_reminder_email_send.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
 // email template  AJAX
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
 Route::post('/fetch_email_template', [App\Http\Controllers\EmailTemplateController::class, 'getEmailTemplate'])->name('email.fetch_email_template');

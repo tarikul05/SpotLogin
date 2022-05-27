@@ -151,3 +151,90 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     $('body').append(modalHtml);
     $("#confirmModal").modal('show');
 }
+
+
+
+function confirmPayReminderModalCall(p_event_id,title,function_name,all_events){
+    //$('#email_list_modal').hide();  
+    //var modalHtml='';
+    
+    var v_title='remove_title_text';
+    
+    v_title = ((title == '') ? v_title : title);
+    var p_event_id = p_event_id;
+    
+    
+
+    //email selection modal on click email reminder -->
+
+    //modalHtml =` `;
+    var find_flag = 0;
+    $.each(all_events, function (key, value) {
+        find_flag = 1;
+        console.log(value.father_email);
+        if (value.class_name == 'student') {
+            if (value.father_email != '') {
+                //document.getElementById("father_email_chk").value = value.father_email;
+                document.getElementById("father_email_chk").checked = true;
+                $('#father_email_cap').html(value.father_email);
+                $("#father_email_div").show();
+            } else {
+                $("#father_email_div").hide();
+            }
+
+            if (value.mother_email != '') {
+                //document.getElementById("mother_email_chk").value = value.mother_email;
+                document.getElementById("mother_email_chk").checked = true;
+                $('#mother_email_cap').html(value.mother_email);
+                $("#mother_email_div").show();
+            } else {
+                $("#mother_email_div").hide();
+            }
+
+            if (value.student_email != '') {
+                //document.getElementById("student_email_chk").value = value.student_email;
+                document.getElementById("student_email_chk").checked = true;
+                $('#student_email_cap').html(value.student_email);
+                $("#student_email_div").show();
+            } else {
+                $("#student_email_div").hide();
+            }
+        } else {
+
+            $("#student_email_div").hide();
+            document.getElementById("student_email_chk").value = "";
+            if (value.primary_email != '') {
+                document.getElementById("father_email_chk").checked = true;
+                $('#father_email_cap').html(value.primary_email);
+                $("#father_email_div").show();
+            } else {
+                $('#father_email_cap').html('');
+                $("#father_email_div").hide();
+            }
+
+            if (value.secondary_email != '') {
+                document.getElementById("mother_email_chk").checked = true;
+                $('#mother_email_cap').html(value.secondary_email);
+                $("#mother_email_div").show();
+            } else {
+                $('#mother_email_cap').html('');
+                $("#mother_email_div").hide();
+            }
+        
+        }
+
+    });
+    if (find_flag == 0) {
+        document.getElementById("father_email_chk").checked = false;
+        document.getElementById("mother_email_chk").checked = false;
+        document.getElementById("student_email_chk").checked = false;
+
+        $("#father_email_div").hide();
+        $("#mother_email_div").hide();
+        $("#student_email_div").hide();
+    }
+    //send email dialog -->
+   
+    //$('body').append(modalHtml);
+    $("#email_list_modal").modal('show');
+}
