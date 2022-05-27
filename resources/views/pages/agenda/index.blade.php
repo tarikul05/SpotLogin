@@ -1171,7 +1171,7 @@ admin_main_style.css
                     var resultHtml ='';
                     var i='0';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.teacher_id+'">'+value.nickname+'</option>'; 
+                        resultHtml+='<option value="'+value.teacher_id+'">'+value.full_name+'</option>'; 
                     });
                     $('#event_teacher, #teacher_select').html(resultHtml);
                     $("#event_teacher").multiselect('destroy');
