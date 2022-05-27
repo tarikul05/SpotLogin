@@ -60,7 +60,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
-										{{!empty($professors->nickname) ? $professors->nickname : ''; }}
+										{{!empty($professors->full_name) ? $professors->full_name : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">

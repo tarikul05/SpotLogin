@@ -43,7 +43,7 @@
 								<div class="form-group row">
 									<label class="col-lg-2 col-sm-2 text-left">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
-										{{!empty($coachoffData->nickname) ? $coachoffData->nickname : ''; }}
+										{{!empty($coachoffData->full_name) ? $coachoffData->full_name : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
