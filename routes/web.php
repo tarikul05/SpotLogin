@@ -48,7 +48,10 @@ Route::post('teacher_email_send', [App\Http\Controllers\TeachersController::clas
 //email-send student AJAX
 Route::post('student_email_send', [App\Http\Controllers\StudentsController::class, 'studentEmailSend'])->name('student_email_send.submit');
 
-//email-send school AJAX
+//email-fetch pay reminder AJAX
+Route::post('pay_reminder_email_fetch', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailFetch'])->name('pay_reminder_email_fetch.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+//email-fetch pay reminder AJAX
 Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailSend'])->name('pay_reminder_email_send.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 

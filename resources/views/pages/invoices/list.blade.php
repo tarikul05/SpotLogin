@@ -24,9 +24,12 @@
             </div>
         </div>
     </header>
-    <div class="table-responsive">
-        <label id="seleted_auto_id" name="seleted_auto_id" style="display: none;"></label>
-        <label id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;"></label>
+    <div class="table-responsive1">
+        <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
+        <input id="p_school_id" name="p_school_id" style="display: none;">
+        
+        
+        <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">
         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
         <table id="example" class="display" style="width:100%">
             <thead>
@@ -121,7 +124,7 @@
                                 @endif
 
                                 @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
-                                    <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                                    <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                 @endif
                                     
                                 
@@ -144,7 +147,7 @@
                     <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
                 </div>
                 <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
-                    <form id="email_list_form" name="email_list_form" method="POST">
+                    <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
 
                         <div class="form-group col-md-12" id="father_email_div">
                             <div class="btn-group text-left">
@@ -188,7 +191,7 @@
                                 <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
                         </div>
 
-                    </form>
+                    <!-- </form> -->
 
                 </div>
             </div>
@@ -257,9 +260,11 @@
             }); //ajax-type
     }
 
-    function SendPayRemiEmail(p_value,p_invoice_type) {
+    function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
         
         $('#seleted_auto_id').val(p_value);
+        $('#p_school_id').val(p_school_id);
+        
         $('#seleted_invoice_type').val(p_invoice_type);
         //console.log('p_value='+p_value);
         var p_attached_file = '';
@@ -268,7 +273,7 @@
         //return false;
         //populate lis of emails
         $.ajax({
-            url: BASE_URL + '/pay_reminder_email',
+            url: BASE_URL + '/pay_reminder_email_fetch',
             //url: 'invoice_data.php',
             data: 'type=email_list&p_auto_id=' + p_value,
             type: 'POST',
@@ -277,7 +282,7 @@
             success: function (result) {
                 //console.log(result);
                 if (result.status) {
-                    confirmPayReminderModalCall(p_value,'Do you want to validate events',"pay_reminder_email('"+p_value+"','"+result.data+"');",result.data);
+                    confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
                     return false;
                     
                 }
@@ -301,7 +306,7 @@
         var p_emails = '', p_attached_file = '';
         var p_inv_auto_id = $('#seleted_auto_id').val();
         var p_seleted_invoice_type = $('#seleted_invoice_type').val();
-
+        var p_school_id = document.getElementById("p_school_id").value;
         if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
             p_emails = document.getElementById("father_email_chk").value + "|";
         }
@@ -317,11 +322,11 @@
         }
 
 
-        console.log(p_emails);
+        console.log(p_seleted_invoice_type);
         if (p_seleted_invoice_type == 2) {
-                SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails);
+            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
         } else {
-            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails);
+            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
         }
 
 

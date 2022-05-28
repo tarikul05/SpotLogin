@@ -154,7 +154,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
 
 
 
-function confirmPayReminderModalCall(p_event_id,title,function_name,all_events){
+function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
     //$('#email_list_modal').hide();  
     //var modalHtml='';
     
@@ -162,7 +162,8 @@ function confirmPayReminderModalCall(p_event_id,title,function_name,all_events){
     
     v_title = ((title == '') ? v_title : title);
     var p_event_id = p_event_id;
-    
+    document.getElementById("p_school_id").value = p_school_id;
+                
     
 
     //email selection modal on click email reminder -->
@@ -238,3 +239,99 @@ function confirmPayReminderModalCall(p_event_id,title,function_name,all_events){
     //$('body').append(modalHtml);
     $("#email_list_modal").modal('show');
 }
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+} 
+
+function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='',p_school_id=0){
+    var emails='',email_cc='',email_bcc='',email_subject='',email_body='',data='';
+    var p_attached_file ='';
+    var client_id='',client_name='',client_lastname='',client_firstname='',invoice_price='',invoice_filename='';
+    
+    $.ajax({
+        url: BASE_URL + '/pay_reminder_email',
+        data: 'type=fetch_email_inv_detail&template_code='+p_template_code+'&p_inv_auto_id='+p_inv_auto_id+'&p_inv_file='+p_inv_file+'&p_email='+p_email+'&p_school_id='+p_school_id,
+        type: 'POST',                     
+        dataType: 'json',
+        //async: false,
+        success: function(data) {
+            console.log(data);
+            successModalCall("email_sent",'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
+            // $.each(data, function(key,value){
+            //     email_subject=value.subject_text;
+            //     email_body=value.body_text;
+            //     if (p_email !='') {
+            //         emails=p_email;
+            //     } else {
+            //         emails=value.emails;
+            //     }
+                
+            //     client_name=value.client_name;
+            //     invoice_filename=value.invoice_filename;
+			// });
+        },   // sucess
+        error: function(ts) { 
+            alert(ts.responseText+'sorry for the inconvenience caused.')
+            //alert(ts.responseText+' email template='+p_template_code) 
+        }
+    });
+    
+    
+    //var school_code=getCookie("school_code");
+    //alert(client_name+' '+school_code + ' ' + invoice_price);
+    //email_body=email_body.replace(/"[~~USER_NAME~~]"/g,client_name);
+    //email_body=email_body.replace(/"[~~SCHOOL_CODE~~]"/g,school_code);
+    //email_body=email_body.replace(/"[~~AMOUNT~~]"/g,invoice_price);
+    
+	// email_body=email_body.replace(/'/g,"''");
+	// email_body=email_body.replace(/&/g,"<<~>>");
+    // email_body=email_body.replace(/&/g,"<<~>>");
+    
+    
+    // if (p_inv_file == "") {
+    //     p_inv_file=invoice_filename;
+    // }
+    // //alert('p_inv_file='+p_inv_file);
+    
+    // //emails="soumenmiddey@gmail.com|soumen_middey@yahoo.com|";
+    
+    // var data='email_to='+emails+'&email_cc='+email_cc+'&email_bcc='+email_bcc+'&email_subject='+email_subject+'&email_body='+email_body;
+    // data=data+'&p_attachment='+p_inv_file;
+    // console.log(data);
+	// $.ajax({type: "POST",
+    //     url: VHTTP_HOST1+"teamvg/email/send_email_common.php",
+    //     data: data,
+	// 	dataType: "json",
+    //     async: false,
+    //     success:function(result){
+	// 	    var status =  result.status;
+	// 		if(status ==1)
+	// 		{
+	// 		   status=0;
+	// 		}
+	// 		else
+	// 		{
+	// 		   successModalCall(GetAppMessage("email_sent"),'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
+	// 		   //setTimeout(function(){ successModalCall(GetAppMessage("email_sent")) }, 3000);
+               
+                
+	// 		}
+    //     },   // sucess
+    //     error: function(ts) { alert(ts.responseText+'sorry for the inconvenience caused.') }
+    // }); //ajax-type
+
+    return true;    
+}   //END - SendInvoiceEmail
