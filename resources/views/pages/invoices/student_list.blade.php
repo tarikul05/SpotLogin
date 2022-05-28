@@ -11,7 +11,7 @@
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
-                    <label id="page_header_id" name="page_header_id">List of invoice(s)</label></div>
+                    <label id="page_header_id" name="page_header_id">Student's Bill</label></div>
             </div>
             <!--<div class="pull-right col-xs-6" style="text-align:right;">-->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
@@ -35,12 +35,8 @@
             <thead>
                 <tr>
                     <th>{{ __('#') }}</th>
-                    <th>{{ __('Date') }}</th>
-                    <th>{{ __('Type') }}</th>
-                    <th>{{ __('Event') }}</th>
-                    <th>{{ __('Amount') }}</th>
-                    <th>{{ __('Status') }}</th>
-                    <th></th>
+                    <th>{{ __('Student’s name') }}</th>
+                    <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
@@ -58,38 +54,7 @@
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>{{ $invoice->date_invoice; }}</td>
                         <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
-                        @if ($invoice->invoice_type == 1)
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
-                        @else
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->seller_name }}</td>
-                        @endif
-                        <td>{{ $invoice->total_amount; }}</td>
-                        @if ($invoice->payment_status_flag == 0)
-                            <td class="text-center">
-                                <div id="status_{{$invoice->id}}">
-                                    <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
-                                </div>
-                            </td>
-                        @else
-                            <td class="text-center">
-                                <div id="status_{{$invoice->id}}">
-                                    <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
-                                </div>
-                            </td>
-                        @endif
-                        @if ($invoice->invoice_status > 1)
-
-                            <td class="text-center">
-                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                <span class="small txt-grey pull-left">
-                                    <span class="change_button">Change</span>
-                                </span>
-                            </td>
-                        @else
-                            <td>
-                            </td>
-                        @endif
-                        
+                       
                         <td>
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

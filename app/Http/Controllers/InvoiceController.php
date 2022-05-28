@@ -274,6 +274,35 @@ class InvoiceController extends Controller
         
     }
 
+    
+
+    /**
+     *  List of student invoices by school
+     * 
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-05-28
+     */
+    public function student_invoice_list(Request $request,$schoolId = null)
+    {
+
+        $user = $request->user();
+        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($this->schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        // $school = School::active()->find($schoolId);
+        // if (empty($school)) {
+        //     $schoolId = 0;
+        // }
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+        $invoices = Invoice::active()->where('school_id',$this->schoolId)->get();
+        //dd($invoices);
+        return view('pages.invoices.student_list',compact('invoices','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
+    }
+
     public function add()
     {
         $genders = config('global.gender');
