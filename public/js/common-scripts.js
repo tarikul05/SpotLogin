@@ -267,8 +267,12 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='
         type: 'POST',                     
         dataType: 'json',
         //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+        },
         success: function(data) {
             console.log(data);
+            $("#pageloader").hide();
             successModalCall("email_sent",'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
             // $.each(data, function(key,value){
             //     email_subject=value.subject_text;
@@ -284,54 +288,11 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='
 			// });
         },   // sucess
         error: function(ts) { 
+            $("#pageloader").hide();
             alert(ts.responseText+'sorry for the inconvenience caused.')
             //alert(ts.responseText+' email template='+p_template_code) 
         }
     });
     
-    
-    //var school_code=getCookie("school_code");
-    //alert(client_name+' '+school_code + ' ' + invoice_price);
-    //email_body=email_body.replace(/"[~~USER_NAME~~]"/g,client_name);
-    //email_body=email_body.replace(/"[~~SCHOOL_CODE~~]"/g,school_code);
-    //email_body=email_body.replace(/"[~~AMOUNT~~]"/g,invoice_price);
-    
-	// email_body=email_body.replace(/'/g,"''");
-	// email_body=email_body.replace(/&/g,"<<~>>");
-    // email_body=email_body.replace(/&/g,"<<~>>");
-    
-    
-    // if (p_inv_file == "") {
-    //     p_inv_file=invoice_filename;
-    // }
-    // //alert('p_inv_file='+p_inv_file);
-    
-    // //emails="soumenmiddey@gmail.com|soumen_middey@yahoo.com|";
-    
-    // var data='email_to='+emails+'&email_cc='+email_cc+'&email_bcc='+email_bcc+'&email_subject='+email_subject+'&email_body='+email_body;
-    // data=data+'&p_attachment='+p_inv_file;
-    // console.log(data);
-	// $.ajax({type: "POST",
-    //     url: VHTTP_HOST1+"teamvg/email/send_email_common.php",
-    //     data: data,
-	// 	dataType: "json",
-    //     async: false,
-    //     success:function(result){
-	// 	    var status =  result.status;
-	// 		if(status ==1)
-	// 		{
-	// 		   status=0;
-	// 		}
-	// 		else
-	// 		{
-	// 		   successModalCall(GetAppMessage("email_sent"),'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
-	// 		   //setTimeout(function(){ successModalCall(GetAppMessage("email_sent")) }, 3000);
-               
-                
-	// 		}
-    //     },   // sucess
-    //     error: function(ts) { alert(ts.responseText+'sorry for the inconvenience caused.') }
-    // }); //ajax-type
-
     return true;    
 }   //END - SendInvoiceEmail
