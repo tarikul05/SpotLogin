@@ -72,7 +72,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
-													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -154,7 +154,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
 												<option value="0">No charge</option>
-												<option value="1">Hourly rate</option>
+												<option value="1" selected>Hourly rate</option>
 												<option value="2">Price per student</option>
 											</select>
 										</div>
@@ -166,7 +166,13 @@
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
-													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>Group lessons for {{ $lessprice->divider }} students</option>
+													<option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>    
+													@if($lessprice->lesson_price_student == 'price_1')
+														Private Group
+													@else
+														Group lessons for {{ $lessprice->divider }} students
+													@endif	
+													</option>
 												@endforeach
 											</select>
 										</div>
@@ -232,11 +238,31 @@
 							</div>
 						</div>
 					</fieldset>
-					<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					<div class="btn_area">
+						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+
+	<!-- success modal-->
+	<div class="modal modal_parameter" id="modal_lesson_price">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p id="modal_alert_body">
+						{{__('Price setup is not available for this event category and coach. please check and update.')}}
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Tabs content -->
 @endsection
 
 
@@ -265,19 +291,15 @@ $('#student').multiselect({
 
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
-	var price=document.getElementById("sis_paying").value;
-	
-	//if ((action == "new") && (price == 1)){
-	if (price == 1){                   
-		if (cnt >= 10) {
-			document.getElementById("sevent_price").value='price_10';
-		}
-		else
-		{
-			document.getElementById("sevent_price").value='price_'+cnt;
-		}
-		
-	} 
+	var price=document.getElementById("sis_paying").value;                
+	if (cnt >= 10) {
+		document.getElementById("sevent_price").value='price_10';
+	}
+	else
+	{
+		document.getElementById("sevent_price").value='price_'+cnt;
+	}
+
 })
 
 $( document ).ready(function() {
@@ -418,12 +440,21 @@ $('#sis_paying').on('change', function() {
 	}
 });
 
-$('#add_lesson').on('submit', function() {
+$('#add_lesson').on('submit', function(e) {
+
+	var formData = $('#add_lesson').serializeArray();
+	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	formData.push({
+		"name": "_token",
+		"value": csrfToken,
+	});
+
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
+	var bill_type = $('#sis_paying').val();
 
 	var errMssg = '';
 	
@@ -453,6 +484,25 @@ $('#add_lesson').on('submit', function() {
 		$('#end_date').addClass('error');
 	}else{
 		$('#end_date').removeClass('error');
+	}
+
+	if(bill_type == 1){
+		$.ajax({
+			url: BASE_URL + '/check-lesson-price',
+			async: false, 
+			data: formData,
+			type: 'POST',
+			dataType: 'json',
+			success: function(response){
+				if(response.status == 1){
+					var errMssg = '';	
+				}else{
+					var errMssg = 'error';
+					$('#modal_lesson_price').modal('show');
+					e.preventDefault();
+				}
+			}
+		})
 	}
 
 	if(errMssg == ""){

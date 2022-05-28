@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Country;
 use App\Models\School;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -10,8 +11,6 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\EmailTemplate;
 use App\Mail\SportloginEmail;
-
-
 
 class InvoiceController extends Controller
 {
@@ -274,4 +273,15 @@ class InvoiceController extends Controller
         }
         
     }
+
+    public function add()
+    {
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.add', [
+            'title' => 'Invoice',
+            'pageInfo'=>['siteTitle'=>'']
+        ])->with(compact('genders','countries'));
+       
+    } 
 }

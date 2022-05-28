@@ -1015,7 +1015,9 @@ button.btn.btn-sm.btn-warning {
     z-index: 9999 !important;
     min-width: 100px;
 }
-
+#modal_lesson_price p#modal_alert_body {
+    font-size: 18px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
