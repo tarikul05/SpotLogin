@@ -182,7 +182,7 @@ class InvoiceController extends Controller
             $res_data[]= $result_data;
             
             //sending email for forgot password
-            if (config('global.email_send') != 1) {
+            if (config('global.email_send') == 1) {
                        
                 try {
                     $p_lang = 'en'; 
