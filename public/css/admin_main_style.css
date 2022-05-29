@@ -2,7 +2,7 @@
     font-family: "Gilroy-Bold";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-Bold"),
+    src: url("../font/Gilroy-Bold.woff"),
         url("../font/gilroy/Gilroy-Bold.ttf") format("truetype");
 }
 
@@ -10,15 +10,14 @@
     font-family: "gilroy-SemiBold";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-SemiBold"),
-        url("../font/gilroy/Gilroy-SemiBold.ttf") format("truetype");
+    src: url("../font/gilroy/Gilroy-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
     font-family: "Gilroy-Heavy";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-Heavy"),
+    src: url("../font/Gilroy-Heavy.woff"),
         url("../font/gilroy/Gilroy-Heavy.ttf") format("truetype");
 }
 
@@ -26,7 +25,7 @@
     font-family: "Gilroy-Light";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-Light"),
+    src: url("../font/Gilroy-Light.woff"),
         url("../font/gilroy/Gilroy-Light.ttf") format("truetype");
 }
 
@@ -34,7 +33,7 @@
     font-family: "Gilroy-Medium";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-Medium"),
+    src: url("../font/Gilroy-Medium.woff"),
         url("../font/gilroy/Gilroy-Medium.ttf") format("truetype");
 }
 
@@ -42,7 +41,7 @@
     font-family: "Gilroy-Regular";
     font-style: normal;
     font-weight: normal;
-    src: ("../font/gilroy/Gilroy-Regular"),
+    src: url("../font/Gilroy-Regular.woff"),
         url("../font/gilroy/Gilroy-Regular.ttf") format("truetype");
 }
 
@@ -704,7 +703,7 @@ ul.dropdown-menu.show li a i {
     font-weight: bold;
 }
 a#btn_delete_events {
-    line-height: 25px;
+    line-height: 14px;
 }
 em.glyphicon.glyphicon-plus {
     font-size: 20px;
@@ -1017,6 +1016,11 @@ button.btn.btn-sm.btn-warning {
 }
 #modal_lesson_price p#modal_alert_body {
     font-size: 18px;
+}
+.btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
 }
 @media only screen and (max-width: 991px) {
     h1 {

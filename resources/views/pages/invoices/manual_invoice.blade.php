@@ -11,15 +11,27 @@
 @endsection
 
 @section('content')
-<div class="content">
+<div class="content" id="manual_invoice_page">
 	<div class="container-fluid">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">Invoice Detail</label>
+						<label id="page_header" name="page_header">{{__('Manual Detail')}}</label>
 					</div>
 				</div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
+                    <div class="btn-group save-button pull-right"> 
+                        <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                        <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
+                        </a> 
+                        <a id="print_preview_btn" style="display: block;" name="print_preview_btn" class="btn btn-sm btn-default" target="_blank">Print Preview</a> 
+                        <a id="delete_btn" style="display: block!important;" name="delete_btn" class="btn btn-sm btn-danger" href="">Delete</a>
+                        <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
+                        <button id="approved_btn" style="display: none;" target="" href="" class="btn btn-sm btn-primary">Send by email</button> 
+                        <a id="download_pdf_btn" name="download_pdf_btn" style="display: none;" target="" href="" class="btn btn-sm btn-default">Download PDF</a> 
+                    </div>
+                </div>
 			</div>
 		</header>
         <div class="row" style="margin:0;">
@@ -69,20 +81,22 @@
                                         <td width="20%">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
-                                                <input id="date_invoice" name="date_invoice" type="text" class="form-control datetimepicker"> <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                <input id="date_invoice" name="date_invoice" type="text" class="form-control datetimepicker"> 
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <!-- client info -->
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Client Information') }}:</label>
+							</div>
                             <div id="client_detail_id" open="">
-                                <label class="section_header_class" id="lbl_client_information">Client Information</label>
-                                <!-- <summary></summary> -->
                                 <div id="table_client">
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
-                                            <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                            <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
                                                     <option value="ammy roy (STUDENT)" id="2601914D-B642-11EC-BC5D-067B4964D503" <="" option=""></option>
@@ -119,66 +133,79 @@
                                     </div>
                                     <div class="row" id="table_client_detail">
                                         <div class="col-md-6">
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group row" style="display: none;">
                                                 <input type="hidden" id="client_id" name="client_id" value="EC7E9C27-1B10-11EC-9CF6-067B4964D503">
                                                 <label id="client_name_caption" name="client_name_caption" for="client_name" class="col-lg-3 col-sm-3 text-left">Client Name</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_name" name="client_name" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="first_name_label_id" name="first_name_label_id" for="client_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_firstname" name="client_firstname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="street_caption" name="street_caption" for="client_street" class="col-lg-3 col-sm-3 text-left">Street</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_street" name="client_street" value="" placeholder="" maxlength="120"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="street_number_caption" name="street_number_caption" for="client_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_street_number" name="client_street_number" value="" placeholder="" maxlength="20"> </div>
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group row" style="display: none;">
                                                 <label id="street2_caption" name="street2_caption" for="client_street2" class="col-lg-3 col-sm-3 text-left">Street 2 :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_street2" name="client_street2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="postal_code_caption" name="postal_code_caption" for="client_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="" placeholder="" maxlength="8"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="family_name_label_id" name="family_name_label_id" for="client_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_lastname" name="client_lastname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="client_country_id" name="client_country_id">
-                                                            <option value="CA">Canada</option>
-                                                            <option value="FR">France</option>
-                                                            <option value="CH">Switzerland</option>
-                                                            <option value="US">United States</option>
+                                                            @foreach($countries as $country)
+                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" id="client_province_id_div" style="display:none;">
+                                            <div class="form-group row" id="client_province_id_div" style="display:none;">
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_province_id" name="client_province_id"> </select>
+                                                        <select class="form-control" id="client_province_id" name="client_province_id"> 
+                                                            <option value="">Select Province</option>
+                                                            <option value="3">Alberta</option>
+                                                            <option value="2">British Columbia</option>
+                                                            <option value="5">Manitoba</option>
+                                                            <option value="10">Newfoundland &amp; Labrador</option>
+                                                            <option value="12">Northwest territory</option>
+                                                            <option value="8">Nova Scotia</option>
+                                                            <option value="11">Nunavut</option>
+                                                            <option value="6">Ontario</option>
+                                                            <option value="9">PEI</option>
+                                                            <option value="7">Quebec</option>
+                                                            <option value="4">Saskatchewan</option>
+                                                            <option value="13">Yukon</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="locality_caption" name="locality_caption" for="client_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_place" name="client_place" value="" placeholder="" maxlength="150"> </div>
@@ -189,77 +216,79 @@
                             </div>
                             <!-- client info END -->
                             <!-- Seller info -->
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Basic data Seller (creditor of invoice)') }}:</label>
+							</div>
                             <div id="seller_detail_id" open="">
-                                <label class="section_header_class" id="lbl_seller_information">Basic data Seller (creditor of invoice)</label>
                                 <!-- <summary></summary> -->
                                 <div id="table_seller">
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
-                                            <div class="input-group"> <span class="input-group-addon">
-                                                                <i class="glyphicon glyphicon-search"></i>
-                                                            </span>
-                                                <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="on"> </div>
+                                            <div class="input-group"> 
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </span>
+                                            <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="on"> </div>
                                         </div>
                                     </div>
                                     <div class="row" id="table_seller_detail">
                                         <div class="col-md-6">
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group row" style="display: none;">
                                                 <input type="hidden" id="seller_id" name="seller_id" value="">
                                                 <label id="seller_name_caption" name="seller_name_caption" for="seller_name" class="col-lg-3 col-sm-3 text-left">Seller Name</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_name" name="seller_name" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="first_name_label_id" name="first_name_label_id" for="seller_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="street_caption" name="street_caption" for="seller_street" class="col-lg-3 col-sm-3 text-left">Street</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_street" name="seller_street" value="" placeholder="" maxlength="120"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="street_number_caption" name="street_number_caption" for="seller_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="" placeholder="" maxlength="15"> </div>
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group row" style="display: none;">
                                                 <label id="street2_caption" name="street2_caption" for="seller_street2" class="col-lg-3 col-sm-3 text-left">Street 2 :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_street2" name="seller_street2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="postal_code_caption" name="postal_code_caption" for="seller_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="" placeholder="" maxlength="8"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="phone_caption" name="phone_caption" for="seller_phone" class="col-lg-3 col-sm-3 text-left">Téléphone</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_phone" name="seller_phone" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="family_name_label_id" name="family_name_label_id" for="seller_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="seller_country_id" name="seller_country_id">
-                                                            <option value="CA">Canada</option>
-                                                            <option value="FR">France</option>
-                                                            <option value="CH">Switzerland</option>
-                                                            <option value="US">United States</option>
+                                                            @foreach($countries as $country)
+                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" id="seller_province_id_div" style="display: block;">
+                                            <div class="form-group row" id="seller_province_id_div" style="display:none">
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
@@ -281,17 +310,17 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="locality_caption" name="locality_caption" for="seller_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_place" name="seller_place" value="" placeholder="" maxlength="150"> </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label id="email_caption" name="email_caption" for="seller_email" class="col-lg-3 col-sm-3 text-left">email</label>
                                                 <div class="col-sm-7">
                                                     <input type="email" class="form-control" id="seller_email" name="seller_strseller_emaileet2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group row" style="display: none;">
                                                 <label id="mobile_caption" name="mobile_caption" for="seller_mobile" class="col-lg-3 col-sm-3 text-left">Mobile</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_mobile" name="seller_mobile" value="" placeholder="" maxlength="150"> </div>
@@ -302,58 +331,59 @@
                             </div>
                             <!-- Seller info END -->
                             <!-- Payment Bank info for Seller -->
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Payment Bank Information') }}:</label>
+							</div>
                             <div id="" open="">
-                                <label class="section_header_class" id="lbl_seller_information">Payment Bank Information</label>
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-2 col-sm-2 text-left">Payment Bank Account Name</label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="name_of_bank_caption" name="name_of_bank_caption" for="payment_bank_name" class="col-lg-2 col-sm-2 text-left">Bank Name</label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="payment_bank_name" name="payment_bank_name" value="" placeholder="" maxlength="100"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="address_caption" name="address_caption" for="payment_bank_address" class="col-lg-3 col-sm-3 text-left">Address</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="postal_code_caption" name="postal_code_caption" for="payment_bank_zipcode" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="locality_caption" name="locality_caption" for="payment_bank_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="account_number" name="account_number" for="payment_bank_account" class="col-lg-3 col-sm-3 text-left">Account No</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="pays_caption" name="pays_caption" for="payment_bank_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
-                                                        <option value="CA">Canada</option>
-                                                        <option value="FR">France</option>
-                                                        <option value="CH">Switzerland</option>
-                                                        <option value="US">United States</option>
+                                                        @foreach($countries as $country)
+                                                            <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group" id="bank_province_id_div" style="">
+                                        <div class="form-group row" id="bank_province_id_div" style="display:none">
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
@@ -375,12 +405,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="iban_caption" name="iban_caption" for="payment_bank_iban" class="col-lg-3 col-sm-3 text-left">IBAN No</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="swift_number" name="swift_number" for="payment_bank_swift" class="col-lg-3 col-sm-3 text-left">SWIFT A/c No</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30"> </div>
@@ -389,14 +419,14 @@
                                 </div>
                                 <div class="row" id="payment_bank_info_canada" style="display: none;">
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
                                             <div class="col-sm-7">
                                                 <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="name_for_checks" name="name_for_checks" value="" placeholder="Name for Checks" maxlength="100"> </div>
@@ -406,8 +436,10 @@
                             </div>
                             <!-- Payment Bank info for Seller -->
                             <!-- Transaction Detail info -->
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Invoice Detail Information') }}:</label>
+							</div>
                             <div id="details_transaction" open="">
-                                <label id="lbl_details_information" class="section_header_class">Invoice Detail Information</label>
                                 <!-- <summary><h4></h4></summary> -->
                                 <table id="details_tbl" width="100%" border="1" cellpadding="0" cellspacing="0" style="background:lightblue;">
                                     <thead>
@@ -449,7 +481,8 @@
                                             <td style="display: none;">1</td>
                                             <td>
                                                 <div class="input-group datetimepicker" id="date_div">
-                                                    <input id="date" name="date" type="text" class="form-control datetimepicker" value=""><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                                    <input id="date" name="date" type="text" class="form-control datetimepicker" value="">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                                 </div>
                                             </td>
                                             <td>
@@ -459,7 +492,8 @@
                                                 <input type="number" pattern="[0-9.]" id="total_item1" name="total_item1" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
                                             </td>
                                             <td>
-                                                <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><em class="glyphicon glyphicon-remove"></em></button>
+                                                <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row">
+                                                <i class="fa fa-remove"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -480,28 +514,30 @@
                                 </table>
                             </div>
                             <!-- Transaction Detail info END -->
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
+							</div>
                             <div id="add_tax_div" open="">
-                                <label class="section_header_class" id="lbl_add_tax">Add Taxes</label>
                                 <div class="add_more_tax_row row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255"> </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100"> </div>
@@ -514,17 +550,19 @@
                                 </div>
                             </div>
                             <div id="add_expense_div" open="">
-                                <label class="section_header_class" id="lbl_add_expense">Add Expenses</label>
+                                <div class="section_header_class">
+                                    <label class="invoice_subtitle">{{__('Add Expenses') }}:</label>
+                                </div>
                                 <div class="add_more_expense_row row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" name="expense_name[]" value="" placeholder="Expense Name" maxlength="255"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">Amount</label>
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100"> </div>
@@ -560,13 +598,13 @@ $('#seller_country_id').change(function(){
 	}
 })
 
-$('#spayment_bank_country_id').change(function(){
+$('#payment_bank_country_id').change(function(){
 	var country = $(this).val();
 
 	if(country == 'CA'){
-		$('#spayment_bank_country_id_div').show();
+		$('#bank_province_id_div').show();
 	}else{
-		$('#spayment_bank_country_id_div').hide();
+		$('#bank_province_id_div').hide();
 	}
 })
 
@@ -579,6 +617,160 @@ $('#client_country_id').change(function(){
 		$('#client_province_id_div').hide();
 	}
 })
+
+$(document).on('click','#add_more_tax_btn',function(){
+
+    var resultHtml = `<div class="add_more_tax_row row">
+        <hr>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                    <div class="col-sm-7">                                        
+                        <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                    <div class="col-sm-7">                                        
+                        <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                    <div class="col-sm-7">                                        
+                        <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
+                    <div class="col-sm-7">                                        
+                        <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
+                    </div>
+                    <div class="col-sm-1">                                        
+                        <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+        $("#add_more_tax_div").append(resultHtml);
+
+})
+
+$(document).on('click','.delete_tax',function(){
+    $(this).parents('.add_more_tax_row').remove();
+})
+
+$(document).on('click','#add_more_expense_btn',function(){
+
+var resultHtml = `<div class="add_more_expense_row row">
+        <hr>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
+                <div class="col-sm-7">                                        
+                    <input type="text" class="form-control" name="expense_name[]" value="" placeholder="Expense Name" maxlength="255">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            
+            <div class="form-group row">
+                <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">Amount</label>
+                <div class="col-sm-7">                                        
+                    <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100">
+                </div>
+                <div class="col-sm-1">                                        
+                        <button type="button" class="btn btn-theme-warn delete_expense"><i class="fa fa-trash-o"></i></button>
+                    </div>
+            </div>
+        </div>
+    </div>`;
+
+    $("#add_more_expense_div").append(resultHtml);
+
+})
+
+$(document).on('click','.delete_expense',function(){
+    $(this).parents('.add_more_expense_row').remove();
+})
+
+$(".add-row").click(function(){
+    var i =document.getElementById("details_tbl").rows.length-2;            
+    
+    var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
+    markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
+    markup+='<td><input type="text" id="caption" name="caption" placeholder="" class="form-control"></td>';                   
+    markup+='<td class="row_item_value"><input type="number" pattern="[0-9.]" id="total_item'+i+'" name="total_item'+i+'" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
+    markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><i class="fa fa-remove"></i></button></td>';
+    //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
+    markup+='</tr>';   
+    
+    $("#details_tbl tbody").append(markup);
+
+    $('.date_picker').datetimepicker({
+        format: "dd.mm.yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+    });
+
+});
+
+function remove_rows(r){
+    var i = document.getElementById("details_tbl").rows.length; //get total rows including header footer
+    //alert(i);
+    if (i>4){
+        i = r.parentNode.parentNode.rowIndex;
+        document.getElementById("details_tbl").deleteRow(i);        
+        //$(this).parent("tr").remove();
+    };
+};
+
+ $(function() {
+	$("#date").datetimepicker({
+        format: "dd.mm.yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+    
+    $("#date_invoice").datetimepicker({
+        format: "dd.mm.yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+
+        
+    $(".date_picker").datetimepicker({
+        format: "dd.mm.yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+
+ });
 
 </script>
 @endsection

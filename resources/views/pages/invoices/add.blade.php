@@ -349,8 +349,8 @@
 								<div class="form-group row">
 									<label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">{{ __('Date of invoice') }}</label>
 									<div class="col-sm-2">
-										<div class="input-group" id="birth_date_div">
-											<input id="birth_date" value="1970-01-01 00:00:00" name="birth_date" type="text" class="form-control"> 
+										<div class="input-group" id="date_invoice_div">
+											<input id="date_invoice" value="" name="date_invoice" type="text" class="form-control"> 
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
 										</div>
 									</div>
@@ -760,6 +760,19 @@ $('#client_country_id').change(function(){
 		$('#client_province_id_div').hide();
 	}
 })
+
+$(function() {
+	$("#date_invoice").datetimepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+});
 
 </script>
 @endsection

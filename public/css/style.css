@@ -72,6 +72,44 @@ nav {
     text-align: left;
     font-weight: bold;
 }
+.section_header_class label.invoice_subtitle {
+    color: #152245;
+    font-size: 18px;
+    margin: 15px 0 12px 0;
+    text-align: left;
+    font-weight: bold;
+}
+
+#manual_invoice_page tbody,
+#manual_invoice_page tr,
+#manual_invoice_page th,
+#manual_invoice_page td {
+    border-color: #bdbdbd;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+    outline: none;
+}
+.btn {
+    padding: 0.75rem;
+    font-family: "Gilroy-Medium";
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 14px;
+    min-height: 37px;
+}
+button.btn.btn-theme-warn.delete_tax,
+button.btn.btn-theme-warn.delete_expense {
+    margin-left: 19px;
+    margin-top: 3px;
+}
+
+button#add_more_tax_btn,
+button#add_more_expense_btn {
+    max-width: 195px;
+    font-size: 15px;
+    padding: 9px;
+}
 .form-group.row {
     margin-bottom: 8px;
 }

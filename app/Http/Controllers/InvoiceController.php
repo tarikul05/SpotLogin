@@ -304,7 +304,7 @@ class InvoiceController extends Controller
     {
         $genders = config('global.gender');
         $countries = Country::active()->get();
-        return view('pages.invoices.manual', [
+        return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo'=>['siteTitle'=>'']
         ])->with(compact('genders','countries'));
