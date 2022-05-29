@@ -274,6 +274,14 @@ class InvoiceController extends Controller
         
     }
 
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
     public function add()
     {
         $genders = config('global.gender');
@@ -282,6 +290,24 @@ class InvoiceController extends Controller
             'title' => 'Invoice',
             'pageInfo'=>['siteTitle'=>'']
         ])->with(compact('genders','countries'));
-       
+    } 
+        
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function manualInvoice()
+    {
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.manual', [
+            'title' => 'Invoice',
+            'pageInfo'=>['siteTitle'=>'']
+        ])->with(compact('genders','countries'));
+     
     } 
 }
