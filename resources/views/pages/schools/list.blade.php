@@ -51,7 +51,7 @@
                 </td>
 
                 <td>{{ $school->school_name }}</td>
-                <td>School</td>
+                <td>{{ ($school->school_type == 'S')? 'School': 'Coach' }}</td>
                 <td>{{ $school->incorporation_date }}</td>
                 <td>{{ $school->contact_firstname }}</td>
                 <td>{{ $school->email }}</br>
