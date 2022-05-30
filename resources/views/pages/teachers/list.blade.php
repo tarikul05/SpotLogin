@@ -25,7 +25,7 @@
             <tr>
                 <td>{{ $teacher->id; }} </td>
                 <td> {{ $teacher->full_name }}</td>
-                <td>{{ $teacher->email; }} {{ $teacher->pivot->school_id}}</td>
+                <td>{{ $teacher->email; }} </td>
                 <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
