@@ -7,8 +7,11 @@ use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Country;
+use App\Models\Invoice;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
+
 
 class School extends BaseModel
 {
@@ -100,7 +103,8 @@ class School extends BaseModel
     public function teachers()
     {
         return $this->belongsToMany(Teacher::class)
-                    ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at');
+                    // ->whereNull('school_teacher.deleted_at') 
+                    ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at','deleted_at');
     }
 
 
@@ -110,7 +114,17 @@ class School extends BaseModel
     public function students()
     {
         return $this->belongsToMany(Student::class)
-                    ->withPivot( 'nickname', 'email', 'billing_method', 'level_id', 'has_user_account', 'licence_arp', 'level_skating_arp', 'level_date_arp', 'licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at');
+                    // ->whereNull('school_student.deleted_at') 
+                    ->withPivot( 'nickname', 'email', 'billing_method', 'level_id', 'has_user_account', 'licence_arp', 'level_skating_arp', 'level_date_arp', 'licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at','deleted_at');
+    }
+
+
+    /**
+     * Get invoices for the Schools.
+     */
+    public function invoices()
+    {
+        return $this->belongsTo(Invoice::class);
     }
 
 

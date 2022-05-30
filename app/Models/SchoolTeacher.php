@@ -40,7 +40,7 @@ class SchoolTeacher extends BaseModel
      *
      * @var array
      */
-    protected $appends = [];
+    protected $appends = ['full_name'];
 
      /**
      * Get the user for the user enquiry.
@@ -58,6 +58,11 @@ class SchoolTeacher extends BaseModel
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->teacher->full_name;
     }
 
 }

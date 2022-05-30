@@ -24,7 +24,7 @@
             @endphp
             <tr>
                 <td>{{ $teacher->id; }} </td>
-                <td>{{ $teacher->firstname.' '.$teacher->middlename.' '.$teacher->lastname; }}</td>
+                <td> {{ $teacher->full_name }}</td>
                 <td>{{ $teacher->email; }} {{ $teacher->pivot->school_id}}</td>
                 <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
@@ -41,7 +41,7 @@
                             @endcan
 
                             @can('teachers-delete')
-                            <form method="post" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('delete')
                                 @csrf
                                 <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>

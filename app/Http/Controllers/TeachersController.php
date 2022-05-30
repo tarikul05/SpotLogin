@@ -63,7 +63,7 @@ class TeachersController extends Controller
         }else {
             $teachers = $user->getSelectedSchoolAttribute()->teachers;
         }
-        // dd($teachers);
+        // dd($teachers[1]->pivot);
         // $teachers = Teacher::where('is_active', 1)->get();
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
@@ -441,7 +441,6 @@ class TeachersController extends Controller
     {
         $schoolId = $request->route('school'); 
         $teacherId = $request->route('teacher');
-        // dd(SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->get());
         SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->delete();
         return redirect()->back()
             ->with('success', 'Deleted successfully');

@@ -27,19 +27,30 @@
                 <td>{{ $student->firstname.' '.$student->middlename.' '.$student->lastname; }}</td>
                 <td>{{ $student->email; }}</td>
                 <td>{{ !empty($student->is_active) && !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
-                <td>
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-ellipsis-h txt-grey"></i>
-                        </a>
-                        <div class="dropdown-menu list action text-left">
-                            @can('students-view')
-                            <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
-                            @endcan
-                            <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
-                        </div>
-                    </div>  
-                </td>
+                @if($student->pivot->deleted_at)
+                    <td>{{__('Deleted')}}</td>
+                @else
+                    <td>
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h txt-grey"></i>
+                            </a>
+                            <div class="dropdown-menu list action text-left">
+                                @can('students-view')
+                                <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                                @endcan
+                                @can('teachers-delete')
+                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('studentDelete',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                                    @method('delete')
+                                    @csrf
+                                    <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
+                                </form>
+                                @endcan
+                                <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+                            </div>
+                        </div>  
+                    </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

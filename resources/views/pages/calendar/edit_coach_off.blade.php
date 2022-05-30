@@ -54,7 +54,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
-													<option value="{{ $professor->teacher_id }}" {{!empty($coachoffData->teacher_id) ? (old('teacher_select', $coachoffData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->nickname }}</option>
+													<option value="{{ $professor->teacher_id }}" {{!empty($coachoffData->teacher_id) ? (old('teacher_select', $coachoffData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->full_name }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -110,7 +110,11 @@
 							</div>
 						</div>
 					</fieldset>
-					<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					<div class="btn_area">
+						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
+						<a class="btn btn-theme-warn" href="#" id="delete_btn" style="display: block;">Delete</a>
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+					</div>
 				</form>
 			</div>
 		</div>

@@ -526,9 +526,13 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $schoolId = $request->route('school'); 
+        $studentId = $request->route('student');
+        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
+        return redirect()->back()
+            ->with('success', 'Deleted successfully');
     }
 
 
