@@ -36,7 +36,8 @@
                             <i class="fa fa-ellipsis-h txt-grey"></i>
                         </a>
                         <div class="dropdown-menu list action text-left">
-                            @can('teachers-view')
+
+                            @can('teachers-update')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
 
