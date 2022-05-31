@@ -100,9 +100,9 @@
                                     $edit_view_url = '';
                                     //invoice_creation_type = y means manual invoice
                                     if ($invoice->invoice_creation_type == 'Y') {
-                                        $edit_view_url = '/manual-invoice/'.$invoice->id;
+                                        $edit_view_url = '/admin/manual-invoice/'.$invoice->id;
                                     } else {
-                                        $edit_view_url = '/invoice/'.$invoice->id;
+                                        $edit_view_url = '/admin/invoice/'.$invoice->id;
                                     }
                                 @endphp
                                 

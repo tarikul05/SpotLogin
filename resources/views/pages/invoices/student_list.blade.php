@@ -61,36 +61,36 @@
                                     <i class="fa fa-ellipsis-h txt-grey"></i>
                                 </a>
                                 <div class="dropdown-menu list action text-left">
-                                @php
-                                    $edit_view_url = '';
-                                    //invoice_creation_type = y means manual invoice
-                                    if ($invoice->invoice_creation_type == 'Y') {
-                                        $edit_view_url = '/manual-invoice/'.$invoice->id;
-                                    } else {
-                                        $edit_view_url = '/invoice/'.$invoice->id;
-                                    }
-                                @endphp
-                                
+                                    @php
+                                        $edit_view_url = '';
+                                        //invoice_creation_type = y means manual invoice
+                                        if ($invoice->invoice_creation_type == 'Y') {
+                                            $edit_view_url = '/manual-invoice/'.$invoice->id;
+                                        } else {
+                                            $edit_view_url = '/invoice/'.$invoice->id;
+                                        }
+                                    @endphp
+                                    
 
-                                @if ($invoice->invoice_status > 1)
-                                    <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                        <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
-                                        {{ __('View')}}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
-                                        <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
-                                        {{ __('PDF')}}
-                                    </a>
-                                @else
-                                    <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                        <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
-                                        {{ __('Edit')}}
-                                    </a>
-                                @endif
+                                    @if ($invoice->invoice_status > 1)
+                                        <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                            <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
+                                            {{ __('View')}}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
+                                            <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
+                                            {{ __('PDF')}}
+                                        </a>
+                                    @else
+                                        <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                            <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                            {{ __('Edit')}}
+                                        </a>
+                                    @endif
 
-                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
-                                    <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
-                                @endif
+                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
+                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                                    @endif
                                     
                                 
                                 </div>

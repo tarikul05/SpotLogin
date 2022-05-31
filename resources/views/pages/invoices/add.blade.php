@@ -11,6 +11,7 @@
 @endsection
 
 @section('content')
+<!--main content start-->
 <div class="content">
 	<div class="container-fluid">
 		<header class="panel-heading" style="border: none;">
@@ -22,6 +23,16 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="pull-right btn-group save-button">
+						<a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-theme-success" target=""><em
+										class="glyphicon glyphicon-cog"></em> Emettre la facture</a>
+						<a id="print_preview_btn" name="print_preview_btn" class="btn btn-theme-outline"
+								target="_blank"><i class="glyphicon glyphicon-eye-open"></i> Prévisualiser avant
+								impression</a>
+						<a id="delete_btn" name="delete_btn" class="btn btn-theme-warn" href=""><em
+										class="glyphicon glyphicon-trash"></em> Supprimer</a>
+						<a id="save_btn" name="save_btn" class="btn btn-theme-success"><em
+										class="glyphicon glyphicon-floppy-save"></em> Enregistrer</a>
+
 						<a id="payment_btn" target="" href="" class="btn btn-theme-warn" style="display: block;"><i class="fa fa-money" aria-hidden="true"></i> Flag as Paid</a>
 						<button id="approved_btn" target="" href="" class="btn btn-theme-success" style="display: block;">Send by email</button>
 						<a id="download_pdf_btn_a" target="" href="" class="btn btn-theme-outline" style="display: block;"><i class="fa fa-file-pdf-o"></i>
@@ -31,6 +42,29 @@
 				</div>
 			</div>
 		</header>
+		<!-- page start-->
+		<form>
+			<input type="hidden" id="auto_id" name="auto_id" value="{{ !empty($invoice->id) ? $invoice->id : ''; }}">
+			<input type="hidden" id="invoice_filename" name="invoice_filename" value="">
+			<input type="hidden" id="action" name="action" value="">
+			<input type="hidden" id="total_min" name="action" value="">
+			<input type="hidden" id="person_id" name="person_id" value="{{ !empty($invoice->person_id) ? $invoice->person_id : ''; }}">
+			<input type="hidden" id="invoice_status_id" name="invoice_status_id" value="{{ !empty($invoice->invoice_status) ? $invoice->invoice_status : ''; }}">
+
+			<input type="hidden" id="invoice_id" name="invoice_id" value="{{ !empty($invoice->id) ? $invoice->id : ''; }}">
+			<input type="hidden" id="invoice_type" name="invoice_type" value="{{ !empty($invoice->invoice_type) ? $invoice->invoice_type : ''; }}">
+			<input type="hidden" id="approved_flag" name="approved_flag" value="{{ !empty($invoice->approved_flag) ? $invoice->approved_flag : ''; }}">
+			<input type="hidden" id="payment_status" name="payment_status" value="{{ !empty($invoice->payment_status) ? $invoice->payment_status : ''; }}">
+
+			<input type="hidden" id="invoice_currency" name="invoice_currency" value="">
+
+			<select style="display:none;" id="inv_payment_status"
+					name="inv_payment_status"></select>
+			<label style="display:none;" id="lbl_date_invoice" name="lbl_date_invoice"></label>
+			<label style="display:none;" id="payment_info_cap" name="payment_info_cap"></label>
+			<label style="display:none;" id="bank_caption" name="bank_caption"></label>
+			<label style="display:none;" id="holder_cap" name="holder_cap"></label>
+		</form>
 		<!-- Tabs navs -->
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -43,7 +77,8 @@
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
-			<input type="hidden" id="user_id" name="user_id" value="4">
+			<input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
+			<!-- TAB 1-->
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form role="form" id="form_main" class="form-horizontal" method="post" action="">
 					<fieldset>
@@ -56,18 +91,21 @@
 									<th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
 									<th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Amount') }}</span></th>
 								</tr>
-								<tr>
-									<td>16.04.2022 11:22</td>
-									<td>heloo (ice skating-school) Number of Students 3</td>
-									<td style="text-align:right">30 minutes</td>
-									<td style="text-align:right">25.00</td>
-								</tr>
-								<tr>
-									<td>18.05.2022 14:30</td>
-									<td> (soccer-school) Number of Students 3</td>
-									<td style="text-align:right">30 minutes</td>
-									<td style="text-align:right">225.00</td>
-								</tr>
+								@if (!empty($invoice->invoice_items))
+									@foreach($invoice->invoice_items as $key => $item)
+										<tr>
+											<td>{{ !empty($item->created_at) ? $item->created_at : ''; }}</td>
+											<td style="text-align:right">{{ !empty($item->caption) ? $item->caption : ''; }}</td>
+											@if ($item->unit == 0) {
+												<td></td>
+											@else
+												<td style="text-align:right">{{ $item->unit }} minutes</td>
+											@endif
+											<td style="text-align:right">{{ !empty($item->total_item) ? round($item->total_item,2) : ''; }}</td>
+										</tr>
+									@endforeach
+								@endif
+								
 								<tr>
 									<td colspan="1" rowspan="7" style="vertical-align:middle;" class="disc_bottom_rows">{{ __('Reduction of 10.00% on value 201 to 400 is 25.00 Total duration of courses 60 minutes, 1 hours and 0 minutes.') }}</td>
 								</tr>
@@ -133,7 +171,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_with_discount">250.00</label>
+									<label id="ssubtotal_amount_with_discount">{{ !empty($invoice->ssubtotal_amount_with_discount) ? $invoice->ssubtotal_amount_with_discount : ''; }}</label>
 								</p>
 							</div>
 						</div>
@@ -295,7 +333,7 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="0" placeholder=""> </div>
+								<input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{ !empty($invoice->extra_expenses) ? $invoice->extra_expenses : ''; }}" placeholder=""> </div>
 						</div>
 						<div id="tax_amount_div" name="tax_amount_div" class="form-group row">
 							<label id="tax_cap" name="tax_cap" class="col-lg-3 col-sm-3 text-right">Tax:</label>
@@ -336,12 +374,12 @@
 							<div class="col-md-8 offset-md-2">
 								<div class="form-group row">
 									<label id="invoice_type_cap" for="invoice_type_name" class="col-lg-3 col-sm-3 text-right">{{ __('Invoice Type') }}</label>
-									<label id="invoice_type_name" class="col-sm-5">Professor</label>
+									<label id="invoice_type_name" class="col-sm-5">{{ !empty($invoice->invoice_type_name) ? $invoice->invoice_type_name : ''; }}</label>
 								</div>
 								<div class="form-group row">
 									<label id="row_hdr_status" name="row_hdr_status" for="invoice_status" class="col-lg-3 col-sm-3 text-right">{{ __('Status') }}</label>
 									<div class="col-lg-2 col-sm-2 text-left">
-										<label id="invoice_status">{{ __('Issued') }}</label>
+										<label id="invoice_status">{{ !empty($invoice->invoice_status_name) ? $invoice->invoice_status_name : ''; }}</label>
 										<div> <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: block;"><span id="unlock_btn_cap">Unlock</span></a> </div>
 									</div>
 								</div>
@@ -350,7 +388,8 @@
 									<label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">{{ __('Date of invoice') }}</label>
 									<div class="col-sm-2">
 										<div class="input-group" id="birth_date_div">
-											<input id="birth_date" value="1970-01-01 00:00:00" name="birth_date" type="text" class="form-control"> 
+											<input id="date_invoice" value="{{ !empty($invoice->date_invoice) ? $invoice->date_invoice : ''; }}" name="date_invoice" type="text" class="form-control" />
+											
 											<span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
 										</div>
 									</div>
@@ -358,31 +397,39 @@
 								<!-- -->
 								<div class="form-group row">
 									<label id="start_of_period_cap" class="col-lg-3 col-sm-3 text-right">{{ __('Start of Period') }}</label>
-									<label id="start_date" class="col-sm-7">Friday, April 1, 2022 12:00 AM</label>
+									<label id="start_date" class="col-sm-7">
+									{{ !empty($invoice->period_starts) ? $invoice->period_starts : ''; }}
+										<!-- Friday, April 1, 2022 12:00 AM -->
+									</label>
 								</div>
 								<div class="form-group row">
 									<label id="end_of_period_cap" class="col-lg-3 col-sm-3 text-right">End of Period</label>
-									<label id="end_date" class="col-sm-7">Sunday, May 22, 2022 12:00 AM</label>
+									<label id="end_date" class="col-sm-7">
+									{{ !empty($invoice->period_ends) ? $invoice->period_ends : ''; }}
+										<!-- Sunday, May 22, 2022 12:00 AM -->
+									</label>
 								</div>
 								<div class="form-group row">
 									<label id="payment_date_cap" class="col-lg-3 col-sm-3 text-right">{{ __('Date of Payment') }}</label>
 									<label id="placement" class="col-sm-5"></label>
 								</div>
 								<div class="form-group row">
-									<label id="invoice_title_cap" for="invoice_title" class="col-lg-3 col-sm-3 text-right">{{ __('invoice Title') }}</label>
+									<label id="invoice_title_cap" for="invoice_title" class="col-lg-3 col-sm-3 text-right">
+										{{ __('invoice Title') }}
+									</label>
 									<div class="col-sm-7">
-										<input type="text" class="form-control" id="invoice_title" name="invoice_title" value="" placeholder="" maxlength="150"> </div>
+										<input type="text" class="form-control" id="invoice_title" name="invoice_title" value="{{ !empty($invoice->invoice_name) ? $invoice->invoice_name : ''; }}" placeholder="" maxlength="150"> </div>
 								</div>
 								<div class="form-group row">
 									<label id="invoice_header_cap" for="invoice_header" class="col-lg-3 col-sm-3 text-right">{{ __('Invoice Header') }}</label>
 									<div class="col-sm-7">
-										<textarea class="form-control" id="invoice_header" name="invoice_header" placeholder="" rows="6" maxlength="2000"></textarea>
+										<textarea class="form-control" id="invoice_header" name="invoice_header" placeholder="" rows="6" maxlength="2000">{{ !empty($invoice->invoice_header) ? $invoice->invoice_header : ''; }}</textarea>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label id="invoice_footer_cap" for="invoice_footer" class="col-lg-3 col-sm-3 text-right">{{ __('Invoice Footer') }}</label>
 									<div class="col-sm-7">
-										<textarea class="form-control" id="invoice_footer" name="invoice_footer" placeholder="" rows="6" maxlength="2000"></textarea>
+										<textarea class="form-control" id="invoice_footer" name="invoice_footer" placeholder="" rows="6" maxlength="2000">{{ !empty($invoice->invoice_footer) ? $invoice->invoice_footer : ''; }}</textarea>
 									</div>
 								</div>
 
@@ -396,7 +443,9 @@
 									<div class="form-group row">
 										<label id="client_name_caption" name="client_name_caption" for="client_name" class="col-lg-3 col-sm-3 text-right">{{ __('Client Name') }}</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_name" name="client_name" value="Team VG Skating" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="client_name" name="client_name" 
+											value="{{ !empty($invoice->client_name) ? $invoice->client_name : ''; }}" 
+											placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="gender_label_id" name="gender_label_id" for="client_gender_id" class="col-lg-3 col-sm-3 text-right">{{ __('Gender') }} : *</label>
@@ -413,37 +462,37 @@
 									<div class="form-group row">
 										<label id="family_name_label_id" name="family_name_label_id" for="client_lastname" class="col-lg-3 col-sm-3 text-right">{{ __('Family Name :') }}*</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_lastname" name="client_lastname" value="" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="client_lastname" name="client_lastname" value="{{ !empty($invoice->client_lastname) ? $invoice->client_lastname : ''; }}" placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="first_name_label_id" name="first_name_label_id" for="client_firstname" class="col-lg-3 col-sm-3 text-right">{{ __('First Name :') }} *</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_firstname" name="client_firstname" value="Vanessa" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="client_firstname" name="client_firstname" value="{{ !empty($invoice->	client_firstname) ? $invoice->	client_firstname : ''; }}" placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street_caption" name="street_caption" for="client_street" class="col-lg-3 col-sm-3 text-right">{{ __('Street') }}</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_street" name="client_street" value="Rue Hans Wilsdorf" placeholder="" maxlength="120"> </div>
+											<input type="text" class="form-control" id="client_street" name="client_street" value="{{ !empty($invoice->	client_street) ? $invoice->	client_street : ''; }}" placeholder="" maxlength="120"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street_number_caption" name="street_number_caption" for="client_street_number" class="col-lg-3 col-sm-3 text-right">{{ __('Street No') }} :</label>
 										<div class="col-sm-2">
-											<input type="text" class="form-control" id="client_street_number" name="client_street_number" value="" placeholder="" maxlength="20"> </div>
+											<input type="text" class="form-control" id="client_street_number" name="client_street_number" value="{{ !empty($invoice->	client_street_number) ? $invoice->	client_street_number : ''; }}" placeholder="" maxlength="20"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street2_caption" name="street2_caption" for="client_street2" class="col-lg-3 col-sm-3 text-right">{{ __('Street 2 ') }}:</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_street2" name="client_street2" value="Patinoire des Vernets" placeholder="" maxlength="100"> </div>
+											<input type="text" class="form-control" id="client_street2" name="client_street2" value="{{ !empty($invoice->	client_street2) ? $invoice->	client_street2 : ''; }}" placeholder="" maxlength="100"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="postal_code_caption" name="postal_code_caption" for="client_zip_code" class="col-lg-3 col-sm-3 text-right">{{ __('Postal Code') }} :</label>
 										<div class="col-sm-2">
-											<input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="1227" placeholder="" maxlength="8"> </div>
+											<input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="{{ !empty($invoice->client_zip_code) ? $invoice->client_zip_code : ''; }}" placeholder="" maxlength="8"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="locality_caption" name="locality_caption" for="client_place" class="col-lg-3 col-sm-3 text-right">{{ __('City') }} :</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="client_place" name="client_place" value="Les Acacias" placeholder="" maxlength="120"> </div>
+											<input type="text" class="form-control" id="client_place" name="client_place" value="{{ !empty($invoice->client_place) ? $invoice->client_place : ''; }}" placeholder="" maxlength="120"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-right">{{ __('Country') }} :</label>
@@ -490,7 +539,7 @@
 									<div class="form-group row">
 										<label id="seller_name_caption" name="seller_name_caption" for="seller_name" class="col-lg-3 col-sm-3 text-right">{{ __('Seller Name') }}</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_name" name="seller_name" value="Soumendra Middey" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="seller_name" name="seller_name" value="{{ !empty($invoice->seller_name) ? $invoice->seller_name : ''; }}" placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="gender_label_id" name="gender_label_id" for="seller_gender_id" class="col-lg-3 col-sm-3 text-right">{{ __('Gender') }} : *</label>
@@ -507,37 +556,37 @@
 									<div class="form-group row">
 										<label id="family_name_label_id" name="family_name_label_id" for="seller_lastname" class="col-lg-3 col-sm-3 text-right">{{ __('Family Name') }} :*</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="{{ !empty($invoice->seller_lastname) ? $invoice->seller_lastname : ''; }}" placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="first_name_label_id" name="first_name_label_id" for="seller_firstname" class="col-lg-3 col-sm-3 text-right">{{ __('First Name') }} : *</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="" placeholder="" maxlength="250"> </div>
+											<input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="{{ !empty($invoice->seller_firstname) ? $invoice->seller_firstname : ''; }}" placeholder="" maxlength="250"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street_caption" name="street_caption" for="seller_street" class="col-lg-3 col-sm-3 text-right">{{ __('Street') }}</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_street" name="seller_street" value="" placeholder="" maxlength="120"> </div>
+											<input type="text" class="form-control" id="seller_street" name="seller_street" value="{{ !empty($invoice->seller_street) ? $invoice->seller_street : ''; }}" placeholder="" maxlength="120"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street_number_caption" name="street_number_caption" for="seller_street_number" class="col-lg-3 col-sm-3 text-right">{{ __('Street No') }} :</label>
 										<div class="col-sm-2">
-											<input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="" placeholder="" maxlength="20"> </div>
+											<input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="{{ !empty($invoice->seller_street_number) ? $invoice->seller_street_number : ''; }}" placeholder="" maxlength="20"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="street_caption" name="street_caption" for="seller_street2" class="col-lg-3 col-sm-3 text-right">{{ __('Street') }}</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_street2" name="seller_street2" value="" placeholder="" maxlength="100"> </div>
+											<input type="text" class="form-control" id="seller_street2" name="seller_street2" value="{{ !empty($invoice->seller_street) ? $invoice->seller_street : ''; }}" placeholder="" maxlength="100"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="postal_code_caption" name="postal_code_caption" for="seller_zip_code" class="col-lg-3 col-sm-3 text-right">{{ __('Postal Code') }} :</label>
 										<div class="col-sm-2">
-											<input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="" placeholder="" maxlength="8"> </div>
+											<input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="{{ !empty($invoice->seller_zip_code) ? $invoice->seller_zip_code : ''; }}" placeholder="" maxlength="8"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="locality_caption" name="locality_caption" for="seller_place" class="col-lg-3 col-sm-3 text-right">{{ __('City') }} :</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_place" name="seller_place" value="" placeholder="" maxlength="120"> </div>
+											<input type="text" class="form-control" id="seller_place" name="seller_place" value="{{ !empty($invoice->seller_place) ? $invoice->seller_place : ''; }}" placeholder="" maxlength="120"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-right">{{ __('Country') }} :</label>
@@ -576,22 +625,22 @@
 									<div class="form-group row">
 										<label id="phone_caption" name="phone_caption" for="seller_phone" class="col-lg-3 col-sm-3 text-right">{{ __('Téléphone') }}:</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" id="seller_phone" name="seller_phone" value="" placeholder="" maxlength="50"> </div>
+											<input type="text" class="form-control" id="seller_phone" name="seller_phone" value="{{ !empty($invoice->seller_phone) ? $invoice->seller_phone : ''; }}" placeholder="" maxlength="50"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="mobile_caption" name="mobile_caption" for="seller_mobile" class="col-lg-3 col-sm-3 text-right">{{ __('Mobile') }}:</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" id="seller_mobile" name="seller_mobile" value="" placeholder="" maxlength="50"> </div>
+											<input type="text" class="form-control" id="seller_mobile" name="seller_mobile" value="{{ !empty($invoice->seller_mobile) ? $invoice->seller_mobile : ''; }}" placeholder="" maxlength="50"> </div>
 									</div>
 									<div class="form-group row">
 										<label id="email_caption" name="email_caption" for="seller_email" class="col-lg-3 col-sm-3 text-right">{{ __('Email') }}:</label>
 										<div class="col-sm-5">
-											<input type="text" class="form-control" id="seller_email" name="seller_email" value="" placeholder="" maxlength="50"> </div>
+											<input type="text" class="form-control" id="seller_email" name="seller_email" value="{{ !empty($invoice->seller_email) ? $invoice->seller_email : ''; }}" placeholder="" maxlength="50"> </div>
 									</div>
 									<div class="form-group row">
 										<label for="seller_eid" class="col-lg-3 col-sm-3 text-right">{{ __('EID') }}:</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control" id="seller_eid" name="seller_eid" value="" placeholder="" maxlength="100"> </div>
+											<input type="text" class="form-control" id="seller_eid" name="seller_eid" value="{{ !empty($invoice->seller_eid) ? $invoice->seller_eid : ''; }}" placeholder="" maxlength="100"> </div>
 									</div>
 								</div>
 							</div>
@@ -605,49 +654,49 @@
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('Payment Bank Account Name') }} :</label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_account_name" value="{{ !empty($invoice->payment_bank_account_name) ? $invoice->payment_bank_account_name : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('IBAN No') }} </label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_iban" value="{{ !empty($invoice->payment_bank_iban) ? $invoice->payment_bank_iban : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('Account No') }} </label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_account" value="{{ !empty($invoice->payment_bank_account) ? $invoice->payment_bank_account : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('SWIFT A/c No') }} </label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_swift" value="{{ !empty($invoice->payment_bank_swift) ? $invoice->payment_bank_swift : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('Nom de la banque') }}:</label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_name" value="{{ !empty($invoice->payment_bank_name) ? $invoice->payment_bank_name : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('Address') }}</label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_address" value="{{ !empty($invoice->payment_bank_address) ? $invoice->payment_bank_address : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('Postal Code') }} :</label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_zipcode" value="{{ !empty($invoice->payment_bank_zipcode) ? $invoice->payment_bank_zipcode : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
 											<label class="col-lg-3 col-sm-3 text-right">{{ __('City') }} :</label>
 											<div class="col-sm-7">
-												<input type="text" name="private_bank_info" class="form-control"> 
+												<input type="text" name="payment_bank_place" value="{{ !empty($invoice->payment_bank_place) ? $invoice->payment_bank_place : ''; }}" class="form-control"> 
 											</div>
 										</div>
 										<div class="form-group row">
@@ -728,6 +777,77 @@ $(document).ready(function(){
 	}
 	if(p_country == 'CA'){
 		$('#spayment_bank_country_id_div').show();
+	}
+	$('#date_invoice').datetimepicker({
+			//locale: CurrentLanguage,
+			format: 'DD/MM/YYYY',
+			icons: {
+					time: "fa fa-clock-o",
+					date: "fa fa-calendar",
+					up: "fa fa-arrow-up",
+					down: "fa fa-arrow-down"
+			}
+	});
+
+	;
+	//invoice_status: 10=issued, 1=En création(Creating)
+	if ($("#invoice_status_id").val() == 10) {
+			document.getElementById("unlock_btn").style.display = "block";
+			document.getElementById("issue_inv_btn").style.display = "none";
+			document.getElementById("print_preview_btn").style.display = "none";
+			document.getElementById("delete_btn").style.display = "none";
+			document.getElementById("save_btn").style.display = "none";
+			document.getElementById("download_pdf_btn_a").style.display = "block";
+			document.getElementById("payment_btn").style.display = "block";
+
+			if ($("#approved_flag").val() == '0') {
+					document.getElementById("approved_btn").style.display = "block";
+			}
+			else {
+					document.getElementById("approved_btn").style.display = "none";
+			}
+			/*payment status*/
+			//alert(value.payment_status);
+			/*
+			if (value.payment_status == '0'){
+					document.getElementById("payment_btn").innerHTML='<i class="fa fa-money" aria-hidden="true"></i> Payé';
+					document.getElementById("payment_status_text").innerHTML='non payé';
+			}
+			else
+			{
+					document.getElementById("payment_btn").innerHTML='<i class="fa fa-money" aria-hidden="true"></i> non payé';
+					document.getElementById("payment_status_text").innerHTML='Payé';
+			} 
+			*/
+			var pay_status_text = '';
+			if ($("#payment_status").val() == '0') {
+					//pay_status_text = GetPaymentStatusText(1);
+					pay_status_text = GetAppMessage("invoice_flag_as_paid_text") ;
+					document.getElementById("payment_btn").innerHTML = '<i class="fa fa-money" aria-hidden="true"></i> ' + pay_status_text;
+
+					$("#payment_btn").addClass('btn-theme-warn');
+
+					//$("payment_btn").css("background", "Orange");
+
+					//pay_status_text = GetPaymentStatusText(0);
+					//document.getElementById("payment_status_text").innerHTML = pay_status_text;
+			}
+			else {
+
+					$("#payment_btn").addClass("btn-theme-success");
+					//$("payment_btn").css("background", "Green")
+					//pay_status_text = GetPaymentStatusText(0);
+					pay_status_text = GetAppMessage("invoice_flag_as_unpaid_text") ;
+					document.getElementById("payment_btn").innerHTML = '<i class="fa fa-money" aria-hidden="true"></i> ' + pay_status_text;
+					//pay_status_text = GetPaymentStatusText(1);
+					//document.getElementById("payment_status_text").innerHTML = pay_status_text;
+			}
+	} else {
+			document.getElementById("unlock_btn").style.display = "none";
+			document.getElementById("issue_inv_btn").style.display = "block";
+			document.getElementById("delete_btn").style.display = "block";
+			document.getElementById("approved_btn").style.display = "none";
+			document.getElementById("payment_btn").style.display = "none";
 	}
 })
 

@@ -11,6 +11,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\EmailTemplate;
 use App\Mail\SportloginEmail;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceController extends Controller
 {
@@ -303,14 +304,37 @@ class InvoiceController extends Controller
         return view('pages.invoices.student_list',compact('invoices','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
     }
 
-    public function add()
+    public function view(Request $request, Invoice $invoice)
     {
+        $user = Auth::user();
+        //$invoiceId = $request->route('invoice'); 
+        //dd($invoice);
+
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+        $invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
+        $invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
+        
+
+        if ($invoice->invoice_type==1) {
+            $invoice->person_id = $invoice->client_id;
+        } else{
+            $invoice->person_id = $invoice->seller_id;
+        }
+
+        // $invoiceCurrency = InvoiceItem::active()->where('invoice_id',$invoice->id)->get()->pluck('price_currency')->join(',');
+        $invoice->invoice_items = InvoiceItem::active()->where('invoice_id',$invoice->id)->get();
+        // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
+            
+        
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.add', [
-            'title' => 'Invoice',
-            'pageInfo'=>['siteTitle'=>'']
-        ])->with(compact('genders','countries'));
+                    'title' => 'Invoice',
+                    'pageInfo'=>['siteTitle'=>'']
+                ])
+                ->with(compact('invoice','genders','countries'));
        
     } 
 }

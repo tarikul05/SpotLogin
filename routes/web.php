@@ -213,7 +213,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
     Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList.id');
     Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
-    Route::get('/invoice/{id}', 'InvoiceController@view')->name('invoice');
+    Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
   }); //Admin scope end
 
 
