@@ -40,6 +40,10 @@
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 				</button>
+
+				@can('parameters-list')
+					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
+				@endcan
 			</div>	
 		</nav>
 		<!-- Tabs navs -->

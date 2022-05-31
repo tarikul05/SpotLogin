@@ -70,6 +70,7 @@
 											</div>
 										</div>
 									</div>
+									@if(!$AppUI->isTeacher())
 									<div class="col-md-5 col-6">
 										<div class="form-group row invoice_part">
 											<div class="col-sm-6">
@@ -80,6 +81,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 									<div class="col-md-2 col-1">
 										@can('parameters-delete')
 										<div class="form-group row">
@@ -135,6 +137,7 @@
 					</div>
 				</div>
 			</div>
+			@if(!$AppUI->isTeacher())
 			<div class="col-md-5 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-6">
@@ -145,6 +148,7 @@
 					</div>
 				</div>
 			</div>
+			@endif
 			<div class="col-md-2 col-1">
 				<div class="form-group row">
 					<div class="col-sm-5">
@@ -222,7 +226,7 @@
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						$("#modal_alert_body").text('{{ __('Successfully Registered') }}');
 						window.location.reload();
 					}
 				}
