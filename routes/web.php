@@ -236,10 +236,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
     Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
 
+
+    Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
+    Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
+
     //AJAX action
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     Route::post('/update-price/{teacher}', [App\Http\Controllers\TeachersController::class, 'priceUpdate'])->name('updatePriceAction');
+    Route::post('/self-update-price', [App\Http\Controllers\TeachersController::class, 'selfPriceUpdate'])->name('selfUpdatePriceAction');
 
     Route::post('update-teacher-photo', ['as' =>'teacher.update_photo','uses' =>'TeachersController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

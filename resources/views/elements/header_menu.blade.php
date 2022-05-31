@@ -32,7 +32,7 @@
                         @endcan
 
                         @hasanyrole('teachers_admin|teachers_all|teachers_medium|teachers_minimum')
-                            <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
+                            <a href="{{ route('updateTeacher') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
                         @else
                             @can('teachers-list')
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
