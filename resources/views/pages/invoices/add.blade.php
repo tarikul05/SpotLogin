@@ -78,6 +78,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
+			
 			<!-- TAB 1-->
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form role="form" id="form_main" class="form-horizontal" method="post" action="">
@@ -116,31 +117,51 @@
 								<tr>
 									<td colspan="1" rowspan="7" style="vertical-align:middle;" class="disc_bottom_rows" id="disc_bottom_rows">{{ __('Reduction of 10.00% on value 201 to 400 is 25.00 Total duration of courses 60 minutes, 1 hours and 0 minutes.') }}</td>
 								</tr>
-								<tr>
-									<td colspan="1" style="text-align:right">{{ __('Sub-total') }} </td>
-									<td style="text-align:right">60 minutes</td>
-									<td style="text-align:right">250.00</td>
-								</tr>
-								<tr>
-									<td colspan="1" style="text-align:right">{{ __('Discount on course') }} </td>
-									<td></td>
-									<td style="text-align:right">- 25.00</td>
-								</tr>
+								@if ($invoice->subtotal_amount_all > 0)
+									<tr>
+										<td colspan="1" style="text-align:right">{{ __('Sub-total') }} </td>
+										<td style="text-align:right">{{$total_min}} minutes</td>
+										<td style="text-align:right">{{$invoice->subtotal_amount_all}}</td>
+									</tr>
+								@endif
+								@if ($invoice->total_amount_discount != 0) 
+									<tr>
+										<td colspan="1" style="text-align:right">{{ __('Discount on course') }} </td>
+										<td></td>
+										<td style="text-align:right">- {{$invoice->total_amount_discount}}</td>
+									</tr>
+								@endif
+
+								
+
 								<tr>
 									<td colspan="1" style="text-align:right">{{ __('Extra charges') }}</td>
 									<td></td>
-									<td style="text-align:right">+ <span id="extra_expenses_cap">0.00</span></td>
+									<td style="text-align:right">+ <span id="extra_expenses_cap">{{$invoice->extra_expenses}}</span></td>
 								</tr>
+								@if ($invoice->tax_amount != 0) 
+									<tr>
+										<td colspan="1" style="text-align:right">{{$invoice->{{$invoice->total_amount_discount}}}} </td>
+										<td></td>
+										<td style="text-align:right">{{$invoice->tax_amount}}</td>
+									</tr>
+								@endif
+								@php
+								$grand_total = $invoice->total_amount + $invoice->extra_expenses;
+								@endphp
 								<tr>
 									<td colspan="1" style="text-align:right">{{ __('Total') }}</td>
 									<td></td>
-									<td style="text-align:right"><span id="grand_total_cap">225.00</span></td>
+									<td style="text-align:right"><span id="grand_total_cap">{{$grand_total}}</span></td>
 								</tr>
 							</tbody>
 						</table>
 					</fieldset>
 				</form>
 			</div>
+
+
+			<!-- TAB 2-->									
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form role="form" id="form_finance" class="form-horizontal" method="post" action="">
 					<fieldset>
@@ -152,7 +173,7 @@
 							<label id="payment_status_label" class="col-lg-3 col-sm-3 text-right">{{ __('Payment Status') }}:</label>
 							<div class="col-sm-2">
 								<p>
-									<label id="payment_status_text" name="payment_status_text"></label>
+									<label id="payment_status_text" name="payment_status_text">{{$payment_status_all[$invoice->payment_status]}}</label>
 								</p>
 							</div>
 						</div>
@@ -165,7 +186,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_no_discount">0.00</label>
+									<label id="ssubtotal_amount_no_discount">{{$invoice->subtotal_amount_no_discount}}</label>
 								</p>
 							</div>
 						</div>
@@ -191,7 +212,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_all">250.00</label>
+									<label id="ssubtotal_amount_all">{{$invoice->subtotal_amount_no_discount}}</label>
 								</p>
 							</div>
 						</div>
@@ -223,11 +244,11 @@
 									</p>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" class="form-control numeric_amount" id="samount_discount_2" name="samount_discount_2" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_2" name="samount_discount_2" value="{{ !empty($invoice->amount_discount_2) ? $invoice->amount_discount_2 : ''; }}" placeholder="">
 								</div>
 								<div class="col-sm-2 text-right">
 									<div class="input-group"><span class="input-group-addon">%</span>
-										<input type="text" class="form-control numeric" id="sdiscount_percent_2" name="sdiscount_percent_2" value="0" placeholder=""> 
+										<input type="text" class="form-control numeric" id="sdiscount_percent_2" name="sdiscount_percent_2" value="{{ !empty($invoice->discount_percent_2) ? $invoice->discount_percent_2 : ''; }}" placeholder=""> 
 									</div>
 								</div>
 							</div>
@@ -239,11 +260,11 @@
 									</p>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" class="form-control numeric_amount" id="samount_discount_3" name="samount_discount_3" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_3" name="samount_discount_3" value="{{ !empty($invoice->amount_discount_3) ? $invoice->amount_discount_3 : ''; }}" placeholder="">
 								</div>
 								<div class="col-sm-2">
 									<div class="input-group"><span class="input-group-addon">%</span>
-										<input type="text" class="form-control numeric" id="sdiscount_percent_3" name="sdiscount_percent_3" value="0" placeholder=""> </div>
+										<input type="text" class="form-control numeric" id="sdiscount_percent_3" name="sdiscount_percent_3" value="{{ !empty($invoice->discount_percent_3) ? $invoice->discount_percent_3 : ''; }}" placeholder=""> </div>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -254,11 +275,11 @@
 									</p>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" class="form-control numeric_amount" id="samount_discount_4" name="samount_discount_4" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_4" name="samount_discount_4" value="{{ !empty($invoice->amount_discount_4) ? $invoice->amount_discount_4 : ''; }}" placeholder="">
 								</div>
 								<div class="col-sm-2">
 									<div class="input-group"><span class="input-group-addon">%</span>
-										<input type="text" class="form-control numeric" id="sdiscount_percent_4" name="sdiscount_percent_4" value="0" placeholder=""> 
+										<input type="text" class="form-control numeric" id="sdiscount_percent_4" name="sdiscount_percent_4" value="{{ !empty($invoice->discount_percent_4) ? $invoice->discount_percent_4 : ''; }}" placeholder=""> 
 									</div>
 								</div>
 							</div>
@@ -270,11 +291,11 @@
 									</p>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" class="form-control numeric_amount" id="samount_discount_5" name="samount_discount_5" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_5" name="samount_discount_5" value="{{ !empty($invoice->amount_discount_5) ? $invoice->amount_discount_5 : ''; }}" placeholder="">
 								</div>
 								<div class="col-sm-2">
 									<div class="input-group"><span class="input-group-addon">%</span>
-										<input type="text" class="form-control numeric" id="sdiscount_percent_5" name="sdiscount_percent_5" value="0" placeholder=""> 
+										<input type="text" class="form-control numeric" id="sdiscount_percent_5" name="sdiscount_percent_5" value="{{ !empty($invoice->discount_percent_5) ? $invoice->discount_percent_5 : ''; }}" placeholder=""> 
 									</div>
 								</div>
 							</div>
@@ -286,11 +307,11 @@
 									</p>
 								</div>
 								<div class="col-sm-2">
-									<input type="text" class="form-control numeric_amount" id="samount_discount_6" name="samount_discount_6" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_6" name="samount_discount_6" value="{{ !empty($invoice->amount_discount_6) ? $invoice->amount_discount_6 : ''; }}" placeholder="">
 								</div>
 								<div class="col-sm-2">
 									<div class="input-group"><span class="input-group-addon">%</span>
-										<input type="text" class="form-control numeric" id="sdiscount_percent_6" name="sdiscount_percent_6" value="0" placeholder=""> 
+										<input type="text" class="form-control numeric" id="sdiscount_percent_6" name="sdiscount_percent_6" value="{{ !empty($invoice->discount_percent_6) ? $invoice->discount_percent_6 : ''; }}" placeholder=""> 
 									</div>
 								</div>
 							</div>
@@ -299,7 +320,7 @@
 							<label id="stotal_amount_discount_cap" class="col-sm-3 text-right">{{ __('Total de la réduction') }}:</label>
 							<div class="col-sm-2">
 								<div class="input-group"><span class="input-group-addon currency_display">CHF</span>
-									<input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="0" placeholder="" readonly=""> 
+									<input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{ !empty($invoice->total_amount_discount) ? $invoice->total_amount_discount : ''; }}" placeholder="" readonly=""> 
 								</div>
 							</div>
 						</div>
@@ -318,7 +339,7 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<p id="stotal_amount_no_discount" class="form-control-static numeric">0.00</p>
+								<p id="stotal_amount_no_discount" class="form-control-static numeric">{{ !empty($invoice->total_amount_no_discount) ? $invoice->total_amount_no_discount : ''; }}</p>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -329,7 +350,7 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<p id="stotal_amount_with_discount" class="form-control-static numeric">225.00</p>
+								<p id="stotal_amount_with_discount" class="form-control-static numeric">{{ !empty($invoice->total_amount_with_discount) ? $invoice->total_amount_with_discount : ''; }}</p>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -340,7 +361,8 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{ !empty($invoice->extra_expenses) ? $invoice->extra_expenses : ''; }}" placeholder=""> </div>
+								<input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{ !empty($invoice->extra_expenses) ? $invoice->extra_expenses : ''; }}" placeholder=""> 
+							</div>
 						</div>
 						<div id="tax_amount_div" name="tax_amount_div" class="form-group row">
 							<label id="tax_cap" name="tax_cap" class="col-lg-3 col-sm-3 text-right">Tax:</label>
@@ -350,7 +372,8 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<input type="text" class="form-control numeric" id="tax_amount" name="tax_amount" value="0" placeholder=""> </div>
+								<input type="text" class="form-control numeric" id="tax_amount" name="tax_amount" value="{{ !empty($invoice->tax_amount) ? $invoice->tax_amount : ''; }}" placeholder=""> 
+							</div>
 						</div>
 						<div class="form-group row">
 							<label id="grand_total_amount_cap" name="grand_total_amount_cap" class="col-lg-3 col-sm-3 text-right">{{ __('Grand Total') }}</label>
@@ -360,14 +383,17 @@
 								</p>
 							</div>
 							<div class="col-sm-2">
-								<p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;">225.00</p>
-								<p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric">225.00</p>
+								<p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;">{{ $invoice->total_amount + $invoice->extra_expenses }}</p>
+								<p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric">{{ $invoice->total_amount + $invoice->extra_expenses }}</p>
 							</div>
 						</div>
 					</div>
 					</fieldset>
 				</form>
 			</div>
+
+
+			<!-- TAB 3-->
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<form class="form-horizontal" id="add_teacher" action="http://localhost:8000/edit-teacher/12" method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					<input type="hidden" name="_token" value="sFD17gatUngGK5kuFWC2nZKEa1vtNtraV0nqnMvz">
@@ -893,6 +919,8 @@ $(document).ready(function(){
 		$("#disc_bottom_rows").text('');
 		//resultHtml += '<td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>';
 	}
+
+
 })
 
 $('#seller_country_id').change(function(){
