@@ -13,6 +13,7 @@
                 <th>{{ __('#') }}</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
+                <th>{{ __('User Account') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
@@ -26,6 +27,7 @@
                 <td>{{ $teacher->id; }} </td>
                 <td> {{ $teacher->full_name }}</td>
                 <td>{{ $teacher->email; }} </td>
+                <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
                 <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
