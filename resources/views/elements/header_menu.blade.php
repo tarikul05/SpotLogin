@@ -30,12 +30,18 @@
                                 <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
                             <?php endif; ?>
                         @endcan
+
+                        @hasanyrole('teachers_admin|teachers_all|teachers_medium|teachers_minimum')
+                            <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
+                        @else
+                            @can('teachers-list')
+                                @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                                   <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
+                                @endif
+                            @endcan
+                        @endhasanyrole
                         
-                        @can('teachers-list')
-                            @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
-                            @endif
-                        @endcan
+                            
 
                         @can('students-list')
                             @if($AppUI['person_type'] != 'SUPER_ADMIN')
@@ -100,6 +106,12 @@
                                     @can('role-list')
                                         <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
                                     @endcan
+
+
+                                    @if($AppUI->isTeacher())
+                                        <!-- <a class="dropdown-item" href="/logout">{{ __('Price') }}</a> -->
+                                    @endif
+
                                     <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
                                 </div>
                             </div>
