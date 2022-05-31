@@ -41,9 +41,11 @@
 					{{ __('Logo')}}
 				</button>
 				@can('teachers-users-update')
-				<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
-					{{ __('User Account')}}
-				</button>
+					@if($teacher->user)
+					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+						{{ __('User Account')}}
+					</button>
+					@endif
 				@endcan
 			</div>	
 		</nav>
@@ -51,7 +53,7 @@
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
-			<input type="hidden" id="user_id" name="user_id" value="{{$teacher->user->id}}">
+			<input type="hidden" id="user_id" name="user_id" value="{{ !empty($teacher->user) ? $teacher->user->id : null }}">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
@@ -415,6 +417,7 @@
 					</div>
 				</div>
 			</div>
+			@if(!empty($teacher->user))
 			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
 				<form id="teacherUserForm" name="teacherUserForm" class="form-horizontal" role="form"
 				 action="{{!empty($teacher) ? route('teacher.user_update',[$teacher->user->id]): '/'}}" method="POST" enctype="multipart/form-data">
@@ -503,6 +506,7 @@
 					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
 				</form>
 			</div>
+			@endif
 		</div>
 	</div>
 	<!-- success modal-->
