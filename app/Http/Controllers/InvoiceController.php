@@ -327,7 +327,10 @@ class InvoiceController extends Controller
         $invoice->invoice_items = InvoiceItem::active()->where('invoice_id',$invoice->id)->get();
         // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
             
-        
+        // if ($invoice->amount_discount_1  > 0) {
+        //     $invoice->disc_text = '1, disc1, disc1_amt, 0';
+        //     # code...
+        // }
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.add', [

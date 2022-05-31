@@ -47,7 +47,7 @@
 			<input type="hidden" id="auto_id" name="auto_id" value="{{ !empty($invoice->id) ? $invoice->id : ''; }}">
 			<input type="hidden" id="invoice_filename" name="invoice_filename" value="">
 			<input type="hidden" id="action" name="action" value="">
-			<input type="hidden" id="total_min" name="action" value="">
+			
 			<input type="hidden" id="person_id" name="person_id" value="{{ !empty($invoice->person_id) ? $invoice->person_id : ''; }}">
 			<input type="hidden" id="invoice_status_id" name="invoice_status_id" value="{{ !empty($invoice->invoice_status) ? $invoice->invoice_status : ''; }}">
 
@@ -91,6 +91,9 @@
 									<th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
 									<th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Amount') }}</span></th>
 								</tr>
+								@php 
+										$total_min = 0;
+								@endphp
 								@if (!empty($invoice->invoice_items))
 									@foreach($invoice->invoice_items as $key => $item)
 										<tr>
@@ -103,11 +106,15 @@
 											@endif
 											<td style="text-align:right">{{ !empty($item->total_item) ? round($item->total_item,2) : ''; }}</td>
 										</tr>
+										@php 
+											$total_min = $total_min + $item->unit;
+										@endphp
 									@endforeach
 								@endif
+								<input type="hidden" id="total_min" name="action" value="{{$total_min}}">
 								
 								<tr>
-									<td colspan="1" rowspan="7" style="vertical-align:middle;" class="disc_bottom_rows">{{ __('Reduction of 10.00% on value 201 to 400 is 25.00 Total duration of courses 60 minutes, 1 hours and 0 minutes.') }}</td>
+									<td colspan="1" rowspan="7" style="vertical-align:middle;" class="disc_bottom_rows" id="disc_bottom_rows">{{ __('Reduction of 10.00% on value 201 to 400 is 25.00 Total duration of courses 60 minutes, 1 hours and 0 minutes.') }}</td>
 								</tr>
 								<tr>
 									<td colspan="1" style="text-align:right">{{ __('Sub-total') }} </td>
@@ -199,12 +206,12 @@
 							<label id="sdiscount_percent_1_cap" class="col-lg-3 col-sm-3 text-right" for="sdiscount_percent_1">{{ __('Reduction Rate') }}: </label>
 							<div class="col-sm-2">
 								<div class="input-group"><span class="input-group-addon currency_display">CHF</span>
-									<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="0" placeholder="">
+									<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{ !empty($invoice->amount_discount_1) ? $invoice->amount_discount_1 : ''; }}" placeholder="">
 								</div>
 							</div>
 							<div class="col-sm-2 offset-md-1">
 								<div class="input-group"><span class="input-group-addon">%</span>
-									<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="0" placeholder=""> </div>
+									<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{ !empty($invoice->discount_percent_1) ? $invoice->discount_percent_1 : ''; }}" placeholder=""> </div>
 							</div>
 						</div>
 						<div style="display:none;">
@@ -849,6 +856,43 @@ $(document).ready(function(){
 			document.getElementById("approved_btn").style.display = "none";
 			document.getElementById("payment_btn").style.display = "none";
 	}
+
+
+
+
+
+
+
+
+
+
+
+	var disc_text = '';
+	let disc1_amt = $("#samount_discount_1").val();
+	let disc1 = $("#sdiscount_percent_1").val();
+	if (disc1_amt > 0) {
+			//disc_text+='Réduction de '+disc1+'% sur tranche 201.00 à 400.00 = '+disc1_amt+'<br>';
+			disc_text += GetDiscPercCaption(1, disc1, disc1_amt, 0) + '<br>';
+	}
+	let total_min = document.getElementById("total_min").value;
+	
+	if (disc_text != '') {
+			//Durée totale des cours:
+			var hours = Math.trunc(total_min / 60);
+			var minutes = total_min % 60;
+
+			let total_duration_during_course = GetAppMessage('total_duration_during_course');
+			total_duration_during_course = total_duration_during_course.replace('[~~TOTAL_MIN~~]', total_min);
+			total_duration_during_course = total_duration_during_course.replace('[~~HOURS~~]', hours);
+			total_duration_during_course = total_duration_during_course.replace('[~~MINUTES~~]', (total_min % 60));
+			disc_text += total_duration_during_course;
+			$("#disc_bottom_rows").text(disc_text);
+			//disc_text+=GetAppMessage('total_duration_during_course')+' '+total_min+' minutes,'+DisplayMinsToHoursMins(total_min);
+			//resultHtml += '<small><td colspan="1" rowspan="7" style="vertical-align:middle;" class="disc_bottom_rows">' + disc_text + '</td></small>';
+	} else {
+		$("#disc_bottom_rows").text('');
+		//resultHtml += '<td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>';
+	}
 })
 
 $('#seller_country_id').change(function(){
@@ -880,6 +924,70 @@ $('#client_country_id').change(function(){
 		$('#client_province_id_div').hide();
 	}
 })
+
+
+function GetDiscPercCaption(p_disc_seq,p_disc_perc,p_disc_amt,p_inv_amt){
+    var disc_caption=GetAppMessage("DISC_PEFC");
+    var disc1='',disc2='';
+    
+    switch (p_disc_seq) {
+        case 1:
+            disc1='201';
+            disc2='400';       
+            break;
+        case 2:
+            disc1='401';
+            disc2='600';
+            break;
+        case 3:
+            disc1='601';
+            disc2='800';
+            break;
+        case 4:
+            disc1='801';
+            disc2='1000';       
+            break;
+        case 5:
+            disc1='1001';
+            disc2='1200';       
+            break;
+        case 6:
+            disc1='1201';
+            disc2='';       
+            break;
+    }
+    
+    disc_caption=disc_caption.replace("[~~SYSTEM_DISC_PERC~~]",p_disc_perc);
+    disc_caption=disc_caption.replace("[~~SYSTEM_RANGE_FROM~~]",disc1);
+    
+    try {
+        if (disc2 == ''){
+            //application for disc5 if amount >1201
+            disc_caption=disc_caption.replace("[~~SYSTEM_RANGE_TO~~]",p_inv_amt.toFixed(2));
+        }else {
+            disc_caption=disc_caption.replace("[~~SYSTEM_RANGE_TO~~]",disc2);    
+        }
+    }catch (e) {
+        disc_caption=disc_caption.replace("[~~SYSTEM_RANGE_TO~~]","");
+    }
+    
+    try {
+        
+        if (p_disc_amt > 0) {
+            disc_caption=disc_caption.replace("[~~SYSTEM_AMOUNT~~]",p_disc_amt.toFixed(2));    
+        }else {
+            disc_caption=disc_caption.replace("[~~SYSTEM_AMOUNT~~]","");
+        }
+    }catch (e){
+        try {
+            disc_caption=disc_caption.replace("[~~SYSTEM_AMOUNT~~]",p_disc_amt);    
+        }catch (err){}
+        
+    }
+    
+    return disc_caption;
+} 
+
 
 </script>
 @endsection
