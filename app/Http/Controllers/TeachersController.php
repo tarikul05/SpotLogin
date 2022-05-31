@@ -54,17 +54,14 @@ class TeachersController extends Controller
     {
 
         $user = Auth::user();
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return redirect()->route('schools')->with('error', __('School is not selected'));
-            }
-            $teachers = $school->teachers; 
-        }else {
-            $teachers = $user->getSelectedSchoolAttribute()->teachers;
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        // dd($teachers[1]->pivot);
-        // $teachers = Teacher::where('is_active', 1)->get();
+        $teachers = $school->teachers; 
+        
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
 
