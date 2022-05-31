@@ -67,18 +67,19 @@ class EventCategoryController extends Controller
                 }
                 
                 foreach($categoryData['category'] as $cat){
+                    $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
                     if(isset($cat['id']) && !empty($cat['id'])){
                         $answers = [
                             'school_id' => $userSchoolId,
                             'title' => $cat['name'],
-                            'invoiced_type' => $cat['invoice']
+                            'invoiced_type' => $invoicedType
                         ];
                         $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
                     }else{
                         $answers = [
                             'school_id' => $userSchoolId,
                             'title' => $cat['name'],
-                            'invoiced_type' => $cat['invoice']
+                            'invoiced_type' => $invoicedType
                         ];
                         $eventCat = EventCategory::create($answers);
                     }
