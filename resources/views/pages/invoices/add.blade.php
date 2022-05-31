@@ -775,23 +775,11 @@
 			</div>
 		</div>
 	</div>
-	<!-- success modal-->
-	<div class="modal modal_parameter" id="modal_add_teacher">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
-					<p id="modal_alert_body"></p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
 	<!-- End Tabs content -->
-    <div id="pageloader">
-      <img src="http://localhost:8000/img/loading.gif" alt="processing..." />
-    </div>
+	<div id="pageloader">
+		<img src="{{ asset('img/loading.gif') }}" alt="processing..." />
+	</div>
 </div>
 @endsection
 
