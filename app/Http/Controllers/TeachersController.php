@@ -54,17 +54,14 @@ class TeachersController extends Controller
     {
 
         $user = Auth::user();
-        if ($user->isSuperAdmin()) {
-            $school = School::active()->find($schoolId);
-            if (empty($school)) {
-                return redirect()->route('schools')->with('error', __('School is not selected'));
-            }
-            $teachers = $school->teachers; 
-        }else {
-            $teachers = $user->getSelectedSchoolAttribute()->teachers;
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        // dd($teachers[1]->pivot);
-        // $teachers = Teacher::where('is_active', 1)->get();
+        $teachers = $school->teachers; 
+        
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
 
@@ -431,6 +428,108 @@ class TeachersController extends Controller
         }
     }
 
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
+    public function self_edit(Request $request)
+    {
+        $user = Auth::user();
+        $schoolId = $request->route('school'); 
+        $teacherId = $request->route('teacher');
+
+        $teacher = Teacher::find($user->person_id);
+// dd($teacher);     
+        $schoolId = $user->selectedSchoolId();
+        $schoolName = $user->selectedSchoolName(); 
+
+
+        $relationalData = SchoolTeacher::where([
+            ['teacher_id',$teacher->id],
+            ['school_id',$schoolId]
+        ])->first();
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+
+        $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();
+        $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
+        $lessonPriceTeachers = LessonPriceTeacher::active()
+                              ->where(['teacher_id' => $teacher->id])
+                              ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                              ->get();
+        $ltprice =[];
+        foreach ($lessonPriceTeachers as $lkey => $lpt) {
+          $ltprice[$lpt->event_category_id][$lpt->lesson_price_student] = $lpt->toArray();
+        }
+        // dd($lessionPriceTeacher);
+        
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+        // dd($relationalData);
+        return view('pages.teachers.self_edit')->with(compact('teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
+    }
+
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function self_update(Request $request, Teacher $teacher)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $teacher = Teacher::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+
+        DB::beginTransaction();
+        try{
+            $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $teacherData = [
+                'gender_id' => $alldata['gender_id'],
+                'lastname' => $alldata['lastname'],
+                'firstname' => $alldata['firstname'],
+                'birth_date' => $birthDate,
+                'licence_js' => $alldata['licence_js'],
+                'email' => $alldata['email'],
+                'street' => $alldata['street'],
+                'street_number' => $alldata['street_number'],
+                'zip_code' => $alldata['zip_code'],
+                'place' => $alldata['place'],
+                'country_code' => $alldata['country_code'],
+                'phone' => $alldata['phone'],
+                'mobile' => $alldata['mobile'],
+            ];
+            Teacher::where('id', $teacher->id)->update($teacherData);
+
+            $relationalData = [
+                // 'role_type'=>$alldata['role_type'],
+                // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                'comment'=> $alldata['comment'],
+                'nickname'=> $alldata['nickname'],
+                'bg_color_agenda'=> $alldata['bg_color_agenda'],
+            ];
+            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
+        }catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -480,7 +579,7 @@ class TeachersController extends Controller
                }
              }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Teacher Lession Price updated successfully!'));
+            return back()->withInput($request->all())->with('success', __('Teacher Lesson Price updated successfully!'));
         }catch (\Exception $e) {
             DB::rollBack();
             // dd($e);
@@ -488,6 +587,54 @@ class TeachersController extends Controller
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
 
+
+    }
+
+
+    /**
+     * Check users .
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function selfPriceUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $teacher = Teacher::find($user->person_id);
+
+      // dd($alldata);
+      DB::beginTransaction();
+        try{
+             foreach ($alldata['data'] as $key => $catPrices) {
+              // dd($catPrices);
+               foreach ($catPrices as $pkey => $price) {
+                 // dd($price);
+                 $dataprice = [
+                      'event_category_id' => $key,
+                      'teacher_id' => $teacher->id,
+                      'lesson_price_student' => $price['lesson_price_student'],
+                      'lesson_price_id' => $price['lesson_price_id'],
+                      'price_buy' => $price['price_sell'],
+                      'price_sell' => $price['price_sell'],
+                  ];
+
+                 if (empty($price['id'])) {
+                    $updatedPrice = LessonPriceTeacher::create($dataprice);
+                 }else{
+                    $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                 }
+               }
+             }
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Lesson Price updated successfully!'));
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e);
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
 
     }
 

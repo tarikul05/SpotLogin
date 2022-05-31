@@ -249,7 +249,7 @@ class StudentsController extends Controller
                         'nickname' => $alldata['nickname'],
                         'email' => $alldata['email'],
                         'billing_method' => $alldata['billing_method'],
-                        'level_id' => $alldata['level_id'],
+                        'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null ,
                         'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
                         'licence_arp' => $alldata['licence_arp'],
                         'licence_usp' => $alldata['licence_usp'],

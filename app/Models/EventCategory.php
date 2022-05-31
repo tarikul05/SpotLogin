@@ -42,7 +42,7 @@ class EventCategory extends BaseModel
     ];
 
     /**
-     * Scope a query to only include active users.
+     * Scope a query to only include school invoiced.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
@@ -51,5 +51,17 @@ class EventCategory extends BaseModel
     {
         $query->active();
         $query->where('invoiced_type', 'S');
+    }
+
+    /**
+     * Scope a query to only include teacher invoiced.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeTeacherInvoiced($query)
+    {
+        $query->active();
+        $query->where('invoiced_type', 'T');
     }
 }
