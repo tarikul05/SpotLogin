@@ -10,8 +10,11 @@ use App\Models\InvoiceItem;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\EmailTemplate;
+use App\Models\AttachedFile;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
 
 class InvoiceController extends Controller
 {
@@ -287,6 +290,7 @@ class InvoiceController extends Controller
     {
 
         $user = $request->user();
+        //dd($user);
         $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($this->schoolId);
         if (empty($school)) {
@@ -299,9 +303,85 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-        $invoices = Invoice::active()->where('school_id',$this->schoolId)->get();
-        //dd($invoices);
-        return view('pages.invoices.student_list',compact('invoices','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
+
+
+       
+      
+        
+
+
+
+
+        $studentEvents = DB::table('events')
+        ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+        ->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')
+        ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
+        ->select(
+            'events.id as event_id',
+            'event_details.student_id as person_id',
+            'school_student.nickname as student_name',
+            'users.profile_image_id as profile_image_id'
+            )
+        //->selectRaw('count(events.id) as invoice_items')
+        ->where(
+            [
+                'events.school_id'=>$this->schoolId, 
+                'event_details.billing_method' => "E",
+                'events.is_active' => 1
+            ]);
+        
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+
+        $studentEvents->where(function ($query) {
+            $query->where('event_details.is_sell_invoiced', '=', 0)
+                ->orWhereNull('event_details.is_sell_invoiced');
+            }
+        );
+        
+         $dateS = Carbon::now()->startOfMonth()->subMonth(3)->format('Y-m-d');
+        //exit();
+
+        $studentEvents->where('events.date_start', '>=', $dateS);
+        $studentEvents->distinct('events.id');
+        $studentEvents->groupBy('events.id');
+
+        $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
+            ->select(
+                'custom_table.person_id as person_id',
+                'custom_table.student_name as student_name',
+                'custom_table.profile_image_id as profile_image_id'
+            )
+            ->selectRaw('count(custom_table.event_id) as invoice_items')
+            ->mergeBindings($studentEvents)
+            ->groupBy('custom_table.person_id')
+            
+            ->get();
+       
+        // dd($allEvents);
+        //$allEvents = $studentEvents->get();
+        //echo $allEvents->toSql();exit();
+        $allStudentEvents=[];
+        foreach ($allEvents as $key => $value) {
+            $profile_image = !empty($value->profile_image_id) ? AttachedFile::find($value->profile_image_id) : null ;
+            if (!empty($profile_image)) {
+                $value->profile_image = $profile_image->path_name;
+            }
+            
+            $allStudentEvents[] = $value;
+            //echo $value->id;
+        }
+        //dd($allStudentEvents);
+        
+
+        // $invoices = Invoice::active()->where('school_id',$this->schoolId)->get();
+        
+        return view('pages.invoices.student_list',compact('allStudentEvents','schoolId','invoice_type_all','payment_status_all','invoice_status_all'));
     }
 
     public function view(Request $request, Invoice $invoice)
