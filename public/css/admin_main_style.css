@@ -1022,6 +1022,36 @@ button.btn.btn-sm.btn-warning {
     background-color: #5cb85c;
     border-color: #4cae4c;
 }
+.course_week_header {
+    font-size: 16px;
+    line-height: 1.5em;
+    background-color: lightblue;
+    color: black;
+    font-weight: 300;
+}
+table#lesson_table {
+    border: 1px solid #ddd;
+}
+table#lesson_table > tbody > tr > td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.section_header_class label {
+    color: #152245;
+    font-size: 20px;
+    font-family: "Gilroy-Bold";
+    margin: 15px 0;
+    text-align: left;
+    padding-bottom: 0 10%;
+    font-weight: normal;
+}
+a#correct_btn {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;

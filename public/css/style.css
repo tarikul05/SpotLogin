@@ -384,6 +384,9 @@ table.tc_template .detail_header {
 #nav-tab .nav-link {
     margin-right: 15px;
     color: #657e8e;
+    border-left: 0px solid transparent;
+    border-right: 0px solid transparent;
+    border-top: 0px solid transparent;
 }
 #nav-tab .nav-link.active {
     color: #3b75bf;
@@ -654,7 +657,18 @@ img#frame {
     height: 150px;
     border-radius: 100%;
 }
-
+table#tariff_table_id {
+    border: 1px solid #e1eff7 !important;
+}
+label#teacher_disc_perc_cap {
+    margin-top: 20px;
+}
+label {
+    color: #657e8e;
+}
+button#changer_btn {
+    padding: 9px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
