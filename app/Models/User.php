@@ -108,6 +108,76 @@ class User extends Authenticatable
         return $this->person_type == 'SUPER_ADMIN';
     }
 
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isSchoolAdmin()
+    {
+
+        return $this->hasAnyRole(['school_admin']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacher()
+    {
+
+        return $this->hasAnyRole(['teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherAdmin()
+    {
+
+        return $this->hasAnyRole(['teachers_admin']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherAll()
+    {
+
+        return $this->hasAnyRole(['teachers_all']);
+    }
+    
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherMedium()
+    {
+
+        return $this->hasAnyRole(['teachers_medium']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherMinimum()
+    {
+
+        return $this->hasAnyRole(['teachers_minimum']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isStudent()
+    {
+
+        return $this->hasAnyRole(['student']);
+    }
+
      /**
      * Get the personable for the user.
      */

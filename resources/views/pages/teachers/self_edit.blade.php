@@ -34,21 +34,15 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					{{ __('Lesson') }}
-				</button>
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
-				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 				</button>
-				@can('teachers-users-update')
-					@if($teacher->user)
-					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
-						{{ __('User Account')}}
-					</button>
-					@endif
+
+				@can('parameters-list')
+					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
 				@endcan
 			</div>	
 		</nav>
@@ -56,9 +50,9 @@
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
-			<input type="hidden" id="user_id" name="user_id" value="{{ !empty($teacher->user) ? $teacher->user->id : null }}">
+			<input type="hidden" id="user_id" name="user_id" value="{{$teacher->user->id}}">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="add_teacher" action="{{!empty($teacher) ? route('editTeacherAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_teacher" action="{{ route('updateTeacherAction') }}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					@csrf
 					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
@@ -159,22 +153,6 @@
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
 											<input class="form-control" value="{{!empty($teacher->email) ? old('email', $teacher->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
-									</div>
-								</div>
-								<div class="form-group row" id="shas_user_account_div">
-									<div id="shas_user_account_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
-										<div class="col-sm-7">
-											<input id="shas_user_account"  name="has_user_account" type="checkbox" value="1" {{!empty($relationalData->has_user_account) ? (old('has_user_account', $relationalData->has_user_account) == 1 ? 'checked' : '') : (old('has_user_account') == 1 ? 'checked' : '')}}>
-										</div>
-									</div>
-								</div>
-								<div class="form-group row" id="authorisation_div">
-										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
-									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{ ($relationalData->role_type == 'teachers_all') ? 'checked' : '' }}> ALL<br>
-										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{($relationalData->role_type == 'teachers_medium') ? 'checked' : '' }}> Medium<br>
-										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{($relationalData->role_type == 'teachers_minimum') ? 'checked' : '' }}> Minimum<br></b>
 									</div>
 								</div>
 								<div class="form-group row" id="sbg_color_agenda_div">
@@ -300,118 +278,7 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-					<input type="hidden" name="selected_month" id="selected_month" value="">
-					<input type="hidden" name="selected_year" id="selected_year" value=""> 
-					<div class="row">
-						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
-							<div class="">
-								<label id="perc_deduction_warning_cap_teacher">Enter discount percentance</label>
-							</div>
-							<div class="form-group row">
-								<label id="teacher_disc_perc_cap" class="col-lg-3 col-sm-3 text-left">Discount Perc(%)</label>
-								<div class="col-sm-6">
-									<div class="table-responsive">
-										<table id="tariff_table_id" class="table list-item">
-											<tbody>
-												<tr>
-													<td width="20%">
-														<input id="discount_perc" name="discount_perc" type="text" value="10" class="form-control">
-													</td>
-													<td>
-														<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group row">
-								<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
-								<div class="col-sm-2">
-									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-								</div>
-								<div class="col-sm-2 offset-md-1">
-									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-								</div>
-								<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-									<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked="">
-									<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
-								</div>
-								<div class="col-sm-1">
-									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-					</div>
-					<div class="table-responsive">
-						<table class="table lessons-list" id="lesson_table">
-							<tbody>
-								<tr class="course_week_header">
-									<td colspan="1">{{ __('Week 20') }}</td>
-									<td colspan="1"></td>
-									<td colspan="1">{{ __('Date') }}</td>
-									<td colspan="1">{{ __('Time') }}</td>
-									<td colspan="1">{{ __('Duration') }}</td>
-									<td colspan="1">{{ __('Type') }}</td>
-									<td colspan="1">{{ __('Coach') }}</td>
-									<td colspan="1">{{ __('Lesson') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-								</tr>
-								<tr>
-									<td style="display:none;">30533</td>
-									<td>-</td>
-									<td></td>
-									<td width="10%">18/05/2022</td>
-									<td>14:30</td>
-									<td>30 minutes </td>
-									<td> (Soccer-School)</td>
-									<td>teacher all</td>
-									<td>Group lessons for 3 students</td>
-									<td></td>
-									<td>
-										<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-											<i class="fa fa-pencil"></i>{{__('Validate')}}
-										</a>
-									</td>
-									<td style="text-align:right"></td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Week')}} </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Total Monthly')}}</td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-					</div>
-				</form>
-			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
+				<form class="form-horizontal" id="add_price" action="{{ route('selfUpdatePriceAction') }}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
 						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
@@ -423,7 +290,7 @@
 								<th>#</th>
 								<th>{{__('Type of course')}}</th>
 								<th>{{__('Hourly rate applied')}}</th>
-								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
+								<!-- <th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th> -->
 								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
 							</tr>
 						</thead>
@@ -452,13 +319,13 @@
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif
 									
-									<td>
+									<!-- <td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
 										style="text-align:right" class="form-control numeric float"
 										>
-									</td>
+									</td> -->
 									<td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
@@ -477,7 +344,7 @@
 					@endcan
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
+			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<div class="row">
 					<div class="col-sm-12 col-xs-12 header-area">
 						<div class="page_header_class">
@@ -531,96 +398,6 @@
 					</div>
 				</div>
 			</div>
-			@if(!empty($teacher->user))
-			<div class="tab-pane fade" id="tab_5" role="tabpanel" aria-labelledby="tab_5">
-				<form id="teacherUserForm" name="teacherUserForm" class="form-horizontal" role="form"
-				 action="{{!empty($teacher) ? route('teacher.user_update',[$teacher->user->id]): '/'}}" method="POST" enctype="multipart/form-data">
-					@csrf
-					<input type="hidden" id="user_id" name="user_id" value="{{!empty($teacher->user->id) ? old('user_id', $teacher->user->id) : old('user_id')}}">
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">{{ __('User Account')}}</label>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($teacher->user->username) ? old('admin_username', $teacher->user->username) : old('admin_username')}}">      
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Email')}}:</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" id="admin_email" name="admin_email" value="{{!empty($teacher->user->email) ? old('admin_email', $teacher->user->email) : old('admin_email')}}">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
-						<div class="col-sm-7">
-							<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
-                  
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Status')}}:</label>
-						<div class="col-sm-7">
-							<div class="selectdiv">
-								<select class="form-control" name="admin_is_active" id="admin_is_active">
-									<option value="">Select</option>
-									<option value="1" {{!empty($teacher->user->is_active) ? (old('admin_is_active', $teacher->user->is_active) == 1 ? 'selected' : '') : (old('admin_is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-									<option value="0" {{!empty($teacher->user->is_active) ? (old('admin_is_active', $teacher->user->is_active) == 0 ? 'selected' : '') : (old('admin_is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">{{ __('Send Activation Email')}}</label>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($teacher->user->email) ? $teacher->user->email : old('email_to_id')}}">
-						
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
-						
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-10 col-md-10">
-							<div class="email_template_tbl table-responsive mt-1">
-								<table id="email_template_tbl" name="email_template_tbl" width="100%" border="0" class="email_template school resizable">
-									<tbody>
-										<tr align="left" valign="middle">
-											<td>
-												<div class="form-group-data">
-													<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">
-													{{!empty($emailTemplate->body_text) ? old('body_text', $emailTemplate->body_text) : old('body_text')}}
-													</textarea>
-													<span id="body_text_error" class="error"></span>
-													<span class="pull-right">
-														<div class="text-center">
-														<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
-														<!-- <button id="send_email_btn" name="send_email_btn" class="btn btn-sm btn-info" ><em class="glyphicon glyphicon-send"></em> envoyer </button> -->
-														</div>
-													</span>
-												</div>
-												
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
-				</form>
-			</div>
-			@endif
 		</div>
 	</div>
 	<!-- success modal-->
@@ -653,93 +430,11 @@ $(document).ready(function(){
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	$("#billing_period_start_date").datetimepicker({
-		format: "dd/mm/yyyy",
-		autoclose: true,
-		todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
-	$("#billing_period_end_date").datetimepicker({
-		format: "dd/mm/yyyy",
-		autoclose: true,
-		todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
 
-
-	$("#send_email_btn").click(function (e) {
-		var user_id = $("#user_id").val();
-		var email_to = $("#email_to_id").val(),
-				school_name = $("#school_name").val(),
-				email_body  = CKEDITOR.instances["body_text"].getData()
-		email_body = email_body.replace(/'/g, "''");
-		email_body = email_body.replace(/&/g, "<<~>>");
-		let loader = $('#pageloader');
-    	loader.show();
-
-		var teacherUserForm = document.getElementById("teacherUserForm");
-		var formdata = $("#teacherUserForm").serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-
-		
-		formdata.push({
-				"name": "_token",
-				"value": csrfToken
-		});
-		formdata.push({
-				"name": "user_id",
-				"value": user_id
-		});
-		formdata.push({
-				"name": "email_body",
-				"value": email_body
-		});
-		formdata.push({
-				"name": "school_name",
-				"value": school_name
-		});
-		//console.log(formdata);
-
-		$.ajax({
-			url: BASE_URL + '/teacher_email_send',
-			data: formdata,
-			type: 'POST',
-			dataType: 'json',
-			async: false,
-			encode: true,
-			success: function(data) {
-				loader.hide();
-				if (data.status) {
-						successModalCall("{{ __('email_sent')}}");
-				} else {
-						errorModalCall(data.msg);
-				}
-
-			}, // sucess
-			error: function(ts) {
-				loader.hide();
-				errorModalCall('error_message_text');
-			}
-		});
-	
-	});    //contact us button click 
 })
 
 $(function() { 
@@ -830,42 +525,5 @@ function DeleteProfileImage() {
 	});
 
 }
-// save functionality
-// $('#save_btn').click(function (e) {
-// 		var formData = $('#add_teacher').serializeArray();
-// 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-// 		var error = '';
-// 		$( ".form-control.require" ).each(function( key, value ) {
-// 			var lname = $(this).val();
-// 			if(lname=='' || lname==null || lname==undefined){
-// 				$(this).addClass('error');
-// 				error = 1;
-// 			}else{
-// 				$(this).removeClass('error');
-// 				error = 0;
-// 			}
-// 		});
-// 		formData.push({
-// 			"name": "_token",
-// 			"value": csrfToken,
-// 		});
-// 		if(error < 1){	
-// 			$.ajax({
-// 				url: BASE_URL + '/add-teacher-action',
-// 				data: formData,
-// 				type: 'POST',
-// 				dataType: 'json',
-// 				success: function(response){	
-// 					if(response.status == 1){
-// 						$('#modal_add_teacher').modal('show');
-// 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
-// 					}
-// 				}
-// 			})
-// 		}else{
-// 			$('#modal_add_teacher').modal('show');
-// 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-// 		}	            
-// });  
 </script>
 @endsection

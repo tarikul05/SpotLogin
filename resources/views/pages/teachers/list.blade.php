@@ -13,6 +13,7 @@
                 <th>{{ __('#') }}</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
+                <th>{{ __('User Account') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
@@ -20,12 +21,13 @@
         <tbody>
             @foreach($teachers as $teacher)
             @php
-            if ($teacher->pivot->role_type == 'school_admin' || $teacher->pivot->role_type == 'teachers_admin') continue;
+            if ($teacher->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
                 <td>{{ $teacher->id; }} </td>
                 <td> {{ $teacher->full_name }}</td>
-                <td>{{ $teacher->email; }} {{ $teacher->pivot->school_id}}</td>
+                <td>{{ $teacher->email; }} </td>
+                <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
                 <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
@@ -36,7 +38,8 @@
                             <i class="fa fa-ellipsis-h txt-grey"></i>
                         </a>
                         <div class="dropdown-menu list action text-left">
-                            @can('teachers-view')
+
+                            @can('teachers-update')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
 
