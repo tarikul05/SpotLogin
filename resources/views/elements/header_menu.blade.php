@@ -17,10 +17,12 @@
                         $url = route('agenda');
                         $urlInvoice = route('invoiceList');
                         $urlStudentInvoice = route('invoiceList');
+                        $urlTeacherInvoice = route('invoiceList');
                         if(!empty($schoolId)){ 
                             $url = route('agenda.id',[$schoolId]);
                             $urlInvoice = route('invoiceList.id',[$schoolId]);
                             $urlStudentInvoice = route('studentInvoiceList.id',[$schoolId]);
+                            $urlTeacherInvoice = route('teacherInvoiceList.id',[$schoolId]);
                         }
                         @endphp
                         <a href="{{ $url }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
@@ -49,7 +51,7 @@
                             <div class="dropdown-menu header">
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
-                                <a href="#" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
+                                <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Manual Invoice') }}</a>
                             </div>
                         </div>
