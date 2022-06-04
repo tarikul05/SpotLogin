@@ -518,10 +518,26 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.add', [
-                    'title' => 'Invoice',
-                    'pageInfo'=>['siteTitle'=>'']
-                ])
-                ->with(compact('invoice','genders','countries'));
-       
+            'title' => 'Invoice',
+            'pageInfo'=>['siteTitle'=>'']
+        ])->with(compact('genders','countries'));
+    } 
+        
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function manualInvoice()
+    {
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.manual_invoice', [
+            'title' => 'Invoice',
+            'pageInfo'=>['siteTitle'=>'']
+        ])->with(compact('genders','countries'));
     } 
 }
