@@ -32,7 +32,7 @@
 			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
 				<div class="form-group row">
-					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i> :</label>
+					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i> :</label>
 					<div class="col-sm-5">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -516,6 +516,8 @@ $(function() {
 			$('#billing_street').val( $('#street').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
+			$('#billing_country_code').val( $('#country_code option:selected').val() );
+			$('#billing_province_id').val( $('#province_id option:selected').val() );
 		}
 	});
 

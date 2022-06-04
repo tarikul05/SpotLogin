@@ -24,7 +24,10 @@
             @endphp
             <tr>
                 <td>{{ $student->id; }}
-                <td>{{ $student->firstname.' '.$student->middlename.' '.$student->lastname; }}</td>
+                <td>
+                    <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
+                </td>
+                
                 <td>{{ $student->email; }}</td>
                 <td>{{ !empty($student->is_active) && !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($student->pivot->deleted_at)
