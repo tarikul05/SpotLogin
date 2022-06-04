@@ -34,10 +34,13 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+					{{ __('Lesson') }}
+				</button>
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
-				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 				</button>
 				@can('teachers-users-update')
@@ -297,6 +300,117 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+					<input type="hidden" name="selected_month" id="selected_month" value="">
+					<input type="hidden" name="selected_year" id="selected_year" value=""> 
+					<div class="row">
+						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
+							<div class="">
+								<label id="perc_deduction_warning_cap_teacher">Enter discount percentance</label>
+							</div>
+							<div class="form-group row">
+								<label id="teacher_disc_perc_cap" class="col-lg-3 col-sm-3 text-left">Discount Perc(%)</label>
+								<div class="col-sm-6">
+									<div class="table-responsive">
+										<table id="tariff_table_id" class="table list-item">
+											<tbody>
+												<tr>
+													<td width="20%">
+														<input id="discount_perc" name="discount_perc" type="text" value="10" class="form-control">
+													</td>
+													<td>
+														<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-8">
+							<div class="form-group row">
+								<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
+								<div class="col-sm-2">
+									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+								</div>
+								<div class="col-sm-2 offset-md-1">
+									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+								</div>
+								<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
+									<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked="">
+									<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
+								</div>
+								<div class="col-sm-1">
+									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="section_header_class">
+						<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
+					</div>
+					<div class="table-responsive">
+						<table class="table lessons-list" id="lesson_table">
+							<tbody>
+								<tr class="course_week_header">
+									<td colspan="1">{{ __('Week 20') }}</td>
+									<td colspan="1"></td>
+									<td colspan="1">{{ __('Date') }}</td>
+									<td colspan="1">{{ __('Time') }}</td>
+									<td colspan="1">{{ __('Duration') }}</td>
+									<td colspan="1">{{ __('Type') }}</td>
+									<td colspan="1">{{ __('Coach') }}</td>
+									<td colspan="1">{{ __('Lesson') }}</td>
+									<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
+									<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
+									<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
+								</tr>
+								<tr>
+									<td style="display:none;">30533</td>
+									<td>-</td>
+									<td></td>
+									<td width="10%">18/05/2022</td>
+									<td>14:30</td>
+									<td>30 minutes </td>
+									<td> (Soccer-School)</td>
+									<td>teacher all</td>
+									<td>Group lessons for 3 students</td>
+									<td></td>
+									<td>
+										<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
+											<i class="fa fa-pencil"></i>{{__('Validate')}}
+										</a>
+									</td>
+									<td style="text-align:right"></td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td colspan="6"></td>
+									<td colspan="2">{{ __('Sub-total Week')}} </td>
+									<td style="text-align:right">75.00</td>
+									<td style="text-align:right">75.00</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td colspan="6"></td>
+									<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
+									<td style="text-align:right">75.00</td>
+									<td style="text-align:right">75.00</td>
+								</tr>
+								<tr style="font-weight: bold;">
+									<td colspan="6"></td>
+									<td colspan="2">{{ __('Total Monthly')}}</td>
+									<td style="text-align:right">75.00</td>
+									<td style="text-align:right">75.00</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+					</div>
+				</form>
+			</div>
+			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
@@ -363,7 +477,7 @@
 					@endcan
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
 				<div class="row">
 					<div class="col-sm-12 col-xs-12 header-area">
 						<div class="page_header_class">
@@ -418,7 +532,7 @@
 				</div>
 			</div>
 			@if(!empty($teacher->user))
-			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
+			<div class="tab-pane fade" id="tab_5" role="tabpanel" aria-labelledby="tab_5">
 				<form id="teacherUserForm" name="teacherUserForm" class="form-horizontal" role="form"
 				 action="{{!empty($teacher) ? route('teacher.user_update',[$teacher->user->id]): '/'}}" method="POST" enctype="multipart/form-data">
 					@csrf
@@ -533,6 +647,26 @@ $(document).ready(function(){
         format: "dd/mm/yyyy",
         autoclose: true,
         todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+	$("#billing_period_start_date").datetimepicker({
+		format: "dd/mm/yyyy",
+		autoclose: true,
+		todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+	$("#billing_period_end_date").datetimepicker({
+		format: "dd/mm/yyyy",
+		autoclose: true,
+		todayBtn: true,
 		minuteStep: 10,
 		minView: 3,
 		maxView: 3,

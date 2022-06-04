@@ -941,6 +941,18 @@ $('#client_country_id').change(function(){
 	}
 })
 
+$(function() {
+	$("#date_invoice").datetimepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+});
 
 function GetDiscPercCaption(p_disc_seq,p_disc_perc,p_disc_amt,p_inv_amt){
     var disc_caption=GetAppMessage("DISC_PEFC");
