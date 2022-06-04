@@ -11,7 +11,7 @@
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
-                    <label id="page_header_id" name="page_header_id">List of invoice(s)</label></div>
+                    <label id="page_header_id" name="page_header_id">Invoice assistants</label></div>
             </div>
             <!--<div class="pull-right col-xs-6" style="text-align:right;">-->
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
@@ -36,100 +36,34 @@
                 <tr>
                     <th>{{ __('#') }}</th>
                     <th>{{ __('Date') }}</th>
-                    <th>{{ __('Type') }}</th>
-                    <th>{{ __('Event') }}</th>
-                    <th>{{ __('Amount') }}</th>
-                    <th>{{ __('Status') }}</th>
-                    <th></th>
+                    <th>{{ __('Name of  the Professor') }}</th>
+                    <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody>
-            @if (!empty($invoices))
+            @if (!empty($allTeacherEvents))
                 @php
                     $i = 0;
                 @endphp
-                @foreach($invoices as $invoice)
+                @foreach($allTeacherEvents as $event)
                     @php
                         $i++;
                     @endphp
                 
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <td>{{ $invoice->date_invoice; }}</td>
-                        <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
-                        @if ($invoice->invoice_type == 1)
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
-                        @else
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->seller_name }}</td>
-                        @endif
-                        <td>{{ $invoice->total_amount; }}</td>
-                        @if ($invoice->payment_status_flag == 0)
-                            <td class="text-center">
-                                <div id="status_{{$invoice->id}}">
-                                    <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
-                                </div>
-                            </td>
-                        @else
-                            <td class="text-center">
-                                <div id="status_{{$invoice->id}}">
-                                    <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
-                                </div>
-                            </td>
-                        @endif
-                        @if ($invoice->invoice_status > 1)
-
-                            <td class="text-center">
-                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                <span class="small txt-grey pull-left">
-                                    <span class="change_button">Change</span>
-                                </span>
-                            </td>
-                        @else
-                            <td>
-                            </td>
-                        @endif
-                        
-                        <td>
-                            <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-h txt-grey"></i>
-                                </a>
-                                <div class="dropdown-menu list action text-left">
-                                @php
-                                    $edit_view_url = '';
-                                    //invoice_creation_type = y means manual invoice
-                                    if ($invoice->invoice_creation_type == 'Y') {
-                                        $edit_view_url = '/admin/manual-invoice/'.$invoice->id;
-                                    } else {
-                                        $edit_view_url = '/admin/invoice/'.$invoice->id;
-                                    }
-                                @endphp
-                                
-
-                                @if ($invoice->invoice_status > 1)
-                                    <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                        <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
-                                        {{ __('View')}}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
-                                        <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
-                                        {{ __('PDF')}}
-                                    </a>
-                                @else
-                                    <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                        <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
-                                        {{ __('Edit')}}
-                                    </a>
-                                @endif
-
-                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
-                                    <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
-                                @endif
-                                    
-                                
-                                </div>
-                            </div>  
+                        <td>{{ $event->teacher_name; }}</td>
+                        <td>{{ $event->teacher_name; }}</td>
+                        <td>{{ $event->invoice_items; }}</td>
+                       
+                        <td align="center">
+                            <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
+                            href="../student/student_master.html?person_id={{ $event->person_id }}&action=edit&tab=pane_lessons" 
+                            class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
+                            View items to be invoiced</a>
+                        </td>
+                    
                         </td>
                     </tr>
                 @endforeach

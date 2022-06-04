@@ -209,9 +209,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
   
   
-     // Invoice 
-     Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
-     Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList.id');
+    // Invoice 
+    Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
+    Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList.id');
+    Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
+    Route::get('/{school}/teacher-invoices', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id');
+    Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
   }); //Admin scope end
 
 
@@ -293,7 +296,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
     Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');  
     Route::post('/{school}/student-attend-action/{id}', [App\Http\Controllers\LessonsController::class, 'StudentAttendAction'])->name('studentAttend.Action');
-    Route::get('invoice', 'InvoiceController@add')->name('invoice');
+    
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
 });
 
