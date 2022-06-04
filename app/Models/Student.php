@@ -107,7 +107,7 @@ class Student extends BaseModel
     ];
 
    
-    protected $appends = [];
+    protected $appends = ['full_name'];
 
 
     /**
@@ -148,6 +148,12 @@ class Student extends BaseModel
             ->join('schools as u', 'u.id', '=', 'school_students.school_id')
             ->select(['u.*']);
 
+    }
+
+
+     public function getFullNameAttribute()
+    {
+        return $this->firstname . " " . $this->middlename. " " . $this->lastname;
     }
 
 }
