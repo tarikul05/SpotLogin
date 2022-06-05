@@ -1052,6 +1052,11 @@ a#correct_btn {
     background-color: #5bc0de;
     border-color: #46b8da;
 }
+.student_save {
+    position: absolute;
+    top: 131px;
+    right: 7%;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
