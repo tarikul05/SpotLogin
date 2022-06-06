@@ -25,7 +25,9 @@
             @endphp
             <tr>
                 <td>{{ $teacher->id; }} </td>
-                <td> {{ $teacher->full_name }}</td>
+                <td>
+                    <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">{{ $teacher->full_name }}</a>
+                </td>
                 <td>{{ $teacher->email; }} </td>
                 <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
                 <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
