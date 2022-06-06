@@ -557,8 +557,6 @@ $(function() {
 		if(error < 1){	
 			return true;
 		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 			return false;
 		}	            
 	});  

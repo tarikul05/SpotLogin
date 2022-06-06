@@ -821,8 +821,6 @@ $('#save_btn').click(function (e) {
 			studentForm.submit();
 		} 
 	}else{
-		$('#modal_add_teacher').modal('show');
-		$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		return false;
 	}	            
 }); 
