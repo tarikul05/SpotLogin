@@ -1052,6 +1052,30 @@ a#correct_btn {
     background-color: #5bc0de;
     border-color: #46b8da;
 }
+.student_save {
+    position: absolute;
+    top: 131px;
+    right: 7%;
+}
+label.profile_img_area {
+    position: relative;
+}
+#profile_image i {
+    font-size: 30px;
+    color: #000;
+}
+#profile_image .box_img {
+    position: relative;
+}
+#profile_image i {
+    right: 0px;
+    position: absolute;
+    top: 0%;
+    color: #000;
+}
+#profile_image i.fa-close {
+    top: -65px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;

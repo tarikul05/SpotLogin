@@ -166,7 +166,8 @@ class AuthController extends Controller
                             "user_role"  => $user['person_type'],
                             "email"  => $user['email'],
                             "country_code"  => $country_code,
-                            "person_id"  => $user['person_id']
+                            "person_id"  => $user['person_id'],
+                            "login_url" => RouteServiceProvider::HOME
                         );
                         return response()->json($result);
                     }
@@ -385,14 +386,14 @@ class AuthController extends Controller
             $user->syncRoles(['student']);
             $request->session()->put('selected_role','student');
             // $request->session()->put('selected_school', $school);
-            return redirect()->route('Home');
+            return redirect(RouteServiceProvider::HOME);
 
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
             $tRoleType = $user->schools()[0]->pivot->role_type;
             $user->syncRoles([$tRoleType]);
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
-            return redirect()->route('Home');
+            return redirect(RouteServiceProvider::HOME);
         }
 
         if ($request->isMethod('post')){
@@ -402,7 +403,7 @@ class AuthController extends Controller
                     $request->session()->put('selected_school', $school);
                     $request->session()->put('selected_role',$school->pivot->role_type);
                     $user->syncRoles([$school->pivot->role_type]);
-                    return redirect()->route('Home');
+                    return redirect(RouteServiceProvider::HOME);
                 }
             }
         }

@@ -151,12 +151,19 @@
 									</div>
 								</div>
 								<div class="form-group row" id="profile_image">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : *</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : </label>
 									<div class="col-sm-7">
-										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" onchange="preview()" style="display:none">
-										<label for="profile_image_file"><img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin"></label>
+										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" style="display:none">
+										<span class="box_img">
+											<label for="profile_image_file" class="profile_img_area">
+											<img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin">
+											<i class="fa fa-plus" style="display:none"></i>
+											</label>
+											<i class="fa fa-close"></i>
+										</span>
 									</div>
 								</div>
+
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -169,6 +176,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
+													<option value="">Select level</option>
 													@foreach($levels as $key => $level)
 														<option value="{{ $level->id }}"  {{ ($relationalData->level_id == $level->id) ? 'selected' : ''}}>{{ $level->title }}</option>
 													@endforeach
@@ -255,6 +263,12 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="street_number" name="street_number" value="{{!empty($student->street_number) ? old('street_number', $student->street_number) : old('street_number')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="street2" name="street2" value="{{!empty($student->street2) ? old('street2', $student->street2) : old('street2')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -382,7 +396,7 @@
 						</div>
 					</div>
 					<div class="section_header_class">
-						<label id="address_caption">{{__('Contact information') }}</label>
+						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -763,33 +777,69 @@ $(document).ready(function(){
 		});
 	
 	});    //contact us button click 
-
-	$('#save_btn').click(function (e) {
-		var x = document.getElementsByClassName("tab-pane active");
-		var studentForm = document.getElementById("add_student");
-		var studentUserForm = document.getElementById("studentUserForm");
-		console.log(studentUserForm);
-		if (x[0].id == "tab_3") {
-			studentUserForm.submit();
-		} else{
-			studentForm.submit();
-		} 
-	});
 });
 
 $(function() {
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
+			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
+			$('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
+			$('#billing_country_code').val( $('#country_code option:selected').val() );
+			$('#billing_province_id').val( $('#province_id option:selected').val() );
 		}
 	});
 });
 
+$('#save_btn').click(function (e) {
+	var formData = $('#add_student').serializeArray();
+	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	var error = '';
+	$( ".form-control.require" ).each(function( key, value ) {
+		var lname = $(this).val();
+		if(lname=='' || lname==null || lname==undefined){
+			$(this).addClass('error');
+			error = 1;
+		}else{
+			$(this).removeClass('error');
+			error = 0;
+		}
+	});
+	formData.push({
+		"name": "_token",
+		"value": csrfToken,
+	});
+	if(error < 1){	
+		var x = document.getElementsByClassName("tab-pane active");
+		var studentForm = document.getElementById("add_student");
+		var studentUserForm = document.getElementById("studentUserForm");
+		if (x[0].id == "tab_3") {
+			studentUserForm.submit();
+		} else{
+			studentForm.submit();
+		} 
+	}else{
+		return false;
+	}	            
+}); 
 
-function preview() {
-	frame.src = URL.createObjectURL(event.target.files[0]);
-}
+$('#profile_image_file').change(function(e) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById("frame").src = e.target.result;
+  };
+  reader.readAsDataURL(this.files[0]);
+  	$('#profile_image i.fa.fa-plus').hide();
+	$('#profile_image i.fa.fa-close').show();
+});
+
+
+$('.box_img i.fa.fa-close').click(function (e) {
+	 document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
+	$('#profile_image i.fa.fa-plus').show();
+	$('#profile_image i.fa.fa-close').hide();
+})
 </script>
 @endsection
