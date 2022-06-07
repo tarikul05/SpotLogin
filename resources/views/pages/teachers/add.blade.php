@@ -212,6 +212,19 @@
 											</div>
 										</div>
 									</div>
+									<div id="province_id_div" class="form-group row" style="display:none">
+										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" id="province_id" name="province_id">
+													<option value="">Select Province</option>
+													@foreach($provinces as $key => $province)
+														<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="clearfix"></div>
@@ -444,5 +457,15 @@ $('#save_btn').click(function (e) {
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}	            
 });  
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
 </script>
 @endsection
