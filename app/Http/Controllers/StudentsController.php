@@ -505,7 +505,7 @@ class StudentsController extends Controller
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName'));
+        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName','school'));
     }
 
     /**
