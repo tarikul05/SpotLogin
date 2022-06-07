@@ -34,16 +34,18 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Sections and prices')}}
-				</button>
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
 				</button>
-
 				@can('parameters-list')
 					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
 				@endcan
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Sections and prices')}}
+				</button>
+				
+
+				
 			</div>	
 		</nav>
 		<!-- Tabs navs -->

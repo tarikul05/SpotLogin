@@ -48,7 +48,7 @@
 				<!-- // user email check end -->
 		</div>
 
-	@if(!empty($searchEmail))
+	{{-- @if(!empty($searchEmail)) --}}
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
@@ -354,7 +354,7 @@
 				</div>
 			</div>
 		</form>
-	@endif
+	{{-- @endif --}}
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
