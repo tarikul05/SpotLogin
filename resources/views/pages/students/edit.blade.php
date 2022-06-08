@@ -906,6 +906,7 @@ function populate_student_lesson() {
 	data = '',
 	//p_person_id='832F4CB7-4596-4EFB-9C86-C6A702412E05',
 	p_person_id = document.getElementById("person_id").value,
+	school_id = document.getElementById("school_id").value,
 	p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
 	p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
 	//alert(p_year+'-'+p_month);
@@ -976,24 +977,24 @@ function populate_student_lesson() {
 								//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 								resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
 								resultHtml += '<b><td colspan="1">' + '' + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_date') + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_time') + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_duration') + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_type') + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_coach') + '</td>';
-								resultHtml += '<b><td colspan="1">' + GetAppMessage('lesson_head_lesson') + '</td>';
+								resultHtml += '<b><td colspan="1">Date</td>';
+								resultHtml += '<b><td colspan="1">Time</td>';
+								resultHtml += '<b><td colspan="1">Duration</td>';
+								resultHtml += '<b><td colspan="1">Type</td>';
+								resultHtml += '<b><td colspan="1">Coach</td>';
+								resultHtml += '<b><td colspan="1">Lesson</td>';
 								
 								//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 								if (result.no_of_teachers == 1){
 									resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td style="text-align:right" colspan="1">' + GetAppMessage('price_cap')  + '</td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 								} else {
-									resultHtml += '<b><td style="text-align:right" colspan="1">' + GetAppMessage('buy_price_cap') + '</td>';
-									resultHtml += '<b><td style="text-align:right" colspan="1">' + GetAppMessage('sell_price_cap')  + '</td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
 								}
 	
 	
-								resultHtml += '<td style="text-align:right" colspan="1">' + GetAppMessage('sextra_expenses_cap') + '</td></tr></b>';;
+								resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
 
 						}
 						resultHtml += '<tr>';
@@ -1035,7 +1036,7 @@ function populate_student_lesson() {
 						if (value.ready_flag == 0) {
 								all_ready = 0;
 								resultHtml += "<td></td>";
-								resultHtml += "<td><a id='correct_btn' href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 						} else {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
