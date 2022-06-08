@@ -17,7 +17,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Teacher Information:') }}</label>
+						<label id="page_header" name="page_header">{{ __('Teacher Information:') }} {{!empty($relationalData->nickname) ? $relationalData->nickname : ''}}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -745,6 +745,18 @@ $(document).ready(function(){
 $(function() { 
 	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
 	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
+
+
+	var vtab=getUrlVarsO()["tab"];
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_2') {
+		document.getElementById("delete_btn").style.display="none";
+		document.getElementById("save_btn").style.display="none";					
+		activaTab('tab_2');
+	}
+
 });
 
 function UploadImage() {
@@ -830,6 +842,25 @@ function DeleteProfileImage() {
 	});
 
 }
+function activaTab(tab) {
+	$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+};
+
+
+function getUrlVarsO()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	//alert(hashes);
+	for(var i = 0; i < hashes.length; i++)
+	{
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+	//Salert(vars);
+	return vars;
+}  //getUrlVarsO
 // save functionality
 // $('#save_btn').click(function (e) {
 // 		var formData = $('#add_teacher').serializeArray();

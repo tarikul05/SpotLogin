@@ -56,13 +56,15 @@
                         <td>{{ $event->teacher_name; }}</td>
                         <td>{{ $event->teacher_name; }}</td>
                         <td>{{ $event->invoice_items; }}</td>
-                       
                         <td align="center">
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
-                            href="../student/student_master.html?person_id={{ $event->person_id }}&action=edit&tab=pane_lessons" 
+                            href="{{ auth()->user()->isSuperAdmin() ? 
+                                    route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
+                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_2" 
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             View items to be invoiced</a>
                         </td>
+                        
                     
                         </td>
                     </tr>
