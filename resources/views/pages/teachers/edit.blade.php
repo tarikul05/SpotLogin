@@ -301,8 +301,12 @@
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+					
 					<input type="hidden" name="selected_month" id="selected_month" value="">
-					<input type="hidden" name="selected_year" id="selected_year" value=""> 
+					<input type="hidden" name="selected_year" id="selected_year" value="">
+					<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
+					<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
+					
 					<div class="row">
 						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
 							<div class="">
@@ -740,6 +744,54 @@ $(document).ready(function(){
 		});
 	
 	});    //contact us button click 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	$('#changer_btn').click(function(e) {
+		var p_person_id=document.getElementById("person_id").value;
+		var p_disc1 = document.getElementById('discount_perc').value;
+
+		$.ajax({
+			url: BASE_URL + '/teacher_update_discount_perc',
+			//$.ajax({
+			//url: 'insert_update_delete_teacher.php',
+			data: 'type=update_discount_perc&p_disc1=' + p_disc1+"&p_person_id="+p_person_id,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+				if (response.status == 'success')
+					successModalCall('save_confirm_message');
+			},
+			error: function(e) {
+				errorModalCall(GetAppMessage('error_message_text'));
+				// alert('Error processing your request: ' + e.responseText + ' DeleteProfileImage');
+			}
+		});
+		return false;
+
+	})
+
+
+
+
+
+
+
+
+
+
 })
 
 $(function() { 
