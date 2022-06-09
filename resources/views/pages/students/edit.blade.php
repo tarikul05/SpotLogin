@@ -15,7 +15,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Student Information:') }}</label>
+						<label id="page_header" name="page_header">{{ __('Student Information:') }} {{!empty($relationalData->nickname) ? $relationalData->nickname : ''}}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -791,6 +791,62 @@ $(function() {
 			$('#billing_province_id').val( $('#province_id option:selected').val() );
 		}
 	});
+
+
+
+
+
+
+
+
+
+
+	var saction= getUrlVarsO()["action"];
+	console.log(saction)
+	
+	//For fetching the student details
+	//document.getElementById("sperson_id").value=getUrlVarsO()["person_id"];
+	//document.getElementById("saction").value=saction;
+	//SetObjectsAccess(user_role);
+	//PopulateMonthYearList();
+	//PopulateMonthYearListForInv();
+	//Fetch_student_info();
+	//PopulateDiscountPerc();			
+	
+	var vtab=getUrlVarsO()["tab"];
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_3') {
+		document.getElementById("delete_btn").style.display="none";
+		document.getElementById("save_btn").style.display="none";					
+		activaTab('tab_3');
+	}
+	// if (document.getElementById("find_flag").value== "0"){
+	// 	document.getElementById("delete_btn").style.display="none";
+	// 	document.getElementById("save_btn").style.display="none";                
+	// }            
+	
+
+	function activaTab(tab) {
+		$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+	};
+
+
+	function getUrlVarsO()
+	{
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		//alert(hashes);
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		//Salert(vars);
+		return vars;
+	}  //getUrlVarsO
 });
 
 $('#save_btn').click(function (e) {
