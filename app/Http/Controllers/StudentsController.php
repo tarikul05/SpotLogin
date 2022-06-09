@@ -83,6 +83,7 @@ class StudentsController extends Controller
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender'); 
+        $provinces = config('global.provinces'); 
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -99,7 +100,7 @@ class StudentsController extends Controller
             // print_r($exStudent); exit;
         }
 
-        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels'));
+        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces'));
     }
 
      /**
@@ -467,7 +468,8 @@ class StudentsController extends Controller
         $alldata = $request->all();
         $schoolId = $request->route('school'); 
         $studentId = $request->route('student');
-        
+        $provinces = config('global.provinces'); 
+
         $student = Student::find($studentId);
 
         if ($user->isSuperAdmin()) {
@@ -507,7 +509,7 @@ class StudentsController extends Controller
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName'));
+        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName','provinces'));
     }
 
     /**

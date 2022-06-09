@@ -545,18 +545,9 @@
 											<div class="selectdiv">
 												<select class="form-control" id="client_province_id" name="client_province_id">
 													<option value="">Select Province</option>
-													<option value="3">Alberta</option>
-													<option value="2">British Columbia</option>
-													<option value="5">Manitoba</option>
-													<option value="10">Newfoundland &amp; Labrador</option>
-													<option value="12">Northwest territory</option>
-													<option value="8">Nova Scotia</option>
-													<option value="11">Nunavut</option>
-													<option value="6">Ontario</option>
-													<option value="9">PEI</option>
-													<option value="7">Quebec</option>
-													<option value="4">Saskatchewan</option>
-													<option value="13">Yukon</option>
+													@foreach($provinces as $key => $province)
+													<option value="{{ $key }}" {{ old('client_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@endforeach
 												</select>
 											</div>
 										</div>
@@ -639,18 +630,8 @@
 											<div class="selectdiv">
 												<select class="form-control" id="seller_province_id" name="seller_province_id">
 													<option value="">Select Province</option>
-													<option value="3">Alberta</option>
-													<option value="2">British Columbia</option>
-													<option value="5">Manitoba</option>
-													<option value="10">Newfoundland &amp; Labrador</option>
-													<option value="12">Northwest territory</option>
-													<option value="8">Nova Scotia</option>
-													<option value="11">Nunavut</option>
-													<option value="6">Ontario</option>
-													<option value="9">PEI</option>
-													<option value="7">Quebec</option>
-													<option value="4">Saskatchewan</option>
-													<option value="13">Yukon</option>
+													@foreach($provinces as $key => $province)
+													<option value="{{ $key }}" {{ old('seller_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
 												</select>
 											</div>
 										</div>
@@ -750,18 +731,9 @@
 												<div class="selectdiv">
 													<select class="form-control" id="seller_province_id" name="seller_province_id">
 														<option value="">Select Province</option>
-														<option value="3">Alberta</option>
-														<option value="2">British Columbia</option>
-														<option value="5">Manitoba</option>
-														<option value="10">Newfoundland &amp; Labrador</option>
-														<option value="12">Northwest territory</option>
-														<option value="8">Nova Scotia</option>
-														<option value="11">Nunavut</option>
-														<option value="6">Ontario</option>
-														<option value="9">PEI</option>
-														<option value="7">Quebec</option>
-														<option value="4">Saskatchewan</option>
-														<option value="13">Yukon</option>
+														@foreach($provinces as $key => $province)
+														<option value="{{ $key }}" {{ old('seller_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+														@endforeach
 													</select>
 												</div>
 											</div>

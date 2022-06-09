@@ -85,6 +85,7 @@ class TeachersController extends Controller
 
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
+        $provinces = config('global.provinces'); 
         $exTeacher = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -95,7 +96,7 @@ class TeachersController extends Controller
         $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
 
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices'));
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices','provinces'));
     }
 
      /**
@@ -185,6 +186,7 @@ class TeachersController extends Controller
                         'zip_code' => $alldata['zip_code'],
                         'place' => $alldata['place'],
                         'country_code' => $alldata['country_code'],
+                        'province_id' => $alldata['province_id'],
                         'phone' => $alldata['phone'],
                         'mobile' => $alldata['mobile'],
                     ];
@@ -317,7 +319,7 @@ class TeachersController extends Controller
         $user = Auth::user();
         $schoolId = $request->route('school'); 
         $teacherId = $request->route('teacher');
-
+        $provinces = config('global.provinces'); 
         $teacher = Teacher::find($teacherId);
 
         if ($user->isSuperAdmin()) {
@@ -368,7 +370,7 @@ class TeachersController extends Controller
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice','provinces'));
     }
 
     /**
@@ -406,6 +408,7 @@ class TeachersController extends Controller
                 'zip_code' => $alldata['zip_code'],
                 'place' => $alldata['place'],
                 'country_code' => $alldata['country_code'],
+                'province_id' => $alldata['province_id'],
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
             ];

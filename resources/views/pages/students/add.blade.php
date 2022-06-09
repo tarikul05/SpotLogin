@@ -312,24 +312,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -385,24 +376,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -581,6 +563,28 @@ $('.box_img i.fa.fa-close').click(function (e) {
 	 document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
 	$('#profile_image i.fa.fa-plus').show();
 	$('#profile_image i.fa.fa-close').hide();
+})
+
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
+
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
 })
 </script>
 @endsection

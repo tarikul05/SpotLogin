@@ -104,14 +104,31 @@
       2  => 'Professor',
       9  => 'School',
     ],
+
     'payment_status' =>[
       0  => 'Unpaid',
       1 =>'Paid'
     ],
+
     'invoice_status' =>[
       1  => 'Creation',
       10 =>'Issued or Approved',
       100 =>'Paid'
+    ],
+
+    'provinces' =>[
+      3  => 'Alberta',
+      2 =>'British Columbia',
+      5  => 'Manitoba',
+      10  => 'Newfoundland Labrador',
+      12 => 'Northwest territory',
+      8  => 'Nova Scotia',
+      11 => 'Nunavut',
+      6  => 'Ontario',
+      9  => 'PEI',
+      7  => 'Quebec',
+      4  => 'Saskatchewan',
+      13 => 'Yukon'
     ],
     
   ];
