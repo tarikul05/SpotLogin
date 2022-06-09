@@ -54,6 +54,16 @@ Route::post('pay_reminder_email_fetch', [App\Http\Controllers\InvoiceController:
 //email-fetch pay reminder AJAX
 Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailSend'])->name('pay_reminder_email_send.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+//AJAX get student lessons for invoice
+Route::post('get_student_lessons', [App\Http\Controllers\InvoiceController::class, 'getStudentLessons'])->name('get_student_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+//AJAX get student lessons for invoice
+Route::post('get_teacher_lessons', [App\Http\Controllers\InvoiceController::class, 'getTeacherLessons'])->name('get_teacher_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+
+//AJAX update teacher discount
+Route::post('teacher_update_discount_perc', [App\Http\Controllers\TeachersController::class, 'updateDiscountPerc'])->name('teacher_update_discount_perc.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 
 // email template  AJAX
 Route::get('/template_variables', [App\Http\Controllers\EmailTemplateController::class, 'templateVariables'])->name('email.template_variables');
