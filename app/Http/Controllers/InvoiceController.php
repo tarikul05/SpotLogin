@@ -386,8 +386,8 @@ class InvoiceController extends Controller
     public function teacher_invoice_list(Request $request,$schoolId = null)
     {
         $user = $request->user();
-        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($this->schoolId);
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
@@ -640,10 +640,14 @@ class InvoiceController extends Controller
 
 
             $studentEvents = DB::table('events')
-            ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
-            ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
-            ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+            ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+            ->leftJoin('teachers', 'teachers.id', '=', 'events.teacher_id')
+            ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
+            
+            ->leftJoin('users', 'users.person_id', '=', 'events.teacher_id')
+            ->leftJoin('schools', 'schools.id', '=', 'events.school_id')
+            
             ->select(
                 'events.id as event_id',
                 //'DATE_FORMAT(str_to_date(concat('01/',month(events.date_start),'/',year(events.date_start)),'%d/%m/%Y'),"%d/%m/%Y") as FirstDay', 
@@ -657,8 +661,8 @@ class InvoiceController extends Controller
                 'events.duration_minutes as duration_minutes',
                 'event_details.buy_total as buy_total',
                 'event_details.sell_total as sell_total',
-                'school_student.nickname as student_name',
-                'school_teacher.nickname as teacher_name',
+                //'students.nickname as student_name',
+                //'teachers.nickname as teacher_name',
                 'events.title as title',
                 'events.event_type as event_type',
                 'events.event_category as category_id',
@@ -676,58 +680,67 @@ class InvoiceController extends Controller
                 
                 // 'users.profile_image_id as profile_image_id'
                 )
+            ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name") 
+            ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name") 
             ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
             ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
             ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
             ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
             ->selectRaw('week(events.date_start,5) week_no')
             ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
-            
             //->selectRaw('count(events.id) as invoice_items')
             ->where(
                 [
                     //date(date_start) between str_to_date(p_billing_period_start_date,'%d/%m/%Y')
                     //and str_to_date(p_billing_period_end_date,'%d/%m/%Y')
                     //'event_details.teacher_id'=>$this->schoolId, 
-                    'event_details.teacher_id'=>$p_person_id, 
-                    'event_details.billing_method' => "E",
+                    'events.teacher_id'=>$p_person_id, 
+                    'event_categories.invoiced_type' => "S",
+                    //'event_details.billing_method' => "E",
                     'events.is_active' => 1
                 ]);
+            $studentEvents->where('events.is_paying','>', 0);
+            $studentEvents->where('event_details.visibility_id','>', 0);
+            $studentEvents->whereNotIn('events.event_type',[100]);
+            $studentEvents->whereNotNull('events.date_start');
+
+            
             
             $user_role = 'superadmin';
            // dd($user);
-            if ($user->person_type == 'App\Models\Student') {
-                $user_role = 'student';
-            }
-            if ($user->person_type == 'App\Models\Teacher') {
-                $user_role = 'teacher';
-                $studentEvents->where('events.teacher_id', $user->person_id);
-            }
+           
 
-            $studentEvents->where(function ($query) {
-                $query->where('event_details.is_sell_invoiced', '=', 0)
-                    ->orWhereNull('event_details.is_sell_invoiced');
-                }
-            );
+            // $studentEvents->where(function ($query) {
+            //     $query->where('event_details.is_sell_invoiced', '=', 0)
+            //         ->orWhereNull('event_details.is_sell_invoiced');
+            //     }
+            // );
             
-            $dateS = Carbon::now()->startOfMonth()->subMonth(3)->format('Y-m-d');
             
 
             // and date(date_start) between str_to_date(p_billing_period_start_date,'%d/%m/%Y') 
 		    // and str_to_date(p_billing_period_end_date,'%d/%m/%Y')
 
-
             
-            $studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
+            // $p_billing_period_start_date ='2022-05-01';
+            // $p_billing_period_end_date = '2022-06-09';
+            //->whereRaw('email like "%a%"')
+            $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '".$p_billing_period_start_date."' AND '".$p_billing_period_end_date."'";
+            // exit();
+            //$studentEvents->whereRaw("( DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'d%/%m/%Y') BETWEEN '".$p_billing_period_start_date."' AND '".$p_billing_period_end_date."' )");
+            $studentEvents->whereRaw($qq);
+
+            //$studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
                 
 
             //$studentEvents->where('events.date_start', '>=', $dateS);
             $studentEvents->orderBy('events.date_start','desc');
             //By
             $studentEvents->distinct('events.id');
-            $data = $studentEvents->get();
+            
             //$studentEvents->groupBy('events.id');
             //dd($studentEvents->toSql());
+            $data = $studentEvents->get();
             //dd($data);
 
             $result = array(
