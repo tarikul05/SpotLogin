@@ -601,6 +601,142 @@ class InvoiceController extends Controller
     }
 
 
+    /**
+     *  AJAX action to get student lessons
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-06-07
+     */
+    public function getTeacherLessons(Request $request)
+    {
+        $user = $request->user();
+        
+
+        $result = array(
+            'status' => false,
+            'message' => __('failed to get lesson data'),
+        );
+        //$no_of_teachers = $school->max_teachers;
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_person_id=trim($data['p_person_id']);
+            $p_billing_period_start_date=trim($data['p_billing_period_start_date']);
+            $p_billing_period_end_date=trim($data['p_billing_period_end_date']);
+            //exit();
+
+
+            $studentEvents = DB::table('events')
+            ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
+            ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+            ->select(
+                'events.id as event_id',
+                //'DATE_FORMAT(str_to_date(concat('01/',month(events.date_start),'/',year(events.date_start)),'%d/%m/%Y'),"%d/%m/%Y") as FirstDay', 
+                //'date_format(first_day(events.date_start),"%d/%m/%Y") as FirstDay',
+				//'date_format(last_day(events.date_start),"%d/%m/%Y") as Lastday',
+                // 'concat("Semaine ",week(events.date_start,5)) as week_name', 
+                // 'week(events.date_start,5) week_no',
+                // 'DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start', 
+                // 'DATE_FORMAT(events.date_start,"%H:%i") time_start',
+                
+                'events.duration_minutes as duration_minutes',
+                'event_details.buy_total as buy_total',
+                'event_details.sell_total as sell_total',
+                'school_student.nickname as student_name',
+                'school_teacher.nickname as teacher_name',
+                'events.title as title',
+                'events.event_type as event_type',
+                'events.event_category as category_id',
+                //'events.event_category as category_name',
+                'events.is_paying as is_paying',
+                //'events.price_id as price_id',
+                'event_details.is_locked as ready_flag',
+                'event_details.participation_id as participation_id',
+                'event_details.is_buy_invoiced as is_buy_invoiced',
+                'event_details.is_sell_invoiced as is_sell_invoiced',
+                'event_details.price_currency as price_currency',
+                'event_details.costs_1 as costs_1',
+                'event_details.costs_2 as costs_2'
+                //'events.is_locked as ready_flag'
+                
+                // 'users.profile_image_id as profile_image_id'
+                )
+            ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
+            ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
+            ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
+            ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+            ->selectRaw('week(events.date_start,5) week_no')
+            ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
+            
+            //->selectRaw('count(events.id) as invoice_items')
+            ->where(
+                [
+                    //date(date_start) between str_to_date(p_billing_period_start_date,'%d/%m/%Y')
+                    //and str_to_date(p_billing_period_end_date,'%d/%m/%Y')
+                    //'event_details.teacher_id'=>$this->schoolId, 
+                    'event_details.teacher_id'=>$p_person_id, 
+                    'event_details.billing_method' => "E",
+                    'events.is_active' => 1
+                ]);
+            
+            $user_role = 'superadmin';
+           // dd($user);
+            if ($user->person_type == 'App\Models\Student') {
+                $user_role = 'student';
+            }
+            if ($user->person_type == 'App\Models\Teacher') {
+                $user_role = 'teacher';
+                $studentEvents->where('events.teacher_id', $user->person_id);
+            }
+
+            $studentEvents->where(function ($query) {
+                $query->where('event_details.is_sell_invoiced', '=', 0)
+                    ->orWhereNull('event_details.is_sell_invoiced');
+                }
+            );
+            
+            $dateS = Carbon::now()->startOfMonth()->subMonth(3)->format('Y-m-d');
+            
+
+            // and date(date_start) between str_to_date(p_billing_period_start_date,'%d/%m/%Y') 
+		    // and str_to_date(p_billing_period_end_date,'%d/%m/%Y')
+
+
+            
+            $studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
+                
+
+            //$studentEvents->where('events.date_start', '>=', $dateS);
+            $studentEvents->orderBy('events.date_start','desc');
+            //By
+            $studentEvents->distinct('events.id');
+            $data = $studentEvents->get();
+            //$studentEvents->groupBy('events.id');
+            //dd($studentEvents->toSql());
+            //dd($data);
+
+            $result = array(
+                'status' => true,
+                'message' => __('We got a list of invoice'),
+                'data' => $data,
+                //'no_of_teachers' =>$no_of_teachers
+            );
+
+            //$p_auto_id = trim($data['p_auto_id']);
+            return response()->json($result);
+        }
+        catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+        
+    }
+
+
 
 
 

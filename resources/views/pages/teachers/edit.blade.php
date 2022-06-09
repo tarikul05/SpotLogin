@@ -2,6 +2,7 @@
 
 @section('head_links')
 <!-- datetimepicker -->
+<script src="{{ asset('js/datetimepicker-lang/moment-with-locales.js')}}"></script>
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <!-- color wheel -->
@@ -62,7 +63,8 @@
 					@csrf
 					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
-					
+					<input type="hidden" id="smonth" name="smonth" value="0">
+					<input type="hidden" id="syear" name="syear" value="0">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -646,6 +648,7 @@
 
 @section('footer_js')
 <script type="text/javascript">
+	var saction = getUrlVarsO()["action"];
 $(document).ready(function(){
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -666,7 +669,9 @@ $(document).ready(function(){
 		maxView: 3,
 		viewSelect: 3,
 		todayBtn:false,
+		defaultDate:  moment().subtract(1, 'months').startOf('month')
 	});
+	$('#billing_period_start_date').val(moment().subtract(1, 'months').startOf('month').format('DD/MM/YYYY'));
 	$("#billing_period_end_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -676,7 +681,9 @@ $(document).ready(function(){
 		maxView: 3,
 		viewSelect: 3,
 		todayBtn:false,
+		defaultDate: moment()
 	});
+	$('#billing_period_end_date').val(moment().format('DD/MM/YYYY'));
 	CKEDITOR.replace( "body_text", {
 		customConfig: '/ckeditor/config_email.js',
 		height: 300
@@ -783,9 +790,11 @@ $(document).ready(function(){
 
 	})
 
+	populate_teacher_lesson();
 
-
-
+	$('#billing_period_search_btn').on('click', function() {
+		populate_teacher_lesson(); //refresh lesson details for billing	
+	});
 
 
 
@@ -913,6 +922,199 @@ function getUrlVarsO()
 	//Salert(vars);
 	return vars;
 }  //getUrlVarsO
+
+function populate_teacher_lesson() {
+	var record_found = 0,
+	all_ready = 1,
+	total_buy = 0,
+	total_sell = 0,
+	week_total_buy = 0,
+	week_total_sell = 0,
+	cost_1 = 0.00,
+	cost_2 = 0.00,
+	prev_week = '',
+	data = '',
+	p_person_id = document.getElementById("person_id").value,
+	p_month = document.getElementById("smonth").value,
+	p_year = document.getElementById("syear").value,
+	p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
+	p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
+
+	var disc_caption = 'DISC';
+	var disc_caption_disp = '';
+	var week_caption = 'week';
+	var month_caption = 'month';
+	var sub_total_caption = 'sub_total';
+
+
+	var invoice_already_generated = 0,
+		person_type = 'teacher_lessons';
+
+	var disc1_amt = 0;
+
+	var resultHtml = '',
+		resultHtmlHeader = '',
+		resultHtmlFooter = '',
+		resultHtmlDetails = '';
+	//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
+	data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date;
+
+	$.ajax({
+		url: BASE_URL + '/get_teacher_lessons',
+		//url: '../teacher/teacher_events_data.php',
+		data: data,
+		type: 'POST',
+		dataType: 'json',
+		async: false,
+		success: function(result) {
+			$.each(result, function(key, value) {
+				record_found += 1;
+
+
+				// week summary
+				if ((prev_week != '') && (prev_week != value.week_name)) {
+					resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+					resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+					//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
+					resultHtml += '</tr>'
+					week_total_buy = 0;
+					week_total_sell = 0;
+				}
+
+				if (prev_week != value.week_name) {
+					//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</td></tr></b>';
+					resultHtml += '<b><tr class="course_week_header"><td colspan="5">' + week_caption + ' ' + value.week_no + '</td>';
+					//resultHtml+='<td colspan="2" style="text-align:right">'+value.price_currency+'</td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + '' + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
+				}
+				resultHtml += '<tr>';
+				resultHtml += '<td width="10%">' + value.date_start + '</td>';
+				resultHtml += '<td>' + value.time_start + '</td>';
+				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
+				resultHtml += '<td>' + value.title + '</td>';
+				resultHtml += '<td>' + value.student_name + '</td>';
+				resultHtml += '<td>' + value.price_name + '</td>';
+
+				// all_ready = 0 means not ready to generate invoice
+				if (value.ready_flag == "0") {
+					all_ready = 0;
+					//resultHtml+="<td></td>";
+					resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Corriger</a>";
+				} else {
+					resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+					//resultHtml+='<td style="text-align:right">'+value.sell_total+'</td>';
+				}
+				if (value.costs_1 != 0) {
+					resultHtml += '<td style="text-align:right">' + value.costs_1 + '</td>';
+				} else {
+					resultHtml += '<td style="text-align:right"></td>';
+				}
+
+				resultHtml += '</tr>';
+				total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
+				//total_sell+=parseFloat(value.sell_total);
+				week_total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
+				//week_total_sell+=parseFloat(value.sell_total);
+
+				prev_week = value.week_name;
+				// for teacher
+				if (value.is_buy_invoiced != 0) {
+					invoice_already_generated = 1;
+				}
+			}); //for each record
+		}, // success
+		error: function(ts) {
+			errorModalCall(GetAppMessage('invalid_person_id'));
+			//   alert(ts.responseText + ' populate_teacher_lesson')
+		}
+	}); // Ajax
+	if (record_found > 0) {
+
+		// summary for last week of course records
+		if ((week_total_buy > 0) || (week_total_sell > 0)) {
+			resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+			resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+			//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
+			resultHtml += '</tr>'
+			week_total_buy = 0;
+			week_total_sell = 0;
+		}
+
+		// display grand total
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
+		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';    
+		resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+		resultHtml += '</tr>'
+
+
+		var disc1_perc = 0;
+		var amt_for_disc = 0.00;
+		amt_for_disc = Number(total_buy);
+		disc1_perc = document.getElementById("discount_perc").value;
+
+		if (Number(disc1_perc) > 0) {
+			disc1_amt = ((amt_for_disc * disc1_perc) / 100);
+		}
+		//Retenue de 10% sur tranche 0.00 à 0.00 soit -0.00
+		if (disc1_amt > 0) {
+			disc_caption_disp = disc_caption;
+			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_DISC_PERC~~]", disc1_perc);
+			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_FROM~~]", '0.00');
+			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_TO~~]", '0.00');
+			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_AMOUNT~~]", disc1_amt.toFixed(2));
+			resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+			//resultHtml+='<tr><td colspan="8">Réduction de '+disc1_perc+'% sur tranche 0.00 à 0.00 soit -'+disc1_amt.toFixed(2)+'</tr>';
+		}
+
+		total_disc = disc1_amt;
+		total_buy = total_buy - total_disc;
+
+		if (total_disc > 0) {
+			resultHtml += '<tr><td colspan="4">';
+			//resultHtml+='<td colspan="2">Montant total de la réduction:';
+			resultHtml += '<td colspan="2"><strong>total_deduction_caption</strong></td>';
+			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
+		}
+
+		// display grand total
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+		resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
+		resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
+		resultHtml += '</tr>'
+
+		//display grand total
+		$('#lesson_table').html(resultHtml);
+		//alert(all_ready);
+		if (all_ready == 1) {
+			if (invoice_already_generated == 1) {
+				document.getElementById("lesson_footer_div").style.display = "none";
+			} else {
+				document.getElementById('lesson_footer_div').className = "alert alert-info";
+				document.getElementById("lesson_footer_div").style.display = "block";
+				document.getElementById("btn_convert_invoice").style.display = "block";
+				document.getElementById("verify_label_id").style.display = "none";
+			}
+		} else {
+			document.getElementById('lesson_footer_div').className = "alert alert-danger";
+			document.getElementById("lesson_footer_div").style.display = "block";
+			document.getElementById("btn_convert_invoice").style.display = "none";
+			document.getElementById("verify_label_id").style.display = "block";
+		}
+
+	} //found records
+	else {
+		resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12"></td></tr></tbody>';
+		$('#lesson_table').html(resultHtml);
+		document.getElementById("lesson_footer_div").style.display = "none";
+	}
+} // populate_teacher_lesson
+
+
 // save functionality
 // $('#save_btn').click(function (e) {
 // 		var formData = $('#add_teacher').serializeArray();
