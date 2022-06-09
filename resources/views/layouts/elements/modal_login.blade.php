@@ -168,7 +168,7 @@ $(document).ready(function() {
             //successModalCall("{{ __('Logged In Successfully') }}");
             
             setTimeout(function() {
-              window.location.href = "../teachers";
+              window.location.href = data.login_url;
             }, 1000);
 
 

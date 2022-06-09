@@ -167,10 +167,16 @@
 									</div>
 								</div>
 								<div class="form-group row" id="profile_image">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : *</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : </label>
 									<div class="col-sm-7">
-										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" onchange="preview()" style="display:none">
-										<label for="profile_image_file"><img src="{{ asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin"></label>
+										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" style="display:none">
+										<span class="box_img">
+											<label for="profile_image_file" class="profile_img_area">
+											<img src="{{ asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin">
+											<i class="fa fa-plus"></i>
+											</label>
+											<i class="fa fa-close" style="display:none"></i>
+										</span>
 									</div>
 								</div>
 							</div>
@@ -184,7 +190,8 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="level_id">{{__('Level') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control m-bot15" required="true" id="level_id" name="level_id">
+												<select class="form-control m-bot15" id="level_id" name="level_id">
+													<option value="">Select level</option>
 													@foreach($levels as $key => $level)
 														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
 													@endforeach
@@ -274,6 +281,12 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street2" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="zip_code" value="{{ $exStudent ? $exStudent->zip_code : '' }}" {{ $exStudent ? 'disabled' : '' }} name="zip_code" value="{{old('zip_code')}}" type="text">
@@ -299,24 +312,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -372,24 +376,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -397,7 +392,7 @@
 						</div>
 					</div>
 					<div class="section_header_class">
-						<label id="address_caption">{{__('Contact information') }}</label>
+						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -513,7 +508,9 @@ $(function() {
 
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
+			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
+			$('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
 			$('#billing_country_code').val( $('#country_code option:selected').val() );
@@ -521,55 +518,73 @@ $(function() {
 		}
 	});
 
-	// $('#save_btn').click(function (e) {
-	// 	var formData = $('#add_student').serializeArray();
-	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-	// 	var error = '';
-	// 	$( ".form-control.require" ).each(function( key, value ) {
-	// 		var lname = $(this).val();
-	// 		if(lname=='' || lname==null || lname==undefined){
-	// 			$(this).addClass('error');
-	// 			error = 1;
-	// 		}else{
-	// 			$(this).removeClass('error');
-	// 			error = 0;
-	// 		}
-	// 	});
-	// 	formData.push({
-	// 		"name": "_token",
-	// 		"value": csrfToken,
-	// 	});
-	// 	if(error < 1){	
-	// 		$.ajax({
-	// 			url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-	// 			data: formData,
-	// 			type: 'POST',
-	// 			dataType: 'json',
-	// 			beforeSend: function( xhr ) {
-	// 			    $("#pageloader").show();
-	// 			 },
-	// 			success: function(response){	
-	// 				if(response.status == 1){
-	// 					$('#modal_add_teacher').modal('show');
-	// 					$("#modal_alert_body").text(response.message);
-	// 				}
-	// 			},
-	// 			complete: function( xhr ) {
-	// 			    $("#pageloader").hide();
-	// 			}
-	// 		})
-	// 	}else{
-	// 		$('#modal_add_teacher').modal('show');
-	// 		$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-	// 	}	            
-	// });  
+	$('#save_btn').click(function (e) {
+		var formData = $('#add_student').serializeArray();
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var error = '';
+		$( ".form-control.require" ).each(function( key, value ) {
+			var lname = $(this).val();
+			if(lname=='' || lname==null || lname==undefined){
+				$(this).addClass('error');
+				error = 1;
+			}else{
+				$(this).removeClass('error');
+				error = 0;
+			}
+		});
+		formData.push({
+			"name": "_token",
+			"value": csrfToken,
+		});
+		if(error < 1){	
+			return true;
+		}else{
+			return false;
+		}	            
+	});  
 
 
 });
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
 
-function preview() {
-	frame.src = URL.createObjectURL(event.target.files[0]);
-}
+
+$('#profile_image_file').change(function(e) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById("frame").src = e.target.result;
+  };
+  reader.readAsDataURL(this.files[0]);
+  	$('#profile_image i.fa.fa-plus').hide();
+	$('#profile_image i.fa.fa-close').show();
+});
+
+
+$('.box_img i.fa.fa-close').click(function (e) {
+	 document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
+	$('#profile_image i.fa.fa-plus').show();
+	$('#profile_image i.fa.fa-close').hide();
+})
+
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
+
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
+})
 </script>
 @endsection

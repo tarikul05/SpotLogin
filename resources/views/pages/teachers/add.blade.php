@@ -48,7 +48,7 @@
 				<!-- // user email check end -->
 		</div>
 
-	@if(!empty($searchEmail))
+	{{-- @if(!empty($searchEmail)) --}}
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
@@ -212,6 +212,19 @@
 											</div>
 										</div>
 									</div>
+									<div id="province_id_div" class="form-group row" style="display:none">
+										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" id="province_id" name="province_id">
+													<option value="">Select Province</option>
+													@foreach($provinces as $key => $province)
+														<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="clearfix"></div>
@@ -341,7 +354,7 @@
 				</div>
 			</div>
 		</form>
-	@endif
+	{{-- @endif --}}
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -444,5 +457,15 @@ $('#save_btn').click(function (e) {
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}	            
 });  
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
 </script>
 @endsection

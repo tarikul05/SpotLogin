@@ -152,12 +152,25 @@
 									</div>
 								</div>
 								<div class="form-group row" id="profile_image">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : *</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : </label>
 									<div class="col-sm-7">
-										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" onchange="preview()" style="display:none">
-										<label for="profile_image_file"><img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin"></label>
+										<input class="form-control" type="file" accept="image/*" id="profile_image_file" name="profile_image_file" style="display:none">
+										<span class="box_img">
+											<label for="profile_image_file" class="profile_img_area">
+											<img src="{{ isset($profile_image->path_name) ? $profile_image->path_name : asset('img/default_profile_image.png') }}"  id="frame" width="150px" alt="SpotLogin">
+											@if(empty($profile_image->path_name))
+											<i class="fa fa-plus"></i>
+											@endif
+											<i class="fa fa-plus" style="display:none"></i>
+											</label>
+											@if(!empty($profile_image->path_name))
+											<i class="fa fa-close"></i>
+											@endif
+											<i class="fa fa-close" style="display:none"></i>
+										</span>
 									</div>
 								</div>
+
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -170,6 +183,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
+													<option value="">Select level</option>
 													@foreach($levels as $key => $level)
 														<option value="{{ $level->id }}"  {{ ($relationalData->level_id == $level->id) ? 'selected' : ''}}>{{ $level->title }}</option>
 													@endforeach
@@ -259,6 +273,12 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
+								<div class="col-sm-7">
+									<input class="form-control" id="street2" name="street2" value="{{!empty($student->street2) ? old('street2', $student->street2) : old('street2')}}" type="text">
+								</div>
+							</div>
+							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="zip_code" name="zip_code" value="{{!empty($student->zip_code) ? old('zip_code', $student->zip_code) : old('zip_code')}}" type="text">
@@ -290,19 +310,9 @@
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											<option value="3" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '3' ? 'selected' : '') : (old('province_id') == '3' ? 'selected' : '')}}>Alberta</option>
-											<option value="2" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '2' ? 'selected' : '') : (old('province_id') == '2' ? 'selected' : '')}}>British Columbia</option>
-											<option value="5" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '5' ? 'selected' : '') : (old('province_id') == '5' ? 'selected' : '')}}>Manitoba</option>
-											<option value="10" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '10' ? 'selected' : '') : (old('province_id') == '10' ? 'selected' : '')}}>Newfoundland &amp; Labrador</option>
-											<option value="12" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '12' ? 'selected' : '') : (old('province_id') == '12' ? 'selected' : '')}}>Northwest territory</option>
-											<option value="8" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '8' ? 'selected' : '') : (old('province_id') == '8' ? 'selected' : '')}}>Nova Scotia</option>
-											<option value="11" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '11' ? 'selected' : '') : (old('province_id') == '11' ? 'selected' : '')}}>Nunavut</option>
-											<option value="6" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '6' ? 'selected' : '') : (old('province_id') == '6' ? 'selected' : '')}}>Ontario</option>
-											<option value="9" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '9' ? 'selected' : '') : (old('province_id') == '9' ? 'selected' : '')}}>PEI</option>
-											<option value="7" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '7' ? 'selected' : '') : (old('province_id') == '7' ? 'selected' : '')}}>Quebec</option>
-											<option value="4" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '4' ? 'selected' : '') : (old('province_id') == '4' ? 'selected' : '')}}>Saskatchewan</option>
-											<option value="13" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == '13' ? 'selected' : '') : (old('province_id') == '13' ? 'selected' : '')}}>Yukon</option>
-										
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $key ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -383,7 +393,7 @@
 						</div>
 					</div>
 					<div class="section_header_class">
-						<label id="address_caption">{{__('Contact information') }}</label>
+						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -790,38 +800,20 @@ $(document).ready(function(){
 		});
 	
 	});    //contact us button click 
-
-	$('#save_btn').click(function (e) {
-		var x = document.getElementsByClassName("tab-pane active");
-		var studentForm = document.getElementById("add_student");
-		var studentUserForm = document.getElementById("studentUserForm");
-		console.log(studentUserForm);
-		if (x[0].id == "tab_3") {
-			studentUserForm.submit();
-		} else{
-			studentForm.submit();
-		} 
-	});
 });
 
 $(function() {
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
+			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
+			$('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
+			$('#billing_country_code').val( $('#country_code option:selected').val() );
+			$('#billing_province_id').val( $('#province_id option:selected').val() );
 		}
 	});
-
-
-
-
-
-
-
-
-
-
 	var saction= getUrlVarsO()["action"];
 	console.log(saction)
 	
@@ -833,7 +825,7 @@ $(function() {
 	//PopulateMonthYearListForInv();
 	//Fetch_student_info();
 	//PopulateDiscountPerc();			
-	
+
 	var vtab=getUrlVarsO()["tab"];
 	if (typeof vtab === "undefined") {
 		vtab='';
@@ -850,6 +842,62 @@ $(function() {
 	// 	document.getElementById("save_btn").style.display="none";                
 	// }            
 	
+
+	
+
+
+
+	$('#billing_period_search_btn').on('click', function() {   
+		// document.getElementById("smonth").value = data_month;
+		// document.getElementById("syear").value = data_year;
+		populate_student_lesson(); // refresh lesson details for billing
+
+	});
+});
+
+$('#save_btn').click(function (e) {
+	var formData = $('#add_student').serializeArray();
+	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	var error = '';
+	$( ".form-control.require" ).each(function( key, value ) {
+		var lname = $(this).val();
+		if(lname=='' || lname==null || lname==undefined){
+			$(this).addClass('error');
+			error = 1;
+		}else{
+			$(this).removeClass('error');
+			error = 0;
+		}
+	});
+	
+	
+
+
+
+
+
+
+
+
+	formData.push({
+		"name": "_token",
+		"value": csrfToken,
+	});
+	if(error < 1){	
+		var x = document.getElementsByClassName("tab-pane active");
+		var studentForm = document.getElementById("add_student");
+		var studentUserForm = document.getElementById("studentUserForm");
+		if (x[0].id == "tab_3") {
+			studentUserForm.submit();
+		} else{
+			studentForm.submit();
+		} 
+	}else{
+		return false;
+	}	            
+}); 
+
+
 
 	function activaTab(tab) {
 		$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
@@ -872,431 +920,435 @@ $(function() {
 	}  //getUrlVarsO
 
 
+	function populate_student_lesson() {
+		//alert('populate_student_lesson method');
+		// var user_role = document.getElementById("user_role").value;
+		// //alert(user_role);
+		// //(user_role =='teacher') || 
+		// if ((user_role == 'student')) {
+		// 		return false;
+		// }
+		var costs_1 = 0.00;
+		var record_found = 0,
+		all_ready = 1,
+		total_buy = 0,
+		total_sell = 0,
+		week_total_buy = 0,
+		week_total_sell = 0,
+		total_disc = 0.00,
+		prev_week = '',
+		data = '',
+		//p_person_id='832F4CB7-4596-4EFB-9C86-C6A702412E05',
+		p_person_id = document.getElementById("person_id").value,
+		school_id = document.getElementById("school_id").value,
+		p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
+		p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
+		//alert(p_year+'-'+p_month);
 
-	$('#billing_period_search_btn').on('click', function() {   
-		// document.getElementById("smonth").value = data_month;
-		// document.getElementById("syear").value = data_year;
-		populate_student_lesson(); // refresh lesson details for billing
+		if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
+				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
+				$('#lesson_table').html(resultHtml);
+				document.getElementById("lesson_footer_div").style.display = "none";
+				return false;
+		}
 
+		var invoice_already_generated = 0,
+		person_type = 'student_lessons',
+		selected_items = 0;
+
+		var disc1_amt = 0,
+		disc2_amt = 0,
+		disc3_amt = 0,
+		disc4_amt = 0,
+		disc5_amt = 0,
+		disc6_amt = 0;
+
+		var correct_btn_text = 'Validate';
+
+		var resultHtml = '',
+		resultHtmlHeader = '',
+		resultHtmlFooter = '',
+		resultHtmlDetails = '';
+		var amount_for_disc=0.00;
+		var disc_caption = 'DESC';
+		var disc_caption_disp = '';
+		var week_caption = 'Weekly';
+		var month_caption = 'Monthly';
+		var sub_total_caption = 'Sub Total';
+
+
+		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
+		data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
+		console.log(data);
+		$.ajax({
+			url: BASE_URL + '/get_student_lessons',
+			//url: '../student/student_events_data.php',
+			data: data,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(result) {
+					$.each(result.data, function(key, value) {
+							record_found += 1;
+							// week summary
+							if ((prev_week != '') && (prev_week != value.week_name)) {
+									resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+									resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+									// alert('no_of_teachers='+no_of_teachers);
+									if (no_of_teachers == 1){
+											resultHtml += '<td style="text-align:right"></td>';
+									}else {
+											resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+									}
+		
+									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
+									resultHtml += '</tr>'
+									week_total_buy = 0;
+									week_total_sell = 0;
+							}
+
+							if (prev_week != value.week_name) {
+									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
+									resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td>';
+									resultHtml += '<b><td colspan="1">Date</td>';
+									resultHtml += '<b><td colspan="1">Time</td>';
+									resultHtml += '<b><td colspan="1">Duration</td>';
+									resultHtml += '<b><td colspan="1">Type</td>';
+									resultHtml += '<b><td colspan="1">Coach</td>';
+									resultHtml += '<b><td colspan="1">Lesson</td>';
+									
+									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
+									if (result.no_of_teachers == 1){
+										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
+									} else {
+										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+									}
+		
+		
+									resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+
+							}
+							resultHtml += '<tr>';
+
+							resultHtml += '<td style="display:none;">' + value.event_id + '</td>';
+
+							if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
+									selected_items += 1;
+									resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+							} else {
+									resultHtml += "<td>-</td>";
+							}
+
+							//below locked and invoiced
+							resultHtml += "<td>";
+							if (value.ready_flag == 1) {
+									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+							}
+							//if (value.is_sell_invoiced > 0) {
+									//comments as Kim as per Sportlogin Before the app.doc
+									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
+							//}
+							resultHtml += "</td>";
+							//above locked and invoiced
+
+							resultHtml += '<td width="10%">' + value.date_start + '</td>';
+							if (value.duration_minutes == 0) {
+								resultHtml += '<td style="text-align:center" colspan="2">' + GetAppMessage('allday_event_caption') + '</td>';
+							}else {
+								resultHtml += '<td>' + value.time_start + '</td>';
+								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
+							}
+							resultHtml += '<td>' + value.title + '</td>';
+							resultHtml += '<td>' + value.teacher_name + '</td>';
+							resultHtml += '<td></td>';
+
+							// all_ready = 0 means not ready to generate invoice
+							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
+							if (value.ready_flag == 0) {
+									all_ready = 0;
+									resultHtml += "<td></td>";
+									resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+							} else {
+									if (no_of_teachers == 1){
+											resultHtml += '<td style="text-align:right"></td>';
+									}else {
+											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+									}
+															
+									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
+							}
+
+							costs_1 = parseFloat(value.costs_1);
+							if (value.costs_1 != 0) {
+									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
+							} else {
+									resultHtml += '<td style="text-align:right"></td>';
+							}
+							resultHtml += '</tr>';
+							total_buy += parseFloat(value.buy_total);
+							total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
+
+							if (value.event_type == 10) {
+								amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
+							}
+
+							week_total_buy += parseFloat(value.buy_total);
+							week_total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
+
+							prev_week = value.week_name;
+
+							if (person_type == 'student_lessons') {
+									if (value.is_sell_invoiced != 0) {
+											//invoice_already_generated=1;  //commented by soumen to display items which has been generated already    
+									} else {
+
+									}
+							}
+					}); //for each record
+			}, // success
+			error: function(ts) {
+				//errorModalCall(GetAppMessage('error_message_text'));
+				console.log(ts.responseText + ' populate_student_lesson')
+			}
+		}); // Ajax
+
+		
+		if (record_found > 0) {
+
+				// summary for last week of course records
+				if ((week_total_buy > 0) || (week_total_sell > 0)) {
+					
+						resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+						resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+
+						if (no_of_teachers == 1){
+							resultHtml += '<td style="text-align:right"></td>';
+						}else {
+							resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+						}
+
+						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
+						resultHtml += '</tr>'
+						week_total_buy = 0;
+						week_total_sell = 0;
+				}
+
+				// display grand total
+				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+				resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
+
+				if (no_of_teachers == 1){
+				resultHtml += '<td style="text-align:right"></td>';
+				}else {
+					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+				}
+
+				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
+				resultHtml += '</tr>'
+
+
+				var disc1_perc = 0,
+						disc2_perc = 0,
+						disc3_perc = 0,
+						disc4_perc = 0,
+						disc5_perc = 0,
+						disc6_perc = 0;
+				var amt_for_disc = 0;
+				// calculate discount if total sell amount >0
+				if (amount_for_disc > 0) {
+
+						disc1_perc = document.getElementById("s_percent_1").value;
+						disc2_perc = document.getElementById("s_percent_2").value;
+						disc3_perc = document.getElementById("s_percent_3").value;
+						disc4_perc = document.getElementById("s_percent_4").value;
+						disc5_perc = document.getElementById("s_percent_5").value;
+						disc6_perc = document.getElementById("s_percent_6").value;
+
+
+						//disc slab 201-400
+						if (disc1_perc > 0) {
+								if (amount_for_disc > 400) {
+										amt_for_disc = 200;
+								} else {
+										amt_for_disc = amount_for_disc - 200;
+								}
+								if (amt_for_disc > 0) {
+										disc1_amt = ((amt_for_disc * disc1_perc) / 100);
+								}
+
+						}
+
+						//disc slab 401-600
+						if (disc2_perc > 0) {
+								if (amount_for_disc > 600) {
+										amt_for_disc = 200;
+								} else {
+										amt_for_disc = amount_for_disc - 400;
+								}
+								if (amt_for_disc > 0) {
+										disc2_amt = ((amt_for_disc * disc2_perc) / 100);
+								}
+						}
+
+						//disc slab 601-800
+						if (disc3_perc > 0) {
+								if (amount_for_disc > 800) {
+										amt_for_disc = 200;
+								} else {
+										amt_for_disc = amount_for_disc - 600;
+								}
+								if (amt_for_disc > 0) {
+										disc3_amt = ((amt_for_disc * disc3_perc) / 100);
+								}
+						}
+
+						//disc slab 801-1000
+						if (disc4_perc > 0) {
+								if (amount_for_disc > 1000) {
+										amt_for_disc = 200;
+								} else {
+										amt_for_disc = total_sell - 800;
+								}
+								if (amt_for_disc > 0) {
+										disc4_amt = ((amt_for_disc * disc4_perc) / 100);
+								}
+						}
+
+						//disc slab 1001-1200
+						if (disc5_perc > 0) {
+								if (amount_for_disc > 1200) {
+										amt_for_disc = 200;
+								} else {
+										amt_for_disc = amount_for_disc - 1000;
+								}
+								if (amt_for_disc > 0) {
+										disc5_amt = ((amt_for_disc * disc5_perc) / 100);
+								}
+						}
+
+						//disc slab 1200>
+						if (disc6_perc > 0) {
+								amt_for_disc = amount_for_disc - 1200;
+								if (amt_for_disc > 0) {
+										disc6_amt = ((amt_for_disc * disc5_perc) / 100);
+								}
+						}
+
+						if (disc1_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(1, disc1_perc, disc1_amt, 0);
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc1_perc+'% sur tranche 201.00 à 400.00 soit -'+disc1_amt.toFixed(2)+'</tr>';
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+
+						}
+						if (disc2_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(2, disc2_perc, disc2_amt, 0);
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc2_perc+'% sur tranche 401.00 à 600.00 soit -'+disc2_amt.toFixed(2)+'</tr>';
+						}
+						if (disc3_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(3, disc3_perc, disc3_amt, 0);
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc3_perc+'% sur tranche 601.00 à 800.00 soit -'+disc3_amt.toFixed(2)+'</tr>';
+						}
+						if (disc4_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(4, disc4_perc, disc4_amt, 0);
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc4_perc+'% sur tranche 801.00 à 1000.00 soit -'+disc4_amt.toFixed(2)+'</tr>';
+						}
+						if (disc5_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(5, disc5_perc, disc5_amt, 0);
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc5_perc+'% sur tranche 1001.00 à 1200.00 soit -'+disc5_amt.toFixed(2)+'</tr>';
+						}
+						if (disc6_amt > 0) {
+								disc_caption_disp = GetDiscPercCaption(6, disc6_perc, disc6_amt, total_sell);
+
+								/*var str1 = disc_caption_disp.split('[~~SYSTEM_RANGE_FROM~~]');
+								if (str1.length > 1) {
+										disc_caption_disp=str1[0]+' 1201.00+ '+str1[2];    
+								}                        
+								*/
+								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+								//resultHtml+='<tr><td colspan="8">Réduction de '+disc6_perc+'% sur tranche 1200 plus -'+disc6_amt.toFixed(2)+'</tr>';
+						}
+
+						total_disc = (disc1_amt + disc2_amt + disc3_amt + disc4_amt + disc5_amt + disc6_amt);
+						total_sell = total_sell - total_disc;
+				} // calculate disc
+
+				if (total_disc > 0) {
+						resultHtml += '<tr><td colspan="3"></td>';
+						resultHtml += '<td colspan="5"><strong>' + GetAppMessage("total_deduction_caption") + ' </strong></td>';
+						resultHtml += '<td style="text-align:right" colspan="2"><strong>-' + total_disc.toFixed(2) + '<strong></tr>';
+				}
+
+				// display grand total
+				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+				resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
+				
+				if (no_of_teachers == 1){
+					resultHtml += '<td style="text-align:right"></td>';
+				}else {
+					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+				}
+
+				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
+				resultHtml += '</tr>'
+
+				//display grand total
+				$('#lesson_table').html(resultHtml);
+				//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
+
+				if (all_ready == 1) {
+						if (selected_items == 0) {
+								document.getElementById("lesson_footer_div").style.display = "none";
+						} else {
+								document.getElementById('lesson_footer_div').className = "alert alert-info";
+								document.getElementById("lesson_footer_div").style.display = "block";
+								document.getElementById("btn_convert_invoice").style.display = "block";
+
+								document.getElementById("verify_label_id").style.display = "none";
+						}
+				} else {
+						document.getElementById('lesson_footer_div').className = "alert alert-danger";
+						document.getElementById("lesson_footer_div").style.display = "block";
+						document.getElementById("btn_convert_invoice").style.display = "none";
+						document.getElementById("verify_label_id").style.display = "block";
+				}
+
+		} //found records
+		else {
+				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recrd</td></tr></tbody>';
+				$('#lesson_table').html(resultHtml);
+				document.getElementById("lesson_footer_div").style.display = "none";
+		}
+	} // populate_student_lesson
+
+
+	function preview() {
+		frame.src = URL.createObjectURL(event.target.files[0]);
+	}
+
+
+	$('#profile_image_file').change(function(e) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			document.getElementById("frame").src = e.target.result;
+		};
+		reader.readAsDataURL(this.files[0]);
+			$('#profile_image i.fa.fa-plus').hide();
+		$('#profile_image i.fa.fa-close').show();
 	});
 
-});
 
-
-
-
-
-function populate_student_lesson() {
-	//alert('populate_student_lesson method');
-	// var user_role = document.getElementById("user_role").value;
-	// //alert(user_role);
-	// //(user_role =='teacher') || 
-	// if ((user_role == 'student')) {
-	// 		return false;
-	// }
-	var costs_1 = 0.00;
-	var record_found = 0,
-	all_ready = 1,
-	total_buy = 0,
-	total_sell = 0,
-	week_total_buy = 0,
-	week_total_sell = 0,
-	total_disc = 0.00,
-	prev_week = '',
-	data = '',
-	//p_person_id='832F4CB7-4596-4EFB-9C86-C6A702412E05',
-	p_person_id = document.getElementById("person_id").value,
-	school_id = document.getElementById("school_id").value,
-	p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
-	p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
-	//alert(p_year+'-'+p_month);
-
-	if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
-			resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
-			$('#lesson_table').html(resultHtml);
-			document.getElementById("lesson_footer_div").style.display = "none";
-			return false;
-	}
-
-	var invoice_already_generated = 0,
-	person_type = 'student_lessons',
-	selected_items = 0;
-
-	var disc1_amt = 0,
-	disc2_amt = 0,
-	disc3_amt = 0,
-	disc4_amt = 0,
-	disc5_amt = 0,
-	disc6_amt = 0;
-
-	var correct_btn_text = 'Validate';
-
-	var resultHtml = '',
-	resultHtmlHeader = '',
-	resultHtmlFooter = '',
-	resultHtmlDetails = '';
-	var amount_for_disc=0.00;
-	var disc_caption = 'DESC';
-	var disc_caption_disp = '';
-	var week_caption = 'Weekly';
-	var month_caption = 'Monthly';
-	var sub_total_caption = 'Sub Total';
-
-
-	//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-	data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
-	console.log(data);
-	$.ajax({
-		url: BASE_URL + '/get_student_lessons',
-		//url: '../student/student_events_data.php',
-		data: data,
-		type: 'POST',
-		dataType: 'json',
-		async: false,
-		success: function(result) {
-				$.each(result.data, function(key, value) {
-						record_found += 1;
-						// week summary
-						if ((prev_week != '') && (prev_week != value.week_name)) {
-								resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-								resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
-								// alert('no_of_teachers='+no_of_teachers);
-								if (no_of_teachers == 1){
-										resultHtml += '<td style="text-align:right"></td>';
-								}else {
-										resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-								}
-	
-								resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
-								resultHtml += '</tr>'
-								week_total_buy = 0;
-								week_total_sell = 0;
-						}
-
-						if (prev_week != value.week_name) {
-								//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
-								resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
-								resultHtml += '<b><td colspan="1">' + '' + '</td>';
-								resultHtml += '<b><td colspan="1">Date</td>';
-								resultHtml += '<b><td colspan="1">Time</td>';
-								resultHtml += '<b><td colspan="1">Duration</td>';
-								resultHtml += '<b><td colspan="1">Type</td>';
-								resultHtml += '<b><td colspan="1">Coach</td>';
-								resultHtml += '<b><td colspan="1">Lesson</td>';
-								
-								//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
-								if (result.no_of_teachers == 1){
-									resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
-								} else {
-									resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-									resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
-								}
-	
-	
-								resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
-
-						}
-						resultHtml += '<tr>';
-
-						resultHtml += '<td style="display:none;">' + value.event_id + '</td>';
-
-						if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
-								selected_items += 1;
-								resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
-						} else {
-								resultHtml += "<td>-</td>";
-						}
-
-						//below locked and invoiced
-						resultHtml += "<td>";
-						if (value.ready_flag == 1) {
-								resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
-						}
-						//if (value.is_sell_invoiced > 0) {
-								//comments as Kim as per Sportlogin Before the app.doc
-								//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
-						//}
-						resultHtml += "</td>";
-						//above locked and invoiced
-
-						resultHtml += '<td width="10%">' + value.date_start + '</td>';
-						if (value.duration_minutes == 0) {
-							resultHtml += '<td style="text-align:center" colspan="2">' + GetAppMessage('allday_event_caption') + '</td>';
-						}else {
-							resultHtml += '<td>' + value.time_start + '</td>';
-							resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
-						}
-						resultHtml += '<td>' + value.title + '</td>';
-						resultHtml += '<td>' + value.teacher_name + '</td>';
-						resultHtml += '<td></td>';
-
-						// all_ready = 0 means not ready to generate invoice
-						//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
-						if (value.ready_flag == 0) {
-								all_ready = 0;
-								resultHtml += "<td></td>";
-								resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
-						} else {
-								if (no_of_teachers == 1){
-										resultHtml += '<td style="text-align:right"></td>';
-								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
-								}
-														
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-						}
-
-						costs_1 = parseFloat(value.costs_1);
-						if (value.costs_1 != 0) {
-								resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
-						} else {
-								resultHtml += '<td style="text-align:right"></td>';
-						}
-						resultHtml += '</tr>';
-						total_buy += parseFloat(value.buy_total);
-						total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
-
-						if (value.event_type == 10) {
-							amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
-						}
-
-						week_total_buy += parseFloat(value.buy_total);
-						week_total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
-
-						prev_week = value.week_name;
-
-						if (person_type == 'student_lessons') {
-								if (value.is_sell_invoiced != 0) {
-										//invoice_already_generated=1;  //commented by soumen to display items which has been generated already    
-								} else {
-
-								}
-						}
-				}); //for each record
-		}, // success
-		error: function(ts) {
-			//errorModalCall(GetAppMessage('error_message_text'));
-			console.log(ts.responseText + ' populate_student_lesson')
-		}
-	}); // Ajax
-
-	
-	if (record_found > 0) {
-
-			// summary for last week of course records
-			if ((week_total_buy > 0) || (week_total_sell > 0)) {
-				
-					resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-					resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
-
-					if (no_of_teachers == 1){
-						resultHtml += '<td style="text-align:right"></td>';
-					}else {
-						resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-					}
-
-					resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
-					resultHtml += '</tr>'
-					week_total_buy = 0;
-					week_total_sell = 0;
-			}
-
-			// display grand total
-			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-			resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
-
-			if (no_of_teachers == 1){
-			resultHtml += '<td style="text-align:right"></td>';
-			}else {
-				resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
-			}
-
-			resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
-			resultHtml += '</tr>'
-
-
-			var disc1_perc = 0,
-					disc2_perc = 0,
-					disc3_perc = 0,
-					disc4_perc = 0,
-					disc5_perc = 0,
-					disc6_perc = 0;
-			var amt_for_disc = 0;
-			// calculate discount if total sell amount >0
-			if (amount_for_disc > 0) {
-
-					disc1_perc = document.getElementById("s_percent_1").value;
-					disc2_perc = document.getElementById("s_percent_2").value;
-					disc3_perc = document.getElementById("s_percent_3").value;
-					disc4_perc = document.getElementById("s_percent_4").value;
-					disc5_perc = document.getElementById("s_percent_5").value;
-					disc6_perc = document.getElementById("s_percent_6").value;
-
-
-					//disc slab 201-400
-					if (disc1_perc > 0) {
-							if (amount_for_disc > 400) {
-									amt_for_disc = 200;
-							} else {
-									amt_for_disc = amount_for_disc - 200;
-							}
-							if (amt_for_disc > 0) {
-									disc1_amt = ((amt_for_disc * disc1_perc) / 100);
-							}
-
-					}
-
-					//disc slab 401-600
-					if (disc2_perc > 0) {
-							if (amount_for_disc > 600) {
-									amt_for_disc = 200;
-							} else {
-									amt_for_disc = amount_for_disc - 400;
-							}
-							if (amt_for_disc > 0) {
-									disc2_amt = ((amt_for_disc * disc2_perc) / 100);
-							}
-					}
-
-					//disc slab 601-800
-					if (disc3_perc > 0) {
-							if (amount_for_disc > 800) {
-									amt_for_disc = 200;
-							} else {
-									amt_for_disc = amount_for_disc - 600;
-							}
-							if (amt_for_disc > 0) {
-									disc3_amt = ((amt_for_disc * disc3_perc) / 100);
-							}
-					}
-
-					//disc slab 801-1000
-					if (disc4_perc > 0) {
-							if (amount_for_disc > 1000) {
-									amt_for_disc = 200;
-							} else {
-									amt_for_disc = total_sell - 800;
-							}
-							if (amt_for_disc > 0) {
-									disc4_amt = ((amt_for_disc * disc4_perc) / 100);
-							}
-					}
-
-					//disc slab 1001-1200
-					if (disc5_perc > 0) {
-							if (amount_for_disc > 1200) {
-									amt_for_disc = 200;
-							} else {
-									amt_for_disc = amount_for_disc - 1000;
-							}
-							if (amt_for_disc > 0) {
-									disc5_amt = ((amt_for_disc * disc5_perc) / 100);
-							}
-					}
-
-					//disc slab 1200>
-					if (disc6_perc > 0) {
-							amt_for_disc = amount_for_disc - 1200;
-							if (amt_for_disc > 0) {
-									disc6_amt = ((amt_for_disc * disc5_perc) / 100);
-							}
-					}
-
-					if (disc1_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(1, disc1_perc, disc1_amt, 0);
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc1_perc+'% sur tranche 201.00 à 400.00 soit -'+disc1_amt.toFixed(2)+'</tr>';
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-
-					}
-					if (disc2_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(2, disc2_perc, disc2_amt, 0);
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc2_perc+'% sur tranche 401.00 à 600.00 soit -'+disc2_amt.toFixed(2)+'</tr>';
-					}
-					if (disc3_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(3, disc3_perc, disc3_amt, 0);
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc3_perc+'% sur tranche 601.00 à 800.00 soit -'+disc3_amt.toFixed(2)+'</tr>';
-					}
-					if (disc4_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(4, disc4_perc, disc4_amt, 0);
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc4_perc+'% sur tranche 801.00 à 1000.00 soit -'+disc4_amt.toFixed(2)+'</tr>';
-					}
-					if (disc5_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(5, disc5_perc, disc5_amt, 0);
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc5_perc+'% sur tranche 1001.00 à 1200.00 soit -'+disc5_amt.toFixed(2)+'</tr>';
-					}
-					if (disc6_amt > 0) {
-							disc_caption_disp = GetDiscPercCaption(6, disc6_perc, disc6_amt, total_sell);
-
-							/*var str1 = disc_caption_disp.split('[~~SYSTEM_RANGE_FROM~~]');
-							if (str1.length > 1) {
-									disc_caption_disp=str1[0]+' 1201.00+ '+str1[2];    
-							}                        
-							*/
-							resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-							//resultHtml+='<tr><td colspan="8">Réduction de '+disc6_perc+'% sur tranche 1200 plus -'+disc6_amt.toFixed(2)+'</tr>';
-					}
-
-					total_disc = (disc1_amt + disc2_amt + disc3_amt + disc4_amt + disc5_amt + disc6_amt);
-					total_sell = total_sell - total_disc;
-			} // calculate disc
-
-			if (total_disc > 0) {
-					resultHtml += '<tr><td colspan="3"></td>';
-					resultHtml += '<td colspan="5"><strong>' + GetAppMessage("total_deduction_caption") + ' </strong></td>';
-					resultHtml += '<td style="text-align:right" colspan="2"><strong>-' + total_disc.toFixed(2) + '<strong></tr>';
-			}
-
-			// display grand total
-			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-			resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
-			
-			if (no_of_teachers == 1){
-				resultHtml += '<td style="text-align:right"></td>';
-			}else {
-				resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
-			}
-
-			resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
-			resultHtml += '</tr>'
-
-			//display grand total
-			$('#lesson_table').html(resultHtml);
-			//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
-
-			if (all_ready == 1) {
-					if (selected_items == 0) {
-							document.getElementById("lesson_footer_div").style.display = "none";
-					} else {
-							document.getElementById('lesson_footer_div').className = "alert alert-info";
-							document.getElementById("lesson_footer_div").style.display = "block";
-							document.getElementById("btn_convert_invoice").style.display = "block";
-
-							document.getElementById("verify_label_id").style.display = "none";
-					}
-			} else {
-					document.getElementById('lesson_footer_div').className = "alert alert-danger";
-					document.getElementById("lesson_footer_div").style.display = "block";
-					document.getElementById("btn_convert_invoice").style.display = "none";
-					document.getElementById("verify_label_id").style.display = "block";
-			}
-
-	} //found records
-	else {
-			resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recrd</td></tr></tbody>';
-			$('#lesson_table').html(resultHtml);
-			document.getElementById("lesson_footer_div").style.display = "none";
-	}
-} // populate_student_lesson
-
-
-function preview() {
-	frame.src = URL.createObjectURL(event.target.files[0]);
-}
+	$('.box_img i.fa.fa-close').click(function (e) {
+		document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
+		$('#profile_image i.fa.fa-plus').show();
+		$('#profile_image i.fa.fa-close').hide();
+	})
 </script>
 @endsection

@@ -752,6 +752,7 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
+        $provinces = config('global.provinces'); 
         $invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
         $invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
         
@@ -775,7 +776,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.add', [
             'title' => 'Invoice',
             'pageInfo'=>['siteTitle'=>'']
-        ])->with(compact('genders','countries'));
+        ])->with(compact('genders','countries','provinces'));
     } 
         
     /**
@@ -789,10 +790,11 @@ class InvoiceController extends Controller
     public function manualInvoice()
     {
         $genders = config('global.gender');
+        $provinces = config('global.provinces'); 
         $countries = Country::active()->get();
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo'=>['siteTitle'=>'']
-        ])->with(compact('genders','countries'));
+        ])->with(compact('genders','countries','provinces'));
     } 
 }

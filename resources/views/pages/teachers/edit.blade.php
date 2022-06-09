@@ -35,20 +35,20 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					{{ __('Lesson') }}
+				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Logo')}}
 				</button>
 				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
-				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+					{{ __('Lesson') }}
 				</button>
 				@can('teachers-users-update')
 					@if($teacher->user)
-					<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
+					<!-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
 						{{ __('User Account')}}
-					</button>
+					</button> -->
 					@endif
 				@endcan
 			</div>	
@@ -227,6 +227,19 @@
 								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 								                @endforeach
 											</select>
+											</div>
+										</div>
+									</div>
+									<div id="province_id_div" class="form-group row" style="display:none">
+										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" id="province_id" name="province_id">
+													<option value="">Select Province</option>
+													@foreach($provinces as $key => $province)
+														<option value="{{ $key }}" {{!empty($teacher->province_id) ? (old('province_id', $teacher->province_id) == $key ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province }}</option>
+													@endforeach
+												</select>
 											</div>
 										</div>
 									</div>
