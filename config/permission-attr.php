@@ -60,7 +60,7 @@ return [
         'students-create',
         'students-update',
         // 'students-users-update',
-        // 'students-delete',
+        'students-delete',
 
 
         ];

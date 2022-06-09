@@ -814,6 +814,7 @@ $(function() {
 			$('#billing_province_id').val( $('#province_id option:selected').val() );
 		}
 	});
+
 	var saction= getUrlVarsO()["action"];
 	console.log(saction)
 	
@@ -855,6 +856,8 @@ $(function() {
 	});
 });
 
+
+
 $('#save_btn').click(function (e) {
 	var formData = $('#add_student').serializeArray();
 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
@@ -869,16 +872,6 @@ $('#save_btn').click(function (e) {
 			error = 0;
 		}
 	});
-	
-	
-
-
-
-
-
-
-
-
 	formData.push({
 		"name": "_token",
 		"value": csrfToken,
@@ -898,6 +891,15 @@ $('#save_btn').click(function (e) {
 }); 
 
 
+	$('#profile_image_file').change(function(e) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			document.getElementById("frame").src = e.target.result;
+		};
+		reader.readAsDataURL(this.files[0]);
+			$('#profile_image i.fa.fa-plus').hide();
+		$('#profile_image i.fa.fa-close').show();
+	});
 
 	function activaTab(tab) {
 		$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
@@ -1334,15 +1336,7 @@ $('#save_btn').click(function (e) {
 	}
 
 
-	$('#profile_image_file').change(function(e) {
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			document.getElementById("frame").src = e.target.result;
-		};
-		reader.readAsDataURL(this.files[0]);
-			$('#profile_image i.fa.fa-plus').hide();
-		$('#profile_image i.fa.fa-close').show();
-	});
+	
 
 
 	$('.box_img i.fa.fa-close').click(function (e) {
