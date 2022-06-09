@@ -52,7 +52,14 @@
                 
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <td>{{ $event->student_name; }}</td>
+                        <td>
+                        <td>
+                            <?php if (!empty($event->profile_image)): ?>
+                                <img src="{{ $event->profile_image }}" class="admin_logo" id="admin_logo"  alt="globe">
+                            <?php else: ?>
+                                <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                            <?php endif; ?>
+                        {{ $event->student_full_name; }}</td>
                         <td>{{ $event->invoice_items; }}</td>
                        
                         <td align="center">

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\School;
+use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
 use App\Models\EventCategory;
@@ -457,7 +458,12 @@ class LessonsController extends Controller
         $lessonlId = $request->route('lesson'); 
         $lessonData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
-        $professors = DB::table('events')->select('school_teacher.nickname')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
+        $professors = DB::table('events')->select('school_teacher.nickname','school_teacher.teacher_id')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
+        $professors->full_name = "";
+        if (!empty($professors->teacher_id)) {
+            $teacher = Teacher::find($professors->teacher_id);
+            $professors->full_name = $teacher->full_name;
+        }
         $lessonCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();

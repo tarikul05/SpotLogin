@@ -18,7 +18,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Teacher Information:') }} {{!empty($relationalData->nickname) ? $relationalData->nickname : ''}}</label>
+						<label id="page_header" name="page_header">{{ __('Teacher Information:') }} {{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -980,7 +980,7 @@ function populate_teacher_lesson() {
 		dataType: 'json',
 		async: false,
 		success: function(result) {
-			$.each(result, function(key, value) {
+			$.each(result.data, function(key, value) {
 				record_found += 1;
 
 

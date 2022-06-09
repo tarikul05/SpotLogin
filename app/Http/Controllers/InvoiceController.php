@@ -289,8 +289,8 @@ class InvoiceController extends Controller
     public function student_invoice_list(Request $request,$schoolId = null)
     {
         $user = $request->user();
-        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($this->schoolId);
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
@@ -359,6 +359,11 @@ class InvoiceController extends Controller
             $profile_image = !empty($value->profile_image_id) ? AttachedFile::find($value->profile_image_id) : null ;
             if (!empty($profile_image)) {
                 $value->profile_image = $profile_image->path_name;
+            }
+            $value->student_full_name = "";
+            if (!empty($value->person_id)) {
+                $student = Student::find($value->person_id);
+                $value->student_full_name = $student->full_name;
             }
             
             $allStudentEvents[] = $value;
@@ -455,6 +460,13 @@ class InvoiceController extends Controller
             if (!empty($profile_image)) {
                 $value->profile_image = $profile_image->path_name;
             }
+            $value->teacher_full_name = "";
+            if (!empty($value->person_id)) {
+                $teacher = Teacher::find($value->person_id);
+                $value->teacher_full_name = $teacher->full_name;
+            }
+
+            
             
             $allTeacherEvents[] = $value;
         }
