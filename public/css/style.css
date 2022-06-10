@@ -681,7 +681,7 @@ button#changer_btn {
         margin-top: 20px;
     }
     .table-responsive {
-        margin-top: 40px;
+        margin-top: 20px;
         width: 100%;
         margin-bottom: 15px;
         overflow-y: hidden;
@@ -703,7 +703,7 @@ button#changer_btn {
         outline: none;
     }
     .section_header_class label {
-        margin: 15px 0;
+        margin: 15px 0 0px 0px;
         font-size: 17px;
     }
     .form-group.row.invoice_part {
@@ -713,5 +713,49 @@ button#changer_btn {
     }
     .form-group.row.invoice_part label {
         margin-top: 4px;
+    }
+    .below_space > div {
+        margin-bottom: 10px;
+    }
+    .header-area {
+        margin-bottom: 15px;
+    }
+    .pull-right.btn-group.cal_top {
+        display: block;
+        float: left;
+        width: 100%;
+    }
+    div#button_menu_div {
+        display: block;
+        float: left;
+        width: 100%;
+    }
+    a#btn_export_events {
+        float: left;
+        width: 45%;
+    }
+    a#btn_export_events {
+        float: left;
+        width: 45%;
+        padding: 10px;
+        font-size: 16px;
+    }
+    a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
+        padding: 9px 14px;
+    }
+    button.btn.btn-theme-success.dropdown-toggle {
+        height: 40px !important;
+    }
+    button#update_btn {
+        right: 0;
+    }
+    div#nav-tab {
+        display: flex;
+        font-size: 14px;
+        margin-top: 40px;
+    }
+    #nav-tab .nav-link {
+        margin-right: 12px;
+        padding-right: 3px;
     }
 }

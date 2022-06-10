@@ -40,7 +40,7 @@ admin_main_style.css
 							</div>
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
-                        <div class="pull-right btn-group">
+                        <div class="pull-right btn-group cal_top">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">

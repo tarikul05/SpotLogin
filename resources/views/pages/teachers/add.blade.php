@@ -34,13 +34,13 @@
 					@csrf
 					<div class="form-group row">
 						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Teachers Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i> : </label>
-						<div class="col-sm-5">
+						<div class="col-sm-5 search_area">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
 								<input class="form-control" id="email" placeholder="{{ __('email@domain.com') }}" value="{{$searchEmail}}" name="email" type="email">
 							</div>
 						</div>
-						<div class="col-sm-2 ">
+						<div class="col-sm-2 check_btn">
 							<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 						</div>
 					</div>

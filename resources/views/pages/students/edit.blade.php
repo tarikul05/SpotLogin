@@ -470,7 +470,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-8">
-								<div class="form-group row">
+								<div class="form-group row below_space">
 									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
 									<div class="col-sm-2">
 										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
