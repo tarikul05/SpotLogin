@@ -300,7 +300,7 @@ class InvoiceController extends Controller
 
 
         $studentEvents = DB::table('events')
-        ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+        ->join('event_details', 'events.id', '=', 'event_details.event_id')
         ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
         ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
         ->select(
@@ -312,27 +312,29 @@ class InvoiceController extends Controller
         //->selectRaw('count(events.id) as invoice_items')
         ->where(
             [
-                'events.school_id'=>$this->schoolId, 
+                'events.school_id'=>$schoolId, 
                 'event_details.billing_method' => "E",
                 'events.is_active' => 1
             ]);
         
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-            $studentEvents->where('events.teacher_id', $user->person_id);
-        }
+        // $user_role = 'superadmin';
+        // if ($user->person_type == 'App\Models\Student') {
+        //     $user_role = 'student';
+        // }
+        // if ($user->person_type == 'App\Models\Teacher') {
+        //     $user_role = 'teacher';
+        //     $studentEvents->where('events.teacher_id', $user->person_id);
+        // }
 
-        $studentEvents->where(function ($query) {
-            $query->where('event_details.is_sell_invoiced', '=', 0)
-                ->orWhereNull('event_details.is_sell_invoiced');
-            }
-        );
+        // $studentEvents->where(function ($query) {
+        //     $query->where('event_details.is_sell_invoiced', '=', 0)
+        //         ->orWhereNull('event_details.is_sell_invoiced');
+        //     }
+        // );
+        $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
+        $studentEvents->whereNull('event_details.sell_invoice_id');
         
-        $dateS = Carbon::now()->startOfMonth()->subMonth(3)->format('Y-m-d');
+        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         
 
         $studentEvents->where('events.date_start', '>=', $dateS);
@@ -397,8 +399,8 @@ class InvoiceController extends Controller
 
 
         
-        $studentEvents = DB::table('events')
-        ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+        $teacherEvents = DB::table('events')
+        ->join('event_details', 'events.id', '=', 'event_details.event_id')
         ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
         ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
         ->select(
@@ -410,52 +412,43 @@ class InvoiceController extends Controller
         //->selectRaw('count(events.id) as invoice_items')
         ->where(
             [
-                'events.school_id'=>$this->schoolId, 
+                'events.school_id'=>$schoolId, 
                 //'event_details.billing_method' => "E",
                 'events.is_active' => 1
             ]);
-        
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-            //$studentEvents->where('events.teacher_id', $user->person_id);
-        }
-        $studentEvents->where('event_details.is_buy_invoiced', '=', 0);
-
-        // $studentEvents->where(function ($query) {
-        //     $query->where('event_details.is_buy_invoiced', '=', 0)
-        //         ->orWhereNull('event_details.is_sell_invoiced');
-        //     }
-        // );
+        $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
+        $teacherEvents->whereNull('event_details.buy_invoice_id');
+       
         
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateEnd = Carbon::now()->format('Y-m-d');
+        $dateEnd = Carbon::now()->endOfMonth()->subMonth(1)->format('Y-m-d');
+        //exit();
         
 
-        $studentEvents->where('events.date_start', '>=', $dateS);
-        $studentEvents->where('events.date_end', '<=', $dateEnd);
-        $studentEvents->distinct('events.id');
-        $studentEvents->groupBy('events.id');
+        $teacherEvents->where('events.date_start', '>=', $dateS);
+        $teacherEvents->where('events.date_end', '<=', $dateEnd);
+        $teacherEvents->distinct('events.id');
+        $teacherEvents->groupBy('events.id');
 
-        $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
+        //dd($studentEvents->toSql());
+        //dd($data);
+        $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
             ->select(
                 'custom_table.person_id as person_id',
                 'custom_table.teacher_name as teacher_name',
                 'custom_table.profile_image_id as profile_image_id'
             )
             ->selectRaw('count(custom_table.event_id) as invoice_items')
-            ->mergeBindings($studentEvents)
-            ->groupBy('custom_table.person_id')
+            ->mergeBindings($teacherEvents)
+            ->groupBy('custom_table.person_id');
+        //dd($allEvents->toSql());
             
-            ->get();
+        $allEventData =  $allEvents->get();
        
-        //dd($allEvents);
+        //dd($allEventData);
        
         $allTeacherEvents=[];
-        foreach ($allEvents as $key => $value) {
+        foreach ($allEventData as $key => $value) {
             $profile_image = !empty($value->profile_image_id) ? AttachedFile::find($value->profile_image_id) : null ;
             if (!empty($profile_image)) {
                 $value->profile_image = $profile_image->path_name;

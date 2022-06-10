@@ -53,7 +53,6 @@
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>
-                        <td>
                             <?php if (!empty($event->profile_image)): ?>
                                 <img src="{{ $event->profile_image }}" class="admin_logo" id="admin_logo"  alt="globe">
                             <?php else: ?>
