@@ -40,7 +40,8 @@
 
 		<!-- Tabs content -->
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
-		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
+		<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
+					
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 		@csrf	
 		<div class="tab-content" id="ex1-content">
@@ -493,63 +494,59 @@
 						</div>
 						<div class="table-responsive">
 							<table class="table lessons-list" id="lesson_table">
-								<!-- <tbody>
-									<tr class="course_week_header">
-										<td colspan="1">{{ __('Week 20') }}</td>
-										<td colspan="1"></td>
-										<td colspan="1">{{ __('Date') }}</td>
-										<td colspan="1">{{ __('Time') }}</td>
-										<td colspan="1">{{ __('Duration') }}</td>
-										<td colspan="1">{{ __('Type') }}</td>
-										<td colspan="1">{{ __('Coach') }}</td>
-										<td colspan="1">{{ __('Lesson') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-									</tr>
-									<tr>
-										<td style="display:none;">30533</td>
-										<td>-</td>
-										<td></td>
-										<td width="10%">18/05/2022</td>
-										<td>14:30</td>
-										<td>30 minutes </td>
-										<td> (Soccer-School)</td>
-										<td>teacher all</td>
-										<td>Group lessons for 3 students</td>
-										<td></td>
-										<td>
-											<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-												<i class="fa fa-pencil"></i>{{__('Validate')}}
-											</a>
-										</td>
-										<td style="text-align:right"></td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Week')}} </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Total Monthly')}}</td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-								</tbody> -->
+								
 							</table>
 						</div>
-						<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
+								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+								<button class="btn btn-primary" id="btn_convert_invoice">Generate invoice</button>
 						</div>
+						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+						</div> -->
 					</form>
+
+
+					<!-- START discount_div -->
+					<div style="display:none;" id="discount_div" name="discount_div">
+							<div class="form-group">
+									<label id="disc_201_400_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 201-400:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_1" id="s_percent_1" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="5">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_401_600_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 401-600:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_2" id="s_percent_2" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_601_800_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 601-800:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_3" id="s_percent_3" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_801_1000_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 801-1000:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_4" id="s_percent_4" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_1001_1200_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 1001-1200:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_5" id="s_percent_5" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_1200_plus_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 1200 et plus:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_6" id="s_percent_6" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+					</div>
+					<!-- END discount_div -->
 				</div>
 				<!--Start of Tab 4 -->
 				<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
@@ -847,7 +844,7 @@ $(function() {
 	
 
 
-
+	populate_student_lesson(); // refresh lesson details for billing
 	$('#billing_period_search_btn').on('click', function() {   
 		// document.getElementById("smonth").value = data_month;
 		// document.getElementById("syear").value = data_year;
@@ -923,13 +920,6 @@ $('#save_btn').click(function (e) {
 
 
 	function populate_student_lesson() {
-		//alert('populate_student_lesson method');
-		// var user_role = document.getElementById("user_role").value;
-		// //alert(user_role);
-		// //(user_role =='teacher') || 
-		// if ((user_role == 'student')) {
-		// 		return false;
-		// }
 		var costs_1 = 0.00;
 		var record_found = 0,
 		all_ready = 1,
