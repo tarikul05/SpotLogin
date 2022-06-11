@@ -40,9 +40,12 @@
 				@can('parameters-list')
 					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
 				@endcan
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
-				</button>
+				</a>
+				<!-- <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Sections and prices')}}
+				</button> -->
 				
 
 				
