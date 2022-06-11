@@ -96,7 +96,7 @@ admin_main_style.css
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
                                     <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
-                                    <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
+                                    <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
 							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
                                     <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
                                     <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
@@ -1656,7 +1656,12 @@ admin_main_style.css
         console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
-
+        let curdate=new Date();
+        let p_from_date=moment(curdate).format("YYYY-MM-DD");
+        if (getCookie("date_from") != ""){
+            let p_from_date = getCookie("date_from");
+        } 
+        console.log(getCookie("date_from"));
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
@@ -1666,7 +1671,8 @@ admin_main_style.css
             minTime: '05:00:00',
             maxTime: '24:00:00',
             //defaultView: 'agendaweek',
-            //defaultDate: '2022-04-12',
+            defaultDate: p_from_date,
+            gotoDate:p_from_date,
             utc: false, 
             editable: false,
             selectable: true,
@@ -2158,6 +2164,7 @@ admin_main_style.css
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
+                SetEventCookies();
             },
             dayClick: function(date, jsEvent, view, resource) {
                 // $('#start_date').val('');
