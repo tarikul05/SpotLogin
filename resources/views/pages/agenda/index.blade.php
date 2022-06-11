@@ -1661,7 +1661,7 @@ admin_main_style.css
         if (getCookie("date_from") != ""){
             let p_from_date = getCookie("date_from");
         } 
-        console.log(getCookie("date_from"));
+        console.log(p_from_date);
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
@@ -1671,8 +1671,8 @@ admin_main_style.css
             minTime: '05:00:00',
             maxTime: '24:00:00',
             //defaultView: 'agendaweek',
-            defaultDate: p_from_date,
-            gotoDate:p_from_date,
+            defaultDate: getCookie("date_from"),
+            gotoDate:getCookie("date_from"),
             utc: false, 
             editable: false,
             selectable: true,
