@@ -754,8 +754,8 @@ admin_main_style.css
     }
     function confirm_event(){
         var p_event_auto_id=document.getElementById('confirm_event_id').value;
-        var school_id=document.getElementById('school_id').value;
-        var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
+        //var school_id=document.getElementById('school_id').value;
+        var data = 'p_event_auto_id=' + p_event_auto_id;
         var status = '';
         $.ajax({
             url: BASE_URL + '/confirm_event',

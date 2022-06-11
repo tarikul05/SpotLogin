@@ -334,7 +334,7 @@ class AgendaController extends Controller
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->get();
+            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
             foreach ($eventdetails as $key => $eventdetail) {
                 $eventDetailPresent = [
                     'is_locked' => 1,
@@ -786,7 +786,7 @@ class AgendaController extends Controller
 
 
     /**
-     *  AJAX confirm event
+     *  AJAX get locations
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -812,7 +812,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get students
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -858,7 +858,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get teachers
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
