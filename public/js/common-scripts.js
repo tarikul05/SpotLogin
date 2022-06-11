@@ -116,15 +116,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
     var p_event_id = p_event_id.split(',');
-    console.log(v_title); 
-    
-    // Object.keys(p_event_id).forEach(function(key) {
-    //     console.log(p_event_id[key].id);       
-    //     //selected_ids.push($(this).val());	
-    //     //console.log('selected='+selected_ids.join("|"));
-        
-    // });
-   // selected_ids.join("|");
+    //console.log(v_title); 
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">

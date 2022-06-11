@@ -65,6 +65,7 @@ admin_main_style.css
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
                             
                             <input type="hidden" name="get_event_id" id="get_event_id" value="">
+                            <input type="hidden" name="get_validate_event_id" id="get_validate_event_id" value="">                         
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -94,7 +95,7 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
-                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate</span></a>
+                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                     <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
 							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
                                     <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
@@ -1407,18 +1408,20 @@ admin_main_style.css
             errorModalCall('permission_issue_common_text');
             return false;
         }
-        
+        var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
-        p_to_date=document.getElementById("date_to").value;
+        p_to_date=moment(curdate).format("YYYY-MM-DD");
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
+        var get_validate_event_id=document.getElementById("get_validate_event_id").value;
+        
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(p_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(get_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
@@ -1505,10 +1508,11 @@ admin_main_style.css
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
+                var selected_validate_ids = [];
                 const type_removed = [50, 51];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
-                        
+                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
@@ -1520,7 +1524,12 @@ admin_main_style.css
                         }
                         if (teacher_name == null) {
                             teacher_name = '';
-                        }     
+                        } 
+                        var curdate=new Date();
+                    
+                        if (end<moment(curdate).format("DD/MM/YYYY")) {
+                            selected_validate_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        }    
                         selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         //console.log('selected='+selected_ids.join("|"));
                         
@@ -1528,8 +1537,10 @@ admin_main_style.css
                     
                 });
                 selected_ids.join("|");
+                selected_validate_ids.join("|");
                 document.getElementById("get_event_id").value = selected_ids;
-
+                document.getElementById("get_validate_event_id").value = selected_validate_ids;
+                
                 //alert('get refresh');
                 $("#agenda_table tr:gt(0)").remove();
                 $('#calendar').fullCalendar('removeEvents');
