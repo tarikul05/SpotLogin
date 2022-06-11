@@ -1405,10 +1405,11 @@ admin_main_style.css
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
+        var p_event_id=document.getElementById("get_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmDeleteModalCall(p_event_id,'Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
 
@@ -1658,9 +1659,9 @@ admin_main_style.css
 		-----------------------------------------------------------------*/
         let curdate=new Date();
         let p_from_date=moment(curdate).format("YYYY-MM-DD");
-        if (getCookie("date_from") != ""){
-            let p_from_date = getCookie("date_from");
-        } 
+        // if (getCookie("date_from")){
+        //     p_from_date = getCookie("date_from");
+        // } 
         console.log(p_from_date);
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
@@ -1671,8 +1672,7 @@ admin_main_style.css
             minTime: '05:00:00',
             maxTime: '24:00:00',
             //defaultView: 'agendaweek',
-            defaultDate: getCookie("date_from"),
-            gotoDate:getCookie("date_from"),
+            defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false, 
             editable: false,
             selectable: true,
