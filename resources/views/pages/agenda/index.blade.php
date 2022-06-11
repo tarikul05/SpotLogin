@@ -1513,6 +1513,8 @@ admin_main_style.css
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
                         let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
+                        let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
+                        let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
@@ -1526,12 +1528,11 @@ admin_main_style.css
                             teacher_name = '';
                         } 
                         var curdate=new Date();
-                    
-                        if (end<moment(curdate).format("DD/MM/YYYY")) {
-                            selected_validate_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
+                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         }    
-                        selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                        //console.log('selected='+selected_ids.join("|"));
+                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        
                         
                     }
                     
@@ -1539,6 +1540,9 @@ admin_main_style.css
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
                 document.getElementById("get_event_id").value = selected_ids;
+                if (selected_validate_ids.length ==0) {
+                    document.getElementById("btn_validate_events").style.display = "none";
+                }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 
                 //alert('get refresh');
@@ -2051,7 +2055,13 @@ admin_main_style.css
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
-                        document.getElementById("btn_validate_events").style.display = "block";
+                        let selected_validate_ids = document.getElementById("get_validate_event_id").value;
+                        if (selected_validate_ids.length ==0) {
+                            document.getElementById("btn_validate_events").style.display = "none";
+                        }else {
+                            document.getElementById("btn_validate_events").style.display = "block";
+                        }
+                        
                 
                     }
                 }
