@@ -467,7 +467,7 @@ class LessonsController extends Controller
         $lessonCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.view_lesson')->with(compact('lessonData','schoolId','lessonCategory','locations','professors','studentOffList','lessonPrice'));
+        return view('pages.calendar.view_lesson')->with(compact('lessonData','schoolId','lessonCategory','locations','professors','studentOffList','lessonPrice','lessonlId'));
     }
 
     /**
