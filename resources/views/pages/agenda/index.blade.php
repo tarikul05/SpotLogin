@@ -393,6 +393,8 @@ admin_main_style.css
                                                                     <option value="0">No charge</option>
                                                                     <option value="1">Hourly rate</option>
                                                                     <option value="2">Price per student</option>
+                                                                    <option value="3">Coming Soon</option>
+
                                                                 </select>
                                                             </div>
                                                         </div>
