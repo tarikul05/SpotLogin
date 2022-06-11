@@ -525,7 +525,7 @@ admin_main_style.css
     </div>
 </div>
 
-	<!-- End Tabs content -->
+<!-- End Tabs content -->
 @endsection
 
 
@@ -1628,10 +1628,12 @@ admin_main_style.css
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
-			slotDuration: '00:30:00',
+			slotDuration: '00:15:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            //defaultView: 'month',
+            minTime: '05:00:00',
+            maxTime: '24:00:00',
+            //defaultView: 'agendaweek',
             //defaultDate: '2022-04-12',
             utc: false, 
             editable: false,
@@ -1666,7 +1668,7 @@ admin_main_style.css
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
 			// allDayDefault: true,
-			defaultTimedEventDuration: '00:30:00',
+			defaultTimedEventDuration: '00:15:00',
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
