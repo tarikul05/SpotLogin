@@ -619,7 +619,7 @@ admin_main_style.css
     var currentTimezone = 'local';
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
-    var lockRecords=0;
+    var lockRecords=1;
     var zone =getTimeZone();
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
@@ -1931,7 +1931,11 @@ admin_main_style.css
                     if (event.is_locked == '1'){        
                         $(el).find('div.fc-content').prepend(icon);
                         
+                        
+                    }else if (event.is_locked == '0'){        
+                        icon='';
                         lockRecords=1;
+                        
                     } else if (event.event_mode == '0'){
                         icon ='<i class="fa fa-file"></i> ';
                     } else{
@@ -2092,25 +2096,27 @@ admin_main_style.css
                     }
                 }
 
-                if ((foundRecords == 1) && (lockRecords == 0))
+                if (foundRecords > 0)
                 {
                     if (user_role == 'student') {
-                        document.getElementById("btn_delete_events").style.display = "none";    
-                        document.getElementById("btn_validate_events").style.display = "none";    
-                        
-                        
+                        document.getElementById("btn_validate_events").style.display = "none"; 
+                        document.getElementById("btn_delete_events").style.display = "none"; 
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
-                        //alert('delete button will visible');
                         document.getElementById("btn_delete_events").style.display = "block";
                         document.getElementById("btn_validate_events").style.display = "block";
                     }
+                    if (lockRecords == 0)
+                    {
+                        document.getElementById("btn_validate_events").style.display = "none"; 
+                        
+                    }
+                } else{
+                    document.getElementById("btn_delete_events").style.display = "none";  
+                    document.getElementById("btn_validate_events").style.display = "none";  
                 }
-                else
-                {
-                    document.getElementById("btn_delete_events").style.display = "none";
-                    //document.getElementById("btn_validate_events").style.display = "none";
-                }
+
+                
                 lockRecords=0;
                     
                 var view = $('#calendar').fullCalendar('getView'); 
