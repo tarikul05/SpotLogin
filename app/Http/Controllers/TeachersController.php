@@ -85,6 +85,7 @@ class TeachersController extends Controller
 
         $countries = Country::active()->get();
         $genders = config('global.gender'); 
+        $provinces = config('global.provinces'); 
         $exTeacher = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -95,7 +96,7 @@ class TeachersController extends Controller
         $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
 
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices'));
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices','provinces'));
     }
 
      /**
@@ -185,6 +186,7 @@ class TeachersController extends Controller
                         'zip_code' => $alldata['zip_code'],
                         'place' => $alldata['place'],
                         'country_code' => $alldata['country_code'],
+                        'province_id' => $alldata['province_id'],
                         'phone' => $alldata['phone'],
                         'mobile' => $alldata['mobile'],
                     ];
@@ -317,7 +319,7 @@ class TeachersController extends Controller
         $user = Auth::user();
         $schoolId = $request->route('school'); 
         $teacherId = $request->route('teacher');
-
+        $provinces = config('global.provinces'); 
         $teacher = Teacher::find($teacherId);
 
         if ($user->isSuperAdmin()) {
@@ -368,7 +370,8 @@ class TeachersController extends Controller
         $countries = Country::active()->get();
         $genders = config('global.gender');
         // dd($relationalData);
-        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
+
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice','provinces','school'));
     }
 
     /**
@@ -406,6 +409,7 @@ class TeachersController extends Controller
                 'zip_code' => $alldata['zip_code'],
                 'place' => $alldata['place'],
                 'country_code' => $alldata['country_code'],
+                'province_id' => $alldata['province_id'],
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
             ];
@@ -442,8 +446,7 @@ class TeachersController extends Controller
         $schoolId = $request->route('school'); 
         $teacherId = $request->route('teacher');
 
-        $teacher = Teacher::find($user->person_id);
-// dd($teacher);     
+        $teacher = Teacher::find($user->person_id);     
         $schoolId = $user->selectedSchoolId();
         $schoolName = $user->selectedSchoolName(); 
 
@@ -849,6 +852,51 @@ class TeachersController extends Controller
         catch (\Exception $e) {
           //return error message
           $result['message'] = __('Internal server error');
+        }
+        return response()->json($result);
+    }
+
+
+
+    
+
+      /**
+     * Update teacher discount prec
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-06-08
+    */
+    public function updateDiscountPerc(Request $request, User $user)
+    {
+        $authUser = $request->user();
+        $data = $request->all();
+        $user = User::find($data['user_id']); 
+        $result = array(
+          'status' => 'failed',   
+          'message' => __('failed to remove image'),
+        );
+        try{
+
+            $p_disc1 = trim($data['p_disc1']);
+            $p_person_id = trim($data['p_person_id']);
+            if  ($p_disc1 == '') {
+                 $p_disc1=0;   
+            }
+
+            $teacherData = [
+                'tax_perc' => $p_disc1,
+            ];
+            Teacher::where('id', $p_person_id)->update($teacherData);
+
+            $result = array(
+                "status"     => 'success',
+                'message' => __('Successfully Changed Profile image')
+            );
+        }
+        catch (\Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
         }
         return response()->json($result);
     }

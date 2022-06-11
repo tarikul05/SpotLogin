@@ -33,13 +33,13 @@
 				@csrf
 				<div class="form-group row">
 					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i> :</label>
-					<div class="col-sm-5">
+					<div class="col-sm-5 search_area">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
 							<input class="form-control" id="email" placeholder="{{ __('email@domain.com') }}" value="{{$searchEmail}}" name="email" type="email">
 						</div>
 					</div>
-					<div class="col-sm-2 ">
+					<div class="col-sm-2 check_btn">
 						<button  class="btn btn-primary check" type="submit"><i class="fa fa-search"></i> Check</button>
 					</div>
 				</div>
@@ -102,13 +102,15 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Rate') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control"id="billing_method" name="billing_method">
+												<option value="E" >coming soon</option>
+												<!-- comented for 1st release
 												<option value="E" {{ old('billing_method') == 'Y' ? 'selected' : ''}} >Event-wise</option>
 												<option value="M" {{ old('billing_method') == 'M' ? 'selected' : ''}} >Monthly</option>
-												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option>
+												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option> -->
 											</select>
 										</div>
 									</div>
@@ -191,14 +193,15 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="">Select level</option>
+													<option selected value="">Select level</option>
 													@foreach($levels as $key => $level)
-														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
+														<option value="{{ $level->id }}">{{ $level->title }}</option>
 													@endforeach
 												</select>
 											</div>
 										</div>
 									</div>
+									@if($AppUI->getSelectedSchoolAttribute()->country_code == 'CH')
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
@@ -216,6 +219,7 @@
 											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -224,6 +228,7 @@
 											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
 										</div>
 									</div>
+									@if($AppUI->getSelectedSchoolAttribute()->country_code == 'CH')
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
@@ -241,6 +246,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 								</div>
 							</div>
 							
@@ -312,24 +318,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -385,24 +382,15 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											<option value="3">Alberta</option>
-											<option value="2">British Columbia</option>
-											<option value="5">Manitoba</option>
-											<option value="10">Newfoundland &amp; Labrador</option>
-											<option value="12">Northwest territory</option>
-											<option value="8">Nova Scotia</option>
-											<option value="11">Nunavut</option>
-											<option value="6">Ontario</option>
-											<option value="9">PEI</option>
-											<option value="7">Quebec</option>
-											<option value="4">Saskatchewan</option>
-											<option value="13">Yukon</option>
+											@foreach($provinces as $key => $province)
+												<option value="{{ $key }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -581,6 +569,28 @@ $('.box_img i.fa.fa-close').click(function (e) {
 	 document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
 	$('#profile_image i.fa.fa-plus').show();
 	$('#profile_image i.fa.fa-close').hide();
+})
+
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
+
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
 })
 </script>
 @endsection

@@ -105,28 +105,19 @@ function confirmModalCall(title,function_name){
 }
 
 
-function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_events){
+
+function confirmDeleteModalCall(p_event_id,title,function_name){
     $('#confirmModal').remove();  
     var modalHtml='';
     
     var v_title='remove_title_text';
-    var ok_btn_text='confirm_ok_btn';
-    var cancel_btn_text='confirm_cancel_btn';
+    var ok_btn_text='Confirm';
+    var cancel_btn_text='Cancel';
     
     v_title = ((title == '') ? v_title : title);
-    //ok_btn_text = ((ok_btn_text =='') ? 'Ok' : ok_btn_text);
-    //cancel_btn_text = ((ok_btn_text =='') ? 'Cancel' : cancel_btn_text);
     //var selected_ids = [];
     var p_event_id = p_event_id.split(',');
-    //console.log(p_event_id); 
     
-    // Object.keys(p_event_id).forEach(function(key) {
-    //     console.log(p_event_id[key].id);       
-    //     //selected_ids.push($(this).val());	
-    //     //console.log('selected='+selected_ids.join("|"));
-        
-    // });
-    // selected_ids.join("|");
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
@@ -138,7 +129,44 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
 
                     p_event_id.forEach((element) => {
                         modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
-                        console.log(element);
+                        console.log(element+'hhh');
+                    });
+                    
+                modalHtml +=`</ul>
+                    <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    $('body').append(modalHtml);
+    $("#confirmModal").modal('show');
+}
+
+function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_events){
+    $('#confirmModal').remove();  
+    var modalHtml='';
+    
+    var v_title='remove_title_text';
+    var ok_btn_text='Confirm';
+    var cancel_btn_text='Cancel';
+    
+    v_title = ((title == '') ? v_title : title);
+    //var selected_ids = [];
+    var p_event_id = p_event_id.split(',');
+    //console.log(v_title); 
+    modalHtml =`
+    <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
+        aria-labelledby="confirmModal" name="confirmModal">
+        <div class="modal-dialog mt-5">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">                    
+                    <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
+                    <ul>`;
+
+                    p_event_id.forEach((element) => {
+                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
+                        console.log(element+'hhh');
                     });
                     
                 modalHtml +=`</ul>

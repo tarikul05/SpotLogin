@@ -163,7 +163,7 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="row">
-								<div class="col-xs-11" style="padding: 0 30px;">
+								<div class="col-xs-12">
 										<div class="form-group alert alert-info row">
 												<label for="default_currency_code" id="default_currency_lbl"
 														name="default_currency_lbl"

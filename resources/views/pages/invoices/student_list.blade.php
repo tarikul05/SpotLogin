@@ -52,12 +52,20 @@
                 
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <td>{{ $event->student_name; }}</td>
+                        <td>
+                            <?php if (!empty($event->profile_image)): ?>
+                                <img src="{{ $event->profile_image }}" class="admin_logo" id="admin_logo"  alt="globe">
+                            <?php else: ?>
+                                <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                            <?php endif; ?>
+                        {{ $event->student_full_name; }}</td>
                         <td>{{ $event->invoice_items; }}</td>
                        
                         <td align="center">
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
-                            href="../student/student_master.html?person_id={{ $event->person_id }}&action=edit&tab=pane_lessons" 
+                            href="{{ auth()->user()->isSuperAdmin() ? 
+                                    route('adminEditStudent',['school'=> $schoolId,'student'=> $event->person_id]) : 
+                                    route('editStudent',['student' => $event->person_id]) }}?action=edit&tab=tab_3" 
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             View items to be invoiced</a>
                         </td>

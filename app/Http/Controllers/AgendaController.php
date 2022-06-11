@@ -322,28 +322,47 @@ class AgendaController extends Controller
 
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            // $data['school_id']
-            // $p_user_id = Auth::user()->id;
-
             $eventUpdate = [
                 'is_locked' => 1
             ];
+            if (isset($data['unlock'])) {
+                $eventUpdate = [
+                    'is_locked' => 0
+                ];
+            }
             $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
 
 
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->get();
+            if (isset($data['unlock'])) {
+                $eventDetail = [
+                    'is_locked' => 0
+                ];
+            }
+            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
             foreach ($eventdetails as $key => $eventdetail) {
                 $eventDetailPresent = [
                     'is_locked' => 1,
                     'participation_id' => 200,
                 ];
+                if (isset($data['unlock'])) {
+                    $eventDetailPresent = [
+                        'is_locked' => 0,
+                        'participation_id' => 200,
+                    ];
+                }
                 $eventDetailAbsent = [
                     'is_locked' => 1,
                     'participation_id' => 199,
                 ];
+                if (isset($data['unlock'])) {
+                    $eventDetailAbsent = [
+                        'is_locked' => 0,
+                        'participation_id' => 200,
+                    ];
+                }
                 if ($eventdetail->participation_id == 0) {
                     $eventdetail = $eventdetail->update($eventDetailPresent);
                 } else {
@@ -786,7 +805,7 @@ class AgendaController extends Controller
 
 
     /**
-     *  AJAX confirm event
+     *  AJAX get locations
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -812,7 +831,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get students
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -858,7 +877,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get teachers
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>

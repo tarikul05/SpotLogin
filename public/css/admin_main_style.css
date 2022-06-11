@@ -1213,4 +1213,58 @@ label.profile_img_area {
     .btn-area .btn {
         margin-top: 20px;
     }
+    .dataTables_wrapper {
+        position: relative;
+        clear: both;
+        overflow: hidden;
+    }
+    .dataTables_wrapper .dataTables_filter {
+        margin-top: 0.5em;
+        float: left;
+        width: 100%;
+    }
+    #example_filter label {
+        float: left;
+        width: 60%;
+        margin-top: 22px;
+    }
+    #example_filter a {
+        float: right;
+        margin-top: 20px;
+    }
+    .dataTables_wrapper .dataTables_filter input[type="search"] {
+        max-width: 60%;
+    }
+    .search_area {
+        max-width: 69%;
+        float: left;
+    }
+    .check_btn {
+        max-width: 30%;
+        float: left;
+    }
+    label#page_header,
+    #cal_title {
+        font-size: 22px !important;
+    }
+    header.panel-heading {
+        margin: 40px 0 10px !important;
+    }
+    .student_save {
+        top: 90px;
+        z-index: 999;
+    }
+    .col-sm-6.col-xs-12.btn-area {
+        position: absolute;
+    }
+    nav {
+        margin-bottom: 10px !important;
+    }
+    #calendar .fc-row {
+        height: auto !important;
+    }
+    .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+        float: right;
+        margin-top: 19px;
+    }
 }
