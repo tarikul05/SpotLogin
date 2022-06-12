@@ -144,6 +144,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('roles', "RoleController");
     Route::resource('permissions', "PermissionController");
+
+    // ical personal events 
+    Route::get('/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEvents');
+
         
     // Language 
     Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');

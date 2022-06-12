@@ -32,14 +32,16 @@ admin_main_style.css
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
-					<div class="col-sm-6 col-xs-12 header-area">
+					<div class="col-sm-4 col-xs-12 header-area">
 							<div class="page_header_class">
                                 <label for="calendar" id="cal_title" style="display: block;">
                                     {{__('Agenda')}}: 
                                 </label>
 							</div>
+                            
 					</div>
-					<div class="col-sm-6 col-xs-12 btn-area">
+                    
+					<div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
@@ -95,14 +97,20 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
-                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
-                                    <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
-							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
-                                    <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
-                                    <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
-                                        <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                                        <span id ="btn_export_events_cap">Excel</span>
-                                    </a>
+                                <a href="/admin/icalendar/personnel-events" 
+                                id="personal_ics1" 
+                                target="_blank" class="btn btn-sm btn-theme-warn light-blue-txt">
+                                    <em class="glyphicon glyphicon-remove"></em>
+                                    <span id ="btn_validate_events_cap">Copy my schedule</span>
+                                </a>
+                                <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
+                                <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
+                                <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
+                                <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
+                                <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
+                                    <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
+                                    <span id ="btn_export_events_cap">Excel</span>
+                                </a>
                                 <!-- </div> -->
                             </div>
                             
@@ -737,10 +745,25 @@ admin_main_style.css
         });
         menuHtml+='</ul>';
         $('#button_menu_div').append(menuHtml); 
-    
+        
+
+
+        $('#personal_ics').click(function (e) {
+            DownloadEventsICS('PersonnelEvents');
+        })
 		
 		
 	}); //ready
+
+    function DownloadEventsICS(CalType) {
+        var p_calendar_type = CalType,
+          file_name = '', data = '',
+          p_person_id = ReadSessionVariable('person_id');   //document.getElementById("sperson_id").value;
+
+        //alert(p_person_id);
+        var url = "../agenda/icalendar.php?type=ical&p_calendar_type=" + CalType + '&p_person_id=' + p_person_id;
+        window.location = url;
+    }
 
     function startOfWeek(date)
     {
