@@ -38,10 +38,6 @@ class AgendaController extends Controller
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
-        $school = School::active()->find($schoolId);
         if (empty($school)) {
             $schoolId = 0;
         }
@@ -1048,12 +1044,16 @@ class AgendaController extends Controller
      *  icalendar export
      * @return Response
     */
-    public function icalPersonalEvents(Request $request, Event $event)
+    public function icalPersonalEvents(Request $request, $schoolId = null,Event $event)
     {
         $data = $request->all();
         
         $user = Auth::user();
-
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            $schoolId = 0;
+        }
         $event_types = config('global.event_type'); 
         $user_role = 'superadmin';
         if ($user->person_type == 'App\Models\Student') {
@@ -1062,7 +1062,9 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
+        $data['school_id'] = $schoolId;
         $data['user_role'] = $user_role;
+        $data['person_id'] = $user->person_id;
         $data['v_start_date']=Carbon::now()->format('Y-m-d');
         $data['v_end_date'] = Carbon::now()->addDays(365)->format('Y-m-d');
             

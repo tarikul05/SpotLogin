@@ -97,7 +97,13 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
-                                <a href="/admin/icalendar/personnel-events" 
+                                @php 
+                                $icalPersonal = route('ical.personalEvents');
+                                if(!empty($schoolId)){ 
+                                    $icalPersonal = route('ical.personalEventss',[$schoolId]);
+                                }
+                                @endphp
+                                <a href="{{ $icalPersonal }}" 
                                 id="personal_ics1" 
                                 target="_blank" class="btn btn-sm btn-theme-warn light-blue-txt">
                                     <em class="glyphicon glyphicon-remove"></em>

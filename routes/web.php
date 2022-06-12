@@ -146,6 +146,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('permissions', "PermissionController");
 
     // ical personal events 
+    Route::post('/{school}/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEventss')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEvents');
 
         

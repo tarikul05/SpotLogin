@@ -592,13 +592,25 @@ class Event extends BaseModel
                 'events.is_active' => 1
             ]);
         
-        if (isset($params['school_id'])) {
+        if (isset($params['school_id']) && !empty($params['school_id'])) {
             $teacherEvents->where('events.school_id', '=', $params['school_id']);
         }
+
+        
+        
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $studentEvents->where('event_details.student_id', $params['person_id']);
+        }
+        if ($user_role == 'teacher') {
+            $studentEvents->where('events.teacher_id', $params['person_id']);
+        }
+
+
         $params['v_start_date'] = '2021-06-12';
         $query->where('events.date_start', '>=', $params['v_start_date']);
         $query->where('events.date_end', '<=', $params['v_end_date']);
-        //$query->distinct('events.id');
+        $query->distinct('events.id');
         //$query->groupBy('events.id');
         
        //dd($query->toSql());
