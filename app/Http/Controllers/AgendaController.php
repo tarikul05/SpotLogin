@@ -1131,7 +1131,7 @@ class AgendaController extends Controller
         
 
         $seq=0;
-        foreach ($allEventData as $key => $row) {
+        foreach ($result as $key => $row) {
         // while($row = mysql_fetch_array($result))
         // {
             $seq=$seq+1;
@@ -1144,7 +1144,7 @@ class AgendaController extends Controller
             $start=$row->start_datetime;
             $end=$row->end_datetime;
             $location_name=$row->location_name;
-            $teacher = Teacher::find($result->seller_id);
+            //$teacher = Teacher::find($result->seller_id);
             if ($row->event_type == 51) {
                $parti = '';
             } else{
