@@ -191,7 +191,7 @@
 											</div>
 										</div>
 									</div>
-									@if($AppUI->getSelectedSchoolAttribute()->country_code == 'CH')
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
@@ -218,7 +218,7 @@
 											<input class="form-control" id="licence_usp" name="licence_usp" type="text" value="{{!empty($relationalData->licence_usp) ? old('licence_usp', $relationalData->licence_usp) : old('licence_usp')}}">
 										</div>
 									</div>
-									@if($AppUI->getSelectedSchoolAttribute()->country_code == 'CH')
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
