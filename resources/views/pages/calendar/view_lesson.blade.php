@@ -219,7 +219,8 @@
                     // } else{
                     //     successModalCall('{{ __("Event has been validated ")}}');
                     // }
-					window.location.reload();
+					// window.location.reload();
+					window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
                 }
                 else {
                     errorModalCall('{{ __("Event validation error ")}}');

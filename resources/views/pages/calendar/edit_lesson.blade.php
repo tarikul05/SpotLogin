@@ -193,8 +193,8 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($lessonData->price_amount_buy) ? old('sprice_amount_buy', $lessonData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
-											<input type="hidden" name="attendBuyPrice" value="{{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData->price_amount_buy) && !empty($lessonData->price_amount_buy) ? $lessonData->price_amount_buy : 0 }}" autocomplete="off">
+											<input type="hidden" name="attendBuyPrice" value="{{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -205,8 +205,8 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($lessonData->price_amount_sell) ? old('sprice_amount_sell', $lessonData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData->price_amount_sell) && !empty($lessonData->price_amount_sell) ? $lessonData->price_amount_sell : 0 }}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -255,8 +255,8 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}</td>
-																<td style="text-align:right">{{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}</td>
+																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0  }}</td>
+																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}</td>
 															</tr>
 															@endforeach
 														</tbody>
@@ -617,34 +617,35 @@ $("#button_lock_and_save").on('click', function(event) {
 	confirm_event();
 });
 function confirm_event(){
-        var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
-        var status = '';
-        $.ajax({
-            url: BASE_URL + '/confirm_event',
-            data: data,
-            type: 'POST',
-            dataType: 'json',
-            beforeSend: function( xhr ) {
-                $("#pageloader").show();
-            },
-            success: function (result) {
-                status = result.status;
-                if (status == 'success') {
-                    successModalCall('{{ __("Event has been validated ")}}');
-                }
-                else {
-                    errorModalCall('{{ __("Event validation error ")}}');
-                }
-            },   //success
-            complete: function( xhr ) {
-                $("#pageloader").hide();
-            },
-            error: function (ts) { 
-                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
-            }
-        }); //ajax-type            
+	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
+	var status = '';
+	$.ajax({
+		url: BASE_URL + '/confirm_event',
+		data: data,
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function( xhr ) {
+			$("#pageloader").show();
+		},
+		success: function (result) {
+			status = result.status;
+			if (status == 'success') {
+				successModalCall('{{ __("Event has been validated ")}}');
+				window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}'
+			}
+			else {
+				errorModalCall('{{ __("Event validation error ")}}');
+			}
+		},   //success
+		complete: function( xhr ) {
+			$("#pageloader").hide();
+		},
+		error: function (ts) { 
+			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+		}
+	}); //ajax-type            
 
-    }
+}
 
 </script>
 @endsection
