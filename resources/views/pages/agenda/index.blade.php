@@ -534,9 +534,9 @@ admin_main_style.css
                         <span id="event_btn_confirm_text">Validate<span>
 
                         </button>
-                        <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
+                        <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_unlock_text">Unlock<span>
-                        </button>
+                        </button> -->
                         <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_edit_text">View<span>
                         </a>
@@ -2009,21 +2009,21 @@ admin_main_style.css
                             const type_removed = [50, 51];
                             if(type_removed.includes(event.event_type) != true){ 
                                 $('#btn_confirm').show();
-                                $('#btn_confirm_unlock').hide();
+                                //$('#btn_confirm_unlock').hide();
                                 
                             } else {
                                 $('#btn_confirm').hide(); 
-                                $('#btn_confirm_unlock').show();
+                                //$('#btn_confirm_unlock').show();
                             }
                         } else {
                             $('#btn_confirm').hide();
-                            $('#btn_confirm_unlock').show();
+                            //$('#btn_confirm_unlock').show();
                         }
                         
                     } else {
                         $('#event_btn_edit_text').text("{{__('View')}}");
                         $('#btn_confirm').hide();
-                        $('#btn_confirm_unlock').show();
+                        //$('#btn_confirm_unlock').show();
                     }
                     
                     stime=moment(event.start).format('HH:mm');
