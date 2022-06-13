@@ -490,7 +490,7 @@ $("#button_lock_and_save").on('click', function(event) {
 	confirm_event();
 });
 function confirm_event(){
-	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
+	var data = 'school_id={{ $schoolId }}&p_event_auto_id={{ $eventId }}';
 	var status = '';
 	$.ajax({
 		url: BASE_URL + '/confirm_event',
@@ -504,6 +504,7 @@ function confirm_event(){
 			status = result.status;
 			if (status == 'success') {
 				successModalCall('{{ __("Event has been validated ")}}');
+				window.location.href = '/{{$schoolId}}/view-event/{{$eventId}}'
 			}
 			else {
 				errorModalCall('{{ __("Event validation error ")}}');

@@ -631,6 +631,7 @@ function confirm_event(){
 			status = result.status;
 			if (status == 'success') {
 				successModalCall('{{ __("Event has been validated ")}}');
+				window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}'
 			}
 			else {
 				errorModalCall('{{ __("Event validation error ")}}');
