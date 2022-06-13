@@ -78,6 +78,7 @@ class StudentsController extends Controller
             $schoolId = $school->id; 
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         $countries = Country::active()->get();
@@ -100,7 +101,7 @@ class StudentsController extends Controller
             // print_r($exStudent); exit;
         }
 
-        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces'));
+        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces','school'));
     }
 
      /**
