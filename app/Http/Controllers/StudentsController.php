@@ -404,7 +404,23 @@ class StudentsController extends Controller
                 
                 $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
                 if (!empty($alldata['email'])) {
-                    if (!$exist) {
+                    if (!$user) {
+                        $usersData = [
+                            'person_id' => $student->id,
+                            'person_type' =>'App\Models\Student',
+                            'username' =>$alldata['nickname'],
+                            'lastname' => $alldata['lastname'],
+                            'middlename'=>'',
+                            'firstname'=>$alldata['firstname'],
+                            'email'=>$alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password'=>Str::random(10),
+                            'is_mail_sent'=>0,
+                            'is_active'=>1,
+                            'is_firstlogin'=>0
+                        ];
+                        $user = User::create($usersData);
+                        $user->save();
                         // notify user by email about new Teacher role
                         if (config('global.email_send') == 1) {
                             $data = [];
@@ -431,7 +447,8 @@ class StudentsController extends Controller
                             // notify user by email about new Teacher role
                             if (config('global.email_send') == 1) {
                                 $data = [];
-                                $data['email'] = $user->email;
+                                $data['email'] = $alldata['email'];
+                                $user->update($data);
                                 $data['username'] = $data['name'] = $user->username;
                                 
                                 $verifyUser = [
