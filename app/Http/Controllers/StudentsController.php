@@ -78,6 +78,7 @@ class StudentsController extends Controller
             $schoolId = $school->id; 
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         $countries = Country::active()->get();
@@ -100,7 +101,7 @@ class StudentsController extends Controller
             // print_r($exStudent); exit;
         }
 
-        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces'));
+        return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces','school'));
     }
 
      /**
@@ -252,11 +253,11 @@ class StudentsController extends Controller
                         'email' => $alldata['email'],
                         'billing_method' => $alldata['billing_method'],
                         'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null ,
-                        'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
-                        'licence_arp' => $alldata['licence_arp'],
+                        'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
+                        'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
                         'licence_usp' => $alldata['licence_usp'],
-                        'level_skating_usp' => $alldata['level_skating_usp'],
-                        'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                        'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
+                        'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
                         'comment' => $alldata['comment'],
                     ];
 
@@ -413,11 +414,11 @@ class StudentsController extends Controller
                     'email' => $alldata['email'],
                     'billing_method' => $alldata['billing_method'],
                     'level_id' => $alldata['level_id'],
-                    'level_date_arp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])),
-                    'licence_arp' => $alldata['licence_arp'],
+                    'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
+                    'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
                     'licence_usp' => $alldata['licence_usp'],
-                    'level_skating_usp' => $alldata['level_skating_usp'],
-                    'level_date_usp' => date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])),
+                    'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
+                    'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
                     'comment' => $alldata['comment'],
                 ];
 
@@ -477,12 +478,16 @@ class StudentsController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id;
-            $schoolName = $school->school_name; 
+            // $schoolId = $school->id;
+            // $schoolName = $school->school_name; 
         }else {
-            $schoolId = $user->selectedSchoolId();
-            $schoolName = $user->selectedSchoolName(); 
+            $school = $user->getSelectedSchoolAttribute();
+            // $schoolId = $user->selectedSchoolId();
+            // $schoolName = $user->selectedSchoolName(); 
         }
+
+        $schoolId = $school->id;
+        $schoolName = $school->school_name; 
 
         $relationalData = SchoolStudent::where([
             ['student_id',$studentId]

@@ -52,7 +52,8 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button>
+				<a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a>
+				<!-- <button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button> -->
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -395,8 +396,8 @@ $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: t
 $('#save_btn').click(function (e) {
 		var formData = $('#add_teacher').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = 2;
-		// var priceFlag = 2;
+		// var error = 2;
+		var error = 0;
 		
 		$( ".form-control.requr" ).each(function( key, value ) {
 			var lname = +$(this).val();

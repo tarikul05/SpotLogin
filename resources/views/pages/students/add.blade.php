@@ -102,13 +102,15 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Rate') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control"id="billing_method" name="billing_method">
+												<option value="E" >coming soon</option>
+												<!-- comented for 1st release
 												<option value="E" {{ old('billing_method') == 'Y' ? 'selected' : ''}} >Event-wise</option>
 												<option value="M" {{ old('billing_method') == 'M' ? 'selected' : ''}} >Monthly</option>
-												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option>
+												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option> -->
 											</select>
 										</div>
 									</div>
@@ -191,14 +193,15 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="">Select level</option>
+													<option selected value="">Select level</option>
 													@foreach($levels as $key => $level)
-														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
+														<option value="{{ $level->id }}">{{ $level->title }}</option>
 													@endforeach
 												</select>
 											</div>
 										</div>
 									</div>
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
@@ -216,6 +219,7 @@
 											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -224,6 +228,7 @@
 											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
 										</div>
 									</div>
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
@@ -241,6 +246,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 								</div>
 							</div>
 							

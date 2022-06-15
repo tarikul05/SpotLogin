@@ -32,14 +32,16 @@ admin_main_style.css
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
-					<div class="col-sm-6 col-xs-12 header-area">
+					<div class="col-sm-4 col-xs-12 header-area">
 							<div class="page_header_class">
                                 <label for="calendar" id="cal_title" style="display: block;">
                                     {{__('Agenda')}}: 
                                 </label>
 							</div>
+                            
 					</div>
-					<div class="col-sm-6 col-xs-12 btn-area">
+                    
+					<div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
 
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
@@ -65,6 +67,7 @@ admin_main_style.css
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
                             
                             <input type="hidden" name="get_event_id" id="get_event_id" value="">
+                            <input type="hidden" name="get_validate_event_id" id="get_validate_event_id" value="">                         
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -94,14 +97,26 @@ admin_main_style.css
                             	
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
-                                    <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate</span></a>
-                                    <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete</span></a>
-							        <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
-                                    <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
-                                    <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
-                                        <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                                        <span id ="btn_export_events_cap">Excel</span>
-                                    </a>
+                                @php 
+                                $icalPersonal = route('ical.personalEvents');
+                                if(!empty($schoolId)){ 
+                                    $icalPersonal = route('ical.personalEventss',[$schoolId]);
+                                }
+                                @endphp
+                                <a href="{{ $icalPersonal }}" 
+                                id="personal_ics1" 
+                                target="_blank" class="btn btn-sm btn-theme-warn light-blue-txt">
+                                    <em class="glyphicon glyphicon-remove"></em>
+                                    <span id ="btn_validate_events_cap">Copy my schedule</span>
+                                </a>
+                                <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
+                                <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
+                                <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
+                                <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
+                                <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
+                                    <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
+                                    <span id ="btn_export_events_cap">Excel</span>
+                                </a>
                                 <!-- </div> -->
                             </div>
                             
@@ -393,6 +408,8 @@ admin_main_style.css
                                                                     <option value="0">No charge</option>
                                                                     <option value="1">Hourly rate</option>
                                                                     <option value="2">Price per student</option>
+                                                                    <option value="3">Coming Soon</option>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -513,7 +530,13 @@ admin_main_style.css
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
                         <p style="font-size: 20px;"></p>
-                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;"><span id="event_btn_confirm_text">Validate<span></button>
+                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
+                        <span id="event_btn_confirm_text">Validate<span>
+
+                        </button>
+                        <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
+                            <span id="event_btn_confirm_unlock_text">Unlock<span>
+                        </button> -->
                         <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_edit_text">View<span>
                         </a>
@@ -525,7 +548,7 @@ admin_main_style.css
     </div>
 </div>
 
-	<!-- End Tabs content -->
+<!-- End Tabs content -->
 @endsection
 
 
@@ -610,7 +633,7 @@ admin_main_style.css
     var currentTimezone = 'local';
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
-    var lockRecords=0;
+    var lockRecords=1;
     var zone =getTimeZone();
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
@@ -728,10 +751,25 @@ admin_main_style.css
         });
         menuHtml+='</ul>';
         $('#button_menu_div').append(menuHtml); 
-    
+        
+
+
+        $('#personal_ics').click(function (e) {
+            DownloadEventsICS('PersonnelEvents');
+        })
 		
 		
 	}); //ready
+
+    function DownloadEventsICS(CalType) {
+        var p_calendar_type = CalType,
+          file_name = '', data = '',
+          p_person_id = ReadSessionVariable('person_id');   //document.getElementById("sperson_id").value;
+
+        //alert(p_person_id);
+        var url = "../agenda/icalendar.php?type=ical&p_calendar_type=" + CalType + '&p_person_id=' + p_person_id;
+        window.location = url;
+    }
 
     function startOfWeek(date)
     {
@@ -749,10 +787,14 @@ admin_main_style.css
         //alert(event_url);
         window.location=event_url;
     }
-    function confirm_event(){
+    function confirm_event(unlock=false){
         var p_event_auto_id=document.getElementById('confirm_event_id').value;
-        var school_id=document.getElementById('school_id').value;
-        var data = 'school_id='+school_id+'&p_event_auto_id=' + p_event_auto_id;
+        //var school_id=document.getElementById('school_id').value;
+        var data = 'p_event_auto_id=' + p_event_auto_id;
+        if (unlock) {
+            var data = 'unlock=1&p_event_auto_id=' + p_event_auto_id;
+        }
+        
         var status = '';
         $.ajax({
             url: BASE_URL + '/confirm_event',
@@ -765,7 +807,12 @@ admin_main_style.css
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    successModalCall('{{ __("Event has been validated ")}}');
+                    if (unlock) {
+                        successModalCall('{{ __("Event has been unlocked ")}}');
+                    } else{
+                        successModalCall('{{ __("Event has been validated ")}}');
+                    }
+                    
                     //window.location.reload(false);
                     getFreshEvents();
                    // window.location.reload(false);
@@ -1387,10 +1434,11 @@ admin_main_style.css
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
+        var p_event_id=document.getElementById("get_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmModalCall('Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmDeleteModalCall(p_event_id,'Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
         return false;
     })
 
@@ -1405,18 +1453,20 @@ admin_main_style.css
             errorModalCall('permission_issue_common_text');
             return false;
         }
-        
+        var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
-        p_to_date=document.getElementById("date_to").value;
+        p_to_date=moment(curdate).format("YYYY-MM-DD");
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
+        var get_validate_event_id=document.getElementById("get_validate_event_id").value;
+        
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(p_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(get_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
@@ -1503,10 +1553,13 @@ admin_main_style.css
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
+                var selected_validate_ids = [];
                 const type_removed = [50, 51];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
-                        
+                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
+                        let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
+                        let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
@@ -1518,16 +1571,25 @@ admin_main_style.css
                         }
                         if (teacher_name == null) {
                             teacher_name = '';
-                        }     
-                        selected_ids.push(JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                        //console.log('selected='+selected_ids.join("|"));
+                        } 
+                        var curdate=new Date();
+                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
+                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        }    
+                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        
                         
                     }
                     
                 });
                 selected_ids.join("|");
+                selected_validate_ids.join("|");
                 document.getElementById("get_event_id").value = selected_ids;
-
+                if (selected_validate_ids.length ==0) {
+                    document.getElementById("btn_validate_events").style.display = "none";
+                }
+                document.getElementById("get_validate_event_id").value = selected_validate_ids;
+                
                 //alert('get refresh');
                 $("#agenda_table tr:gt(0)").remove();
                 $('#calendar').fullCalendar('removeEvents');
@@ -1624,15 +1686,22 @@ admin_main_style.css
         console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
-
+        let curdate=new Date();
+        let p_from_date=moment(curdate).format("YYYY-MM-DD");
+        // if (getCookie("date_from")){
+        //     p_from_date = getCookie("date_from");
+        // } 
+        console.log(p_from_date);
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
-			slotDuration: '00:30:00',
+			slotDuration: '00:15:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            //defaultView: 'month',
-            //defaultDate: '2022-04-12',
+            minTime: '05:00:00',
+            maxTime: '24:00:00',
+            //defaultView: 'agendaweek',
+            defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false, 
             editable: false,
             selectable: true,
@@ -1666,7 +1735,7 @@ admin_main_style.css
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
 			// allDayDefault: true,
-			defaultTimedEventDuration: '00:30:00',
+			defaultTimedEventDuration: '00:15:00',
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
@@ -1891,7 +1960,11 @@ admin_main_style.css
                     if (event.is_locked == '1'){        
                         $(el).find('div.fc-content').prepend(icon);
                         
+                        
+                    }else if (event.is_locked == '0'){        
+                        icon='';
                         lockRecords=1;
+                        
                     } else if (event.event_mode == '0'){
                         icon ='<i class="fa fa-file"></i> ';
                     } else{
@@ -1936,16 +2009,21 @@ admin_main_style.css
                             const type_removed = [50, 51];
                             if(type_removed.includes(event.event_type) != true){ 
                                 $('#btn_confirm').show();
+                                //$('#btn_confirm_unlock').hide();
+                                
                             } else {
                                 $('#btn_confirm').hide(); 
+                                //$('#btn_confirm_unlock').show();
                             }
                         } else {
                             $('#btn_confirm').hide();
+                            //$('#btn_confirm_unlock').show();
                         }
                         
                     } else {
                         $('#event_btn_edit_text').text("{{__('View')}}");
                         $('#btn_confirm').hide();
+                        //$('#btn_confirm_unlock').show();
                     }
                     
                     stime=moment(event.start).format('HH:mm');
@@ -2036,30 +2114,38 @@ admin_main_style.css
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
-                        document.getElementById("btn_validate_events").style.display = "block";
+                        let selected_validate_ids = document.getElementById("get_validate_event_id").value;
+                        if (selected_validate_ids.length ==0) {
+                            document.getElementById("btn_validate_events").style.display = "none";
+                        }else {
+                            document.getElementById("btn_validate_events").style.display = "block";
+                        }
+                        
                 
                     }
                 }
 
-                if ((foundRecords == 1) && (lockRecords == 0))
+                if (foundRecords > 0)
                 {
                     if (user_role == 'student') {
-                        document.getElementById("btn_delete_events").style.display = "none";    
-                        document.getElementById("btn_validate_events").style.display = "none";    
-                        
-                        
+                        document.getElementById("btn_validate_events").style.display = "none"; 
+                        document.getElementById("btn_delete_events").style.display = "none"; 
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
-                        //alert('delete button will visible');
                         document.getElementById("btn_delete_events").style.display = "block";
                         document.getElementById("btn_validate_events").style.display = "block";
                     }
+                    if (lockRecords == 0)
+                    {
+                        document.getElementById("btn_validate_events").style.display = "none"; 
+                        
+                    }
+                } else{
+                    document.getElementById("btn_delete_events").style.display = "none";  
+                    document.getElementById("btn_validate_events").style.display = "none";  
                 }
-                else
-                {
-                    document.getElementById("btn_delete_events").style.display = "none";
-                    //document.getElementById("btn_validate_events").style.display = "none";
-                }
+
+                
                 lockRecords=0;
                     
                 var view = $('#calendar').fullCalendar('getView'); 
@@ -2113,6 +2199,7 @@ admin_main_style.css
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
+                SetEventCookies();
             },
             dayClick: function(date, jsEvent, view, resource) {
                 // $('#start_date').val('');

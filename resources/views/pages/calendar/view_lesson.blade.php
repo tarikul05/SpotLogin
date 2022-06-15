@@ -24,7 +24,8 @@
 			</div>
 		</nav>
 		<!-- Tabs navs -->
-
+		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
+							
 		<!-- Tabs content -->
 		<div class="tab-content view_part" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -32,10 +33,13 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
-						<div class="alert alert-warning">
-							<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
-							<button class="btn btn-sm btn-warning">Unlock</button>
-						</div>
+						@if($lessonData->is_locked ==1)
+							<div class="alert alert-warning">
+								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								
+							</div>
+						@endif
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
@@ -190,6 +194,46 @@
 
 @section('footer_js')
 <script type="text/javascript">
+	function confirm_event(unlock=false){
+        var p_event_auto_id=document.getElementById('confirm_event_id').value;
+        console.log(p_event_auto_id);
+        var data = 'p_event_auto_id=' + p_event_auto_id;
+        if (unlock) {
+            var data = 'unlock=1&p_event_auto_id=' + p_event_auto_id;
+        }
+        
+        var status = '';
+        $.ajax({
+            url: BASE_URL + '/confirm_event',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function( xhr ) {
+                $("#pageloader").show();
+            },
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+                    // if (unlock) {
+                    //     successModalCall('{{ __("Event has been unlocked ")}}');
+                    // } else{
+                    //     successModalCall('{{ __("Event has been validated ")}}');
+                    // }
+					// window.location.reload();
+					window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
+                }
+                else {
+                    errorModalCall('{{ __("Event validation error ")}}');
+                }
+            },   //success
+            complete: function( xhr ) {
+                $("#pageloader").hide();
+            },
+            error: function (ts) { 
+                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+            }
+        }); //ajax-type            
 
+    }
 </script>
 @endsection

@@ -16,6 +16,7 @@ use App\Models\LessonPrice;
 use App\Models\Currency;
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 class AgendaController extends Controller
 {
     /**
@@ -36,10 +37,6 @@ class AgendaController extends Controller
     {
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
-        $school = School::active()->find($schoolId);
-        // if (empty($school)) {
-        //     return redirect()->route('schools')->with('error', __('School is not selected'));
-        // }
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             $schoolId = 0;
@@ -322,28 +319,47 @@ class AgendaController extends Controller
 
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            // $data['school_id']
-            // $p_user_id = Auth::user()->id;
-
             $eventUpdate = [
                 'is_locked' => 1
             ];
+            if (isset($data['unlock'])) {
+                $eventUpdate = [
+                    'is_locked' => 0
+                ];
+            }
             $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
 
 
             $eventDetail = [
                 'is_locked' => 1,
             ];
-            $eventdetail = EventDetails::where('event_id', $p_event_auto_id)->get();
+            if (isset($data['unlock'])) {
+                $eventDetail = [
+                    'is_locked' => 0
+                ];
+            }
+            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
             foreach ($eventdetails as $key => $eventdetail) {
                 $eventDetailPresent = [
                     'is_locked' => 1,
                     'participation_id' => 200,
                 ];
+                if (isset($data['unlock'])) {
+                    $eventDetailPresent = [
+                        'is_locked' => 0,
+                        'participation_id' => 200,
+                    ];
+                }
                 $eventDetailAbsent = [
                     'is_locked' => 1,
                     'participation_id' => 199,
                 ];
+                if (isset($data['unlock'])) {
+                    $eventDetailAbsent = [
+                        'is_locked' => 0,
+                        'participation_id' => 200,
+                    ];
+                }
                 if ($eventdetail->participation_id == 0) {
                     $eventdetail = $eventdetail->update($eventDetailPresent);
                 } else {
@@ -786,7 +802,7 @@ class AgendaController extends Controller
 
 
     /**
-     *  AJAX confirm event
+     *  AJAX get locations
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -812,7 +828,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get students
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -858,7 +874,7 @@ class AgendaController extends Controller
     }
 
     /**
-     *  AJAX confirm event
+     *  AJAX get teachers
      * 
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
@@ -1020,6 +1036,183 @@ class AgendaController extends Controller
             return response()->json($result);
         }
         
+    }
+
+
+    
+      /**
+     *  icalendar export
+     * @return Response
+    */
+    public function icalPersonalEvents(Request $request, $schoolId = null,Event $event)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            $schoolId = 0;
+        }
+        $event_types = config('global.event_type'); 
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $data['school_id'] = $schoolId;
+        $data['user_role'] = $user_role;
+        $data['person_id'] = $user->person_id;
+        $data['v_start_date']=Carbon::now()->format('Y-m-d');
+        $data['v_end_date'] = Carbon::now()->addDays(365)->format('Y-m-d');
+            
+
+        $query = $event->filter_for_iCal($data);
+        //dd($eventData->count());
+        $result = $query->get();
+        $dt_format='Ymd\THis\Z';
+
+        
+        //$v_end_date=date_add(v_start_date,interval 365 day);
+        // the iCal date format. Note the Z on the end indicates a UTC timestamp.
+        define('DATE_ICAL', $dt_format);  //soumen enabled timezone
+        
+        $file_name="PersonnelEvents";
+
+		// if ($p_calendar_type == "disponibilites") {
+		// 	$file_name="IcetimeEvents";
+		// }
+		// else {
+		// 	$file_name=$p_calendar_type;
+		// }
+			
+        $class="PUBLIC";
+        $output = "BEGIN:VCALENDAR\nMETHOD:PUBLISH\nVERSION:2.0\nPRODID:-//www.sportlogin.ch//APGVApp//FR\n";
+
+
+        $output .= "BEGIN:VTIMEZONE
+        TZID:UTC
+        BEGIN:STANDARD
+        DTSTART:16010101T000000Z
+        X-WR-TIMEZONE:UTC
+        TZOFFSETFROM:+0000
+        TZOFFSETTO:+0000
+        END:STANDARD
+        END:VTIMEZONE\n";
+
+        /*
+        $output .= "BEGIN:VTIMEZONE
+        TZID:Europe/Zurich
+        BEGIN:STANDARD
+        DTSTART:16010101T000000
+        X-WR-TIMEZONE:Europe/Zurich
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0200
+        END:STANDARD
+        END:VTIMEZONE\n";
+        */
+        /*
+        $output .= "BEGIN:VTIMEZONE
+        TZID:Europe/London
+        X-LIC-LOCATION:Europe/Zurich
+        BEGIN:DAYLIGHT
+        TZOFFSETFROM:+0100
+        TZOFFSETTO:+0100
+        TZNAME:BST
+        DTSTART:19700329T010000
+        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+        END:DAYLIGHT
+        END:VTIMEZONE\n";
+        */
+        $event_type_all = config('global.event_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+        $provinces = config('global.provinces'); 
+        
+
+        $seq=0;
+        foreach ($result as $key => $row) {
+        // while($row = mysql_fetch_array($result))
+        // {
+            $seq=$seq+1;
+            $row->event_type_name = $event_type_all[$row->event_type];
+            $row->subject_sumamry = $row->event_title.' '.$row->event_type_name.' '.$row->event_category_name;
+            $subject_summary=$row->subject_sumamry;
+            $id=$row->id;
+            $uid=$row->id;    //uniqid();
+            $status='CONFIRMED';
+            $start=$row->start_datetime;
+            $end=$row->end_datetime;
+            $location_name=$row->location_name;
+            //$teacher = Teacher::find($result->seller_id);
+            if ($row->event_type == 51) {
+               $parti = '';
+            } else{
+                $parti = ': Participant(s):'.$row->teacher_name;
+            }
+            $row->desc_text = $row->subject_sumamry.' '.$parti;
+            $description=$row->desc_text;
+            
+                /* uncomment to enable timezone Z for UTC
+                            
+                $output .="BEGIN:VEVENT\nDTSTART:".date("Ymd\THis\Z",strtotime($start))."
+                DTEND:".date("Ymd\THis\Z",strtotime($end))."
+                DTSTAMP:".date("Ymd\THis\Z")."
+
+                DTSTART;TZID="Europe/Zurich":'.date($dt_format,strtotime($start)).'
+                DTEND;TZID="Europe/Zurich":'.date($dt_format,strtotime($end)).'
+
+                DTSTART:'.date($dt_format,strtotime($start)).'
+                DTEND:'.date($dt_format,strtotime($end)).'
+                */
+
+
+            if ($row->fullday_flag == 'Y' ) {
+            $output .='BEGIN:VEVENT
+            DTSTART;VALUE=DATE:'.$start.'
+            DTEND;VALUE=DATE:'.$end;
+            } else {
+            $output .='BEGIN:VEVENT
+            DTSTART:'.$start.'
+            DTEND:'.$end;
+            }
+
+            /*
+            $output .='BEGIN:VEVENT
+            DTSTART:'.$start.'
+            DTEND:'.$end;
+            */
+
+            $output .='
+            LOCATION:'.$location_name.'
+            TRANSP: OPAQUE
+            SEQUENCE:'.$seq.'
+            UID:'.$uid.' 
+            DTSTAMP:'.date($dt_format).'
+            SUMMARY:'.$subject_summary.'
+            DESCRIPTION:'.$description.'
+            PRIORITY:3
+            CLASS:'.$class.'
+            BEGIN:VALARM
+            TRIGGER:-PT30M
+            ACTION:DISPLAY
+            DESCRIPTION:Reminder
+            END:VALARM
+            END:VEVENT
+            ';
+
+		}
+        $output .="END:VCALENDAR";
+        
+        header('Content-Type: text/calendar; charset=utf-8');
+        header('Content-Disposition: attachment; filename="'.$file_name.'.ics"');
+        Header('Content-Length: '.strlen($output));
+        //Header('Connection: close');
+        echo $output;
+        
+        //echo json_encode(array('status'=>'success'));
     }
     
 
