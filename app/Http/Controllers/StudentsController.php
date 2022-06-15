@@ -374,9 +374,6 @@ class StudentsController extends Controller
                     'email2' => $alldata['email2'],
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
                 ];
-                // echo "<pre>";
-                // print_r($alldata['mother_notify']);
-                // print_r($studentData); exit;
                 if($request->file('profile_image_file'))
                 {
                   $image = $request->file('profile_image_file');
@@ -403,7 +400,58 @@ class StudentsController extends Controller
                     }
                   }
                 }
+                $user = User::where(['person_id'=>$student->id])->first();
                 
+                $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
+                if (!empty($alldata['email'])) {
+                    if (!$exist) {
+                        // notify user by email about new Teacher role
+                        if (config('global.email_send') == 1) {
+                            $data = [];
+                            $data['email'] = $user->email;
+                            $data['username'] = $data['name'] = $user->username;
+                            
+                            $verifyUser = [
+                                'school_id' => $alldata['school_id'],
+                                'person_id' => $student->id,
+                                'person_type' => 'App\Models\Student',
+                                'token' => Str::random(10),
+                                'token_type' => 'VERIFY_SIGNUP',
+                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                            ];
+                            $verifyUser = VerifyToken::create($verifyUser);
+                            $data['token'] = $verifyUser->token; 
+
+                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                            }
+                        } 
+                    }else {
+                        if ($exist->email != $alldata['email']) {
+                            // notify user by email about new Teacher role
+                            if (config('global.email_send') == 1) {
+                                $data = [];
+                                $data['email'] = $user->email;
+                                $data['username'] = $data['name'] = $user->username;
+                                
+                                $verifyUser = [
+                                    'school_id' => $alldata['school_id'],
+                                    'person_id' => $student->id,
+                                    'person_type' => 'App\Models\Student',
+                                    'token' => Str::random(10),
+                                    'token_type' => 'VERIFY_SIGNUP',
+                                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                                ];
+                                $verifyUser = VerifyToken::create($verifyUser);
+                                $data['token'] = $verifyUser->token; 
+
+                                if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                                    return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                                }
+                            } 
+                        }
+                    }
+                }
                 Student::where('id', $student->id)->update($studentData);
                 
                 $schoolStudent = [
@@ -490,8 +538,10 @@ class StudentsController extends Controller
         $schoolName = $school->school_name; 
 
         $relationalData = SchoolStudent::where([
-            ['student_id',$studentId]
+            ['student_id',$studentId],
+            ['school_id',$schoolId]
         ])->first();
+        //dd($relationalData);
 
         $lanCode = 'en';
         if (Session::has('locale')) {
