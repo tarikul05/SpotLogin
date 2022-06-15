@@ -669,6 +669,15 @@ label {
 button#changer_btn {
     padding: 9px;
 }
+.p-l-n {
+    padding-left: 0;
+}
+.p-r-n {
+    padding-right: 0;
+}
+#all_day_div111 .col-sm-7 {
+    margin-top: 12px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
@@ -757,5 +766,35 @@ button#changer_btn {
     #nav-tab .nav-link {
         margin-right: 12px;
         padding-right: 3px;
+    }
+    #addAgendaModalWin .col-sm-7 {
+        padding: 0;
+    }
+    #addAgendaModalWin .col-sm-6 {
+        margin-bottom: 10px;
+    }
+    #addAgendaModalWin .lesson .col-sm-2 {
+        padding-left: 0;
+    }
+    .cal_area {
+        margin-top: 70px;
+    }
+    .col-sm-6.col-xs-12.btn-area {
+        position: relative;
+    }
+    #ex1-content .col-sm-4 {
+        margin-bottom: 10px;
+    }
+    .btn_area {
+        z-index: 9;
+    }
+    #all_day_div111 label {
+        float: left;
+        width: 20%;
+    }
+    #all_day_div111 .col-sm-7 {
+        float: left;
+        width: 25%;
+        margin-top: 12px;
     }
 }

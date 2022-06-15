@@ -714,10 +714,10 @@ button#btn_copy_events {
     padding-top: 2px;
 }
 button.btn.btn-theme-success.dropdown-toggle {
-    height: 37px !important;
+    height: 43px !important;
 }
 a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
-    padding-top: 5px;
+    padding-top: 9px;
 }
 a.btn.btn-theme-success.dropdown-toggle.btn-add-event i {
     padding-right: 9px;
@@ -1266,5 +1266,39 @@ label.profile_img_area {
     .fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
         float: right;
         margin-top: 19px;
+    }
+    .navbar-nav.user-area a.user_profile {
+        padding: 12px 10px 10px 0px !important;
+    }
+    img.admin_logo {
+        border-radius: 90px;
+        width: 30px !important;
+        height: 30px !important;
+        margin-right: 10px !important;
+        float: left;
+    }
+    span.admin_name {
+        line-height: 31px !important;
+    }
+    .dropdown-menu.header a {
+        text-align: left !important;
+        padding-top: 10px !important;
+        line-height: 13px !important;
+    }
+    .dropdown-menu.header.show {
+        display: block;
+        background: #35404d;
+        max-width: 180px;
+        margin-top: 0px;
+        right: auto !important;
+        left: 38px !important;
+        padding-top: 0;
+        padding-bottom: 0;
+        position: relative;
+        top: -40px !important;
+    }
+    .dro_set {
+        width: 30px;
+        margin-top: 0px;
     }
 }
