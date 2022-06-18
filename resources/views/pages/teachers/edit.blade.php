@@ -280,7 +280,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
@@ -290,7 +290,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div id="commentaire_div">
 								<div class="section_header_class">

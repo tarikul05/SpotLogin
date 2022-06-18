@@ -81,6 +81,7 @@ class TeachersController extends Controller
             $schoolId = $school->id; 
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         $countries = Country::active()->get();
@@ -96,7 +97,7 @@ class TeachersController extends Controller
         $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
 
-        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices','provinces'));
+        return view('pages.teachers.add')->with(compact('countries','genders','exTeacher','exUser','searchEmail','schoolId','eventCategory','lessonPrices','provinces','school'));
     }
 
      /**
@@ -118,6 +119,7 @@ class TeachersController extends Controller
             $schoolId = $school->id; 
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         DB::beginTransaction(); 
@@ -332,6 +334,7 @@ class TeachersController extends Controller
         }else {
             $schoolId = $user->selectedSchoolId();
             $schoolName = $user->selectedSchoolName(); 
+            $school = School::active()->find($schoolId);
         }
 
 
