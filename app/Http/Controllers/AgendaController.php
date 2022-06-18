@@ -615,7 +615,7 @@ class AgendaController extends Controller
             }
             
             
-            $allday = ($fetch->fullday_flag == "true") ? true : false;
+            $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {

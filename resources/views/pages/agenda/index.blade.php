@@ -1746,13 +1746,13 @@ admin_main_style.css
             timezone: currentTimezone, 
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
-			// allDayDefault: true,
+			allDayDefault: true,
 			defaultTimedEventDuration: '00:15:00',
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
             events: JSON.parse(json_events),
-            allDaySlot: true,
+            //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
 			},
@@ -1968,7 +1968,13 @@ admin_main_style.css
                         etime=stime;
                     }
                     foundRecords=1; //found valid record;
-                    
+                    //event.allDay = true;
+                    console.log(event)
+                    if (event.allDay) {
+                        $(el).find('div.fc-content').prepend(icon);
+                    } else {
+                        $(el).find('.fc-time').prepend(icon);
+                    }
                     var icon ='<span class="fa fa-lock txt-orange"></span>';
                     if (event.is_locked == '1'){        
                         $(el).find('div.fc-content').prepend(icon);
