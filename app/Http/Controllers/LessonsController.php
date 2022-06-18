@@ -353,6 +353,7 @@ class LessonsController extends Controller
             $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         $lessonlId = $request->route('lesson'); 
