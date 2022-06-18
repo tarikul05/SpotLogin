@@ -962,7 +962,7 @@ function DeleteProfileImage() {
 
 
 function validateSchoolForm() {
-
+	return true;
 	//var p_school_code = document.getElementById("school_code").value;
 	let error = false;
 
@@ -971,28 +971,28 @@ function validateSchoolForm() {
 	// 	error = true;
 	// }
 	//added for max students and teachers
-	var max_students = document.getElementById("max_students").value;
-	var max_teachers = document.getElementById("max_teachers").value;
+	// var max_students = document.getElementById("max_students").value;
+	// var max_teachers = document.getElementById("max_teachers").value;
 
-	if (max_students.trim() == 0) {
-			//alert("nombre max invalide");
-			errorModalCall("{{ __('Maximum students required') }}");
-			document.getElementById("max_students").focus();
-			error = true;
-	}
-	if (max_teachers.trim() == 0) {
-			//alert("nombre max invalide");	
-			errorModalCall("{{ __('Maximum teacher required') }}");
-			document.getElementById("max_teachers").focus();
-			error = true;
-	}
-	if (error) {
-		return false;
-	}            			
-	else
-	{
-		return true;
-	}
+	// if (max_students.trim() == 0) {
+	// 		//alert("nombre max invalide");
+	// 		errorModalCall("{{ __('Maximum students required') }}");
+	// 		document.getElementById("max_students").focus();
+	// 		error = true;
+	// }
+	// if (max_teachers.trim() == 0) {
+	// 		//alert("nombre max invalide");	
+	// 		errorModalCall("{{ __('Maximum teacher required') }}");
+	// 		document.getElementById("max_teachers").focus();
+	// 		error = true;
+	// }
+	// if (error) {
+	// 	return false;
+	// }            			
+	// else
+	// {
+	// 	return true;
+	// }
 }
 
   
