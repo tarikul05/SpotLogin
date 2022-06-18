@@ -2697,12 +2697,12 @@ $('#add_lesson').on('submit', function(e) {
             }
         }
         
-        if(title == ''){
-            var errMssg = 'Title required';
-            $('#Title').addClass('error');
-        }else{
-            $('#Title').removeClass('error');
-        }
+        // if(title == ''){
+        //     var errMssg = 'Title required';
+        //     $('#Title').addClass('error');
+        // }else{
+        //     $('#Title').removeClass('error');
+        // }
 
         if( evetCat == undefined || evetCat == ''){
             var errMssg = '{{ __("Select event category") }}';

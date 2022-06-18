@@ -48,7 +48,7 @@ class LessonsController extends Controller
         }
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
 
@@ -141,7 +141,7 @@ class LessonsController extends Controller
         $relationData = EventDetails::active()->where(['event_id'=>$eventId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
         $lessonPrice = LessonPrice::active()->get();
@@ -263,7 +263,7 @@ class LessonsController extends Controller
         }
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
@@ -361,7 +361,7 @@ class LessonsController extends Controller
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
         $lessonPrice = LessonPrice::active()->get();
@@ -651,7 +651,7 @@ class LessonsController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         return view('pages.calendar.add_coach_off')->with(compact('schoolId','professors'));
     }
 
@@ -723,7 +723,7 @@ class LessonsController extends Controller
         }
         $coachoffId = $request->route('id'); 
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         if (!empty($coachoffData)){
             return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
         }else{
