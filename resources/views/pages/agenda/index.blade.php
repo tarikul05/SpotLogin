@@ -129,7 +129,7 @@ admin_main_style.css
             <div class="row" style="margin:0;">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     @csrf
-                    <section class="panel" style="border: 0;box-shadow: none;">
+                    <section class="panel cal_area" style="border: 0;box-shadow: none;">
                         <label id="loading" style="display:none;">Loading....</label> 
                         <form action="#" method="post">
                         
@@ -265,7 +265,7 @@ admin_main_style.css
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <div class="col-md-10 offset-md-1" style="padding-left:0"> 
+                            <div class="col-md-10 offset-md-1 p-l-n p-r-n"> 
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-sm-3 text-left">Agenda Type :</label>
                                     <div class="col-sm-7">
@@ -1698,7 +1698,8 @@ admin_main_style.css
 			slotDuration: '00:15:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            minTime: '05:00:00',
+            // minTime: '05:00:00',
+            scrollTime: '05:00:00',
             maxTime: '24:00:00',
             //defaultView: 'agendaweek',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
@@ -2696,12 +2697,12 @@ $('#add_lesson').on('submit', function(e) {
             }
         }
         
-        if(title == ''){
-            var errMssg = 'Title required';
-            $('#Title').addClass('error');
-        }else{
-            $('#Title').removeClass('error');
-        }
+        // if(title == ''){
+        //     var errMssg = 'Title required';
+        //     $('#Title').addClass('error');
+        // }else{
+        //     $('#Title').removeClass('error');
+        // }
 
         if( evetCat == undefined || evetCat == ''){
             var errMssg = '{{ __("Select event category") }}';
