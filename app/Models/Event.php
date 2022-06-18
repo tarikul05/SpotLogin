@@ -138,22 +138,15 @@ class Event extends BaseModel
 
         if (isset($params['p_from_date'])) {
             $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
-            
-            if (!$toFilterDate) {
-                $toFilterDate = now();
-            }
         } 
         
         if (isset($params['p_to_date'])) {
             $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
-            
-            if (!$fromFilterDate) {
-                $fromFilterDate = now();
-            }
         }
 
 
         $query->where('deleted_at', null);
+        $query->where('is_locked', 0);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
