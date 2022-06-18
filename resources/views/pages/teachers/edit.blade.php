@@ -78,7 +78,6 @@
 											<select class="form-control" name="availability_select" id="availability_select">
 												<option value="10" >Active</option>
 												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
 											</select>
 										</div>
 									</div>
