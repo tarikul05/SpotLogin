@@ -114,7 +114,7 @@ class AgendaController extends Controller
             }
             
             
-            $allday = ($fetch->fullday_flag == "true") ? true : false;
+            $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
@@ -502,6 +502,7 @@ class AgendaController extends Controller
                     'price_amount_buy' => $fetch->price_amount_buy,
                     'price_amount_sell' => $fetch->price_amount_sell,
                     'fullday_flag' => $fetch->fullday_flag,
+                    'allDay' => ($fetch->fullday_flag == "Y") ? true : false,
                     'description' => $fetch->description,
                     'location_id' => $fetch->location_id,
                     'teacher_id' => $fetch->teacher_id,

@@ -1752,6 +1752,7 @@ admin_main_style.css
 			nextDayThreshold: '00:00',
             nowIndicator: true,
             events: JSON.parse(json_events),
+            allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
 			},
@@ -2189,6 +2190,34 @@ admin_main_style.css
                     return false;
                 });
                                     
+            },
+
+            // Renders events onto the view and populates the View's segment array
+            renderEvents: function(events) {
+                var dayEvents = [];
+                var timedEvents = [];
+                var daySegs = [];
+                var timedSegs;
+                var i;
+
+                // separate the events into all-day and timed
+                for (i = 0; i < events.length; i++) {
+                    if (events[i].allDay) {
+                        dayEvents.push(events[i]);
+                    }
+                    else {
+                        timedEvents.push(events[i]);
+                    }
+                }
+
+                // render the events in the subcomponents
+                timedSegs = this.timeGrid.renderEvents(timedEvents);
+                if (this.dayGrid) {
+                    daySegs = this.dayGrid.renderEvents(dayEvents);
+                }
+
+                // the all-day area is flexible and might have a lot of events, so shift the height
+                this.updateHeight();
             },
                 
             viewRender: function( view, el ) {
