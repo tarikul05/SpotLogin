@@ -132,7 +132,8 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
                         console.log(element+'hhh');
                     });
                     
-                modalHtml +=`</ul>
+                modalHtml +=`</ul><div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`
+                modalHtml +=`
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
                     <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
                 </div>
