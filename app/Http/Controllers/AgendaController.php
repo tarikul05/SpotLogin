@@ -586,7 +586,11 @@ class AgendaController extends Controller
         }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+            }
         }
+
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
         
         //$data['school_id'] = $schoolId;
