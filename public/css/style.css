@@ -634,11 +634,12 @@ table.dataTable.no-footer {
     font-family: "Gilroy-SemiBold";
     font-weight: normal;
     font-size: 13px;
+    color: black;
 }
 .dropdown-menu.action.header a:hover,
 .dropdown-menu.action.list a:hover {
     color: #1e2125;
-    background: transparent;
+    background: #e9ecef;
 }
 .dropdown-menu.action.header i,
 .dropdown-menu.action.list i {
