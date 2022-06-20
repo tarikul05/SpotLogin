@@ -323,16 +323,22 @@ admin_main_style.css
                                                         </div>
                                                     </div>
                                                     <div class="form-group row show_coach_off hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
-                                                        <div class="col-sm-7">
-                                                            <div class="selectdiv">
-                                                                <select class="form-control" id="teacher_select" name="teacher_select">
-                                                                    @foreach($professors as $key => $professor)
-                                                                        <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
+                                                    @if(!$AppUI->isTeacherAdmin())
+                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+                                                    @endif
+                                                    @if($AppUI->isTeacherAdmin())
+                                                        <input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+                                                    @else	
+                                                    <div class="col-sm-7">
+                                                        <div class="selectdiv">
+                                                            <select class="form-control" id="teacher_select" name="teacher_select">
+                                                                @foreach($professors as $key => $professor)
+                                                                    <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
+                                                    </div>
+                                                    @endif
                                                     </div>
                                                     <div class="form-group row hide_coach_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
@@ -407,11 +413,9 @@ admin_main_style.css
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sis_paying" name="sis_paying">
-                                                                    <option value="0">No charge</option>
-                                                                    <option value="1">Hourly rate</option>
-                                                                    <option value="2">Price per student</option>
-                                                                    <option value="3">Coming Soon</option>
-
+                                                                    <option value="0">Coming Soon</option>
+                                                                    <!-- <option value="1">Hourly rate</option>
+                                                                    <option value="2">Price per student</option> -->
                                                                 </select>
                                                             </div>
                                                         </div>
