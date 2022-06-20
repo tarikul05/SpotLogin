@@ -67,9 +67,13 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} : <?php echo $AppUI->isTeacherAdmin(); ?></label>
+									@if(!$AppUI->isTeacherAdmin())
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} : </label>
+									@endif
 									<div class="col-sm-7">
-									
+										@if($AppUI->isTeacherAdmin())
+											<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+										@else	
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
 												@foreach($professors as $key => $professor)
@@ -77,6 +81,7 @@
 												@endforeach
 											</select>
 										</div>
+										@endif
 									</div>
 								</div>
 								<div class="form-group row">
