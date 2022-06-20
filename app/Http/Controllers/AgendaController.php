@@ -58,6 +58,9 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
             $schools = $user->schools();
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+            }
         }
         
 
