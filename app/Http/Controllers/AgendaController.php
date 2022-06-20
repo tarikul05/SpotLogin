@@ -58,6 +58,9 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
             $schools = $user->schools();
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+            }
         }
         
 
@@ -114,7 +117,7 @@ class AgendaController extends Controller
             }
             
             
-            $allday = ($fetch->fullday_flag == "true") ? true : false;
+            $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
@@ -502,6 +505,7 @@ class AgendaController extends Controller
                     'price_amount_buy' => $fetch->price_amount_buy,
                     'price_amount_sell' => $fetch->price_amount_sell,
                     'fullday_flag' => $fetch->fullday_flag,
+                    'allDay' => ($fetch->fullday_flag == "Y") ? true : false,
                     'description' => $fetch->description,
                     'location_id' => $fetch->location_id,
                     'teacher_id' => $fetch->teacher_id,
@@ -586,7 +590,11 @@ class AgendaController extends Controller
         }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+            }
         }
+
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
         
         //$data['school_id'] = $schoolId;
@@ -614,7 +622,7 @@ class AgendaController extends Controller
             }
             
             
-            $allday = ($fetch->fullday_flag == "true") ? true : false;
+            $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
@@ -916,20 +924,20 @@ class AgendaController extends Controller
             'message' => __('failed to delete'),
         );
         try {
-            $data = $request->all();
-            $p_from_date= trim($data['p_from_date']);
-            $p_to_date= trim($data['p_to_date']);
+            $dataParam = $request->all();
+            $data['p_from_date']= trim($dataParam['p_from_date']);
+            $data['p_to_date']= trim($dataParam['p_to_date']);
         
-            $data['school_id']= trim($data['p_event_school_id']);
-            $data['event_type']= trim($data['p_event_type_id']);
-            $data['teacher_id']= trim($data['p_teacher_id']);
-            $data['student_id']= trim($data['p_student_id']);
+            $data['school_id']= trim($dataParam['p_event_school_id']);
+            $data['event_type']= trim($dataParam['p_event_type_id']);
+           // $data['teacher_id']= trim($dataParam['p_teacher_id']);
+            $data['student_id']= trim($dataParam['p_student_id']);
             $p_user_id=Auth::user()->id;
-
-            
+            $data['is_locked']=0;
             if (isset($data['p_from_date'])) {
                 
-                $eventData = $event->multiDelete($data)->delete();
+                $query = $event->multiDelete($data);
+                $eventData = $query->delete();
             }
       
             if ($eventData)
