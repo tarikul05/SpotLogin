@@ -678,6 +678,9 @@ button#changer_btn {
 #all_day_div111 .col-sm-7 {
     margin-top: 12px;
 }
+.fc-time-grid .fc-slats td {
+  height: 1.0em;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,

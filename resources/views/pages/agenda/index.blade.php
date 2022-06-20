@@ -68,6 +68,8 @@ admin_main_style.css
                             
                             <input type="hidden" name="get_event_id" id="get_event_id" value="">
                             <input type="hidden" name="get_validate_event_id" id="get_validate_event_id" value="">                         
+                            <input type="hidden" name="get_non_validate_event_id" id="get_non_validate_event_id" value="">                         
+                            
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -1432,7 +1434,7 @@ admin_main_style.css
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
-        var p_event_id=document.getElementById("get_event_id").value;
+        var p_event_id=document.getElementById("get_validate_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -1552,6 +1554,7 @@ admin_main_style.css
                 json_events = s;
                 var selected_ids = [];
                 var selected_validate_ids = [];
+                var selected_non_validate_ids = [];
                 const type_removed = [50, 51];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
@@ -1573,7 +1576,10 @@ admin_main_style.css
                         var curdate=new Date();
                         if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
-                        }    
+                        } 
+                        else{
+                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                        }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         
                         
@@ -1582,11 +1588,16 @@ admin_main_style.css
                 });
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
+                selected_non_validate_ids.join("|");
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
                 }
+                if (selected_validate_ids.length ==0) {
+                    document.getElementById("btn_delete_events").style.display = "none";
+                }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
+                document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
                 
                 //alert('get refresh');
                 $("#agenda_table tr:gt(0)").remove();
@@ -1696,7 +1707,8 @@ admin_main_style.css
 			slotDuration: '00:15:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            minTime: '05:00:00',
+            // minTime: '05:00:00',
+            scrollTime: '05:00:00',
             maxTime: '24:00:00',
             //defaultView: 'agendaweek',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
@@ -1732,12 +1744,13 @@ admin_main_style.css
             timezone: currentTimezone, 
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
-			// allDayDefault: true,
+			allDayDefault: true,
 			defaultTimedEventDuration: '00:15:00',
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
             events: JSON.parse(json_events),
+            //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
 			},
@@ -1953,7 +1966,13 @@ admin_main_style.css
                         etime=stime;
                     }
                     foundRecords=1; //found valid record;
-                    
+                    //event.allDay = true;
+                    console.log(event)
+                    if (event.allDay) {
+                        $(el).find('div.fc-content').prepend(icon);
+                    } else {
+                        $(el).find('.fc-time').prepend(icon);
+                    }
                     var icon ='<span class="fa fa-lock txt-orange"></span>';
                     if (event.is_locked == '1'){        
                         $(el).find('div.fc-content').prepend(icon);
@@ -2135,6 +2154,7 @@ admin_main_style.css
                     }
                     if (lockRecords == 0)
                     {
+                        document.getElementById("btn_delete_events").style.display = "none";
                         document.getElementById("btn_validate_events").style.display = "none"; 
                         
                     }
@@ -2174,6 +2194,34 @@ admin_main_style.css
                     return false;
                 });
                                     
+            },
+
+            // Renders events onto the view and populates the View's segment array
+            renderEvents: function(events) {
+                var dayEvents = [];
+                var timedEvents = [];
+                var daySegs = [];
+                var timedSegs;
+                var i;
+
+                // separate the events into all-day and timed
+                for (i = 0; i < events.length; i++) {
+                    if (events[i].allDay) {
+                        dayEvents.push(events[i]);
+                    }
+                    else {
+                        timedEvents.push(events[i]);
+                    }
+                }
+
+                // render the events in the subcomponents
+                timedSegs = this.timeGrid.renderEvents(timedEvents);
+                if (this.dayGrid) {
+                    daySegs = this.dayGrid.renderEvents(dayEvents);
+                }
+
+                // the all-day area is flexible and might have a lot of events, so shift the height
+                this.updateHeight();
             },
                 
             viewRender: function( view, el ) {
@@ -2694,12 +2742,12 @@ $('#add_lesson').on('submit', function(e) {
             }
         }
         
-        if(title == ''){
-            var errMssg = 'Title required';
-            $('#Title').addClass('error');
-        }else{
-            $('#Title').removeClass('error');
-        }
+        // if(title == ''){
+        //     var errMssg = 'Title required';
+        //     $('#Title').addClass('error');
+        // }else{
+        //     $('#Title').removeClass('error');
+        // }
 
         if( evetCat == undefined || evetCat == ''){
             var errMssg = '{{ __("Select event category") }}';

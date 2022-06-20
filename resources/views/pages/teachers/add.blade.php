@@ -135,7 +135,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} : <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the teacher will receive an email with instructions to connect to his teacher account.')}}"></i></label>
 									<div class="col-sm-7">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
@@ -263,7 +263,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
@@ -272,7 +272,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 
 							<div id="commentaire_div">
