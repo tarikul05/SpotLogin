@@ -68,7 +68,12 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									@if(!$AppUI->isTeacherAdmin())
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									@endif
+									@if($AppUI->isTeacherAdmin())
+										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+									@else	
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
@@ -78,6 +83,7 @@
 											</select>
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
