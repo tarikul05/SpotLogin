@@ -11,6 +11,7 @@ use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\User;
 use App\Models\MonthlyInvoiceRun;
+use App\Models\EventCategory;
 
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 use App\Http\Requests\ProfilePhotoUpdateRequest;
 use App\Http\Requests\SchoolUpdateRequest;
+use DB;
 
 class SchoolsController extends Controller
 {
@@ -200,9 +202,22 @@ class SchoolsController extends Controller
             $monthly_issue = 0;
         }
 
-        
+        $eventCat = EventCategory::active()->where('school_id', $school->id)->get();
+        $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
+        $schoolId = $school->id;
+
         return view('pages.schools.edit')
-        ->with(compact('legal_status','currency','school','emailTemplate','country','role_type','school_admin'));
+        ->with(compact(
+            'eventCat',
+            'eventLastCatId',
+            'legal_status',
+            'currency',
+            'school',
+            'emailTemplate',
+            'country',
+            'role_type',
+            'school_admin'
+        ));
         
     }
 

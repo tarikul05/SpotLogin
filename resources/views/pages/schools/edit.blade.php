@@ -44,7 +44,7 @@
 						</button>
 					@endcan -->
 					@can('parameters-list')
-						<a class="nav-link" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
+						<a class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
 					@endcan
 					<!-- </button> -->
 				</div>
@@ -750,6 +750,149 @@
 
 				</div>
 				<!--End of Tab 4-->
+
+				<!--Start of Tab 5 -->
+				<div id="tab_5" class="tab-pane">
+					<div class="row">
+						<header class="panel-heading" style="border: none;">
+							<div class="row panel-row" style="margin:0;">
+								<div class="col-sm-6 col-xs-12 header-area">
+									<div class="page_header_class">
+										<label id="page_header" name="page_header">Parameters</label>
+									</div>
+								</div>
+								<div class="col-sm-6 col-xs-12 btn-area">
+									<div class="float-end btn-group">
+										<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
+
+									@can('parameters-create-udpate')
+										<button id="save_btn" name="save_btn" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
+									@endcan
+									</div>
+								</div>    
+							</div>          
+						</header>
+
+						<!-- Tabs navs -->
+						<nav>
+							<div class="nav nav-tabs" id="nav-tab" role="tablist">
+								<a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab_inner_part1" type="button" role="tab" aria-controls="nav-tab_inner_part1" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
+								<a class="nav-link" data-bs-toggle="tab" data-bs-target="#tab_inner_part2" type="button" role="tab" aria-controls="nav-tab_inner_part2" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_location.index',['school'=> $schoolId]) : route('event_location.index') }}">{{ __('Locations') }}</a>
+								<a class="nav-link" data-bs-toggle="tab" data-bs-target="#tab_inner_part3" type="button" role="tab" aria-controls="nav-tab_inner_part3" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_level.index',['school'=> $schoolId]) : route('event_level.index') }}">{{ __('Level') }}</a>
+							</div>
+						</nav>
+						<!-- Tabs navs -->
+						<!-- Tabs content -->
+						<div id="tab_inner_part1" class="tab-pane tab-content">
+							<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
+								<form role="form" id="event_form" class="form-horizontal" method="post" action="{{route('event_category.create')}}">
+									@csrf
+									<div class="section_header_class row">
+										<div class="col-md-3 col-5">
+											<label>{{ __('Category Name') }}</label>
+										</div>
+										<div class="col-md-3 col-6">
+											<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
+										</div>
+										<div class="col-md-2 col-1">
+											<label></label>
+										</div>
+									</div>
+									<div class="row">
+										<div id="add_more_event_category_div" class="col-md-8">
+										@php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
+											@foreach($eventCat as $cat)
+												<div class="col-md-12 add_more_event_category_row row">
+													<div class="col-md-5 col-5">
+														<div class="form-group row">
+															<div class="col-sm-11">
+																<input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
+																<input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+															</div>
+														</div>
+													</div>
+													@if(!$AppUI->isTeacher())
+													<div class="col-md-5 col-6">
+														<div class="form-group row invoice_part">
+															<div class="col-sm-6">
+																<input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+															</div>
+															<div class="col-sm-6">
+																<input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+															</div>
+														</div>
+													</div>
+													@endif
+													<div class="col-md-2 col-1">
+														@can('parameters-delete')
+														<div class="form-group row">
+															<div class="col-sm-5">
+																<button type="button" class="btn btn-theme-warn delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+															</div>
+														</div>
+														@endcan
+													</div>
+												</div>
+											@php $count++; endforeach @endphp
+										</div>
+										<div class="col-md-2">
+										@can('parameters-create-udpate')
+											<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+										@endcan
+										</div>
+									</div>
+								</form>	
+							</div>
+						</div>
+						<!-- End Tabs content -->
+					
+						<div class="col-md-6">
+							<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
+								<div class="form-group row">
+									<div class="col-sm-8">
+										<fieldset>
+											<div class="profile-image-cropper responsive">
+											<?php if (!empty($school->logoImage->path_name)): ?>
+												<img id="profile_image_user_account" src="{{ $school->logoImage->path_name }}"
+														height="128" width="128" class="img-circle"
+														style="margin-right:10px;">
+											<?php else: ?>
+												<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
+														height="128" width="128" class="img-circle"
+														style="margin-right:10px;">
+											<?php endif; ?>
+
+												
+												<div style="display:flex;flex-direction: column;">
+													<div style="margin:5px;">
+														<span class="btn btn-theme-success">
+															<i class="fa fa-picture-o"></i>
+															<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
+															<input onchange="ChangeImage()"
+																	class="custom-file-input" id="profile_image_file"
+																	type="file" name="profile_image_file"
+																	accept="image/*" style="display: none;">
+														</span>
+													</div>
+													<?php //if (!empty($AppUI->profile_image_id)): ?>
+														<div style="margin:5px;">
+															<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($school->logo_image_id) ? '' : 'display:none;'}}">
+																<i class="fa fa-trash"></i>
+																<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
+															</a>
+														</div>
+													<?php //endif; ?>
+												</div>
+											</div>
+										</fieldset>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+
+				</div>
+				<!--End of Tab 5-->
 			</div>
 		
 	</div>
