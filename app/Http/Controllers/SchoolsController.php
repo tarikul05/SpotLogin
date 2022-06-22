@@ -470,6 +470,93 @@ class SchoolsController extends Controller
     }
 
 
+
+     /**
+     * 
+     * @return Response
+    */
+ 
+    public function addParameters(Request $request)
+    {
+        try{
+            if ($request->isMethod('post')){
+
+
+                $data = $request->all();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $data['school_id']; 
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
+
+                foreach($data['level'] as $level){
+                    if(isset($level['id']) && !empty($level['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $level['name']
+                        ];
+                        $eventLevel = Level::where('id', $level['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $level['name']
+                        ];
+                        $eventLevel = Level::create($answers);
+                    }
+                }
+                
+                foreach($data['location'] as $location){
+                    if(isset($location['id']) && !empty($location['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::where('id', $location['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::create($answers);
+                    }
+                }
+                foreach($data['category'] as $cat){
+                    $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
+                    if(isset($cat['id']) && !empty($cat['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $invoicedType
+                        ];
+                        $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $invoicedType
+                        ];
+                        $eventCat = EventCategory::create($answers);
+                    }
+                }
+
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
+    }
+
+
     
 
     /**
