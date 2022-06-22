@@ -53,6 +53,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{!empty($coachoffData->teacher_id) ? (old('teacher_select', $coachoffData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->full_name }}</option>
 												@endforeach

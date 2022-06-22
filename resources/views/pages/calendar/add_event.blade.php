@@ -73,6 +73,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -331,6 +332,13 @@ $('#add_event').on('submit', function() {
 		$('.student_list').addClass('error');
 	}else{
 		$('.student_list').removeClass('error');
+	}
+	
+	if(professor == ''){
+		var errMssg = 'professor required';
+		$('#teacher_select').addClass('error');
+	}else{
+		$('#teacher_select').removeClass('error');
 	}
 
 	if(startDate == ''){

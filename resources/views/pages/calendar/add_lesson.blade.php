@@ -67,6 +67,14 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-7">
+										<div class="input-group"> 
+											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
 									@if(!$AppUI->isTeacherAdmin())
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} : </label>
 									@endif
@@ -76,6 +84,7 @@
 										@else	
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -225,14 +234,6 @@
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
 							<div class="col-md-7 offset-md-2">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-									<div class="col-sm-7">
-										<div class="input-group"> 
-											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
-										</div>
-									</div>
-								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
@@ -476,6 +477,13 @@ $('#add_lesson').on('submit', function(e) {
 		$('.student_list').addClass('error');
 	}else{
 		$('.student_list').removeClass('error');
+	}
+
+	if(professor == ''){
+		var errMssg = 'professor required';
+		$('#teacher_select').addClass('error');
+	}else{
+		$('#teacher_select').removeClass('error');
 	}
 
 	if(startDate == ''){

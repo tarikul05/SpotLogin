@@ -52,7 +52,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="teacher_select" name="teacher_select">
+											<select class="form-control required" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
