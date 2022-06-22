@@ -12,6 +12,8 @@ use App\Models\SchoolTeacher;
 use App\Models\User;
 use App\Models\MonthlyInvoiceRun;
 use App\Models\EventCategory;
+use App\Models\Location;
+use App\Models\Level;
 
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -205,9 +207,16 @@ class SchoolsController extends Controller
         $eventCat = EventCategory::active()->where('school_id', $school->id)->get();
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
         $schoolId = $school->id;
-
+        $locations = Location::active()->where('school_id', $schoolId)->get();
+        $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
+        $levels = Level::active()->where('school_id', $schoolId)->get();
+        $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         return view('pages.schools.edit')
         ->with(compact(
+            'levels',
+            'eventLastLevelId',
+            'locations',
+            'eventLastLocaId',
             'eventCat',
             'eventLastCatId',
             'legal_status',

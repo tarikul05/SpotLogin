@@ -783,112 +783,168 @@
 						</nav>
 						<!-- Tabs navs -->
 						<!-- Tabs content -->
-						<div id="tab_inner_part1" class="tab-pane tab-content">
-							<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
-								<form role="form" id="event_form" class="form-horizontal" method="post" action="{{route('event_category.create')}}">
-									@csrf
-									<div class="section_header_class row">
-										<div class="col-md-3 col-5">
-											<label>{{ __('Category Name') }}</label>
+						<div class="tab-content" id="tab_inner_part">
+							<div id="tab_inner_part1" class="tab-pane fade show active">
+								<div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
+									<form role="form" id="event_form" class="form-horizontal" method="post" action="{{route('event_category.create')}}">
+										@csrf
+										<div class="section_header_class row">
+											<div class="col-md-3 col-5">
+												<label>{{ __('Category Name') }}</label>
+											</div>
+											<div class="col-md-3 col-6">
+												<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
+											</div>
+											<div class="col-md-2 col-1">
+												<label></label>
+											</div>
 										</div>
-										<div class="col-md-3 col-6">
-											<label class="invoice_type_label">{{ __('Invoice Type') }}</label>
-										</div>
-										<div class="col-md-2 col-1">
-											<label></label>
-										</div>
-									</div>
-									<div class="row">
-										<div id="add_more_event_category_div" class="col-md-8">
-										@php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
-											@foreach($eventCat as $cat)
-												<div class="col-md-12 add_more_event_category_row row">
-													<div class="col-md-5 col-5">
-														<div class="form-group row">
-															<div class="col-sm-11">
-																<input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
-																<input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+										<div class="row">
+											<div id="add_more_event_category_div" class="col-md-8">
+											@php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
+												@foreach($eventCat as $cat)
+													<div class="col-md-12 add_more_event_category_row row">
+														<div class="col-md-5 col-5">
+															<div class="form-group row">
+																<div class="col-sm-11">
+																	<input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
+																	<input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+																</div>
 															</div>
 														</div>
-													</div>
-													@if(!$AppUI->isTeacher())
-													<div class="col-md-5 col-6">
-														<div class="form-group row invoice_part">
-															<div class="col-sm-6">
-																<input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
-															</div>
-															<div class="col-sm-6">
-																<input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
-															</div>
-														</div>
-													</div>
-													@endif
-													<div class="col-md-2 col-1">
-														@can('parameters-delete')
-														<div class="form-group row">
-															<div class="col-sm-5">
-																<button type="button" class="btn btn-theme-warn delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+														@if(!$AppUI->isTeacher())
+														<div class="col-md-5 col-6">
+															<div class="form-group row invoice_part">
+																<div class="col-sm-6">
+																	<input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+																</div>
+																<div class="col-sm-6">
+																	<input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+																</div>
 															</div>
 														</div>
-														@endcan
+														@endif
+														<div class="col-md-2 col-1">
+															@can('parameters-delete')
+															<div class="form-group row">
+																<div class="col-sm-5">
+																	<button type="button" class="btn btn-theme-warn delete_event" data-category_id="<?= $cat->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+																</div>
+															</div>
+															@endcan
+														</div>
 													</div>
-												</div>
-											@php $count++; endforeach @endphp
+												@php $count++; endforeach @endphp
+											</div>
+											<div class="col-md-2">
+											@can('parameters-create-udpate')
+												<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+											@endcan
+											</div>
 										</div>
-										<div class="col-md-2">
-										@can('parameters-create-udpate')
-											<button id="add_more_event_category_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
-										@endcan
+									</form>	
+								</div>
+							</div>
+							<!-- End Tabs content -->
+							<!-- Tabs content -->
+							<div id="tab_inner_part2" class="tab-pane tab-content">
+								<div class="tab-pane fade show active" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
+									<form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('event_location.create')}}">
+										<input type="hidden" name="school_id" value="3">
+										@csrf
+										<div class="section_header_class row">
+											<div class="col-md-3 col-9">
+												<label>{{ __('Location Name') }}</label>
+											</div>
+											<div class="col-md-2 col-2">
+												<label></label>
+											</div>
 										</div>
-									</div>
-								</form>	
+										<div class="row">
+											<div id="add_more_location_div" class="col-md-8">
+												@php $count= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
+												@foreach($locations as $loca)
+													<div class="col-md-12 add_more_location_row row">
+														<div class="col-md-5 col-9">
+															<div class="form-group row">
+																<div class="col-sm-11">
+																	<input type="hidden" name="location[{{$count}}][id]" value="<?= $loca->id; ?>">
+																	<input class="form-control location_name" name="location[{{$count}}][name]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
+																</div>
+															</div>
+														</div>
+														<div class="offset-1 col-2">
+															@can('parameters-delete')
+															<div class="form-group row">
+																<div class="col-sm-5">
+																	<button type="button" class="btn btn-theme-warn delete_location" data-location_id="<?= $loca->id; ?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+																</div>
+															</div>
+															@endcan
+														</div>
+													</div>
+												@php $count++; endforeach @endphp
+											</div>
+											<div class="col-md-2">
+											@can('parameters-create-udpate')
+												<button id="add_more_location_btn" data-last_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
+											@endcan
+											</div>
+										</div>
+									</form>	
+								</div>
+							</div>
+							<!-- End Tabs content -->
+							<!-- Tabs content -->
+							<div id="tab_inner_part3" class="tab-pane tab-content">
+								<div class="tab-pane fade show active" id="tab_level" role="tabpanel" aria-labelledby="tab_level">
+									<form role="form" id="level_form" class="form-horizontal" method="post" action="#">
+										<input type="hidden" name="school_id" value="3">
+										@csrf
+										<div class="section_header_class row">
+											<div class="col-md-3 col-9">
+												<label>{{ __('Level Name') }}</label>
+											</div>
+											<div class="col-md-2 col-2">
+												<label></label>
+											</div>
+										</div>
+										<div class="row">
+											<div id="add_more_level_div" class="col-md-8">
+											@php $count= isset($eventLastLevelId->id) ? ($eventLastLevelId->id) : 1; @endphp
+											@foreach($levels as $lvl)
+													<div class="col-md-12 add_more_level_row row">
+														<div class="col-md-5 col-9">
+															<div class="form-group row">
+																<div class="col-sm-11">
+																	<input type="hidden" name="level[{{$count}}][id]" value="<?= $lvl->id; ?>">
+																	<input class="form-control level_name" name="level[{{$count}}][name]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
+																</div>
+															</div>
+														</div>
+														<div class="col-md-2 offset-1 col-2">
+															@can('parameters-delete')
+															<div class="form-group row">
+																<div class="col-sm-5">
+																	<button type="button" class="btn btn-theme-warn delete_level" data-level_id="{{ $lvl->id; }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
+																</div>
+															</div>
+															@endcan
+														</div>
+													</div>
+												@php $count++; endforeach @endphp
+											</div>
+											<div class="col-md-2">
+											@can('parameters-create-udpate')
+												<button id="add_more_level_btn" type="button" data-last_id="{{$count}}"  class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
+											@endcan
+											</div>
+										</div>
+									</form>
+								</div>
 							</div>
 						</div>
 						<!-- End Tabs content -->
-					
-						<div class="col-md-6">
-							<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
-								<div class="form-group row">
-									<div class="col-sm-8">
-										<fieldset>
-											<div class="profile-image-cropper responsive">
-											<?php if (!empty($school->logoImage->path_name)): ?>
-												<img id="profile_image_user_account" src="{{ $school->logoImage->path_name }}"
-														height="128" width="128" class="img-circle"
-														style="margin-right:10px;">
-											<?php else: ?>
-												<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
-														height="128" width="128" class="img-circle"
-														style="margin-right:10px;">
-											<?php endif; ?>
-
-												
-												<div style="display:flex;flex-direction: column;">
-													<div style="margin:5px;">
-														<span class="btn btn-theme-success">
-															<i class="fa fa-picture-o"></i>
-															<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
-															<input onchange="ChangeImage()"
-																	class="custom-file-input" id="profile_image_file"
-																	type="file" name="profile_image_file"
-																	accept="image/*" style="display: none;">
-														</span>
-													</div>
-													<?php //if (!empty($AppUI->profile_image_id)): ?>
-														<div style="margin:5px;">
-															<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($school->logo_image_id) ? '' : 'display:none;'}}">
-																<i class="fa fa-trash"></i>
-																<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
-															</a>
-														</div>
-													<?php //endif; ?>
-												</div>
-											</div>
-										</fieldset>
-									</div>
-								</div>
-							</form>
-						</div>
 					</div>
 
 				</div>
@@ -1016,6 +1072,186 @@ $(document).ready(function(){
 		});
 	
 	});    //contact us button click 
+
+	$(document).on('click','#add_more_event_category_btn',function(){
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+		$(this).attr('data-last_id',incre);
+
+		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
+			<div class="col-md-5 col-5">
+				<div class="form-group row">
+					<div class="col-sm-11">
+						<input class="form-control category_name" name="category[`+lst_id+`][name]" placeholder="Category Name" type="text">
+					</div>
+				</div>
+			</div>
+			@if(!$AppUI->isTeacher())
+			<div class="col-md-5 col-6">
+				<div class="form-group row invoice_part">
+					<div class="col-sm-6">
+						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
+					</div>
+					<div class="col-sm-6">
+						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					</div>
+				</div>
+			</div>
+			@endif
+			<div class="col-md-2 col-1">
+				<div class="form-group row">
+					<div class="col-sm-5">
+						<button type="button" class="btn btn-theme-warn delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>`;
+
+		$("#add_more_event_category_div").append(resultHtml);
+	})
+	$(document).on('click','.delete_event',function(){
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+		$(this).attr('data-last_id',incre);
+		if (!confirm('{{ __("Are you want to delete?") }}')) return
+
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('category_id');
+		var current_obj = $(this);
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-category/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_event_category_row').remove();
+					}
+				}
+			})
+		}else{
+			current_obj.parents('.add_more_event_category_row').remove();
+		}
+	});
+
+
+	// level part
+	$(document).on('click','#add_more_level_btn',function(){
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+		$(this).attr('data-last_id',incre);
+
+		var resultHtml = `<div class="col-md-12 add_more_level_row row">
+			<div class="col-md-5 col-9">
+				<div class="form-group row">
+					<div class="col-sm-11">
+						<input class="form-control level_name" name="level[`+lst_id+`][name]" placeholder="Level Name" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 offset-1 col-2">
+				<div class="form-group row">
+					<div class="col-sm-5">
+						<button type="button" class="btn btn-theme-warn delete_level"><i class="fa fa-trash" aria-hidden="true"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>`;
+
+		$("#add_more_level_div").append(resultHtml);
+	})
+	
+	$(document).on('click','.delete_level',function(){
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('level_id');
+		var current_obj = $(this);
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+		$(this).attr('data-last_id',incre);
+
+		if (!confirm('{{ __("Are you want to delete?") }}')) return
+
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-level/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_level_row').remove();
+					}
+				}
+			})
+		}else{
+			current_obj.parents('.add_more_level_row').remove();
+		}	
+	});
+
+
+	// location part
+	$(document).on('click','#add_more_location_btn',function(){
+		var lst_id = $(this).attr('data-last_id');
+		var incre = (parseInt(lst_id)+1);
+		$(this).attr('data-last_id',incre);
+
+		var resultHtml = `<div class="col-md-12 add_more_location_row row">
+			<div class="col-md-5 col-9">
+				<div class="form-group row">
+					<div class="col-sm-11">
+						<input class="form-control location_name" name="location[`+lst_id+`][name]" placeholder="location name" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-2 offset-1 col-2">
+				<div class="form-group row">
+					<div class="col-sm-5">
+						<button type="button" class="btn btn-theme-warn delete_location"><i class="fa fa-trash" aria-hidden="true"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>`;
+
+		$("#add_more_location_div").append(resultHtml);
+	})
+	
+	$(document).on('click','.delete_location',function(){
+		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+		var id = $(this).data('location_id');
+		var current_obj = $(this);
+		var lst_id = $(this).attr('data-r_id');
+		var incre = parseInt(lst_id);
+		$(this).attr('data-last_id',incre);
+
+		if (!confirm('{{ __("Are you want to delete?") }}')) return
+
+		if(id){
+			$.ajax({
+				url: BASE_URL + '/remove-event-location/'+id,
+				type: 'DELETE',
+				dataType: 'json',
+				data: {
+					"id": id,
+					"_token": csrfToken,
+				},
+				success: function(response){	
+					if(response.status == 1){
+						current_obj.parents('.add_more_location_row').remove();
+					}
+				}
+			})
+		}else{
+			current_obj.parents('.add_more_location_row').remove();
+		}
+		
+	});
 })
 
 
