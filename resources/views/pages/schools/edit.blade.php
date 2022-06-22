@@ -518,6 +518,7 @@
 							</div>
 							
 							<div class="clearfix"></div>
+							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
 							</div>
@@ -598,6 +599,23 @@
 									</div>
 								</div>
 							</div>
+							@else
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+												value="{{!empty($school->etransfer_acc) ? old('etransfer_acc', $school->etransfer_acc) : old('etransfer_acc')}}">
+												<span class="etransfer_acc"></span>	
+										</div>
+									</div>
+								</div>	
+							</div>
+							@endif	
 							
 							<div class="clearfix"></div>
 							
@@ -994,6 +1012,21 @@ function validateSchoolForm() {
 	// 	return true;
 	// }
 }
+
+$('#etransfer_acc').on('input', function() {
+
+	var val = $(this).val();
+	var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+	if (val.match(validRegex)) {
+		console.log('ddd')
+		$('.etransfer_acc').html('');
+	}else{
+		console.log('invaddd')
+		$('.etransfer_acc').html('Invalid email address!');
+	}
+
+});
 
   
 </script>

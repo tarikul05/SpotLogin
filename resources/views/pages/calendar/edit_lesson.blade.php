@@ -582,12 +582,12 @@ $('#edit_lesson').on('submit', function() {
 
 	var errMssg = '';
 	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
-	}else{
-		$('#Title').removeClass('error');
-	}
+	// if(title == ''){
+	// 	var errMssg = 'Title required';
+	// 	$('#Title').addClass('error');
+	// }else{
+	// 	$('#Title').removeClass('error');
+	// }
 
 	if( selected < 1){
 		var errMssg = 'Select student';
@@ -602,7 +602,7 @@ $('#edit_lesson').on('submit', function() {
 	}else{
 		$('#teacher_select').removeClass('error');
 	}
-	
+
 	if(startDate == ''){
 		var errMssg = 'Start date required';
 		$('#start_date').addClass('error');

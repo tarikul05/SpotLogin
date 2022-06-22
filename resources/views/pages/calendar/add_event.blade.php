@@ -320,12 +320,12 @@ $('#add_event').on('submit', function() {
 
 	var errMssg = '';
 	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
-	}else{
-		$('#Title').removeClass('error');
-	}
+	// if(title == ''){
+	// 	var errMssg = 'Title required';
+	// 	$('#Title').addClass('error');
+	// }else{
+	// 	$('#Title').removeClass('error');
+	// }
 
 	if( selected < 1){
 		var errMssg = 'Select student';
@@ -333,7 +333,7 @@ $('#add_event').on('submit', function() {
 	}else{
 		$('.student_list').removeClass('error');
 	}
-	
+
 	if(professor == ''){
 		var errMssg = 'professor required';
 		$('#teacher_select').addClass('error');
