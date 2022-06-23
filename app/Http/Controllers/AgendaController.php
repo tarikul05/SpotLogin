@@ -123,7 +123,9 @@ class AgendaController extends Controller
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
                 $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
-                $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
@@ -629,7 +631,9 @@ class AgendaController extends Controller
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
                 $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
-                $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
