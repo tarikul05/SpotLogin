@@ -710,16 +710,16 @@ admin_main_style.css
             if ( (value.value == 51) && (user_role == 'student') ){
                 menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
                 menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
             if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
                 // if (value.id != 10) {
@@ -730,33 +730,33 @@ admin_main_style.css
                 //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 51) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 51) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
                 
             }
             else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
             }
             
              
             // Add $(this).val() to your list
         });
-        menuHtml+='</ul>';
+        // menuHtml+='</ul>';
         $('#button_menu_div').append(menuHtml); 
         
 
