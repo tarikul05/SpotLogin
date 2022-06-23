@@ -366,11 +366,13 @@ class AgendaController extends Controller
                         'participation_id' => 200,
                     ];
                 }
-                if ($eventdetail->participation_id == 0) {
-                    $eventdetail = $eventdetail->update($eventDetailPresent);
-                } else {
-                    $eventdetail = $eventdetail->update($eventDetailAbsent);
-                }
+
+                $eventdetail = $eventdetail->update($eventDetailPresent);
+                // if ($eventdetail->participation_id == 0) {
+                    
+                // } else {
+                //     $eventdetail = $eventdetail->update($eventDetailAbsent);
+                // }
 
                 if ($eventdetail)
                 {

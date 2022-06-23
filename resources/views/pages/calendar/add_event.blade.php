@@ -140,7 +140,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="1">
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y">
 										</div>
 									</div>
 								</div>
@@ -169,7 +169,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
