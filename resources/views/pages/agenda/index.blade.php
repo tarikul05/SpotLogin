@@ -406,7 +406,7 @@ admin_main_style.css
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
-                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="1">
+                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
@@ -710,16 +710,16 @@ admin_main_style.css
             if ( (value.value == 51) && (user_role == 'student') ){
                 menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
                 menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
             if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
                 // if (value.id != 10) {
@@ -730,33 +730,33 @@ admin_main_style.css
                 //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 51) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 51) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
                 
             }
             else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
             }
             
              
             // Add $(this).val() to your list
         });
-        menuHtml+='</ul>';
+        // menuHtml+='</ul>';
         $('#button_menu_div').append(menuHtml); 
         
 
@@ -2944,14 +2944,22 @@ $('#agenda_select').on('change', function() {
 $( document ).ready(function() {
 
     $('#add_lesson_btn').on('click', function() {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-        today = dd + '/' + mm + '/' + yyyy;
-        $("#addAgendaModal").modal('show');
-        $('#start_date').val(today);
-        $('#end_date').val(today);
+
+        if (getSchoolIDs('is_multi')) {
+                $('#modal_lesson_price').modal('show');
+                $("#modal_alert_body").text("Please select One school for add event or lesson");
+        }else{
+            $("#addAgendaModal").modal('show');
+            const startresult = moment().format('DD/MM/YYYY');
+            const startTime = moment().format('HH:mm');
+            $('#start_date').val(startresult);
+            $('#start_time').val(startTime);
+            const endTime = moment().add(100, 'm').format('HH:mm');
+            const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+            $('#end_date').val(endresult);
+            $('#end_time').val(endTime).trigger('change');
+        }
+
     });
 });
 
