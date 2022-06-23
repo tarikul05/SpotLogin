@@ -10,7 +10,7 @@
             <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
 
         @can('parameters-create-udpate')
-            <button id="save_btn" name="save_btn" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save Parameters</button>
+            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save Parameters</button>
         @endcan
         </div>
     </nav>
@@ -83,8 +83,7 @@
             <div id="tab_inner_part2" class="tab_inner tab-pane tab-content">
                 <div class="tab-pane fade show active" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
                     
-                    <input type="hidden" name="school_id" value="{{$school->id}}">
-                    
+				
                     <div class="section_header_class row">
                         <div class="col-md-3 col-9">
                             <label>{{ __('Location Name') }}</label>
@@ -365,18 +364,7 @@ $(document).ready(function(){
 
 
 	// save functionality
-	$('#save_btn').click(function (e) {		
-
-		// var x = document.getElementsByClassName("tab-pane active");
-		// var studentForm = document.getElementById("add_student");
-		// var studentUserForm = document.getElementById("studentUserForm");
-		// if (x[0].id == "tab_3") {
-		// 	studentUserForm.submit();
-		// } else{
-		// 	studentForm.submit();
-		// } 
-
-
+	$('#save_btn_param').click(function (e) {		
 		var formData = $('#location_form').serializeArray();
 		// var eventFormData = $('#event_form').serializeArray();
 		// var levelFormData = $('#level_form').serializeArray();
@@ -413,6 +401,10 @@ $(document).ready(function(){
 				$(this).removeClass('error');
 				error = 0;
 			}
+		});
+        formData.push({
+			"name": "school_id",
+			"value": $("#school_id").val(),
 		});
 
 		//console.log(formData);

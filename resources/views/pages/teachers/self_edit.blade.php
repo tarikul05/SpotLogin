@@ -38,7 +38,7 @@
 					{{ __('Logo')}}
 				</button>
 				@can('parameters-list')
-					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
+					<a class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
 				@endcan
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
@@ -404,6 +404,12 @@
 					</div>
 				</div>
 			</div>
+
+			<!--Start of Tab 5 -->
+			<div id="tab_5" class="tab-pane">
+				@include('pages.schools.elements.school-parameters')
+			</div>
+			<!--End of Tab 5-->
 		</div>
 	</div>
 	<!-- success modal-->
