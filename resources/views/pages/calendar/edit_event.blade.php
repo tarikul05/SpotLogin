@@ -140,7 +140,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="1" {{ !empty($eventData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" {{ !empty($eventData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
 								</div>
