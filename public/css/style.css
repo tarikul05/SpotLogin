@@ -680,7 +680,12 @@ button#changer_btn {
     margin-top: 12px;
 }
 .fc-time-grid .fc-slats td {
-  height: 1.0em;
+    height: 1em;
+}
+span.etransfer_acc {
+    color: red;
+    margin-top: 7px;
+    display: block;
 }
 @media only screen and (max-width: 768px) {
     .language_page label,

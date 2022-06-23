@@ -52,7 +52,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="teacher_select" name="teacher_select">
+											<select class="form-control require" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{!empty($coachoffData->teacher_id) ? (old('teacher_select', $coachoffData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -90,7 +91,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="1" {{ !empty($coachoffData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y" {{ !empty($coachoffData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
 								</div>
@@ -153,19 +154,26 @@ $('#student').multiselect({
 
 // save functionality
 $('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});	            
+	var formData = $('#coach_off').serializeArray();
+	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	var error = '';
+	$( ".form-control.require" ).each(function( key, value ) {
+
+		var lname = $(this).val();
+		if(lname=='' || lname==null || lname==undefined){
+			$(this).addClass('error');
+			error = 1;
+		}else{
+			$(this).removeClass('error');
+			error = 0;
+		}
+	});
+
+	if(error < 1){	
+		return true;
+	}else{
+		return false;
+	}	            
 });  
 </script>
 @endsection

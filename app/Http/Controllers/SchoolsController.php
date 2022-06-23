@@ -11,8 +11,12 @@ use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\User;
 use App\Models\MonthlyInvoiceRun;
+use App\Models\EventCategory;
+use App\Models\Location;
+use App\Models\Level;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\URL;
@@ -21,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 use App\Http\Requests\ProfilePhotoUpdateRequest;
 use App\Http\Requests\SchoolUpdateRequest;
+use DB;
 
 class SchoolsController extends Controller
 {
@@ -35,7 +40,7 @@ class SchoolsController extends Controller
     {
         parent::__construct();
         $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
-        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
+        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete','addParameters']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
         $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
 
@@ -200,9 +205,29 @@ class SchoolsController extends Controller
             $monthly_issue = 0;
         }
 
-        
+        $eventCat = EventCategory::active()->where('school_id', $school->id)->get();
+        $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
+        $schoolId = $school->id;
+        $locations = Location::active()->where('school_id', $schoolId)->get();
+        $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
+        $levels = Level::active()->where('school_id', $schoolId)->get();
+        $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         return view('pages.schools.edit')
-        ->with(compact('legal_status','currency','school','emailTemplate','country','role_type','school_admin'));
+        ->with(compact(
+            'levels',
+            'eventLastLevelId',
+            'locations',
+            'eventLastLocaId',
+            'eventCat',
+            'eventLastCatId',
+            'legal_status',
+            'currency',
+            'school',
+            'emailTemplate',
+            'country',
+            'role_type',
+            'school_admin'
+        ));
         
     }
 
@@ -443,6 +468,91 @@ class SchoolsController extends Controller
             return response()->json($result);
         }
         
+    }
+
+
+
+     /**
+     * 
+     * @return Response
+    */
+ 
+    public function addParameters(Request $request)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $data = $request->all();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $data['school_id']; 
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
+
+                foreach($data['level'] as $level){
+                    if(isset($level['id']) && !empty($level['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $level['name']
+                        ];
+                        $eventLevel = Level::where('id', $level['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $level['name']
+                        ];
+                        $eventLevel = Level::create($answers);
+                    }
+                }
+                
+                foreach($data['location'] as $location){
+                    if(isset($location['id']) && !empty($location['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::where('id', $location['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $location['name']
+                        ];
+                        $eventLocation = Location::create($answers);
+                    }
+                }
+                foreach($data['category'] as $cat){
+                    $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
+                    if(isset($cat['id']) && !empty($cat['id'])){
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $invoicedType
+                        ];
+                        $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
+                    }else{
+                        $answers = [
+                            'school_id' => $userSchoolId,
+                            'title' => $cat['name'],
+                            'invoiced_type' => $invoicedType
+                        ];
+                        $eventCat = EventCategory::create($answers);
+                    }
+                }
+
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }   
+
+        return $result;
     }
 
 

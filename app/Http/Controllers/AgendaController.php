@@ -121,8 +121,11 @@ class AgendaController extends Controller
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
-                $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
-                $e['teacher_name'] = $fetch->teacher['Kazi'];
+                $e['teacher_name'] = $fetch->teacher['firstname'];
+                $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
@@ -363,11 +366,13 @@ class AgendaController extends Controller
                         'participation_id' => 200,
                     ];
                 }
-                if ($eventdetail->participation_id == 0) {
-                    $eventdetail = $eventdetail->update($eventDetailPresent);
-                } else {
-                    $eventdetail = $eventdetail->update($eventDetailAbsent);
-                }
+
+                $eventdetail = $eventdetail->update($eventDetailPresent);
+                // if ($eventdetail->participation_id == 0) {
+                    
+                // } else {
+                //     $eventdetail = $eventdetail->update($eventDetailAbsent);
+                // }
 
                 if ($eventdetail)
                 {
@@ -626,8 +631,11 @@ class AgendaController extends Controller
             $e['allDay'] = $allday;
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
-                $e['backgroundColor'] = $fetch->teacher['bg_color_agenda'];
-                $e['teacher_name'] = $fetch->teacher['Kazi'];
+                $e['teacher_name'] = $fetch->teacher['firstname'];
+                $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);

@@ -130,6 +130,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
 
   // add parameters for schools
+  Route::post('/add-school-parameters', 'SchoolsController@addParameters')->name('school_parameter.create');
   Route::get('/parameters/category', 'EventCategoryController@index')->name('event_category.index');
   Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('event_category.create');
   Route::delete('/remove-event-category/{key}', 'EventCategoryController@removeEventCategory')->name('event_category.destroy');

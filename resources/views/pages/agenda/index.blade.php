@@ -332,6 +332,7 @@ admin_main_style.css
                                                     <div class="col-sm-7">
                                                         <div class="selectdiv">
                                                             <select class="form-control" id="teacher_select" name="teacher_select">
+                                                                    <option value="">{{__('Select Professor') }}</option>
                                                                 @foreach($professors as $key => $professor)
                                                                     <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
                                                                 @endforeach
@@ -405,7 +406,7 @@ admin_main_style.css
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
-                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="1">
+                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
@@ -707,18 +708,18 @@ admin_main_style.css
         {
             //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;" href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
                 menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                menuHtml+='<ul class="dropdown-menu" role="menu">';                            
+                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
+                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
             if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
                 // if (value.id != 10) {
@@ -729,33 +730,33 @@ admin_main_style.css
                 //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
                 // }
 
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 51) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 51) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
                 
             }
             else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                if (value.value == 50) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 50) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
 
-                if (value.value == 100) {
-                    menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                }
+                // if (value.value == 100) {
+                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
+                // }
             }
             
              
             // Add $(this).val() to your list
         });
-        menuHtml+='</ul>';
+        // menuHtml+='</ul>';
         $('#button_menu_div').append(menuHtml); 
         
 
@@ -1222,11 +1223,20 @@ admin_main_style.css
                         
                     }
                     var resultHtml ='';
+                    var EresultHtml ='';
                     var i='0';
+                    
+                    resultHtml+='<option value="">{{__('Select Professor') }}</option>';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.teacher_id+'">'+value.full_name+'</option>'; 
                     });
-                    $('#event_teacher, #teacher_select').html(resultHtml);
+
+                    $.each(data, function(key,value){
+                        EresultHtml+='<option value="'+value.teacher_id+'">'+value.full_name+'</option>'; 
+                    });
+
+                    $('#event_teacher').html(EresultHtml);
+                    $('#teacher_select').html(resultHtml);
                     $("#event_teacher").multiselect('destroy');
                     
                 },   //success
@@ -2748,12 +2758,12 @@ $('#add_lesson').on('submit', function(e) {
             }
         }
         
-        // if(title == ''){
-        //     var errMssg = 'Title required';
-        //     $('#Title').addClass('error');
-        // }else{
-        //     $('#Title').removeClass('error');
-        // }
+        if(professor == ''){
+            var errMssg = 'professor required';
+            $('#teacher_select').addClass('error');
+        }else{
+            $('#teacher_select').removeClass('error');
+        }
 
         if( evetCat == undefined || evetCat == ''){
             var errMssg = '{{ __("Select event category") }}';
@@ -2793,12 +2803,12 @@ $('#add_lesson').on('submit', function(e) {
             return false;	
         }
     }else if(type == 3){
-        if(title == ''){
-            var errMssg = 'Title required';
-            $('#Title').addClass('error');
-        }else{
-            $('#Title').removeClass('error');
-        }
+        // if(title == ''){
+        //     var errMssg = 'Title required';
+        //     $('#Title').addClass('error');
+        // }else{
+        //     $('#Title').removeClass('error');
+        // }
         if( selected < 1){
             var errMssg = 'Select student';
             $('.student_list').addClass('error');
@@ -2811,11 +2821,11 @@ $('#add_lesson').on('submit', function(e) {
             return false;	
         }
     }else if(type == 4){
-        if(title == ''){
-            var errMssg = 'Title required';
-            $('#Title').addClass('error');
+        if(professor == ''){
+            var errMssg = 'professor required';
+            $('#teacher_select').addClass('error');
         }else{
-            $('#Title').removeClass('error');
+            $('#teacher_select').removeClass('error');
         }
         if(errMssg == ""){
             return true;
@@ -2929,6 +2939,28 @@ $('#agenda_select').on('change', function() {
 	}else{
         $('#agenda_form_area').hide();
     }
+});
+
+$( document ).ready(function() {
+
+    $('#add_lesson_btn').on('click', function() {
+
+        if (getSchoolIDs('is_multi')) {
+                $('#modal_lesson_price').modal('show');
+                $("#modal_alert_body").text("Please select One school for add event or lesson");
+        }else{
+            $("#addAgendaModal").modal('show');
+            const startresult = moment().format('DD/MM/YYYY');
+            const startTime = moment().format('HH:mm');
+            $('#start_date').val(startresult);
+            $('#start_time').val(startTime);
+            const endTime = moment().add(100, 'm').format('HH:mm');
+            const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+            $('#end_date').val(endresult);
+            $('#end_time').val(endTime).trigger('change');
+        }
+
+    });
 });
 
 </script>

@@ -73,6 +73,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -139,7 +140,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="1">
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y">
 										</div>
 									</div>
 								</div>
@@ -168,7 +169,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
@@ -319,18 +320,25 @@ $('#add_event').on('submit', function() {
 
 	var errMssg = '';
 	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
-	}else{
-		$('#Title').removeClass('error');
-	}
+	// if(title == ''){
+	// 	var errMssg = 'Title required';
+	// 	$('#Title').addClass('error');
+	// }else{
+	// 	$('#Title').removeClass('error');
+	// }
 
 	if( selected < 1){
 		var errMssg = 'Select student';
 		$('.student_list').addClass('error');
 	}else{
 		$('.student_list').removeClass('error');
+	}
+
+	if(professor == ''){
+		var errMssg = 'professor required';
+		$('#teacher_select').addClass('error');
+	}else{
+		$('#teacher_select').removeClass('error');
 	}
 
 	if(startDate == ''){

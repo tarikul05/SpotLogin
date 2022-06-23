@@ -52,7 +52,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="teacher_select" name="teacher_select">
+											<select class="form-control require" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -152,7 +153,7 @@ $('#student').multiselect({
 
 // save functionality
 $('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
+		var formData = $('#coach_off').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var error = '';
 		$( ".form-control.require" ).each(function( key, value ) {
@@ -170,27 +171,9 @@ $('#save_btn').click(function (e) {
 			"value": csrfToken,
 		});
 		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				beforeSend: function( xhr ) {
-				    $("#pageloader").show();
-				 },
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				},
-				complete: function( xhr ) {
-				    $("#pageloader").hide();
-				}
-			})
+			return true;
 		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+			return false;
 		}	            
 });  
 </script>
