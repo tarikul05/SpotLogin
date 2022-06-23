@@ -1014,15 +1014,11 @@ function validateSchoolForm() {
 }
 
 $('#etransfer_acc').on('input', function() {
-
 	var val = $(this).val();
-	var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
+	var validRegex =  /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
 	if (val.match(validRegex)) {
-		console.log('ddd')
 		$('.etransfer_acc').html('');
 	}else{
-		console.log('invaddd')
 		$('.etransfer_acc').html('Invalid email address!');
 	}
 
