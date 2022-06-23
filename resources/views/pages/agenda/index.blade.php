@@ -406,7 +406,7 @@ admin_main_style.css
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
-                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="1">
+                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
@@ -2944,14 +2944,22 @@ $('#agenda_select').on('change', function() {
 $( document ).ready(function() {
 
     $('#add_lesson_btn').on('click', function() {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
-        today = dd + '/' + mm + '/' + yyyy;
-        $("#addAgendaModal").modal('show');
-        $('#start_date').val(today);
-        $('#end_date').val(today);
+
+        if (getSchoolIDs('is_multi')) {
+                $('#modal_lesson_price').modal('show');
+                $("#modal_alert_body").text("Please select One school for add event or lesson");
+        }else{
+            $("#addAgendaModal").modal('show');
+            const startresult = moment().format('DD/MM/YYYY');
+            const startTime = moment().format('HH:mm');
+            $('#start_date').val(startresult);
+            $('#start_time').val(startTime);
+            const endTime = moment().add(100, 'm').format('HH:mm');
+            const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+            $('#end_date').val(endresult);
+            $('#end_time').val(endTime).trigger('change');
+        }
+
     });
 });
 
