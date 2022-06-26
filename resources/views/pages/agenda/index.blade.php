@@ -592,13 +592,13 @@ admin_main_style.css
    
 
    
-    var defview='month';   //'month';//'agendaWeek'
+    var defview='agendaWeek';   //'month';//'agendaWeek'
     try {
         if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
             defview=getCookie("cal_view_mode");
         }
     } catch(err) {
-        defview="month";
+        defview="agendaWeek";
     }
     
 
