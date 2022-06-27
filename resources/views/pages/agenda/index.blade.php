@@ -575,12 +575,21 @@ admin_main_style.css
     var FirstDay = new Date(year, month, 1);
     var LastDay = new Date(year, month+1, 1);
 
-    
+    let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+
 
     if (defview == 'month') {
         // GET THE FIRST AND LAST DATE OF THE MONTH.
         document.getElementById("date_from").value = formatDate(FirstDay);
         document.getElementById("date_to").value = formatDate(LastDay);
+        
+    }
+    else if (defview == 'CurrentListView') {
+        // GET THE FIRST AND LAST DATE OF THE MONTH.
+        var dt = new Date();
+        let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+        document.getElementById("date_from").value = formatDate(dt);
+        document.getElementById("date_to").value = formatDate(CurrentListViewDate);
         
     } else {
         
@@ -593,6 +602,14 @@ admin_main_style.css
         document.getElementById("date_to").value = getCookie("date_to");
         FirstDay=document.getElementById("date_from").value;
         LastDay=document.getElementById("date_to").value;
+    }
+    if (getCookie("view_mode") != "CurrentListView"){
+        // GET THE FIRST AND LAST DATE OF THE MONTH.
+        var dt = new Date();
+        let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+        document.getElementById("date_from").value = formatDate(dt);
+        document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
     }
     document.getElementById("view_mode").value='';
     
@@ -1530,10 +1547,13 @@ admin_main_style.css
             var end_date=getCookie("date_to");
         }
         if (p_view=='CurrentListView') {
-            document.getElementById("date_from").value = getCookie("date_from");
-            document.getElementById("date_to").value = getCookie("date_to");
-            var start_date=getCookie("date_from");
-            var end_date=getCookie("date_to");
+            var dt = new Date();
+            let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            document.getElementById("date_from").value = formatDate(dt);
+            document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
+            var start_date=document.getElementById("date_from").value;
+            var end_date=document.getElementById("date_to").value;
         }
 
         var school_id=document.getElementById('school_id').value;
@@ -2214,9 +2234,10 @@ admin_main_style.css
                 
                     
                 } else if (view.name=='CurrentListView') {
-                    document.getElementById("date_from").value = getCookie("date_from");
-                    document.getElementById("date_to").value = getCookie("date_to");
-                
+                    var dt = new Date();
+                    let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+                    document.getElementById("date_from").value = formatDate(dt);
+                    document.getElementById("date_to").value = formatDate(CurrentListViewDate);
                 }
                 else {
                     document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
@@ -2280,6 +2301,13 @@ admin_main_style.css
 
     function DisplayCalendarTitle() {
         var view = $('#calendar').fullCalendar('getView');
+        if (view.name=='CurrentListView') {
+            var dt = new Date();
+            var CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            const options1 = {month: 'short',day: 'numeric' };
+            const options = { day: 'numeric', year: 'numeric'};
+            view.title = moment(dt).format("MMM DD")+' - '+moment(CurrentListViewDate).format("DD,YYYY");
+        }
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
 
