@@ -16,7 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
+<script src="{{ asset('js/fullcalendar.js')}}"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script> -->
 <script src="{{ asset('js/jquery.table2excel.js')}}"></script>
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 <!-- add new assets for modal of add event,lesson -->
@@ -131,6 +132,7 @@ admin_main_style.css
                                         <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
                                         <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
                                         <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">Current List</button> 
                                     </div>   
                                 </div>
                                 <div class="col-md-3">
@@ -859,12 +861,12 @@ admin_main_style.css
         $('#calendar').fullCalendar('changeView', 'agendaDay');
 	});
     $('#btn_list').on('click', function() {
-        
         getFreshEvents('ListView');	  
-        
 		$('#calendar').fullCalendar('changeView', 'listYear');	
-          
-	   
+	});
+    $('#btn_current_list').on('click', function() {
+        getFreshEvents('CurrentListView');	  
+		$('#calendar').fullCalendar('changeView', 'CurrentListView');	
 	});
     
     $('#list_button').on('click', function() {
@@ -1516,11 +1518,18 @@ admin_main_style.css
 
     function getFreshEvents(p_view=getCookie("cal_view_mode")){
         
+        
         //console.log(getCookie("date_from"));
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
         if (getCookie("date_from") != ""){
             //alert('getrefresh..: Start');
+            document.getElementById("date_from").value = getCookie("date_from");
+            document.getElementById("date_to").value = getCookie("date_to");
+            var start_date=getCookie("date_from");
+            var end_date=getCookie("date_to");
+        }
+        if (p_view=='CurrentListView') {
             document.getElementById("date_from").value = getCookie("date_from");
             document.getElementById("date_to").value = getCookie("date_to");
             var start_date=getCookie("date_from");
@@ -1813,7 +1822,7 @@ admin_main_style.css
                 var view = $('#calendar').fullCalendar('getView');
                 var viewname=view.name;
                 
-                if ((viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
+                if ((viewname=='CurrentListView') || (viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
                     date_found=1;
                     var curdate=new Date();
                     
@@ -2194,7 +2203,7 @@ admin_main_style.css
             },
                 
             viewRender: function( view, el ) {
-                //alert('RerenderEvents events');
+                console.log(view);
                 $("#agenda_table tr:gt(0)").remove();
                 resultHtml='';
                 prevdt='';
@@ -2204,7 +2213,12 @@ admin_main_style.css
                     document.getElementById("date_to").value = getCookie("date_to");
                 
                     
-                } else {
+                } else if (view.name=='CurrentListView') {
+                    document.getElementById("date_from").value = getCookie("date_from");
+                    document.getElementById("date_to").value = getCookie("date_to");
+                
+                }
+                else {
                     document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
                     document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
                 
@@ -2219,9 +2233,9 @@ admin_main_style.css
                 {
                     document.getElementById("view_mode").value = view.name;
                 }
-                console.log(document.getElementById("date_from").value);
+                
                 SetEventCookies();
-                console.log(document.getElementById("date_from").value);
+                
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
