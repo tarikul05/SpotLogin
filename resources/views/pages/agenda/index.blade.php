@@ -2008,6 +2008,15 @@ admin_main_style.css
                 
                 resultHtml_rows=resultHtml;
                 el.attr('title', event.tooltip);
+                //el.attr('data-html', 'true');
+
+                el.popover({
+                    title: event.tooltip,
+                    trigger: 'hover',
+                    html: true,
+                    placement: 'top',
+                    container: 'body'
+                });
                 //el.attr('timetext', event.title);
                 //$('#timetext').text(event.cours_name);
                 $(el).find('#timetext').append(' '+event.event_type_name);
