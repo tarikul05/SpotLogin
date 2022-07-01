@@ -119,6 +119,14 @@ class Event extends BaseModel
         return $this->belongsTo(EventCategory::class);
     }
 
+    /**
+     * Get the user for the News.
+     */
+    public function details()
+    {
+        return $this->hasMany(EventDetails::class);
+    }
+
 
 
     /**
