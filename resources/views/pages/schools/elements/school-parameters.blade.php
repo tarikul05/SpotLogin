@@ -420,6 +420,11 @@ $(document).ready(function(){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
 						//window.location.reload();
+						var url = window.location.href;    
+						//const url = "http://testing.com/path?empty&value1=test&id=3";
+
+						url = addOrChangeParameters( url, {tab:'tab_5'} )
+						window.location.href = url;
 					}
 				}
 			})
@@ -428,6 +433,18 @@ $(document).ready(function(){
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}
 	}); 
+
+
+	function addOrChangeParameters( url, params )
+	{
+	let splitParams = {};
+	let splitPath = (/(.*)[?](.*)/).exec(url);
+	if ( splitPath && splitPath[2] )
+		splitPath[2].split("&").forEach( k => { let d = k.split("="); splitParams[d[0]] = d[1]; } );
+	let newParams = Object.assign( splitParams, params );
+	let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
+	return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
+	}
 
 })
 </script>

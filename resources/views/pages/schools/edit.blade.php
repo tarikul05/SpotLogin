@@ -819,12 +819,21 @@ $(document).ready(function(){
 	//var update_btn = document.getElementById("update_btn");
 	console.log(x[0].id);
 	if (x[0].id == "tab_5") {
-		
 		document.getElementById("update_btn").style.display = "none";
 	} 
 	else  {
 		document.getElementById("update_btn").style.display = "block";
 	} 
+	var vtab=getUrlVarsO()["tab"];
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_5') {//?action=edit&tab=tab_5
+		document.getElementById("update_btn").style.display = "none";					
+		activaTab('tab_5');
+	} else {
+		document.getElementById("update_btn").style.display = "block";
+	}
 
 	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
 		console.log(e.target.id) // activated tab
@@ -940,7 +949,25 @@ $(document).ready(function(){
 
 })
 
+function activaTab(tab) {
+	$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+};
 
+
+function getUrlVarsO()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	//alert(hashes);
+	for(var i = 0; i < hashes.length; i++)
+	{
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+	//Salert(vars);
+	return vars;
+}  //getUrlVarsO
 function UploadImage() {
 	document.getElementById("profile_image_file").value = "";
 	$("#profile_image_file").trigger('click');
