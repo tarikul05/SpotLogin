@@ -91,7 +91,7 @@ class LessonsController extends Controller
                     'extra_charges' => $eventData['extra_charges'],
                     'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
                     'description' => $eventData['description'],
-                    'location_id' => $eventData['location'],
+                    'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
                     'no_of_students' => !empty($stu_num) ? $stu_num : null,
                 ];
@@ -190,7 +190,7 @@ class LessonsController extends Controller
                     'extra_charges' => $eventData['extra_charges'],
                     'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
                     'description' => $eventData['description'],
-                    'location_id' => $eventData['location'],
+                    'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
                     'no_of_students' => !empty($stu_num) ? $stu_num : null,
                 ];
@@ -309,7 +309,7 @@ class LessonsController extends Controller
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
-                    'location_id' => $lessonData['location'],
+                    'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
                     'sis_paying' => $lessonData['sis_paying']
                 ];
 
@@ -412,7 +412,7 @@ class LessonsController extends Controller
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
-                    'location_id' => $lessonData['location'],
+                    'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
                     'is_paying' => $lessonData['sis_paying']
                 ];
 
