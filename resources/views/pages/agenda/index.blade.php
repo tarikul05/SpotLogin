@@ -2784,12 +2784,12 @@ $('#add_lesson').on('submit', function(e) {
             $('#category_select').removeClass('error');
         }
 
-        if( evetLoc == undefined || evetLoc == ''){
-            var errMssg = '{{ __("Select Location") }}';
-            $('#location').addClass('error');
-        }else{
-            $('#location').removeClass('error');
-        }
+        // if( evetLoc == undefined || evetLoc == ''){
+        //     var errMssg = '{{ __("Select Location") }}';
+        //     $('#location').addClass('error');
+        // }else{
+        //     $('#location').removeClass('error');
+        // }
 
         if( selected < 1){
             var errMssg = 'Select student';
