@@ -1070,7 +1070,7 @@ admin_main_style.css
                     if (data.length >0) {
                         
                     }
-                    var resultHtml ="<option value=''>{{__('Select Location') }}</option>";
+                    var resultHtml ="";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
@@ -1116,7 +1116,7 @@ admin_main_style.css
                     if (data.length >0) {
                         
                     }
-                    var resultHtml ='';
+                    var resultHtml ="<option value=''>{{__('Select Location') }}</option>";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
