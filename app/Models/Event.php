@@ -119,6 +119,14 @@ class Event extends BaseModel
         return $this->belongsTo(EventCategory::class);
     }
 
+    /**
+     * Get the user for the News.
+     */
+    public function details()
+    {
+        return $this->hasMany(EventDetails::class);
+    }
+
 
 
     /**
@@ -311,22 +319,25 @@ class Event extends BaseModel
             unset($params['zone']);
         }
         if (isset($params['start_date'])) {
-            //$fromFilterDate = null;
-            //$toFilterDate = null;
-        
-          //$fromFilterDate = str_replace('/', '-',$params['start_date']);
-          $fromFilterDate = $params['start_date'];
-        //   if (!$toFilterDate) {
-        //       $toFilterDate = now();
-        //   }
-          unset($params['start_date']);
+            $fromFilterDate = $params['start_date'];
+            if ($params['p_view'] =='CurrentListView') {
+                $fromFilterDate = now();
+            }
+          
+            //   if (!$toFilterDate) {
+            //       $toFilterDate = now();
+            //   }
+            unset($params['start_date']);
         } 
       
         if (isset($params['end_date'])) {
            // $fromFilterDate = null;
             //$toFilterDate = null;
-            $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            
             $toFilterDate = $params['end_date'];
+            if ($params['p_view'] =='CurrentListView') {
+                $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            }
           
             //   if (!$fromFilterDate) {
             //       $fromFilterDate = now();

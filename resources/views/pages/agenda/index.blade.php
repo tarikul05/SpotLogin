@@ -16,7 +16,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
+<script src="{{ asset('js/fullcalendar.js')}}"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script> -->
 <script src="{{ asset('js/jquery.table2excel.js')}}"></script>
 <link href="{{ asset('css/admin_main_style.css')}}" rel='stylesheet' />
 <!-- add new assets for modal of add event,lesson -->
@@ -38,38 +39,27 @@ admin_main_style.css
                                     {{__('Agenda')}}: 
                                 </label>
 							</div>
-                            
 					</div>
                     
 					<div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
-
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
-                            
-                            
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
 							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
                             <input type="hidden" name="person_id" id="person_id" value="">
 							<input type="hidden" name="evt_t_id" id="evt_t_id" value="">
-						    
-                            <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
-                                            
-                            	 
+                            <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0"> 
                             <input type="hidden" name="date_from" id="date_from" value="">
                             <input type="hidden" name="date_to" id="date_to" value="">
                             <input type="hidden" name="view_mode" size="14px" id="view_mode" value="">
-
                             <input type="hidden" name="week_day" id="week_day" value="">
                             <input type="hidden" name="month_day" id="month_day" value="">
-
                             <input type="hidden" name="prevnext" size="14px" id="prevnext" value="">
-                            
                             <input type="hidden" name="get_event_id" id="get_event_id" value="">
                             <input type="hidden" name="get_validate_event_id" id="get_validate_event_id" value="">                         
                             <input type="hidden" name="get_non_validate_event_id" id="get_non_validate_event_id" value="">                         
-                            
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -79,24 +69,19 @@ admin_main_style.css
                             <input type="hidden" name="copy_view_mode" id="copy_view_mode" value="">
                             <input type="hidden" name="copy_week_day" id="copy_week_day" value="">
                             <input type="hidden" name="copy_month_day" id="copy_month_day" value="">
-                            
                             <input type="hidden" name="event_school_id" size="14px" id="event_school_id" value="{{$schoolId}}">
                             <input type="hidden" name="event_type_id" size="14px" id="event_type_id" value="0">
                             <input type="hidden" name="event_student_id" size="14px" id="event_student_id" value="0">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0">
                             <input type="hidden" name="event_location_id" size="14px" id="event_location_id" value="0">
                             <input type="hidden" name="event_category_id" size="14px" id="event_category_id" value="0">
-
-
                             <input type="hidden" name="event_school_all_flag" size="14px" id="event_school_all_flag" value="0">
                             <input type="hidden" name="event_type_all_flag" size="14px" id="event_type_all_flag" value="1">
                             <input type="hidden" name="event_student_all_flag" size="14px" id="event_student_all_flag" value="1">
                             <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
                             <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
                             <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
-
                             <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
-                            	
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
                                 @php 
@@ -121,8 +106,6 @@ admin_main_style.css
                                 </a>
                                 <!-- </div> -->
                             </div>
-                            
-                            
                         </div>
 					</div>    
 				</div>                 
@@ -134,13 +117,11 @@ admin_main_style.css
                     <section class="panel cal_area" style="border: 0;box-shadow: none;">
                         <label id="loading" style="display:none;">Loading....</label> 
                         <form action="#" method="post">
-                        
                             <div class="clearfix"></div>
                             <div class="row">
                                 <div class="col-md-9">
                                     <!-- fullcalendar -->
                                     <div id="calendar"></div>
-
                                     <div style="margin-top: 15px;">
                                         <div class="btn-group" style="margin-right:5px;">
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
@@ -151,6 +132,7 @@ admin_main_style.css
                                         <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
                                         <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
                                         <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">Current List</button> 
                                     </div>   
                                 </div>
                                 <div class="col-md-3">
@@ -161,38 +143,30 @@ admin_main_style.css
                                                     value="{{ $this_school->id }}">{{ $this_school->school_name }}</option>
                                             @endforeach    
                                         </select>
-                                    
                                     </div>  
                                     <!-- Datepicker -->
                                     <div id="datepicker_month"></div>
                                     <div>
                                         <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;"> 
-                                        
                                             <div id="event_location_div" name="event_location_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
                                                     @foreach($locations as $key => $location)
                                                         <option value="{{ $location->id }}">{{ $location->title }}</option>
                                                     @endforeach    
                                                 </select>
-                                            
-                                            </div>                                                    
-
-
+                                            </div>
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
-                                            
                                                 </select>
                                                 <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 15px;" >
                                                     @foreach($event_types_all as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
-                                            
                                                 </select>
-                                            </div>                                                    
-                                        
+                                            </div>
                                             <div id="event_student_div" name="event_student_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
                                                     @foreach($students as $key => $student)
@@ -200,7 +174,6 @@ admin_main_style.css
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        
                                             <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
                                                 <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
                                                     @foreach($teachers as $key => $teacher)
@@ -208,8 +181,6 @@ admin_main_style.css
                                                     @endforeach
                                                 </select>
                                             </div>
-                    
-                    
                                             <div id="list-button" class="pull-right form-inline">
                                                 <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
                                             </div>
@@ -217,10 +188,7 @@ admin_main_style.css
                                     </div>
                                 </div>
                             </div>
-
-
                             <div style="margin-top: 25px;">
-                            
                                 <div id="agenda_list" width="350px" border="1" style="display:none;margin-top: auto;">
                                     <!-- class="display row-border" -->
                                     <table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="table-responsive agenda_table_class tablesorter">
@@ -247,8 +215,6 @@ admin_main_style.css
                     </section>
                 </div>
             </div>
-		
-		
 		</form>
 	</div>
 </div>
@@ -288,7 +254,6 @@ admin_main_style.css
                                         @csrf
                                         <fieldset>
                                             <div class="row">
-                                                
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
@@ -307,6 +272,7 @@ admin_main_style.css
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="location" name="location">
+                                                                    <option value="">{{__('Select Location') }}</option>
                                                                     @foreach($locations as $key => $location)
                                                                         <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
                                                                     @endforeach
@@ -531,26 +497,26 @@ admin_main_style.css
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         
-        <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
-            <div class="modal-dialog EventModalClass" id="EventModalWin">
-                <div class="modal-content">
-                    <div class="modal-body text-center p-4">                    
-                        <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
-                        <p style="font-size: 20px;"></p>
-                        <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
-                        <span id="event_btn_confirm_text">Validate<span>
+            <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+                <div class="modal-dialog EventModalClass" id="EventModalWin">
+                    <div class="modal-content">
+                        <div class="modal-body text-center p-4">                    
+                            <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                            <p style="font-size: 20px;"></p>
+                            <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
+                            <span id="event_btn_confirm_text">Validate<span>
 
-                        </button>
-                        <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
-                            <span id="event_btn_confirm_unlock_text">Unlock<span>
-                        </button> -->
-                        <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
-                            <span id="event_btn_edit_text">View<span>
-                        </a>
+                            </button>
+                            <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
+                                <span id="event_btn_confirm_unlock_text">Unlock<span>
+                            </button> -->
+                            <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
+                                <span id="event_btn_edit_text">View<span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
@@ -592,13 +558,13 @@ admin_main_style.css
    
 
    
-    var defview='month';   //'month';//'agendaWeek'
+    var defview='agendaWeek';   //'month';//'agendaWeek'
     try {
         if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
             defview=getCookie("cal_view_mode");
         }
     } catch(err) {
-        defview="month";
+        defview="agendaWeek";
     }
     
 
@@ -610,13 +576,24 @@ admin_main_style.css
     var FirstDay = new Date(year, month, 1);
     var LastDay = new Date(year, month+1, 1);
 
-    
+    let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+
 
     if (defview == 'month') {
         // GET THE FIRST AND LAST DATE OF THE MONTH.
         document.getElementById("date_from").value = formatDate(FirstDay);
         document.getElementById("date_to").value = formatDate(LastDay);
+        
+    }
+    else if (defview == 'CurrentListView') {
+        // GET THE FIRST AND LAST DATE OF THE MONTH.
+        var dt = new Date();
+        let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+        document.getElementById("date_from").value = formatDate(dt);
+        document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
     } else {
+        
         document.getElementById("date_from").value=moment(startOfWeek(dt)).format('YYYY-MM-DD');
         //document.getElementById("date_from").value=startOfWeek(dt);
         document.getElementById("date_to").value = moment(endOfWeek(dt)).format('YYYY-MM-DD');        
@@ -627,7 +604,16 @@ admin_main_style.css
         FirstDay=document.getElementById("date_from").value;
         LastDay=document.getElementById("date_to").value;
     }
+    if (getCookie("view_mode") != "CurrentListView"){
+        // GET THE FIRST AND LAST DATE OF THE MONTH.
+        var dt = new Date();
+        let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+        document.getElementById("date_from").value = formatDate(dt);
+        document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
+    }
     document.getElementById("view_mode").value='';
+    
     if (getCookie("view_mode") != "list"){
         document.getElementById("view_mode").value = getCookie("view_mode");
     }    
@@ -635,6 +621,7 @@ admin_main_style.css
     if (getCookie("prevnext") != ""){
         document.getElementById("prevnext").value = getCookie("prevnext");
     }  
+    
 
 
     var currentTimezone = 'local';
@@ -708,16 +695,16 @@ admin_main_style.css
         {
             //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
@@ -892,10 +879,14 @@ admin_main_style.css
         $('#calendar').fullCalendar('changeView', 'agendaDay');
 	});
     $('#btn_list').on('click', function() {
-        getFreshEvents('ListView');	   
-		$('#calendar').fullCalendar('changeView', 'listYear');	   
-	   
+        getFreshEvents('ListView');	  
+		$('#calendar').fullCalendar('changeView', 'listYear');	
 	});
+    $('#btn_current_list').on('click', function() {
+        getFreshEvents('CurrentListView');	  
+		$('#calendar').fullCalendar('changeView', 'CurrentListView');	
+	});
+    
     $('#list_button').on('click', function() {
         CallListView();
 	});
@@ -1536,14 +1527,6 @@ admin_main_style.css
     }
 
 
-
-
-
-    
-    
-    
-
-	
     function getTimeZone() {
         var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
         return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
@@ -1551,10 +1534,29 @@ admin_main_style.css
     
 
 
-    function getFreshEvents(p_view=''){
-        //alert('getrefresh..: Start');
+    function getFreshEvents(p_view=getCookie("cal_view_mode")){
+        
+        
+        //console.log(getCookie("date_from"));
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
+        if (getCookie("date_from") != ""){
+            //alert('getrefresh..: Start');
+            document.getElementById("date_from").value = getCookie("date_from");
+            document.getElementById("date_to").value = getCookie("date_to");
+            var start_date=getCookie("date_from");
+            var end_date=getCookie("date_to");
+        }
+        if (p_view=='CurrentListView') {
+            var dt = new Date();
+            let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            document.getElementById("date_from").value = formatDate(dt);
+            document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
+            var start_date=document.getElementById("date_from").value;
+            var end_date=document.getElementById("date_to").value;
+        }
+
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         document.getElementById("prevnext").value = '';
@@ -1716,7 +1718,7 @@ admin_main_style.css
         // if (getCookie("date_from")){
         //     p_from_date = getCookie("date_from");
         // } 
-        console.log(p_from_date);
+        //console.log(p_from_date);
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
@@ -1726,7 +1728,6 @@ admin_main_style.css
             // minTime: '05:00:00',
             scrollTime: '05:00:00',
             maxTime: '24:00:00',
-            //defaultView: 'agendaweek',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false, 
             editable: false,
@@ -1736,7 +1737,6 @@ admin_main_style.css
                 next: '>'
             },       
 			header: false,
-            
             views: {
                 agenda: {
                     columnFormat: 'ddd MMM DD'
@@ -1756,7 +1756,6 @@ admin_main_style.css
             firstDay: '1',      //monday
             height: 'parent', // calendar content height excluding header
             contentHeight: v_calc_height, // calendar content height excluding header
-            
             timezone: currentTimezone, 
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
@@ -1773,7 +1772,6 @@ admin_main_style.css
   
             // to customize cell text
             eventRender: function(event, el) {
-        
                 var flag=true;
                 var event_found=1;
                 var school_found=1;
@@ -1792,15 +1790,12 @@ admin_main_style.css
                 //ProgressIncrement(); //display progress bar
                 if (document.getElementById("event_type").value != '0') {
                     event_found=0;
-                    
                     $.each($("#event_type option:selected"), function(){ 
                         var name=$(this).text();
-
                         if (event.event_type_name.indexOf(name) >= 0){
                             event_found=1;
                             //break;
-                        }                      
-                        
+                        }
                     });
                 }                
                 // event_type=50 - teacher's vacation
@@ -1810,18 +1805,16 @@ admin_main_style.css
                         student_found=0;
                     }
                     else {
-                        
-                            if (document.getElementById("event_student_id").value !='0') {
-                                student_found=0;
-                                $.each($("#event_student option:selected"), function(){ 
-                                    var id=$(this).val();
-                                    if (event.student_id_list.indexOf(id) >= 0){
-                                        student_found=1;
-                                        //break;
-                                    }
-                                });
-                            }
-                        
+                        if (document.getElementById("event_student_id").value !='0') {
+                            student_found=0;
+                            $.each($("#event_student option:selected"), function(){ 
+                                var id=$(this).val();
+                                if (event.student_id_list.indexOf(id) >= 0){
+                                    student_found=1;
+                                    //break;
+                                }
+                            });
+                        }
                     }
                 }	//event_type <> 50
                 
@@ -1850,7 +1843,7 @@ admin_main_style.css
                 var view = $('#calendar').fullCalendar('getView');
                 var viewname=view.name;
                 
-                if ((viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
+                if ((viewname=='CurrentListView') || (viewname == 'listMonth') || (viewname == 'listYear') || (viewname == 'listWeek')){
                     date_found=1;
                     var curdate=new Date();
                     
@@ -1893,7 +1886,6 @@ admin_main_style.css
 
 
                 var event_school=document.getElementById("event_school_id").value;
-                
                 if (event_school == '') {
                     school_found=0;
                 }
@@ -1931,9 +1923,6 @@ admin_main_style.css
                     	
                 }
 
-
-
-            
                 /* search START */ 
                 var search_text = $('#search_text').val();
                 if ((school_found == 1) && (event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
@@ -1972,18 +1961,14 @@ admin_main_style.css
                 
 
                 if (flag == true){
-                    
                     stime=moment(event.start).format('HH:mm');
                     etime=moment(event.end).format('HH:mm');
-
-                    
-
                     if (moment(event.end).isValid() == false){
                         etime=stime;
                     }
                     foundRecords=1; //found valid record;
                     //event.allDay = true;
-                    console.log(event)
+                    //console.log(event)
                     if (event.allDay) {
                         $(el).find('div.fc-content').prepend(icon);
                     } else {
@@ -2024,6 +2009,15 @@ admin_main_style.css
                 
                 resultHtml_rows=resultHtml;
                 el.attr('title', event.tooltip);
+                //el.attr('data-html', 'true');
+
+                el.popover({
+                    title: event.tooltip,
+                    trigger: 'hover',
+                    html: true,
+                    placement: 'top',
+                    container: 'body'
+                });
                 //el.attr('timetext', event.title);
                 //$('#timetext').text(event.cours_name);
                 $(el).find('#timetext').append(' '+event.event_type_name);
@@ -2153,8 +2147,6 @@ admin_main_style.css
                         }else {
                             document.getElementById("btn_validate_events").style.display = "block";
                         }
-                        
-                
                     }
                 }
 
@@ -2241,13 +2233,27 @@ admin_main_style.css
             },
                 
             viewRender: function( view, el ) {
-                //alert('RerenderEvents events');
+                console.log(view);
                 $("#agenda_table tr:gt(0)").remove();
                 resultHtml='';
                 prevdt='';
                 //view change event - here needs to refresh data
-                document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
-                document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
+                if (view.name == 'listYear') {
+                    document.getElementById("date_from").value = getCookie("date_from");
+                    document.getElementById("date_to").value = getCookie("date_to");
+                
+                    
+                } else if (view.name=='CurrentListView') {
+                    var dt = new Date();
+                    let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+                    document.getElementById("date_from").value = formatDate(dt);
+                    document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+                }
+                else {
+                    document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
+                    document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
+                
+                }
                 
                 if (document.getElementById("prevnext").value == 'yes'){
                     document.getElementById("view_mode").value = 'list';
@@ -2258,10 +2264,12 @@ admin_main_style.css
                 {
                     document.getElementById("view_mode").value = view.name;
                 }
+                
+                SetEventCookies();
+                
                 if  (firstload != '0'){
                     getFreshEvents();
                 }
-                SetEventCookies();
             },
             dayClick: function(date, jsEvent, view, resource) {
                 // $('#start_date').val('');
@@ -2303,6 +2311,13 @@ admin_main_style.css
 
     function DisplayCalendarTitle() {
         var view = $('#calendar').fullCalendar('getView');
+        if (view.name=='CurrentListView') {
+            var dt = new Date();
+            var CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            const options1 = {month: 'short',day: 'numeric' };
+            const options = { day: 'numeric', year: 'numeric'};
+            view.title = moment(dt).format("MMM DD")+' - '+moment(CurrentListViewDate).format("DD,YYYY");
+        }
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
 
@@ -2326,9 +2341,6 @@ admin_main_style.css
         }	
 		return selected_ids.join("|");
 	}
-// console.log("call func",getSchoolIDs('count'))
-// console.log("call func",getSchoolIDs('is_multi'))
-
     function getEventIDs(){
 		var selected_ids = [];
         $.each($("#event_type option:selected"), function(){         
@@ -2421,42 +2433,42 @@ admin_main_style.css
         var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
         //console.log(data);
         //return false;
-            e.preventDefault();
-			$.ajax({
-                type: "POST",
-                url: BASE_URL + '/copy_paste_events',
-                //url: "copy_paste_events.php",
-                data: data,
-				dataType: "JSON",
-				async: false,
-                success:function(result){
-				    var status =  result.status;
-                    //alert(status);
-					if(status == 0)
-					{
-                        document.getElementById("copy_date_from").value = '';
-                        document.getElementById("copy_date_to").value = '';
-                        document.getElementById("copy_school_id").value = '';
-                        document.getElementById("copy_event_id").value = '';
-                        document.getElementById("copy_student_id").value ='';
-                        document.getElementById("copy_teacher_id").value = '';					   
-                        document.getElementById("copy_view_mode").value = '';
-                        document.getElementById("copy_week_day").value = '';
-                        document.getElementById("copy_month_day").value = '';
-                        //window.location.reload(false);
-					       
-					    getFreshEvents();      //refresh calendar                          
-					}
-					else
-					{
-						alert('failed.. ');
-					}
-                },   //success
-                error: function(ts) { 
-                    // alert(ts.responseText)
-                    errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
-                 }
-            }); //ajax-type
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + '/copy_paste_events',
+            //url: "copy_paste_events.php",
+            data: data,
+            dataType: "JSON",
+            async: false,
+            success:function(result){
+                var status =  result.status;
+                //alert(status);
+                if(status == 0)
+                {
+                    document.getElementById("copy_date_from").value = '';
+                    document.getElementById("copy_date_to").value = '';
+                    document.getElementById("copy_school_id").value = '';
+                    document.getElementById("copy_event_id").value = '';
+                    document.getElementById("copy_student_id").value ='';
+                    document.getElementById("copy_teacher_id").value = '';					   
+                    document.getElementById("copy_view_mode").value = '';
+                    document.getElementById("copy_week_day").value = '';
+                    document.getElementById("copy_month_day").value = '';
+                    //window.location.reload(false);
+                        
+                    getFreshEvents();      //refresh calendar                          
+                }
+                else
+                {
+                    alert('failed.. ');
+                }
+            },   //success
+            error: function(ts) { 
+                // alert(ts.responseText)
+                errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
+                }
+        }); //ajax-type
         return false;
     })
 
@@ -2514,33 +2526,33 @@ admin_main_style.css
     }
 
 
-window.addEventListener( "pageshow", function ( event ) {
-	var historyTraversal = event.persisted || 
-                         ( typeof window.performance != "undefined" && 
-                              window.performance.navigation.type === 2 );
-							  
-	  if ( historyTraversal ) {
-		// Handle page restore.
-		//RerenderEvents();
-		var isFirefox = typeof InstallTrigger !== 'undefined';
-		//if (isFirefox) {
-			console.log('before firefox.. reload.');
-			//alert('firefox.. reload.');
-			//getFreshEvents();
-			
-			window.location.reload(false);
-			//}
-	  }
-});
+    window.addEventListener( "pageshow", function ( event ) {
+        var historyTraversal = event.persisted || 
+                            ( typeof window.performance != "undefined" && 
+                                window.performance.navigation.type === 2 );
+                                
+        if ( historyTraversal ) {
+            // Handle page restore.
+            //RerenderEvents();
+            var isFirefox = typeof InstallTrigger !== 'undefined';
+            //if (isFirefox) {
+                console.log('before firefox.. reload.');
+                //alert('firefox.. reload.');
+                //getFreshEvents();
+                
+                window.location.reload(false);
+                //}
+        }
+    });
 
-window.addEventListener('focus', function (event) {
-    console.log('has focus');
-	//RerenderEvents();
-});
+    window.addEventListener('focus', function (event) {
+        console.log('has focus');
+        //RerenderEvents();
+    });
 
-window.addEventListener('blur', function (event) {
-    console.log('lost focus');
-});
+    window.addEventListener('blur', function (event) {
+        console.log('lost focus');
+    });
 
 </script>
 
