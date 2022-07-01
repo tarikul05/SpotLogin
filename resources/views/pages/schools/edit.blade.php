@@ -43,8 +43,12 @@
 						{{ __('User Account')}}
 						</button>
 					@endcan -->
+					
 					@can('parameters-list')
-						<a class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
+						<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
+						{{ __('Parameters')}}
+						</button>
+						
 					@endcan
 					<!-- </button> -->
 				</div>
@@ -809,6 +813,28 @@ $(document).ready(function(){
 		viewSelect: 3,
 		todayBtn:false,
 	});
+
+
+	var x = document.getElementsByClassName("tab-pane active");
+	//var update_btn = document.getElementById("update_btn");
+	console.log(x[0].id);
+	if (x[0].id == "tab_5") {
+		
+		document.getElementById("update_btn").style.display = "none";
+	} 
+	else  {
+		document.getElementById("update_btn").style.display = "block";
+	} 
+
+	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+		console.log(e.target.id) // activated tab
+		if (e.target.id == 'nav-parameters-tab') {
+			document.getElementById("update_btn").style.display = "none";
+		} 
+		else  {
+			document.getElementById("update_btn").style.display = "block";
+		} 
+	})
 
 	// CKEDITOR.replace( "body_text", {
 	// 	customConfig: '/ckeditor/config_email.js',

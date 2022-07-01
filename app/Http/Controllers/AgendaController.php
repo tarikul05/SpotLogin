@@ -159,16 +159,35 @@ class AgendaController extends Controller
             
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
-            $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+            //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+
+            
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray(); 
+            $student_name ='';
+            $i=0;
+            foreach($eventDetailsStudentId as $std){
+                $student = Student::find($std['student_id']);
+                if ($student) {
+                    $student_name .= $student->firstname;
+                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
+                        $student_name .=',';
+                    }
+                    $i++;
+                }
+                
+            }
+            $e['tooltip']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+
             $e['content'] = ($e['cours_name']);
 
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            $e['student_id_list'] = $eventDetailsStudentId;
             
             $e['teacher_id'] = $fetch->teacher_id; 
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
-            $e['student_id_list'] = $eventDetailsStudentId;
+            
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
             
@@ -669,7 +688,24 @@ class AgendaController extends Controller
             
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
-            $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+            //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+
+            
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray(); 
+            $student_name ='';
+            $i=0;
+            foreach($eventDetailsStudentId as $std){
+                $student = Student::find($std['student_id']);
+                if ($student) {
+                    $student_name .= $student->firstname;
+                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
+                        $student_name .=',';
+                    }
+                    $i++;
+                }
+            }
+            $e['tooltip']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+
             $e['content'] = ($e['cours_name']);
 
             
