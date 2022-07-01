@@ -272,7 +272,7 @@ admin_main_style.css
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="location" name="location">
-                                                                    <option value="">{{__('Select Location') }}</option>
+                                                                    
                                                                     @foreach($locations as $key => $location)
                                                                         <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
                                                                     @endforeach
@@ -1070,7 +1070,7 @@ admin_main_style.css
                     if (data.length >0) {
                         
                     }
-                    var resultHtml ='';
+                    var resultHtml ="<option value=''>{{__('Select Location') }}</option>";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
