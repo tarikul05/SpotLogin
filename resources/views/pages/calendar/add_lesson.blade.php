@@ -59,6 +59,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
+												<option value="">{{__('Select Location') }}</option>
 												@foreach($locations as $key => $location)
 													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
 												@endforeach
