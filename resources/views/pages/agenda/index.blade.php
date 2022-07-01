@@ -694,16 +694,16 @@ admin_main_style.css
         {
             //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a>';
-                menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px 0 0 4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
