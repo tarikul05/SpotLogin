@@ -1988,6 +1988,11 @@ admin_main_style.css
                     } else{
                         icon='';
                     }
+
+                    if (event.duration_minutes > 60){        
+                        var ooo= event.title_extend;
+                        $(el).find('div.fc-content').append(ooo);
+                    }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
                    
                     resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
@@ -2233,7 +2238,6 @@ admin_main_style.css
             },
                 
             viewRender: function( view, el ) {
-                console.log(view);
                 $("#agenda_table tr:gt(0)").remove();
                 resultHtml='';
                 prevdt='';

@@ -314,7 +314,12 @@ class AgendaController extends Controller
            
             $e['url'] = $page_name;
             $e['action_type'] = $action_type;
-
+            //$e['duration_minutes'] = 120;
+            
+            //$e['title']="dsadasdasd";
+            $e['title_extend']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            // $e['start'] = "2022-07-05 06:30:00";
+            // $e['end'] = "2022-07-05 08:45:00";
             array_push($events, $e);
         }
         //dd($events);
@@ -842,7 +847,12 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
             
             $e['action_type'] = $action_type;
-
+            // $e['duration_minutes'] = 90;
+            
+            //$e['title']="dsadasdasd";
+            $e['title_extend']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            // $e['start'] = "2022-07-05 06:30:00";
+            // $e['end'] = "2022-07-05 07:30:00";
             array_push($events, $e);
         }
         
