@@ -581,7 +581,7 @@ $("body").on('click', '#all_day', function(event) {
         $(".not-allday").show();
     }
 })
-{{ !empty($lessonData->fullday_flag) ? '' : '';  }}
+
 if ({{!empty($lessonData->fullday_flag) ? 1 : 0}}) {
 	$("#all_day").click()
 }
