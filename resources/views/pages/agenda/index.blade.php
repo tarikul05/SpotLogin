@@ -319,7 +319,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row">
+                                                    <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-7 row">
                                                             <div class="col-sm-6">
@@ -340,7 +340,7 @@ admin_main_style.css
                                                             </div>	
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row">
+                                                    <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
                                                         <div class="col-sm-7 row">
                                                             <div class="col-sm-6">
@@ -361,7 +361,7 @@ admin_main_style.css
                                                             </div>	
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row lesson hide_on_off">
+                                                    <div class="form-group row lesson hide_on_off not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
                                                         <div class="col-sm-2">
                                                             <div class="input-group"> 
@@ -2727,6 +2727,13 @@ $('#sis_paying').on('change', function() {
 	}else if(this.value == 2){
 		$('#price_per_student').show();
 	}
+});
+$("body").on('click', '#all_day', function(event) {
+    if ($(this).prop('checked')) {
+        $(".not-allday").hide();
+    }else{
+        $(".not-allday").show();
+    }
 });
 
 

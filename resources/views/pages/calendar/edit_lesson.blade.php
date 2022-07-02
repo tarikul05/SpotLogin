@@ -107,7 +107,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
@@ -128,7 +128,7 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
@@ -149,7 +149,7 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
 									<div class="col-sm-2">
 										<div class="input-group"> 
@@ -161,7 +161,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" {{ !empty($lessonData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
 								</div>
@@ -573,6 +573,19 @@ $('#mark_present_btn').click(function (e) {
 	}
 			            
 }); 
+
+$("body").on('click', '#all_day', function(event) {
+    if ($(this).prop('checked')) {
+        $(".not-allday").hide();
+    }else{
+        $(".not-allday").show();
+    }
+})
+{{ !empty($lessonData->fullday_flag) ? '' : '';  }}
+if ({{!empty($lessonData->fullday_flag) ? 1 : 0}}) {
+	$("#all_day").click()
+}
+
 
 $('#edit_lesson').on('submit', function() {
 	var title = $('#Title').val();
