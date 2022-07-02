@@ -540,7 +540,7 @@ admin_main_style.css
     // var next_text=document.getElementById("next_text").value;
     //var listcalendar_text=document.getElementById("listcalendar_text").value;
 	var stime='00:00',etime='00:00';
-	var v_calc_height=((screen.height/100)*63.00);
+	var v_calc_height=((screen.height/100)*61.00);
 	//var v_calc_height=((window.innerHeight/100)*30.00);
 
     var loading=1;

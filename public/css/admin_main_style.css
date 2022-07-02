@@ -1088,7 +1088,7 @@ label.profile_img_area {
 #calendar {
     color: #152245;
     font-family: "Gilroy-Regular";
-    height: 73vh;
+    /* height: 68vh; */
 }
 @media only screen and (max-width: 991px) {
     h1 {
