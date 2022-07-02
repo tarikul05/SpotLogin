@@ -1076,6 +1076,20 @@ label.profile_img_area {
 #profile_image i.fa-close {
     top: -65px;
 }
+
+.content.agenda_page {
+    margin-top: -29px;
+    /* padding-top: 2px; */
+}
+
+.content.agenda_page header.panel-heading {
+    margin: 0px 0;
+}
+#calendar {
+    color: #152245;
+    font-family: "Gilroy-Regular";
+    height: 73vh;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
