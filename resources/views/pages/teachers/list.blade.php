@@ -3,6 +3,10 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 @endsection
 
 @section('content')
@@ -68,7 +72,9 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#example').DataTable();
+        $('#example').DataTable({
+            "responsive": true,
+        });
         @can('teachers-create')
         $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
         @endcan

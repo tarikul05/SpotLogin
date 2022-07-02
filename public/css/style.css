@@ -806,4 +806,12 @@ span.etransfer_acc {
         width: 25%;
         margin-top: 12px;
     }
+    .btn {
+        padding: 0.6rem;
+        font-family: "Gilroy-Medium";
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 17px;
+        min-height: 37px;
+    }
 }
