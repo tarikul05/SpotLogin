@@ -91,7 +91,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="1">
+											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
 										</div>
 									</div>
 								</div>

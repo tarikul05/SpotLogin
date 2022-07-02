@@ -123,7 +123,9 @@ class AgendaController extends Controller
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
                 $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
-                $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
@@ -157,16 +159,35 @@ class AgendaController extends Controller
             
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
-            $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+            //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+
+            
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray(); 
+            $student_name ='';
+            $i=0;
+            foreach($eventDetailsStudentId as $std){
+                $student = Student::find($std['student_id']);
+                if ($student) {
+                    $student_name .= $student->firstname;
+                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
+                        $student_name .=',';
+                    }
+                    $i++;
+                }
+                
+            }
+            $e['tooltip']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+
             $e['content'] = ($e['cours_name']);
 
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            $e['student_id_list'] = $eventDetailsStudentId;
             
             $e['teacher_id'] = $fetch->teacher_id; 
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
-            $e['student_id_list'] = $eventDetailsStudentId;
+            
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
             
@@ -293,7 +314,12 @@ class AgendaController extends Controller
            
             $e['url'] = $page_name;
             $e['action_type'] = $action_type;
-
+            //$e['duration_minutes'] = 120;
+            
+            //$e['title']="dsadasdasd";
+            $e['title_extend']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            // $e['start'] = "2022-07-05 06:30:00";
+            // $e['end'] = "2022-07-05 08:45:00";
             array_push($events, $e);
         }
         //dd($events);
@@ -364,11 +390,13 @@ class AgendaController extends Controller
                         'participation_id' => 200,
                     ];
                 }
-                if ($eventdetail->participation_id == 0) {
-                    $eventdetail = $eventdetail->update($eventDetailPresent);
-                } else {
-                    $eventdetail = $eventdetail->update($eventDetailAbsent);
-                }
+
+                $eventdetail = $eventdetail->update($eventDetailPresent);
+                // if ($eventdetail->participation_id == 0) {
+                    
+                // } else {
+                //     $eventdetail = $eventdetail->update($eventDetailAbsent);
+                // }
 
                 if ($eventdetail)
                 {
@@ -629,7 +657,9 @@ class AgendaController extends Controller
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
                 $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
-                $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                if (!empty($schoolTeacher)) {
+                    $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                }
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
@@ -663,7 +693,24 @@ class AgendaController extends Controller
             
             $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
-            $e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+            //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
+
+            
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray(); 
+            $student_name ='';
+            $i=0;
+            foreach($eventDetailsStudentId as $std){
+                $student = Student::find($std['student_id']);
+                if ($student) {
+                    $student_name .= $student->firstname;
+                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
+                        $student_name .=',';
+                    }
+                    $i++;
+                }
+            }
+            $e['tooltip']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+
             $e['content'] = ($e['cours_name']);
 
             
@@ -800,7 +847,12 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
             
             $e['action_type'] = $action_type;
-
+            // $e['duration_minutes'] = 90;
+            
+            //$e['title']="dsadasdasd";
+            $e['title_extend']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            // $e['start'] = "2022-07-05 06:30:00";
+            // $e['end'] = "2022-07-05 07:30:00";
             array_push($events, $e);
         }
         

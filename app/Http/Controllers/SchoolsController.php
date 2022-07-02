@@ -16,6 +16,7 @@ use App\Models\Location;
 use App\Models\Level;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\URL;
@@ -39,7 +40,7 @@ class SchoolsController extends Controller
     {
         parent::__construct();
         $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
-        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
+        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete','addParameters']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
         $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
 
@@ -480,8 +481,6 @@ class SchoolsController extends Controller
     {
         try{
             if ($request->isMethod('post')){
-
-
                 $data = $request->all();
                 $user = Auth::user();
                 if ($user->isSuperAdmin()) {
