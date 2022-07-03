@@ -319,7 +319,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row">
+                                                    <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-7 row">
                                                             <div class="col-sm-6">
@@ -340,7 +340,7 @@ admin_main_style.css
                                                             </div>	
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row">
+                                                    <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
                                                         <div class="col-sm-7 row">
                                                             <div class="col-sm-6">
@@ -361,7 +361,7 @@ admin_main_style.css
                                                             </div>	
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row lesson hide_on_off">
+                                                    <div class="form-group row lesson hide_on_off not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
                                                         <div class="col-sm-2">
                                                             <div class="input-group"> 
@@ -540,7 +540,7 @@ admin_main_style.css
     // var next_text=document.getElementById("next_text").value;
     //var listcalendar_text=document.getElementById("listcalendar_text").value;
 	var stime='00:00',etime='00:00';
-	var v_calc_height=((screen.height/100)*50.00);
+	var v_calc_height=((screen.height/100)*59.00);
 	//var v_calc_height=((window.innerHeight/100)*30.00);
 
     var loading=1;
@@ -677,6 +677,7 @@ admin_main_style.css
             PopulateStudentDropdown(document.getElementById("event_school_id").value)
             PopulateTeacherDropdown(document.getElementById("event_school_id").value)
             PopulateEventCategoryDropdown(document.getElementById("event_school_id").value)
+            PopulateSchoolCurrencyDropdown(document.getElementById("event_school_id").value)
         } else{
             PopulateLocationDropdown();
             PopulateStudentDropdown();
@@ -960,6 +961,7 @@ admin_main_style.css
                         PopulateStudentDropdown(document.getElementById("event_school_id").value)
                         PopulateTeacherDropdown(document.getElementById("event_school_id").value)
                         PopulateEventCategoryDropdown(document.getElementById("event_school_id").value)
+                        PopulateSchoolCurrencyDropdown(document.getElementById("event_school_id").value)
                         $('#agenda_select').trigger('change');
                     }
                     
@@ -1068,15 +1070,55 @@ admin_main_style.css
                     $("#pageloader").hide();
                     console.log(data.length);
                     if (data.length >0) {
-                        
+                        var resultHtml ="";
+                        var i='0';
+                        $.each(data, function(key,value){
+                            resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                        });
+                        $('#category_select').html(resultHtml);
                     }
-                    var resultHtml ="";
-                    var i='0';
-                    $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
-                    });
-                    $('#category_select').html(resultHtml);
-                    // $("#event_location").multiselect('destroy');
+                    
+                },   //success
+                complete: function( xhr ) {
+                    $("#pageloader").hide();
+                }, 
+                error: function(ts) { 
+                    // alert(ts.responseText) 
+                    errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+                }
+            }); // Ajax
+        }
+             
+    }  
+
+    // populate location
+    function PopulateSchoolCurrencyDropdown(school_id=null){
+
+        if (school_id !=null) {
+            var menuHtml='';
+            var data = 'school_id='+school_id;
+            $('#sprice_currency').html('');
+        
+            $.ajax({
+                url: BASE_URL + '/get_school_currency',
+                data: data,
+                type: 'POST',                     
+                dataType: 'json',
+                async: false,
+                beforeSend: function( xhr ) {
+                    $("#pageloader").show();
+                },
+                success: function(data) {
+                    $("#pageloader").hide();
+                    console.log(data.length);
+                    if (data.length >0) {
+                        var resultHtml ="";
+                        var i='0';
+                        $.each(data, function(key,value){
+                            resultHtml+='<option value="'+value.currency_code+'">'+value.currency_code+'</option>'; 
+                        });
+                        $('#sprice_currency').html(resultHtml);
+                    }
                     
                 },   //success
                 complete: function( xhr ) {
@@ -1988,6 +2030,11 @@ admin_main_style.css
                     } else{
                         icon='';
                     }
+
+                    if (event.duration_minutes > 60){        
+                        var ooo= event.title_extend;
+                        $(el).find('div.fc-content').append(ooo);
+                    }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
                    
                     resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
@@ -2233,7 +2280,6 @@ admin_main_style.css
             },
                 
             viewRender: function( view, el ) {
-                console.log(view);
                 $("#agenda_table tr:gt(0)").remove();
                 resultHtml='';
                 prevdt='';
@@ -2723,6 +2769,13 @@ $('#sis_paying').on('change', function() {
 	}else if(this.value == 2){
 		$('#price_per_student').show();
 	}
+});
+$("body").on('click', '#all_day', function(event) {
+    if ($(this).prop('checked')) {
+        $(".not-allday").hide();
+    }else{
+        $(".not-allday").show();
+    }
 });
 
 

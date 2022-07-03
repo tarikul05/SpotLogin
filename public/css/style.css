@@ -34,7 +34,7 @@ label#page_header,
 #cal_title {
     color: #0075bf;
     float: left;
-    font-size: 28px;
+    font-size: 25px;
     padding: 0;
     margin: 0;
     position: relative;
@@ -805,5 +805,13 @@ span.etransfer_acc {
         float: left;
         width: 25%;
         margin-top: 12px;
+    }
+    .btn {
+        padding: 0.6rem;
+        font-family: "Gilroy-Medium";
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 17px;
+        min-height: 37px;
     }
 }
