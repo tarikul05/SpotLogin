@@ -935,6 +935,29 @@ class AgendaController extends Controller
        
     }
 
+
+    /**
+     *  AJAX school currency
+     * 
+     * @return json
+     */
+    public function getSchoolCurrency(Request $request)
+    {
+        $data = $request->all();
+        
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+        $school = School::active()->find($schoolId);
+        if (!empty($school->country_code)) {
+            $currency = Currency::active()->ByCountry($school->country_code)->get();
+        }else{
+            $currency = Currency::active()->get();
+        }
+
+        return $schoolCurrency =json_encode($currency);
+       
+    }
+
     /**
      *  AJAX get teachers
      * 
