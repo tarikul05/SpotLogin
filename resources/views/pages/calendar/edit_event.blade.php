@@ -89,7 +89,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
-													<option value="{{ $sub->id}}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+													<option value="{{ $sub->student_id}}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
