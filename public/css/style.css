@@ -687,6 +687,9 @@ span.etransfer_acc {
     margin-top: 7px;
     display: block;
 }
+.multiselect-container > li > a > label {
+    padding: 3px 10px 3px 0px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
@@ -754,8 +757,8 @@ span.etransfer_acc {
     }
     a#btn_export_events {
         float: left;
-        width: 45%;
-        padding: 10px;
+        width: 28%;
+        padding: 9px;
         font-size: 16px;
     }
     a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
@@ -786,7 +789,7 @@ span.etransfer_acc {
         padding-left: 0;
     }
     .cal_area {
-        margin-top: 70px;
+        margin-top: 5px;
     }
     .col-sm-6.col-xs-12.btn-area {
         position: relative;
@@ -813,5 +816,9 @@ span.etransfer_acc {
         font-size: 13px;
         line-height: 17px;
         min-height: 37px;
+    }
+    div#school_cal {
+        display: flex;
+        flex-direction: column-reverse;
     }
 }
