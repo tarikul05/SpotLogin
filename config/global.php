@@ -59,6 +59,7 @@
       'school' => 'school',
       'send_approve_pdf_invoice' => 'send_approve_pdf_invoice',
       'sign_up_confirmation_email' => 'sign_up_confirmation_email',
+      'sign_up_confirmation_email_exist' => 'sign_up_confirmation_email_exist',
       'student' => 'student',
       'student_activation_email' => 'student_activation_email',
       'teacher' => 'teacher',
