@@ -246,6 +246,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
   Route::middleware(['select_role'])->group(function () {
+
+    Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+    Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
+    
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
     Route::match(array('GET', 'POST'), "add-teacher", array(
