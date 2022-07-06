@@ -822,10 +822,9 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 <td style="text-align:center">
 <h2><strong>Welcome to Sportlogin!</strong></h2>
 
-<p><em>&lsquo;Welcome to Sportlogin, an invite has been sent to you by (name of the coach or school account)&rsquo;</em></p>
+<p><em>Welcome to Sportlogin, an invite has been sent to you by by </em>[~~SCHOOL_NAME~~]</p>
 
-<p style="list-style-type:disc">If you already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
-
+<p>If you already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
 <p>[~~HOSTNAME~~][~~USER_NAME~~]/index.html</p>
 </td>
@@ -838,7 +837,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-06 23:56:34',
+                'modified_at' => '2022-07-06 18:04:30',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,

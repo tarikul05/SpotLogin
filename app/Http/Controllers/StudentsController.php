@@ -88,8 +88,9 @@ class StudentsController extends Controller
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
-            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
-            $exStudent = !empty($exUser) ? $exUser->personable : null;
+            // $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
+            // $exStudent = !empty($exUser) ? $exUser->personable : null;
+            $exStudent = Student::where(['email'=> $searchEmail])->first();;
             $alreadyFlag =null;
             if ($exStudent) {
                 $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
@@ -172,7 +173,7 @@ class StudentsController extends Controller
                         } 
                         $msg = 'Successfully Registered';
                         
-                    }else {
+                    } else {
                         $msg = 'This teacher already exist with your school';
                     }
                     
@@ -283,7 +284,7 @@ class StudentsController extends Controller
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token; 
 
-                            if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                            if ($this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                             }  else {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -312,6 +313,7 @@ class StudentsController extends Controller
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Student added successfully!'));
         }catch (Exception $e) {
+            // dd($e);
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }   
