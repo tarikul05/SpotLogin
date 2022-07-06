@@ -806,7 +806,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'id' => 28,
                 'template_code' => 'sign_up_confirmation_email_exist',
                 'template_name' => 'Sign up confirmation mail existing user',
-                'subject_text' => 'Welcome to Sportlogin 333',
+                'subject_text' => 'Welcome to Sportlogin',
                 'body_text' => '<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
 <tbody>
 <tr>
@@ -838,7 +838,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-06 17:14:21',
+                'modified_at' => '2022-07-06 23:56:34',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,
