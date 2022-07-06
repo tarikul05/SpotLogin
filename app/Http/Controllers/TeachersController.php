@@ -249,26 +249,26 @@ class TeachersController extends Controller
                     $msg = 'Successfully Registered';
                 }
 
+                
+                // foreach ($alldata['data'] as $key => $catPrices) {
+                //    foreach ($catPrices as $pkey => $price) {
+                //      $dataprice = [
+                //           'event_category_id' => $key,
+                //           'teacher_id' => $teacher->id,
+                //           'lesson_price_student' => $price['lesson_price_student'],
+                //           'lesson_price_id' => $price['lesson_price_id'],
+                //           // 'price_buy' => $price['price_buy'],
+                //           'price_buy' => $price['price_sell'],
+                //           'price_sell' => $price['price_sell'],
+                //       ];
 
-                foreach ($alldata['data'] as $key => $catPrices) {
-                   foreach ($catPrices as $pkey => $price) {
-                     $dataprice = [
-                          'event_category_id' => $key,
-                          'teacher_id' => $teacher->id,
-                          'lesson_price_student' => $price['lesson_price_student'],
-                          'lesson_price_id' => $price['lesson_price_id'],
-                          // 'price_buy' => $price['price_buy'],
-                          'price_buy' => $price['price_sell'],
-                          'price_sell' => $price['price_sell'],
-                      ];
-
-                     if (empty($price['id'])) {
-                        $updatedPrice = LessonPriceTeacher::create($dataprice);
-                     }else{
-                        $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
-                     }
-                   }
-                 }
+                //      if (empty($price['id'])) {
+                //         $updatedPrice = LessonPriceTeacher::create($dataprice);
+                //      }else{
+                //         $updatedPrice = LessonPriceTeacher::where('id', $price['id'])->update($dataprice);
+                //      }
+                //    }
+                //  }
 
                 
                 $result = array(
