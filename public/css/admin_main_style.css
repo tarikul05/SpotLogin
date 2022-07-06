@@ -1315,4 +1315,23 @@ label.profile_img_area {
         width: 30px;
         margin-top: 0px;
     }
+    a#personal_ics1 {
+        float: left;
+        max-width: 40%;
+    }
+    a#btn_validate_events {
+        max-width: 40%;
+        float: left;
+    }
+    a#btn_delete_events {
+        float: left;
+        width: 30%;
+    }
+    button#btn_copy_events {
+        float: left;
+        width: 33%;
+    }
+    a#add_lesson_btn {
+        width: 28%;
+    }
 }

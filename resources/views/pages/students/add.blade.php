@@ -138,7 +138,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->lastname : '' }}" {{ $exStudent ? 'disabled' : '' }} id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
+										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->lastname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
 										@if ($errors->has('lastname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('lastname') }}.</strong>
@@ -149,7 +149,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->firstname : '' }}" {{ $exStudent ? 'disabled' : '' }} id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
+										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->firstname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
 										@if ($errors->has('firstname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('firstname') }}.</strong>
@@ -161,7 +161,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{ $exStudent ? $exStudent->birth_date : '' }}" {{ $exStudent ? 'disabled' : '' }} name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
+											<input id="birth_date" value="{{ $exStudent ? $exStudent->birth_date : '' }}" {{ $exStudent ? 'readonly' : '' }} name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -206,7 +206,7 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group"> 
-												<input id="level_date_arp" value="{{ $exStudent ? $exStudent->level_date_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
+												<input id="level_date_arp" value="{{ $exStudent ? $exStudent->level_date_arp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -216,7 +216,7 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="licence_arp" id="postal_code_caption">{{__('ARP license') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
+											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
 										</div>
 									</div>
 									@endif
@@ -225,21 +225,21 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="licence_usp" id="locality_caption">{{__('License number') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
+											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
 										</div>
 									</div>
 									@if($school->country_code == 'CH')
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="level_skating_usp" value="{{ $exStudent ? $exStudent->level_skating_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_skating_usp" type="text" value="{{old('level_skating_usp')}}">
+											<input class="form-control" id="level_skating_usp" value="{{ $exStudent ? $exStudent->level_skating_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_skating_usp" type="text" value="{{old('level_skating_usp')}}">
 										</div>
 									</div>
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="date_last_level_usp_div"> 
-												<input id="level_date_usp" value="{{ $exStudent ? $exStudent->level_date_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
+												<input id="level_date_usp" value="{{ $exStudent ? $exStudent->level_date_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -277,25 +277,25 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street" value="{{ $exStudent ? $exStudent->street : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street" value="{{old('street')}}" type="text">
+									<input class="form-control" id="street" value="{{ $exStudent ? $exStudent->street : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street" value="{{old('street')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street_number" value="{{ $exStudent ? $exStudent->street_number : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street_number" value="{{old('street_number')}}" type="text">
+									<input class="form-control" id="street_number" value="{{ $exStudent ? $exStudent->street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street_number" value="{{old('street_number')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street2" type="text">
+									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street2" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="zip_code" value="{{ $exStudent ? $exStudent->zip_code : '' }}" {{ $exStudent ? 'disabled' : '' }} name="zip_code" value="{{old('zip_code')}}" type="text">
+									<input class="form-control" id="zip_code" value="{{ $exStudent ? $exStudent->zip_code : '' }}" {{ $exStudent ? 'readonly' : '' }} name="zip_code" value="{{old('zip_code')}}" type="text">
 								</div>
 							</div>
 						</div>
@@ -303,7 +303,7 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="place" value="{{ $exStudent ? $exStudent->place : '' }}" {{ $exStudent ? 'disabled' : '' }} name="place" value="{{old('place')}}" type="text">
+									<input class="form-control" id="place" value="{{ $exStudent ? $exStudent->place : '' }}" {{ $exStudent ? 'readonly' : '' }} name="place" value="{{old('place')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -341,25 +341,25 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street" id="street_caption">{{__('Street') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street" value="{{ $exStudent ? $exStudent->billing_street : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street" value="{{old('billing_street')}}" type="text">
+									<input class="form-control" id="billing_street" value="{{ $exStudent ? $exStudent->billing_street : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street" value="{{old('billing_street')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street_number" id="street_number_caption">{{__('Street No') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street_number" value="{{ $exStudent ? $exStudent->billing_street_number : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street_number" type="text">
+									<input class="form-control" id="billing_street_number" value="{{ $exStudent ? $exStudent->billing_street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street_number" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street2" value="{{ $exStudent ? $exStudent->billing_street2 : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street2" type="text">
+									<input class="form-control" id="billing_street2" value="{{ $exStudent ? $exStudent->billing_street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street2" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_zip_code" value="{{ $exStudent ? $exStudent->billing_zip_code : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_zip_code" type="text">
+									<input class="form-control" id="billing_zip_code" value="{{ $exStudent ? $exStudent->billing_zip_code : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_zip_code" type="text">
 								</div>
 							</div>
 						</div>
@@ -367,7 +367,7 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_place" id="locality_caption">{{__('City') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_place" value="{{ $exStudent ? $exStudent->billing_place : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_place" type="text">
+									<input class="form-control" id="billing_place" value="{{ $exStudent ? $exStudent->billing_place : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_place" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -406,7 +406,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="father_phone" value="{{ $exStudent ? $exStudent->father_phone : '' }}" {{ $exStudent ? 'disabled' : '' }} name="father_phone"  type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="father_phone" value="{{ $exStudent ? $exStudent->father_phone : '' }}" {{ $exStudent ? 'readonly' : '' }} name="father_phone"  type="text">
 									</div>
 								</div>
 							</div>
@@ -414,7 +414,7 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mother_phone" name="mother_phone" value="{{ $exStudent ? $exStudent->mother_phone : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mother_phone" name="mother_phone" value="{{ $exStudent ? $exStudent->mother_phone : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text">
 									</div>
 								</div>
 							</div>
@@ -422,7 +422,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{ $exStudent ? $exStudent->mobile : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{ $exStudent ? $exStudent->mobile : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text">
 									</div>
 								</div>
 							</div>
@@ -432,7 +432,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"value="1" name="father_notify"></span> <input class="form-control" id="father_email" name="father_email" value="{{ $exStudent ? $exStudent->father_email : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox"value="1" name="father_notify"></span> <input class="form-control" id="father_email" name="father_email" value="{{ $exStudent ? $exStudent->father_email : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
@@ -440,7 +440,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="mother_email">{{__("Mother’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" value="1" name="mother_notify"></span> <input class="form-control" id="mother_email" name="mother_email" value="{{ $exStudent ? $exStudent->mother_email : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" value="1" name="mother_notify"></span> <input class="form-control" id="mother_email" name="mother_email" value="{{ $exStudent ? $exStudent->mother_email : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
