@@ -163,6 +163,7 @@ class TeachersController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['school_name'] = $schoolName;
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return $result = array(
