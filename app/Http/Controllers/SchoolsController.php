@@ -40,9 +40,10 @@ class SchoolsController extends Controller
     {
         parent::__construct();
         $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
-        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete','addParameters']]);
+        $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
         $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addParameters']]);
 
     }
 
