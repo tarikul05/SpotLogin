@@ -165,6 +165,7 @@
     "school": "school",
     "send_approve_pdf_invoice": "send approve pdf invoice",
     "sign_up_confirmation_email": "sign up confirmation email",
+    "sign_up_confirmation_email_exist": "sign up confirmation email exist",
     "student": "student",
     "student_activation_email": "student activation email",
     "submit": null,

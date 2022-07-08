@@ -170,6 +170,9 @@ class AuthController extends Controller
                             "person_id"  => $user['person_id'],
                             "login_url" => RouteServiceProvider::HOME
                         );
+                        if (!$user->isSuperAdmin()) {
+                            $result['login_url'] = '/permission-check';
+                        }
                         return response()->json($result);
                     }
                 }

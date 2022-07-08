@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\School;
 use App\Models\Teacher;
+use App\Models\SchoolStudent;
 use App\Models\SchoolEmployee;
 use App\Models\VerifyToken;
 use App\Models\Currency;
@@ -200,7 +201,9 @@ class UserController extends Controller
             $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 0,'is_active'=> 0]);
             
             $user = User::create($request->except(['_token']));
-            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+            // return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+           return redirect('/')->with('success', __('Successfully Registered!'));
+
            
         } catch (Exception $e) {
             //return error message\
@@ -260,6 +263,7 @@ class UserController extends Controller
      */
     public function verify_user_added($token)
     {
+
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyToken = VerifyToken::where([
@@ -278,7 +282,9 @@ class UserController extends Controller
                 
                 if(!$user_data->user) {
                     if ($verifyToken->person_type =='App\Models\Student') {
-                        $user_data->email = $user_data->student_email;
+                        $user_data->email = $user_data->email;
+                    }else{
+                        $user_data->email = $user_data->email;
                     }
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{

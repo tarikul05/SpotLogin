@@ -40,10 +40,10 @@ class StudentsController extends Controller
         $this->middleware('permission:students-update', ['only' => ['update']]);
         $this->middleware('permission:students-users-update', ['only' => ['teacherEmailSend','userUpdate']]);
         $this->middleware('permission:students-delete', ['only' => ['destroy']]);
-    
+
     }
 
-   
+
     /**
      * Display a listing of the resource.
      *
@@ -53,12 +53,12 @@ class StudentsController extends Controller
     {
 
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $students = $school->students; 
+        $students = $school->students;
         return view('pages.students.list',compact('students','schoolId'));
     }
 
@@ -68,14 +68,14 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request, $schoolId = null)
-    {  
+    {
         $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
             $school = School::active()->find($schoolId);
@@ -83,13 +83,14 @@ class StudentsController extends Controller
 
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
-        $genders = config('global.gender'); 
-        $provinces = config('global.provinces'); 
+        $genders = config('global.gender');
+        $provinces = config('global.provinces');
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
-            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
-            $exStudent = !empty($exUser) ? $exUser->personable : null;
+            // $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
+            // $exStudent = !empty($exUser) ? $exUser->personable : null;
+            $exStudent = Student::where(['email'=> $searchEmail])->first();;
             $alreadyFlag =null;
             if ($exStudent) {
                 $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
@@ -110,13 +111,12 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function AddStudent(Request $request, $schoolId = null)
-    { 
-      
+    {
+
         $user = Auth::user();
         $alldata = $request->all();
-        
+
         if ($user->isSuperAdmin()) {
-            $schoolId = $alldata['school_id'];
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return [
@@ -124,18 +124,23 @@ class StudentsController extends Controller
                     'message' =>  __('School not selected')
                 ];
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
+            $schoolName = $school->school_name;
         }else {
             $schoolId = $user->selectedSchoolId();
+            $schoolName = $user->selectedSchoolName();
+            $school = School::active()->find($schoolId);
+            $schoolId = $school->id;
+            $schoolName = $school->school_name;
         }
         // print_r($schoolId); exit;
         // $schoolId = $alldata['school_id'];
-        DB::beginTransaction(); 
+        DB::beginTransaction();
         try{
 
             $authUser = $request->user();
             if ($request->isMethod('post')){
-                
+
                 if (!empty($alldata['user_id'])) {
                     $relationalData = [
                         'has_user_account'=> 1 ,
@@ -154,7 +159,7 @@ class StudentsController extends Controller
                             $data = [];
                             $data['email'] = $user->email;
                             $data['username'] = $data['name'] = $user->username;
-                            
+                            $data['school_name'] = $schoolName;
                             $verifyUser = [
                                 'school_id' => $schoolId,
                                 'person_id' => $student->id,
@@ -164,23 +169,23 @@ class StudentsController extends Controller
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
-                            $data['token'] = $verifyUser->token; 
+                            $data['token'] = $verifyUser->token;
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                             }
-                        } 
+                        }
                         $msg = 'Successfully Registered';
-                        
-                    }else {
+
+                    } else {
                         $msg = 'This teacher already exist with your school';
                     }
-                    
-                    
-                    
+
+
+
 
                 }else {
-                
+
                     $studentData = [
                         'is_active' => $alldata['is_active'],
                         'gender_id' => $alldata['gender_id'],
@@ -212,18 +217,18 @@ class StudentsController extends Controller
                         'email' => $alldata['email'],
                         'email2' => $alldata['email2'],
                         'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
-                        
+
                     ];
-                    
+
                     if($request->file('profile_image_file'))
                     {
                         $image = $request->file('profile_image_file');
                         $mime_type = $image->getMimeType();
                         $extension = $image->getClientOriginalExtension();
                         if($image->getSize()>0)
-                        { 
-                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
-                            
+                        {
+                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
+
                             if (!empty($path)) {
                             $fileData = [
                                 'visibility' => 1,
@@ -234,19 +239,19 @@ class StudentsController extends Controller
                                 'extension'=>$extension,
                                 'mime_type'=>$mime_type
                             ];
-                            
+
                             $attachedImage = AttachedFile::create($fileData);
                             $studentData['profile_image_id'] = $attachedImage->id;
-                            
+
                             }
                         }
                     }
-                  // print_r($studentData); exit;  
+                  // print_r($studentData); exit;
                     $student = Student::create($studentData);
                     $student->save();
-                    
+
                     $schoolStudent = [
-                        'student_id' => $student->id,  
+                        'student_id' => $student->id,
                         'school_id' => $schoolId,
                         'has_user_account' => isset($alldata['has_user_account']) && !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                         'nickname' => $alldata['nickname'],
@@ -265,13 +270,14 @@ class StudentsController extends Controller
                     $schoolStudentData->save();
 
                     if (!empty($alldata['email'])) {
-                        
+
                         //sending activation email after successful signed up
                         if (config('global.email_send') == 1) {
                             $data = [];
                             $data['email'] = $alldata['email'];
                             $data['username'] = $data['name'] = $alldata['nickname'];
-                            
+                            $data['school_name'] = $schoolName;
+
                             $verifyUser = [
                                 'school_id' => $schoolId,
                                 'person_id' => $student->id,
@@ -281,9 +287,9 @@ class StudentsController extends Controller
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
-                            $data['token'] = $verifyUser->token; 
+                            $data['token'] = $verifyUser->token;
 
-                            if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                            if ($this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                             }  else {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -312,11 +318,12 @@ class StudentsController extends Controller
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Student added successfully!'));
         }catch (Exception $e) {
+            // dd($e);
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
-        
+
         return $result;
     }
 
@@ -326,22 +333,22 @@ class StudentsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function editStudentAction(Request $request, Student $student)
-    { 
-      
+    {
+
         $authUser = $user = Auth::user();
         // $authUser = $request->user();
         $alldata = $request->all();
 
         if ($user->isSuperAdmin()) {
-            $schoolId = $alldata['school_id']; 
+            $schoolId = $alldata['school_id'];
         }else {
             $schoolId = $user->selectedSchoolId();
         }
-        
-        DB::beginTransaction(); 
+
+        DB::beginTransaction();
         try{
 
-            
+
             if ($request->isMethod('post')){
                 $studentData = [
                     'is_active' => $alldata['is_active'],
@@ -380,9 +387,9 @@ class StudentsController extends Controller
                   $mime_type = $image->getMimeType();
                   $extension = $image->getClientOriginalExtension();
                   if($image->getSize()>0)
-                  { 
-                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser); 
-                    
+                  {
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
+
                     if (!empty($path)) {
                       $fileData = [
                         'visibility' => 1,
@@ -393,15 +400,15 @@ class StudentsController extends Controller
                         'extension'=>$extension,
                         'mime_type'=>$mime_type
                       ];
-                      
+
                       $attachedImage = AttachedFile::create($fileData);
                       $studentData['profile_image_id'] = $attachedImage->id;
-                      
+
                     }
                   }
                 }
                 $user = User::where(['person_id'=>$student->id])->first();
-                
+
                 $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
                 if (!empty($alldata['email'])) {
                     if (!$user) {
@@ -426,7 +433,7 @@ class StudentsController extends Controller
                             $data = [];
                             $data['email'] = $user->email;
                             $data['username'] = $data['name'] = $user->username;
-                            
+
                             $verifyUser = [
                                 'school_id' => $alldata['school_id'],
                                 'person_id' => $student->id,
@@ -436,12 +443,12 @@ class StudentsController extends Controller
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
-                            $data['token'] = $verifyUser->token; 
+                            $data['token'] = $verifyUser->token;
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                             }
-                        } 
+                        }
                     }else {
                         if ($exist->email != $alldata['email']) {
                             // notify user by email about new Teacher role
@@ -450,7 +457,7 @@ class StudentsController extends Controller
                                 $data['email'] = $alldata['email'];
                                 $user->update($data);
                                 $data['username'] = $data['name'] = $user->username;
-                                
+
                                 $verifyUser = [
                                     'school_id' => $alldata['school_id'],
                                     'person_id' => $student->id,
@@ -460,19 +467,19 @@ class StudentsController extends Controller
                                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                                 ];
                                 $verifyUser = VerifyToken::create($verifyUser);
-                                $data['token'] = $verifyUser->token; 
+                                $data['token'] = $verifyUser->token;
 
                                 if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                     return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                                 }
-                            } 
+                            }
                         }
                     }
                 }
                 Student::where('id', $student->id)->update($studentData);
-                
+
                 $schoolStudent = [
-                    'student_id' => $student->id,  
+                    'student_id' => $student->id,
                     'school_id' => $schoolId,
                     'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                     'nickname' => $alldata['nickname'],
@@ -494,9 +501,9 @@ class StudentsController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
-        
+
         return $result;
     }
 
@@ -532,9 +539,9 @@ class StudentsController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
-        $schoolId = $request->route('school'); 
+        $schoolId = $request->route('school');
         $studentId = $request->route('student');
-        $provinces = config('global.provinces'); 
+        $provinces = config('global.provinces');
 
         $student = Student::find($studentId);
 
@@ -544,15 +551,15 @@ class StudentsController extends Controller
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
             // $schoolId = $school->id;
-            // $schoolName = $school->school_name; 
+            // $schoolName = $school->school_name;
         }else {
             $school = $user->getSelectedSchoolAttribute();
             // $schoolId = $user->selectedSchoolId();
-            // $schoolName = $user->selectedSchoolName(); 
+            // $schoolName = $user->selectedSchoolName();
         }
 
         $schoolId = $school->id;
-        $schoolName = $school->school_name; 
+        $schoolName = $school->school_name;
 
         $relationalData = SchoolStudent::where([
             ['student_id',$studentId],
@@ -567,7 +574,7 @@ class StudentsController extends Controller
         $emailTemplate = EmailTemplate::where([
             ['template_code', 'student'],
             ['language', $lanCode]
-        ])->first(); 
+        ])->first();
 
         if ($emailTemplate) {
             $http_host=$this->BASE_URL."/";
@@ -575,8 +582,8 @@ class StudentsController extends Controller
                 $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
                 $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
             }
-        } 
-        
+        }
+
         $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
@@ -594,7 +601,7 @@ class StudentsController extends Controller
      */
     public function update(Request $request, Teacher $teacher)
     {
-       
+
     }
 
     /**
@@ -605,7 +612,7 @@ class StudentsController extends Controller
      */
     public function destroy(Request $request)
     {
-        $schoolId = $request->route('school'); 
+        $schoolId = $request->route('school');
         $studentId = $request->route('student');
         SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
         return redirect()->back()
@@ -615,7 +622,7 @@ class StudentsController extends Controller
 
     /**
     *  AJAX action image delete and unlink
-    * 
+    *
     * @return json
     * @author Mamun <lemonpstu09@gmail.com>
     * @version 0.1 written in 2022-03-10
@@ -624,9 +631,9 @@ class StudentsController extends Controller
     {
         $authUser = $request->user();
         $data = $request->all();
-        $user = User::find($data['user_id']); 
+        $user = User::find($data['user_id']);
         $result = array(
-          'status' => 'failed',   
+          'status' => 'failed',
           'message' => __('failed to remove image'),
         );
         try{
@@ -670,7 +677,7 @@ class StudentsController extends Controller
                 'email'=> $params['admin_email'],
                 'is_active'=> $params['admin_is_active']
             ]);
-            
+
 
             $user = User::find($params['user_id']);
             if ($user) {
@@ -695,7 +702,7 @@ class StudentsController extends Controller
 
     /**
      *  AJAX action to send email to school admin
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
@@ -708,18 +715,18 @@ class StudentsController extends Controller
         );
         try {
             $data = $request->all();
-            
-            $user = User::find($data['user_id']); 
+
+            $user = User::find($data['user_id']);
             if ($user) {
                 //sending email for forgot password
                 if (config('global.email_send') == 1) {
-                    
+
                     try {
                         $data['email'] = $data['email_to_id'];
                         $data['name'] = $user->username;
-                        $data['username'] = $user->username; 
+                        $data['username'] = $user->username;
                         if (!empty($data['admin_password'])) {
-                            $data['password'] = $data['admin_password']; 
+                            $data['password'] = $data['admin_password'];
                         } else {
                             $data['password'] = config('global.user_default_password');
                         }
@@ -736,9 +743,9 @@ class StudentsController extends Controller
                                 'message' =>  __('Internal server error')
                             );
                         }
-                        
-                        
-                        
+
+
+
                         return response()->json($result);
                     } catch (\Exception $e) {
                         $result = array(
@@ -761,6 +768,6 @@ class StudentsController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-        
+
     }
 }
