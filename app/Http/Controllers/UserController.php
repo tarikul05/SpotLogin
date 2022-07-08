@@ -196,13 +196,7 @@ class UserController extends Controller
      */
     public function create_verified_user(ActivationRequest $request)
     {
-        // $to = Carbon::now()->format("Y-m-d");
-        //     $verifyToken = VerifyToken::where([
-        //                                 ['expire_date', '>=', $to],
-        //                                 ['token', $token]
-        //                             ])->first();
         $data = $request->all();
-        dd($data);
         try{
             $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 1,'is_active'=> 1]);
 
