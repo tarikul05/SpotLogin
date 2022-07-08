@@ -260,6 +260,7 @@ class UserController extends Controller
      */
     public function verify_user_added($token)
     {
+        
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyToken = VerifyToken::where([
@@ -280,7 +281,7 @@ class UserController extends Controller
                     if ($verifyToken->person_type =='App\Models\Student') {
                         $user_data->email = $user_data->student_email;
                     }else{
-                        $user_data->email = $user_data->student_email;
+                        $user_data->email = $user_data->email;
                     }
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
