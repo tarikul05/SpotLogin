@@ -24,8 +24,8 @@
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -38,7 +38,9 @@
 					{{ __('Logo')}}
 				</button>
 				@can('parameters-list')
-					<a class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
+					<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
+					{{ __('Parameters')}}
+					</button>
 				@endcan
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
@@ -47,10 +49,10 @@
 				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button> -->
-				
 
-				
-			</div>	
+
+
+			</div>
 		</nav>
 		<!-- Tabs navs -->
 
@@ -62,7 +64,7 @@
 					@csrf
 					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
-					
+
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
@@ -84,7 +86,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" 
+										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text"
 										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
 										>
 										@if ($errors->has('nickname'))
@@ -138,7 +140,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
+										<div class="input-group" id="birth_date_div">
 											<input id="birth_date" value="{{!empty($teacher->birth_date) ? old('birth_date', $teacher->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -156,7 +158,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 											<input class="form-control" value="{{!empty($teacher->email) ? old('email', $teacher->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
 									</div>
@@ -224,7 +226,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 												<input class="form-control" value="{{!empty($teacher->phone) ? old('phone', $teacher->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
 										</div>
@@ -243,7 +245,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
 												<input class="form-control" value="{{!empty($teacher->mobile) ? old('mobile', $teacher->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
@@ -254,7 +256,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 												<input class="form-control" value="{{!empty($teacher->email2) ? old('email2', $teacher->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
 										</div>
@@ -311,8 +313,8 @@
 								@foreach($lessonPrices as $key => $lessionPrice)
 								<tr>
 									<td>{{$lessionPrice->divider}}
-										<input type="hidden" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
+										<input type="hidden"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
 										>
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
@@ -324,17 +326,17 @@
 									@else
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif
-									
+
 									<!-- <td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
 										style="text-align:right" class="form-control numeric float"
 										>
 									</td> -->
 									<td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
 										style="text-align:right" class="form-control numeric float"
 										>
@@ -357,7 +359,7 @@
 							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
 						</div>
 					</div>
-				
+
 					<div class="col-md-6">
 						<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
 							<div class="form-group row">
@@ -442,18 +444,65 @@ $(document).ready(function(){
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	
+	var x = document.getElementsByClassName("tab-pane active");
+	//var update_btn = document.getElementById("update_btn");
+	console.log(x[0].id);
+	if (x[0].id == "tab_5") {
+		document.getElementById("save_btn").style.display = "none";
+	}
+	else  {
+		document.getElementById("save_btn").style.display = "block";
+	}
+	var vtab=getUrlVarsO()["tab"];
+	console.log(vtab);
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_5') {//?action=edit&tab=tab_5
+		document.getElementById("save_btn").style.display = "none";
+		activaTab('tab_5');
+	} else {
+		document.getElementById("save_btn").style.display = "block";
+	}
+
+	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+		console.log(e.target.id) // activated tab
+		if (e.target.id == 'nav-parameters-tab') {
+			document.getElementById("save_btn").style.display = "none";
+		}
+		else  {
+			document.getElementById("save_btn").style.display = "block";
+		}
+	})
+
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
 
 })
 
-$(function() { 
-	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
+$(function() {
+	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" });
 	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
 });
 
+function activaTab(tab) {
+	$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+};
+function getUrlVarsO()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	//alert(hashes);
+	for(var i = 0; i < hashes.length; i++)
+	{
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+	//Salert(vars);
+	return vars;
+}  //getUrlVarsO
 function UploadImage() {
 	document.getElementById("profile_image_file").value = "";
 	$("#profile_image_file").trigger('click');
@@ -466,7 +515,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('user_id', user_id);
-	
+
 	let loader = $('#pageloader');
 	loader.show("fast");
 	$.ajax({
@@ -491,7 +540,7 @@ function ChangeImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -520,7 +569,7 @@ function DeleteProfileImage() {
 				$("#delete_profile_image").hide();
 				successModalCall(response.message);
 			}
-						
+
 		},
 		error: function (reject) {
 			loader.hide("fast");
@@ -528,7 +577,7 @@ function DeleteProfileImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {

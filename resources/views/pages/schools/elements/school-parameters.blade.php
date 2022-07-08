@@ -1,4 +1,4 @@
-<div class="row">			
+<div class="row">
     <!-- Tabs navs -->
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -75,15 +75,15 @@
                         @endcan
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <!-- End Tabs content -->
             <!-- Tabs content -->
             <div id="tab_inner_part2" class="tab_inner tab-pane tab-content">
                 <div class="tab-pane fade show active" id="tab_location" role="tabpanel" aria-labelledby="tab_location">
-                    
-				
+
+
                     <div class="section_header_class row">
                         <div class="col-md-3 col-9">
                             <label>{{ __('Location Name') }}</label>
@@ -123,14 +123,14 @@
                         @endcan
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <!-- End Tabs content -->
             <!-- Tabs content -->
             <div id="tab_inner_part3" class="tab_inner tab-pane tab-content">
                 <div class="tab-pane fade show active" id="tab_level" role="tabpanel" aria-labelledby="tab_level">
-                    
+
                     <div class="section_header_class row">
                         <div class="col-md-3 col-9">
                             <label>{{ __('Level Name') }}</label>
@@ -170,7 +170,7 @@
                         @endcan
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -185,8 +185,7 @@ $(document).ready(function(){
 	$(document).on('click','#add_more_event_category_btn',function(){
 		var lst_id = $(this).attr('data-last_event_cat_id');
 		var incre = (parseInt(lst_id)+1);
-		$(this).attr('data-last__event_cat_id',incre);
-
+		$(this).attr('data-last_event_cat_id',incre);
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
 			<div class="col-md-5 col-5">
 				<div class="form-group row">
@@ -222,8 +221,12 @@ $(document).ready(function(){
 		var lst_id = $(this).attr('data-r_id');
 		var incre = parseInt(lst_id);
 		$(this).attr('data-last_event_cat_id',incre);
-		if (!confirm('{{ __("Are you want to delete?") }}')) return
 
+
+		if (!confirm('{{ __("Are you want to delete?") }}')) return
+		var lst_id = $('#add_more_event_category_btn').attr('data-last_event_cat_id');
+		var incre = (parseInt(lst_id)-1);
+		$('#add_more_event_category_btn').attr('data-last_event_cat_id',incre);
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('category_id');
 		var current_obj = $(this);
@@ -236,7 +239,8 @@ $(document).ready(function(){
 					"id": id,
 					"_token": csrfToken,
 				},
-				success: function(response){	
+				success: function(response){
+
 					if(response.status == 1){
 						current_obj.parents('.add_more_event_category_row').remove();
 					}
@@ -273,7 +277,7 @@ $(document).ready(function(){
 
 		$("#add_more_level_div").append(resultHtml);
 	})
-	
+
 	$(document).on('click','.delete_level',function(){
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('level_id');
@@ -283,7 +287,9 @@ $(document).ready(function(){
 		$(this).attr('data-last_level_id',incre);
 
 		if (!confirm('{{ __("Are you want to delete?") }}')) return
-
+		var lst_id = $('#add_more_level_btn').attr('data-last_level_id');
+		var incre = (parseInt(lst_id)-1);
+		$('#add_more_level_btn').attr('data-last_level_id',incre);
 		if(id){
 			$.ajax({
 				url: BASE_URL + '/remove-event-level/'+id,
@@ -293,7 +299,7 @@ $(document).ready(function(){
 					"id": id,
 					"_token": csrfToken,
 				},
-				success: function(response){	
+				success: function(response){
 					if(response.status == 1){
 						current_obj.parents('.add_more_level_row').remove();
 					}
@@ -301,7 +307,7 @@ $(document).ready(function(){
 			})
 		}else{
 			current_obj.parents('.add_more_level_row').remove();
-		}	
+		}
 	});
 
 
@@ -330,7 +336,7 @@ $(document).ready(function(){
 
 		$("#add_more_location_div").append(resultHtml);
 	})
-	
+
 	$(document).on('click','.delete_location',function(){
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var id = $(this).data('location_id');
@@ -340,6 +346,9 @@ $(document).ready(function(){
 		$(this).attr('data-last_location_id',incre);
 
 		if (!confirm('{{ __("Are you want to delete?") }}')) return
+		var lst_id = $('#add_more_location_btn').attr('data-last_location_id');
+		var incre = (parseInt(lst_id)-1);
+		$('#add_more_location_btn').attr('data-last_location_id',incre);
 
 		if(id){
 			$.ajax({
@@ -350,7 +359,7 @@ $(document).ready(function(){
 					"id": id,
 					"_token": csrfToken,
 				},
-				success: function(response){	
+				success: function(response){
 					if(response.status == 1){
 						current_obj.parents('.add_more_location_row').remove();
 					}
@@ -359,17 +368,17 @@ $(document).ready(function(){
 		}else{
 			current_obj.parents('.add_more_location_row').remove();
 		}
-		
+
 	});
 
 
 	// save functionality
-	$('#save_btn_param').click(function (e) {		
+	$('#save_btn_param').click(function (e) {
 		var formData = $('#location_form').serializeArray();
 		// var eventFormData = $('#event_form').serializeArray();
 		// var levelFormData = $('#level_form').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		
+
 		var error = '';
 
 		$( ".location_name" ).each(function( key, value ) {
@@ -415,12 +424,12 @@ $(document).ready(function(){
 				type: 'POST',
 				dataType: 'json',
 				success: function(response){
-					console.log(response);	
+					console.log(response);
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
 						//window.location.reload();
-						var url = window.location.href;    
+						var url = window.location.href;
 						//const url = "http://testing.com/path?empty&value1=test&id=3";
 
 						url = addOrChangeParameters( url, {tab:'tab_5'} )
@@ -432,7 +441,7 @@ $(document).ready(function(){
 			$('#modal_parameter').modal('show');
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}
-	}); 
+	});
 
 
 	function addOrChangeParameters( url, params )
