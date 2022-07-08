@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\School;
 use App\Models\Teacher;
+use App\Models\SchoolStudent;
 use App\Models\SchoolEmployee;
 use App\Models\VerifyToken;
 use App\Models\Currency;
@@ -281,7 +282,7 @@ class UserController extends Controller
                 
                 if(!$user_data->user) {
                     if ($verifyToken->person_type =='App\Models\Student') {
-                        $user_data->email = $user_data->student_email;
+                        $user_data->email = $user_data->email;
                     }else{
                         $user_data->email = $user_data->email;
                     }
