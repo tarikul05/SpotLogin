@@ -363,10 +363,10 @@ class UserController extends Controller
                 'is_active'=> 1
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
-                SchoolTeacher::where(['is_active'=> 1,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolTeacher::where(['teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             if ($data['person_type'] =='App\Models\Student') {
-                SchoolStudent::where(['is_active'=> 1,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolStudent::where(['student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             return redirect('/');
 
