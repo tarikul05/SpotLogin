@@ -200,7 +200,9 @@ class UserController extends Controller
             $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 0,'is_active'=> 0]);
             
             $user = User::create($request->except(['_token']));
-            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+            // return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+           return redirect('/')->with('success', __('Successfully Registered!'));
+
            
         } catch (Exception $e) {
             //return error message\
@@ -260,7 +262,7 @@ class UserController extends Controller
      */
     public function verify_user_added($token)
     {
-        
+
         try{
             $to = Carbon::now()->format("Y-m-d");
             $verifyToken = VerifyToken::where([
