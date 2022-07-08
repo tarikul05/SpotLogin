@@ -88,7 +88,7 @@ class StudentsController extends Controller
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
-            // $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
+            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             // $exStudent = !empty($exUser) ? $exUser->personable : null;
             $exStudent = Student::where(['email'=> $searchEmail])->first();;
             $alreadyFlag =null;

@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\ActivationRequest;
 use URL;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -34,11 +34,11 @@ class UserController extends Controller
         return view('pages.teachers.list');
     }
 
-   
+
 
      /**
-     * signup confirmation 
-     * 
+     * signup confirmation
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -53,7 +53,7 @@ class UserController extends Controller
         try{
             $data = $request->all();
             $school_type=trim($data['school_type']);
-            
+
 
             $roleType = ($school_type=='COACH') ? 'teachers_admin' : 'school_admin';
             $scType = ($school_type=='COACH') ? 'C' : 'S';
@@ -72,10 +72,10 @@ class UserController extends Controller
                 'is_active'=>1
             ];
             if (!empty($data['country_code'])) {
-                $currencyExists = Currency::byCountry($data['country_code'])->active()->first();  
+                $currencyExists = Currency::byCountry($data['country_code'])->active()->first();
                 if ($currencyExists) {
                     $schoolData['default_currency_code'] = $currencyExists->currency_code;
-                }    
+                }
             }
 
             $school = School::create($schoolData);
@@ -89,12 +89,12 @@ class UserController extends Controller
                 'country_code'=>$data['country_code'],
                 'is_active' =>1
             ];
-            
+
 
             $teacher = Teacher::create($teacherData);
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1]);
-            
+
             $usersData = [
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
@@ -125,11 +125,11 @@ class UserController extends Controller
         }
 
 
-            
+
 
         //sending activation email after successful signed up
         if (config('global.email_send') == 1) {
-            
+
             try {
                 $data = [];
                 $data['email'] = $user->email;
@@ -142,17 +142,17 @@ class UserController extends Controller
                     'token' => Str::random(10),
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
-                
-        
+
+
                 $verifyUser = VerifyToken::create($verifyUser);
-        
-                $data['token'] = $verifyUser->token; 
-                $data['username'] = $user->username; 
-                
+
+                $data['token'] = $verifyUser->token;
+                $data['username'] = $user->username;
+
                 $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
-                $data['url'] = route('verify.email',$data['token']); 
-                
-                
+                $data['url'] = route('verify.email',$data['token']);
+
+
 
                 if ($this->emailSend($data,'forsign_up_confirmation_emailgot_password_email')) {
                     $user->is_mail_sent = 1;
@@ -167,7 +167,7 @@ class UserController extends Controller
                         'message' =>  __('Internal server error')
                     );
                 }
-                
+
                 return response()->json($result);
             } catch (\Exception $e) {
                 $result = array(
@@ -185,11 +185,11 @@ class UserController extends Controller
         return response()->json($result);
     }
 
-    
+
 
      /**
-     * signup confirmation 
-     * 
+     * signup confirmation
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-23
@@ -198,13 +198,13 @@ class UserController extends Controller
     {
         $data = $request->all();
         try{
-            $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 0,'is_active'=> 0]);
-            
+            $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 1,'is_active'=> 1]);
+
             $user = User::create($request->except(['_token']));
             // return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
            return redirect('/')->with('success', __('Successfully Registered!'));
 
-           
+
         } catch (Exception $e) {
             //return error message\
            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -213,11 +213,11 @@ class UserController extends Controller
         //return error message
         return redirect()->back()->withInput($request->all())->with('error', __('failed to signup'));
     }
-    
+
 
     /**
-     * signup virification 
-     * 
+     * signup virification
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
@@ -230,7 +230,7 @@ class UserController extends Controller
                                         ['expire_date', '>=', $to],
                                         ['token', $token]
                                     ])->first();
-            
+
             if(isset($verifyUser) ){
                 $user = $verifyUser->user;
                 if(!$user->is_active) {
@@ -255,8 +255,8 @@ class UserController extends Controller
 
 
     /**
-     * after user add from admin verify it by user 
-     * 
+     * after user add from admin verify it by user
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-22
@@ -270,16 +270,17 @@ class UserController extends Controller
                                         ['expire_date', '>=', $to],
                                         ['token', $token]
                                     ])->first();
-            
+
+
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
                 $school = $verifyToken->school;
-                
+
 
                 $countries = Country::active()->get();
-                $genders = config('global.gender'); 
-                
-                
+                $genders = config('global.gender');
+
+
                 if(!$user_data->user) {
                     if ($verifyToken->person_type =='App\Models\Student') {
                         $user_data->email = $user_data->email;
@@ -288,28 +289,30 @@ class UserController extends Controller
                     }
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
-                    
-                    if(!$user_data->user->is_active) {
+
+                    if($user_data->user->is_active==0) {
+
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
+                        echo $status = "User already added please login.";
+                        header( "refresh:2;url=/" );
+                        //return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                     }
                     if($user_data->user->is_active ==3) {
-                        $user_data->user->is_active = 1;
-                        $user_data->user->save();
+
                         return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
-                        
+
                     }
                     else{
                         if ($verifyToken->person_type =='App\Models\Student') {
                             $exist = SchoolStudent::where(['is_active'=> 0,'student_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
-                        
+
                         }
                         else {
                             $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
-                        
-                        }
 
+                        }
+// dd($exist);
                         if ($exist) {
                             return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         } else {
@@ -317,10 +320,10 @@ class UserController extends Controller
                             header( "refresh:2;url=/" );
                         }
 
-                        
-                        
+
+
                     }
-                    
+
                 }
             }else{
                 echo '<h1>Invalid activation Link.</h1>'; die;
@@ -332,8 +335,8 @@ class UserController extends Controller
     }
 
      /**
-     * after user add from admin verify it by user 
-     * 
+     * after user add from admin verify it by user
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-22
@@ -341,23 +344,32 @@ class UserController extends Controller
     public function active_school(Request $request)
     {
         $data = $request->all();
+        
         try{
 
+// dd($data);
+            $user = User::where(['id'=>$data['user_id']])->orderBy('id','desc')->first();
+            $userName = !empty($user) && $user->username == $data['login_username'] ? $user->username : '';
+
+            if (!Auth::attempt(['username' => $userName, 'password' => $data['login_password']], $request->filled('remember'))) {
+                return redirect()->back()->withInput($request->all())->with('error', __('Login information not match'));
+            }
+
             $user_data = [
-                'is_active'=> 3
+                'is_active'=> 1
             ];
             User::where(['id'=>$data['user_id']])->update($user_data);
             $relationalData = [
                 'is_active'=> 1
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
-                SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolTeacher::where(['is_active'=> 1,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             if ($data['person_type'] =='App\Models\Student') {
-                SchoolTeacher::where(['is_active'=> 0,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolStudent::where(['is_active'=> 1,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
-            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
-           
+            return redirect('/');
+
         } catch (Exception $e) {
             //return error message\
            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
