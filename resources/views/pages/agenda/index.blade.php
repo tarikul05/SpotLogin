@@ -90,12 +90,12 @@ admin_main_style.css
                                     $icalPersonal = route('ical.personalEventss',[$schoolId]);
                                 }
                                 @endphp
-                                <a href="{{ $icalPersonal }}" 
+                                <!-- <a href="{{ $icalPersonal }}" 
                                 id="personal_ics1" 
                                 target="_blank" class="btn btn-sm btn-theme-warn light-blue-txt">
                                     <em class="glyphicon glyphicon-remove"></em>
                                     <span id ="btn_validate_events_cap">Copy my schedule</span>
-                                </a>
+                                </a> -->
                                 <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
                                 <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
@@ -696,7 +696,7 @@ admin_main_style.css
         {
             //console.log(value.value);
             if ( (value.value == 51) && (user_role == 'student') ){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                // menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
