@@ -629,7 +629,7 @@ admin_main_style.css
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
     var zone =getTimeZone();
-    if ((no_of_teachers == 1) || (user_role == "student") || (user_role == "admin_teacher_coach")){
+    if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
 	$('#datepicker_month').datetimepicker({

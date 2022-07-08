@@ -61,11 +61,11 @@ class AgendaController extends Controller
             if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
                 $user_role = 'admin_teacher';
             }
-            if ($user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher_coach';
-            }
+            // if ($user->isTeacherAdmin()) {
+            //     $user_role = 'admin_teacher_coach';
+            // }
         }
-        
+
 
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::orderBy('id')->get();
@@ -79,7 +79,7 @@ class AgendaController extends Controller
         $event_types = [];
 
         foreach ($event_types_all as $key => $value) {
-            
+
             if ($key == 10) {
                 if ($eventCategories) {
                     foreach ($eventCategories as $cat => $eventCat) {
@@ -87,8 +87,8 @@ class AgendaController extends Controller
                      }
                 }
                 $event_types[$key]= $value;
-                
-                
+
+
             } else{
                 $event_types[$key]= $value;
             }
@@ -625,9 +625,9 @@ class AgendaController extends Controller
             if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
                 $user_role = 'admin_teacher';
             }
-            if ($user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher_coach';
-            }
+            // if ($user->isTeacherAdmin()) {
+            //     $user_role = 'admin_teacher_coach';
+            // }
         }
 
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
