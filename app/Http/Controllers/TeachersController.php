@@ -120,9 +120,13 @@ class TeachersController extends Controller
                 ];
             }
             $schoolId = $school->id;
+            $schoolName = $school->school_name;
         }else {
             $schoolId = $user->selectedSchoolId();
+            $schoolName = $user->selectedSchoolName();
             $school = School::active()->find($schoolId);
+            $schoolId = $school->id;
+            $schoolName = $school->school_name;
         }
 
         DB::beginTransaction();
@@ -211,6 +215,7 @@ class TeachersController extends Controller
                         $data = [];
                         $data['email'] = $alldata['email'];
                         $data['username'] = $data['name'] = $alldata['firstname'];
+                        $data['school_name'] = $schoolName;
 
                         $verifyUser = [
                             'school_id' => $schoolId,
