@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\ActivationRequest;
 use URL;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -312,7 +312,7 @@ class UserController extends Controller
                             $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
 
                         }
-
+// dd($exist);
                         if ($exist) {
                             return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         } else {
@@ -344,7 +344,16 @@ class UserController extends Controller
     public function active_school(Request $request)
     {
         $data = $request->all();
+        
         try{
+
+// dd($data);
+            $user = User::where(['id'=>$data['user_id']])->orderBy('id','desc')->first();
+            $userName = !empty($user) && $user->username == $data['login_username'] ? $user->username : '';
+
+            if (!Auth::attempt(['username' => $userName, 'password' => $data['login_password']], $request->filled('remember'))) {
+                return redirect()->back()->withInput($request->all())->with('error', __('Login information not match'));
+            }
 
             $user_data = [
                 'is_active'=> 1
@@ -354,12 +363,12 @@ class UserController extends Controller
                 'is_active'=> 1
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
-                SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolTeacher::where(['is_active'=> 1,'teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
             if ($data['person_type'] =='App\Models\Student') {
-                SchoolTeacher::where(['is_active'=> 0,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
+                SchoolStudent::where(['is_active'=> 1,'student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
-            return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
+            return redirect('/');
 
         } catch (Exception $e) {
             //return error message\
