@@ -34,11 +34,11 @@ class UserController extends Controller
         return view('pages.teachers.list');
     }
 
-   
+
 
      /**
-     * signup confirmation 
-     * 
+     * signup confirmation
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -53,7 +53,7 @@ class UserController extends Controller
         try{
             $data = $request->all();
             $school_type=trim($data['school_type']);
-            
+
 
             $roleType = ($school_type=='COACH') ? 'teachers_admin' : 'school_admin';
             $scType = ($school_type=='COACH') ? 'C' : 'S';
@@ -72,10 +72,10 @@ class UserController extends Controller
                 'is_active'=>1
             ];
             if (!empty($data['country_code'])) {
-                $currencyExists = Currency::byCountry($data['country_code'])->active()->first();  
+                $currencyExists = Currency::byCountry($data['country_code'])->active()->first();
                 if ($currencyExists) {
                     $schoolData['default_currency_code'] = $currencyExists->currency_code;
-                }    
+                }
             }
 
             $school = School::create($schoolData);
@@ -89,12 +89,12 @@ class UserController extends Controller
                 'country_code'=>$data['country_code'],
                 'is_active' =>1
             ];
-            
+
 
             $teacher = Teacher::create($teacherData);
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1]);
-            
+
             $usersData = [
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
@@ -142,8 +142,8 @@ class UserController extends Controller
                     'token' => Str::random(10),
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
-                
-        
+
+
                 $verifyUser = VerifyToken::create($verifyUser);
 
                 $data['token'] = $verifyUser->token;
@@ -196,7 +196,13 @@ class UserController extends Controller
      */
     public function create_verified_user(ActivationRequest $request)
     {
+        // $to = Carbon::now()->format("Y-m-d");
+        //     $verifyToken = VerifyToken::where([
+        //                                 ['expire_date', '>=', $to],
+        //                                 ['token', $token]
+        //                             ])->first();
         $data = $request->all();
+        dd($data);
         try{
             $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 1,'is_active'=> 1]);
 
@@ -271,6 +277,7 @@ class UserController extends Controller
                                         ['token', $token]
                                     ])->first();
 
+
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
                 $school = $verifyToken->school;
@@ -289,14 +296,16 @@ class UserController extends Controller
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
 
-                    if(!$user_data->user->is_active) {
+                    if($user_data->user->is_active==0) {
+
                         $user_data->user->is_active = 1;
                         $user_data->user->save();
-                        return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
+                        echo $status = "User already added please login.";
+                        header( "refresh:2;url=/" );
+                        //return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                     }
                     if($user_data->user->is_active ==3) {
-                        $user_data->user->is_active = 1;
-                        $user_data->user->save();
+
                         return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
 
                     }
@@ -344,7 +353,7 @@ class UserController extends Controller
         try{
 
             $user_data = [
-                'is_active'=> 3
+                'is_active'=> 1
             ];
             User::where(['id'=>$data['user_id']])->update($user_data);
             $relationalData = [
