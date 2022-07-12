@@ -151,7 +151,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" value="{{!empty($relationalData->licence_js) ? old('licence_js', $relationalData->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
+										<input class="form-control" value="{{!empty($teacher->licence_js) ? old('licence_js', $teacher->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
