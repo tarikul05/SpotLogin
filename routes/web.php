@@ -32,8 +32,8 @@ Route::post('/change_first_password', [App\Http\Controllers\AuthController::clas
 
 // after user add verify it
 Route::get('/verify-user-account/{token}', 'UserController@verify_user_added')->name('add.verify.email');
-Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add');
-Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school');
+Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 
