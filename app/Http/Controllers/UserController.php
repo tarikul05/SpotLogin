@@ -242,18 +242,21 @@ class UserController extends Controller
 
             if(isset($verifyUser) ){
                 $user = $verifyUser->user;
+                if ($verifyUser->person_type =='App\Models\Student') {
+                    $exist = SchoolStudent::where(['student_id'=>$verifyUser->person_id, 'school_id'=>$verifyUser->school_id])->first();
+
+                }
+                if ($verifyUser->person_type =='App\Models\Teacher') {
+                    $exist = SchoolTeacher::where(['teacher_id'=>$verifyUser->person_id, 'school_id'=>$verifyUser->school_id])->first();
+
+                }
+                if ($exist) {
+                    $exist->has_user_account = 1;
+                    $exist->save();
+                }
                 if(!$user->is_active) {
                     $verifyUser->user->is_active = 1;
                     $verifyUser->user->save();
-
-                    Auth::logout();
-                    Session::flush();
-            
-                    $cal_view_mode = Cookie::forget('cal_view_mode');
-                    $date_from = Cookie::forget('date_from');
-                    $view_mode = Cookie::forget('view_mode');
-                    $date_to = Cookie::forget('date_to');
-
                     echo '<h1>Account Activated Successfully..please login into your account</h1>';
                     header( "refresh:2;url=/" );
                     //exit();
@@ -315,7 +318,18 @@ class UserController extends Controller
                     }
                     return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
                 }else{
-
+                    if ($verifyToken->person_type =='App\Models\Student') {
+                        $exist = SchoolStudent::where(['student_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
+    
+                    }
+                    if ($verifyToken->person_type =='App\Models\Teacher') {
+                        $exist = SchoolTeacher::where(['teacher_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
+    
+                    }
+                    if ($exist) {
+                        $exist->has_user_account = 1;
+                        $exist->save();
+                    }
                     if($user_data->user->is_active==0) {
 
                         $user_data->user->is_active = 1;
@@ -383,7 +397,8 @@ class UserController extends Controller
             ];
             User::where(['id'=>$data['user_id']])->update($user_data);
             $relationalData = [
-                'is_active'=> 1
+                'is_active'=> 1,
+                'has_user_account' => 1
             ];
             if ($data['person_type'] =='App\Models\Teacher') {
                 SchoolTeacher::where(['teacher_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
