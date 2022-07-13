@@ -19,8 +19,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\RegistrationRequest;
 use App\Http\Requests\ActivationRequest;
-use URL;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use URL;
+use Cookie;
 
 class UserController extends Controller
 {
@@ -225,6 +227,13 @@ class UserController extends Controller
     public function verify_user($token)
     {
         try{
+            Auth::logout();
+            Session::flush();
+    
+            $cal_view_mode = Cookie::forget('cal_view_mode');
+            $date_from = Cookie::forget('date_from');
+            $view_mode = Cookie::forget('view_mode');
+            $date_to = Cookie::forget('date_to');
             $to = Carbon::now()->format("Y-m-d");
             $verifyUser = VerifyToken::where([
                                         ['expire_date', '>=', $to],
@@ -236,6 +245,15 @@ class UserController extends Controller
                 if(!$user->is_active) {
                     $verifyUser->user->is_active = 1;
                     $verifyUser->user->save();
+
+                    Auth::logout();
+                    Session::flush();
+            
+                    $cal_view_mode = Cookie::forget('cal_view_mode');
+                    $date_from = Cookie::forget('date_from');
+                    $view_mode = Cookie::forget('view_mode');
+                    $date_to = Cookie::forget('date_to');
+
                     echo '<h1>Account Activated Successfully..please login into your account</h1>';
                     header( "refresh:2;url=/" );
                     //exit();
@@ -265,6 +283,14 @@ class UserController extends Controller
     {
 
         try{
+            Auth::logout();
+            Session::flush();
+    
+            $cal_view_mode = Cookie::forget('cal_view_mode');
+            $date_from = Cookie::forget('date_from');
+            $view_mode = Cookie::forget('view_mode');
+            $date_to = Cookie::forget('date_to');
+
             $to = Carbon::now()->format("Y-m-d");
             $verifyToken = VerifyToken::where([
                                         ['expire_date', '>=', $to],
@@ -312,7 +338,6 @@ class UserController extends Controller
                             $exist = SchoolTeacher::where(['is_active'=> 0,'teacher_id'=>$user_data->id, 'school_id'=>$verifyToken->school_id])->first();
 
                         }
-// dd($exist);
                         if ($exist) {
                             return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
                         } else {
@@ -346,8 +371,6 @@ class UserController extends Controller
         $data = $request->all();
         
         try{
-
-// dd($data);
             $user = User::where(['id'=>$data['user_id']])->orderBy('id','desc')->first();
             $userName = !empty($user) && $user->username == $data['login_username'] ? $user->username : '';
 

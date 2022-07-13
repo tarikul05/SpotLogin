@@ -151,7 +151,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" value="{{!empty($relationalData->licence_js) ? old('licence_js', $relationalData->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
+										<input class="form-control" value="{{!empty($teacher->licence_js) ? old('licence_js', $teacher->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
@@ -280,9 +280,9 @@
 							</div>
 						</div>
 					</fieldset>
-					@can('teachers-update')
-						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-					@endcan
+					
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+					
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
@@ -347,9 +347,9 @@
 						</tbody>
 						</table>
 
-					@can('teachers-update')
+					
 						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
-					@endcan
+					
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
@@ -376,7 +376,7 @@
 													style="margin-right:10px;">
 										<?php endif; ?>
 
-											@can('teachers-update')
+											
 											<div style="display:flex;flex-direction: column;">
 												<div style="margin:5px;">
 													<span class="btn btn-theme-success">
@@ -397,7 +397,7 @@
 													</div>
 												<?php //endif; ?>
 											</div>
-											@endcan
+											
 										</div>
 									</fieldset>
 								</div>
