@@ -1875,9 +1875,8 @@ admin_main_style.css
                             teacher_found=0;
                             $.each($("#event_teacher option:selected"), function(){ 
                                 var id=$(this).val();
-                                if (event.teacher_id.indexOf(id) >= 0){
+                                if (event.teacher_id == id){
                                     teacher_found=1;
-                                    //break;
                                 }                      
                             });
                             }	//no_of_teachers		
