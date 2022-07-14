@@ -274,6 +274,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
 
+    Route::get('/update-student', [App\Http\Controllers\StudentsController::class, 'self_edit'])->name('updateStudent');
+    Route::post('/update-student', [App\Http\Controllers\StudentsController::class, 'self_update'])->name('updateStudentAction');
+
     // Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   });
 

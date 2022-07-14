@@ -44,8 +44,11 @@
                                 @endif
                             @endcan
                         @endhasanyrole
+
+                        @hasanyrole('student')
+                            <a href="{{ route('updateStudent') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
+                        @endhasanyrole
                         
-                            
 
                         @can('students-list')
                             @if($AppUI['person_type'] != 'SUPER_ADMIN')

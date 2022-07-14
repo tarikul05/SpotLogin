@@ -34,7 +34,7 @@ class StudentsController extends Controller
     {
         parent::__construct();
 
-       $this->middleware('permission:students-list|students-create|students-update|students-view|students-users-update|students-delete', ['only' => ['index']]);
+        $this->middleware('permission:students-list|students-create|students-update|students-view|students-users-update|students-delete', ['only' => ['index']]);
         $this->middleware('permission:students-create', ['only' => ['create','AddTeacher']]);
         $this->middleware('permission:students-view|students-update', ['only' => ['edit']]);
         $this->middleware('permission:students-update', ['only' => ['update']]);
@@ -117,6 +117,7 @@ class StudentsController extends Controller
         $alldata = $request->all();
 
         if ($user->isSuperAdmin()) {
+            $schoolId = $alldata['school_id'];
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return [
@@ -133,14 +134,10 @@ class StudentsController extends Controller
             $schoolId = $school->id;
             $schoolName = $school->school_name;
         }
-        // print_r($schoolId); exit;
-        // $schoolId = $alldata['school_id'];
         DB::beginTransaction();
         try{
-
             $authUser = $request->user();
             if ($request->isMethod('post')){
-
                 if (!empty($alldata['user_id'])) {
                     $relationalData = [
                         'has_user_account'=> 1 ,
@@ -185,7 +182,6 @@ class StudentsController extends Controller
 
 
                 }else {
-
                     $studentData = [
                         'is_active' => $alldata['is_active'],
                         'gender_id' => $alldata['gender_id'],
@@ -217,7 +213,6 @@ class StudentsController extends Controller
                         'email' => $alldata['email'],
                         'email2' => $alldata['email2'],
                         'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
-
                     ];
 
                     if($request->file('profile_image_file'))
@@ -228,21 +223,18 @@ class StudentsController extends Controller
                         if($image->getSize()>0)
                         {
                             list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
-
                             if (!empty($path)) {
-                            $fileData = [
-                                'visibility' => 1,
-                                'file_type' =>'image',
-                                'title' => $authUser->username,
-                                'path_name' =>$path,
-                                'file_name' => $imageNewName,
-                                'extension'=>$extension,
-                                'mime_type'=>$mime_type
-                            ];
-
-                            $attachedImage = AttachedFile::create($fileData);
-                            $studentData['profile_image_id'] = $attachedImage->id;
-
+                                $fileData = [
+                                    'visibility' => 1,
+                                    'file_type' =>'image',
+                                    'title' => $authUser->username,
+                                    'path_name' =>$path,
+                                    'file_name' => $imageNewName,
+                                    'extension'=>$extension,
+                                    'mime_type'=>$mime_type
+                                ];
+                                $attachedImage = AttachedFile::create($fileData);
+                                $studentData['profile_image_id'] = $attachedImage->id;
                             }
                         }
                     }
@@ -715,12 +707,10 @@ class StudentsController extends Controller
         );
         try {
             $data = $request->all();
-
             $user = User::find($data['user_id']);
             if ($user) {
                 //sending email for forgot password
                 if (config('global.email_send') == 1) {
-
                     try {
                         $data['email'] = $data['email_to_id'];
                         $data['name'] = $user->username;
@@ -743,9 +733,6 @@ class StudentsController extends Controller
                                 'message' =>  __('Internal server error')
                             );
                         }
-
-
-
                         return response()->json($result);
                     } catch (\Exception $e) {
                         $result = array(
@@ -768,6 +755,111 @@ class StudentsController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
+    }
 
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
+    public function self_edit(Request $request)
+    {
+        $user = Auth::user();
+        $schoolId = $request->route('school');
+
+        $student = Student::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+        $schoolName = $user->selectedSchoolName();
+        $school = School::active()->find($schoolId);
+
+        $provinces = config('global.provinces');
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+
+
+        $relationalData = SchoolStudent::where([
+            ['student_id',$student->id],
+            ['school_id',$schoolId]
+        ])->first();
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'student'],
+            ['language', $lanCode]
+        ])->first();
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        }
+        $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
+        $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
+        $genders = config('global.gender');
+
+        // dd($relationalData);
+        return view('pages.students.self_edit')->with(compact('levels',
+        'emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','schoolName','provinces','school'));
+    }
+
+
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function self_update(Request $request, Teacher $teacher)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $teacher = Teacher::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+
+        DB::beginTransaction();
+        try{
+            $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $teacherData = [
+                'gender_id' => $alldata['gender_id'],
+                'lastname' => $alldata['lastname'],
+                'firstname' => $alldata['firstname'],
+                'birth_date' => $birthDate,
+                'licence_js' => $alldata['licence_js'],
+                'email' => $alldata['email'],
+                'street' => $alldata['street'],
+                'street_number' => $alldata['street_number'],
+                'zip_code' => $alldata['zip_code'],
+                'place' => $alldata['place'],
+                'country_code' => $alldata['country_code'],
+                'phone' => $alldata['phone'],
+                'mobile' => $alldata['mobile'],
+            ];
+            Teacher::where('id', $teacher->id)->update($teacherData);
+
+            $relationalData = [
+                // 'role_type'=>$alldata['role_type'],
+                // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
+                'comment'=> $alldata['comment'],
+                'nickname'=> $alldata['nickname'],
+                'bg_color_agenda'=> $alldata['bg_color_agenda'],
+            ];
+            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
+        }catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
     }
 }
