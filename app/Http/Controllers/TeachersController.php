@@ -140,6 +140,7 @@ class TeachersController extends Controller
                         'comment'=> $alldata['comment'],
                         'nickname'=> $alldata['nickname'],
                         'is_active'=> 0,
+                        'is_teacher'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
                     ];
                     $user = User::find($alldata['user_id']);
@@ -207,6 +208,7 @@ class TeachersController extends Controller
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
                         'comment'=> $alldata['comment'],
                         'nickname'=> $alldata['nickname'],
+                        'is_teacher'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
                     ];
                     $teacher->save();
