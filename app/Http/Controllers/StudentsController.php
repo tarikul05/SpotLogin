@@ -339,8 +339,6 @@ class StudentsController extends Controller
 
         DB::beginTransaction();
         try{
-
-
             if ($request->isMethod('post')){
                 $studentData = [
                     'is_active' => $alldata['is_active'],
@@ -494,9 +492,6 @@ class StudentsController extends Controller
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
-
-
-        return $result;
     }
 
     /**
@@ -817,47 +812,126 @@ class StudentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function self_update(Request $request, Teacher $teacher)
+    public function self_update(Request $request, Student $student)
     {
         $user = Auth::user();
         $alldata = $request->all();
 
-        $teacher = Teacher::find($user->person_id);
+        $student = Student::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
 
         DB::beginTransaction();
         try{
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
-            $teacherData = [
-                'gender_id' => $alldata['gender_id'],
-                'lastname' => $alldata['lastname'],
-                'firstname' => $alldata['firstname'],
-                'birth_date' => $birthDate,
-                'licence_js' => $alldata['licence_js'],
-                'email' => $alldata['email'],
-                'street' => $alldata['street'],
-                'street_number' => $alldata['street_number'],
-                'zip_code' => $alldata['zip_code'],
-                'place' => $alldata['place'],
-                'country_code' => $alldata['country_code'],
-                'phone' => $alldata['phone'],
-                'mobile' => $alldata['mobile'],
+            $studentData = [
+                'is_active' => $alldata['is_active'],
+                    'gender_id' => $alldata['gender_id'],
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'street2' => $alldata['street2'],
+                    'zip_code' => $alldata['zip_code'],
+                    'place' => $alldata['place'],
+                    'country_code' => $alldata['country_code'],
+                    'province_id' => $alldata['province_id'],
+                    'billing_street' => $alldata['billing_street'],
+                    'billing_street2' => $alldata['billing_street2'],
+                    'billing_street_number' => $alldata['billing_street_number'],
+                    'billing_zip_code' => $alldata['billing_zip_code'],
+                    'billing_place' => $alldata['billing_place'],
+                    'billing_country_code' => $alldata['billing_country_code'],
+                    'billing_province_id' => $alldata['billing_province_id'],
+                    'father_phone' => $alldata['father_phone'],
+                    'father_email' => $alldata['father_email'],
+                    'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0 ,
+                    'mother_phone' => $alldata['mother_phone'],
+                    'mother_email' => $alldata['mother_email'],
+                    'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0 ,
+                    'mobile' => $alldata['mobile'],
+                    'email' => $alldata['email'],
+                    'email2' => $alldata['email2'],
+                    'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
             ];
-            Teacher::where('id', $teacher->id)->update($teacherData);
+            if($request->file('profile_image_file'))
+            {
+                $image = $request->file('profile_image_file');
+                $mime_type = $image->getMimeType();
+                $extension = $image->getClientOriginalExtension();
+                if($image->getSize()>0)
+                {
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$user);
 
+                    if (!empty($path)) {
+                        $fileData = [
+                            'visibility' => 1,
+                            'file_type' =>'image',
+                            'title' => $user->username,
+                            'path_name' =>$path,
+                            'file_name' => $imageNewName,
+                            'extension'=>$extension,
+                            'mime_type'=>$mime_type
+                        ];
+
+                        $attachedImage = AttachedFile::create($fileData);
+                        $studentData['profile_image_id'] = $attachedImage->id;
+
+                    }
+                }
+            }
             $relationalData = [
-                // 'role_type'=>$alldata['role_type'],
-                // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment'=> $alldata['comment'],
                 'nickname'=> $alldata['nickname'],
-                'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];
-            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
+            $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
+            if (!empty($alldata['email'])) {
+                if ($exist->email != $alldata['email']) {
+                    // notify user by email about new Teacher role
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $user->update($data);
+                        $data['username'] = $data['name'] = $user->username;
+
+                        $verifyUser = [
+                            'school_id' => $alldata['school_id'],
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+
+                        if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
+                    }
+                }
+            }
+            Student::where('id', $student->id)->update($studentData);
+            $schoolStudent = [
+                'student_id' => $student->id,
+                'school_id' => $schoolId,
+                'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                'nickname' => $alldata['nickname'],
+                'email' => $alldata['email'],
+                'billing_method' => $alldata['billing_method'],
+                'level_id' => $alldata['level_id'],
+                'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
+                'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
+                'licence_usp' => $alldata['licence_usp'],
+                'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
+                'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
+                'comment' => $alldata['comment'],
+            ];
+
+            SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
+            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
         }catch (\Exception $e) {
             DB::rollBack();
-            dd($e);
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
