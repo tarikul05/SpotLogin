@@ -32,8 +32,6 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
-				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -165,12 +163,12 @@
 
 							</div>
 							<div class="clearfix"></div>
-							<div class="section_header_class">
+							<!-- <div class="section_header_class">
 								<label id="address_caption">{{__('Level') }}</label>
-							</div>
+							</div> -->
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_id">{{__('Level') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
@@ -182,7 +180,7 @@
 												</select>
 											</div>
 										</div>
-									</div>
+									</div> -->
 									@if($school->country_code == 'CH')
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
@@ -453,187 +451,6 @@
 					</div>
 				</div>
 				</form>
-				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-						<input type="hidden" name="selected_month" id="selected_month" value="">
-						<input type="hidden" name="selected_year" id="selected_year" value="">
-						<input type="hidden" name="person_id" id="person_id" value="{{!empty($student->id) ? old('person_id', $student->id) : old('person_id')}}"> 
-						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-						
-						
-						<div class="alert alert-warning">
-							{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
-						</div>
-						<div class="row">
-							<div class="col-md-8">
-								<div class="form-group row below_space">
-									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
-									<div class="col-sm-2">
-										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-									</div>
-									<div class="col-sm-2 offset-md-1">
-										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-									</div>
-									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked="">
-										<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
-									</div>
-									<div class="col-sm-1">
-										<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-						</div>
-						<div class="table-responsive">
-							<table class="table lessons-list" id="lesson_table">
-								<!-- <tbody>
-									<tr class="course_week_header">
-										<td colspan="1">{{ __('Week 20') }}</td>
-										<td colspan="1"></td>
-										<td colspan="1">{{ __('Date') }}</td>
-										<td colspan="1">{{ __('Time') }}</td>
-										<td colspan="1">{{ __('Duration') }}</td>
-										<td colspan="1">{{ __('Type') }}</td>
-										<td colspan="1">{{ __('Coach') }}</td>
-										<td colspan="1">{{ __('Lesson') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-									</tr>
-									<tr>
-										<td style="display:none;">30533</td>
-										<td>-</td>
-										<td></td>
-										<td width="10%">18/05/2022</td>
-										<td>14:30</td>
-										<td>30 minutes </td>
-										<td> (Soccer-School)</td>
-										<td>teacher all</td>
-										<td>Group lessons for 3 students</td>
-										<td></td>
-										<td>
-											<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-												<i class="fa fa-pencil"></i>{{__('Validate')}}
-											</a>
-										</td>
-										<td style="text-align:right"></td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Week')}} </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Total Monthly')}}</td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-								</tbody> -->
-							</table>
-						</div>
-						<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						</div>
-					</form>
-				</div>
-				<!--Start of Tab 4 -->
-				<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
-					<form id="studentUserForm" name="studentUserForm" class="form-horizontal" role="form"
-					 action="{{!empty($student) ? route('student.user_update',[$student->id]): '/'}}" method="POST" enctype="multipart/form-data">
-						@csrf
-						<input type="hidden" id="user_id" name="user_id" value="{{!empty($student->user->id) ? old('user_id', $student->user->id) : old('user_id')}}">
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('User Account')}}</label>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($student->user->username) ? old('admin_username', $student->user->username) : old('admin_username')}}" readonly>      
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Email')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_email" name="admin_email" value="{{!empty($student->user->email) ? old('admin_email', $student->user->email) : old('admin_email')}}">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
-							<div class="col-sm-7">
-								<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
-                      
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Status')}}:</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-									<select class="form-control" name="admin_is_active" id="admin_is_active">
-										<option value="">Select</option>
-										<option value="1" {{!empty($student->user->is_active) ? (old('admin_is_active', $student->user->is_active) == 1 ? 'selected' : '') : (old('admin_is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-										<option value="0" {{!empty($student->user->is_active) ? (old('admin_is_active', $student->user->is_active) == 0 ? 'selected' : '') : (old('admin_is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="clearfix"></div>
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('Send Activation Email')}}</label>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($student->user->email) ? $student->user->email : old('email_to_id')}}">
-							
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
-							
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-10 col-md-10">
-								<div class="email_template_tbl table-responsive mt-1">
-									<table id="email_template_tbl" name="email_template_tbl" width="100%" border="0" class="email_template school resizable">
-										<tbody>
-											<tr align="left" valign="middle">
-												<td>
-													<div class="form-group-data">
-														<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">
-														{{!empty($emailTemplate->body_text) ? old('body_text', $emailTemplate->body_text) : old('body_text')}}
-														</textarea>
-														<span id="body_text_error" class="error"></span>
-														<span class="pull-right">
-															<div class="text-center">
-															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
-															</div>
-														</span>
-													</div>
-													
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div> 
-				<!--End of Tab 4 -->
 			</div>
 			
 			<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
