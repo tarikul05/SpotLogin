@@ -344,7 +344,7 @@ class Event extends BaseModel
             //   }
             unset($params['end_date']);
         }
-        
+        $query->join('event_details', 'events.id', '=', 'event_details.event_id');
         //$query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
@@ -370,6 +370,14 @@ class Event extends BaseModel
                 // }
                 
             }
+        }
+        
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $query->where('event_details.student_id', $params['person_id']);
+        }
+        if ($user_role == 'teacher') {
+            $query->where('events.teacher_id', $params['person_id']);
         }
 
         if (!empty($sortingParams)) { 

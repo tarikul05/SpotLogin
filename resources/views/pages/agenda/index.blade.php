@@ -1161,12 +1161,15 @@ admin_main_style.css
                     if (data.length >0) {
                         
                     }
-                    var resultHtml ="<option value=''>{{__('Select Location') }}</option>";
+                    var resultHtml ="";
+                    var locHtml ="<option value=''>{{__('Select Location') }}</option>";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
                     });
-                    $('#event_location, #location').html(resultHtml);
+                    locHtml += resultHtml
+                    $('#event_location').html(resultHtml);
+                    $('#location').html(locHtml);
                     $("#event_location").multiselect('destroy');
                     
                 },   //success
@@ -1875,9 +1878,8 @@ admin_main_style.css
                             teacher_found=0;
                             $.each($("#event_teacher option:selected"), function(){ 
                                 var id=$(this).val();
-                                if (event.teacher_id.indexOf(id) >= 0){
+                                if (event.teacher_id == id){
                                     teacher_found=1;
-                                    //break;
                                 }                      
                             });
                             }	//no_of_teachers		

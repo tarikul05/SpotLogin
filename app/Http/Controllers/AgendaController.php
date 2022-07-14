@@ -98,6 +98,27 @@ class AgendaController extends Controller
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
         $eventData = Event::active()->get();
         $data = $request->all();
+
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+            $user_role = 'teacher';
+        }
+        //$eventData = Event::active()->where('school_id', $schoolId)->get();
+
+        $data['user_role'] = $user_role;
+        $data['person_id'] = $user->person_id;
         if (isset($data['start_date'])) {
             $query = $eventData->filter($data);
             $eventData = $query->get();
@@ -622,17 +643,20 @@ class AgendaController extends Controller
         }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-            }
-            // if ($user->isTeacherAdmin()) {
-            //     $user_role = 'admin_teacher_coach';
-            // }
         }
-
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+            $user_role = 'teacher';
+        }
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
 
-        //$data['school_id'] = $schoolId;
+        $data['user_role'] = $user_role;
+        $data['person_id'] = $user->person_id;
         //dd($data);
 
         //$query1 = new Event;
