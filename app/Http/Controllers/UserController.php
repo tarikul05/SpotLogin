@@ -406,7 +406,8 @@ class UserController extends Controller
             if ($data['person_type'] =='App\Models\Student') {
                 SchoolStudent::where(['student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
-            return redirect('/');
+
+            return redirect()->route('check.permission');
 
         } catch (Exception $e) {
             //return error message\
