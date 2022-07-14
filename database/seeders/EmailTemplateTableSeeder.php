@@ -252,22 +252,31 @@ Sobald Ihre Seite aktiviert ist, f&uuml;llen Sie bitte Ihre Schulinformationen i
                 'template_code' => 'school',
                 'template_name' => 'School Activation email',
                 'subject_text' => 'Welcome! Your school [~~SCHOOL_NAME~~] has been opened',
-                'body_text' => '<p><strong>Hello and welcome,</strong></p>
+                'body_text' => '<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+<tbody>
+<tr>
+<td style="background-color:#0e2245; height:100px; text-align:center"><a href="[~~HOSTNAME~~][~~USER_NAME~~]/index.html"><img alt="SPORTLOGIN" src="http://sportlogin.ch/img/banner-sport-login.jpg" style="height:100%; width:100%" /></a></td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN BODY -->
 
-<p>You have just been accepted into the team of Vanessa Gusmeroli. Your access to the<strong> [~~ SCHOOL_CODE ~~]</strong> software has been opened. Here step by step the procedure to follow:</p>
+<p><strong>Hello and welcome,</strong></p>
 
-<p>The login page is accessible by clicking on the following link:<strong> [~~ HOSTNAME ~~][~~ SCHOOL_CODE ~~]/</strong></p>
+<p>You have just been accepted into the team of Sportlogin. Your access to the<strong> </strong>[~~SCHOOL_NAME~~] software has been opened. Here step by step the procedure to follow:</p>
 
-<p>&nbsp;&nbsp;&nbsp; Your username is: <strong>[~~USER_NAME~~]</strong><br />
-&nbsp;&nbsp;&nbsp; Your password is: <strong>11223344</strong></p>
+<p>The login page is accessible by clicking on the following link:<strong> [~~ HOSTNAME ~~]/#login</strong></p>
+
+<p>&nbsp;&nbsp;&nbsp; Your username is: <strong>[~~USER_NAME~~] </strong><br />
+&nbsp;&nbsp;&nbsp; Your password is: [your choosen password]</p>
 
 <p>Once your page is activated, please fill in your school information in your account (address, phone). We remain of course at your disposal for any question.</p>',
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 21:56:34',
-                'modified_at' => '2022-01-03 21:56:34',
+                'modified_at' => '2022-07-14 11:36:48',
                 'created_by' => 0,
-                'modified_by' => NULL,
+                'modified_by' => 1,
                 'deleted_at' => NULL,
             ),
             11 => 
@@ -428,7 +437,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 
 <p>If you do not already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
-<p>[~~HOSTNAME~~][~~USER_NAME~~]/index.html</p>
+<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
 </tr>
 </tbody>
@@ -439,7 +448,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-06 11:42:02',
+                'modified_at' => '2022-07-14 11:20:58',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,
@@ -822,11 +831,11 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 <td style="text-align:center">
 <h2><strong>Welcome to Sportlogin!</strong></h2>
 
-<p><em>Welcome to Sportlogin, an invite has been sent to you by by </em>[~~SCHOOL_NAME~~]</p>
+<p><em>Welcome to Sportlogin, an invite has been sent to you by </em>[~~SCHOOL_NAME~~]</p>
 
 <p>If you already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
-<p>[~~HOSTNAME~~][~~USER_NAME~~]/index.html</p>
+<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
 </tr>
 </tbody>
@@ -837,7 +846,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-06 18:04:30',
+                'modified_at' => '2022-07-14 11:20:41',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,

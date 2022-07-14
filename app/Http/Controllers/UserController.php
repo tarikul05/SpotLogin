@@ -136,6 +136,7 @@ class UserController extends Controller
                 $data = [];
                 $data['email'] = $user->email;
                 $data['name'] = $user->username;
+                $data['school_name'] = $school->school_name;
                 $verifyUser = [
                     'school_id' => $school->id,
                     'person_id' => $teacher->id,
@@ -151,12 +152,12 @@ class UserController extends Controller
                 $data['token'] = $verifyUser->token;
                 $data['username'] = $user->username;
 
-                $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
+                // $data['subject']=__('www.sportogin.ch: Welcome! Activate account.');
                 $data['url'] = route('verify.email',$data['token']);
 
 
 
-                if ($this->emailSend($data,'forsign_up_confirmation_emailgot_password_email')) {
+                if ($this->emailSend($data,'school')) {
                     $user->is_mail_sent = 1;
                     $user->save();
                     $result = array(
@@ -406,7 +407,8 @@ class UserController extends Controller
             if ($data['person_type'] =='App\Models\Student') {
                 SchoolStudent::where(['student_id'=>$data['person_id'], 'school_id'=>$data['school_id']])->update($relationalData);
             }
-            return redirect('/');
+
+            return redirect()->route('check.permission');
 
         } catch (Exception $e) {
             //return error message\
