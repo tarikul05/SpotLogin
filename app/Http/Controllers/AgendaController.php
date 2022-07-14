@@ -916,8 +916,12 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-
+        $students = SchoolStudent::active()->where('school_id',$schoolId);
+     
+        if ($user_role =='student' ) { 
+           $students->where('student_id',$user->person_id)
+        }
+        $students = $students->get();
         //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
         return $locations =json_encode($students);
 
@@ -985,7 +989,17 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId);
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+           $professors->where('teacher_id',$user->person_id)
+        }
+        $professors = $professors->get();
         //$students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         //$locations = Teacher::active()->where('school_id', $schoolId)->orderBy('id')->get();
         return $professors =json_encode($professors);
