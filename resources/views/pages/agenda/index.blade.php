@@ -1161,12 +1161,15 @@ admin_main_style.css
                     if (data.length >0) {
                         
                     }
-                    var resultHtml ="<option value=''>{{__('Select Location') }}</option>";
+                    var resultHtml ="";
+                    var locHtml ="<option value=''>{{__('Select Location') }}</option>";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
                     });
-                    $('#event_location, #location').html(resultHtml);
+                    locHtml += resultHtml
+                    $('#event_location').html(resultHtml);
+                    $('#location').html(locHtml);
                     $("#event_location").multiselect('destroy');
                     
                 },   //success
