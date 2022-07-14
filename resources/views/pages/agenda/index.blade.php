@@ -883,11 +883,11 @@ admin_main_style.css
         $('#calendar').fullCalendar('changeView', 'agendaDay');
 	});
     $('#btn_list').on('click', function() {
-        getFreshEvents('ListView');	  
+        //getFreshEvents('ListView');	  
 		$('#calendar').fullCalendar('changeView', 'listYear');	
 	});
     $('#btn_current_list').on('click', function() {
-        getFreshEvents('CurrentListView');	  
+        //getFreshEvents('CurrentListView');	  
 		$('#calendar').fullCalendar('changeView', 'CurrentListView');	
 	});
     
@@ -1433,10 +1433,11 @@ admin_main_style.css
     }   // populate event type
 
     function RerenderEvents(){
+        
 	    if (loading == 0){ 
-            
+            getFreshEvents();
             $("#agenda_table tr:gt(0)").remove();
-            $('#calendar').fullCalendar('rerenderEvents');								
+            $('#calendar').fullCalendar('rerenderEvents');
         }
     }
  
