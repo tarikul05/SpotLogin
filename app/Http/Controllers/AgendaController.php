@@ -919,7 +919,7 @@ class AgendaController extends Controller
         $students = SchoolStudent::active()->where('school_id',$schoolId);
      
         if ($user_role =='student' ) { 
-           $students->where('student_id',$user->person_id)
+           $students->where('student_id',$user->person_id);
         }
         $students = $students->get();
         //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
@@ -997,7 +997,7 @@ class AgendaController extends Controller
         }
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId);
         if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
-           $professors->where('teacher_id',$user->person_id)
+           $professors->where('teacher_id',$user->person_id);
         }
         $professors = $professors->get();
         //$students = SchoolStudent::active()->where('school_id',$schoolId)->get();
