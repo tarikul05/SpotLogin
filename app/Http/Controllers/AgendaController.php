@@ -916,8 +916,12 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-
+        $students = SchoolStudent::active()->where('school_id',$schoolId);
+     
+        if ($user_role =='student' ) { 
+           $students->where('student_id',$user->person_id)
+        }
+        $students = $students->get();
         //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
         return $locations =json_encode($students);
 
