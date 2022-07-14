@@ -1058,7 +1058,7 @@ admin_main_style.css
         if (school_id !=null) {
             var menuHtml='';
             var data = 'school_id='+school_id;
-            $('#event_location').html('');
+            $('#category_select').html('');
         
             $.ajax({
                 url: BASE_URL + '/get_event_category',
