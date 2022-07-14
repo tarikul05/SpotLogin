@@ -39,6 +39,10 @@
 <script>
 $(document).ready(function() {
 
+  if(window.location.href.indexOf('#login') != -1) {
+    $('#loginModal').modal('show');
+  }
+
   $("#show_hide_password a").on('click', function(event) {
     event.preventDefault();
     if ($('#show_hide_password input').attr("type") == "text") {
