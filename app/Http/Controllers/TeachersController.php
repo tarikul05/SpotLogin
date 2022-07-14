@@ -167,7 +167,7 @@ class TeachersController extends Controller
                             $data['token'] = $verifyUser->token;
                             $data['school_name'] = $schoolName;
 
-                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                            if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 return $result = array(
                                     "status"     => 0,
                                     'message' =>  __('Internal server error')
@@ -233,7 +233,7 @@ class TeachersController extends Controller
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
 
-                        if ($this->emailSend($data,'sign_up_confirmation_email_exist')) {
+                        if ($this->emailSend($data,'sign_up_confirmation_email')) {
                             $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                         }  else {
                             return $result = array(
