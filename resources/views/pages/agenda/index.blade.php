@@ -655,7 +655,7 @@ admin_main_style.css
     moment.locale(lang_id, {
 	  week: { dow: 1 } // Monday is the first day of the week
 	});
-
+    RenderCalendar();
     $(document).ready(function(){
         if (user_role == "student") {
             document.getElementById('event_school').style.display="none";
@@ -667,8 +667,9 @@ admin_main_style.css
 	   	    window.history.back();
 		});
         loading=0;
+        
         RerenderEvents();
-        RenderCalendar();
+        getFreshEvents();
         PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
         var selected_school_ids = [];
@@ -970,6 +971,7 @@ admin_main_style.css
                     
                     SetEventCookies();
                     RerenderEvents();
+                    //getFreshEvents();
             },
             onSelectAll: function (options,checked) {
 
@@ -986,6 +988,7 @@ admin_main_style.css
                 }
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             onDeselectAll: function(option,checked) {
                 console.log('school onDeSelectAll triggered!');
@@ -993,6 +996,7 @@ admin_main_style.css
                 document.getElementById("event_school_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             selectAllValue: 0
         });
@@ -1029,12 +1033,14 @@ admin_main_style.css
                     document.getElementById("event_type_all_flag").value='0';
                     SetEventCookies();
                     RerenderEvents();
+                   // getFreshEvents();
             },
             onSelectAll: function (option,checked) {
                     document.getElementById("event_type_id").value='0';
                     document.getElementById("event_type_all_flag").value='1';
                     SetEventCookies();
                     RerenderEvents();
+                   // getFreshEvents();
             },
             onDeselectAll: function(option,checked) {
                 console.log('Event onDeSelectAll triggered!');
@@ -1043,6 +1049,7 @@ admin_main_style.css
                     document.getElementById("event_type_all_flag").value='0';
                     SetEventCookies();
                     RerenderEvents();
+                   // getFreshEvents();
                 },
             selectAllValue: 0
         });
@@ -1203,6 +1210,7 @@ admin_main_style.css
                 document.getElementById("event_location_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
+                getFreshEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
@@ -1218,6 +1226,7 @@ admin_main_style.css
                 }
                 //SetEventCookies();
                 RerenderEvents();
+                getFreshEvents();
             },
             onDeselectAll: function() {
                 console.log('NOT WORKING location onDeSelectAll triggered!');
@@ -1225,6 +1234,7 @@ admin_main_style.css
                 document.getElementById("event_location_all_flag").value='0';
                 //SetEventCookies();
                 RerenderEvents();
+                getFreshEvents();
             },
             selectAllValue: 0
         });
@@ -1309,6 +1319,7 @@ admin_main_style.css
                 document.getElementById("event_teacher_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
@@ -1324,6 +1335,7 @@ admin_main_style.css
                 }
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             onDeselectAll: function() {
                 console.log('NOT WORKING teacher onDeSelectAll triggered!');
@@ -1331,6 +1343,8 @@ admin_main_style.css
                 document.getElementById("event_teacher_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
+                
             },
             selectAllValue: 0
         });
@@ -1401,6 +1415,7 @@ admin_main_style.css
                 document.getElementById("event_student_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
@@ -1416,6 +1431,8 @@ admin_main_style.css
                 }
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
+                
             },
             onDeselectAll: function() {
                 console.log('NOT WORKING student onDeSelectAll triggered!');
@@ -1423,6 +1440,7 @@ admin_main_style.css
                 document.getElementById("event_student_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
+                //getFreshEvents();
             },
             selectAllValue: 0
         });
@@ -1435,7 +1453,8 @@ admin_main_style.css
     function RerenderEvents(){
         
 	    if (loading == 0){ 
-            getFreshEvents();
+            //getFreshEvents();
+            //console.log('sss');
             $("#agenda_table tr:gt(0)").remove();
             $('#calendar').fullCalendar('rerenderEvents');
         }
@@ -1585,123 +1604,7 @@ admin_main_style.css
     
 
 
-    function getFreshEvents(p_view=getCookie("cal_view_mode")){
-        
-        
-        //console.log(getCookie("date_from"));
-        var start_date=document.getElementById("date_from").value;
-        var end_date=document.getElementById("date_to").value;
-        if (getCookie("date_from") != ""){
-            //alert('getrefresh..: Start');
-            document.getElementById("date_from").value = getCookie("date_from");
-            document.getElementById("date_to").value = getCookie("date_to");
-            var start_date=getCookie("date_from");
-            var end_date=getCookie("date_to");
-        }
-        if (p_view=='CurrentListView') {
-            var dt = new Date();
-            let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
-            document.getElementById("date_from").value = formatDate(dt);
-            document.getElementById("date_to").value = formatDate(CurrentListViewDate);
-        
-            var start_date=document.getElementById("date_from").value;
-            var end_date=document.getElementById("date_to").value;
-        }
-
-        var school_id=document.getElementById('school_id').value;
-        var p_event_school_id=document.getElementById("event_school_id").value;
-        var p_event_location_id=getLocationIDs();
-        document.getElementById("prevnext").value = '';
-        var json_events = @json($events);
-        $.ajax({
-            //url: BASE_URL + '/'+school_id+'/get_event',
-            url: BASE_URL + '/get_event',
-            type: 'POST', 
-            data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            // async: false,
-            success: function(s){
-                SetEventCookies();
-                json_events = s;
-                var selected_ids = [];
-                var selected_validate_ids = [];
-                var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
-                Object.keys(JSON.parse(json_events)).forEach(function(key) {
-                    if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
-                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
-                        let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
-                        let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
-                        let teacher_name =JSON.parse(json_events)[key].cours_name; 
-                        let cours_name = JSON.parse(json_events)[key].duration_minutes; 
-                        let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
-                        if (cours_name == null) {
-                            cours_name = '';
-                        }  
-                        if (duration_minutes == null) {
-                            duration_minutes = 0;
-                        }
-                        if (teacher_name == null) {
-                            teacher_name = '';
-                        } 
-                        var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
-                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
-                        } 
-                        else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
-                        }   
-                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                        
-                        
-                    }
-                    
-                });
-                selected_ids.join("|");
-                selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
-                document.getElementById("get_event_id").value = selected_ids;
-                if (selected_validate_ids.length ==0) {
-                    document.getElementById("btn_validate_events").style.display = "none";
-                }
-                if (selected_validate_ids.length ==0) {
-                    document.getElementById("btn_delete_events").style.display = "none";
-                }
-                document.getElementById("get_validate_event_id").value = selected_validate_ids;
-                document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
-                
-                //alert('get refresh');
-                $("#agenda_table tr:gt(0)").remove();
-                $('#calendar').fullCalendar('removeEvents');
-                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
-                $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
-                if (document.getElementById("view_mode").value == 'list'){
-                    //remove 
-                    $('#calendar').fullCalendar().find('.fc-day-header').hide();
-                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
-                    document.getElementById("agenda_list").style.display = "block";
-                }
-                else
-                {
-                    
-                    resultHtml='';
-                    prevdt=''; 
-                    document.getElementById("prevnext").value='';
-                    document.getElementById("agenda_list").style.display = "none";
-                    $('#calendar').fullCalendar().find('.fc-day-header').show();
-                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
-                }
-            },
-            error: function(ts) { 
-                //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
-                // alert(ts.responseText) 
-                console.log(ts.responseText);
-            }
-        });
-        
-        
-        
-    } 
-
+    
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
@@ -1770,7 +1673,7 @@ admin_main_style.css
         // if (getCookie("date_from")){
         //     p_from_date = getCookie("date_from");
         // } 
-        //console.log(p_from_date);
+        console.log(JSON.parse(json_events));
         $('#calendar').fullCalendar({
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
@@ -1816,7 +1719,10 @@ admin_main_style.css
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
-            events: JSON.parse(json_events),
+            // events: function (start, end, tz, callback) {
+            //     callback(JSON.parse(json_events));
+            // },
+            //events: JSON.parse(json_events),
             //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
@@ -1923,7 +1829,7 @@ admin_main_style.css
                             }
                             else {
                                 try {
-                                    if (loc_id.indexOf(id) >= 0){
+                                    if (loc_id = id){
                                         location_found=1;
                                     }
                                 }
@@ -2362,6 +2268,137 @@ admin_main_style.css
         
     } //full calender - RenderCalendar
 
+
+    function getFreshEvents(p_view=getCookie("cal_view_mode")){
+        
+        
+        //console.log(getCookie("date_from"));
+        var start_date=document.getElementById("date_from").value;
+        var end_date=document.getElementById("date_to").value;
+        if (getCookie("date_from") != ""){
+            //alert('getrefresh..: Start');
+            document.getElementById("date_from").value = getCookie("date_from");
+            document.getElementById("date_to").value = getCookie("date_to");
+            var start_date=getCookie("date_from");
+            var end_date=getCookie("date_to");
+        }
+        if (p_view=='CurrentListView') {
+            var dt = new Date();
+            let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            document.getElementById("date_from").value = formatDate(dt);
+            document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+        
+            var start_date=document.getElementById("date_from").value;
+            var end_date=document.getElementById("date_to").value;
+        }
+
+        var school_id=document.getElementById('school_id').value;
+        var p_event_school_id=document.getElementById("event_school_id").value;
+        var p_event_location_id=getLocationIDs();
+        document.getElementById("prevnext").value = '';
+        var json_events = @json($events);
+        $.ajax({
+            //url: BASE_URL + '/'+school_id+'/get_event',
+            url: BASE_URL + '/get_event',
+            type: 'POST', 
+            data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            // async: false,
+            success: function(s){
+                SetEventCookies();
+                json_events = s;
+                var selected_ids = [];
+                var selected_validate_ids = [];
+                var selected_non_validate_ids = [];
+                const type_removed = [50, 51];
+                Object.keys(JSON.parse(json_events)).forEach(function(key) {
+                    if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
+                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
+                        let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
+                        let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
+                        let teacher_name =JSON.parse(json_events)[key].cours_name; 
+                        let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                        if (cours_name == null) {
+                            cours_name = '';
+                        }  
+                        if (duration_minutes == null) {
+                            duration_minutes = 0;
+                        }
+                        if (teacher_name == null) {
+                            teacher_name = '';
+                        } 
+                        var curdate=new Date();
+                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
+                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        } 
+                        else{
+                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                        }   
+                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        
+                        
+                    }
+                    
+                });
+                selected_ids.join("|");
+                selected_validate_ids.join("|");
+                selected_non_validate_ids.join("|");
+                document.getElementById("get_event_id").value = selected_ids;
+                if (selected_validate_ids.length ==0) {
+                    document.getElementById("btn_validate_events").style.display = "none";
+                }
+                if (selected_validate_ids.length ==0) {
+                    document.getElementById("btn_delete_events").style.display = "none";
+                }
+                document.getElementById("get_validate_event_id").value = selected_validate_ids;
+                document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
+                
+                
+                $('#calendar').fullCalendar('removeEvents', function () { return true; });
+
+                var eventsToPut = []; 
+
+                $.each(JSON.parse(json_events), function(k, v)  {
+                    // OBJECT is created when processing response
+                    eventsToPut.push(v);
+                });
+                console.log(eventsToPut);
+                $('#calendar').fullCalendar('addEventSource',eventsToPut, true);
+
+                $("#agenda_table tr:gt(0)").remove();
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
+                $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
+                $('#calendar').fullCalendar('refetchEventSources',JSON.parse(json_events))
+                $('#calendar').fullCalendar('rerenderEvents' );
+                $('#calendar').fullCalendar('refetchEvents');
+                $('#calendar').fullCalendar('refetchEvents');
+                $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
+                // $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
+                if (document.getElementById("view_mode").value == 'list'){
+                    //remove 
+                    $('#calendar').fullCalendar().find('.fc-day-header').hide();
+                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
+                    document.getElementById("agenda_list").style.display = "block";
+                }
+                else
+                {
+                    
+                    resultHtml='';
+                    prevdt=''; 
+                    document.getElementById("prevnext").value='';
+                    document.getElementById("agenda_list").style.display = "none";
+                    $('#calendar').fullCalendar().find('.fc-day-header').show();
+                    $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
+                }
+            },
+            error: function(ts) { 
+                //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
+                // alert(ts.responseText) 
+                console.log(ts.responseText);
+            }
+        }); 
+    } 
 
 
    

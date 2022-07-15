@@ -344,7 +344,12 @@ class Event extends BaseModel
             //   }
             unset($params['end_date']);
         }
-        $query->join('event_details', 'events.id', '=', 'event_details.event_id');
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->select(['events.*']);
+        }
+        
         //$query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {

@@ -478,6 +478,7 @@ class AgendaController extends Controller
 
             }
             $e['event_type'] = $fetch->event_type;
+            $e['event_location'] = $fetch->location_id;
 
             $event_type_name = $event_types[$e['event_type']];
             if ($e['event_type'] == 10) {
