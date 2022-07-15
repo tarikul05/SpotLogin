@@ -1487,9 +1487,11 @@ admin_main_style.css
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
         var p_event_school_id=getSchoolIDs();
+        var p_event_location_id=getLocationIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
+        
         var p_event_id=document.getElementById("get_validate_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
@@ -1608,13 +1610,14 @@ admin_main_style.css
 
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
+        var p_event_location_id=getLocationIDs();
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
             type: 'POST', 
-            data: 'type=fetch&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
             // async: false,
             success: function(s){
                 SetEventCookies();
