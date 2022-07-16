@@ -152,11 +152,13 @@ class Controller extends BaseController
                 
             }  
             $data['body_text'] = $email_body;
-            if (isset($data['token'])) {
-                $data['url'] = route('add.verify.email',$data['token']); 
-            }
+            
             if (isset($data['url'])) {
                 $data['url'] = $data['url']; 
+            } else {
+                if (isset($data['token'])) {
+                    $data['url'] = route('add.verify.email',$data['token']); 
+                }
             }
             \Mail::to($data['email'])->send(new SportloginEmail($data));
             return true;

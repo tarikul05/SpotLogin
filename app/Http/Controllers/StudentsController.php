@@ -167,6 +167,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -280,6 +281,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if ($this->emailSend($data,'sign_up_confirmation_email')) {
                                 $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
@@ -434,6 +436,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -458,6 +461,7 @@ class StudentsController extends Controller
                                 ];
                                 $verifyUser = VerifyToken::create($verifyUser);
                                 $data['token'] = $verifyUser->token;
+                                $data['url'] = route('add.verify.email',$data['token']); 
 
                                 if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                     return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -903,7 +907,7 @@ class StudentsController extends Controller
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
-
+                        $data['url'] = route('add.verify.email',$data['token']); 
                         if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                         }
