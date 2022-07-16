@@ -1054,7 +1054,7 @@ a#correct_btn {
 }
 .student_save {
     position: absolute;
-    top: 131px;
+    /* top: 131px; */
     right: 7%;
 }
 label.profile_img_area {

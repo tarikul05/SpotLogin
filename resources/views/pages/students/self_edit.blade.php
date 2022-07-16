@@ -21,6 +21,7 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
+						<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
 					</div>
 				</div>    
@@ -452,10 +453,6 @@
 				</div>
 				</form>
 			</div>
-			
-			<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-			
-		
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">

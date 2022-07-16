@@ -21,6 +21,9 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
+						@can('students-update')
+							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+						@endcan
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
 					</div>
 				</div>    
@@ -643,9 +646,6 @@
 				</div> 
 				<!--End of Tab 4 -->
 			</div>
-			@can('students-update')
-				<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-			@endcan
 		
 	</div>
 	<!-- success modal-->
