@@ -645,6 +645,10 @@ $(function() {
 		document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";					
 		activaTab('tab_3');
+	} else {
+		if (vtab != '') {
+			activaTab(vtab);
+		}
 	}
 
 	let no_of_teachers = document.getElementById("no_of_teachers").value;
@@ -692,8 +696,14 @@ $('#save_btn').click(function (e) {
 		var studentUserForm = document.getElementById("studentUserForm");
 		if (x[0].id == "tab_3") {
 			studentUserForm.submit();
+			var url = window.location.href;
+			url = addOrChangeParameters( url, {tab:x[0].id} );
+			window.location.href = url;
 		} else{
+			var url = window.location.href;
+			url = addOrChangeParameters( url, {tab:x[0].id} );
 			studentForm.submit();
+			window.location.href = url;
 		} 
 	}else{
 		return false;
@@ -1154,5 +1164,15 @@ $('#save_btn').click(function (e) {
 		$('#profile_image i.fa.fa-plus').show();
 		$('#profile_image i.fa.fa-close').hide();
 	})
+	function addOrChangeParameters( url, params )
+	{
+		let splitParams = {};
+		let splitPath = (/(.*)[?](.*)/).exec(url);
+		if ( splitPath && splitPath[2] )
+			splitPath[2].split("&").forEach( k => { let d = k.split("="); splitParams[d[0]] = d[1]; } );
+		let newParams = Object.assign( splitParams, params );
+		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
+		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
+	}
 </script>
 @endsection

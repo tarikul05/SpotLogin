@@ -446,13 +446,13 @@ $(document).ready(function(){
 
 	function addOrChangeParameters( url, params )
 	{
-	let splitParams = {};
-	let splitPath = (/(.*)[?](.*)/).exec(url);
-	if ( splitPath && splitPath[2] )
-		splitPath[2].split("&").forEach( k => { let d = k.split("="); splitParams[d[0]] = d[1]; } );
-	let newParams = Object.assign( splitParams, params );
-	let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
-	return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
+		let splitParams = {};
+		let splitPath = (/(.*)[?](.*)/).exec(url);
+		if ( splitPath && splitPath[2] )
+			splitPath[2].split("&").forEach( k => { let d = k.split("="); splitParams[d[0]] = d[1]; } );
+		let newParams = Object.assign( splitParams, params );
+		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
+		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
 
 })
