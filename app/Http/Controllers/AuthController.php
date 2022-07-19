@@ -22,6 +22,7 @@ use App\Mail\SportloginEmail;
 use URL;
 use Spatie\Permission\Models\Role;
 use Cookie;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller

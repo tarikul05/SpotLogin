@@ -166,7 +166,7 @@ class TeachersController extends Controller
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
                             $data['school_name'] = $schoolName;
-
+                            $data['url'] = route('add.verify.email',$data['token']); 
                             if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 return $result = array(
                                     "status"     => 0,
@@ -232,6 +232,7 @@ class TeachersController extends Controller
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email',$data['token']); 
 
                         if ($this->emailSend($data,'sign_up_confirmation_email')) {
                             $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
@@ -549,7 +550,7 @@ class TeachersController extends Controller
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
                 'comment'=> $alldata['comment'],
                 'nickname'=> $alldata['nickname'],
-                'bg_color_agenda'=> $alldata['bg_color_agenda'],
+                // 'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];
             SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
             DB::commit();

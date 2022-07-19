@@ -167,6 +167,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -217,28 +218,31 @@ class StudentsController extends Controller
 
                     if($request->file('profile_image_file'))
                     {
-                        $image = $request->file('profile_image_file');
-                        $mime_type = $image->getMimeType();
-                        $extension = $image->getClientOriginalExtension();
-                        if($image->getSize()>0)
-                        {
-                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
-                            if (!empty($path)) {
-                                $fileData = [
-                                    'visibility' => 1,
-                                    'file_type' =>'image',
-                                    'title' => $authUser->username,
-                                    'path_name' =>$path,
-                                    'file_name' => $imageNewName,
-                                    'extension'=>$extension,
-                                    'mime_type'=>$mime_type
-                                ];
-                                $attachedImage = AttachedFile::create($fileData);
-                                $studentData['profile_image_id'] = $attachedImage->id;
+                        try {
+                            $image = $request->file('profile_image_file');
+                            if($image->getSize()>0)
+                            {
+                                $mime_type = $image->getMimeType();
+                                $extension = $image->getClientOriginalExtension();
+                                list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
+                                if (!empty($path)) {
+                                    $fileData = [
+                                        'visibility' => 1,
+                                        'file_type' =>'image',
+                                        'title' => $authUser->username,
+                                        'path_name' =>$path,
+                                        'file_name' => $imageNewName,
+                                        'extension'=>$extension,
+                                        'mime_type'=>$mime_type
+                                    ];
+                                    $attachedImage = AttachedFile::create($fileData);
+                                    $studentData['profile_image_id'] = $attachedImage->id;
+                                }
                             }
+                        } catch (\Exception $e) {
+                            $studentData['profile_image_id'] =null;
                         }
                     }
-                  // print_r($studentData); exit;
                     $student = Student::create($studentData);
                     $student->save();
 
@@ -280,6 +284,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if ($this->emailSend($data,'sign_up_confirmation_email')) {
                                 $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
@@ -373,29 +378,34 @@ class StudentsController extends Controller
                 ];
                 if($request->file('profile_image_file'))
                 {
-                  $image = $request->file('profile_image_file');
-                  $mime_type = $image->getMimeType();
-                  $extension = $image->getClientOriginalExtension();
-                  if($image->getSize()>0)
-                  {
-                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
+                    try {
+                        $image = $request->file('profile_image_file');
+                        
+                        if($image->getSize()>0)
+                        {
+                            $mime_type = $image->getMimeType();
+                            $extension = $image->getClientOriginalExtension();
+                            list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$authUser);
 
-                    if (!empty($path)) {
-                      $fileData = [
-                        'visibility' => 1,
-                        'file_type' =>'image',
-                        'title' => $authUser->username,
-                        'path_name' =>$path,
-                        'file_name' => $imageNewName,
-                        'extension'=>$extension,
-                        'mime_type'=>$mime_type
-                      ];
+                            if (!empty($path)) {
+                            $fileData = [
+                                'visibility' => 1,
+                                'file_type' =>'image',
+                                'title' => $authUser->username,
+                                'path_name' =>$path,
+                                'file_name' => $imageNewName,
+                                'extension'=>$extension,
+                                'mime_type'=>$mime_type
+                            ];
 
-                      $attachedImage = AttachedFile::create($fileData);
-                      $studentData['profile_image_id'] = $attachedImage->id;
+                            $attachedImage = AttachedFile::create($fileData);
+                            $studentData['profile_image_id'] = $attachedImage->id;
 
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        $studentData['profile_image_id'] =null;
                     }
-                  }
                 }
                 $user = User::where(['person_id'=>$student->id])->first();
 
@@ -434,6 +444,7 @@ class StudentsController extends Controller
                             ];
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
+                            $data['url'] = route('add.verify.email',$data['token']); 
 
                             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -458,6 +469,7 @@ class StudentsController extends Controller
                                 ];
                                 $verifyUser = VerifyToken::create($verifyUser);
                                 $data['token'] = $verifyUser->token;
+                                $data['url'] = route('add.verify.email',$data['token']); 
 
                                 if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                     return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -903,7 +915,7 @@ class StudentsController extends Controller
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
-
+                        $data['url'] = route('add.verify.email',$data['token']); 
                         if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                         }

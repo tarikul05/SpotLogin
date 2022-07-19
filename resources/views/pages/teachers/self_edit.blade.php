@@ -34,9 +34,6 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
-				</button>
 				@can('parameters-list')
 					<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
 					{{ __('Parameters')}}
@@ -71,7 +68,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -82,7 +79,7 @@
 											</select>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -163,12 +160,12 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row" id="sbg_color_agenda_div">
+								<!-- <div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
 										<input type="text" name="bg_color_agenda" value="{{!empty($relationalData->bg_color_agenda) ? $relationalData->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot" />
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -352,60 +349,7 @@
 					
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<div class="row">
-					<div class="col-sm-12 col-xs-12 header-area">
-						<div class="page_header_class">
-							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
-							<div class="form-group row">
-								<div class="col-sm-8">
-									<fieldset>
-										<div class="profile-image-cropper responsive">
-										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
-											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
-													height="128" width="128" class="img-circle"
-													style="margin-right:10px;">
-										<?php else: ?>
-											<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
-													height="128" width="128" class="img-circle"
-													style="margin-right:10px;">
-										<?php endif; ?>
-
-											
-											<div style="display:flex;flex-direction: column;">
-												<div style="margin:5px;">
-													<span class="btn btn-theme-success">
-														<i class="fa fa-picture-o"></i>
-														<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
-														<input onchange="ChangeImage()"
-																class="custom-file-input" id="profile_image_file"
-																type="file" name="profile_image_file"
-																accept="image/*" style="display: none;">
-													</span>
-												</div>
-												<?php //if (!empty($AppUI->profile_image_id)): ?>
-													<div style="margin:5px;">
-														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->user->profile_image_id) ? '' : 'display:none;'}}">
-															<i class="fa fa-trash"></i>
-															<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
-														</a>
-													</div>
-												<?php //endif; ?>
-											</div>
-											
-										</div>
-									</fieldset>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+			
 
 			<!--Start of Tab 5 -->
 			<div id="tab_5" class="tab-pane">
