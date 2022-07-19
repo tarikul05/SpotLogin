@@ -682,6 +682,9 @@ button#changer_btn {
 .fc-time-grid .fc-slats td {
     height: 1em;
 }
+.fc-time {
+    font-size: 85%;
+}
 span.etransfer_acc {
     color: red;
     margin-top: 7px;
