@@ -100,10 +100,12 @@ admin_main_style.css
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
                                 <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
                                 <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
-                                <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
-                                    <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
-                                    <span id ="btn_export_events_cap">Excel</span>
-                                </a>
+                                @if(!$AppUI->isStudent())
+                                    <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
+                                        <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
+                                        <span id ="btn_export_events_cap">Excel</span>
+                                    </a>
+                                @endif
                                 <!-- </div> -->
                             </div>
                         </div>
