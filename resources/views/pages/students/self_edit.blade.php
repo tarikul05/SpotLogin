@@ -55,9 +55,9 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="is_active" id="is_active">
-													<option value="10">Active</option>
-													<option value="0">Inactive</option>
-													<option value="-9">Deleted</option>
+													<option value="">Select</option>
+													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 												</select>
 											</div>
 										</div>
