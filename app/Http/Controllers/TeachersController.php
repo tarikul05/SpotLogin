@@ -187,7 +187,7 @@ class TeachersController extends Controller
                 }else{
                     $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
                     $teacherData = [
-                        'availability_select' => $alldata['availability_select'],
+                        // 'availability_select' => $alldata['availability_select'],
                         'gender_id' => $alldata['gender_id'],
                         'lastname' => $alldata['lastname'],
                         'firstname' => $alldata['firstname'],
@@ -418,7 +418,7 @@ class TeachersController extends Controller
         try{
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $teacherData = [
-                'availability_select' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
+                // 'availability_select' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],
                 'firstname' => $alldata['firstname'],
@@ -435,7 +435,7 @@ class TeachersController extends Controller
                 'mobile' => $alldata['mobile'],
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
-            $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+            $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
                 
             $relationalData = [
                 'role_type'=>$alldata['role_type'],
@@ -448,6 +448,7 @@ class TeachersController extends Controller
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
         }catch (\Exception $e) {
+            // dd($e);
             DB::rollBack();
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
