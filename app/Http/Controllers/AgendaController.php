@@ -511,10 +511,15 @@ class AgendaController extends Controller
             foreach($eventDetailsStudentId as $std){
                 $student = Student::find($std['student_id']);
                 if ($student) {
-                    $student_name .= $student->firstname;
-                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
-                        $student_name .=',';
+                    
+                    if ($i!=0) {
+                        if ($i==count($eventDetailsStudentId)) {
+                            $student_name .='';
+                        } else {
+                            $student_name .=',';
+                        }
                     }
+                    $student_name .= $student->firstname;
                     $i++;
                 }
             }
