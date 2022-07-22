@@ -34,7 +34,7 @@
                 </td>
                 <td>{{ $teacher->email; }} </td>
                 <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
-                <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ !empty($teacher->availability_select) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else

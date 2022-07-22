@@ -257,7 +257,7 @@ class TeachersController extends Controller
                             // 'password'=>$alldata['password'],
                             'password'=>Str::random(10),
                             'is_mail_sent'=>0,
-                            'is_active'=>1,
+                            'is_active' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                             'is_firstlogin'=>0
                         ];
                         $user = User::create($usersData);
@@ -418,6 +418,7 @@ class TeachersController extends Controller
         try{
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $teacherData = [
+                'availability_select' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],
                 'firstname' => $alldata['firstname'],
