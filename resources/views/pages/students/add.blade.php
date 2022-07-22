@@ -67,17 +67,19 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="1">Active</option>
-												<option value="0">Inactive</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="1">Active</option>
+													<option value="0">Inactive</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
