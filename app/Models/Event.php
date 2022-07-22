@@ -362,7 +362,13 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        $query->whereIn($key, $value);
+                        
+                        $query->where(function ($query) {
+                            $query->whereIn($key, $value)
+                                ->orWhereNull($key);
+                        });
+                        
+                        //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
                         $query->where($key, '=', $value);
