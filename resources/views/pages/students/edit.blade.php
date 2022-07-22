@@ -54,18 +54,20 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="10">Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="">Select</option>
+													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -242,22 +244,23 @@
 									@endif
 								</div>
 							</div>
-							
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -311,7 +314,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div" style="display: none;">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
@@ -668,6 +671,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -1368,5 +1375,14 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
+	$('#country_code').change(function(){
+		var country = $(this).val();
+
+		if(country == 'CA'){
+			$('#province_id_div').show();
+		}else{
+			$('#province_id_div').hide();
+		}
+	})
 </script>
 @endsection

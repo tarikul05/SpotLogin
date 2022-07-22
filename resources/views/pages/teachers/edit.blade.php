@@ -71,17 +71,22 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="availability_select" id="availability_select">
-												<option value="10" >Active</option>
-												<option value="0">Inactive</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="availability_select" id="availability_select">
+													<option value="">Select</option>
+													<option value="1" {{!empty($teacher->availability_select) ? (old('availability_select', $teacher->availability_select) == 10 ? 'selected' : '') : (old('availability_select') == 10 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($teacher->availability_select) ? (old('availability_select', $teacher->availability_select) == 0 ? 'selected' : '') : (old('availability_select') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+												
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -291,21 +296,23 @@
 									</div>
 								</div> -->
 							</div>
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"> {{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}} </textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"> {{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}} </textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 					@can('teachers-update')
@@ -662,6 +669,11 @@
 <script type="text/javascript">
 	var saction = getUrlVarsO()["action"];
 $(document).ready(function(){
+
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -1164,5 +1176,14 @@ function populate_teacher_lesson() {
 // 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 // 		}	            
 // });  
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
 </script>
 @endsection

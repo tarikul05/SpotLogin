@@ -57,7 +57,7 @@
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
                     <div class="col-sm-6">
-                      <div class="selectdiv form-group-data">
+                      <div class="form-group-data">
                         <input type="text" class="form-control" id="firstname" name="firstname" value="{{!empty($AppUI['firstname']) ? old('firstname', $AppUI['firstname']) : old('firstname')}}">
                         
                       </div>
@@ -69,13 +69,13 @@
                       <input type="text" class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
                     </div>
                   </div>
-                  <div class="form-group row">
+                  <!-- <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
                     <div class="col-sm-6 form-group-data">
                       <input type="password" type="text" class="form-control" id="password" name="password" value="">
                       
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

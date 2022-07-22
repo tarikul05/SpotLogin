@@ -511,10 +511,15 @@ class AgendaController extends Controller
             foreach($eventDetailsStudentId as $std){
                 $student = Student::find($std['student_id']);
                 if ($student) {
-                    $student_name .= $student->firstname;
-                    if ($i!=0 && $i!=count($eventDetailsStudentId)) {
-                        $student_name .=',';
+                    
+                    if ($i!=0) {
+                        if ($i==count($eventDetailsStudentId)) {
+                            $student_name .='';
+                        } else {
+                            $student_name .=',';
+                        }
                     }
+                    $student_name .= $student->firstname;
                     $i++;
                 }
             }
@@ -907,12 +912,12 @@ class AgendaController extends Controller
                         'participation_id' => 200,
                     ];
                     $eventDetailAbsent = [
-                        'is_locked' => 1,
-                        'participation_id' => 199,
+                        'is_locked' => 1
+                        //'participation_id' => 199,
                     ];
                     $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
                     foreach ($eventdetails as $key => $eventdetail) {
-                        if ($eventdetail->participation_id == 0) {
+                        if ($eventdetail->participation_id != 199) {
                             $eventdetail = $eventdetail->update($eventDetailPresent);
                         } else {
                             $eventdetail = $eventdetail->update($eventDetailAbsent);
@@ -927,7 +932,7 @@ class AgendaController extends Controller
                 // ];
                 // $eventdetail = $eventdetail->update($eventDetail);
             }
-
+            //dd($eventData);
             if ($eventData)
             {
                 $result = array(

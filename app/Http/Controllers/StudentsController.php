@@ -141,7 +141,7 @@ class StudentsController extends Controller
                 if (!empty($alldata['user_id'])) {
                     $relationalData = [
                         'has_user_account'=> 1 ,
-                        'comment'=> $alldata['comment'],
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
                         'is_active'=> 0,
                     ];
@@ -184,7 +184,7 @@ class StudentsController extends Controller
 
                 }else {
                     $studentData = [
-                        'is_active' => $alldata['is_active'],
+                        'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : 0,
                         'gender_id' => $alldata['gender_id'],
                         'lastname' => $alldata['lastname'],
                         'firstname' => $alldata['firstname'],
@@ -259,7 +259,7 @@ class StudentsController extends Controller
                         'licence_usp' => $alldata['licence_usp'],
                         'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                         'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                        'comment' => $alldata['comment'],
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                     ];
 
                     $schoolStudentData = SchoolStudent::create($schoolStudent);
@@ -346,7 +346,7 @@ class StudentsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $studentData = [
-                    'is_active' => $alldata['is_active'],
+                    'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
                     'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
@@ -479,7 +479,7 @@ class StudentsController extends Controller
                     }
                 }
                 Student::where('id', $student->id)->update($studentData);
-
+                $schoolStudentData =SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
                 $schoolStudent = [
                     'student_id' => $student->id,
                     'school_id' => $schoolId,
@@ -493,7 +493,7 @@ class StudentsController extends Controller
                     'licence_usp' => $alldata['licence_usp'],
                     'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                     'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                    'comment' => $alldata['comment'],
+                    'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolStudentData->comment,
                 ];
 
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
@@ -828,15 +828,15 @@ class StudentsController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
-
+        
         $student = Student::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
 
         DB::beginTransaction();
         try{
+            
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $studentData = [
-                'is_active' => $alldata['is_active'],
                     'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
@@ -866,6 +866,7 @@ class StudentsController extends Controller
                     'email2' => $alldata['email2'],
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
             ];
+            
             if($request->file('profile_image_file'))
             {
                 $image = $request->file('profile_image_file');
@@ -895,6 +896,7 @@ class StudentsController extends Controller
             $relationalData = [
                 'nickname'=> $alldata['nickname'],
             ];
+            
             $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
             if (!empty($alldata['email'])) {
                 if ($exist->email != $alldata['email']) {
@@ -936,7 +938,6 @@ class StudentsController extends Controller
                 'licence_usp' => $alldata['licence_usp'],
                 'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                 'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                'comment' => $alldata['comment'],
             ];
 
             SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);

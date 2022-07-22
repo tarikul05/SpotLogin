@@ -71,18 +71,20 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="availability_select" id="availability_select">
-												<option value="10">Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="availability_select" id="availability_select">
+													<option value="10">Active</option>
+													<option value="0">Inactive</option>
+													<option value="-9">Deleted</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -377,7 +379,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

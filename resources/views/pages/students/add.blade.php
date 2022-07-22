@@ -67,17 +67,19 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="1">Active</option>
-												<option value="0">Inactive</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="1">Active</option>
+													<option value="0">Inactive</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -249,22 +251,23 @@
 									@endif
 								</div>
 							</div>
-							
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{old('comment')}}</textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{old('comment')}}</textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -318,7 +321,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row" id="province_id_div">
+							<div class="form-group row" id="province_id_div" style="display: none;">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
@@ -481,6 +484,16 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+
+	var b_country = $('#billing_country_code option:selected').val();
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
+	if(b_country == 'CA'){
+		$('#billing_province_id_div').show();
+	}
+	
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

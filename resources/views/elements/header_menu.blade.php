@@ -67,9 +67,11 @@
                         </div>
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
-                            @if(count($AppUI->schools()) > 1)
-                                <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
-                            @endif
+                            @unlessrole('student')
+                                @if(count($AppUI->schools()) > 1)
+                                    <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
+                                @endif
+                            @endunlessrole
                         @endunlessrole
                         
                     </div>

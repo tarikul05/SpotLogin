@@ -134,20 +134,21 @@ class TeachersController extends Controller
             if ($request->isMethod('post')){
                 $alldata = $request->all();
                 if (!empty($alldata['user_id'])) {
-                    $relationalData = [
-                        'role_type'=>$alldata['role_type'],
-                        'has_user_account'=> 1 ,
-                        'comment'=> $alldata['comment'],
-                        'nickname'=> $alldata['nickname'],
-                        'is_active'=> 0,
-                        'is_teacher'=> 1,
-                        'bg_color_agenda'=> $alldata['bg_color_agenda'],
-                    ];
+                    
                     $user = User::find($alldata['user_id']);
                     $teacher = $user->personable;
                     $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
                     // dd($exist);
                     if (!$exist) {
+                        $relationalData = [
+                            'role_type'=>$alldata['role_type'],
+                            'has_user_account'=> 1 ,
+                            'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
+                            'nickname'=> $alldata['nickname'],
+                            'is_active'=> 0,
+                            'is_teacher'=> 1,
+                            'bg_color_agenda'=> $alldata['bg_color_agenda'],
+                        ];
                         $teacher->schools()->attach($schoolId,$relationalData);
                         // notify user by email about new Teacher role
                         if (config('global.email_send') == 1) {
@@ -203,10 +204,12 @@ class TeachersController extends Controller
                         'mobile' => $alldata['mobile'],
                     ];
                     $teacher = Teacher::create($teacherData);
+                    $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+                
                     $relationalData = [
                         'role_type'=>$alldata['role_type'],
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                        'comment'=> $alldata['comment'],
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                         'nickname'=> $alldata['nickname'],
                         'is_teacher'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
@@ -254,7 +257,7 @@ class TeachersController extends Controller
                             // 'password'=>$alldata['password'],
                             'password'=>Str::random(10),
                             'is_mail_sent'=>0,
-                            'is_active'=>1,
+                            'is_active' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                             'is_firstlogin'=>0
                         ];
                         $user = User::create($usersData);
@@ -415,6 +418,7 @@ class TeachersController extends Controller
         try{
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $teacherData = [
+                'availability_select' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],
                 'firstname' => $alldata['firstname'],
@@ -431,11 +435,12 @@ class TeachersController extends Controller
                 'mobile' => $alldata['mobile'],
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
-
+            $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+                
             $relationalData = [
                 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment'=> $alldata['comment'],
+                'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                 'nickname'=> $alldata['nickname'],
                 'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];
@@ -544,11 +549,11 @@ class TeachersController extends Controller
                 'mobile' => $alldata['mobile'],
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
-
+            $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
             $relationalData = [
                 // 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment'=> $alldata['comment'],
+                'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                 'nickname'=> $alldata['nickname'],
                 // 'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];

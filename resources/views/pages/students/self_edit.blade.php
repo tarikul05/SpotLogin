@@ -6,7 +6,6 @@
 <script src="{{ asset('js/datetimepicker-lang/moment-with-locales.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <!-- color wheel -->
-<script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
 @section('content')
@@ -50,18 +49,20 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="10">Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="">Select</option>
+													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -231,21 +232,23 @@
 								</div>
 							</div>
 							
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -299,7 +302,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div" style="display:none">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
@@ -474,6 +477,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -547,12 +554,7 @@ $(document).ready(function(){
 	});
 
 
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	
 
 	$("#send_email_btn").click(function (e) {
 		var user_id = $("#user_id").val();
@@ -651,7 +653,6 @@ $(function() {
 		}
 	}
 
-	let no_of_teachers = document.getElementById("no_of_teachers").value;
 	// if (document.getElementById("find_flag").value== "0"){
 	// 	document.getElementById("delete_btn").style.display="none";
 	// 	document.getElementById("save_btn").style.display="none";                
@@ -690,6 +691,7 @@ $('#save_btn').click(function (e) {
 		"name": "_token",
 		"value": csrfToken,
 	});
+	
 	if(error < 1){	
 		var x = document.getElementsByClassName("tab-pane active");
 		var studentForm = document.getElementById("add_student");
@@ -700,10 +702,12 @@ $('#save_btn').click(function (e) {
 			url = addOrChangeParameters( url, {tab:x[0].id} );
 			window.location.href = url;
 		} else{
+			
 			var url = window.location.href;
 			url = addOrChangeParameters( url, {tab:x[0].id} );
 			studentForm.submit();
-			window.location.href = url;
+			return true;
+			//window.location.href = url;
 		} 
 	}else{
 		return false;
@@ -817,11 +821,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 									resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
 									// alert('no_of_teachers='+no_of_teachers);
-									if (no_of_teachers == 1){
-											resultHtml += '<td style="text-align:right"></td>';
-									}else {
-											resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-									}
+									
 		
 									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 									resultHtml += '</tr>'
@@ -840,14 +840,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Coach</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
-									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
-									if (result.no_of_teachers == 1){
-										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
-									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
-									}
+									
 		
 		
 									resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
@@ -894,11 +887,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += "<td></td>";
 									resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 							} else {
-									if (no_of_teachers == 1){
-											resultHtml += '<td style="text-align:right"></td>';
-									}else {
-											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
-									}
+									
 															
 									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 							}
@@ -946,11 +935,7 @@ $('#save_btn').click(function (e) {
 						resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 						resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
 
-						if (no_of_teachers == 1){
-							resultHtml += '<td style="text-align:right"></td>';
-						}else {
-							resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-						}
+						
 
 						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 						resultHtml += '</tr>'
@@ -962,11 +947,7 @@ $('#save_btn').click(function (e) {
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 				resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
 
-				if (no_of_teachers == 1){
-				resultHtml += '<td style="text-align:right"></td>';
-				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
-				}
+			
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
@@ -1112,11 +1093,7 @@ $('#save_btn').click(function (e) {
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 				resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
 				
-				if (no_of_teachers == 1){
-					resultHtml += '<td style="text-align:right"></td>';
-				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
-				}
+				
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
@@ -1174,5 +1151,14 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
+	$('#country_code').change(function(){
+		var country = $(this).val();
+
+		if(country == 'CA'){
+			$('#province_id_div').show();
+		}else{
+			$('#province_id_div').hide();
+		}
+	})
 </script>
 @endsection
