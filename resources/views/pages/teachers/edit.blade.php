@@ -664,6 +664,11 @@
 <script type="text/javascript">
 	var saction = getUrlVarsO()["action"];
 $(document).ready(function(){
+
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -1166,5 +1171,14 @@ function populate_teacher_lesson() {
 // 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 // 		}	            
 // });  
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
 </script>
 @endsection

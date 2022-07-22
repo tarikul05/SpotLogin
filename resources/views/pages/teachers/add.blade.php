@@ -377,7 +377,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

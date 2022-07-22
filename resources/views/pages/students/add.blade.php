@@ -321,7 +321,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row" id="province_id_div">
+							<div class="form-group row" id="province_id_div" style="display: none;">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
@@ -484,6 +484,16 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+
+	var b_country = $('#billing_country_code option:selected').val();
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
+	if(b_country == 'CA'){
+		$('#billing_province_id_div').show();
+	}
+	
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
