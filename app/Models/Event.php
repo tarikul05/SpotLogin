@@ -363,7 +363,7 @@ class Event extends BaseModel
                     }
                     if (is_array($value)) {
                         
-                        $query->where(function ($query) {
+                        $query->where(function ($query) use($key,$value) {
                             $query->whereIn($key, $value)
                                 ->orWhereNull($key);
                         });
