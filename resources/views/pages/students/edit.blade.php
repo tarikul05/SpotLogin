@@ -896,15 +896,22 @@ $('#save_btn').click(function (e) {
 		var studentForm = document.getElementById("add_student");
 		var studentUserForm = document.getElementById("studentUserForm");
 		if (x[0].id == "tab_3") {
-			studentUserForm.submit();
-			var url = window.location.href;
-			url = addOrChangeParameters( url, {tab:x[0].id} );
-			window.location.href = url;
+			if (studentUserForm.submit()){
+				var url = window.location.href;
+				url = addOrChangeParameters( url, {tab:x[0].id} );
+				//window.location.href = url;
+				return true;
+			}
 		} else{
 			var url = window.location.href;
 			url = addOrChangeParameters( url, {tab:x[0].id} );
-			studentForm.submit();
-			window.location.href = url;
+			//$("#add_student").attr("action", url);
+                    
+			if(studentForm.submit()){
+				//window.location.href = url;
+			};
+			return true;
+			//
 		} 
 	}else{
 		return false;
