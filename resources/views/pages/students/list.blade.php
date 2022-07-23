@@ -15,6 +15,7 @@
         <thead>
             <tr>
                 <th>{{ __('#') }}</th>
+                <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -27,7 +28,14 @@
             if ($student->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
-                <td>{{ $student->id; }}
+                <td>{{ $student->id; }} </td>
+                <td>
+                    <?php if (!empty($student->user->profileImage->path_name)): ?>
+                        <img src="{{ $student->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>

@@ -15,6 +15,7 @@
         <thead>
             <tr>
                 <th>{{ __('#') }}</th>
+                <th>&nbsp;</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('User Account') }}</th>
@@ -29,6 +30,13 @@
             @endphp
             <tr>
                 <td>{{ $teacher->id; }} </td>
+                <td>
+                    <?php if (!empty($teacher->user->profileImage->path_name)): ?>
+                        <img src="{{ $teacher->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">{{ $teacher->full_name }}</a>
                 </td>
