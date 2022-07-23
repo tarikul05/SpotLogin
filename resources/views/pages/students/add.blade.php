@@ -289,12 +289,12 @@
 									<input class="form-control" id="street_number" value="{{ $exStudent ? $exStudent->street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street_number" value="{{old('street_number')}}" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street2" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
@@ -353,12 +353,12 @@
 									<input class="form-control" id="billing_street_number" value="{{ $exStudent ? $exStudent->billing_street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street_number" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="billing_street2" value="{{ $exStudent ? $exStudent->billing_street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street2" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
@@ -529,7 +529,7 @@ $(function() {
 		if($(this).is(':checked')){
 			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
-			$('#billing_street2').val( $('#street2').val() );
+			// $('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
 			$('#billing_country_code').val( $('#country_code option:selected').val() );
