@@ -895,9 +895,6 @@ class StudentsController extends Controller
                     }
                 }
             }
-            $relationalData = [
-                'nickname'=> $alldata['nickname'],
-            ];
             
             $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
             if (!empty($alldata['email'])) {
@@ -946,6 +943,7 @@ class StudentsController extends Controller
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
         }catch (\Exception $e) {
+            // dd($e);
             DB::rollBack();
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
