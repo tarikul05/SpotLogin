@@ -260,7 +260,7 @@
 									</div>
 								</div>
 							</div>
-							<div id="commentaire_div">
+							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
 								</div>
@@ -274,7 +274,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</fieldset>
 					

@@ -555,7 +555,7 @@ class TeachersController extends Controller
             $relationalData = [
                 // 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
+                // 'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                 'nickname'=> $alldata['nickname'],
                 // 'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];
