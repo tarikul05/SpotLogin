@@ -113,14 +113,14 @@
 									</div>
 								</div>
 
-								<div class="form-group row" id="shas_user_account_div">
+								<!-- <div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable student account') }} :</label>
 										<div class="col-sm-7">
 											<input id="shas_user_account" name="has_user_account" type="checkbox" value="1" {{!empty($relationalData->has_user_account) ? (old('has_user_account', $relationalData->has_user_account) == 1 ? 'checked' : '') : (old('has_user_account') == 1 ? 'checked' : '')}}>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group row">
