@@ -184,7 +184,7 @@ class StudentsController extends Controller
 
                 }else {
                     $studentData = [
-                        'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : 0,
+                        // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : 0,
                         'gender_id' => $alldata['gender_id'],
                         'lastname' => $alldata['lastname'],
                         'firstname' => $alldata['firstname'],
@@ -346,7 +346,7 @@ class StudentsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $studentData = [
-                    'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
+                    // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
                     'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
@@ -494,6 +494,7 @@ class StudentsController extends Controller
                     'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                     'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
                     'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolStudentData->comment,
+                    'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $schoolStudentData->is_active,
                 ];
 
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);

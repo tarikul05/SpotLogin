@@ -33,7 +33,7 @@
                 </td>
                 
                 <td>{{ $student->email; }}</td>
-                <td>{{ !empty($student->is_active) && !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($student->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else

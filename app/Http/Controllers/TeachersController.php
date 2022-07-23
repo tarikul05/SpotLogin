@@ -145,7 +145,7 @@ class TeachersController extends Controller
                             'has_user_account'=> 1 ,
                             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                             'nickname'=> $alldata['nickname'],
-                            'is_active'=> 0,
+                            // 'is_active'=> 0,
                             'is_teacher'=> 1,
                             'bg_color_agenda'=> $alldata['bg_color_agenda'],
                         ];
@@ -443,6 +443,7 @@ class TeachersController extends Controller
                 'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                 'nickname'=> $alldata['nickname'],
                 'bg_color_agenda'=> $alldata['bg_color_agenda'],
+                'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $schoolTeacherData->is_active,
             ];
             SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
             DB::commit();
