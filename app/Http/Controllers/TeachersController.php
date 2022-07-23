@@ -551,7 +551,7 @@ class TeachersController extends Controller
                 'mobile' => $alldata['mobile'],
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
-            $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+            $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
             $relationalData = [
                 // 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
