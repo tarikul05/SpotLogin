@@ -931,7 +931,7 @@ class StudentsController extends Controller
                 'student_id' => $student->id,
                 'school_id' => $schoolId,
                 'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
-                'nickname' => $alldata['nickname'],
+                // 'nickname' => $alldata['nickname'],
                 'email' => $alldata['email'],
                 'billing_method' => $alldata['billing_method'],
                 // 'level_id' => $alldata['level_id'],
