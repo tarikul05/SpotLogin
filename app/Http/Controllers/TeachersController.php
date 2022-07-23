@@ -204,12 +204,12 @@ class TeachersController extends Controller
                         'mobile' => $alldata['mobile'],
                     ];
                     $teacher = Teacher::create($teacherData);
-                    $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+                    // $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
                 
                     $relationalData = [
                         'role_type'=>$alldata['role_type'],
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
                         'is_teacher'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
