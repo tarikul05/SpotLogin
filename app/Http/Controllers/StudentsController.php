@@ -141,7 +141,7 @@ class StudentsController extends Controller
                 if (!empty($alldata['user_id'])) {
                     $relationalData = [
                         'has_user_account'=> 1 ,
-                        'comment'=> $alldata['comment'],
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
                         'is_active'=> 0,
                     ];
@@ -184,20 +184,20 @@ class StudentsController extends Controller
 
                 }else {
                     $studentData = [
-                        'is_active' => $alldata['is_active'],
+                        // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : 0,
                         'gender_id' => $alldata['gender_id'],
                         'lastname' => $alldata['lastname'],
                         'firstname' => $alldata['firstname'],
                         'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
                         'street' => $alldata['street'],
                         'street_number' => $alldata['street_number'],
-                        'street2' => $alldata['street2'],
+                        // 'street2' => $alldata['street2'],
                         'zip_code' => $alldata['zip_code'],
                         'place' => $alldata['place'],
                         'country_code' => $alldata['country_code'],
                         'province_id' => $alldata['province_id'],
                         'billing_street' => $alldata['billing_street'],
-                        'billing_street2' => $alldata['billing_street2'],
+                        // 'billing_street2' => $alldata['billing_street2'],
                         'billing_street_number' => $alldata['billing_street_number'],
                         'billing_zip_code' => $alldata['billing_zip_code'],
                         'billing_place' => $alldata['billing_place'],
@@ -259,7 +259,7 @@ class StudentsController extends Controller
                         'licence_usp' => $alldata['licence_usp'],
                         'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                         'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                        'comment' => $alldata['comment'],
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                     ];
 
                     $schoolStudentData = SchoolStudent::create($schoolStudent);
@@ -331,7 +331,7 @@ class StudentsController extends Controller
      */
     public function editStudentAction(Request $request, Student $student)
     {
-
+        
         $authUser = $user = Auth::user();
         // $authUser = $request->user();
         $alldata = $request->all();
@@ -346,20 +346,20 @@ class StudentsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $studentData = [
-                    'is_active' => $alldata['is_active'],
+                    // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
                     'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
                     'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
                     'street' => $alldata['street'],
                     'street_number' => $alldata['street_number'],
-                    'street2' => $alldata['street2'],
+                    // 'street2' => $alldata['street2'],
                     'zip_code' => $alldata['zip_code'],
                     'place' => $alldata['place'],
                     'country_code' => $alldata['country_code'],
                     'province_id' => $alldata['province_id'],
                     'billing_street' => $alldata['billing_street'],
-                    'billing_street2' => $alldata['billing_street2'],
+                    // 'billing_street2' => $alldata['billing_street2'],
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
@@ -410,80 +410,80 @@ class StudentsController extends Controller
                 $user = User::where(['person_id'=>$student->id])->first();
 
                 $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
-                if (!empty($alldata['email'])) {
-                    if (!$user) {
-                        $usersData = [
-                            'person_id' => $student->id,
-                            'person_type' =>'App\Models\Student',
-                            'username' =>$alldata['nickname'],
-                            'lastname' => $alldata['lastname'],
-                            'middlename'=>'',
-                            'firstname'=>$alldata['firstname'],
-                            'email'=>$alldata['email'],
-                            // 'password'=>$alldata['password'],
-                            'password'=>Str::random(10),
-                            'is_mail_sent'=>0,
-                            'is_active'=>1,
-                            'is_firstlogin'=>0
-                        ];
-                        $user = User::create($usersData);
-                        $user->save();
-                        // notify user by email about new Teacher role
-                        if (config('global.email_send') == 1) {
-                            $data = [];
-                            $data['email'] = $user->email;
-                            $data['username'] = $data['name'] = $user->username;
+                // if (!empty($alldata['email'])) {
+                //     if (!$user) {
+                //         $usersData = [
+                //             'person_id' => $student->id,
+                //             'person_type' =>'App\Models\Student',
+                //             'username' =>$alldata['nickname'],
+                //             'lastname' => $alldata['lastname'],
+                //             'middlename'=>'',
+                //             'firstname'=>$alldata['firstname'],
+                //             'email'=>$alldata['email'],
+                //             // 'password'=>$alldata['password'],
+                //             'password'=>Str::random(10),
+                //             'is_mail_sent'=>0,
+                //             'is_active'=>1,
+                //             'is_firstlogin'=>0
+                //         ];
+                //         $user = User::create($usersData);
+                //         $user->save();
+                //         // notify user by email about new Teacher role
+                //         if (config('global.email_send') == 1) {
+                //             $data = [];
+                //             $data['email'] = $user->email;
+                //             $data['username'] = $data['name'] = $user->username;
 
-                            $verifyUser = [
-                                'school_id' => $alldata['school_id'],
-                                'person_id' => $student->id,
-                                'person_type' => 'App\Models\Student',
-                                'token' => Str::random(10),
-                                'token_type' => 'VERIFY_SIGNUP',
-                                'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                            ];
-                            $verifyUser = VerifyToken::create($verifyUser);
-                            $data['token'] = $verifyUser->token;
-                            $data['url'] = route('add.verify.email',$data['token']); 
+                //             $verifyUser = [
+                //                 'school_id' => $alldata['school_id'],
+                //                 'person_id' => $student->id,
+                //                 'person_type' => 'App\Models\Student',
+                //                 'token' => Str::random(10),
+                //                 'token_type' => 'VERIFY_SIGNUP',
+                //                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                //             ];
+                //             $verifyUser = VerifyToken::create($verifyUser);
+                //             $data['token'] = $verifyUser->token;
+                //             $data['url'] = route('add.verify.email',$data['token']); 
 
-                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
-                                return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                            }
-                        }
-                    }else {
-                        if ($exist->email != $alldata['email']) {
-                            // notify user by email about new Teacher role
-                            if (config('global.email_send') == 1) {
-                                $data = [];
-                                $data['email'] = $alldata['email'];
-                                $user->update($data);
-                                $data['username'] = $data['name'] = $user->username;
+                //             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                //                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                //             }
+                //         }
+                //     }else {
+                //         if ($exist->email != $alldata['email']) {
+                //             // notify user by email about new Teacher role
+                //             if (config('global.email_send') == 1) {
+                //                 $data = [];
+                //                 $data['email'] = $alldata['email'];
+                //                 $user->update($data);
+                //                 $data['username'] = $data['name'] = $user->username;
 
-                                $verifyUser = [
-                                    'school_id' => $alldata['school_id'],
-                                    'person_id' => $student->id,
-                                    'person_type' => 'App\Models\Student',
-                                    'token' => Str::random(10),
-                                    'token_type' => 'VERIFY_SIGNUP',
-                                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                                ];
-                                $verifyUser = VerifyToken::create($verifyUser);
-                                $data['token'] = $verifyUser->token;
-                                $data['url'] = route('add.verify.email',$data['token']); 
+                //                 $verifyUser = [
+                //                     'school_id' => $alldata['school_id'],
+                //                     'person_id' => $student->id,
+                //                     'person_type' => 'App\Models\Student',
+                //                     'token' => Str::random(10),
+                //                     'token_type' => 'VERIFY_SIGNUP',
+                //                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                //                 ];
+                //                 $verifyUser = VerifyToken::create($verifyUser);
+                //                 $data['token'] = $verifyUser->token;
+                //                 $data['url'] = route('add.verify.email',$data['token']); 
 
-                                if (!$this->emailSend($data,'sign_up_confirmation_email')) {
-                                    return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                                }
-                            }
-                        }
-                    }
-                }
+                //                 if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                //                     return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                //                 }
+                //             }
+                //         }
+                //     } 
+                // }
                 Student::where('id', $student->id)->update($studentData);
-
+                $schoolStudentData =SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
                 $schoolStudent = [
                     'student_id' => $student->id,
                     'school_id' => $schoolId,
-                    'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                    // 'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                     'nickname' => $alldata['nickname'],
                     'email' => $alldata['email'],
                     'billing_method' => $alldata['billing_method'],
@@ -493,7 +493,8 @@ class StudentsController extends Controller
                     'licence_usp' => $alldata['licence_usp'],
                     'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                     'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                    'comment' => $alldata['comment'],
+                    'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolStudentData->comment,
+                    'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $schoolStudentData->is_active,
                 ];
 
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
@@ -501,6 +502,7 @@ class StudentsController extends Controller
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
         }catch (Exception $e) {
+            // dd($e);
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
@@ -828,28 +830,28 @@ class StudentsController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
-
+        
         $student = Student::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
 
         DB::beginTransaction();
         try{
+            
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $studentData = [
-                'is_active' => $alldata['is_active'],
                     'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
                     'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
                     'street' => $alldata['street'],
                     'street_number' => $alldata['street_number'],
-                    'street2' => $alldata['street2'],
+                    // 'street2' => $alldata['street2'],
                     'zip_code' => $alldata['zip_code'],
                     'place' => $alldata['place'],
                     'country_code' => $alldata['country_code'],
                     'province_id' => $alldata['province_id'],
                     'billing_street' => $alldata['billing_street'],
-                    'billing_street2' => $alldata['billing_street2'],
+                    // 'billing_street2' => $alldata['billing_street2'],
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
@@ -866,6 +868,7 @@ class StudentsController extends Controller
                     'email2' => $alldata['email2'],
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
             ];
+            
             if($request->file('profile_image_file'))
             {
                 $image = $request->file('profile_image_file');
@@ -895,6 +898,7 @@ class StudentsController extends Controller
             $relationalData = [
                 'nickname'=> $alldata['nickname'],
             ];
+            
             $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
             if (!empty($alldata['email'])) {
                 if ($exist->email != $alldata['email']) {
@@ -936,7 +940,6 @@ class StudentsController extends Controller
                 'licence_usp' => $alldata['licence_usp'],
                 'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
                 'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
-                'comment' => $alldata['comment'],
             ];
 
             SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);

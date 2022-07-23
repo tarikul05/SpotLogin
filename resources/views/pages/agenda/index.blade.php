@@ -1035,14 +1035,14 @@ admin_main_style.css
                     document.getElementById("event_type_all_flag").value='0';
                     SetEventCookies();
                     RerenderEvents();
-                   // getFreshEvents();
+                    getFreshEvents();
             },
             onSelectAll: function (option,checked) {
                     document.getElementById("event_type_id").value='0';
                     document.getElementById("event_type_all_flag").value='1';
                     SetEventCookies();
                     RerenderEvents();
-                   // getFreshEvents();
+                    getFreshEvents();
             },
             onDeselectAll: function(option,checked) {
                 console.log('Event onDeSelectAll triggered!');
@@ -1051,7 +1051,7 @@ admin_main_style.css
                     document.getElementById("event_type_all_flag").value='0';
                     SetEventCookies();
                     RerenderEvents();
-                   // getFreshEvents();
+                    getFreshEvents();
                 },
             selectAllValue: 0
         });

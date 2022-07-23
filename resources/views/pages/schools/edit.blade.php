@@ -70,6 +70,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
 										<div class="col-sm-7">
@@ -87,6 +88,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 									<!-- <div class="form-group row">
 											<label id="school_code_caption" name="school_code_caption" class="col-lg-3 col-sm-3 text-left">School Code
 													*:</label>
@@ -112,6 +114,8 @@
 										</div>
 										
 									</div>
+
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label id="organization_type_caption"
 										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}}:</label>
@@ -129,9 +133,10 @@
 											</div>
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="col-md-6">
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 
 										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
 											{{ __('Account Type')}}:
@@ -139,7 +144,7 @@
 										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
 											School
 										</label>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label id="sender_email_label" name="sender_email_label" 
 										class="col-lg-3 col-sm-3 text-left">{{ __('Sender email address')}} :</label>
@@ -335,6 +340,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
 										<div class="col-sm-7">
@@ -347,6 +353,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :*</label>
 										<div class="col-sm-7">
@@ -404,13 +411,13 @@
 											value="{{!empty($school->street_number) ? old('street_number', $school->street_number) : old('street_number')}}">
 										</div>
 									</div>
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street 2')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="street2" name="street2" type="text"
 											value="{{!empty($school->street2) ? old('street2', $school->street2) : old('street2')}}">
 										</div>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
 										<div class="col-sm-7">
@@ -477,7 +484,8 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-group row">
+
+									<!-- <div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="smobile" id="mobile_caption">{{ __('Mobile')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group">
@@ -488,7 +496,7 @@
 												value="{{!empty($school->mobile) ? old('mobile', $school->mobile) : old('mobile')}}">
 											</div>
 										</div>
-									</div>
+									</div> -->
 								
 								</div>
 								<div class="col-md-6">

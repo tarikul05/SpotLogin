@@ -35,7 +35,11 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Lesson')}}
+				</a>
+				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button> -->
+				
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
@@ -54,18 +58,20 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="10">Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="">Select</option>
+													<option value="1" {{!empty($relationalData->is_active) ? (old('is_active', $relationalData->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($relationalData->is_active) ? (old('is_active', $relationalData->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -111,14 +117,14 @@
 									</div>
 								</div>
 
-								<div class="form-group row" id="shas_user_account_div">
+								<!-- <div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable student account') }} :</label>
 										<div class="col-sm-7">
 											<input id="shas_user_account" name="has_user_account" type="checkbox" value="1" {{!empty($relationalData->has_user_account) ? (old('has_user_account', $relationalData->has_user_account) == 1 ? 'checked' : '') : (old('has_user_account') == 1 ? 'checked' : '')}}>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="col-md-6">
 								<div class="form-group row">
@@ -242,22 +248,23 @@
 									@endif
 								</div>
 							</div>
-							
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -279,12 +286,12 @@
 									<input class="form-control" id="street_number" name="street_number" value="{{!empty($student->street_number) ? old('street_number', $student->street_number) : old('street_number')}}" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="street2" name="street2" value="{{!empty($student->street2) ? old('street2', $student->street2) : old('street2')}}" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
@@ -311,7 +318,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="province_id_div" style="display: none;">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
@@ -343,12 +350,12 @@
 									<input class="form-control" id="billing_street_number" name="billing_street_number" value="{{!empty($student->billing_street_number) ? old('billing_street_number', $student->billing_street_number) : old('billing_street_number')}}" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
 									<input class="form-control" id="billing_street2" name="billing_street2" value="{{!empty($student->billing_street2) ? old('billing_street2', $student->billing_street2) : old('billing_street2')}}" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
@@ -668,6 +675,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -811,7 +822,7 @@ $(function() {
 		if($(this).is(':checked')){
 			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
-			$('#billing_street2').val( $('#street2').val() );
+			// $('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
 			$('#billing_country_code').val( $('#country_code option:selected').val() );
@@ -889,15 +900,22 @@ $('#save_btn').click(function (e) {
 		var studentForm = document.getElementById("add_student");
 		var studentUserForm = document.getElementById("studentUserForm");
 		if (x[0].id == "tab_3") {
-			studentUserForm.submit();
-			var url = window.location.href;
-			url = addOrChangeParameters( url, {tab:x[0].id} );
-			window.location.href = url;
+			if (studentUserForm.submit()){
+				var url = window.location.href;
+				url = addOrChangeParameters( url, {tab:x[0].id} );
+				//window.location.href = url;
+				return true;
+			}
 		} else{
 			var url = window.location.href;
 			url = addOrChangeParameters( url, {tab:x[0].id} );
-			studentForm.submit();
-			window.location.href = url;
+			//$("#add_student").attr("action", url);
+                    
+			if(studentForm.submit()){
+				//window.location.href = url;
+			};
+			return true;
+			//
 		} 
 	}else{
 		return false;
@@ -1368,5 +1386,14 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
+	$('#country_code').change(function(){
+		var country = $(this).val();
+
+		if(country == 'CA'){
+			$('#province_id_div').show();
+		}else{
+			$('#province_id_div').hide();
+		}
+	})
 </script>
 @endsection
