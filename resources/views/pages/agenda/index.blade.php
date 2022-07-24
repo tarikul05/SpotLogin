@@ -600,7 +600,7 @@ admin_main_style.css
         document.getElementById("date_from").value = formatDate(dt);
         document.getElementById("date_to").value = formatDate(CurrentListViewDate);
         //if (document.getElementById("view_mode").value == 'CurrentListView'){
-            getCurrentListFreshEvents();
+            getCurrentListFreshEvents('CurrentListView','firstLoad');
         //}   
     } else {
         
@@ -899,6 +899,7 @@ admin_main_style.css
        // CallListView();	  
         
 		console.log('lllll----------------')
+          
         getCurrentListFreshEvents();
         console.log('lllll----------------')
 	});
@@ -1470,7 +1471,7 @@ admin_main_style.css
             
             //getFreshEvents();
             //console.log('sss');
-            $("#agenda_table tr:gt(0)").remove();
+           // $("#agenda_table tr:gt(0)").remove();
             //$("#agenda_table_current tr:gt(0)").remove();
             $('#calendar').fullCalendar('rerenderEvents');
         }
@@ -2260,10 +2261,12 @@ admin_main_style.css
                 SetEventCookies();
                 
                 if  (firstload != '0'){
-                    console.log('lllll----------------')
-                    console.log($('#calendar').fullCalendar('getView').name)
-                    console.log('lllll----------------')
-                    getFreshEvents();
+                    if($('#calendar').fullCalendar('getView').name !='CurrentListView'){
+                        getFreshEvents();
+                    } else {
+                        getCurrentListFreshEvents();
+                    }
+                    
                 }
             },
             dayClick: function(date, jsEvent, view, resource) {
@@ -2306,7 +2309,7 @@ admin_main_style.css
     function getFreshEvents(p_view=getCookie("cal_view_mode")){
         
         if (document.getElementById("view_mode").value == 'CurrentListView'){
-            return true;
+            return;
         }
         //console.log(getCookie("date_from"));
         var start_date=document.getElementById("date_from").value;
@@ -2443,10 +2446,27 @@ admin_main_style.css
         }); 
     } 
 
-    function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode")){
+    function first() {
+        setTimeout(function() {
+            
+            SetEventCookies();
+            
+            second();
+            //third();
+        }, 100);
+    }
+    function second() {
+        var url = window.location.href;
+            window.location.href= url;
+            return true;  
+        //$('#q').append('second <br>');
+    }
+    function third() {
+        $('#q').append('third <br>');
+    }
+    function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
         
-        
-        
+        $('#calendar').fullCalendar('changeView', 'CurrentListView');
         var dt = new Date();
         let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
         document.getElementById("date_from").value = formatDate(dt);
@@ -2469,14 +2489,21 @@ admin_main_style.css
             // async: false,
             success: function(s){
                 //SetEventCookies();
+                if (firstLoad =='firstLoad') {
+                    $("#agenda_table tr:gt(0)").remove();
+                } else {
+                    
+                    first();
+                    
+                }
                 json_events = s;
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
                 const type_removed = [50, 51];
                 let resultHtml_cc ='';
-                //$('#agenda_list').html(resultHtml_cc);
-                $("#agenda_table tr:gt(0)").remove();
+                $('#agenda_list').html(resultHtml_cc);
+                //$("#agenda_table tr:gt(0)").remove();
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
                         let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
@@ -2625,36 +2652,36 @@ admin_main_style.css
                 
                 //$('#calendar').fullCalendar('removeEvents', function () { return true; });
 
-                var eventsToPut = []; 
+                // var eventsToPut = []; 
 
-                $.each(JSON.parse(json_events), function(k, v)  {
-                    // OBJECT is created when processing response
-                    eventsToPut.push(v);
-                });
-                console.log(eventsToPut);
-
-
-                $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
+                // $.each(JSON.parse(json_events), function(k, v)  {
+                //     // OBJECT is created when processing response
+                //     eventsToPut.push(v);
+                // });
+                console.log(JSON.parse(json_events));
+                //
+               
                 
-                //$("#agenda_table_current tr:gt(0)").remove();
-                $('#calendar').fullCalendar('removeEvents');
-                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
-                $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
-                $('#calendar').fullCalendar('refetchEventSources',JSON.parse(json_events))
-                $('#calendar').fullCalendar('rerenderEvents' );
-                $('#calendar').fullCalendar('refetchEvents');
-                $('#calendar').fullCalendar('refetchEvents');
-                $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
+                if (firstLoad =='firstLoad') {
+                    $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
+                    $('#calendar').fullCalendar('removeEvents');
+                    $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
+                    $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
+                    $('#calendar').fullCalendar('refetchEventSources',JSON.parse(json_events))
+                    $('#calendar').fullCalendar('rerenderEvents' );
+                    $('#calendar').fullCalendar('refetchEvents');
+                    $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
+                    $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
                 
-                //$("#agenda_table_current tr:gt(0)").remove();
-                //$('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
-                //$('#calendar').fullCalendar({ events: JSON.parse(json_events) });
+                    
+                }
+                
                 //remove 
-                $('#calendar').fullCalendar().find('.fc-day-header').hide();
+               $('#calendar').fullCalendar().find('.fc-day-header').hide();
                 $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
                 //document.getElementById("agenda_list_current").style.display = "block";
                 document.getElementById("agenda_list").style.display = "none";
-                $('#calendar').fullCalendar('changeView', 'CurrentListView');	
+                
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
