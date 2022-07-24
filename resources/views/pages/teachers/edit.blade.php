@@ -83,10 +83,10 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" name="availability_select" id="availability_select">
+												<select class="form-control" name="is_active" id="availability_select">
 													<option value="">Select</option>
-													<option value="1" {{!empty($teacher->availability_select) ? (old('availability_select', $teacher->availability_select) == 10 ? 'selected' : '') : (old('availability_select') == 10 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($teacher->availability_select) ? (old('availability_select', $teacher->availability_select) == 0 ? 'selected' : '') : (old('availability_select') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+													<option value="1" {{!empty($relationalData->is_active) ?  'selected' : '' }}>{{ __('Active')}}</option>
+													<option value="0" {{ ($relationalData->is_active == 0) ? 'selected' : ''}}>{{ __('Inactive')}}</option>
 												
 												</select>
 											</div>

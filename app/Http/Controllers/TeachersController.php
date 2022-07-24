@@ -145,7 +145,7 @@ class TeachersController extends Controller
                             'has_user_account'=> 1 ,
                             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                             'nickname'=> $alldata['nickname'],
-                            'is_active'=> 0,
+                            // 'is_active'=> 0,
                             'is_teacher'=> 1,
                             'bg_color_agenda'=> $alldata['bg_color_agenda'],
                         ];
@@ -204,12 +204,12 @@ class TeachersController extends Controller
                         'mobile' => $alldata['mobile'],
                     ];
                     $teacher = Teacher::create($teacherData);
-                    $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+                    // $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
                 
                     $relationalData = [
                         'role_type'=>$alldata['role_type'],
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
+                        'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
                         'is_teacher'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
@@ -443,6 +443,7 @@ class TeachersController extends Controller
                 'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
                 'nickname'=> $alldata['nickname'],
                 'bg_color_agenda'=> $alldata['bg_color_agenda'],
+                'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $schoolTeacherData->is_active,
             ];
             SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
             DB::commit();
@@ -550,15 +551,15 @@ class TeachersController extends Controller
                 'mobile' => $alldata['mobile'],
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
-            $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+            // $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
             $relationalData = [
                 // 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
-                'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
-                'nickname'=> $alldata['nickname'],
+                // 'comment' => isset($alldata['comment']) ? $alldata['comment'] : $schoolTeacherData->comment,
+                // 'nickname'=> $alldata['nickname'],
                 // 'bg_color_agenda'=> $alldata['bg_color_agenda'],
             ];
-            SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
+            // SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->update($relationalData);
             DB::commit();
             return back()->withInput($request->all())->with('success', __('Teacher updated successfully!'));
         }catch (\Exception $e) {

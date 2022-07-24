@@ -35,7 +35,11 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Lesson')}}
+				</a>
+				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button> -->
+				
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
@@ -61,8 +65,8 @@
 											<div class="selectdiv">
 												<select class="form-control" name="is_active" id="is_active">
 													<option value="">Select</option>
-													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
+													<option value="1" {{!empty($relationalData->is_active) ? (old('is_active', $relationalData->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
+													<option value="0" {{!empty($relationalData->is_active) ? (old('is_active', $relationalData->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
 												</select>
 											</div>
 										</div>

@@ -83,7 +83,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text"
+										<input class="form-control" disabled="disabled" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text"
 										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
 										>
 										@if ($errors->has('nickname'))
@@ -260,7 +260,7 @@
 									</div>
 								</div>
 							</div>
-							<div id="commentaire_div">
+							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
 								</div>
@@ -274,7 +274,7 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</fieldset>
 					
