@@ -1418,7 +1418,7 @@ $(function() {
     if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";					
-		activaTab('tab_2');
+		activaTab('tab_3');
 	} else {
 		if (vtab != '') {
 			activaTab(vtab);
