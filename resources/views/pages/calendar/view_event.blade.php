@@ -14,6 +14,14 @@
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
 				</div>    
+				<div class="col-sm-6 col-xs-12 btn-area">
+					<div class="pull-right btn-group">
+						<a class="btn btn-sm btn-info text-white" href="/agenda" id="back_btn"> 
+							<i class="fa fa-arrow-left"></i>
+							{{ __('Back')}}
+						</a>
+					</div>
+				</div>
 			</div>          
 		</header>
 		<!-- Tabs navs -->
