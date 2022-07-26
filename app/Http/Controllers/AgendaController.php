@@ -862,6 +862,37 @@ class AgendaController extends Controller
         }
 
     }
+     /**
+     *  AJAX delete event
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-07-26
+     */
+	public function deleteEvent(Request $request, Event $event)
+	{
+		$result = array(
+			'status' => 'failed',
+			'message' => __('failed to delete'),
+		);
+		try {
+			$dataParam = $request->all();
+			$id= trim($dataParam['event_id']);
+			$eventData = Event::find($id)->delete();
+			if ($eventData == 1)
+			{
+				$result = array(
+					"status"     => 'success',
+					'message' => __('Confirmed'),
+				);
+			}
+			return response()->json($result);
+		} catch (Exception $e) {
+			//return error message
+			$result['message'] = __('Internal server error');
+			return response()->json($result);
+		}
+	}
 
 
 
