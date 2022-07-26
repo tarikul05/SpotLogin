@@ -500,7 +500,7 @@ class StudentsController extends Controller
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
+            return redirect()->back()->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
         }catch (Exception $e) {
             // dd($e);
             DB::rollBack();
@@ -941,7 +941,7 @@ class StudentsController extends Controller
 
             SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
+            return back()->withInput($request->all())->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
         }catch (\Exception $e) {
             // dd($e);
             DB::rollBack();
