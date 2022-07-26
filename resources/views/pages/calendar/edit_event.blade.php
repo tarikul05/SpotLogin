@@ -285,7 +285,9 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						<a class="btn btn-theme-warn" href="#" id="delete_btn" style="display: block;">Delete</a>
+						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</form>
@@ -549,5 +551,31 @@ function confirm_event(){
 	}); //ajax-type            
 
 }
+	function delete_event(event_id){
+        var data='type=delete_events'+'&event_id='+event_id;
+		$.ajax({type: "POST",
+			url: BASE_URL + '/delete_event',
+			data: data,
+			dataType: "JSON",
+			success:function(result){
+				var status =  result.status;
+				if (status == 'success') {
+					window.location.href = BASE_URL+'/agenda';
+				}
+			},   //success
+			error: function(ts) { 
+				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+			}
+		}); //ajax-type
+    }
+	// delete event
+	$('#delete_btn').click(function (e) {
+		var p_event_type_id='{{$eventId}}';
+		console.log(p_event_type_id);
+		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+		e.preventDefault();
+		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		return false;
+	})
 </script>
 @endsection
