@@ -371,7 +371,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>		
                                                     </div>
-                                                    <div class="form-group row">
+                                                    <div class="form-group row" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
                                                             <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
@@ -3297,6 +3297,7 @@ $('#agenda_select').on('change', function() {
             $('#start_date').on('change', function(e){  
                 $("#end_date").val($("#start_date").val());  
             });
+            $('#all_day').show();
             $( "#end_date" ).attr("readonly", "readonly");;	
             $('.lesson').show();
             $('.event').hide();
@@ -3313,6 +3314,7 @@ $('#agenda_select').on('change', function() {
             }else{
                 var page_action = 'javascript:void(0)';
             }
+            $('#all_day').show();
             $( "#end_date" ).attr("disabled", false );
             $('.lesson').hide();
             $('.event').show();
@@ -3328,6 +3330,7 @@ $('#agenda_select').on('change', function() {
             }else{
                 var page_action = 'javascript:void(0)';
             }
+            $('#all_day').hide();
             $('.hide_on_off').hide();
             $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
@@ -3340,6 +3343,7 @@ $('#agenda_select').on('change', function() {
             }else{
                 var page_action = 'javascript:void(0)';
             }
+            $('#all_day').hide();
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
             $('#price_per_student').hide();

@@ -515,7 +515,7 @@ class LessonsController extends Controller
                     'event_type' => 51,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : 'Y',
                     'description' => $studentOffData['description']
                 ];
 
@@ -592,7 +592,7 @@ class LessonsController extends Controller
                     'event_type' => 51,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : 'Y',
                     'description' => $studentOffData['description']
                 ];
 
@@ -683,7 +683,7 @@ class LessonsController extends Controller
                     'event_type' => 50,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
+                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : 'Y',
                     'description' => $coachOffData['description']
                 ];
                 
@@ -759,7 +759,7 @@ class LessonsController extends Controller
                     'event_type' => 50,
                     'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
                     'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
+                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : 'Y',
                     'description' => $coachOffData['description'],
                     'teacher_id' => $coachOffData['teacher_select']
                 ];
