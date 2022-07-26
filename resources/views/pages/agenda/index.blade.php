@@ -562,8 +562,13 @@ admin_main_style.css
 
    
 
-   
-    var defview='agendaWeek';   //'month';//'agendaWeek'
+   if ($(window).width() < 768) {
+        var defview='agendaDay'; 
+    }
+    else {
+        var defview='agendaWeek'; 
+    }
+      //'month';//'agendaWeek'
     try {
         if ((getCookie("cal_view_mode") != "") && (getCookie("cal_view_mode") !== undefined)){
             defview=getCookie("cal_view_mode");
