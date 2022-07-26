@@ -1970,13 +1970,13 @@ admin_main_style.css
                     }
 
                     if (event.duration_minutes > 60){        
-                        var ooo= event.title_extend;
+                        var ooo= icon+''+event.title_extend;
                         $(el).find('div.fc-content').append(ooo);
                     }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
-                   
+                   // $(el).find('div.fc-title').prepend(event.event_type_name+':'+moment(event.start).format('DD-MM-YYYY')+' '+content_format);
                     resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
-                    resultHtml+='<td href="'+event.url+'">'+icon+moment(event.start).format('DD-MM-YYYY')+'</td>';
+                    resultHtml+='<td href="'+event.url+'">'+moment(event.start).format('DD-MM-YYYY')+'</td>';
                     resultHtml+='<td>'+stime+'</td>';
                     resultHtml+='<td>'+etime+'</td>';
                     if ( event.no_of_students <= 1 ){
