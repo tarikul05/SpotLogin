@@ -303,6 +303,10 @@ li.light-blue-txt.gilroy-bold {
     height: 50px;
     box-shadow: none;
 }
+#reset_password_confirm_pass,
+#reset_password_pass {
+    border: 1px solid;
+}
 .login-signup-modal .input-group-addon:last-child {
     background-color: #e8f3f9;
     border: 0;
