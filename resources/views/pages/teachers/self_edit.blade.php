@@ -93,7 +93,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -109,7 +109,7 @@
 											@endif
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
@@ -134,7 +134,7 @@
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div">
@@ -144,7 +144,7 @@
 											</span>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
