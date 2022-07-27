@@ -435,7 +435,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 
 <p><em>Welcome to Sportlogin, an invite has been sent to you by </em>[~~SCHOOL_NAME~~]</p>
 
-<p>If you do not already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
+<p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
 <p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
@@ -448,7 +448,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-14 11:20:58',
+                'modified_at' => '2022-07-27 19:52:23',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,
@@ -833,7 +833,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 
 <p><em>Welcome to Sportlogin, an invite has been sent to you by </em>[~~SCHOOL_NAME~~]</p>
 
-<p>If you already have an account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
+<p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
 <p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
@@ -846,7 +846,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-07-14 11:20:41',
+                'modified_at' => '2022-07-27 19:52:45',
                 'created_by' => 0,
                 'modified_by' => 1,
                 'deleted_at' => NULL,
