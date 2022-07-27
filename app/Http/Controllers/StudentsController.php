@@ -143,7 +143,6 @@ class StudentsController extends Controller
                         'has_user_account'=> 1 ,
                         'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
-                        'is_active'=> 0,
                     ];
                     $user = User::find($alldata['user_id']);
                     $student = $user->personable;
