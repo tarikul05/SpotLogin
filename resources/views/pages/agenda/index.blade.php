@@ -3369,7 +3369,7 @@ $( document ).ready(function() {
             const startTime = moment().format('HH:mm');
             $('#start_date').val(startresult);
             $('#start_time').val(startTime);
-            const endTime = moment().add(100, 'm').format('HH:mm');
+            const endTime = moment().add(15, 'm').format('HH:mm');
             const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
             $('#end_date').val(endresult);
             $('#end_time').val(endTime).trigger('change');
