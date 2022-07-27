@@ -534,12 +534,12 @@ class TeachersController extends Controller
 
         DB::beginTransaction();
         try{
-            $birthDate=date('Y-m-d H:i:s',strtotime($this->sdateFormat($alldata['birth_date'])));
+            // $birthDate=date('Y-m-d H:i:s',strtotime($this->sdateFormat($alldata['birth_date'])));
             $teacherData = [
-                'gender_id' => $alldata['gender_id'],
+                // 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],
                 'firstname' => $alldata['firstname'],
-                'birth_date' => $birthDate,
+                // 'birth_date' => $birthDate,
                 'licence_js' => $alldata['licence_js'],
                 'email' => $alldata['email'],
                 'street' => $alldata['street'],
