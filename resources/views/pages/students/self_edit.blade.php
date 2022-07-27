@@ -75,7 +75,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -86,19 +86,7 @@
 											</select>
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control"id="billing_method" name="billing_method">
-												<option value="E" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'E' ? 'selected' : '') : (old('billing_method') == 'E' ? 'selected' : '')}} >Event-wise</option>
-												<option value="M" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'M' ? 'selected' : '') : (old('billing_method') == 'M' ? 'selected' : '')}} >Monthly</option>
-												<option value="Y" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'Y' ? 'selected' : '') : (old('billing_method') == 'Y' ? 'selected' : '')}}>Yearly</option>
-											</select>
-										</div>
-									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">

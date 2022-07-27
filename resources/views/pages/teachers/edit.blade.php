@@ -36,7 +36,7 @@
 					{{ __('Contact Information') }}
 				</button>
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
+					{{ __('Photo')}}
 				</button>
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
