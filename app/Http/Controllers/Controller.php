@@ -266,4 +266,10 @@ class Controller extends BaseController
         return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
     }
 
+
+
+    public function sdateFormat($date){
+        return $date = str_replace('/', '-', $date);
+    }
+
 }
