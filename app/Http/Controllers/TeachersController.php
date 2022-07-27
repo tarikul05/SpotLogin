@@ -185,7 +185,7 @@ class TeachersController extends Controller
 
 
                 }else{
-                    $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+                    $birthDate=date('Y-m-d H:i:s',strtotime($this->sdateFormat($alldata['birth_date'])));
                     $teacherData = [
                         // 'availability_select' => $alldata['availability_select'],
                         'gender_id' => $alldata['gender_id'],
@@ -416,7 +416,7 @@ class TeachersController extends Controller
         // dd($schoolId);
         DB::beginTransaction();
         try{
-            $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $birthDate=date('Y-m-d H:i:s',strtotime($this->sdateFormat($alldata['birth_date'])));
             $teacherData = [
                 // 'availability_select' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
                 'gender_id' => $alldata['gender_id'],
@@ -534,7 +534,7 @@ class TeachersController extends Controller
 
         DB::beginTransaction();
         try{
-            $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
+            $birthDate=date('Y-m-d H:i:s',strtotime($this->sdateFormat($alldata['birth_date'])));
             $teacherData = [
                 'gender_id' => $alldata['gender_id'],
                 'lastname' => $alldata['lastname'],

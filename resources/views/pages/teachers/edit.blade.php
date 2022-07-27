@@ -512,7 +512,7 @@
 				<div class="row">
 					<div class="col-sm-12 col-xs-12 header-area">
 						<div class="page_header_class">
-							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
+							<label id="page_header" class="page_title text-black">{{ __('Photo')}}</label>
 						</div>
 					</div>
 				
