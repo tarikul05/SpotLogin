@@ -36,7 +36,7 @@
 					{{ __('Contact Information') }}
 				</button>
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
+					{{ __('Photo')}}
 				</button>
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
@@ -151,7 +151,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{!empty($teacher->birth_date) ? old('birth_date', $teacher->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" value="{{!empty($teacher->birth_date) ? date('d/m/Y', strtotime($teacher->birth_date)) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>

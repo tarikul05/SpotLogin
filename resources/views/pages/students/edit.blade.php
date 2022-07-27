@@ -33,8 +33,8 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a>
@@ -49,6 +49,8 @@
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
+		<input type="hidden" id="active_tab" name="active_tab" value="">
+						
 		@csrf	
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -152,8 +154,8 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? old('birth_date', $student->birth_date) : old('birth_date')}}"">
+										<div class="input-group" id="birth_date_div" > 
+											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : ''}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -570,6 +572,8 @@
 					<form id="studentUserForm" name="studentUserForm" class="form-horizontal" role="form"
 					 action="{{!empty($student) ? route('student.user_update',[$student->id]): '/'}}?tab=tab_4" method="POST" enctype="multipart/form-data">
 						@csrf
+						<input type="hidden" id="active_tab_user" name="active_tab_user" value="">
+						
 						<input type="hidden" id="user_id" name="user_id" value="{{!empty($student->user->id) ? old('user_id', $student->user->id) : old('user_id')}}">
 						<div class="section_header_class">
 							<label id="course_for_billing_caption">{{ __('User Account')}}</label>
@@ -818,6 +822,15 @@ $(document).ready(function(){
 });
 
 $(function() {
+	var x = document.getElementsByClassName("tab-pane active");
+		$('#active_tab').val(x[0].id);
+		$('#active_tab_user').val(x[0].id);
+	$('button[data-bs-toggle=tab]').click(function(e){
+		var target = $(e.target).attr("data-bs-target_val") // activated tab
+		$('#active_tab').val(target);
+		$('#active_tab_user').val(target);
+	});
+	
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
 			$('#billing_place').val( $('#place').val() );
@@ -897,6 +910,8 @@ $('#save_btn').click(function (e) {
 	});
 	if(error < 1){	
 		var x = document.getElementsByClassName("tab-pane active");
+		$('#active_tab').val(x[0].id);
+		$('#active_tab_user').val(x[0].id);
 		var studentForm = document.getElementById("add_student");
 		var studentUserForm = document.getElementById("studentUserForm");
 		if (x[0].id == "tab_3") {
@@ -909,13 +924,11 @@ $('#save_btn').click(function (e) {
 		} else{
 			var url = window.location.href;
 			url = addOrChangeParameters( url, {tab:x[0].id} );
-			//$("#add_student").attr("action", url);
-                    
-			if(studentForm.submit()){
-				//window.location.href = url;
-			};
+			// console.log(url);
+			// 	return false;
+			
+			studentForm.submit();
 			return true;
-			//
 		} 
 	}else{
 		return false;
@@ -1396,4 +1409,22 @@ $('#save_btn').click(function (e) {
 		}
 	})
 </script>
+@if(!empty(Session::get('vtab')))
+
+<script>
+$(function() {
+   
+    var vtab = '{!! Session::get('vtab') !!}';
+    if (vtab == 'tab_3') {
+		document.getElementById("delete_btn").style.display="none";
+		document.getElementById("save_btn").style.display="none";					
+		activaTab('tab_3');
+	} else {
+		if (vtab != '') {
+			activaTab(vtab);
+		}
+	}
+});
+</script>
+@endif
 @endsection

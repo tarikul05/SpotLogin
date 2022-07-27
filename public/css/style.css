@@ -750,9 +750,24 @@ span.etransfer_acc {
         width: 100%;
     }
     div#button_menu_div {
-        display: block;
+        display: flex;
         float: left;
         width: 100%;
+        flex-direction: row;
+        position: unset;
+    }
+    input#search_text {
+        max-width: 68%;
+        float: left;
+    }
+    a#add_lesson_btn {
+        width: 28%;
+        float: right;
+        margin: 0;
+        padding: 6px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
     }
     a#btn_export_events {
         float: left;
@@ -763,6 +778,7 @@ span.etransfer_acc {
         width: 28%;
         padding: 9px;
         font-size: 16px;
+        display: none;
     }
     a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
         padding: 9px 14px;
@@ -822,6 +838,9 @@ span.etransfer_acc {
     }
     div#school_cal {
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
+    }
+    .datetimepicker-days {
+        display: none !important;
     }
 }

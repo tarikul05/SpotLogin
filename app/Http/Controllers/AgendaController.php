@@ -450,7 +450,7 @@ class AgendaController extends Controller
             $e['id'] = $fetch->id;
 
             $e['title']=(substr($fetch->title,0,1)==',') ? substr($fetch->title,1) : substr($fetch->title,0);
-            $e['start'] = $fetch->date_start;
+			$e['start'] = $fetch->date_start;
             $e['end'] = $fetch->date_end;
             if (isset($data['zone'])) {
                 $e['start'] = $fetch->date_start.$data['zone'];
@@ -523,7 +523,11 @@ class AgendaController extends Controller
                     $i++;
                 }
             }
-            $e['tooltip']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+			$format_title = '';
+			if (!empty($e['title'])) {
+				$format_title =':'.$e['title'];
+			}
+            $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
 
             $e['content'] = ($e['cours_name']);
 
@@ -664,9 +668,15 @@ class AgendaController extends Controller
             // $e['duration_minutes'] = 90;
 
             //$e['title']="dsadasdasd";
-            $e['title_extend']=$e['event_type_name'].':'.$e['title'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+			
+            $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
             // $e['start'] = "2022-07-05 06:30:00";
             // $e['end'] = "2022-07-05 07:30:00";
+			$format_title = $e['teacher_name'];
+			if (!empty($e['title'])) {
+				$format_title = $e['title'];
+			}
+			$e['title']= $e['event_type_name'].' '.$format_title;
             array_push($events, $e);
         }
 
@@ -862,6 +872,37 @@ class AgendaController extends Controller
         }
 
     }
+     /**
+     *  AJAX delete event
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-07-26
+     */
+	public function deleteEvent(Request $request, Event $event)
+	{
+		$result = array(
+			'status' => 'failed',
+			'message' => __('failed to delete'),
+		);
+		try {
+			$dataParam = $request->all();
+			$id= trim($dataParam['event_id']);
+			$eventData = Event::find($id)->delete();
+			if ($eventData == 1)
+			{
+				$result = array(
+					"status"     => 'success',
+					'message' => __('Confirmed'),
+				);
+			}
+			return response()->json($result);
+		} catch (Exception $e) {
+			//return error message
+			$result['message'] = __('Internal server error');
+			return response()->json($result);
+		}
+	}
 
 
 

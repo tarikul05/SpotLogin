@@ -9,6 +9,9 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\ProfilePhotoUpdateRequest;
 use Illuminate\Support\Facades\URL;
 use App\Models\AttachedFile;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\School;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -35,11 +38,24 @@ class ProfileController extends Controller
     try{
       $authUser = $request->user();
       if (array_key_exists('password', $data) && empty($data['password'])) {
-        unset($data['password']);          
+        unset($data['password']);
       }
       if (!$authUser->update($data)) {
         return back()->withInput($request->all())->with('error', __('Profile failed to update'));
       }
+        $userData = [
+            'email' => $data['email'],
+        ];
+        if ($authUser->person_type == 'App\Models\Teacher') {
+            if ($authUser->isSchoolAdmin() || $authUser->isTeacherAdmin()) {
+                School::where('id', $authUser->selectedSchoolId())->update($userData);
+            }
+            Teacher::where('id', $authUser->person_id)->update($userData);
+        }
+        if ($authUser->person_type == 'App\Models\Student') {
+            Student::where('id', $authUser->person_id)->update($userData);
+        }
+      
       return back()->withInput($request->all())->with('success', __('Profile updated successfully!'));
     } catch (\Exception $e) {
       //return error message

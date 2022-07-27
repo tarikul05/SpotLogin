@@ -87,14 +87,14 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y" {{ !empty($coachoffData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>

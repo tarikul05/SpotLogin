@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid">
+  <div class="container-fluid students_list">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -77,7 +77,13 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#example').DataTable({"responsive": true});
+        $('#example').DataTable({
+            language: { search: "" },
+            "responsive": true,
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_",
+            }
+        });
         @can('students-create')
         $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
         @endcan

@@ -143,7 +143,6 @@ class StudentsController extends Controller
                         'has_user_account'=> 1 ,
                         'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
-                        'is_active'=> 0,
                     ];
                     $user = User::find($alldata['user_id']);
                     $student = $user->personable;
@@ -500,7 +499,7 @@ class StudentsController extends Controller
                 SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
+            return redirect()->back()->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
         }catch (Exception $e) {
             // dd($e);
             DB::rollBack();
@@ -813,7 +812,7 @@ class StudentsController extends Controller
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
 
-        // dd($relationalData);
+        // dd($student);
         return view('pages.students.self_edit')->with(compact('levels',
         'emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','schoolName','provinces','school'));
     }
@@ -833,13 +832,13 @@ class StudentsController extends Controller
         
         $student = Student::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
-
+        
         DB::beginTransaction();
         try{
             
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $studentData = [
-                    'gender_id' => $alldata['gender_id'],
+                    // 'gender_id' => $alldata['gender_id'],
                     'lastname' => $alldata['lastname'],
                     'firstname' => $alldata['firstname'],
                     'birth_date' => date('Y-m-d H:i:s',strtotime($alldata['birth_date'])),
@@ -923,6 +922,7 @@ class StudentsController extends Controller
                     }
                 }
             }
+
             Student::where('id', $student->id)->update($studentData);
             $schoolStudent = [
                 'student_id' => $student->id,
@@ -930,8 +930,6 @@ class StudentsController extends Controller
                 'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                 // 'nickname' => $alldata['nickname'],
                 'email' => $alldata['email'],
-                'billing_method' => $alldata['billing_method'],
-                // 'level_id' => $alldata['level_id'],
                 'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
                 'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
                 'licence_usp' => $alldata['licence_usp'],
@@ -941,7 +939,7 @@ class StudentsController extends Controller
 
             SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student updated successfully!'));
+            return back()->withInput($request->all())->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
         }catch (\Exception $e) {
             // dd($e);
             DB::rollBack();

@@ -30,8 +30,8 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -40,6 +40,7 @@
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="POST" action="{{ route('updateStudentAction') }}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
+		<input type="hidden" id="active_tab" name="active_tab" value="">
 		@csrf	
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -74,7 +75,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -85,19 +86,7 @@
 											</select>
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control"id="billing_method" name="billing_method">
-												<option value="E" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'E' ? 'selected' : '') : (old('billing_method') == 'E' ? 'selected' : '')}} >Event-wise</option>
-												<option value="M" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'M' ? 'selected' : '') : (old('billing_method') == 'M' ? 'selected' : '')}} >Monthly</option>
-												<option value="Y" {{!empty($relationalData->billing_method) ? (old('billing_method', $relationalData->billing_method) == 'Y' ? 'selected' : '') : (old('billing_method') == 'Y' ? 'selected' : '')}}>Yearly</option>
-											</select>
-										</div>
-									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
@@ -136,7 +125,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? old('birth_date', $student->birth_date) : old('birth_date')}}"">
+											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : '' }}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -615,6 +604,14 @@ $(document).ready(function(){
 });
 
 $(function() {
+	var x = document.getElementsByClassName("tab-pane active");
+	$('#active_tab').val(x[0].id);
+	$('#active_tab_user').val(x[0].id);
+	$('button[data-bs-toggle=tab]').click(function(e){
+		var target = $(e.target).attr("data-bs-target_val") // activated tab
+		$('#active_tab').val(target);
+		$('#active_tab_user').val(target);
+	});
 	$('#bill_address_same_as').click(function(){
 		if($(this).is(':checked')){
 			$('#billing_place').val( $('#place').val() );
@@ -694,6 +691,8 @@ $('#save_btn').click(function (e) {
 	
 	if(error < 1){	
 		var x = document.getElementsByClassName("tab-pane active");
+		$('#active_tab').val(x[0].id);
+		$('#active_tab_user').val(x[0].id);
 		var studentForm = document.getElementById("add_student");
 		var studentUserForm = document.getElementById("studentUserForm");
 		if (x[0].id == "tab_3") {
@@ -1164,4 +1163,22 @@ $('#save_btn').click(function (e) {
 		}
 	})
 </script>
+@if(!empty(Session::get('vtab')))
+
+<script>
+$(function() {
+   
+    var vtab = '{!! Session::get('vtab') !!}';
+    if (vtab == 'tab_3') {
+		document.getElementById("delete_btn").style.display="none";
+		document.getElementById("save_btn").style.display="none";					
+		activaTab('tab_3');
+	} else {
+		if (vtab != '') {
+			activaTab(vtab);
+		}
+	}
+});
+</script>
+@endif
 @endsection
