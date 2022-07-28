@@ -402,7 +402,9 @@ footer p a:hover {
 .error {
     color: red;
 }
-
+div#navbarSupportedContent {
+    max-width: 20%;
+}
 @media only screen and (max-width: 1200px) {
     h1 {
         font-size: 68px;
@@ -441,6 +443,9 @@ footer p a:hover {
     }
     footer p a {
         font-size: 24px;
+    }
+    div#navbarSupportedContent {
+        max-width: 25%;
     }
 }
 
@@ -482,9 +487,6 @@ footer p a:hover {
     .why-sportlogin h2 {
         font-size: 42px;
     }
-}
-div#navbarSupportedContent {
-    max-width: 20%;
 }
 @media only screen and (max-width: 768px) {
     .m-4 {
