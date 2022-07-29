@@ -603,6 +603,7 @@ section.why-sportlogin {
     display: flex;
     flex-direction: row;
     position: relative;
+    width: 10%;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -45%);
