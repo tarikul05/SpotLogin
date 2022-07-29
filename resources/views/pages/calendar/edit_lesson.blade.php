@@ -102,7 +102,7 @@
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												<option value="">{{__('Select Location') }}</option>
 												@foreach($students as $sub)
-													<option value="{{ $sub->student_id }}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+													<option value="{{ $sub->student_id }}"   @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
@@ -259,13 +259,13 @@
 															
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->id }}</td>
+																<td>{{ $student->student_id }}</td>
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
 																<td>
 																	<div class="selectdiv">
-																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->id }}">
+																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->student_id }}">
 																			<option value="0" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Scheduled</option>
 																			<option value="199" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 199 ? 'selected' : '') : (old('student_attn') == 199 ? 'selected' : '')}}>Absent</option>
 																			<option value="200" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 200 ? 'selected' : '') : (old('student_attn') == 200 ? 'selected' : '')}}>Present</option>
