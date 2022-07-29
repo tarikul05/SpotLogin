@@ -158,7 +158,7 @@
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->id }}</td>
+																<td>{{ $student->student_id }}</td>
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
