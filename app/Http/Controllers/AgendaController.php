@@ -184,7 +184,7 @@ class AgendaController extends Controller
                 }
                 $eventDetailAbsent = [
                     'is_locked' => 1,
-                    'participation_id' => 199,
+                    // 'participation_id' => 199,
                 ];
                 if (isset($data['unlock'])) {
                     $eventDetailAbsent = [
@@ -193,12 +193,13 @@ class AgendaController extends Controller
                     ];
                 }
 
-                $eventdetail = $eventdetail->update($eventDetailPresent);
-                // if ($eventdetail->participation_id == 0) {
+                
+                if ($eventdetail->participation_id !== 199) {
+                    $eventdetail = $eventdetail->update($eventDetailPresent);
+                } else {
+                    $eventdetail = $eventdetail->update($eventDetailAbsent);
+                }
 
-                // } else {
-                //     $eventdetail = $eventdetail->update($eventDetailAbsent);
-                // }
 
                 if ($eventdetail)
                 {
