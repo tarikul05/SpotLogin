@@ -254,6 +254,7 @@ admin_main_style.css
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
                                     <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
                                         @csrf
+                                        <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
                                         <fieldset>
                                             <div class="row">
                                                 <div class="col-md-10 offset-md-1">
@@ -471,7 +472,8 @@ admin_main_style.css
                                                 </div>
                                             </div>
                                         </fieldset>
-                                        <button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
+                                        <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
                                     </form>
                                 </div>
                             </div>
@@ -1017,7 +1019,7 @@ admin_main_style.css
             },
             onDeselectAll: function(option,checked) {
                 console.log('school onDeSelectAll triggered!');
-                  document.getElementById("event_school_id").value='';
+                document.getElementById("event_school_id").value='';
                 document.getElementById("event_school_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
@@ -3125,9 +3127,8 @@ $("body").on('click', '#all_day', function(event) {
     }
 });
 
-
-
 $('#add_lesson').on('submit', function(e) {
+    e.preventDefault();
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
     var evetCat = $('#category_select option:selected').val();
@@ -3138,15 +3139,30 @@ $('#add_lesson').on('submit', function(e) {
 	var errMssg = '';
 	var type = $("#agenda_select").val();
 
+    var selected_school_ids = [];
+    $.each($("#event_school option:selected"), function(){         
+        selected_school_ids.push($(this).val());
+    });
+    
+    if(type == 1){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-lesson';
+    }else if(type == 2){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
+    }else if(type == 3){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
+    }else if(type == 4){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
+    }  
+
+    var formData = $('#add_lesson').serializeArray();
+    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+    formData.push({
+        "name": "_token",
+        "value": csrfToken,
+    });
+
     if(type == 1 || type == 2){
         if(type==1){
-            var formData = $('#add_lesson').serializeArray();
-            var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-            formData.push({
-                "name": "_token",
-                "value": csrfToken,
-            });
-
             var bill_type = $('#sis_paying').val();
             
             if(bill_type == 1){
@@ -3184,13 +3200,6 @@ $('#add_lesson').on('submit', function(e) {
             $('#category_select').removeClass('error');
         }
 
-        // if( evetLoc == undefined || evetLoc == ''){
-        //     var errMssg = '{{ __("Select Location") }}';
-        //     $('#location').addClass('error');
-        // }else{
-        //     $('#location').removeClass('error');
-        // }
-
         if( selected < 1){
             var errMssg = 'Select student';
             $('.student_list').addClass('error');
@@ -3204,32 +3213,22 @@ $('#add_lesson').on('submit', function(e) {
             $('#start_date').removeClass('error');
         }
         if(endDate == ''){
-            var errMssg = 'Ednd date required';
+            var errMssg = 'End date required';
             $('#end_date').addClass('error');
         }else{
             $('#end_date').removeClass('error');
         }
-        if(errMssg == ""){
-            return true;
-        }else{
+        if(errMssg = ""){
             return false;	
         }
     }else if(type == 3){
-        // if(title == ''){
-        //     var errMssg = 'Title required';
-        //     $('#Title').addClass('error');
-        // }else{
-        //     $('#Title').removeClass('error');
-        // }
         if( selected < 1){
             var errMssg = 'Select student';
             $('.student_list').addClass('error');
         }else{
             $('.student_list').removeClass('error');
         }
-        if(errMssg == ""){
-            return true;
-        }else{
+        if(errMssg != ""){
             return false;	
         }
     }else if(type == 4){
@@ -3239,13 +3238,156 @@ $('#add_lesson').on('submit', function(e) {
         }else{
             $('#teacher_select').removeClass('error');
         }
-        if(errMssg == ""){
-            return true;
-        }else{
-            return false;	
+        if(errMssg != ""){
+            return false;
         }
     }
+    
+    $.ajax({
+        url: page_action,
+        async: false, 
+        data: formData,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response){
+            if(response.status == 1){
+                $("#add_lesson")[0].reset();
+                $('#student').val([]).multiselect('refresh');
+                const startresult = moment().format('DD/MM/YYYY');
+                const startTime = moment().format('HH:mm');
+                $('#start_date').val(startresult);
+                $('#start_time').val(startTime);
+                const endTime = moment().add(15, 'm').format('HH:mm');
+                const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                $('#end_date').val(endresult);
+                $('#end_time').val(endTime).trigger('change');
+            }else{
+                location.reload();
+            }
+        }
+    })
 });
+
+
+// $('#add_lesson').on('submit', function(e) {
+// 	var title = $('#Title').val();
+// 	var professor = $('#teacher_select').val();
+//     var evetCat = $('#category_select option:selected').val();
+//     var evetLoc = $('#location option:selected').val();
+// 	var selected = $("#student :selected").map((_, e) => e.value).get();
+// 	var startDate = $('#start_date').val();
+// 	var endDate = $('#end_date').val();
+// 	var errMssg = '';
+// 	var type = $("#agenda_select").val();
+
+//     if(type == 1 || type == 2){
+//         if(type==1){
+//             var formData = $('#add_lesson').serializeArray();
+//             var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+//             formData.push({
+//                 "name": "_token",
+//                 "value": csrfToken,
+//             });
+
+//             var bill_type = $('#sis_paying').val();
+            
+//             if(bill_type == 1){
+//                 $.ajax({
+//                     url: BASE_URL + '/check-lesson-price',
+//                     async: false, 
+//                     data: formData,
+//                     type: 'POST',
+//                     dataType: 'json',
+//                     success: function(response){
+//                         if(response.status == 1){
+//                             var errMssg = '';	
+//                         }else{
+//                             var errMssg = 'error';
+//                             $('#modal_lesson_price').modal('show');
+//                             $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
+//                             e.preventDefault();
+//                         }
+//                     }
+//                 })
+//             }
+//         }
+        
+//         if(professor == ''){
+//             var errMssg = 'professor required';
+//             $('#teacher_select').addClass('error');
+//         }else{
+//             $('#teacher_select').removeClass('error');
+//         }
+
+//         if( evetCat == undefined || evetCat == ''){
+//             var errMssg = '{{ __("Select event category") }}';
+//             $('#category_select').addClass('error');
+//         }else{
+//             $('#category_select').removeClass('error');
+//         }
+
+//         // if( evetLoc == undefined || evetLoc == ''){
+//         //     var errMssg = '{{ __("Select Location") }}';
+//         //     $('#location').addClass('error');
+//         // }else{
+//         //     $('#location').removeClass('error');
+//         // }
+
+//         if( selected < 1){
+//             var errMssg = 'Select student';
+//             $('.student_list').addClass('error');
+//         }else{
+//             $('.student_list').removeClass('error');
+//         }
+//         if(startDate == ''){
+//             var errMssg = 'Start date required';
+//             $('#start_date').addClass('error');
+//         }else{
+//             $('#start_date').removeClass('error');
+//         }
+//         if(endDate == ''){
+//             var errMssg = 'End date required';
+//             $('#end_date').addClass('error');
+//         }else{
+//             $('#end_date').removeClass('error');
+//         }
+//         if(errMssg == ""){
+//             return true;
+//         }else{
+//             return false;	
+//         }
+//     }else if(type == 3){
+//         // if(title == ''){
+//         //     var errMssg = 'Title required';
+//         //     $('#Title').addClass('error');
+//         // }else{
+//         //     $('#Title').removeClass('error');
+//         // }
+//         if( selected < 1){
+//             var errMssg = 'Select student';
+//             $('.student_list').addClass('error');
+//         }else{
+//             $('.student_list').removeClass('error');
+//         }
+//         if(errMssg == ""){
+//             return true;
+//         }else{
+//             return false;	
+//         }
+//     }else if(type == 4){
+//         if(professor == ''){
+//             var errMssg = 'professor required';
+//             $('#teacher_select').addClass('error');
+//         }else{
+//             $('#teacher_select').removeClass('error');
+//         }
+//         if(errMssg == ""){
+//             return true;
+//         }else{
+//             return false;	
+//         }
+//     }
+// });
 
 $(document).ready(function() {
     var agenda_select = $("#agenda_select").val();
@@ -3379,6 +3521,20 @@ $( document ).ready(function() {
     });
 });
 
+
+
+$( document ).ready(function() {
+
+    $(function() {
+        $("#save_btn_more").click(function(){
+           $("#save_btn_value"). val(1);
+        });
+        $("#save_btn").click(function(){
+           $("#save_btn_value"). val(0);
+        });
+    });
+
+});
 </script>
 
 @endsection

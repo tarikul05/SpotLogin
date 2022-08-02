@@ -111,8 +111,17 @@ class LessonsController extends Controller
 
                 DB::commit();
                  
-                 // return back()->withInput($request->all())->with('success', __('Successfully Registered'));
-                 return back()->with('success', __('Successfully Registered'));
+                 if($eventData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
                 
             }  
         }catch (Exception $e) {
@@ -325,8 +334,18 @@ class LessonsController extends Controller
                     $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-                 
-                 return back()->with('success', __('Successfully Registered'));
+
+                if($lessonData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }     
                
             }  
         }catch (Exception $e) {
@@ -529,7 +548,19 @@ class LessonsController extends Controller
                     $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-                 return back()->with('success', __('Successfully Registered'));
+                
+                if($studentOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
+                 
             }  
         }catch (Exception $e) {
             DB::rollBack();
@@ -697,7 +728,18 @@ class LessonsController extends Controller
                 $eventDetails = EventDetails::create($dataDetails);
                 
                 DB::commit();
-                return back()->with('success', __('Successfully Registered'));
+                
+                if($coachOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
             }  
         }catch (Exception $e) {
             DB::rollBack();
