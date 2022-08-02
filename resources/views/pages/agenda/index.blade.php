@@ -310,12 +310,6 @@ admin_main_style.css
                                                     </div>
                                                     @endif
                                                     </div>
-                                                    <div class="form-group row" id="std-check-div" style="display: none;">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="">{{__('Student No selected') }} :</label>
-                                                        <div class="col-sm-7">
-                                                            <input type="checkbox" name="student_empty" id="student_empty">
-                                                        </div>
-                                                    </div>
                                                     <div class="form-group row hide_coach_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
                                                         <div class="col-sm-7">
@@ -326,6 +320,9 @@ admin_main_style.css
                                                                     @endforeach
                                                                 </select>
                                                             </div>
+                                                        </div>
+                                                        <div class="col-sm-2 p-l-n p-r-n">
+                                                           <span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
                                                         </div>
                                                     </div>
                                                     
@@ -3283,126 +3280,6 @@ $('#add_lesson').on('submit', function(e) {
 });
 
 
-// $('#add_lesson').on('submit', function(e) {
-// 	var title = $('#Title').val();
-// 	var professor = $('#teacher_select').val();
-//     var evetCat = $('#category_select option:selected').val();
-//     var evetLoc = $('#location option:selected').val();
-// 	var selected = $("#student :selected").map((_, e) => e.value).get();
-// 	var startDate = $('#start_date').val();
-// 	var endDate = $('#end_date').val();
-// 	var errMssg = '';
-// 	var type = $("#agenda_select").val();
-
-//     if(type == 1 || type == 2){
-//         if(type==1){
-//             var formData = $('#add_lesson').serializeArray();
-//             var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-//             formData.push({
-//                 "name": "_token",
-//                 "value": csrfToken,
-//             });
-
-//             var bill_type = $('#sis_paying').val();
-            
-//             if(bill_type == 1){
-//                 $.ajax({
-//                     url: BASE_URL + '/check-lesson-price',
-//                     async: false, 
-//                     data: formData,
-//                     type: 'POST',
-//                     dataType: 'json',
-//                     success: function(response){
-//                         if(response.status == 1){
-//                             var errMssg = '';	
-//                         }else{
-//                             var errMssg = 'error';
-//                             $('#modal_lesson_price').modal('show');
-//                             $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
-//                             e.preventDefault();
-//                         }
-//                     }
-//                 })
-//             }
-//         }
-        
-//         if(professor == ''){
-//             var errMssg = 'professor required';
-//             $('#teacher_select').addClass('error');
-//         }else{
-//             $('#teacher_select').removeClass('error');
-//         }
-
-//         if( evetCat == undefined || evetCat == ''){
-//             var errMssg = '{{ __("Select event category") }}';
-//             $('#category_select').addClass('error');
-//         }else{
-//             $('#category_select').removeClass('error');
-//         }
-
-//         // if( evetLoc == undefined || evetLoc == ''){
-//         //     var errMssg = '{{ __("Select Location") }}';
-//         //     $('#location').addClass('error');
-//         // }else{
-//         //     $('#location').removeClass('error');
-//         // }
-
-//         if( selected < 1){
-//             var errMssg = 'Select student';
-//             $('.student_list').addClass('error');
-//         }else{
-//             $('.student_list').removeClass('error');
-//         }
-//         if(startDate == ''){
-//             var errMssg = 'Start date required';
-//             $('#start_date').addClass('error');
-//         }else{
-//             $('#start_date').removeClass('error');
-//         }
-//         if(endDate == ''){
-//             var errMssg = 'End date required';
-//             $('#end_date').addClass('error');
-//         }else{
-//             $('#end_date').removeClass('error');
-//         }
-//         if(errMssg == ""){
-//             return true;
-//         }else{
-//             return false;	
-//         }
-//     }else if(type == 3){
-//         // if(title == ''){
-//         //     var errMssg = 'Title required';
-//         //     $('#Title').addClass('error');
-//         // }else{
-//         //     $('#Title').removeClass('error');
-//         // }
-//         if( selected < 1){
-//             var errMssg = 'Select student';
-//             $('.student_list').addClass('error');
-//         }else{
-//             $('.student_list').removeClass('error');
-//         }
-//         if(errMssg == ""){
-//             return true;
-//         }else{
-//             return false;	
-//         }
-//     }else if(type == 4){
-//         if(professor == ''){
-//             var errMssg = 'professor required';
-//             $('#teacher_select').addClass('error');
-//         }else{
-//             $('#teacher_select').removeClass('error');
-//         }
-//         if(errMssg == ""){
-//             return true;
-//         }else{
-//             return false;	
-//         }
-//     }
-// });
-
 $(document).ready(function() {
     var agenda_select = $("#agenda_select").val();
     var selected_school_ids = [];
@@ -3447,11 +3324,10 @@ $("body").on('change', '#category_select', function(event) {
     }
 });
 $("body").on('click', '#student_empty', function(event) {
-    console.log('adsf',$("#student_empty").prop('checked'))
     if ($("#student_empty").prop('checked')) {
-        $(".student_list").closest('.form-group').hide();
+        $('#student').val([]).multiselect('refresh');
     }else{
-        $(".student_list").closest('.form-group').show();
+        $('#student').val([]).multiselect('refresh');
     }
     
 })

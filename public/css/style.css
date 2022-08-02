@@ -693,6 +693,17 @@ span.etransfer_acc {
 .multiselect-container > li > a > label {
     padding: 3px 10px 3px 0px;
 }
+
+span.no_select {
+    margin-top: 10px;
+    float: left;
+    font-weight: bold;
+}
+span.no_select input {
+    width: 34px;
+    height: 20px;
+    float: left;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
@@ -842,5 +853,9 @@ span.etransfer_acc {
     }
     .datetimepicker-days {
         display: none !important;
+    }
+    span.no_select {
+        margin-top: 15px;
+        margin-left: -6px;
     }
 }

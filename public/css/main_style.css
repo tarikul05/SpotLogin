@@ -405,6 +405,7 @@ footer p a:hover {
 div#navbarSupportedContent {
     max-width: 20%;
 }
+
 @media only screen and (max-width: 1200px) {
     h1 {
         font-size: 68px;
