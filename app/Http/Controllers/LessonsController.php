@@ -314,16 +314,18 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::create($data);
-                
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $lessonData['teacher_select'],
-                        'student_id' => $std,
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                   foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $lessonData['teacher_select'],
+                            'student_id' => $std,
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
+                    
                 DB::commit();
                  
                  return back()->with('success', __('Successfully Registered'));
