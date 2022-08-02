@@ -170,5 +170,34 @@ $('#save_btn').click(function (e) {
 			}
 		});            
 });  
+
+function delete_event(event_id){
+        var data='type=delete_events'+'&event_id='+event_id;
+		$.ajax({type: "POST",
+			url: BASE_URL + '/delete_event',
+			data: data,
+			dataType: "JSON",
+			success:function(result){
+				var status =  result.status;
+				if (status == 'success') {
+					window.location.href = BASE_URL+'/agenda';
+				}
+			},   //success
+			error: function(ts) { 
+				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+			}
+		}); //ajax-type
+    }
+	// delete event
+	$('#delete_btn').click(function (e) {
+		var p_event_type_id='{{$studentOffId}}';
+		console.log(p_event_type_id);
+		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+		e.preventDefault();
+		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		return false;
+	})
+
+	
 </script>
 @endsection

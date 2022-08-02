@@ -310,6 +310,12 @@ admin_main_style.css
                                                     </div>
                                                     @endif
                                                     </div>
+                                                    <div class="form-group row" id="std-check-div" style="display: none;">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="">{{__('Student No selected') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="checkbox" name="student_empty" id="student_empty">
+                                                        </div>
+                                                    </div>
                                                     <div class="form-group row hide_coach_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
                                                         <div class="col-sm-7">
@@ -322,6 +328,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
                                                     <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-7 row">
@@ -1109,9 +1116,11 @@ admin_main_style.css
                         var resultHtml ="";
                         var i='0';
                         $.each(data, function(key,value){
-                            resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                            resultHtml+='<option value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>'; 
                         });
                         $('#category_select').html(resultHtml);
+                        $('#category_select').change();
+
                     }
                     
                 },   //success
@@ -3133,6 +3142,7 @@ $('#add_lesson').on('submit', function(e) {
 	var professor = $('#teacher_select').val();
     var evetCat = $('#category_select option:selected').val();
     var evetLoc = $('#location option:selected').val();
+    var emptyStdchecked = $("#student_empty").prop('checked')
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
@@ -3200,12 +3210,16 @@ $('#add_lesson').on('submit', function(e) {
             $('#category_select').removeClass('error');
         }
 
-        if( selected < 1){
-            var errMssg = 'Select student';
-            $('.student_list').addClass('error');
-        }else{
-            $('.student_list').removeClass('error');
+        if (!emptyStdchecked) {
+            if( selected < 1){
+                var errMssg = 'Select student';
+                $('.student_list').addClass('error');
+            }else{
+                $('.student_list').removeClass('error');
+            }
         }
+        
+
         if(startDate == ''){
             var errMssg = 'Start date required';
             $('#start_date').addClass('error');
@@ -3423,6 +3437,24 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
+$("body").on('change', '#category_select', function(event) {
+    var datainvoiced = $("#category_select option:selected").data('invoice');
+    if (datainvoiced == 'S') {
+        $("#std-check-div").css('display', 'block');
+    }else{
+        $("#std-check-div").css('display', 'none');
+        $("#student_empty").prop('checked', false)
+    }
+});
+$("body").on('click', '#student_empty', function(event) {
+    console.log('adsf',$("#student_empty").prop('checked'))
+    if ($("#student_empty").prop('checked')) {
+        $(".student_list").closest('.form-group').hide();
+    }else{
+        $(".student_list").closest('.form-group').show();
+    }
+    
+})
 
 $('#agenda_select').on('change', function() {
     if(this.value != ''){
@@ -3437,6 +3469,7 @@ $('#agenda_select').on('change', function() {
             }else{
                 var page_action = 'javascript:void(0)';
             }
+            
             $('#start_date').on('change', function(e){  
                 $("#end_date").val($("#start_date").val());  
             });

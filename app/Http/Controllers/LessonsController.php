@@ -323,16 +323,18 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::create($data);
-                
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $lessonData['teacher_select'],
-                        'student_id' => $std,
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                   foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $lessonData['teacher_select'],
+                            'student_id' => $std,
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
+                    
                 DB::commit();
 
                 if($lessonData['save_btn_more'] == 1){
@@ -666,7 +668,7 @@ class LessonsController extends Controller
         $studoffId = $request->route('id'); 
         $studentOffData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->select('school_student.nickname')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->get();
-        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId'));
+        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId','studoffId'));
     }
 
     /**
@@ -767,7 +769,7 @@ class LessonsController extends Controller
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         if (!empty($coachoffData)){
-            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors','coachoffId'));    
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
