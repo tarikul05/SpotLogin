@@ -2937,14 +2937,14 @@ admin_main_style.css
         }
     });
 
-    window.addEventListener('focus', function (event) {
-        console.log('has focus');
-        //RerenderEvents();
-    });
+    // window.addEventListener('focus', function (event) {
+    //     console.log('has focus');
+    //     //RerenderEvents();
+    // });
 
-    window.addEventListener('blur', function (event) {
-        console.log('lost focus');
-    });
+    // window.addEventListener('blur', function (event) {
+    //     console.log('lost focus');
+    // });
 
 </script>
 
@@ -3021,8 +3021,8 @@ $( document ).ready(function() {
 		el_duration = $('#duration');
 		
 			if (el_end.val() < el_start.val()) {
-				$('#end_time').val(el_start.val());
-				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+				$('#end_time').val(recalculate_end_time(el_start.val(),15));
+				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 			}
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
@@ -3078,13 +3078,14 @@ $( document ).ready(function() {
 		var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
 		return re.test(s_hours);
 	}
-	$('#start_time, #end_time, #duration').on('change', function(e){  
+	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
 		if(!el_duration.val()){el_duration.val('15');}
-		$('#end_time').val(recalculate_end_time($('#start_time').val(), el_duration.val()));
+		$('#end_time').val(recalculate_end_time($('#start_time').val(), '15'));
 	}
+
 	var el_start = $('#start_time'),
 		el_end = $('#end_time');
 		if (event_source === 'end_time' || event_source === 'start_time') {	
