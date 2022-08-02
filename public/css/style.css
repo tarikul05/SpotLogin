@@ -704,6 +704,14 @@ span.no_select input {
     height: 20px;
     float: left;
 }
+button#save_btn_more,
+button#save_btn {
+    float: right;
+    margin: 30px 10px 0px 10px;
+}
+button#save_btn_more i {
+    padding-right: 10px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,

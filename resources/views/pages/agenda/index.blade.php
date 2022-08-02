@@ -476,8 +476,8 @@ admin_main_style.css
                                                 </div>
                                             </div>
                                         </fieldset>
-                                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
                                         <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
                                     </form>
                                 </div>
                             </div>
