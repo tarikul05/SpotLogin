@@ -1977,10 +1977,10 @@ admin_main_style.css
                         icon='';
                     }
 
-                    if (event.duration_minutes > 60){        
-                        var ooo= icon+''+event.title_extend;
-                        $(el).find('div.fc-content').append(ooo);
-                    }
+                    // if (event.duration_minutes > 60){        
+                    //     var ooo= icon+''+event.title_extend;
+                    //     $(el).find('div.fc-content').append(ooo);
+                    // }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
                    // $(el).find('div.fc-title').prepend(event.event_type_name+':'+moment(event.start).format('DD-MM-YYYY')+' '+content_format);
                     resultHtml+='<tr class="agenda_event_row" href="'+event.url+'">';
@@ -2584,10 +2584,10 @@ admin_main_style.css
                             icon='';
                         }
 
-                        if (JSON.parse(json_events)[key].duration_minutes > 60){        
-                            var ooo= JSON.parse(json_events)[key].title_extend;
-                            //$(el).find('div.fc-content').append(ooo);
-                        }
+                        // if (JSON.parse(json_events)[key].duration_minutes > 60){        
+                        //     var ooo= JSON.parse(json_events)[key].title_extend;
+                        //     //$(el).find('div.fc-content').append(ooo);
+                        // }
                         prevdt = moment(JSON.parse(json_events)[key].start).format('DD-MM-YYYY');
 
                         resultHtml_cc+='<tr class="agenda_event_row" href="'+JSON.parse(json_events)[key].url+'">';
