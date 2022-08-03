@@ -1541,7 +1541,7 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         
-        var p_event_id=document.getElementById("get_validate_event_id").value;
+        var p_event_id=document.getElementById("get_non_validate_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -1568,12 +1568,12 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
-        var get_validate_event_id=document.getElementById("get_validate_event_id").value;
+        var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
         
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(get_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(get_non_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
