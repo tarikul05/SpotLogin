@@ -712,6 +712,13 @@ span.no_select input {
 button#save_btn_more i {
     padding-right: 10px;
 }
+#edit_lesson .btn_area {
+    position: absolute;
+    top: 178px;
+    right: 7%;
+    display: flex;
+    grid-gap: 15px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,

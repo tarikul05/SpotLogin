@@ -100,15 +100,14 @@
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
-												<option value="">{{__('Select Student') }}</option>
 												@foreach($students as $sub)
-													<option value="{{ $sub->student_id }}"   @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
 									</div>
 									<div class="col-sm-2 p-l-n p-r-n">
-										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
+										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?> {{__('No selected') }}</span>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
