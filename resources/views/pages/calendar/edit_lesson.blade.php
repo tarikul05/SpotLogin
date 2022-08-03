@@ -410,8 +410,8 @@ $( document ).ready(function() {
 		el_duration = $('#duration');
 		
 			if (el_end.val() < el_start.val()) {
-				$('#end_time').val(el_start.val());
-				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+				$('#end_time').val(recalculate_end_time(el_start.val(),15));
+				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val()));
 			}
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
