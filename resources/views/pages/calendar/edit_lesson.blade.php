@@ -100,12 +100,15 @@
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
-												<option value="">{{__('Select Location') }}</option>
+												<option value="">{{__('Select Student') }}</option>
 												@foreach($students as $sub)
 													<option value="{{ $sub->student_id }}"   @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
+									</div>
+									<div class="col-sm-2 p-l-n p-r-n">
+										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
@@ -705,5 +708,25 @@ function confirm_event(){
 		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
 		return false;
 	})
+
+	$("body").on('change', '#category_select', function(event) {
+		var datainvoiced = $("#category_select option:selected").data('invoice');
+		if (datainvoiced == 'S') {
+			$("#std-check-div").css('display', 'block');
+		}else{
+			$("#std-check-div").css('display', 'none');
+			$("#student_empty").prop('checked', false)
+		}
+	});
+	
+	$("body").on('click', '#student_empty', function(event) {
+		if ($("#student_empty").prop('checked')) {
+			$('#student').multiselect( 'reset' );
+			$('#student').multiselect( 'disable', true );
+		}else{
+			$('#student').multiselect( 'disable', false );
+		}
+		
+	})
 </script>
-@endsection
+@endsection`

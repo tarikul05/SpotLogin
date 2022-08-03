@@ -3329,7 +3329,6 @@ $("body").on('click', '#student_empty', function(event) {
     }else{
         $('#student').val([]).multiselect('refresh');
     }
-    
 })
 
 $('#agenda_select').on('change', function() {

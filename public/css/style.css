@@ -704,8 +704,8 @@ span.no_select input {
     height: 20px;
     float: left;
 }
-button#save_btn_more,
-button#save_btn {
+#addAgendaModal button#save_btn_more,
+#addAgendaModal button#save_btn {
     float: right;
     margin: 30px 10px 0px 10px;
 }
