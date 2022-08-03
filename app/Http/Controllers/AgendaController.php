@@ -86,7 +86,7 @@ class AgendaController extends Controller
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
                      }
                 }
-                $event_types[$key]= $value;
+                //$event_types[$key]= $value;
 
 
             } else{
