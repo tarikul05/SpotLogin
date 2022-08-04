@@ -86,7 +86,7 @@ class AgendaController extends Controller
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
                      }
                 }
-                $event_types[$key]= $value;
+                //$event_types[$key]= $value;
 
 
             } else{
@@ -458,7 +458,12 @@ class AgendaController extends Controller
                 $e['end'] = $fetch->date_end.$data['zone'];
 
             }
-
+            $start_date = date('Y-m-d', strtotime($fetch->date_start));
+            $end_date = date('Y-m-d', strtotime($fetch->date_end));  
+            if ($start_date != $end_date) {
+                $e['end'] = date('Y-m-d H:i:s', strtotime($fetch->date_end . ' +1 day'));
+                //$e['end'] = date('Y-m-d H:i:s', strtotime("+1 day", $end_date));
+            }            
 
             $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;

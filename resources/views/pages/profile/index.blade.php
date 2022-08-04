@@ -66,7 +66,7 @@
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
                     <div class="col-sm-6 form-group-data">
-                      <input type="text" class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
+                      <input type="text" readonly class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
                     </div>
                   </div>
                   <!-- <div class="form-group row">

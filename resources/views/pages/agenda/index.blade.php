@@ -1541,7 +1541,7 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         
-        var p_event_id=document.getElementById("get_validate_event_id").value;
+        var p_event_id=document.getElementById("get_non_validate_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -1568,12 +1568,12 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
-        var get_validate_event_id=document.getElementById("get_validate_event_id").value;
+        var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
         
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(get_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(get_non_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
@@ -1976,10 +1976,11 @@ admin_main_style.css
                     } else{
                         icon='';
                     }
-
-                    if (event.duration_minutes > 60){        
-                        var ooo= icon+''+event.title_extend;
-                        $(el).find('div.fc-content').append(ooo);
+                    if (document.getElementById("view_mode").value != 'month'){
+                        if (event.duration_minutes > 60){        
+                            var ooo= icon+''+event.title_extend;
+                            $(el).find('div.fc-content').append(ooo);
+                        }
                     }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
                    // $(el).find('div.fc-title').prepend(event.event_type_name+':'+moment(event.start).format('DD-MM-YYYY')+' '+content_format);
@@ -2583,10 +2584,11 @@ admin_main_style.css
                         } else{
                             icon='';
                         }
-
-                        if (JSON.parse(json_events)[key].duration_minutes > 60){        
-                            var ooo= JSON.parse(json_events)[key].title_extend;
-                            //$(el).find('div.fc-content').append(ooo);
+                        if (document.getElementById("view_mode").value != 'month'){
+                            if (JSON.parse(json_events)[key].duration_minutes > 60){        
+                                var ooo= JSON.parse(json_events)[key].title_extend;
+                                //$(el).find('div.fc-content').append(ooo);
+                            }
                         }
                         prevdt = moment(JSON.parse(json_events)[key].start).format('DD-MM-YYYY');
 
