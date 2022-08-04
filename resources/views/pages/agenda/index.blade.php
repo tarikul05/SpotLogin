@@ -3229,18 +3229,12 @@ $('#add_lesson').on('submit', function(e) {
         }else{
             $('#end_date').removeClass('error');
         }
-        if(errMssg = ""){
-            return false;	
-        }
     }else if(type == 3){
         if( selected < 1){
             var errMssg = 'Select student';
             $('.student_list').addClass('error');
         }else{
             $('.student_list').removeClass('error');
-        }
-        if(errMssg != ""){
-            return false;	
         }
     }else if(type == 4){
         if(professor == ''){
@@ -3249,34 +3243,35 @@ $('#add_lesson').on('submit', function(e) {
         }else{
             $('#teacher_select').removeClass('error');
         }
-        if(errMssg != ""){
-            return false;
-        }
     }
-    
-    $.ajax({
-        url: page_action,
-        async: false, 
-        data: formData,
-        type: 'POST',
-        dataType: 'json',
-        success: function(response){
-            if(response.status == 1){
-                $("#add_lesson")[0].reset();
-                $('#student').val([]).multiselect('refresh');
-                const startresult = moment().format('DD/MM/YYYY');
-                const startTime = moment().format('HH:mm');
-                $('#start_date').val(startresult);
-                $('#start_time').val(startTime);
-                const endTime = moment().add(15, 'm').format('HH:mm');
-                const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
-                $('#end_date').val(endresult);
-                $('#end_time').val(endTime).trigger('change');
-            }else{
-                location.reload();
+
+    if(errMssg == ""){
+        $.ajax({
+            url: page_action,
+            async: false, 
+            data: formData,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response){
+                if(response.status == 1){
+                    $("#add_lesson")[0].reset();
+                    $('#student').val([]).multiselect('refresh');
+                    const startresult = moment().format('DD/MM/YYYY');
+                    const startTime = moment().format('HH:mm');
+                    $('#start_date').val(startresult);
+                    $('#start_time').val(startTime);
+                    const endTime = moment().add(15, 'm').format('HH:mm');
+                    const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                    $('#end_date').val(endresult);
+                    $('#end_time').val(endTime).trigger('change');
+                }else{
+                    location.reload();
+                }
             }
-        }
-    })
+        })
+    }else{
+        return false;
+    }
 });
 
 
