@@ -322,7 +322,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-2 p-l-n p-r-n">
-                                                           <span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
+                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
                                                         </div>
                                                     </div>
                                                     
@@ -3209,15 +3209,20 @@ $('#add_lesson').on('submit', function(e) {
             $('#category_select').removeClass('error');
         }
 
-        if (!emptyStdchecked) {
-            if( selected < 1){
-                var errMssg = 'Select student';
-                $('.student_list').addClass('error');
-            }else{
-                $('.student_list').removeClass('error');
+        if ($("#student_empty").prop('checked') == false){
+            if (!emptyStdchecked) {
+                if( selected < 1){
+                    var errMssg = 'Select student';
+                    $('.student_list').addClass('error');
+                }else{
+                    var errMssg = '';
+                    $('.student_list').removeClass('error');
+                }
             }
+        }else{
+            var errMssg = '';
+            $('.student_list').removeClass('error');
         }
-        
 
         if(startDate == ''){
             var errMssg = 'Start date required';
@@ -3232,10 +3237,16 @@ $('#add_lesson').on('submit', function(e) {
             $('#end_date').removeClass('error');
         }
     }else if(type == 3){
-        if( selected < 1){
-            var errMssg = 'Select student';
-            $('.student_list').addClass('error');
+        if ($("#student_empty").prop('checked') == false){
+            if( selected < 1){
+                var errMssg = 'Select student';
+                $('.student_list').addClass('error');
+            }else{
+                var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
         }else{
+            var errMssg = '';
             $('.student_list').removeClass('error');
         }
     }else if(type == 4){
@@ -3320,6 +3331,7 @@ $("body").on('change', '#category_select', function(event) {
         $("#student_empty").prop('checked', false)
     }
 });
+
 $("body").on('click', '#student_empty', function(event) {
     if ($("#student_empty").prop('checked')) {
         $('#student').val([]).multiselect('refresh');
@@ -3356,6 +3368,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'block');
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3372,6 +3385,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'none');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3385,6 +3399,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
+             $("#std-check-div").css('display', 'none');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
@@ -3398,6 +3413,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'none');
         }
 	}else{
         $('#agenda_form_area').hide();
