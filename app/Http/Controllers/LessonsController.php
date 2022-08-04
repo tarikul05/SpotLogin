@@ -77,8 +77,7 @@ class LessonsController extends Controller
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
                 $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
-                $stu_num = count($eventData['student']);
-
+              
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
@@ -93,20 +92,22 @@ class LessonsController extends Controller
                     'description' => $eventData['description'],
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
-                    'no_of_students' => !empty($stu_num) ? $stu_num : null,
+                    'no_of_students' => !empty($eventData['student']) ? count($eventData['student']) : null,
                 ];
 
                 $event = Event::create($data);
-                foreach($eventData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $eventData['teacher_select'],
-                        'student_id' => $std,
-                        'buy_price' => $eventData['sprice_amount_buy'],
-                        'sell_price' => $eventData['sprice_amount_sell'],
-                        'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($eventData['student'])) {
+                    foreach($eventData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $eventData['teacher_select'],
+                            'student_id' => $std,
+                            'buy_price' => $eventData['sprice_amount_buy'],
+                            'sell_price' => $eventData['sprice_amount_sell'],
+                            'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
 
                 DB::commit();
@@ -706,7 +707,7 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
 
                 $data = [
                     'title' => $coachOffData['title'],

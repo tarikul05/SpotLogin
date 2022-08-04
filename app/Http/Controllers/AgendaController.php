@@ -458,12 +458,14 @@ class AgendaController extends Controller
                 $e['end'] = $fetch->date_end.$data['zone'];
 
             }
-
-
+            $start_date = date('Y-m-d', strtotime($fetch->date_start));
+            $end_date = date('Y-m-d', strtotime($fetch->date_end));  
             $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
-            if ($data['p_view'] == 'month') {
-                $e['allDay'] = false;
+            if ($allday == true) {
+                if ($start_date != $end_date) {
+                    $e['end'] = date('Y-m-d H:i:s', strtotime($fetch->date_end . ' +1 day'));
+                }
             }
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
