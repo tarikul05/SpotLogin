@@ -528,7 +528,7 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 24:00:00';                
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';                
                 $data = [
                     'title' => $studentOffData['title'],
                     'school_id' => $schoolId,
@@ -615,7 +615,7 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 24:00:00';
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
                 $studoffId = $request->route('id'); 
 
                 $data = [
@@ -706,7 +706,7 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 24:00:00';
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
 
                 $data = [
                     'title' => $coachOffData['title'],
@@ -793,7 +793,7 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 24:00:00';
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
                 $coachoffId = $request->route('id'); 
 
                 $data = [
