@@ -460,13 +460,13 @@ class AgendaController extends Controller
             }
             $start_date = date('Y-m-d', strtotime($fetch->date_start));
             $end_date = date('Y-m-d', strtotime($fetch->date_end));  
-            if ($start_date != $end_date) {
-                $e['end'] = date('Y-m-d H:i:s', strtotime($fetch->date_end . ' +1 day'));
-                //$e['end'] = date('Y-m-d H:i:s', strtotime("+1 day", $end_date));
-            }            
-
             $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
+            if ($allday == true) {
+                if ($start_date != $end_date) {
+                    $e['end'] = date('Y-m-d H:i:s', strtotime($fetch->date_end . ' +1 day'));
+                }
+            }
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
