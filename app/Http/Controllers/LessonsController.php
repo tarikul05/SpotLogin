@@ -77,8 +77,7 @@ class LessonsController extends Controller
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
                 $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
-                $stu_num = count($eventData['student']);
-
+              
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
@@ -93,26 +92,37 @@ class LessonsController extends Controller
                     'description' => $eventData['description'],
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
-                    'no_of_students' => !empty($stu_num) ? $stu_num : null,
+                    'no_of_students' => !empty($eventData['student']) ? count($eventData['student']) : null,
                 ];
 
                 $event = Event::create($data);
-                foreach($eventData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $eventData['teacher_select'],
-                        'student_id' => $std,
-                        'buy_price' => $eventData['sprice_amount_buy'],
-                        'sell_price' => $eventData['sprice_amount_sell'],
-                        'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($eventData['student'])) {
+                    foreach($eventData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $eventData['teacher_select'],
+                            'student_id' => $std,
+                            'buy_price' => $eventData['sprice_amount_buy'],
+                            'sell_price' => $eventData['sprice_amount_sell'],
+                            'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
 
                 DB::commit();
                  
-                 // return back()->withInput($request->all())->with('success', __('Successfully Registered'));
-                 return back()->with('success', __('Successfully Registered'));
+                 if($eventData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
                 
             }  
         }catch (Exception $e) {
@@ -314,19 +324,31 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::create($data);
-                
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $lessonData['teacher_select'],
-                        'student_id' => $std,
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                   foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $lessonData['teacher_select'],
+                            'student_id' => $std,
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
+                    
                 DB::commit();
-                 
-                 return back()->with('success', __('Successfully Registered'));
+
+                if($lessonData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }     
                
             }  
         }catch (Exception $e) {
@@ -507,8 +529,7 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']);
-
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';                
                 $data = [
                     'title' => $studentOffData['title'],
                     'school_id' => $schoolId,
@@ -529,7 +550,19 @@ class LessonsController extends Controller
                     $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-                 return back()->with('success', __('Successfully Registered'));
+                
+                if($studentOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
+                 
             }  
         }catch (Exception $e) {
             DB::rollBack();
@@ -583,7 +616,7 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
                 $studoffId = $request->route('id'); 
 
                 $data = [
@@ -635,7 +668,7 @@ class LessonsController extends Controller
         $studoffId = $request->route('id'); 
         $studentOffData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->select('school_student.nickname')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->get();
-        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId'));
+        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId','studoffId'));
     }
 
     /**
@@ -674,7 +707,7 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $coachOffData['end_date']);
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
 
                 $data = [
                     'title' => $coachOffData['title'],
@@ -697,7 +730,18 @@ class LessonsController extends Controller
                 $eventDetails = EventDetails::create($dataDetails);
                 
                 DB::commit();
-                return back()->with('success', __('Successfully Registered'));
+                
+                if($coachOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
             }  
         }catch (Exception $e) {
             DB::rollBack();
@@ -725,7 +769,7 @@ class LessonsController extends Controller
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         if (!empty($coachoffData)){
-            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors','coachoffId'));    
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
@@ -750,7 +794,7 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $coachOffData['end_date']);
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
                 $coachoffId = $request->route('id'); 
 
                 $data = [

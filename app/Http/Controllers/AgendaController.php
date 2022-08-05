@@ -86,7 +86,7 @@ class AgendaController extends Controller
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
                      }
                 }
-                $event_types[$key]= $value;
+                //$event_types[$key]= $value;
 
 
             } else{
@@ -458,10 +458,15 @@ class AgendaController extends Controller
                 $e['end'] = $fetch->date_end.$data['zone'];
 
             }
-
-
+            $start_date = date('Y-m-d', strtotime($fetch->date_start));
+            $end_date = date('Y-m-d', strtotime($fetch->date_end));  
             $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
+            if ($allday == true) {
+                if ($start_date != $end_date) {
+                    $e['end'] = date('Y-m-d H:i:s', strtotime($fetch->date_end . ' +1 day'));
+                }
+            }
             $e['teacher_name'] = null;
             if (isset($fetch->teacher)) {
                 $e['teacher_name'] = $fetch->teacher['firstname'];
@@ -528,7 +533,14 @@ class AgendaController extends Controller
 			if (!empty($e['title'])) {
 				$format_title =':'.$e['title'];
 			}
-            $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            if ($fetch->event_type==50) { //coach time off
+                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'];
+            }elseif ($fetch->event_type==51) { //student time off
+                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name;
+            }else{
+                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            }
+            
 
             $e['content'] = ($e['cours_name']);
 

@@ -693,6 +693,32 @@ span.etransfer_acc {
 .multiselect-container > li > a > label {
     padding: 3px 10px 3px 0px;
 }
+
+span.no_select {
+    margin-top: 10px;
+    float: left;
+    font-weight: bold;
+}
+span.no_select input {
+    width: 34px;
+    height: 20px;
+    float: left;
+}
+#addAgendaModal button#save_btn_more,
+#addAgendaModal button#save_btn {
+    float: right;
+    margin: 30px 10px 0px 10px;
+}
+button#save_btn_more i {
+    padding-right: 10px;
+}
+#edit_lesson .btn_area {
+    position: absolute;
+    top: 178px;
+    right: 7%;
+    display: flex;
+    grid-gap: 15px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
@@ -842,5 +868,9 @@ span.etransfer_acc {
     }
     .datetimepicker-days {
         display: none !important;
+    }
+    span.no_select {
+        margin-top: 15px;
+        margin-left: -6px;
     }
 }

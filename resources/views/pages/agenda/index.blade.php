@@ -254,6 +254,7 @@ admin_main_style.css
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
                                     <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
                                         @csrf
+                                        <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
                                         <fieldset>
                                             <div class="row">
                                                 <div class="col-md-10 offset-md-1">
@@ -320,7 +321,11 @@ admin_main_style.css
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                        <div class="col-sm-2 p-l-n p-r-n">
+                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
+                                                        </div>
                                                     </div>
+                                                    
                                                     <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-7 row">
@@ -471,7 +476,8 @@ admin_main_style.css
                                                 </div>
                                             </div>
                                         </fieldset>
-                                        <button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                                        <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
                                     </form>
                                 </div>
                             </div>
@@ -1017,7 +1023,7 @@ admin_main_style.css
             },
             onDeselectAll: function(option,checked) {
                 console.log('school onDeSelectAll triggered!');
-                  document.getElementById("event_school_id").value='';
+                document.getElementById("event_school_id").value='';
                 document.getElementById("event_school_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
@@ -1107,9 +1113,11 @@ admin_main_style.css
                         var resultHtml ="";
                         var i='0';
                         $.each(data, function(key,value){
-                            resultHtml+='<option value="'+value.id+'">'+value.title+'</option>'; 
+                            resultHtml+='<option value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>'; 
                         });
                         $('#category_select').html(resultHtml);
+                        $('#category_select').change();
+
                     }
                     
                 },   //success
@@ -1533,7 +1541,7 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         
-        var p_event_id=document.getElementById("get_validate_event_id").value;
+        var p_event_id=document.getElementById("get_non_validate_event_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -1560,12 +1568,12 @@ admin_main_style.css
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
-        var get_validate_event_id=document.getElementById("get_validate_event_id").value;
+        var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
         
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(get_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(get_non_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
         return false;
     })
 
@@ -1968,10 +1976,11 @@ admin_main_style.css
                     } else{
                         icon='';
                     }
-
-                    if (event.duration_minutes > 60){        
-                        var ooo= icon+''+event.title_extend;
-                        $(el).find('div.fc-content').append(ooo);
+                    if (document.getElementById("view_mode").value != 'month'){
+                        if (event.duration_minutes > 60){        
+                            var ooo= icon+''+event.title_extend;
+                            $(el).find('div.fc-content').append(ooo);
+                        }
                     }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
                    // $(el).find('div.fc-title').prepend(event.event_type_name+':'+moment(event.start).format('DD-MM-YYYY')+' '+content_format);
@@ -2575,10 +2584,11 @@ admin_main_style.css
                         } else{
                             icon='';
                         }
-
-                        if (JSON.parse(json_events)[key].duration_minutes > 60){        
-                            var ooo= JSON.parse(json_events)[key].title_extend;
-                            //$(el).find('div.fc-content').append(ooo);
+                        if (document.getElementById("view_mode").value != 'month'){
+                            if (JSON.parse(json_events)[key].duration_minutes > 60){        
+                                var ooo= JSON.parse(json_events)[key].title_extend;
+                                //$(el).find('div.fc-content').append(ooo);
+                            }
                         }
                         prevdt = moment(JSON.parse(json_events)[key].start).format('DD-MM-YYYY');
 
@@ -2937,14 +2947,14 @@ admin_main_style.css
         }
     });
 
-    window.addEventListener('focus', function (event) {
-        console.log('has focus');
-        //RerenderEvents();
-    });
+    // window.addEventListener('focus', function (event) {
+    //     console.log('has focus');
+    //     //RerenderEvents();
+    // });
 
-    window.addEventListener('blur', function (event) {
-        console.log('lost focus');
-    });
+    // window.addEventListener('blur', function (event) {
+    //     console.log('lost focus');
+    // });
 
 </script>
 
@@ -3021,8 +3031,8 @@ $( document ).ready(function() {
 		el_duration = $('#duration');
 		
 			if (el_end.val() < el_start.val()) {
-				$('#end_time').val(el_start.val());
-				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+				$('#end_time').val(recalculate_end_time(el_start.val(),15));
+				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 			}
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
@@ -3078,13 +3088,14 @@ $( document ).ready(function() {
 		var re = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
 		return re.test(s_hours);
 	}
-	$('#start_time, #end_time, #duration').on('change', function(e){  
+	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
 		if(!el_duration.val()){el_duration.val('15');}
-		$('#end_time').val(recalculate_end_time($('#start_time').val(), el_duration.val()));
+		$('#end_time').val(recalculate_end_time($('#start_time').val(), '15'));
 	}
+
 	var el_start = $('#start_time'),
 		el_end = $('#end_time');
 		if (event_source === 'end_time' || event_source === 'start_time') {	
@@ -3124,28 +3135,43 @@ $("body").on('click', '#all_day', function(event) {
     }
 });
 
-
-
 $('#add_lesson').on('submit', function(e) {
+    e.preventDefault();
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
     var evetCat = $('#category_select option:selected').val();
     var evetLoc = $('#location option:selected').val();
+    var emptyStdchecked = $("#student_empty").prop('checked')
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
 	var errMssg = '';
 	var type = $("#agenda_select").val();
 
+    var selected_school_ids = [];
+    $.each($("#event_school option:selected"), function(){         
+        selected_school_ids.push($(this).val());
+    });
+    
+    if(type == 1){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-lesson';
+    }else if(type == 2){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
+    }else if(type == 3){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
+    }else if(type == 4){
+        var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
+    }  
+
+    var formData = $('#add_lesson').serializeArray();
+    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+    formData.push({
+        "name": "_token",
+        "value": csrfToken,
+    });
+
     if(type == 1 || type == 2){
         if(type==1){
-            var formData = $('#add_lesson').serializeArray();
-            var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-            formData.push({
-                "name": "_token",
-                "value": csrfToken,
-            });
-
             var bill_type = $('#sis_paying').val();
             
             if(bill_type == 1){
@@ -3183,19 +3209,21 @@ $('#add_lesson').on('submit', function(e) {
             $('#category_select').removeClass('error');
         }
 
-        // if( evetLoc == undefined || evetLoc == ''){
-        //     var errMssg = '{{ __("Select Location") }}';
-        //     $('#location').addClass('error');
-        // }else{
-        //     $('#location').removeClass('error');
-        // }
-
-        if( selected < 1){
-            var errMssg = 'Select student';
-            $('.student_list').addClass('error');
+        if ($("#student_empty").prop('checked') == false){
+            if (!emptyStdchecked) {
+                if( selected < 1){
+                    var errMssg = 'Select student';
+                    $('.student_list').addClass('error');
+                }else{
+                    var errMssg = '';
+                    $('.student_list').removeClass('error');
+                }
+            }
         }else{
+            var errMssg = '';
             $('.student_list').removeClass('error');
         }
+
         if(startDate == ''){
             var errMssg = 'Start date required';
             $('#start_date').addClass('error');
@@ -3203,33 +3231,23 @@ $('#add_lesson').on('submit', function(e) {
             $('#start_date').removeClass('error');
         }
         if(endDate == ''){
-            var errMssg = 'Ednd date required';
+            var errMssg = 'End date required';
             $('#end_date').addClass('error');
         }else{
             $('#end_date').removeClass('error');
         }
-        if(errMssg == ""){
-            return true;
-        }else{
-            return false;	
-        }
     }else if(type == 3){
-        // if(title == ''){
-        //     var errMssg = 'Title required';
-        //     $('#Title').addClass('error');
-        // }else{
-        //     $('#Title').removeClass('error');
-        // }
-        if( selected < 1){
-            var errMssg = 'Select student';
-            $('.student_list').addClass('error');
+        if ($("#student_empty").prop('checked') == false){
+            if( selected < 1){
+                var errMssg = 'Select student';
+                $('.student_list').addClass('error');
+            }else{
+                var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
         }else{
+            var errMssg = '';
             $('.student_list').removeClass('error');
-        }
-        if(errMssg == ""){
-            return true;
-        }else{
-            return false;	
         }
     }else if(type == 4){
         if(professor == ''){
@@ -3238,13 +3256,37 @@ $('#add_lesson').on('submit', function(e) {
         }else{
             $('#teacher_select').removeClass('error');
         }
-        if(errMssg == ""){
-            return true;
-        }else{
-            return false;	
-        }
+    }
+
+    if(errMssg == ""){
+        $.ajax({
+            url: page_action,
+            async: false, 
+            data: formData,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response){
+                if(response.status == 1){
+                    $("#add_lesson")[0].reset();
+                    $('#student').val([]).multiselect('refresh');
+                    const startresult = moment().format('DD/MM/YYYY');
+                    const startTime = moment().format('HH:mm');
+                    $('#start_date').val(startresult);
+                    $('#start_time').val(startTime);
+                    const endTime = moment().add(15, 'm').format('HH:mm');
+                    const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                    $('#end_date').val(endresult);
+                    $('#end_time').val(endTime).trigger('change');
+                }else{
+                    location.reload();
+                }
+            }
+        })
+    }else{
+        return false;
     }
 });
+
 
 $(document).ready(function() {
     var agenda_select = $("#agenda_select").val();
@@ -3280,6 +3322,23 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
+$("body").on('change', '#category_select', function(event) {
+    var datainvoiced = $("#category_select option:selected").data('invoice');
+    if (datainvoiced == 'S') {
+        $("#std-check-div").css('display', 'block');
+    }else{
+        $("#std-check-div").css('display', 'none');
+        $("#student_empty").prop('checked', false)
+    }
+});
+
+$("body").on('click', '#student_empty', function(event) {
+    if ($("#student_empty").prop('checked')) {
+        $('#student').val([]).multiselect('refresh');
+    }else{
+        $('#student').val([]).multiselect('refresh');
+    }
+})
 
 $('#agenda_select').on('change', function() {
     if(this.value != ''){
@@ -3294,6 +3353,7 @@ $('#agenda_select').on('change', function() {
             }else{
                 var page_action = 'javascript:void(0)';
             }
+            
             $('#start_date').on('change', function(e){  
                 $("#end_date").val($("#start_date").val());  
             });
@@ -3308,6 +3368,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'block');
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3324,6 +3385,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'none');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3337,6 +3399,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
+             $("#std-check-div").css('display', 'none');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
@@ -3350,6 +3413,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
+             $("#std-check-div").css('display', 'none');
         }
 	}else{
         $('#agenda_form_area').hide();
@@ -3378,6 +3442,20 @@ $( document ).ready(function() {
     });
 });
 
+
+
+$( document ).ready(function() {
+
+    $(function() {
+        $("#save_btn_more").click(function(){
+           $("#save_btn_value"). val(1);
+        });
+        $("#save_btn").click(function(){
+           $("#save_btn_value"). val(0);
+        });
+    });
+
+});
 </script>
 
 @endsection

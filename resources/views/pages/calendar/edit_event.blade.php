@@ -455,13 +455,14 @@ $('#mark_present_btn').click(function (e) {
 			            
 });
 
-$("body").on('click', '#all_day', function(event) {
-    if ($(this).prop('checked')) {
-        $(".not-allday").hide();
-    }else{
-        $(".not-allday").show();
-    }
-});
+// $("body").on('click', '#all_day', function(event) {
+//     if ($(this).prop('checked')) {
+//         $(".not-allday").hide();
+//     }else{
+//         $(".not-allday").show();
+//     }
+// });
+
 if ({{!empty($eventData->fullday_flag) ? 1 : 0}}) {
 	$("#all_day").click()
 }
