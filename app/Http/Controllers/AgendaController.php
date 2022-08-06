@@ -451,17 +451,22 @@ class AgendaController extends Controller
 
         $events = array();
         foreach ($eventData as $key => $fetch) {
+            $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);
+            //exit();
+            $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$data['zone']);
             $e = array();
             $e['id'] = $fetch->id;
 
             $e['title']=(substr($fetch->title,0,1)==',') ? substr($fetch->title,1) : substr($fetch->title,0);
 			$e['start'] = $fetch->date_start;
             $e['end'] = $fetch->date_end;
-            if (isset($data['zone'])) {
-                $e['start'] = $fetch->date_start.$data['zone'];
-                $e['end'] = $fetch->date_end.$data['zone'];
+            // print_r($e['start']);
+            // exit();
+            // if (isset($data['zone'])) {
+            //     $e['start'] = $fetch->date_start.$data['zone'];
+            //     $e['end'] = $fetch->date_end.$data['zone'];
 
-            }
+            // }
             $start_date = date('Y-m-d', strtotime($fetch->date_start));
             $end_date = date('Y-m-d', strtotime($fetch->date_end));  
             $allday = ($fetch->fullday_flag == "Y") ? true : false;

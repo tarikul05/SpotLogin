@@ -647,11 +647,12 @@ admin_main_style.css
     
 
 
-    var currentTimezone = 'local';
+    var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    var zone =getTimeZone();
+    //var zone =getTimeZone();
+    var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -1629,14 +1630,6 @@ admin_main_style.css
     }
 
 
-    function getTimeZone() {
-        var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
-        return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
-    }
-    
-
-
-    
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
@@ -2906,6 +2899,7 @@ admin_main_style.css
 			document.cookie = "date_to="+document.getElementById("date_to").value+";path=/";
 
 			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
+			document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";        
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);
