@@ -333,6 +333,7 @@ admin_main_style.css
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="start_date_div"> 
                                                                     <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+                                                                    <input type="hidden" name="zone" id="zone" value="UTC">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
                                                                     </span>
@@ -653,6 +654,7 @@ admin_main_style.css
     var lockRecords=1;
     //var zone =getTimeZone();
     var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById("zone").value = zone;
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -2819,20 +2821,18 @@ admin_main_style.css
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
         e.preventDefault();
         $.ajax({
             type: "POST",
             url: BASE_URL + '/copy_paste_events',
-            //url: "copy_paste_events.php",
             data: data,
             dataType: "JSON",
             async: false,
             success:function(result){
                 var status =  result.status;
-                //alert(status);
                 if(status == 0)
                 {
                     document.getElementById("copy_date_from").value = '';

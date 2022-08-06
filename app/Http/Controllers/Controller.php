@@ -299,7 +299,6 @@ class Controller extends BaseController
 
         if (!$to){
             $to = $this->get_local_time();
-            //$to = 'Asia/Dhaka';
         }
         $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
         $carbon->setTimezone($to)->format('Y-m-d H:i:s');
