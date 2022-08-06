@@ -447,6 +447,7 @@ $('#save_btn').click(function (e) {
 					if(response.status == 1){
 						$('#modal_add_teacher').modal('show');
 						$("#modal_alert_body").text(response.message);
+						window.location.reload(true);
 					}
 				},
 				complete: function( xhr ) {
