@@ -10,7 +10,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+<script type="text/javascript">
+	document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
+</script>
+@php
+	$zone = $_COOKIE['timezone_user'];
+	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -100,7 +108,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($eventData->date_start) ? old('start_date', date('d/m/Y', strtotime($eventData->date_start))) : old('start_date')}}" autocomplete="off">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="UTC">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -122,7 +130,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($eventData->date_end) ? old('end_date', date('d/m/Y', strtotime($eventData->date_end))) : old('end_date')}}" autocomplete="off">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -340,8 +348,8 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = new Date("{{$eventData->date_start}}").toLocaleTimeString()
-	var end_time = new Date("{{$eventData->date_end}}").toLocaleTimeString()
+	var start_time = new Date("{{$date_start}}").toLocaleTimeString()
+	var end_time = new Date("{{$date_end}}").toLocaleTimeString()
 
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',

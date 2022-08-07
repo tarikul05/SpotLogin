@@ -3,7 +3,15 @@
 @section('head_links')
 
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+<script type="text/javascript">
+	document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
+</script>
+@php
+	$zone = $_COOKIE['timezone_user'];
+	$date_start = Helper::formatDateTimeZone($studentOffData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($studentOffData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -70,13 +78,13 @@
 								<div class="form-group row">
 									<label class="col-lg-2 col-sm-2 text-left">{{__('Start date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($studentOffData->date_start) ? date('l jS F-Y', strtotime($studentOffData->date_start)) : ''; }}
+										{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-2 col-sm-2 text-left">{{__('End Date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($studentOffData->date_end) ? date('l jS F-Y', strtotime($studentOffData->date_end)) : ''; }}
+										{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
