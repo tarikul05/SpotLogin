@@ -106,8 +106,12 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
+        $coach_user ='';
         if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
+            if ($user->isTeacherAdmin()) {
+                $coach_user = 'coach_user';
+            }
         }
         if ($user->isTeacherAll()) {
             $user_role = 'teacher_all';
@@ -127,7 +131,7 @@ class AgendaController extends Controller
         //dd($events);
         $events =json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
 
     }
 
@@ -534,11 +538,19 @@ class AgendaController extends Controller
 				$format_title =':'.$e['title'];
 			}
             if ($fetch->event_type==50) { //coach time off
-                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'];
+                if ($user->isTeacherAdmin()) {
+                    $e['tooltip']=$e['event_type_name'].''.$format_title;
+                } else {
+                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'];
+                }
             }elseif ($fetch->event_type==51) { //student time off
                 $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name;
             }else{
-                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                if ($user->isTeacherAdmin()) {
+                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                } else {
+                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                }
             }
             
 
@@ -681,8 +693,12 @@ class AgendaController extends Controller
             // $e['duration_minutes'] = 90;
 
             //$e['title']="dsadasdasd";
-			
-            $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            if ($user->isTeacherAdmin()) {
+                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            } else {
+                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+            }
+            
             // $e['start'] = "2022-07-05 06:30:00";
             // $e['end'] = "2022-07-05 07:30:00";
 			$format_title = $e['teacher_name'];

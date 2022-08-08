@@ -312,7 +312,13 @@ class StudentsController extends Controller
                 }
             }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            #return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            if ($user->isSuperAdmin()) {
+                return redirect(route('adminStudents',$schoolId))->with('success', __('Student added successfully!'));
+            }else{
+                return redirect(route('studentHome'))->with('success', __('Student added successfully!'));
+            }
+            
         }catch (Exception $e) {
             // dd($e);
             DB::rollBack();

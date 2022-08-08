@@ -47,7 +47,8 @@ admin_main_style.css
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
-							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
+							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">
+                            <input type="hidden" name="coach_user" id="coach_user" value="{{$coach_user}}">
                             <input type="hidden" name="person_id" id="person_id" value="">
 							<input type="hidden" name="evt_t_id" id="evt_t_id" value="">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0"> 
@@ -565,6 +566,7 @@ admin_main_style.css
     var m = date.getMonth();
     var y = date.getFullYear();
     var user_role=document.getElementById("user_role").value;
+    var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
 
     var json_events = @json($events);
@@ -2543,19 +2545,8 @@ admin_main_style.css
                             selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                        
-
-
-                        
+                         
                     }
-
-
-
-
-
-
-
-
 
                         stime=moment(JSON.parse(json_events)[key].start).format('HH:mm');
                         etime=moment(JSON.parse(json_events)[key].end).format('HH:mm');
@@ -2604,7 +2595,10 @@ admin_main_style.css
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].title+'</td>';
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].cours_name+'</td>';
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].duration_minutes+' minutes</td>';
-                        resultHtml_cc+='<td>'+JSON.parse(json_events)[key].teacher_name+'</td>';
+                        var coach_user=document.getElementById("coach_user").value;
+                        if (coach_user =='') {
+                            resultHtml_cc+='<td>'+JSON.parse(json_events)[key].teacher_name+'</td>';
+                        }
                         resultHtml_cc+='</tr>';
 
 
