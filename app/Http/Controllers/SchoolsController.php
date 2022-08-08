@@ -213,7 +213,7 @@ class SchoolsController extends Controller
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
         $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
-
+        $timezones = config('global.timezones');
         return view('pages.schools.edit')
         ->with(compact(
             'levels',
@@ -228,7 +228,8 @@ class SchoolsController extends Controller
             'emailTemplate',
             'country',
             'role_type',
-            'school_admin'
+            'school_admin',
+            'timezones'
         ));
 
     }

@@ -166,6 +166,24 @@
 											</div>
 										</div>
 									</div>
+
+									<div class="form-group row">
+										<label id="organization_type_caption"
+										class="col-lg-3 col-sm-3 text-left">{{ __('Timezone')}}:</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="timezone" id="timezone">
+													<option value="">Select</option>
+													@foreach ($timezones as $key => $value)
+														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
+															
+														{{ $value }}
+														</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
 									
 								
 								</div>

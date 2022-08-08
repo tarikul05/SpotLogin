@@ -32,6 +32,7 @@ class Controller extends BaseController
     public $action = null;
     public $all_authority = null;
     public $schoolId = 0;
+    public $timezone = 'UTC';
 
     public function __construct()
     {
@@ -79,8 +80,14 @@ class Controller extends BaseController
             }
             if (Auth::check() && $this->isAuthorized()) {
                 $user = Auth::user();
-                $this->schoolId = $user->isSuperAdmin() ? $this->schoolId : $user->selectedSchoolId() ;
-
+                
+                if ($user->isSuperAdmin()) {
+                    $school = School::active()->find($this->schoolId);
+                    $this->timezone = !empty($school->timezone) ? 'UTC' : $school->timezone;
+                } else{
+                    $this->schoolId = $user->selectedSchoolId() ;
+                    $this->timezone = $user->selectedSchoolTimezone() ;
+                }
                 $this->AppUI = Auth::user();
             }
             $data = array(
@@ -89,7 +96,8 @@ class Controller extends BaseController
                 'CURRENT_URL' => $this->CURRENT_URL,
                 'BASE_URL' => $this->BASE_URL,
                 'AppUI' => $this->AppUI,
-                'schoolId' => $this->schoolId
+                'schoolId' => $this->schoolId,
+                'timezone' => $this->timezone
             );
             View::share($data);
             return $next($request);
