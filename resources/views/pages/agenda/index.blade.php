@@ -333,7 +333,7 @@ admin_main_style.css
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="start_date_div"> 
                                                                     <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
-                                                                    <input type="hidden" name="zone" id="zone" value="UTC">
+                                                                    <input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
                                                                     </span>
@@ -647,13 +647,14 @@ admin_main_style.css
     }  
     
 
-
-    var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var currentTimezone = document.getElementById("zone").value;
+    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
     //var zone =getTimeZone();
-    var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var zone = document.getElementById("zone").value;
     document.getElementById("zone").value = zone;
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
@@ -2899,7 +2900,9 @@ admin_main_style.css
 			document.cookie = "date_to="+document.getElementById("date_to").value+";path=/";
 
 			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
-			document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";        
+			
+            //document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";        
+			document.cookie = "timezone_user="+document.getElementById("zone").value+";path=/";        
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);

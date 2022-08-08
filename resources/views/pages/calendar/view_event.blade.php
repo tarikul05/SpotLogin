@@ -4,11 +4,9 @@
 
 @endsection
 <!-- Code within resources/views/blade.php -->
-<script type="text/javascript">
-	document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
-</script>
 @php
-	$zone = $_COOKIE['timezone_user'];
+	//$zone = $_COOKIE['timezone_user'];
+	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 @endphp

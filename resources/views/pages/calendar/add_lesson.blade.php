@@ -112,7 +112,7 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
-												<input type="hidden" name="zone" id="zone" value="UTC">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -312,8 +312,9 @@ $('#student').on('change', function(event) {
 })
 
 $( document ).ready(function() {
-	var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    document.getElementById("zone").value = zone;
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
