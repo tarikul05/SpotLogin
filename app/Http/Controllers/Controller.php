@@ -80,14 +80,12 @@ class Controller extends BaseController
             }
             if (Auth::check() && $this->isAuthorized()) {
                 $user = Auth::user();
-                
+                $this->schoolId = $user->isSuperAdmin() ? $this->schoolId : $user->selectedSchoolId() ;
+                $school = School::active()->find($this->schoolId);
+                $this->timezone = !empty($school->timezone) ? $school->timezone : 'UTC';
                 if ($user->isSuperAdmin()) {
-                    $school = School::active()->find($this->schoolId);
-                    $this->timezone = !empty($school->timezone) ? 'UTC' : $school->timezone;
-                } else{
-                    $this->schoolId = $user->selectedSchoolId() ;
-                    $this->timezone = $user->selectedSchoolTimezone() ;
-                }
+                    $this->timezone = 'UTC';
+                } 
                 $this->AppUI = Auth::user();
             }
             $data = array(
