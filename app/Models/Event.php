@@ -467,6 +467,12 @@ class Event extends BaseModel
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
+        if (isset($params['type'])) { 
+            unset($params['type']);
+        }
+        if (isset($params['zone'])) { 
+            unset($params['zone']);
+        }
        //dd($params);
         
         //$query->where('deleted_at', null);
@@ -481,7 +487,11 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        $query->whereIn($key, $value);
+                        $query->where(function ($query) use($key,$value) {
+                            $query->whereIn($key, $value)
+                                ->orWhereNull($key);
+                        });
+                        //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
                         $query->where($key, '=', $value);
