@@ -698,6 +698,7 @@ span.no_select {
     margin-top: 10px;
     float: left;
     font-weight: bold;
+    min-width: 170px;
 }
 span.no_select input {
     width: 34px;
@@ -708,6 +709,24 @@ span.no_select input {
 #addAgendaModal button#save_btn {
     float: right;
     margin: 30px 10px 0px 10px;
+}
+div#add_lesson_success {
+    margin-top: 120px;
+}
+#add_lesson_success .close {
+    text-align: right;
+    float: right;
+    padding: 10px 20px 0px 20px;
+}
+#add_lesson_success .modal-content {
+    border: 1px solid #0075bf;
+    padding-bottom: 20px;
+}
+h3#add_lesson_success {
+    text-align: center;
+    font-size: 18px;
+    color: red;
+    margin-top: 5px;
 }
 button#save_btn_more i {
     padding-right: 10px;

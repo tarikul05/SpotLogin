@@ -491,6 +491,24 @@ admin_main_style.css
 </div>
 
 <!-- success modal-->
+<div class="modal modal_parameter" id="add_lesson_success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>        
+            <div class="modal-body">
+                <p class="success_message">Successfully added</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- success modal-->
 <div class="modal modal_parameter" id="modal_lesson_price">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -3261,16 +3279,17 @@ $('#add_lesson').on('submit', function(e) {
             dataType: 'json',
             success: function(response){
                 if(response.status == 1){
-                    $("#add_lesson")[0].reset();
-                    $('#student').val([]).multiselect('refresh');
-                    const startresult = moment().format('DD/MM/YYYY');
-                    const startTime = moment().format('HH:mm');
-                    $('#start_date').val(startresult);
-                    $('#start_time').val(startTime);
-                    const endTime = moment().add(15, 'm').format('HH:mm');
-                    const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
-                    $('#end_date').val(endresult);
-                    $('#end_time').val(endTime).trigger('change');
+                    $('#add_lesson_success').modal('show');
+                    // $("#add_lesson")[0].reset();
+                    // $('#student').val([]).multiselect('refresh');
+                    // const startresult = moment().format('DD/MM/YYYY');
+                    // const startTime = moment().format('HH:mm');
+                    // $('#start_date').val(startresult);
+                    // $('#start_time').val(startTime);
+                    // const endTime = moment().add(15, 'm').format('HH:mm');
+                    // const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                    // $('#end_date').val(endresult);
+                    // $('#end_time').val(endTime).trigger('change');
                 }else{
                     location.reload();
                 }
