@@ -588,6 +588,24 @@ class TeachersController extends Controller
     }
 
     /**
+     * change status.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $teacherId = $request->route('teacher');
+        $alldata = $request->all();
+        $status = isset($alldata['status']) && ($alldata['status'] == 1 ) ? 0 : 1 ;
+        // dd($schoolId,$teacherId);
+        SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->update(['is_active'=>$status]);
+        return redirect()->back()
+            ->with('success', 'status updated successfully');
+    }
+
+    /**
      * Check users .
      *
      * @param  int  $id
