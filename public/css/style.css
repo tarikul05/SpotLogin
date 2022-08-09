@@ -722,6 +722,9 @@ div#add_lesson_success {
     border: 1px solid #0075bf;
     padding-bottom: 20px;
 }
+div#addAgendaModal {
+    overflow-y: scroll;
+}
 h3#add_lesson_success {
     text-align: center;
     font-size: 18px;
