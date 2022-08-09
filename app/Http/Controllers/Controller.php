@@ -95,7 +95,8 @@ class Controller extends BaseController
                 'BASE_URL' => $this->BASE_URL,
                 'AppUI' => $this->AppUI,
                 'schoolId' => $this->schoolId,
-                'timezone' => $this->timezone
+                'timezone' => $this->timezone,
+                'timezones' => config('global.timezones')
             );
             View::share($data);
             return $next($request);
