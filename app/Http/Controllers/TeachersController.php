@@ -17,6 +17,7 @@ use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
 use App\Models\Location;
 use App\Models\Level;
+use App\Models\Province;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -89,7 +90,7 @@ class TeachersController extends Controller
 
         $countries = Country::active()->get();
         $genders = config('global.gender');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $exTeacher = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -338,7 +339,7 @@ class TeachersController extends Controller
         $user = Auth::user();
         $schoolId = $request->route('school');
         $teacherId = $request->route('teacher');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $teacher = Teacher::find($teacherId);
 
         if ($user->isSuperAdmin()) {

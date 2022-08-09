@@ -297,8 +297,8 @@
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											@foreach($provinces as $key => $province)
-												<option value="{{ $key }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $key ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province }}</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
 											@endforeach
 										</select>
 									</div>
