@@ -107,7 +107,7 @@
 										</div>
 									</div>
 									<div class="col-sm-2 p-l-n p-r-n">
-										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
+										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
