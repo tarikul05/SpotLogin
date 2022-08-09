@@ -16,6 +16,7 @@ use Route;
 use Illuminate\Support\Facades\URL;
 use App\Mail\SportloginEmail;
 use App\Models\EmailTemplate;
+use App\Models\School;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as InterventionImageManager;
 use Carbon\Carbon;
