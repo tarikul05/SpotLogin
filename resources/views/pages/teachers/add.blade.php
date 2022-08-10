@@ -448,7 +448,9 @@ $('#save_btn').click(function (e) {
 					if(response.status == 1){
 						$('#modal_add_teacher').modal('show');
 						$("#modal_alert_body").text(response.message);
-						window.location.href = window.location.href
+							window.location.href = "{{ auth()->user()->isSuperAdmin() ? route('adminTeachers',$schoolId) : route('teacherHome') }}"
+						
+
 					}
 				},
 				complete: function( xhr ) {
