@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Province extends BaseModel
 {
-    use SoftDeletes;
+    // use SoftDeletes;
     protected $table = 'provinces';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';

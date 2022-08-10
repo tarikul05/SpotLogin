@@ -628,6 +628,25 @@ class StudentsController extends Controller
 
 
     /**
+     * change status.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        $alldata = $request->all();
+        $status = isset($alldata['status']) && ($alldata['status'] == 1 ) ? 0 : 1 ;
+        // dd($schoolId,$studentId);
+        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->update(['is_active'=>$status]);
+        return redirect()->back()
+            ->with('success', 'status updated successfully');
+    }
+
+
+    /**
     *  AJAX action image delete and unlink
     *
     * @return json
