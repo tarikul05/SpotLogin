@@ -326,8 +326,8 @@
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											@foreach($provinces as $key => $province)
-												<option value="{{ $key }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $key ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province }}</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -390,18 +390,9 @@
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											<option value="3" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '3' ? 'selected' : '') : (old('billing_province_id') == '3' ? 'selected' : '')}}>Alberta</option>
-											<option value="2" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '2' ? 'selected' : '') : (old('billing_province_id') == '2' ? 'selected' : '')}}>British Columbia</option>
-											<option value="5" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '5' ? 'selected' : '') : (old('billing_province_id') == '5' ? 'selected' : '')}}>Manitoba</option>
-											<option value="10" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '10' ? 'selected' : '') : (old('billing_province_id') == '10' ? 'selected' : '')}}>Newfoundland &amp; Labrador</option>
-											<option value="12" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '12' ? 'selected' : '') : (old('billing_province_id') == '12' ? 'selected' : '')}}>Northwest territory</option>
-											<option value="8" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '8' ? 'selected' : '') : (old('billing_province_id') == '8' ? 'selected' : '')}}>Nova Scotia</option>
-											<option value="11" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '11' ? 'selected' : '') : (old('billing_province_id') == '11' ? 'selected' : '')}}>Nunavut</option>
-											<option value="6" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '6' ? 'selected' : '') : (old('billing_province_id') == '6' ? 'selected' : '')}}>Ontario</option>
-											<option value="9" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '9' ? 'selected' : '') : (old('billing_province_id') == '9' ? 'selected' : '')}}>PEI</option>
-											<option value="7" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '7' ? 'selected' : '') : (old('billing_province_id') == '7' ? 'selected' : '')}}>Quebec</option>
-											<option value="4" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '4' ? 'selected' : '') : (old('billing_province_id') == '4' ? 'selected' : '')}}>Saskatchewan</option>
-											<option value="13" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '13' ? 'selected' : '') : (old('billing_province_id') == '13' ? 'selected' : '')}}>Yukon</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == $province['id'] ? 'selected' : '') : (old('billing_province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>

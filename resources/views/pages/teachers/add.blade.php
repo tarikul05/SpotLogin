@@ -215,14 +215,15 @@
 											</div>
 										</div>
 									</div>
+									<?php //echo '<pre>'; print_r($provinces);exit; ?>
 									<div id="province_id_div" class="form-group row" style="display:none">
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" id="province_id" name="province_id">
 													<option value="">Select Province</option>
-													@foreach($provinces as $key => $province)
-														<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@foreach($provinces as $province)
+														<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 													@endforeach
 												</select>
 											</div>

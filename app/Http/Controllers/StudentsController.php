@@ -11,6 +11,7 @@ use App\Models\SchoolStudent;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Level;
+use App\Models\Province;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
@@ -84,7 +85,7 @@ class StudentsController extends Controller
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -547,7 +548,7 @@ class StudentsController extends Controller
         $alldata = $request->all();
         $schoolId = $request->route('school');
         $studentId = $request->route('student');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
 
         $student = Student::find($studentId);
 
@@ -789,7 +790,7 @@ class StudentsController extends Controller
         $schoolName = $user->selectedSchoolName();
         $school = School::active()->find($schoolId);
 
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
         $genders = config('global.gender');
 
