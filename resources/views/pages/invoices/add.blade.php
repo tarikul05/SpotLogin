@@ -545,9 +545,8 @@
 											<div class="selectdiv">
 												<select class="form-control" id="client_province_id" name="client_province_id">
 													<option value="">Select Province</option>
-													@foreach($provinces as $key => $province)
-													<option value="{{ $key }}" {{ old('client_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
-													@endforeach
+													@foreach($provinces as $province)
+													<option value="{{ $province['id'] }}" {{ old('client_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 												</select>
 											</div>
 										</div>
@@ -630,8 +629,8 @@
 											<div class="selectdiv">
 												<select class="form-control" id="seller_province_id" name="seller_province_id">
 													<option value="">Select Province</option>
-													@foreach($provinces as $key => $province)
-													<option value="{{ $key }}" {{ old('seller_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@foreach($provinces as $province)
+													<option value="{{ $province['id'] }}" {{ old('seller_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 												</select>
 											</div>
 										</div>
@@ -732,7 +731,7 @@
 													<select class="form-control" id="seller_province_id" name="seller_province_id">
 														<option value="">Select Province</option>
 														@foreach($provinces as $key => $province)
-														<option value="{{ $key }}" {{ old('seller_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+														<option value="{{ $province['id'] }}" {{ old('seller_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 														@endforeach
 													</select>
 												</div>

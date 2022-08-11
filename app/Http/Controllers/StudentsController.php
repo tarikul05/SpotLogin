@@ -11,6 +11,7 @@ use App\Models\SchoolStudent;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Level;
+use App\Models\Province;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
@@ -84,7 +85,7 @@ class StudentsController extends Controller
         $countries = Country::active()->get();
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $exStudent = $exUser = $searchEmail = null;
         if ($request->isMethod('post')){
             $searchEmail = $request->email;
@@ -312,7 +313,13 @@ class StudentsController extends Controller
                 }
             }
             DB::commit();
-            return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            #return back()->withInput($request->all())->with('success', __('Student added successfully!'));
+            if ($user->isSuperAdmin()) {
+                return redirect(route('adminStudents',$schoolId))->with('success', __('Student added successfully!'));
+            }else{
+                return redirect(route('studentHome'))->with('success', __('Student added successfully!'));
+            }
+            
         }catch (Exception $e) {
             // dd($e);
             DB::rollBack();
@@ -541,7 +548,7 @@ class StudentsController extends Controller
         $alldata = $request->all();
         $schoolId = $request->route('school');
         $studentId = $request->route('student');
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
 
         $student = Student::find($studentId);
 
@@ -617,6 +624,25 @@ class StudentsController extends Controller
         SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
         return redirect()->back()
             ->with('success', 'Deleted successfully');
+    }
+
+
+    /**
+     * change status.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        $alldata = $request->all();
+        $status = isset($alldata['status']) && ($alldata['status'] == 1 ) ? 0 : 1 ;
+        // dd($schoolId,$studentId);
+        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->update(['is_active'=>$status]);
+        return redirect()->back()
+            ->with('success', 'status updated successfully');
     }
 
 
@@ -783,7 +809,7 @@ class StudentsController extends Controller
         $schoolName = $user->selectedSchoolName();
         $school = School::active()->find($schoolId);
 
-        $provinces = config('global.provinces');
+        $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
         $genders = config('global.gender');
 

@@ -32,22 +32,10 @@
 </script>
 <script src="{{ asset('js/common-scripts.js')}}"></script>
 
-<style>
-    .se-pre-con {
-        position: fixed;
-        left: 0px;
-        top: 0px;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;  
-        background: url("{{ asset('img/loader4.gif') }}") center no-repeat #ffffff;
-        opacity: 1; 
-    }
-</style>
 	
 </head>
 <body>
-<div class="se-pre-con"></div> 
+
 <section class="m-4 top">
     @include('elements.header_menu')
 </section>
@@ -63,13 +51,5 @@
 @section('footer_js')
 @show
 <!-- js comes form inner page end -->
-<script type="text/javascript">
-  $(document).ready(function() {
-    setTimeout(function () { 
-        $(".se-pre-con").hide();
-    }, 500);
-  });
-  
-</script>
 </body>
 </html>

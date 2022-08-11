@@ -335,6 +335,7 @@ class AgendaController extends Controller
                     'title' => $fetch->title,
                     'school_id' => $fetch->school_id,
                     'event_type' => $fetch->event_type,
+                    'event_category' =>$fetch->event_category,
                     'date_start' => $date_start,
                     'date_end' => $date_end,
                     'duration_minutes' => $fetch->duration_minutes,

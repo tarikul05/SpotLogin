@@ -323,7 +323,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-2 p-l-n p-r-n">
-                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
+                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i> </span>
                                                         </div>
                                                     </div>
                                                     
@@ -490,6 +490,24 @@ admin_main_style.css
         </div>
     </div>
 </div>
+
+<!-- success modal-->
+<div class="modal modal_parameter" id="add_lesson_success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>        
+            <div class="modal-body">
+                <p class="success_message">Successfully added</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- success modal-->
 <div class="modal modal_parameter" id="modal_lesson_price">
@@ -3258,16 +3276,17 @@ $('#add_lesson').on('submit', function(e) {
             dataType: 'json',
             success: function(response){
                 if(response.status == 1){
-                    $("#add_lesson")[0].reset();
-                    $('#student').val([]).multiselect('refresh');
-                    const startresult = moment().format('DD/MM/YYYY');
-                    const startTime = moment().format('HH:mm');
-                    $('#start_date').val(startresult);
-                    $('#start_time').val(startTime);
-                    const endTime = moment().add(15, 'm').format('HH:mm');
-                    const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
-                    $('#end_date').val(endresult);
-                    $('#end_time').val(endTime).trigger('change');
+                    $('#add_lesson_success').modal('show');
+                    // $("#add_lesson")[0].reset();
+                    // $('#student').val([]).multiselect('refresh');
+                    // const startresult = moment().format('DD/MM/YYYY');
+                    // const startTime = moment().format('HH:mm');
+                    // $('#start_date').val(startresult);
+                    // $('#start_time').val(startTime);
+                    // const endTime = moment().add(15, 'm').format('HH:mm');
+                    // const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                    // $('#end_date').val(endresult);
+                    // $('#end_time').val(endTime).trigger('change');
                 }else{
                     location.reload();
                 }

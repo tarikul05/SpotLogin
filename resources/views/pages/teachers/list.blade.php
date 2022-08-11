@@ -64,7 +64,17 @@
                                 <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                             </form>
                             @endcan
-                            <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('teacherStatus',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                                @method('post')
+                                @csrf
+                                <input type="hidden" name="status" value="{{ $teacher->pivot->is_active }}">
+                                @if($teacher->pivot->is_active)
+                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</button>
+                                @else
+                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
+                                @endif
+                            </form>
+
                         </div>
                     </div>  
                 </td>
