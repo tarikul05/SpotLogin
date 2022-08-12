@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LessonPricesTableSeeder::class);
         $this->call(CurrencyTableSeeder::class);
         $this->call(EmailTemplateTableSeeder::class);
+        $this->call(ProvincesTableSeeder::class);
     }
 }
