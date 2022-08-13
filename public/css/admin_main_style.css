@@ -296,7 +296,7 @@ li.light-blue-txt.gilroy-bold {
 }
 /**/
 .login-signup-modal .form-control {
-    background-color: #e8f3f9;
+    background-color: #e8f3f9 !important;
     border: 0;
     outline: 0;
     padding: 10px;

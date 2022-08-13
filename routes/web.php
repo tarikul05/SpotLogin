@@ -206,6 +206,10 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'StudentsController@export',
       'as' => 'admin.student.export'
     ));
+    Route::match(array('GET', 'POST'), "/{school}/import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'admin.student.import'
+    ));
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
@@ -298,6 +302,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), "export-student", array(
       'uses' => 'StudentsController@export',
       'as' => 'student.export'
+    ));
+    Route::match(array('GET', 'POST'), "import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'student.import'
     ));
 
     Route::delete('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('studentDelete');

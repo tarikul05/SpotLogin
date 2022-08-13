@@ -1005,4 +1005,36 @@ class StudentsController extends Controller
         fclose($output);
         exit;
     }
+     /**
+     * export student school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function import($schoolId = null, Request $request, Student $student)
+    {
+        $filename = date('Ymd_His') . '.csv';
+        header('Content-Encoding: UTF-8');
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $header = "ID,Email\x0A";
+        echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
+        $output = fopen('php://output', 'w');
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
+        $students = $school->students;
+        foreach ($students as $student) {
+            $row = array();
+            $row[] = $student->id;
+            $row[] = $student->email;
+
+            //mb_convert_variables ( 'sjis-win', 'utf-8', $row );
+            fputcsv($output, $row);
+        }
+        fclose($output);
+        exit;
+    }
 }

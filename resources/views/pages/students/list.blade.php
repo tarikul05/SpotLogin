@@ -7,6 +7,7 @@
     <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
@@ -84,8 +85,7 @@
     </table>
   </div>
 @endsection
-
-
+@include('layouts.elements.modal_csv_import')
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
@@ -97,8 +97,103 @@
             }
         });
         @can('students-create')
-        $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.export',['school'=> $schoolId]) : route('student.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Download Excel")}}</a><a id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Upload Excel")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
+        $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.export',['school'=> $schoolId]) : route('student.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Download Excel")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Upload Excel")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
         @endcan
-    } );
+
+        if (window.location.href.indexOf('#login') != -1) {
+            $('#importModal').modal('show');
+        }
+        function validateForm() {
+            var currency_code = document.getElementById("currency_code").value;
+            var currency_title = document.getElementById("currency_title").value;
+            var sort_order = document.getElementById("sort_order").value;
+            let error = false;
+            if (currency_code == null || currency_code == "") {
+                    $('#currency_code').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+                    document.getElementById("currency_code").focus();
+                    error = true;
+            }
+            if (currency_title == null || currency_title == "") {
+                document.getElementById("currency_title").focus();
+                $('#currency_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+                error = true;             
+            }
+
+
+            if (error) {
+                return false;
+            }else{
+                return true;
+            }
+        } 
+        $("#csv_import").submit(function (e) {
+            // if(validateForm()) {
+            // } else {
+                e.preventDefault(e);  
+            //}
+        }).validate({
+            // Specify validation rules
+            rules: {
+                csvFile: {
+                    required: true,
+                    //accept: "text/csv"
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                csvFile:"{{ __('Please select a csv file') }}"
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            },
+            submitHandler: function (form) {
+                let loader = $('#pageloader');
+                loader.show("fast");
+                // return false;
+                // var formdata = $("#csv_import").serializeArray();
+                // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+
+
+                // formdata.push({
+                //     "name": "type",
+                //     "value": "student_submit"
+                // });
+                // formdata.push({
+                //     "name": "_token",
+                //     "value": csrfToken
+                // });
+                // $.ajax({
+                //     url: BASE_URL + '/{{ auth()->user()->isSuperAdmin() ? route("admin.student.import",["school"=> $schoolId]) : route("student.import") }}',
+                //     data: formdata,
+                //     type: 'POST',
+                //     dataType: 'json',
+                //     //async: false,
+                //     //encode: true,
+                //     beforeSend: function (xhr) {
+                //         loader.show("fast");
+                //     },
+                //     success: function (data) {
+                //         if (data.status == 0) {
+                //             var username = $("#csvFile").val();
+                //             $("#importModal").modal('hide');
+                //             successModalCall("{{ __('Imported Successfully') }}");
+                //             // setTimeout(function () {
+                //             //     window.location.href = data.login_url;
+                //             // }, 1000);
+                //         } else {
+                //             errorModalCall("{{ __('Invalid username or password') }}");
+                //         }
+                //     }, // sucess
+                //     error: function (ts) {
+                //         errorModalCall("{{ __('Invalid username or password') }}");
+                //     },
+                //     complete: function () {
+                //         loader.hide("fast");
+                //     }
+                // });
+                // return false; // required to block normal submit since you used ajax
+            }
+        });
+    });
 </script>
 @endsection
