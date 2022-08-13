@@ -209,7 +209,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), "/{school}/import-student", array(
       'uses' => 'StudentsController@import',
       'as' => 'admin.student.import'
-    ));
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
@@ -306,7 +306,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(array('GET', 'POST'), "import-student", array(
       'uses' => 'StudentsController@import',
       'as' => 'student.import'
-    ));
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     Route::delete('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('studentDelete');
     Route::post('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'changeStatus'])->name('studentStatus');

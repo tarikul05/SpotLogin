@@ -126,17 +126,11 @@
                 return true;
             }
         } 
-        $("#csv_import").submit(function (e) {
-            // if(validateForm()) {
-            // } else {
-                e.preventDefault(e);  
-            //}
-        }).validate({
+        $("#csv_import").validate({
             // Specify validation rules
             rules: {
                 csvFile: {
-                    required: true,
-                    //accept: "text/csv"
+                    required: true
                 }
             },
             // Specify validation error messages
@@ -147,51 +141,7 @@
                 $(element).parents('.form-group').append(error);
             },
             submitHandler: function (form) {
-                let loader = $('#pageloader');
-                loader.show("fast");
-                // return false;
-                // var formdata = $("#csv_import").serializeArray();
-                // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-
-
-                // formdata.push({
-                //     "name": "type",
-                //     "value": "student_submit"
-                // });
-                // formdata.push({
-                //     "name": "_token",
-                //     "value": csrfToken
-                // });
-                // $.ajax({
-                //     url: BASE_URL + '/{{ auth()->user()->isSuperAdmin() ? route("admin.student.import",["school"=> $schoolId]) : route("student.import") }}',
-                //     data: formdata,
-                //     type: 'POST',
-                //     dataType: 'json',
-                //     //async: false,
-                //     //encode: true,
-                //     beforeSend: function (xhr) {
-                //         loader.show("fast");
-                //     },
-                //     success: function (data) {
-                //         if (data.status == 0) {
-                //             var username = $("#csvFile").val();
-                //             $("#importModal").modal('hide');
-                //             successModalCall("{{ __('Imported Successfully') }}");
-                //             // setTimeout(function () {
-                //             //     window.location.href = data.login_url;
-                //             // }, 1000);
-                //         } else {
-                //             errorModalCall("{{ __('Invalid username or password') }}");
-                //         }
-                //     }, // sucess
-                //     error: function (ts) {
-                //         errorModalCall("{{ __('Invalid username or password') }}");
-                //     },
-                //     complete: function () {
-                //         loader.hide("fast");
-                //     }
-                // });
-                // return false; // required to block normal submit since you used ajax
+                return true;
             }
         });
     });
