@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade login-signup-modal" id="importModal" tabindex="-1" aria-hidden="true"
-  aria-labelledby="importModalLabel">
+  aria-labelledby="importModalLabel" style="display:none;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header d-block text-center border-0">

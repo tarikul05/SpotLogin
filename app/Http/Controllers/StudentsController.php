@@ -1094,78 +1094,95 @@ class StudentsController extends Controller
     {
         try {
             if (!file_exists($filename) || !is_readable($filename))
-                return false;
+                return redirect()->back()->with('error', __('Internal server error'));
 
             $header = null;
             $data = array();
             if (($handle = fopen($filename, 'r')) !== false) {
-                while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
-                    $student_id = $row[0];
-                    $email = $row[1];
-                    $username = $row[2];
-                    $lastname = $row[3];
-                    $firstname = $row[4];
-                    $nickname = $row[5];
-                    $gender_id = $row[6];
-                    $level_id = $row[7];
-                    $licence_usp = $row[8];
-                    $comment = $row[9];
-                    $is_active = $row[10];
-                    if ($gender_id == 'Male') {
-                        $gender_id = 1;
-                    }
-                    else if ($gender_id == 'Female') {
-                        $gender_id = 2;
-                    }
-                    else if ($gender_id == 'Not specified') {
-                        $gender_id = 3;
-                    } else{
-                        $gender_id = '';
-                    }
-                    $data = [
-                        'email' => $email,
-                        'username' => $username,
-                        'lastname' => $lastname,
-                        'firstname' => $firstname,
-                        'nickname' => $nickname,
-                        'gender_id' => $gender_id,
-                        'level_id' => $level_id,
-                        'licence_usp' => $licence_usp,
-                        'comment' => $comment,
-                        'is_active' => isset($is_active) ? $is_active : 0
-                    ];
-                    if (isset($student_id)) {
-                        DB::beginTransaction();
-                        try {
-                            $student = Student::active()->find($student_id);
-                            if ($student) {
-                                $this->studentUpdate($schoolId,$data,$student);
-                            } else{
-                                continue;
-                            }
-                            DB::commit();
-                        } catch (Exception $e) {
-                            // dd($e);
-                            DB::rollBack();
+                while (($row = fgetcsv($handle, 10240, $delimiter)) !== false) {
+                    if (empty($headers))
+                        $headers = $row;
+                    else if (is_array($row)) {
+                        array_splice($row, count($headers));
+                        $row = $row;
+                        $student_id = $row[0];
+                        $email = $row[1];
+                        $username = $row[2];
+                        $lastname = $row[3];
+                        $firstname = $row[4];
+                        $nickname = $row[5];
+                        $gender_id = $row[6];
+                        $level_id = $row[7];
+                        $licence_usp = $row[8];
+                        $comment = $row[9];
+                        $is_active = $row[10];
+                        if ($gender_id == 'Male') {
+                            $gender_id = 1;
                         }
-                    } else {
-                        DB::beginTransaction();
-                        try {
-                            $user = User::where(['email' => $data['email'], 'person_type' => 'App\Models\Student', 'school_id' => $schoolId])->first();
-                            if ($user) {
-                                $student = $user->personable;
+                        else if ($gender_id == 'Female') {
+                            $gender_id = 2;
+                        }
+                        else if ($gender_id == 'Not specified') {
+                            $gender_id = 3;
+                        } else{
+                            $gender_id = '';
+                        }
+                        $data = [
+                            'email' => $email,
+                            'username' => $username,
+                            'lastname' => $lastname,
+                            'firstname' => $firstname,
+                            'nickname' => $nickname,
+                            'gender_id' => $gender_id,
+                            'level_id' => $level_id,
+                            'licence_usp' => $licence_usp,
+                            'comment' => $comment,
+                            'is_active' => isset($is_active) ? $is_active : 0
+                        ];
+                        
+                        if (isset($student_id) && !empty($student_id)) {
+                            //dd($data);
+                            DB::beginTransaction();
+                            try {
+                                $student = Student::active()->find($student_id);
                                 if ($student) {
                                     $this->studentUpdate($schoolId,$data,$student);
+                                } else{
+                                    continue;
                                 }
-                            } else {
-                                $student = Student::create($data);
-                                $student->save();
-                                $this->schoolStudentData($schoolId,$data,$student);
+                                DB::commit();
+                            } catch (Exception $e) {
+                                // dd($e);
+                                DB::rollBack();
                             }
-                            DB::commit();
-                        } catch (Exception $e) {
-                            // dd($e);
-                            DB::rollBack();
+                            
+                        } else {
+                            DB::beginTransaction();
+                            
+                            try {
+                                $user = User::where(['email' => $data['email'], 'person_type' => 'App\Models\Student', 'school_id' => $schoolId])->first();
+                                
+                                if ($user) {
+                                    $student = $user->personable;
+                                    if ($student) {
+                                        $this->studentUpdate($schoolId,$data,$student);
+                                    }
+                                } else {
+                                    
+                                    $studentData = $data;
+                                    unset($studentData['comment']);
+                                    $student = Student::create($studentData);
+                                    $student->save();
+                                    //
+                                    $this->schoolStudentData($schoolId,$data,$student);
+                                    //DB::commit();
+                                }
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                //dd($e);
+                                DB::rollBack();
+                            }
+                            
                         }
                     }
                 }
@@ -1173,7 +1190,7 @@ class StudentsController extends Controller
             }
             return true;
         } catch (\Exception $e) {
-            DB::rollBack();
+            //DB::rollBack();
             return redirect()->back()->with('error', __('Internal server error'));
         }
     }
@@ -1181,14 +1198,17 @@ class StudentsController extends Controller
     public function studentUpdate($schoolId,$data,$student)
     {
         $student_id = $student->id;
-        $user = User::where(['person_id' => $student_id])->first();
+        $user = User::where(['person_id' => $student_id,'person_type' => 'App\Models\Student'])->first();
         //$student = $user->personable;
-        Student::where('id', $student->id)->update($data);
+        $studentData = $data;
+        unset($studentData['comment']);
+        Student::where('id', $student->id)->update($studentData);
         if ($user) {
             $this->schoolStudentData($schoolId,$data,$student,'update',1);
         } else {
             $this->schoolStudentData($schoolId,$data,$student,'update');
         }
+        return true;
         
     }
 
@@ -1205,65 +1225,76 @@ class StudentsController extends Controller
             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
             'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : ''
         ];
-        $schoolStudent = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
-        if ($schoolStudent) {
+        
+        $schoolStudentExist = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
+        if (!empty($schoolStudentExist)) {
             $status = 'update';
         }
         if ($has_user_account ==0) {
             $status = 'create';
         }
+        try{
+            
+            if ($status =='create') {
+                
+                $schoolStudentData = SchoolStudent::create($schoolStudent);
+                $schoolStudentData->save();
+                if (!empty($alldata['email'])) {
 
-        if ($status =='create') {
-            $schoolStudentData = SchoolStudent::create($schoolStudent);
-            $schoolStudentData->save();
-            if (!empty($alldata['email'])) {
+                    //sending activation email after successful signed up
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $data['username'] = $alldata['name'] = $alldata['nickname'];
+                        $school = School::active()->find($schoolId);
+                        $data['school_name'] = $school->name;
 
-                //sending activation email after successful signed up
-                if (config('global.email_send') == 1) {
-                    $data = [];
-                    $data['email'] = $alldata['email'];
-                    $data['username'] = $alldata['name'] = $alldata['nickname'];
-                    //$data['school_name'] = $schoolName;
+                        $verifyUser = [
+                            'school_id' => $schoolId,
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email', $data['token']);
 
-                    $verifyUser = [
-                        'school_id' => $schoolId,
-                        'person_id' => $student->id,
-                        'person_type' => 'App\Models\Student',
-                        'token' => Str::random(10),
-                        'token_type' => 'VERIFY_SIGNUP',
-                        'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                    ];
-                    $verifyUser = VerifyToken::create($verifyUser);
-                    $data['token'] = $verifyUser->token;
-                    $data['url'] = route('add.verify.email', $data['token']);
-
-                    if ($this->emailSend($data, 'sign_up_confirmation_email')) {
-                        $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                        if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                        } else {
+                            //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
                     } else {
-                        //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        $usersData = [
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'username' => $alldata['username'],
+                            'lastname' => $alldata['lastname'],
+                            'middlename' => '',
+                            'firstname' => $alldata['firstname'],
+                            'email' => $alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password' => Str::random(10),
+                            'is_mail_sent' => 0,
+                            'is_active' => 1,
+                            'is_firstlogin' => 0
+                        ];
+                        $user = User::create($usersData);
+                        $user->save();
+                        return true;
                     }
-                } else {
-                    $usersData = [
-                        'person_id' => $student->id,
-                        'person_type' => 'App\Models\Student',
-                        'username' => $alldata['username'],
-                        'lastname' => $alldata['lastname'],
-                        'middlename' => '',
-                        'firstname' => $alldata['firstname'],
-                        'email' => $alldata['email'],
-                        // 'password'=>$alldata['password'],
-                        'password' => Str::random(10),
-                        'is_mail_sent' => 0,
-                        'is_active' => 1,
-                        'is_firstlogin' => 0
-                    ];
-                    $user = User::create($usersData);
-                    $user->save();
                 }
+            } else {
+                //$schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
+                SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->update($schoolStudent);
+                return true;
             }
-        } else {
-            $schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
-            SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->update($schoolStudent);
+        } catch (\Exception $e) {
+            return true;
+            //dd($e);
+            //return redirect()->back()->with('error', __('Internal server error'));
         }
     }
 }
