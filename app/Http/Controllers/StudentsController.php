@@ -1102,45 +1102,46 @@ class StudentsController extends Controller
                 while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
                     $student_id = $row[0];
                     $email = $row[1];
-                    $name = $row[2];
+                    $username = $row[2];
+                    $lastname = $row[3];
+                    $firstname = $row[4];
+                    $nickname = $row[5];
+                    $gender_id = $row[6];
+                    $level_id = $row[7];
+                    $licence_usp = $row[8];
+                    $comment = $row[9];
+                    $is_active = $row[10];
+                    if ($gender_id == 'Male') {
+                        $gender_id = 1;
+                    }
+                    else if ($gender_id == 'Female') {
+                        $gender_id = 2;
+                    }
+                    else if ($gender_id == 'Not specified') {
+                        $gender_id = 3;
+                    } else{
+                        $gender_id = '';
+                    }
+                    $data = [
+                        'email' => $email,
+                        'username' => $username,
+                        'lastname' => $lastname,
+                        'firstname' => $firstname,
+                        'nickname' => $nickname,
+                        'gender_id' => $gender_id,
+                        'level_id' => $level_id,
+                        'licence_usp' => $licence_usp,
+                        'comment' => $comment,
+                        'is_active' => isset($is_active) ? $is_active : 0
+                    ];
                     if (isset($student_id)) {
-                        $data = [
-                            // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $student->is_active,
-                            'gender_id' => $alldata['gender_id'],
-                            'lastname' => $alldata['lastname'],
-                            'firstname' => $alldata['firstname'],
-                            'birth_date' => date('Y-m-d H:i:s', strtotime($this->sdateFormat($alldata['birth_date']))),
-                            'street' => $alldata['street'],
-                            'street_number' => $alldata['street_number'],
-                            // 'street2' => $alldata['street2'],
-                            'zip_code' => $alldata['zip_code'],
-                            'place' => $alldata['place'],
-                            'country_code' => $alldata['country_code'],
-                            'province_id' => $alldata['province_id'],
-                            'billing_street' => $alldata['billing_street'],
-                            // 'billing_street2' => $alldata['billing_street2'],
-                            'billing_street_number' => $alldata['billing_street_number'],
-                            'billing_zip_code' => $alldata['billing_zip_code'],
-                            'billing_place' => $alldata['billing_place'],
-                            'billing_country_code' => $alldata['billing_country_code'],
-                            'billing_province_id' => $alldata['billing_province_id'],
-                            'father_phone' => $alldata['father_phone'],
-                            'father_email' => $alldata['father_email'],
-                            'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0,
-                            'mother_phone' => $alldata['mother_phone'],
-                            'mother_email' => $alldata['mother_email'],
-                            'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0,
-                            'mobile' => $alldata['mobile'],
-                            'email' => $alldata['email'],
-                            'email2' => $alldata['email2'],
-                            'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0,
-                        ];
-                        
                         DB::beginTransaction();
                         try {
                             $student = Student::active()->find($student_id);
                             if ($student) {
                                 $this->studentUpdate($schoolId,$data,$student);
+                            } else{
+                                continue;
                             }
                             DB::commit();
                         } catch (Exception $e) {
@@ -1150,43 +1151,9 @@ class StudentsController extends Controller
                     } else {
                         DB::beginTransaction();
                         try {
-                            $data = [
-                                // 'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : 0,
-                                'gender_id' => $alldata['gender_id'],
-                                'lastname' => $alldata['lastname'],
-                                'firstname' => $alldata['firstname'],
-                                'birth_date' => date('Y-m-d H:i:s', strtotime($this->sdateFormat($alldata['birth_date']))),
-                                'street' => $alldata['street'],
-                                'street_number' => $alldata['street_number'],
-                                // 'street2' => $alldata['street2'],
-                                'zip_code' => $alldata['zip_code'],
-                                'place' => $alldata['place'],
-                                'country_code' => $alldata['country_code'],
-                                'province_id' => $alldata['province_id'],
-                                'billing_street' => $alldata['billing_street'],
-                                // 'billing_street2' => $alldata['billing_street2'],
-                                'billing_street_number' => $alldata['billing_street_number'],
-                                'billing_zip_code' => $alldata['billing_zip_code'],
-                                'billing_place' => $alldata['billing_place'],
-                                'billing_country_code' => $alldata['billing_country_code'],
-                                'billing_province_id' => $alldata['billing_province_id'],
-                                // 'phone' => $alldata['phone'],
-                                'father_phone' => isset($alldata['father_phone']) ? $alldata['father_phone'] : '',
-                                'father_email' => isset($alldata['father_email']) ? $alldata['father_email'] : '',
-                                'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0,
-                                'mother_phone' => isset($alldata['mother_phone']) ? $alldata['mother_phone'] : '',
-                                'mother_email' => isset($alldata['mother_email']) ? $alldata['mother_email'] : '',
-                                'mother_notify' => isset($alldata['mother_notify']) && !empty($alldata['mother_notify']) ? 1 : 0,
-                                'mobile' => $alldata['mobile'],
-                                'email' => $alldata['email'],
-                                'email2' => $alldata['email2'],
-                                'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0,
-                            ];
-
                             $user = User::where(['email' => $data['email'], 'person_type' => 'App\Models\Student', 'school_id' => $schoolId])->first();
                             if ($user) {
                                 $student = $user->personable;
-                                //$student = Student::active()->find($student_id);
                                 if ($student) {
                                     $this->studentUpdate($schoolId,$data,$student);
                                 }
@@ -1217,38 +1184,45 @@ class StudentsController extends Controller
         $user = User::where(['person_id' => $student_id])->first();
         //$student = $user->personable;
         Student::where('id', $student->id)->update($data);
-        $this->schoolStudentData($schoolId,$data,$student,'update');
+        if ($user) {
+            $this->schoolStudentData($schoolId,$data,$student,'update',1);
+        } else {
+            $this->schoolStudentData($schoolId,$data,$student,'update');
+        }
+        
     }
 
-    public function schoolStudentData($schoolId,$alldata,$student,$status='create')
+    public function schoolStudentData($schoolId,$alldata,$student,$status='create',$has_user_account=0)
     {
-        
         $schoolStudent = [
             'student_id' => $student->id,
             'school_id' => $schoolId,
-            'has_user_account' => isset($alldata['has_user_account']) && !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+            'has_user_account' => $has_user_account,
             'nickname' => $alldata['nickname'],
             'email' => $alldata['email'],
-            'billing_method' => $alldata['billing_method'],
             'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null,
-            'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s', strtotime($alldata['level_date_arp'])) : null,
-            'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null,
             'licence_usp' => $alldata['licence_usp'],
-            'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null,
-            'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s', strtotime($alldata['level_date_usp'])) : null,
             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
+            'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : ''
         ];
+        $schoolStudent = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
+        if ($schoolStudent) {
+            $status = 'update';
+        }
+        if ($has_user_account ==0) {
+            $status = 'create';
+        }
 
         if ($status =='create') {
             $schoolStudentData = SchoolStudent::create($schoolStudent);
             $schoolStudentData->save();
-            if (!empty($data['email'])) {
+            if (!empty($alldata['email'])) {
 
                 //sending activation email after successful signed up
                 if (config('global.email_send') == 1) {
                     $data = [];
-                    $data['email'] = $data['email'];
-                    $data['username'] = $data['name'] = $data['nickname'];
+                    $data['email'] = $alldata['email'];
+                    $data['username'] = $alldata['name'] = $alldata['nickname'];
                     //$data['school_name'] = $schoolName;
 
                     $verifyUser = [
@@ -1266,17 +1240,17 @@ class StudentsController extends Controller
                     if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                         $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                     } else {
-                        return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                     }
                 } else {
                     $usersData = [
                         'person_id' => $student->id,
                         'person_type' => 'App\Models\Student',
-                        'username' => Str::random(10),
-                        'lastname' => $data['lastname'],
+                        'username' => $alldata['username'],
+                        'lastname' => $alldata['lastname'],
                         'middlename' => '',
-                        'firstname' => $data['firstname'],
-                        'email' => $data['email'],
+                        'firstname' => $alldata['firstname'],
+                        'email' => $alldata['email'],
                         // 'password'=>$alldata['password'],
                         'password' => Str::random(10),
                         'is_mail_sent' => 0,
@@ -1289,8 +1263,6 @@ class StudentsController extends Controller
             }
         } else {
             $schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
-            $schoolStudent['is_active'] = isset($alldata['is_active']) ? $alldata['is_active'] : $schoolStudentData->is_active;
-            $schoolStudent['comment'] = isset($alldata['comment']) ? $alldata['comment'] : $schoolStudentData->comment;
             SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->update($schoolStudent);
         }
     }
