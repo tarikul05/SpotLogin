@@ -86,7 +86,7 @@
   </div>
 @endsection
 
-
+@include('layouts.elements.modal_csv_teacher_import')
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
@@ -94,8 +94,30 @@
             "responsive": true,
         });
         @can('teachers-create')
-        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
+        $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teacher.export',['school'=> $schoolId]) : route('teacher.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Download Excel")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Upload Excel")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
         @endcan
+
+        if (window.location.href.indexOf('#login') != -1) {
+            $('#importModal').modal('show');
+        }
+        $("#csv_import").validate({
+            // Specify validation rules
+            rules: {
+                csvFile: {
+                    required: true
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                csvFile:"{{ __('Please select a csv file') }}"
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            },
+            submitHandler: function (form) {
+                return true;
+            }
+        });
     } );
 </script>
 @endsection

@@ -957,4 +957,322 @@ class TeachersController extends Controller
         }
         return response()->json($result);
     }
+
+    /**
+     * export teacher school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function export($schoolId = null, Request $request, Teacher $teacher)
+    {
+        $filename = date('Ymd_His') . '.csv';
+        header('Content-Encoding: UTF-8');
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        $header = "ID,Email,username,Family Name,Firstname,Nickname,Gender,level_id,Licence,Comment,Status\x0A";
+        echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
+        $output = fopen('php://output', 'w');
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
+        $teachers = $school->teachers;
+        foreach ($teachers as $teacher) {
+            $row = array();
+            $teacher_user = User::where(['person_id' => $teacher->id, 'person_type' => 'App\Models\Teacher'])->first();
+            $schoolTeacher = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
+            $row[] = $teacher->id;
+            $row[] = $teacher->email;
+            if ($teacher_user) {
+                $row[] = isset($teacher_user->username) && !empty($teacher_user->username) ? $teacher_user->username : '';
+                $row[] = isset($teacher_user->lastname) && !empty($teacher_user->lastname) ? $teacher_user->lastname : '';
+                $row[] = isset($teacher_user->firstname) && !empty($teacher_user->firstname) ? $teacher_user->firstname : '';
+            } else {
+                $row[] = '';
+                $row[] = isset($teacher->lastname) && !empty($teacher->lastname) ? $teacher->lastname : '';
+                $row[] = isset($teacher->firstname) && !empty($teacher->firstname) ? $teacher->firstname : '';
+            }
+            if ($schoolTeacher) {
+                $row[] = isset($schoolTeacher->nickname) && !empty($schoolTeacher->nickname) ? $schoolTeacher->nickname : '';
+            } else {
+                $row[] = '';
+            }
+
+            if ($teacher->gender_id == 1) {
+                $row[] = 'Male';
+            } else if ($teacher->gender_id == 2) {
+                $row[] = 'Female';
+            } else if ($teacher->gender_id == 3) {
+                $row[] = 'Not specified';
+            } else {
+                $row[] = '';
+            }
+            $row[] = isset($teacher->level_id) && !empty($teacher->level_id) ? $teacher->level_id : '';
+            $row[] = isset($teacher->licence_usp) && !empty($teacher->licence_usp) ? $teacher->licence_usp : '';
+            $row[] = isset($schoolTeacher->comment) && !empty($schoolTeacher->comment) ? $schoolTeacher->comment : '';
+            $row[] = isset($teacher->is_active) && !empty($teacher->is_active) ? $teacher->is_active : '';
+
+            fputcsv($output, $row);
+        }
+        fclose($output);
+        exit;
+    }
+
+    /**
+     * export teacher school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function import($schoolId = null, Request $request, Teacher $teacher)
+    {
+        try {
+            $alldata = $request->all();
+            $user = Auth::user();
+            if ($user->isSuperAdmin()) {
+                $school = School::active()->find($schoolId);
+                if (empty($school)) {
+                    return [
+                        'status' => 1,
+                        'message' =>  __('School not selected')
+                    ];
+                }
+                $schoolId = $school->id;
+            } else {
+                $schoolId = $user->selectedSchoolId();
+                $school = School::active()->find($schoolId);
+                $schoolId = $school->id;
+            }
+            if ($request->file('csvFile')) {
+                try {
+                    $csvFile = $request->file('csvFile');
+                    if ($csvFile->getSize() > 0) {
+                        $mime_type = $csvFile->getMimeType();
+                        $extension = $csvFile->getClientOriginalExtension();
+                        // Create list name
+                        $name = time() . '-' . $csvFile->getClientOriginalName();
+                        $real_path = $csvFile->getRealPath();
+                        if ($extension != 'csv') {
+                            return redirect()->back();
+                        }
+                        $csvArr = $this->csvToArray($schoolId, $csvFile);
+                        //dd($csvArr);
+                        return back()->with('success', __('Teacher updated successfully!'));
+                    }
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', __('Internal server error'));
+                }
+            }
+        } catch (\Exception $e) {
+            //return error message
+            return redirect()->back()->with('error', __('Internal server error'));
+        }
+    }
+
+
+    public function csvToArray($schoolId, $filename = '', $delimiter = ',')
+    {
+        try {
+            if (!file_exists($filename) || !is_readable($filename))
+                return redirect()->back()->with('error', __('Internal server error'));
+
+            $header = null;
+            $data = array();
+            if (($handle = fopen($filename, 'r')) !== false) {
+                while (($row = fgetcsv($handle, 10240, $delimiter)) !== false) {
+                    if (empty($headers))
+                        $headers = $row;
+                    else if (is_array($row)) {
+                        array_splice($row, count($headers));
+                        $row = $row;
+                        $teacher_id = $row[0];
+                        $email = $row[1];
+                        $username = $row[2];
+                        $lastname = $row[3];
+                        $firstname = $row[4];
+                        $nickname = $row[5];
+                        $gender_id = $row[6];
+                        $level_id = $row[7];
+                        $licence_usp = $row[8];
+                        $comment = $row[9];
+                        $is_active = $row[10];
+                        if ($gender_id == 'Male') {
+                            $gender_id = 1;
+                        } else if ($gender_id == 'Female') {
+                            $gender_id = 2;
+                        } else if ($gender_id == 'Not specified') {
+                            $gender_id = 3;
+                        } else {
+                            $gender_id = '';
+                        }
+                        $data = [
+                            'email' => $email,
+                            'username' => $username,
+                            'lastname' => $lastname,
+                            'firstname' => $firstname,
+                            'nickname' => $nickname,
+                            'gender_id' => $gender_id,
+                            'level_id' => $level_id,
+                            'licence_usp' => $licence_usp,
+                            'comment' => $comment,
+                            'is_active' => isset($is_active) ? $is_active : 0
+                        ];
+
+                        if (isset($teacher_id) && !empty($teacher_id)) {
+                            //dd($data);
+                            DB::beginTransaction();
+                            try {
+                                $teacher = Teacher::active()->find($teacher_id);
+                                if ($teacher) {
+                                    $this->teacherUpdate($schoolId, $data, $teacher);
+                                } else {
+                                    continue;
+                                }
+                                DB::commit();
+                            } catch (Exception $e) {
+                                // dd($e);
+                                DB::rollBack();
+                            }
+                        } else {
+                            DB::beginTransaction();
+
+                            try {
+                                $user = User::where(['email' => $data['email'], 'person_type' => 'App\Models\Teacher', 'school_id' => $schoolId])->first();
+
+                                if ($user) {
+                                    $teacher = $user->personable;
+                                    if ($teacher) {
+                                        $this->teacherUpdate($schoolId, $data, $teacher);
+                                    }
+                                } else {
+
+                                    $teacherData = $data;
+                                    unset($teacherData['comment']);
+                                    $teacher = Teacher::create($teacherData);
+                                    $teacher->save();
+                                    //
+                                    $this->schoolTeacherData($schoolId, $data, $teacher);
+                                    //DB::commit();
+                                }
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                //dd($e);
+                                DB::rollBack();
+                            }
+                        }
+                    }
+                }
+                fclose($handle);
+            }
+            return true;
+        } catch (\Exception $e) {
+            //DB::rollBack();
+            return redirect()->back()->with('error', __('Internal server error'));
+        }
+    }
+
+    public function teacherUpdate($schoolId, $data, $teacher)
+    {
+        $teacher_id = $teacher->id;
+        $user = User::where(['person_id' => $teacher_id, 'person_type' => 'App\Models\Teacher'])->first();
+        //$teacher = $user->personable;
+        $teacherData = $data;
+        unset($teacherData['comment']);
+        Teacher::where('id', $teacher->id)->update($teacherData);
+        if ($user) {
+            $this->schoolTeacherData($schoolId, $data, $teacher, 'update', 1);
+        } else {
+            $this->schoolTeacherData($schoolId, $data, $teacher, 'update');
+        }
+        return true;
+    }
+
+    public function schoolTeacherData($schoolId, $alldata, $teacher, $status = 'create', $has_user_account = 0)
+    {
+        $schoolTeacher = [
+            'teacher_id' => $teacher->id,
+            'school_id' => $schoolId,
+            'has_user_account' => $has_user_account,
+            'nickname' => $alldata['nickname'],
+            'email' => $alldata['email'],
+            'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null,
+            'licence_usp' => $alldata['licence_usp'],
+            'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
+            'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : ''
+        ];
+
+        $schoolTeacherExist = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
+        if (!empty($schoolTeacherExist)) {
+            $status = 'update';
+        }
+        if ($has_user_account == 0) {
+            $status = 'create';
+        }
+        try {
+
+            if ($status == 'create') {
+
+                $schoolTeacherData = SchoolTeacher::create($schoolTeacher);
+                $schoolTeacherData->save();
+                if (!empty($alldata['email'])) {
+
+                    //sending activation email after successful signed up
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $data['username'] = $alldata['name'] = $alldata['nickname'];
+                        $school = School::active()->find($schoolId);
+                        $data['school_name'] = $school->name;
+
+                        $verifyUser = [
+                            'school_id' => $schoolId,
+                            'person_id' => $teacher->id,
+                            'person_type' => 'App\Models\Teacher',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email', $data['token']);
+
+                        if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                        } else {
+                            //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
+                    } else {
+                        $usersData = [
+                            'person_id' => $teacher->id,
+                            'person_type' => 'App\Models\Teacher',
+                            'username' => $alldata['username'],
+                            'lastname' => $alldata['lastname'],
+                            'middlename' => '',
+                            'firstname' => $alldata['firstname'],
+                            'email' => $alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password' => Str::random(10),
+                            'is_mail_sent' => 0,
+                            'is_active' => 1,
+                            'is_firstlogin' => 0
+                        ];
+                        $user = User::create($usersData);
+                        $user->save();
+                        return true;
+                    }
+                }
+            } else {
+                //$schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
+                SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->update($schoolTeacher);
+                return true;
+            }
+        } catch (\Exception $e) {
+            return true;
+            //dd($e);
+            //return redirect()->back()->with('error', __('Internal server error'));
+        }
+    }
 }
