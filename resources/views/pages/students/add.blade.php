@@ -391,8 +391,8 @@
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											@foreach($provinces as $key => $province)
-												<option value="{{ $key }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 											@endforeach
 										</select>
 									</div>
