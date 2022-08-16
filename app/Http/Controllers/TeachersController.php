@@ -981,6 +981,7 @@ class TeachersController extends Controller
         $teachers = $school->teachers;
         foreach ($teachers as $teacher) {
             $row = array();
+            if ($teacher->pivot->role_type == 'school_admin') continue;
             $teacher_user = User::where(['person_id' => $teacher->id, 'person_type' => 'App\Models\Teacher'])->first();
             $schoolTeacher = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
             $row[] = $teacher->id;
