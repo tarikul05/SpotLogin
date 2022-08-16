@@ -589,10 +589,15 @@ button#save_btn i {
     float: left;
 }
 a.btn.btn-theme-success.add_teacher_btn {
-    max-width: 130px;
+    max-width: 200px;
     float: left;
     margin-left: 10px;
 }
+
+a.btn.btn-theme-success.add_teacher_btn img {
+    margin-right: 6px;
+}
+
 div#example_filter {
     margin-bottom: 20px;
 }
