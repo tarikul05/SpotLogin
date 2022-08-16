@@ -81,12 +81,16 @@ class AgendaController extends Controller
         foreach ($event_types_all as $key => $value) {
 
             if ($key == 10) {
-                if ($eventCategories) {
+              $count_cat = 0;
+                if (!empty($eventCategories)) {
                     foreach ($eventCategories as $cat => $eventCat) {
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
-                     }
+                        $count_cat++;
+                      }
+                } 
+                if ($count_cat==0) {
+                    $event_types[$key]= $value;
                 }
-                //$event_types[$key]= $value;
 
 
             } else{
