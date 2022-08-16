@@ -26,6 +26,7 @@ class School extends BaseModel
      */
     protected $fillable = [
         'school_name',
+        'timezone',
         'legal_status',
         'incorporation_date',
         'street',
