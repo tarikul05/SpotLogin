@@ -2745,7 +2745,12 @@ admin_main_style.css
             $('#event_teacher_div').hide();
             $('#event_student_div').hide();
         } else {
-            $('#event_location_div').show();
+            if ($("#event_location option").length > 0 ) {
+                $('#event_location_div').show();
+            }else{
+               $('#event_location_div').hide(); 
+            }
+
             $('#event_teacher_div').show();
             $('#event_student_div').show();
         }	
