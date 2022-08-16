@@ -972,7 +972,7 @@ class TeachersController extends Controller
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $header = "ID,Email,username,Family Name,Firstname,Nickname,Gender,level_id,Licence,Comment,Status\x0A";
+        $header = "ID,Email,username,Family Name,Firstname,Nickname,Gender,Licence,role_type,background color,Comment,Status\x0A";
         echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
         $output = fopen('php://output', 'w');
         $user = Auth::user();
@@ -987,13 +987,11 @@ class TeachersController extends Controller
             $row[] = $teacher->email;
             if ($teacher_user) {
                 $row[] = isset($teacher_user->username) && !empty($teacher_user->username) ? $teacher_user->username : '';
-                $row[] = isset($teacher_user->lastname) && !empty($teacher_user->lastname) ? $teacher_user->lastname : '';
-                $row[] = isset($teacher_user->firstname) && !empty($teacher_user->firstname) ? $teacher_user->firstname : '';
             } else {
-                $row[] = '';
-                $row[] = isset($teacher->lastname) && !empty($teacher->lastname) ? $teacher->lastname : '';
-                $row[] = isset($teacher->firstname) && !empty($teacher->firstname) ? $teacher->firstname : '';
+                $row[] = '';    
             }
+            $row[] = isset($teacher->lastname) && !empty($teacher->lastname) ? $teacher->lastname : '';
+            $row[] = isset($teacher->firstname) && !empty($teacher->firstname) ? $teacher->firstname : '';
             if ($schoolTeacher) {
                 $row[] = isset($schoolTeacher->nickname) && !empty($schoolTeacher->nickname) ? $schoolTeacher->nickname : '';
             } else {
@@ -1009,8 +1007,13 @@ class TeachersController extends Controller
             } else {
                 $row[] = '';
             }
-            $row[] = isset($teacher->level_id) && !empty($teacher->level_id) ? $teacher->level_id : '';
-            $row[] = isset($teacher->licence_usp) && !empty($teacher->licence_usp) ? $teacher->licence_usp : '';
+            $row[] = isset($teacher->licence_js) && !empty($teacher->licence_js) ? $teacher->licence_js : '';
+            if ($schoolTeacher) {
+              $row[] = isset($schoolTeacher->role_type) && !empty($schoolTeacher->role_type) ? $schoolTeacher->role_type : '';
+            } else {
+                $row[] = '';
+            }
+            $row[] = isset($schoolTeacher->bg_color_agenda) && !empty($schoolTeacher->bg_color_agenda) ? $schoolTeacher->bg_color_agenda : '';
             $row[] = isset($schoolTeacher->comment) && !empty($schoolTeacher->comment) ? $schoolTeacher->comment : '';
             $row[] = isset($teacher->is_active) && !empty($teacher->is_active) ? $teacher->is_active : '';
 
