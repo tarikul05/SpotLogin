@@ -1230,9 +1230,7 @@ class StudentsController extends Controller
         if (!empty($schoolStudentExist)) {
             $status = 'update';
         }
-        if ($has_user_account ==0) {
-            $status = 'create';
-        }
+        
         try{
             
             if ($status =='create') {
@@ -1289,6 +1287,55 @@ class StudentsController extends Controller
             } else {
                 //$schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
                 SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->update($schoolStudent);
+                if ($has_user_account ==0) {
+                  if (!empty($alldata['email'])) {
+
+                    //sending activation email after successful signed up
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $data['username'] = $alldata['name'] = $alldata['nickname'];
+                        $school = School::active()->find($schoolId);
+                        $data['school_name'] = $school->name;
+
+                        $verifyUser = [
+                            'school_id' => $schoolId,
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(10),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email', $data['token']);
+
+                        if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                            $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                        } else {
+                            //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
+                    } else {
+                        $usersData = [
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'username' => $alldata['username'],
+                            'lastname' => $alldata['lastname'],
+                            'middlename' => '',
+                            'firstname' => $alldata['firstname'],
+                            'email' => $alldata['email'],
+                            // 'password'=>$alldata['password'],
+                            'password' => Str::random(10),
+                            'is_mail_sent' => 0,
+                            'is_active' => 1,
+                            'is_firstlogin' => 0
+                        ];
+                        $user = User::create($usersData);
+                        $user->save();
+                        return true;
+                    }
+                  }
+                }
                 return true;
             }
         } catch (\Exception $e) {
