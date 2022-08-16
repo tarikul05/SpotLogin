@@ -81,12 +81,16 @@ class AgendaController extends Controller
         foreach ($event_types_all as $key => $value) {
 
             if ($key == 10) {
-                if ($eventCategories) {
+              $count_cat = 0;
+                if (!empty($eventCategories)) {
                     foreach ($eventCategories as $cat => $eventCat) {
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
-                     }
+                        $count_cat++;
+                      }
+                } 
+                if ($count_cat==0) {
+                    $event_types[$key]= $value;
                 }
-                //$event_types[$key]= $value;
 
 
             } else{
@@ -303,7 +307,8 @@ class AgendaController extends Controller
             // $events = array();
             foreach ($eventData as $key => $fetch) {
 
-                //echo $fetch->date_start;
+                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);
+                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$data['zone']);
                 if ($day_diff ==0) {
                     $date_start = strtotime($fetch->date_start);
                     $date_start =$target_start_date.' '.date('H:i:s', $date_start);
@@ -328,8 +333,8 @@ class AgendaController extends Controller
                     // $date_end = strtotime($fetch->date_end);
                     // $date_end =$target_start_date.' '.date('H:i:s', $date_end);
                 }
-
-                //exit();
+                $date_start = $this->formatDateTimeZone($date_start, 'long', $data['zone'],'UTC',);
+                $date_end = $this->formatDateTimeZone($date_end, 'long',$data['zone'],'UTC');
                 $data = [
                     'title' => $fetch->title,
                     'school_id' => $fetch->school_id,
@@ -452,17 +457,21 @@ class AgendaController extends Controller
 
         $events = array();
         foreach ($eventData as $key => $fetch) {
+            $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);
+            $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$data['zone']);
             $e = array();
             $e['id'] = $fetch->id;
 
             $e['title']=(substr($fetch->title,0,1)==',') ? substr($fetch->title,1) : substr($fetch->title,0);
 			$e['start'] = $fetch->date_start;
             $e['end'] = $fetch->date_end;
-            if (isset($data['zone'])) {
-                $e['start'] = $fetch->date_start.$data['zone'];
-                $e['end'] = $fetch->date_end.$data['zone'];
+            // print_r($e['start']);
+            // exit();
+            // if (isset($data['zone'])) {
+            //     $e['start'] = $fetch->date_start.$data['zone'];
+            //     $e['end'] = $fetch->date_end.$data['zone'];
 
-            }
+            // }
             $start_date = date('Y-m-d', strtotime($fetch->date_start));
             $end_date = date('Y-m-d', strtotime($fetch->date_end));  
             $allday = ($fetch->fullday_flag == "Y") ? true : false;

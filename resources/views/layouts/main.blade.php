@@ -24,6 +24,11 @@
     var action = '{{ $action ?? '' }}';
     var HTTP_HOST = '{{ $_SERVER['HTTP_HOST'] }}';
     var MESSAGE_CONFIRM_DELETE = '{{ __('MESSAGE_CONFIRM_DELETE') }}';
+    function getTimeZone() {
+      var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
+      return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
+    }
+    
 </script>
 <script src="{{ asset('js/common-scripts.js')}}"></script>
 

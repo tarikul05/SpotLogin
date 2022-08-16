@@ -71,7 +71,8 @@ class UserController extends Controller
                 'school_type'=>$scType,
                 'max_students'=>0,
                 'max_teachers'=>0,
-                'is_active'=>1
+                'is_active'=>1,
+                'timezone'=>$data['timezone']
             ];
             if (!empty($data['country_code'])) {
                 $currencyExists = Currency::byCountry($data['country_code'])->active()->first();
@@ -300,8 +301,7 @@ class UserController extends Controller
                                         ['expire_date', '>=', $to],
                                         ['token', $token]
                                     ])->first();
-
-
+            $timezones = config('global.timezones');
             if(isset($verifyToken) ){
                 $user_data = $verifyToken->personable;
                 $school = $verifyToken->school;
@@ -317,7 +317,7 @@ class UserController extends Controller
                     }else{
                         $user_data->email = $user_data->email;
                     }
-                    return view('pages.verify.add')->with(compact('school','countries','genders','user_data','verifyToken'));
+                    return view('pages.verify.add')->with(compact('school','timezones','countries','genders','user_data','verifyToken'));
                 }else{
                     if ($verifyToken->person_type =='App\Models\Student') {
                         $exist = SchoolStudent::where(['student_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
@@ -341,7 +341,7 @@ class UserController extends Controller
                     }
                     if($user_data->user->is_active ==3) {
 
-                        return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
+                        return view('pages.verify.active_school_user')->with(compact('school','timezones','countries','genders','user_data','verifyToken'));
 
                     }
                     else{
@@ -354,7 +354,7 @@ class UserController extends Controller
 
                         }
                         if ($exist) {
-                            return view('pages.verify.active_school_user')->with(compact('school','countries','genders','user_data','verifyToken'));
+                            return view('pages.verify.active_school_user')->with(compact('school','timezones','countries','genders','user_data','verifyToken'));
                         } else {
                             echo $status = "User already added please login.";
                             header( "refresh:2;url=/" );
