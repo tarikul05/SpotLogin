@@ -341,7 +341,7 @@ admin_main_style.css
                                                             </div>	
                                                             <div class="col-sm-4 offset-md-1 hide_on_off">
                                                                 <div class="input-group"> 
-                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker_start" value="{{old('start_time')}}">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-clock-o"></i>
                                                                     </span>
@@ -3019,7 +3019,7 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
-	$('.timepicker').timepicker({
+	$('.timepicker_start').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
 		minTime: '0',
@@ -3030,9 +3030,25 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+            $('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
 			CalcDuration();
 		}
 	});
+
+    $('.timepicker').timepicker({
+        timeFormat: 'HH:mm',
+        interval: 15,
+        minTime: '0',
+        maxTime: '23:59',
+        defaultTime: '11',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true,
+        change:function(time){
+            CalcDuration();
+        }
+    });
 	
 	function CalcDuration(){
 		var el_start = $('#start_time'),
@@ -3098,6 +3114,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
+        console.log("tttt: ")
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
