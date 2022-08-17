@@ -487,6 +487,7 @@ class AgendaController extends Controller
                 $schoolTeacher = SchoolTeacher::active()->where('teacher_id',$fetch->teacher_id)->where('school_id',$fetch->school_id)->first();
                 if (!empty($schoolTeacher)) {
                     $e['backgroundColor'] = $schoolTeacher->bg_color_agenda;
+                    $e['teacher_name'] = $schoolTeacher->nickname;
                 }
             }
             $e['event_category_name'] = '';
@@ -529,9 +530,9 @@ class AgendaController extends Controller
             $student_name ='';
             $i=0;
             foreach($eventDetailsStudentId as $std){
-                $student = Student::find($std['student_id']);
-                if ($student) {
-                    
+                // $student = Student::find($std['student_id']);
+                $schoolStudent = $schoolTeacher = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
+                if ($schoolStudent) {
                     if ($i!=0) {
                         if ($i==count($eventDetailsStudentId)) {
                             $student_name .='';
@@ -539,7 +540,8 @@ class AgendaController extends Controller
                             $student_name .=',';
                         }
                     }
-                    $student_name .= $student->firstname;
+                    // $student_name .= $student->firstname;
+                    $student_name .= $schoolStudent->nickname;
                     $i++;
                 }
             }
