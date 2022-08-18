@@ -30,7 +30,8 @@ class SchoolStudent extends BaseModel
         'licence_usp',
         'level_skating_usp',
         'level_date_usp',
-        'comment'
+        'comment',
+        'send_email'
     ];
 
    
