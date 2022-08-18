@@ -49,7 +49,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
-													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
+													<option data-invoice="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
