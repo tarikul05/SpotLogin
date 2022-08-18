@@ -37,6 +37,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
+					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -311,7 +312,8 @@
 						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
 							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 						@endif
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+						<button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
 					</div>
 				</form>
 			</div>
@@ -724,8 +726,18 @@ function confirm_event(){
 			$('#student').multiselect( 'disable', true );
 		}else{
 			$('#student').multiselect( 'disable', false );
-		}
-		
+		}	
 	})
+
+	$( document ).ready(function() {
+		$(function() {
+			$("#save_btn_more").click(function(){
+			$("#save_btn_value"). val(1);
+			});
+			$("#save_btn").click(function(){
+			$("#save_btn_value"). val(0);
+			});
+		});
+	});
 </script>
 @endsection`

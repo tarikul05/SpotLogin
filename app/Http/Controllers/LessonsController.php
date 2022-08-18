@@ -18,6 +18,7 @@ use App\Models\Location;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
 use App\Models\Currency;
+use Redirect;
 use DB;
 
 class LessonsController extends Controller
@@ -264,13 +265,17 @@ class LessonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function addLesson(Request $request, $schoolId = null)
-    {
+    {   
+        $lessonlId= $_GET['id'];
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
+        $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
+        $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
@@ -278,7 +283,7 @@ class LessonsController extends Controller
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
 
-        return view('pages.calendar.add_lesson')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
+        return view('pages.calendar.add_lesson')->with(compact('lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency','studentOffList'));
     }
 
      /**
@@ -343,8 +348,10 @@ class LessonsController extends Controller
                         'status' => 1,
                         'message' =>  __('Successfully Registered')
                     ];
+                }else if($lessonData['save_btn_more'] == 2){
+                    return back()->withInput($request->all())->with('success', __('Successfully Registered'));
                 }else{
-                    return [
+                     return [
                         'status' => 2,
                         'message' =>  __('Successfully Registered')
                     ];
@@ -453,9 +460,13 @@ class LessonsController extends Controller
                     $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-                 
-                 return back()->with('success', __('Successfully Registered'));
-            }  
+            
+                if($lessonData['save_btn_more'] == 1){
+                    return Redirect::to($schoolId.'/add-lesson?id='.$lessonlId);
+                }else{
+                    return back()->with('success', __('Successfully Registered'));
+                } 
+        }  
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
