@@ -58,11 +58,12 @@ class SendEmailInvitation extends Command
         if (!empty($schools)) {
             foreach ($schools as $school) {
                 $schoolId = $school->id;
-                $schoolStudentData = SchoolStudent::active()->where(['send_email' => 1, 'school_id' => $schoolId])->get();
+                $schoolStudentData = SchoolStudent::where(['is_sent_invite' => 1, 'school_id' => $schoolId])->get();
                 if (!empty($schoolStudentData)) {
+                    \Log::info(get_class($this) . ': school '.$school->school_name.' ');
                     foreach ($schoolStudentData as $schoolStudent) {
                         $studentId = $schoolStudent->student_id;
-                        $student = Student::active()->find($studentId);
+                        $student = Student::find($studentId);
                         if ($student) {
                             $this->emailSet($school, $schoolStudent, $student, 'App\Models\Student');
                         } else {
@@ -70,11 +71,12 @@ class SendEmailInvitation extends Command
                         }
                     }
                 }
-                $schoolTeacherData = SchoolTeacher::active()->where(['send_email' => 1, 'school_id' => $schoolId])->get();
+                $schoolTeacherData = SchoolTeacher::where(['is_sent_invite' => 1, 'school_id' => $schoolId])->get();
                 if (!empty($schoolTeacherData)) {
+                    \Log::info(get_class($this) . ': school '.$school->school_name.' ');
                     foreach ($schoolTeacherData as $schoolTeacher) {
                         $teacherId = $schoolTeacher->teacher_id;
-                        $teacher = Teacher::active()->find($teacherId);
+                        $teacher = Teacher::find($teacherId);
                         if ($teacher) {
                             $this->emailSet($school, $schoolTeacher, $teacher, 'App\Models\Teacher');
                         } else {
@@ -96,8 +98,7 @@ class SendEmailInvitation extends Command
                 $data = [];
                 $data['email'] = $person->email;
                 $data['username'] = $alldata->nickname;
-                $data['school_name'] = $school->name;
-
+                $data['school_name'] = $school->school_name;
                 $verifyUser = [
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
@@ -112,8 +113,9 @@ class SendEmailInvitation extends Command
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];
-                    $data['send_email'] = 0;
+                    $data['is_sent_invite'] = 0;
                     $alldata->update($data);
+                    \Log::info(get_class($this) . ': email sent to '.$person->email.' ');
 
                     //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                 } else {

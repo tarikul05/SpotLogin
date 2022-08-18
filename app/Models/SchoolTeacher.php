@@ -21,7 +21,7 @@ class SchoolTeacher extends BaseModel
     protected $fillable = [
         'school_id',
         'teacher_id',
-        'send_email'
+        'is_sent_invite'
     ];
 
    

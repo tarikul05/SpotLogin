@@ -14,10 +14,10 @@ class AddSendEmail extends Migration
     public function up()
     {
         Schema::table('school_teacher', function (Blueprint $table) {
-            $table->boolean('send_email')->nullable()->default(0)->after('school_id');
+            $table->boolean('is_sent_invite')->nullable()->default(0)->after('school_id');
         });
         Schema::table('school_student', function (Blueprint $table) {
-            $table->boolean('send_email')->nullable()->default(0)->after('school_id');
+            $table->boolean('is_sent_invite')->nullable()->default(0)->after('school_id');
         });
     }
 
@@ -29,10 +29,10 @@ class AddSendEmail extends Migration
     public function down()
     {
         Schema::table('school_teacher', function (Blueprint $table) {
-            $table->dropColumn('send_email');
+            $table->dropColumn('is_sent_invite');
         });
         Schema::table('school_student', function (Blueprint $table) {
-            $table->dropColumn('send_email');
+            $table->dropColumn('is_sent_invite');
         });
     }
 }
