@@ -361,7 +361,9 @@ class LessonsController extends Controller
                         'message' =>  __('Successfully Registered')
                     ];
                 }else if($lessonData['save_btn_more'] == 2){
-                    return back()->withInput($request->all())->with('success', __('Successfully Registered'));
+                    return Redirect::to($schoolId.'/add-lesson?id='.$event->id)->withInput($request->all())->with('success', __('Successfully Registered'));
+                }else if($lessonData['save_btn_more'] == 3){
+                    return Redirect::to('/agenda');
                 }else{
                      return [
                         'status' => 2,
@@ -463,17 +465,19 @@ class LessonsController extends Controller
 
                 $event = Event::where('id', $lessonlId)->update($data);
                 EventDetails::where('event_id',$lessonlId)->forceDelete();
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id' => $lessonlId,
-                        'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
-                        'student_id' => $std,
-                        'buy_price' => $lessonData['attendBuyPrice'],
-                        'sell_price' => $lessonData['attendSellPrice'],
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
-                        'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                    foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id' => $lessonlId,
+                            'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
+                            'student_id' => $std,
+                            'buy_price' => $lessonData['attendBuyPrice'],
+                            'sell_price' => $lessonData['attendSellPrice'],
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
+                            'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
                 DB::commit();
             

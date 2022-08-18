@@ -108,7 +108,7 @@
 										</div>
 									</div>
 									<div class="col-sm-2 p-l-n p-r-n">
-										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
+										<span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
 									</div>
 								</div>
 
@@ -491,6 +491,7 @@ $('#add_lesson').on('submit', function(e) {
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
 	var bill_type = $('#sis_paying').val();
+	var emptyStdchecked = $("#student_empty").prop('checked');
 
 	var errMssg = '';
 	
@@ -501,10 +502,18 @@ $('#add_lesson').on('submit', function(e) {
 	// 	$('#Title').removeClass('error');
 	// }
 
-	if( selected < 1){
-		var errMssg = 'Select student';
-		$('.student_list').addClass('error');
+	if ($("#student_empty").prop('checked') == false){
+		if (!emptyStdchecked) {
+			if( selected < 1){
+				var errMssg = 'Select student';
+				$('.student_list').addClass('error');
+			}else{
+				var errMssg = '';
+				$('.student_list').removeClass('error');
+			}
+		}
 	}else{
+		var errMssg = '';
 		$('.student_list').removeClass('error');
 	}
 
@@ -559,7 +568,6 @@ $('#add_lesson').on('submit', function(e) {
 
 $("body").on('change', '#category_select', function(event) {
 	var datainvoiced = $("#category_select option:selected").data('invoice');
-	console.log(datainvoiced);
 	if (datainvoiced == 'S') {
 		$("#std-check-div").css('display', 'block');
 	}else{
@@ -584,7 +592,7 @@ $( document ).ready(function() {
            $("#save_btn_value"). val(2);
         });
         $("#save_btn").click(function(){
-           $("#save_btn_value"). val(2);
+           $("#save_btn_value"). val(3);
         });
     });
 });
