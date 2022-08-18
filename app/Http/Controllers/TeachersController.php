@@ -1017,7 +1017,7 @@ class TeachersController extends Controller
             $row[] = isset($schoolTeacher->bg_color_agenda) && !empty($schoolTeacher->bg_color_agenda) ? $schoolTeacher->bg_color_agenda : '';
             $row[] = isset($schoolTeacher->comment) && !empty($schoolTeacher->comment) ? $schoolTeacher->comment : '';
             $row[] = isset($teacher->is_active) && !empty($teacher->is_active) ? $teacher->is_active : '';
-            $row[] = isset($schoolTeacher->send_email) && !empty($schoolTeacher->send_email) ? $schoolTeacher->send_email : 0;
+            $row[] = isset($schoolTeacher->is_sent_invite) && !empty($schoolTeacher->is_sent_invite) ? $schoolTeacher->is_sent_invite : 0;
 
             fputcsv($output, $row);
         }
@@ -1105,7 +1105,7 @@ class TeachersController extends Controller
                         $bg_color_agenda = $row[9];
                         $comment = $row[10];
                         $is_active = $row[11];
-                        $send_email = $row[12];
+                        $is_sent_invite = $row[12];
                         if ($gender_id == 'Male') {
                             $gender_id = 1;
                         } else if ($gender_id == 'Female') {
@@ -1127,14 +1127,14 @@ class TeachersController extends Controller
                             'bg_color_agenda'=>$bg_color_agenda,
                             'comment' => $comment,
                             'is_active' => isset($is_active) ? $is_active : 0,
-                            'send_email' => isset($send_email) && !empty($send_email) ? 1 : 0
+                            'is_sent_invite' => isset($is_sent_invite) && !empty($is_sent_invite) ? 1 : 0
                         ];
 
                         if (isset($teacher_id) && !empty($teacher_id)) {
                             //dd($data);
                             DB::beginTransaction();
                             try {
-                                $teacher = Teacher::active()->find($teacher_id);
+                                $teacher = Teacher::find($teacher_id);
                                 if ($teacher) {
                                     $this->teacherUpdate($schoolId, $data, $teacher);
                                 } else {
@@ -1163,7 +1163,7 @@ class TeachersController extends Controller
                                     $teacher = Teacher::create($teacherData);
                                     $teacher->save();
                                     //
-                                    $this->schoolTeacherData($schoolId, $data, $teacher,'create',0,$data['send_email']);
+                                    $this->schoolTeacherData($schoolId, $data, $teacher,'create',0,$data['is_sent_invite']);
                                     //DB::commit();
                                 }
                                 DB::commit();
@@ -1178,8 +1178,8 @@ class TeachersController extends Controller
             }
             return true;
         } catch (\Exception $e) {
-            //DB::rollBack();
-            return redirect()->back()->with('error', __('Internal server error'));
+            DB::rollBack();
+            return false;
         }
     }
 
@@ -1189,23 +1189,25 @@ class TeachersController extends Controller
         $user = User::where(['person_id' => $teacher_id, 'person_type' => 'App\Models\Teacher'])->first();
         //$teacher = $user->personable;
         $teacherData = $data;
+        
         unset($teacherData['comment']);
         unset($teacherData['username']);
         unset($teacherData['nickname']);
         unset($teacherData['role_type']);
         unset($teacherData['bg_color_agenda']);
-        unset($teacherData['send_email']);
+        unset($teacherData['is_sent_invite']);
         
-        $teacher = Teacher::where('id', $teacher->id)->update($teacherData);
+        Teacher::where('id', $teacher->id)->update($teacherData);
+        $teacher = Teacher::find($teacher_id);
         if ($user) {
             $this->schoolTeacherData($schoolId, $data, $teacher, 'update', 1);
         } else {
-            $this->schoolTeacherData($schoolId, $data, $teacher, 'update',0,$data['send_email']);
+            $this->schoolTeacherData($schoolId, $data, $teacher, 'update',0,$data['is_sent_invite']);
         }
         return true;
     }
 
-    public function schoolTeacherData($schoolId, $alldata, $teacher, $status = 'create', $has_user_account = 0,$send_email=0)
+    public function schoolTeacherData($schoolId, $alldata, $teacher, $status = 'create', $has_user_account = 0,$is_sent_invite=0)
     {
         $schoolTeacher = [
             'teacher_id' => $teacher->id,
@@ -1217,7 +1219,7 @@ class TeachersController extends Controller
             'licence_js' => $alldata['licence_js'],
             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
             'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : '',
-            'send_email' => isset($alldata['send_email']) ? $alldata['send_email'] : 0
+            'is_sent_invite' => isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0
         ];
 
         $schoolTeacherExist = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
@@ -1231,115 +1233,25 @@ class TeachersController extends Controller
 
                 $schoolTeacherData = SchoolTeacher::create($schoolTeacher);
                 $schoolTeacherData->save();
-                if (!empty($alldata['email']) && $send_email ==1) {
+                if (!empty($alldata['email']) && $is_sent_invite ==1) {
                     //sending activation email after successful signed up
                     $inviteUpdate = [
-                        'send_email' => $send_email
+                        'is_sent_invite' => $is_sent_invite
                     ];
                     $schoolTeacherData = $schoolTeacherData->update($inviteUpdate);
-        
-
-                    //sending activation email after successful signed up
-                    // if (config('global.email_send') == 1) {
-                    //     $data = [];
-                    //     $data['email'] = $alldata['email'];
-                    //     $data['username'] = $alldata['name'] = $alldata['nickname'];
-                    //     $school = School::active()->find($schoolId);
-                    //     $data['school_name'] = $school->name;
-
-                    //     $verifyUser = [
-                    //         'school_id' => $schoolId,
-                    //         'person_id' => $teacher->id,
-                    //         'person_type' => 'App\Models\Teacher',
-                    //         'token' => Str::random(10),
-                    //         'token_type' => 'VERIFY_SIGNUP',
-                    //         'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                    //     ];
-                    //     $verifyUser = VerifyToken::create($verifyUser);
-                    //     $data['token'] = $verifyUser->token;
-                    //     $data['url'] = route('add.verify.email', $data['token']);
-
-                    //     if ($this->emailSend($data, 'sign_up_confirmation_email')) {
-                    //         $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
-                    //     } else {
-                    //         //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                    //     }
-                    // } else {
-                    //     $usersData = [
-                    //         'person_id' => $teacher->id,
-                    //         'person_type' => 'App\Models\Teacher',
-                    //         'username' => $alldata['username'],
-                    //         'lastname' => $alldata['lastname'],
-                    //         'middlename' => '',
-                    //         'firstname' => $alldata['firstname'],
-                    //         'email' => $alldata['email'],
-                    //         // 'password'=>$alldata['password'],
-                    //         'password' => Str::random(10),
-                    //         'is_mail_sent' => 0,
-                    //         'is_active' => 1,
-                    //         'is_firstlogin' => 0
-                    //     ];
-                    //     $user = User::create($usersData);
-                    //     $user->save();
-                    //     return true;
-                    // }
                 }
             } else {
                 //$schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
-                $schoolTeacherData = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->update($schoolTeacher);
+                SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->update($schoolTeacher);
+                $schoolTeacherData = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
+        
                 if ($has_user_account == 0) {
-                    if (!empty($alldata['email']) && $send_email ==1) {
+                    if (!empty($alldata['email']) && $is_sent_invite ==1) {
                         //sending activation email after successful signed up
                         $inviteUpdate = [
-                            'send_email' => $send_email
+                            'is_sent_invite' => $is_sent_invite
                         ];
                         $schoolTeacherData = $schoolTeacherData->update($inviteUpdate);
-            
-
-                        //sending activation email after successful signed up
-                        // if (config('global.email_send') == 1) {
-                        //     $data = [];
-                        //     $data['email'] = $alldata['email'];
-                        //     $data['username'] = $alldata['name'] = $alldata['nickname'];
-                        //     $school = School::active()->find($schoolId);
-                        //     $data['school_name'] = $school->name;
-    
-                        //     $verifyUser = [
-                        //         'school_id' => $schoolId,
-                        //         'person_id' => $teacher->id,
-                        //         'person_type' => 'App\Models\Teacher',
-                        //         'token' => Str::random(10),
-                        //         'token_type' => 'VERIFY_SIGNUP',
-                        //         'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                        //     ];
-                        //     $verifyUser = VerifyToken::create($verifyUser);
-                        //     $data['token'] = $verifyUser->token;
-                        //     $data['url'] = route('add.verify.email', $data['token']);
-    
-                        //     if ($this->emailSend($data, 'sign_up_confirmation_email')) {
-                        //         $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
-                        //     } else {
-                        //         //return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                        //     }
-                        // } else {
-                        //     $usersData = [
-                        //         'person_id' => $teacher->id,
-                        //         'person_type' => 'App\Models\Teacher',
-                        //         'username' => $alldata['username'],
-                        //         'lastname' => $alldata['lastname'],
-                        //         'middlename' => '',
-                        //         'firstname' => $alldata['firstname'],
-                        //         'email' => $alldata['email'],
-                        //         // 'password'=>$alldata['password'],
-                        //         'password' => Str::random(10),
-                        //         'is_mail_sent' => 0,
-                        //         'is_active' => 1,
-                        //         'is_firstlogin' => 0
-                        //     ];
-                        //     $user = User::create($usersData);
-                        //     $user->save();
-                        //     return true;
-                        // }
                     }
                 }
                 return true;

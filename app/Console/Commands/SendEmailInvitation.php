@@ -58,11 +58,11 @@ class SendEmailInvitation extends Command
         if (!empty($schools)) {
             foreach ($schools as $school) {
                 $schoolId = $school->id;
-                $schoolStudentData = SchoolStudent::active()->where(['send_email' => 1, 'school_id' => $schoolId])->get();
+                $schoolStudentData = SchoolStudent::where(['send_email' => 1, 'school_id' => $schoolId])->get();
                 if (!empty($schoolStudentData)) {
                     foreach ($schoolStudentData as $schoolStudent) {
                         $studentId = $schoolStudent->student_id;
-                        $student = Student::active()->find($studentId);
+                        $student = Student::find($studentId);
                         if ($student) {
                             $this->emailSet($school, $schoolStudent, $student, 'App\Models\Student');
                         } else {
@@ -70,11 +70,11 @@ class SendEmailInvitation extends Command
                         }
                     }
                 }
-                $schoolTeacherData = SchoolTeacher::active()->where(['send_email' => 1, 'school_id' => $schoolId])->get();
+                $schoolTeacherData = SchoolTeacher::where(['send_email' => 1, 'school_id' => $schoolId])->get();
                 if (!empty($schoolTeacherData)) {
                     foreach ($schoolTeacherData as $schoolTeacher) {
                         $teacherId = $schoolTeacher->teacher_id;
-                        $teacher = Teacher::active()->find($teacherId);
+                        $teacher = Teacher::find($teacherId);
                         if ($teacher) {
                             $this->emailSet($school, $schoolTeacher, $teacher, 'App\Models\Teacher');
                         } else {
