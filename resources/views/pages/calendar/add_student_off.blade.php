@@ -67,6 +67,7 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -125,6 +126,9 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

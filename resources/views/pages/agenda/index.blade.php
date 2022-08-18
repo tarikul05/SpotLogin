@@ -333,6 +333,7 @@ admin_main_style.css
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="start_date_div"> 
                                                                     <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+                                                                    <input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
                                                                     </span>
@@ -340,7 +341,7 @@ admin_main_style.css
                                                             </div>	
                                                             <div class="col-sm-4 offset-md-1 hide_on_off">
                                                                 <div class="input-group"> 
-                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker_start" value="{{old('start_time')}}">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-clock-o"></i>
                                                                     </span>
@@ -664,12 +665,15 @@ admin_main_style.css
     }  
     
 
-
-    var currentTimezone = 'local';
+    var currentTimezone = document.getElementById("zone").value;
+    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    var zone =getTimeZone();
+    //var zone =getTimeZone();
+    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var zone = document.getElementById("zone").value;
+    document.getElementById("zone").value = zone;
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -1647,14 +1651,6 @@ admin_main_style.css
     }
 
 
-    function getTimeZone() {
-        var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
-        return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
-    }
-    
-
-
-    
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
@@ -2749,7 +2745,12 @@ admin_main_style.css
             $('#event_teacher_div').hide();
             $('#event_student_div').hide();
         } else {
-            $('#event_location_div').show();
+            if ($("#event_location option").length > 0 ) {
+                $('#event_location_div').show();
+            }else{
+               $('#event_location_div').hide(); 
+            }
+
             $('#event_teacher_div').show();
             $('#event_student_div').show();
         }	
@@ -2844,20 +2845,18 @@ admin_main_style.css
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
         e.preventDefault();
         $.ajax({
             type: "POST",
             url: BASE_URL + '/copy_paste_events',
-            //url: "copy_paste_events.php",
             data: data,
             dataType: "JSON",
             async: false,
             success:function(result){
                 var status =  result.status;
-                //alert(status);
                 if(status == 0)
                 {
                     document.getElementById("copy_date_from").value = '';
@@ -2924,6 +2923,9 @@ admin_main_style.css
 			document.cookie = "date_to="+document.getElementById("date_to").value+";path=/";
 
 			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
+			
+            //document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";        
+			document.cookie = "timezone_user="+document.getElementById("zone").value+";path=/";        
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);
@@ -3022,7 +3024,7 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
-	$('.timepicker').timepicker({
+	$('.timepicker_start').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
 		minTime: '0',
@@ -3033,9 +3035,25 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+            $('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
 			CalcDuration();
 		}
 	});
+
+    $('.timepicker').timepicker({
+        timeFormat: 'HH:mm',
+        interval: 15,
+        minTime: '0',
+        maxTime: '23:59',
+        defaultTime: '11',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true,
+        change:function(time){
+            CalcDuration();
+        }
+    });
 	
 	function CalcDuration(){
 		var el_start = $('#start_time'),
@@ -3101,6 +3119,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
+        console.log("tttt: ")
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
