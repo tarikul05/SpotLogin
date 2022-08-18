@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 use App\Models\School;
 use App\Models\User;
 use App\Models\Student;
@@ -179,7 +180,7 @@ class SendEmailInvitation extends Command
                     $data['url'] = route('add.verify.email', $data['token']);
                 }
             }
-            \Mail::to($data['email'])->send(new SportloginEmail($data));
+            Mail::to($data['email'])->send(new SportloginEmail($data));
             return true;
         } catch (\Exception $e) {
             return false;
