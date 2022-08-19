@@ -1170,16 +1170,27 @@ class StudentsController extends Controller
                                     $student = $user->personable;
                                     if ($student) {
                                         $this->studentUpdate($schoolId,$data,$student);
+                                    } else{
+                                        continue;
                                     }
                                 } else {
-                                    
-                                    $studentData = $data;
-                                    unset($studentData['comment']);
-                                    $student = Student::create($studentData);
-                                    $student->save();
-                                    //
-                                    $this->schoolStudentData($schoolId,$data,$student,'create',0,$data['is_sent_invite']);
-                                    //DB::commit();
+                                    $exStudent = Student::where(['email'=> $data['email']])->first();;
+                                    if ($exStudent) {
+                                        $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
+                                        if ($alreadyFlag) {
+                                            $this->studentUpdate($schoolId,$data,$exStudent);
+                                            
+                                        } else{
+                                            $this->schoolStudentData($schoolId,$data,$exStudent,'create',0,$data['is_sent_invite']);
+                                        }
+                                    }
+                                    else {
+                                        $studentData = $data;
+                                        unset($studentData['comment']);
+                                        $student = Student::create($studentData);
+                                        $student->save();
+                                        $this->schoolStudentData($schoolId,$data,$student,'create',0,$data['is_sent_invite']);
+                                    }
                                 }
                                 DB::commit();
                             } catch (\Exception $e) {

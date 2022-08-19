@@ -1155,16 +1155,28 @@ class TeachersController extends Controller
                                     $teacher = $user->personable;
                                     if ($teacher) {
                                         $this->teacherUpdate($schoolId, $data, $teacher);
+                                    } else{
+                                        continue;
                                     }
                                 } else {
+                                    $exTeacher = Teacher::where(['email'=> $data['email']])->first();;
+                                    if ($exTeacher) {
+                                        $alreadyFlag = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $exTeacher->id ])->first();
+                                        if ($alreadyFlag) {
+                                            $this->teacherUpdate($schoolId,$data,$exTeacher);
+                                        } else{
+                                            $this->schoolTeacherData($schoolId,$data,$exTeacher,'create',0,$data['is_sent_invite']);
+                                        }
+                                    }
+                                    else {
+                                        $teacherData = $data;
+                                        unset($teacherData['comment']);
+                                        $teacher = Teacher::create($teacherData);
+                                        $teacher->save();
+                                        $this->schoolTeacherData($schoolId, $data, $teacher,'create',0,$data['is_sent_invite']);
+                                    }
 
-                                    $teacherData = $data;
-                                    unset($teacherData['comment']);
-                                    $teacher = Teacher::create($teacherData);
-                                    $teacher->save();
-                                    //
-                                    $this->schoolTeacherData($schoolId, $data, $teacher,'create',0,$data['is_sent_invite']);
-                                    //DB::commit();
+                                    
                                 }
                                 DB::commit();
                             } catch (\Exception $e) {
