@@ -972,7 +972,7 @@ class TeachersController extends Controller
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $header = "ID,Email,username,Family Name,Firstname,Nickname,Gender,Licence,role_type,background color,Comment,Status,Send Email\x0A";
+        $header = "ID,Email,username,Family Name,Firstname,Nickname,Gender,Licence,role_type,background color,Comment,Status,Send Email,Birth date,Street,Street No,Postal Code,City,Country,Province,phone,mobile\x0A";
         echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
         $output = fopen('php://output', 'w');
         $user = Auth::user();
@@ -1018,6 +1018,15 @@ class TeachersController extends Controller
             $row[] = isset($schoolTeacher->comment) && !empty($schoolTeacher->comment) ? $schoolTeacher->comment : '';
             $row[] = isset($teacher->is_active) && !empty($teacher->is_active) ? $teacher->is_active : '';
             $row[] = isset($schoolTeacher->is_sent_invite) && !empty($schoolTeacher->is_sent_invite) ? $schoolTeacher->is_sent_invite : 0;
+            $row[] = isset($teacher->birth_date) && !empty($teacher->birth_date) ? $teacher->birth_date : '';
+            $row[] = isset($teacher->street) && !empty($teacher->street) ? $teacher->street : '';
+            $row[] = isset($teacher->street_number) && !empty($teacher->street_number) ? $teacher->street_number : '';
+            $row[] = isset($teacher->zip_code) && !empty($teacher->zip_code) ? $teacher->zip_code : '';
+            $row[] = isset($teacher->place) && !empty($teacher->place) ? $teacher->place : '';
+            $row[] = isset($teacher->country_code) && !empty($teacher->country_code) ? $teacher->country_code : '';
+            $row[] = isset($teacher->province_id) && !empty($teacher->province_id) ? $teacher->province_id : '';
+            $row[] = isset($teacher->phone) && !empty($teacher->phone) ? $teacher->phone : '';
+            $row[] = isset($teacher->mobile) && !empty($teacher->mobile) ? $teacher->mobile : '';
 
             fputcsv($output, $row);
         }
@@ -1127,7 +1136,16 @@ class TeachersController extends Controller
                             'bg_color_agenda'=>$bg_color_agenda,
                             'comment' => $comment,
                             'is_active' => isset($is_active) ? $is_active : 0,
-                            'is_sent_invite' => isset($is_sent_invite) && !empty($is_sent_invite) ? 1 : 0
+                            'is_sent_invite' => isset($is_sent_invite) && !empty($is_sent_invite) ? 1 : 0,
+                            'birth_date'=>isset($row[13]) && !empty($row[13]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['13']))) : '',
+                            'street'=>isset($row[14]) && !empty($row[14]) ? $row[14] : '',
+                            'street_number'=>isset($row[15]) && !empty($row[15]) ? $row[15] : '',
+                            'zip_code'=>isset($row[16]) && !empty($row[16]) ? $row[16] : '',
+                            'place'=>isset($row[17]) && !empty($row[17]) ? $row[17] : '',
+                            'country_code'=>isset($row[18]) && !empty($row[18]) ? $row[18] : '',
+                            'province_id'=>isset($row[19]) && !empty($row[19]) ? $row[19] : '',
+                            'phone'=>isset($row[20]) && !empty($row[20]) ? $row[20] : '',
+                            'mobile'=>isset($row[21]) && !empty($row[21]) ? $row[21] : ''
                         ];
 
                         if (isset($teacher_id) && !empty($teacher_id)) {
