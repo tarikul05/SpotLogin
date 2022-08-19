@@ -91,7 +91,7 @@ class StudentsController extends Controller
             $searchEmail = $request->email;
             $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
             // $exStudent = !empty($exUser) ? $exUser->personable : null;
-            $exStudent = Student::where(['email'=> $searchEmail])->first();;
+            $exStudent = Student::where(['email'=> $searchEmail])->first();
             $alreadyFlag =null;
             if ($exStudent) {
                 $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
@@ -1174,7 +1174,7 @@ class StudentsController extends Controller
                                         continue;
                                     }
                                 } else {
-                                    $exStudent = Student::where(['email'=> $data['email']])->first();;
+                                    $exStudent = Student::where(['email'=> $data['email']])->first();
                                     if ($exStudent) {
                                         $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
                                         if ($alreadyFlag) {

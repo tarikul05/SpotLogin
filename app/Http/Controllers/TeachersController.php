@@ -1159,7 +1159,7 @@ class TeachersController extends Controller
                                         continue;
                                     }
                                 } else {
-                                    $exTeacher = Teacher::where(['email'=> $data['email']])->first();;
+                                    $exTeacher = Teacher::where(['email'=> $data['email']])->first();
                                     if ($exTeacher) {
                                         $alreadyFlag = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $exTeacher->id ])->first();
                                         if ($alreadyFlag) {
