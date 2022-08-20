@@ -1035,7 +1035,7 @@ class TeachersController extends Controller
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $header = "Email,username,Family Name,Firstname,Nickname,Gender,Licence,role_type,background color,Comment,Birth date,Street,Street No,Postal Code,City,Country,Province,phone,mobile\x0A";
+        $header = "Email,username,Family Name,Firstname,Nickname,Gender,Licence,background color,Comment,Birth date,Street,Street No,Postal Code,City,Country,Province,phone,mobile\x0A";
         echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
         $output = fopen('php://output', 'w');
         $user = Auth::user();
@@ -1072,11 +1072,6 @@ class TeachersController extends Controller
                 $row[] = '';
             }
             $row[] = isset($teacher->licence_js) && !empty($teacher->licence_js) ? $teacher->licence_js : '';
-            if ($schoolTeacher) {
-              $row[] = isset($schoolTeacher->role_type) && !empty($schoolTeacher->role_type) ? $schoolTeacher->role_type : '';
-            } else {
-                $row[] = '';
-            }
             $row[] = isset($schoolTeacher->bg_color_agenda) && !empty($schoolTeacher->bg_color_agenda) ? $schoolTeacher->bg_color_agenda : '';
             $row[] = isset($schoolTeacher->comment) && !empty($schoolTeacher->comment) ? $schoolTeacher->comment : '';
             $row[] = isset($teacher->birth_date) && !empty($teacher->birth_date) ? $teacher->birth_date : '';
@@ -1171,9 +1166,9 @@ class TeachersController extends Controller
                         $nickname = $row[4];
                         $gender_id = $row[5];
                         $licence_js = $row[6];
-                        $role_type = $row[7];
-                        $bg_color_agenda = $row[8];
-                        $comment = $row[9];
+                        $role_type = 'teachers_minimum';
+                        $bg_color_agenda = $row[7];
+                        $comment = $row[8];
                         if ($gender_id == 'Male') {
                             $gender_id = 1;
                         } else if ($gender_id == 'Female') {
@@ -1196,15 +1191,15 @@ class TeachersController extends Controller
                             'comment' => $comment,
                             'is_active' => 1,
                             'is_sent_invite' => 1,
-                            'birth_date'=>isset($row[10]) && !empty($row[10]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['10']))) : '',
-                            'street'=>isset($row[11]) && !empty($row[11]) ? $row[11] : '',
-                            'street_number'=>isset($row[12]) && !empty($row[12]) ? $row[12] : '',
-                            'zip_code'=>isset($row[13]) && !empty($row[13]) ? $row[13] : '',
-                            'place'=>isset($row[14]) && !empty($row[14]) ? $row[14] : '',
-                            'country_code'=>isset($row[15]) && !empty($row[15]) ? $row[15] : '',
-                            'province_id'=>isset($row[16]) && !empty($row[16]) ? $row[16] : '',
-                            'phone'=>isset($row[17]) && !empty($row[17]) ? $row[17] : '',
-                            'mobile'=>isset($row[18]) && !empty($row[18]) ? $row[18] : ''
+                            'birth_date'=>isset($row[9]) && !empty($row[9]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['9']))) : '',
+                            'street'=>isset($row[10]) && !empty($row[10]) ? $row[10] : '',
+                            'street_number'=>isset($row[11]) && !empty($row[11]) ? $row[11] : '',
+                            'zip_code'=>isset($row[12]) && !empty($row[12]) ? $row[12] : '',
+                            'place'=>isset($row[13]) && !empty($row[13]) ? $row[13] : '',
+                            'country_code'=>isset($row[14]) && !empty($row[14]) ? $row[14] : '',
+                            'province_id'=>isset($row[15]) && !empty($row[15]) ? $row[15] : '',
+                            'phone'=>isset($row[16]) && !empty($row[16]) ? $row[16] : '',
+                            'mobile'=>isset($row[17]) && !empty($row[17]) ? $row[17] : ''
                         ];
 
                         if (isset($teacher_id) && !empty($teacher_id)) {
@@ -1308,7 +1303,7 @@ class TeachersController extends Controller
             'has_user_account' => $has_user_account,
             'nickname' => $alldata['nickname'],
             'bg_color_agenda' => $alldata['bg_color_agenda'],
-            'role_type' => isset($alldata['role_type']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null,
+            'role_type' => isset($alldata['role_type']) && !empty($alldata['role_type']) ? $alldata['role_type'] : null,
             'licence_js' => $alldata['licence_js'],
             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
             'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : '',
@@ -1334,7 +1329,7 @@ class TeachersController extends Controller
                     $schoolTeacherData = $schoolTeacherData->update($inviteUpdate);
                 }
             } else {
-                //$schoolStudentData = SchoolStudent::where(['student_id' => $student->id, 'school_id' => $schoolId])->first();
+                unset($alldata['role_type']);
                 SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->update($schoolTeacher);
                 $schoolTeacherData = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
         
