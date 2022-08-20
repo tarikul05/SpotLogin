@@ -1030,7 +1030,7 @@ class TeachersController extends Controller
      */
     public function export($schoolId = null, Request $request, Teacher $teacher)
     {
-        $filename = date('Ymd_His') . '.csv';
+        $filename = 'Teacher_'date('Ymd_His') . '.csv';
         header('Content-Encoding: UTF-8');
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
