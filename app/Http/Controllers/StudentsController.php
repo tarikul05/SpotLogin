@@ -646,6 +646,70 @@ class StudentsController extends Controller
             ->with('success', 'status updated successfully');
     }
 
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function studentInvitation(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        try {
+            $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->get();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+            
+            $school = School::find($schoolId);
+            $student = Student::find($studentId);
+            if ($student) {
+                $this->emailSet($school, $schoolStudent, $student, 'App\Models\Student');
+            }
+            return redirect()->back()
+                ->with('success', 'Invitation sent successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+    public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
+    {
+        //sending activation email after successful signed up
+        try {
+            $schoolId = $school->id;
+            if (config('global.email_send') == 1) {
+                $data = [];
+                $data['email'] = $person->email;
+                $data['username'] = $alldata->nickname;
+                $data['school_name'] = $school->school_name;
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $person->id,
+                    'person_type' => $type,
+                    'token' => Str::random(10),
+                    'token_type' => 'VERIFY_SIGNUP',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('add.verify.email', $data['token']);
+
+                if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                    $data = [];
+                    $data['is_sent_invite'] = 0;
+                    $alldata->update($data);
+                    
+                    //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                } else {
+                    return false;
+                }
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 
     /**
     *  AJAX action image delete and unlink

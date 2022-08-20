@@ -64,7 +64,15 @@
                                     <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                                 </form>
                                 @endcan
-                                
+                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                                  @method('post')
+                                  @csrf
+                                  @if($student->pivot->is_sent_invite)
+                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Send invitation')}}</button>
+                                  @else
+                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Resend invitation')}}</button>
+                                  @endif
+                                </form>
                                 <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                                     @method('post')
                                     @csrf

@@ -606,6 +606,69 @@ class TeachersController extends Controller
     }
 
     /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function teacherInvitation(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $teacherId = $request->route('teacher');
+        try {
+            $schoolTeacher = SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->get();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+            
+            $school = School::find($schoolId);
+            $teacher = Teacher::find($teacherId);
+            if ($teacher) {
+                $this->emailSet($school, $schoolTeacher, $teacher, 'App\Models\Teacher');
+            }
+            return redirect()->back()
+                ->with('success', 'Invitation sent successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+    public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
+    {
+        //sending activation email after successful signed up
+        try {
+            $schoolId = $school->id;
+            if (config('global.email_send') == 1) {
+                $data = [];
+                $data['email'] = $person->email;
+                $data['username'] = $alldata->nickname;
+                $data['school_name'] = $school->school_name;
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $person->id,
+                    'person_type' => $type,
+                    'token' => Str::random(10),
+                    'token_type' => 'VERIFY_SIGNUP',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('add.verify.email', $data['token']);
+
+                if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                    $data = [];
+                    $data['is_sent_invite'] = 0;
+                    $alldata->update($data);
+                    
+                    //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                } else {
+                    return false;
+                }
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    /**
      * Check users .
      *
      * @param  int  $id
