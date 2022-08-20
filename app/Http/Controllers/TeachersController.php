@@ -1252,6 +1252,11 @@ class TeachersController extends Controller
                                     else {
                                         $teacherData = $data;
                                         unset($teacherData['comment']);
+                                        unset($teacherData['username']);
+                                        unset($teacherData['nickname']);
+                                        unset($teacherData['role_type']);
+                                        unset($teacherData['bg_color_agenda']);
+                                        unset($teacherData['is_sent_invite']);
                                         $teacher = Teacher::create($teacherData);
                                         $teacher->save();
                                         $this->schoolTeacherData($schoolId, $data, $teacher,'create',0,$data['is_sent_invite']);
@@ -1261,7 +1266,6 @@ class TeachersController extends Controller
                                 }
                                 DB::commit();
                             } catch (\Exception $e) {
-                                //dd($e);
                                 DB::rollBack();
                             }
                         }

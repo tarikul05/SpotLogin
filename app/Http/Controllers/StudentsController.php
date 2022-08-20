@@ -1290,7 +1290,11 @@ class StudentsController extends Controller
                                     }
                                     else {
                                         $studentData = $data;
+                                        unset($studentData['username']);
+                                        unset($studentData['level_id']);
                                         unset($studentData['comment']);
+                                        unset($studentData['billing_method']);
+                                        unset($studentData['is_sent_invite']);
                                         $student = Student::create($studentData);
                                         $student->save();
                                         $this->schoolStudentData($schoolId,$data,$student,'create',0,$data['is_sent_invite']);
