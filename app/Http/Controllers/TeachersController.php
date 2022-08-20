@@ -616,7 +616,7 @@ class TeachersController extends Controller
         $schoolId = $request->route('school');
         $teacherId = $request->route('teacher');
         try {
-            $schoolTeacher = SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->get();
+            $schoolTeacher = SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->first();
             //->update(['is_sent_invite'=>$is_sent_invite]);
             
             $school = School::find($schoolId);
