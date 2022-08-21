@@ -44,6 +44,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
+					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -56,7 +57,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
-													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
+													<option data-invoice="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -114,7 +115,7 @@
 										</div>
 									</div>
 									<div class="col-sm-2 p-l-n p-r-n">
-										<span class="no_select"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
+										<span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
@@ -319,7 +320,8 @@
 						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
 							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 						@endif
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+						<button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
 					</div>
 				</form>
 			</div>
@@ -611,6 +613,7 @@ $('#edit_lesson').on('submit', function() {
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
+	var emptyStdchecked = $("#student_empty").prop('checked');
 
 	var errMssg = '';
 	
@@ -621,10 +624,18 @@ $('#edit_lesson').on('submit', function() {
 	// 	$('#Title').removeClass('error');
 	// }
 
-	if( selected < 1){
-		var errMssg = 'Select student';
-		$('.student_list').addClass('error');
+	if ($("#student_empty").prop('checked') == false){
+		if (!emptyStdchecked) {
+			if( selected < 1){
+				var errMssg = 'Select student';
+				$('.student_list').addClass('error');
+			}else{
+				var errMssg = '';
+				$('.student_list').removeClass('error');
+			}
+		}
 	}else{
+		var errMssg = '';
 		$('.student_list').removeClass('error');
 	}
 
@@ -736,8 +747,18 @@ function confirm_event(){
 			$('#student').multiselect( 'disable', true );
 		}else{
 			$('#student').multiselect( 'disable', false );
-		}
-		
+		}	
 	})
+
+	$( document ).ready(function() {
+		$(function() {
+			$("#save_btn_more").click(function(){
+			$("#save_btn_value"). val(1);
+			});
+			$("#save_btn").click(function(){
+			$("#save_btn_value"). val(0);
+			});
+		});
+	});
 </script>
 @endsection`
