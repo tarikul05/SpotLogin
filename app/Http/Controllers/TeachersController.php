@@ -1129,7 +1129,7 @@ class TeachersController extends Controller
                             return redirect()->back();
                         }
                         $csvArr = $this->csvToArray($schoolId, $csvFile);
-                        //dd($csvArr);
+                        // dd($csvArr);
                         return back()->with('success', __('Teacher updated successfully!'));
                     }
                 } catch (\Exception $e) {
@@ -1191,15 +1191,15 @@ class TeachersController extends Controller
                             'comment' => $comment,
                             'is_active' => 1,
                             'is_sent_invite' => 1,
-                            'birth_date'=>isset($row[9]) && !empty($row[9]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['9']))) : '',
-                            'street'=>isset($row[10]) && !empty($row[10]) ? $row[10] : '',
-                            'street_number'=>isset($row[11]) && !empty($row[11]) ? $row[11] : '',
-                            'zip_code'=>isset($row[12]) && !empty($row[12]) ? $row[12] : '',
-                            'place'=>isset($row[13]) && !empty($row[13]) ? $row[13] : '',
-                            'country_code'=>isset($row[14]) && !empty($row[14]) ? $row[14] : '',
-                            'province_id'=>isset($row[15]) && !empty($row[15]) ? $row[15] : '',
-                            'phone'=>isset($row[16]) && !empty($row[16]) ? $row[16] : '',
-                            'mobile'=>isset($row[17]) && !empty($row[17]) ? $row[17] : ''
+                            'birth_date'=>isset($row[9]) && !empty($row[9]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['9']))) : null,
+                            'street'=>isset($row[10]) && !empty($row[10]) ? $row[10] : null,
+                            'street_number'=>isset($row[11]) && !empty($row[11]) ? $row[11] : null,
+                            'zip_code'=>isset($row[12]) && !empty($row[12]) ? $row[12] : null,
+                            'place'=>isset($row[13]) && !empty($row[13]) ? $row[13] : null,
+                            'country_code'=>isset($row[14]) && !empty($row[14]) ? $row[14] : null,
+                            'province_id'=>isset($row[15]) && !empty($row[15]) ? $row[15] : null,
+                            'phone'=>isset($row[16]) && !empty($row[16]) ? $row[16] : null,
+                            'mobile'=>isset($row[17]) && !empty($row[17]) ? $row[17] : null
                         ];
 
                         if (isset($teacher_id) && !empty($teacher_id)) {
@@ -1257,6 +1257,7 @@ class TeachersController extends Controller
                                 }
                                 DB::commit();
                             } catch (\Exception $e) {
+                                // dd($e);
                                 DB::rollBack();
                             }
                         }
@@ -1309,7 +1310,7 @@ class TeachersController extends Controller
             'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : '',
             'is_sent_invite' => isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0
         ];
-
+// dd($schoolTeacher);
         $schoolTeacherExist = SchoolTeacher::where(['teacher_id' => $teacher->id, 'school_id' => $schoolId])->first();
         if (!empty($schoolTeacherExist)) {
             $status = 'update';
