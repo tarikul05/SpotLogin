@@ -1052,7 +1052,7 @@ class StudentsController extends Controller
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $header = "Email,username,Family Name,Firstname,Nickname,Gender,level_id,Licence,Comment,Billing Method,Birth date,Street,Street No,Postal Code,City,Country,Province,Billing Street,Billing street No,Billing Postal code,Billing city,Billing country,Billing Province,Father's Phone,Father's email,Mother's phone,Mother's email,Student's Phone,Student's 2nd Email\x0A";
+        $header = "Email,username,Family Name,Firstname,Nickname,Gender,Licence,Comment,Billing Method,Birth date,Street,Street No,Postal Code,City,Billing Street,Billing street No,Billing Postal code,Billing city,Billing country,Billing Province,Father's Phone,Father's email,Mother's phone,Mother's email,Student's Phone,Student's 2nd Email\x0A";
         echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
         $output = fopen('php://output', 'w');
         $user = Auth::user();
@@ -1091,7 +1091,6 @@ class StudentsController extends Controller
             } else{
                 $row[] = '';
             }
-            $row[] = isset($student->level_id) && !empty($student->level_id) ? $student->level_id : '';
             $row[] = isset($student->licence_usp) && !empty($student->licence_usp) ? $student->licence_usp : '';
             $row[] = isset($schoolStudent->comment) && !empty($schoolStudent->comment) ? $schoolStudent->comment : '';
             $row[] = isset($schoolStudent->billing_method) && !empty($schoolStudent->billing_method) ? $schoolStudent->billing_method : '';
@@ -1100,8 +1099,6 @@ class StudentsController extends Controller
             $row[] = isset($student->street_number) && !empty($student->street_number) ? $student->street_number : '';
             $row[] = isset($student->zip_code) && !empty($student->zip_code) ? $student->zip_code : '';
             $row[] = isset($student->place) && !empty($student->place) ? $student->place : '';
-            $row[] = isset($student->country_code) && !empty($student->country_code) ? $student->country_code : '';
-            $row[] = isset($student->province_id) && !empty($student->province_id) ? $student->province_id : '';
             $row[] = isset($student->billing_street) && !empty($student->billing_street) ? $student->billing_street : '';
             $row[] = isset($student->billing_street_number) && !empty($student->billing_street_number) ? $student->billing_street_number : '';
             $row[] = isset($student->billing_zip_code) && !empty($student->billing_zip_code) ? $student->billing_zip_code : '';
@@ -1196,9 +1193,8 @@ class StudentsController extends Controller
                         $firstname = $row[3];
                         $nickname = $row[4];
                         $gender_id = $row[5];
-                        $level_id = $row[6];
-                        $licence_usp = $row[7];
-                        $comment = $row[8];
+                        $licence_usp = $row[6];
+                        $comment = $row[7];
                         if ($gender_id == 'Male') {
                             $gender_id = 1;
                         }
@@ -1217,31 +1213,28 @@ class StudentsController extends Controller
                             'firstname' => $firstname,
                             'nickname' => $nickname,
                             'gender_id' => $gender_id,
-                            'level_id' => $level_id,
                             'licence_usp' => $licence_usp,
                             'comment' => $comment,
                             'is_active' => 1,
                             'is_sent_invite' => 1,
-                            'billing_method'=>isset($row[9]) && !empty($row[9]) ? $row[9] : null,
-                            'birth_date'=>isset($row[10]) && !empty($row[10]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['10']))) : null,
-                            'street'=>isset($row[11]) && !empty($row[11]) ? $row[11] : null,
-                            'street_number'=>isset($row[12]) && !empty($row[12]) ? $row[12] : null,
-                            'zip_code'=>isset($row[13]) && !empty($row[13]) ? $row[13] : null,
-                            'place'=>isset($row[14]) && !empty($row[14]) ? $row[14] : null,
-                            'country_code'=>isset($row[15]) && !empty($row[15]) ? $row[15] : null,
-                            'province_id'=>isset($row[16]) && !empty($row[16]) ? $row[16] : null,
-                            'billing_street'=>isset($row[17]) && !empty($row[17]) ? $row[17] : null,
-                            'billing_street_number'=>isset($row[18]) && !empty($row[18]) ? $row[18] : null,
-                            'billing_zip_code'=>isset($row[19]) && !empty($row[19]) ? $row[19] : '',
-                            'billing_place'=>isset($row[20]) && !empty($row[20]) ? $row[20] : null,
-                            'billing_country_code'=>isset($row[21]) && !empty($row[21]) ? $row[21] : null,
-                            'billing_province_id'=>isset($row[22]) && !empty($row[22]) ? $row[22] : null,
-                            'father_phone'=>isset($row[23]) && !empty($row[23]) ? $row[23] : null,
-                            'father_email'=>isset($row[24]) && !empty($row[24]) ? $row[24] : null,
-                            'mother_phone'=>isset($row[25]) && !empty($row[25]) ? $row[25] : null,
-                            'mother_email'=>isset($row[26]) && !empty($row[26]) ? $row[26] : null,
-                            'mobile'=>isset($row[27]) && !empty($row[27]) ? $row[27] : null,
-                            'email2'=>isset($row[28]) && !empty($row[28]) ? $row[28] : null,
+                            'billing_method'=>isset($row[8]) && !empty($row[8]) ? $row[8] : null,
+                            'birth_date'=>isset($row[9]) && !empty($row[9]) ? date('Y-m-d H:i:s',strtotime($this->sdateFormat($row['9']))) : null,
+                            'street'=>isset($row[10]) && !empty($row[10]) ? $row[10] : null,
+                            'street_number'=>isset($row[11]) && !empty($row[11]) ? $row[11] : null,
+                            'zip_code'=>isset($row[12]) && !empty($row[12]) ? $row[12] : null,
+                            'place'=>isset($row[13]) && !empty($row[13]) ? $row[13] : null,
+                            'billing_street'=>isset($row[14]) && !empty($row[14]) ? $row[14] : null,
+                            'billing_street_number'=>isset($row[15]) && !empty($row[15]) ? $row[15] : null,
+                            'billing_zip_code'=>isset($row[16]) && !empty($row[16]) ? $row[16] : '',
+                            'billing_place'=>isset($row[17]) && !empty($row[17]) ? $row[17] : null,
+                            'billing_country_code'=>isset($row[18]) && !empty($row[18]) ? $row[18] : null,
+                            'billing_province_id'=>isset($row[19]) && !empty($row[19]) ? $row[19] : null,
+                            'father_phone'=>isset($row[20]) && !empty($row[20]) ? $row[20] : null,
+                            'father_email'=>isset($row[21]) && !empty($row[21]) ? $row[21] : null,
+                            'mother_phone'=>isset($row[22]) && !empty($row[22]) ? $row[22] : null,
+                            'mother_email'=>isset($row[23]) && !empty($row[23]) ? $row[23] : null,
+                            'mobile'=>isset($row[24]) && !empty($row[24]) ? $row[24] : null,
+                            'email2'=>isset($row[25]) && !empty($row[25]) ? $row[25] : null,
                         ];
                         
                         if (isset($student_id) && !empty($student_id)) {
@@ -1287,7 +1280,6 @@ class StudentsController extends Controller
                                     else {
                                         $studentData = $data;
                                         unset($studentData['username']);
-                                        unset($studentData['level_id']);
                                         unset($studentData['comment']);
                                         unset($studentData['billing_method']);
                                         unset($studentData['is_sent_invite']);
@@ -1321,7 +1313,6 @@ class StudentsController extends Controller
         //$student = $user->personable;
         $studentData = $data;
         unset($studentData['username']);
-        unset($studentData['level_id']);
         unset($studentData['comment']);
         unset($studentData['billing_method']);
         unset($studentData['is_sent_invite']);
@@ -1344,7 +1335,6 @@ class StudentsController extends Controller
             'has_user_account' => $has_user_account,
             'nickname' => $alldata['nickname'],
             'email' => $alldata['email'],
-            'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null,
             'licence_usp' => $alldata['licence_usp'],
             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
             'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : '',

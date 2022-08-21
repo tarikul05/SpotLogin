@@ -1035,7 +1035,7 @@ class TeachersController extends Controller
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        $header = "Email,username,Family Name,Firstname,Nickname,Gender,Licence,background color,Comment,Birth date,Street,Street No,Postal Code,City,Country,Province,phone,mobile\x0A";
+        $header = "Email,username,Family Name,Firstname,Nickname,Gender,Licence,background color,Comment,Birth date,Street,Street No,Postal Code,City,phone,mobile\x0A";
         echo mb_convert_encoding($header, 'sjis-win', 'utf-8');
         $output = fopen('php://output', 'w');
         $user = Auth::user();
@@ -1079,8 +1079,6 @@ class TeachersController extends Controller
             $row[] = isset($teacher->street_number) && !empty($teacher->street_number) ? $teacher->street_number : '';
             $row[] = isset($teacher->zip_code) && !empty($teacher->zip_code) ? $teacher->zip_code : '';
             $row[] = isset($teacher->place) && !empty($teacher->place) ? $teacher->place : '';
-            $row[] = isset($teacher->country_code) && !empty($teacher->country_code) ? $teacher->country_code : '';
-            $row[] = isset($teacher->province_id) && !empty($teacher->province_id) ? $teacher->province_id : '';
             $row[] = isset($teacher->phone) && !empty($teacher->phone) ? $teacher->phone : '';
             $row[] = isset($teacher->mobile) && !empty($teacher->mobile) ? $teacher->mobile : '';
 
@@ -1196,10 +1194,8 @@ class TeachersController extends Controller
                             'street_number'=>isset($row[11]) && !empty($row[11]) ? $row[11] : null,
                             'zip_code'=>isset($row[12]) && !empty($row[12]) ? $row[12] : null,
                             'place'=>isset($row[13]) && !empty($row[13]) ? $row[13] : null,
-                            'country_code'=>isset($row[14]) && !empty($row[14]) ? $row[14] : null,
-                            'province_id'=>isset($row[15]) && !empty($row[15]) ? $row[15] : null,
-                            'phone'=>isset($row[16]) && !empty($row[16]) ? $row[16] : null,
-                            'mobile'=>isset($row[17]) && !empty($row[17]) ? $row[17] : null
+                            'phone'=>isset($row[14]) && !empty($row[14]) ? $row[14] : null,
+                            'mobile'=>isset($row[15]) && !empty($row[15]) ? $row[15] : null
                         ];
 
                         if (isset($teacher_id) && !empty($teacher_id)) {
