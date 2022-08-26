@@ -21,6 +21,10 @@ class SchoolTeacher extends BaseModel
     protected $fillable = [
         'school_id',
         'teacher_id',
+        'role_type',
+        'nickname',
+        'bg_color_agenda',
+        'comment',
         'is_sent_invite'
     ];
 
@@ -59,6 +63,14 @@ class SchoolTeacher extends BaseModel
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+        /**
+     * Get the user through Teacher.
+     */
+    public function getUserAttribute()
+    {
+        return isset($this->teacher->user) && !empty($this->teacher->user) ? $this->teacher->user : null;
     }
 
     public function getFullNameAttribute()
