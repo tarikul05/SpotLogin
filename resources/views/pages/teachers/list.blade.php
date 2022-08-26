@@ -3,6 +3,11 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
@@ -11,6 +16,7 @@
         <thead>
             <tr>
                 <th>{{ __('#') }}</th>
+                <th>&nbsp;</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
                 <th>{{ __('User Account') }}</th>
@@ -26,11 +32,18 @@
             <tr>
                 <td>{{ $teacher->id; }} </td>
                 <td>
+                    <?php if (!empty($teacher->user->profileImage->path_name)): ?>
+                        <img src="{{ $teacher->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </td>
+                <td>
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">{{ $teacher->full_name }}</a>
                 </td>
                 <td>{{ $teacher->email; }} </td>
                 <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
-                <td>{{ !empty($teacher->is_active) && !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else
@@ -49,10 +62,29 @@
                             <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('delete')
                                 @csrf
-                                <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
+                                <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                             </form>
                             @endcan
-                            <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                              @method('post')
+                              @csrf
+                              @if($teacher->pivot->is_sent_invite)
+                                  <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Send invitation')}}</button>
+                              @else
+                                  <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Resend invitation')}}</button>
+                              @endif
+                            </form>
+                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('teacherStatus',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                                @method('post')
+                                @csrf
+                                <input type="hidden" name="status" value="{{ $teacher->pivot->is_active }}">
+                                @if($teacher->pivot->is_active)
+                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</button>
+                                @else
+                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
+                                @endif
+                            </form>
+
                         </div>
                     </div>  
                 </td>
@@ -64,14 +96,38 @@
   </div>
 @endsection
 
-
+@include('layouts.elements.modal_csv_teacher_import')
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#example').DataTable();
+        $('#example').DataTable({
+            "responsive": true,
+        });
         @can('teachers-create')
-        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
+        $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teacher.export',['school'=> $schoolId]) : route('teacher.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Download CSV")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Upload CSV")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
         @endcan
+
+        if (window.location.href.indexOf('#login') != -1) {
+            $('#importModal').modal('show');
+        }
+        $("#csv_import").validate({
+            // Specify validation rules
+            rules: {
+                csvFile: {
+                    required: true
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                csvFile:"{{ __('Please select a csv file') }}"
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            },
+            submitHandler: function (form) {
+                return true;
+            }
+        });
     } );
 </script>
 @endsection

@@ -8,7 +8,13 @@
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+@php
+	//$zone = $_COOKIE['timezone_user'];
+	$zone = $timezone;
+	$start_date = Helper::formatDateTimeZone($studentOffData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($studentOffData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -66,7 +72,8 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($studentOffData->date_start) ? old('start_date', date('d/m/Y', strtotime($studentOffData->date_start))) : old('start_date')}}" autocomplete="off">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($start_date) ? old('start_date', date('d/m/Y', strtotime($start_date))) : old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -79,7 +86,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($studentOffData->date_end) ? old('end_date', date('d/m/Y', strtotime($studentOffData->date_end))) : old('end_date')}}" autocomplete="off">
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -87,14 +94,14 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="1" {{ !empty($studentOffData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y" {{ !empty($studentOffData->fullday_flag) ? 'checked' : '';  }}>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -113,7 +120,9 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						<a class="btn btn-theme-warn" href="#" id="delete_btn" style="display: block;">Delete</a>
+						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</form>
@@ -126,6 +135,9 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -168,5 +180,34 @@ $('#save_btn').click(function (e) {
 			}
 		});            
 });  
+
+function delete_event(event_id){
+        var data='type=delete_events'+'&event_id='+event_id;
+		$.ajax({type: "POST",
+			url: BASE_URL + '/delete_event',
+			data: data,
+			dataType: "JSON",
+			success:function(result){
+				var status =  result.status;
+				if (status == 'success') {
+					window.location.href = BASE_URL+'/agenda';
+				}
+			},   //success
+			error: function(ts) { 
+				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+			}
+		}); //ajax-type
+    }
+	// delete event
+	$('#delete_btn').click(function (e) {
+		var p_event_type_id='{{$studentOffId}}';
+		console.log(p_event_type_id);
+		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+		e.preventDefault();
+		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		return false;
+	})
+
+	
 </script>
 @endsection

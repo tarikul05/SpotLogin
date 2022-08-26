@@ -3,7 +3,13 @@
 @section('head_links')
 
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+@php
+	//$zone = $_COOKIE['timezone_user'];
+	$zone = $timezone;
+	$date_start = Helper::formatDateTimeZone($coachoffData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($coachoffData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -13,7 +19,15 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('Coach time off') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
-				</div>    
+				</div>
+				<div class="col-sm-6 col-xs-12 btn-area">
+					<div class="pull-right btn-group">
+						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+							<i class="fa fa-arrow-left"></i>
+							{{ __('Back')}}
+						</a>
+					</div>
+				</div>
 			</div>          
 		</header>
 		<!-- Tabs navs -->
@@ -49,13 +63,13 @@
 								<div class="form-group row">
 									<label class="col-lg-2 col-sm-2 text-left">{{__('Start date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($coachoffData->date_start) ? date('l jS F-Y', strtotime($coachoffData->date_start)) : ''; }}
+										{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-2 col-sm-2 text-left">{{__('End Date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($coachoffData->date_end) ? date('l jS F-Y', strtotime($coachoffData->date_end)) : ''; }}
+										{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">

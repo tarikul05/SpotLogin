@@ -34,7 +34,7 @@ label#page_header,
 #cal_title {
     color: #0075bf;
     float: left;
-    font-size: 28px;
+    font-size: 25px;
     padding: 0;
     margin: 0;
     position: relative;
@@ -589,9 +589,12 @@ button#save_btn i {
     float: left;
 }
 a.btn.btn-theme-success.add_teacher_btn {
-    max-width: 130px;
+    max-width: 200px;
     float: left;
     margin-left: 10px;
+}
+a.btn.btn-theme-success.add_teacher_btn img {
+    margin-right: 6px;
 }
 div#example_filter {
     margin-bottom: 20px;
@@ -634,11 +637,12 @@ table.dataTable.no-footer {
     font-family: "Gilroy-SemiBold";
     font-weight: normal;
     font-size: 13px;
+    color: black;
 }
 .dropdown-menu.action.header a:hover,
 .dropdown-menu.action.list a:hover {
     color: #1e2125;
-    background: transparent;
+    background: #e9ecef;
 }
 .dropdown-menu.action.header i,
 .dropdown-menu.action.list i {
@@ -668,6 +672,77 @@ label {
 }
 button#changer_btn {
     padding: 9px;
+}
+.p-l-n {
+    padding-left: 0;
+}
+.p-r-n {
+    padding-right: 0;
+}
+#all_day_div111 .col-sm-7 {
+    margin-top: 12px;
+}
+.fc-time-grid .fc-slats td {
+    height: 1em;
+}
+.fc-time {
+    font-size: 85%;
+}
+span.etransfer_acc {
+    color: red;
+    margin-top: 7px;
+    display: block;
+}
+.multiselect-container > li > a > label {
+    padding: 3px 10px 3px 0px;
+}
+
+span.no_select {
+    margin-top: 10px;
+    float: left;
+    font-weight: bold;
+    min-width: 170px;
+}
+span.no_select input {
+    width: 34px;
+    height: 20px;
+    float: left;
+}
+#addAgendaModal button#save_btn_more,
+#addAgendaModal button#save_btn {
+    float: right;
+    margin: 30px 10px 0px 10px;
+}
+div#add_lesson_success {
+    margin-top: 120px;
+}
+#add_lesson_success .close {
+    text-align: right;
+    float: right;
+    padding: 10px 20px 0px 20px;
+}
+#add_lesson_success .modal-content {
+    border: 1px solid #0075bf;
+    padding-bottom: 20px;
+}
+div#addAgendaModal {
+    overflow-y: scroll;
+}
+h3#add_lesson_success {
+    text-align: center;
+    font-size: 18px;
+    color: red;
+    margin-top: 5px;
+}
+button#save_btn_more i {
+    padding-right: 10px;
+}
+#edit_lesson .btn_area {
+    position: absolute;
+    top: 178px;
+    right: 7%;
+    display: flex;
+    grid-gap: 15px;
 }
 @media only screen and (max-width: 768px) {
     .language_page label,
@@ -726,9 +801,24 @@ button#changer_btn {
         width: 100%;
     }
     div#button_menu_div {
-        display: block;
+        display: flex;
         float: left;
         width: 100%;
+        flex-direction: row;
+        position: unset;
+    }
+    input#search_text {
+        max-width: 68%;
+        float: left;
+    }
+    a#add_lesson_btn {
+        width: 28%;
+        float: right;
+        margin: 0;
+        padding: 6px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
     }
     a#btn_export_events {
         float: left;
@@ -736,9 +826,10 @@ button#changer_btn {
     }
     a#btn_export_events {
         float: left;
-        width: 45%;
-        padding: 10px;
+        width: 28%;
+        padding: 9px;
         font-size: 16px;
+        display: none;
     }
     a.btn.btn-theme-success.dropdown-toggle.btn-add-event {
         padding: 9px 14px;
@@ -757,5 +848,54 @@ button#changer_btn {
     #nav-tab .nav-link {
         margin-right: 12px;
         padding-right: 3px;
+    }
+    #addAgendaModalWin .col-sm-7 {
+        padding: 0;
+    }
+    #addAgendaModalWin .col-sm-6 {
+        margin-bottom: 10px;
+    }
+    #addAgendaModalWin .lesson .col-sm-2 {
+        padding-left: 0;
+    }
+    .cal_area {
+        margin-top: 5px;
+    }
+    .col-sm-6.col-xs-12.btn-area {
+        position: relative;
+    }
+    #ex1-content .col-sm-4 {
+        margin-bottom: 10px;
+    }
+    .btn_area {
+        z-index: 9;
+    }
+    #all_day_div111 label {
+        float: left;
+        width: 20%;
+    }
+    #all_day_div111 .col-sm-7 {
+        float: left;
+        width: 25%;
+        margin-top: 12px;
+    }
+    .btn {
+        padding: 0.6rem;
+        font-family: "Gilroy-Medium";
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 17px;
+        min-height: 37px;
+    }
+    div#school_cal {
+        display: flex;
+        flex-direction: column;
+    }
+    .datetimepicker-days {
+        display: none !important;
+    }
+    span.no_select {
+        margin-top: 15px;
+        margin-left: -6px;
     }
 }

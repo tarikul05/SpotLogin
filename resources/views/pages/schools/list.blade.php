@@ -3,6 +3,10 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
 @endsection
 
 @section('content')
@@ -87,7 +91,7 @@
         
         //var lang_json_file=getLangJsonFileName();
             $('#list_tbl').DataTable( {
-                //"responsive": true,
+                "responsive": true,
                 "searching": true,
                 "bProcessing": true,
                 "bDestroy": true,

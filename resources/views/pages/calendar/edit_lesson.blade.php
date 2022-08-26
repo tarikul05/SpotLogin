@@ -5,12 +5,19 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+@php
+	//$zone = $_COOKIE['timezone_user'];
+	$zone = $timezone;
+	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -37,6 +44,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
+					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -49,7 +57,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
-													<option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
+													<option data-invoice="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -60,6 +68,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
+												<option value="">{{__('Select Location') }}</option>
 												@foreach($locations as $key => $location)
 													<option value="{{ $location->id }}" {{!empty($lessonData->location_id) ? (old('location', $lessonData->location_id) == $location->id ? 'selected' : '') : (old('location') == $location->id ? 'selected' : '')}}>{{ $location->title }}</option>
 												@endforeach
@@ -68,16 +77,31 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-7">
+										<div class="input-group"> 
+											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($lessonData->title) ? old('title', $lessonData->title) : old('title')}}">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									@if(!$AppUI->isTeacherAdmin())
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									@endif
+									@if($AppUI->isTeacherAdmin())
+										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+									@else	
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{!empty($lessonData->teacher_id) ? (old('teacher_select', $lessonData->teacher_id) == $professor->teacher_id ? 'selected' : '') : (old('teacher_select') == $professor->teacher_id ? 'selected' : '')}}>{{ $professor->full_name }}</option>
 												@endforeach
 											</select>
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
@@ -85,18 +109,22 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
-													<option value="{{ $sub->id }}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
 									</div>
+									<div class="col-sm-2 p-l-n p-r-n">
+										<span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty" <?php if(empty($studentOffList[0]->student_id)){ echo 'checked'; } ?>> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="right" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i></span>
+									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($lessonData->date_start) ? old('start_date', date('d/m/Y', strtotime($lessonData->date_start))) : old('start_date')}}" autocomplete="off">
+												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -112,12 +140,12 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($lessonData->date_end) ? old('end_date', date('d/m/Y', strtotime($lessonData->date_end))) : old('end_date')}}" autocomplete="off" readonly>
+												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off" readonly>
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -133,7 +161,7 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
+								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
 									<div class="col-sm-2">
 										<div class="input-group"> 
@@ -145,7 +173,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="1" {{ !empty($lessonData->fullday_flag) ? 'checked' : '';  }}>
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
 								</div>
@@ -154,9 +182,10 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
+												<option value="0">Coming Soon</option>
+												<!-- <option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
 												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Hourly rate</option>
-												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option>
+												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option> -->
 											</select>
 										</div>
 									</div>
@@ -193,8 +222,8 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($lessonData->price_amount_buy) ? old('sprice_amount_buy', $lessonData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
-											<input type="hidden" name="attendBuyPrice" value="{{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData->price_amount_buy) && !empty($lessonData->price_amount_buy) ? $lessonData->price_amount_buy : 0 }}" autocomplete="off">
+											<input type="hidden" name="attendBuyPrice" value="{{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -205,8 +234,8 @@
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($lessonData->price_amount_sell) ? old('sprice_amount_sell', $lessonData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData->price_amount_sell) && !empty($lessonData->price_amount_sell) ? $lessonData->price_amount_sell : 0 }}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -241,13 +270,13 @@
 															
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->id }}</td>
+																<td>{{ $student->student_id }}</td>
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
 																<td>
 																	<div class="selectdiv">
-																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->id }}">
+																		<select class="form-control student_attn" name="student_attn" id="student_attn" data-id="{{ $student->student_id }}">
 																			<option value="0" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Scheduled</option>
 																			<option value="199" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 199 ? 'selected' : '') : (old('student_attn') == 199 ? 'selected' : '')}}>Absent</option>
 																			<option value="200" {{!empty($student->participation_id) ? (old('student_attn', $student->participation_id) == 200 ? 'selected' : '') : (old('student_attn') == 200 ? 'selected' : '')}}>Present</option>
@@ -255,8 +284,8 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60  }}</td>
-																<td style="text-align:right">{{ !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{(($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 }}</td>
+																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0  }}</td>
+																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}</td>
 															</tr>
 															@endforeach
 														</tbody>
@@ -276,14 +305,6 @@
 							</div>
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-									<div class="col-sm-7">
-										<div class="input-group"> 
-											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($lessonData->title) ? old('title', $lessonData->title) : old('title')}}">
-										</div>
-									</div>
-								</div>
-								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group"> 
@@ -296,8 +317,11 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						<a class="btn btn-theme-warn" href="#" id="delete_btn" style="display: block;">Delete</a>
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+						@endif
+						<button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
 					</div>
 				</form>
 			</div>
@@ -347,6 +371,9 @@ $('#student').on('change', function(event) {
 })
 
 $( document ).ready(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
@@ -356,8 +383,8 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = new Date("{{$lessonData->date_start}}").toLocaleTimeString()
-	var end_time = new Date("{{$lessonData->date_end}}").toLocaleTimeString()
+	var start_time = new Date("{{$date_start}}").toLocaleTimeString()
+	var end_time = new Date("{{$date_end}}").toLocaleTimeString()
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
@@ -369,6 +396,7 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+			$('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
 			CalcDuration();
 		}
 	});
@@ -395,8 +423,8 @@ $( document ).ready(function() {
 		el_duration = $('#duration');
 		
 			if (el_end.val() < el_start.val()) {
-				$('#end_time').val(el_start.val());
-				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+				$('#end_time').val(recalculate_end_time(el_start.val(),15));
+				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val()));
 			}
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
@@ -566,27 +594,56 @@ $('#mark_present_btn').click(function (e) {
 			            
 }); 
 
+$("body").on('click', '#all_day', function(event) {
+    if ($(this).prop('checked')) {
+        $(".not-allday").hide();
+    }else{
+        $(".not-allday").show();
+    }
+})
+
+if ({{!empty($lessonData->fullday_flag) ? 1 : 0}}) {
+	$("#all_day").click()
+}
+
+
 $('#edit_lesson').on('submit', function() {
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
+	var emptyStdchecked = $("#student_empty").prop('checked');
 
 	var errMssg = '';
 	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
+	// if(title == ''){
+	// 	var errMssg = 'Title required';
+	// 	$('#Title').addClass('error');
+	// }else{
+	// 	$('#Title').removeClass('error');
+	// }
+
+	if ($("#student_empty").prop('checked') == false){
+		if (!emptyStdchecked) {
+			if( selected < 1){
+				var errMssg = 'Select student';
+				$('.student_list').addClass('error');
+			}else{
+				var errMssg = '';
+				$('.student_list').removeClass('error');
+			}
+		}
 	}else{
-		$('#Title').removeClass('error');
+		var errMssg = '';
+		$('.student_list').removeClass('error');
 	}
 
-	if( selected < 1){
-		var errMssg = 'Select student';
-		$('.student_list').addClass('error');
+	if(professor == ''){
+		var errMssg = 'professor required';
+		$('#teacher_select').addClass('error');
 	}else{
-		$('.student_list').removeClass('error');
+		$('#teacher_select').removeClass('error');
 	}
 
 	if(startDate == ''){
@@ -617,34 +674,91 @@ $("#button_lock_and_save").on('click', function(event) {
 	confirm_event();
 });
 function confirm_event(){
-        var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
-        var status = '';
-        $.ajax({
-            url: BASE_URL + '/confirm_event',
-            data: data,
-            type: 'POST',
-            dataType: 'json',
-            beforeSend: function( xhr ) {
-                $("#pageloader").show();
-            },
-            success: function (result) {
-                status = result.status;
-                if (status == 'success') {
-                    successModalCall('{{ __("Event has been validated ")}}');
-                }
-                else {
-                    errorModalCall('{{ __("Event validation error ")}}');
-                }
-            },   //success
-            complete: function( xhr ) {
-                $("#pageloader").hide();
-            },
-            error: function (ts) { 
-                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
-            }
-        }); //ajax-type            
+	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
+	var status = '';
+	$.ajax({
+		url: BASE_URL + '/confirm_event',
+		data: data,
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function( xhr ) {
+			$("#pageloader").show();
+		},
+		success: function (result) {
+			status = result.status;
+			if (status == 'success') {
+				successModalCall('{{ __("Event has been validated ")}}');
+				window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}'
+			}
+			else {
+				errorModalCall('{{ __("Event validation error ")}}');
+			}
+		},   //success
+		complete: function( xhr ) {
+			$("#pageloader").hide();
+		},
+		error: function (ts) { 
+			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+		}
+	}); //ajax-type            
 
+}
+
+	function delete_event(event_id){
+        var data='type=delete_events'+'&event_id='+event_id;
+		$.ajax({type: "POST",
+			url: BASE_URL + '/delete_event',
+			data: data,
+			dataType: "JSON",
+			success:function(result){
+				var status =  result.status;
+				if (status == 'success') {
+					window.location.href = BASE_URL+'/agenda';
+				}
+			},   //success
+			error: function(ts) { 
+				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+			}
+		}); //ajax-type
     }
+	// delete event
+	$('#delete_btn').click(function (e) {
+		var p_event_type_id='{{$lessonlId}}';
+		console.log(p_event_type_id);
+		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
+		e.preventDefault();
+		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		return false;
+	})
 
+	$("body").on('change', '#category_select', function(event) {
+		var datainvoiced = $("#category_select option:selected").data('invoice');
+		if (datainvoiced == 'S') {
+			$("#std-check-div").css('display', 'block');
+		}else{
+			$("#std-check-div").css('display', 'none');
+			$("#student_empty").prop('checked', false)
+		}
+	});
+	
+	$("body").on('click', '#student_empty', function(event) {
+		if ($("#student_empty").prop('checked')) {
+			$('#student').multiselect( 'reset' );
+			$('#student').multiselect( 'disable', true );
+		}else{
+			$('#student').multiselect( 'disable', false );
+		}	
+	})
+
+	$( document ).ready(function() {
+		$(function() {
+			$("#save_btn_more").click(function(){
+			$("#save_btn_value"). val(1);
+			});
+			$("#save_btn").click(function(){
+			$("#save_btn_value"). val(0);
+			});
+		});
+	});
 </script>
-@endsection
+@endsection`

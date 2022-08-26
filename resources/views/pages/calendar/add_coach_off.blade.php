@@ -52,7 +52,8 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="teacher_select" name="teacher_select">
+											<select class="form-control require" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
@@ -66,6 +67,7 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -124,6 +126,9 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -152,7 +157,7 @@ $('#student').multiselect({
 
 // save functionality
 $('#save_btn').click(function (e) {
-		var formData = $('#add_teacher').serializeArray();
+		var formData = $('#coach_off').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 		var error = '';
 		$( ".form-control.require" ).each(function( key, value ) {
@@ -170,27 +175,9 @@ $('#save_btn').click(function (e) {
 			"value": csrfToken,
 		});
 		if(error < 1){	
-			$.ajax({
-				url: BASE_URL + '/{{$schoolId}}/add-teacher-action',
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				beforeSend: function( xhr ) {
-				    $("#pageloader").show();
-				 },
-				success: function(response){	
-					if(response.status == 1){
-						$('#modal_add_teacher').modal('show');
-						$("#modal_alert_body").text(response.message);
-					}
-				},
-				complete: function( xhr ) {
-				    $("#pageloader").hide();
-				}
-			})
+			return true;
 		}else{
-			$('#modal_add_teacher').modal('show');
-			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
+			return false;
 		}	            
 });  
 </script>

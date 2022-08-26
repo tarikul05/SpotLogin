@@ -52,7 +52,8 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button>
+				<a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a>
+				<!-- <button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button> -->
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -70,18 +71,20 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="availability_select" id="availability_select">
-												<option value="10">Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="availability_select" id="availability_select">
+													<option value="10">Active</option>
+													<option value="0">Inactive</option>
+													<option value="-9">Deleted</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -134,7 +137,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} : <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the teacher will receive an email with instructions to connect to his teacher account.')}}"></i></label>
 									<div class="col-sm-7">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> <input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
@@ -212,14 +215,15 @@
 											</div>
 										</div>
 									</div>
+									<?php //echo '<pre>'; print_r($provinces);exit; ?>
 									<div id="province_id_div" class="form-group row" style="display:none">
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" id="province_id" name="province_id">
 													<option value="">Select Province</option>
-													@foreach($provinces as $key => $province)
-														<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+													@foreach($provinces as $province)
+														<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 													@endforeach
 												</select>
 											</div>
@@ -262,7 +266,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
@@ -271,7 +275,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 
 							<div id="commentaire_div">
@@ -376,7 +380,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -395,8 +402,8 @@ $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: t
 $('#save_btn').click(function (e) {
 		var formData = $('#add_teacher').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = 2;
-		// var priceFlag = 2;
+		// var error = 2;
+		var error = 0;
 		
 		$( ".form-control.requr" ).each(function( key, value ) {
 			var lname = +$(this).val();
@@ -441,6 +448,9 @@ $('#save_btn').click(function (e) {
 					if(response.status == 1){
 						$('#modal_add_teacher').modal('show');
 						$("#modal_alert_body").text(response.message);
+							window.location.href = "{{ auth()->user()->isSuperAdmin() ? route('adminTeachers',$schoolId) : route('teacherHome') }}"
+						
+
 					}
 				},
 				complete: function( xhr ) {

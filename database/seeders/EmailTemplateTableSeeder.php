@@ -21,6 +21,7 @@ class EmailTemplateTableSeeder extends Seeder
         \DB::table('email_template')->insert(array (
             0 => 
             array (
+                'id' => 1,
                 'template_code' => 'forgot_password_email',
                 'template_name' => 'Passwort-E-Mail vergessen',
                 'subject_text' => 'www.sportogin.ch: Passwort zurücksetzen',
@@ -48,6 +49,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             1 => 
             array (
+                'id' => 2,
                 'template_code' => 'forgot_password_email',
                 'template_name' => 'Forgot Password Email',
                 'subject_text' => 'www.sportogin.ch: Reset Your Password',
@@ -75,6 +77,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             2 => 
             array (
+                'id' => 3,
                 'template_code' => 'forgot_password_email',
                 'template_name' => 'Mot de passe oublié',
                 'subject_text' => 'www.sportogin.ch : Réinitialisez votre mot de passe',
@@ -102,6 +105,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             3 => 
             array (
+                'id' => 4,
                 'template_code' => 'reminder_email_unpaid',
                 'template_name' => 'E-Mail-Erinnerung für unbezahlte Rechnung',
                 'subject_text' => 'Rechnung ausstehende Zahlung',
@@ -124,6 +128,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             4 => 
             array (
+                'id' => 5,
                 'template_code' => 'reminder_email_unpaid',
                 'template_name' => 'e-mail reminder for unpaid invoice',
                 'subject_text' => 'Invoice pending payment',
@@ -144,6 +149,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             5 => 
             array (
+                'id' => 6,
                 'template_code' => 'reminder_email_unpaid',
                 'template_name' => 'email de relance pour facture impayée',
                 'subject_text' => 'Facture en attente de paiement',
@@ -164,6 +170,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             6 => 
             array (
+                'id' => 7,
                 'template_code' => 'reset_pass_email',
                 'template_name' => 'Passwort zurücksetzen',
                 'subject_text' => NULL,
@@ -178,6 +185,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             7 => 
             array (
+                'id' => 8,
                 'template_code' => 'reset_pass_email',
                 'template_name' => 'Reset password',
                 'subject_text' => 'Reset Password',
@@ -200,6 +208,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             8 => 
             array (
+                'id' => 9,
                 'template_code' => 'reset_pass_email',
                 'template_name' => 'Réinitialiser le modèle de courriel',
                 'subject_text' => NULL,
@@ -214,6 +223,7 @@ class EmailTemplateTableSeeder extends Seeder
             ),
             9 => 
             array (
+                'id' => 10,
                 'template_code' => 'school',
                 'template_name' => 'Schulaktivierungs-E-Mail',
                 'subject_text' => 'Willkommen! Deine Schule [~~SCHOOL_NAME~~] wurde geöffnet',
@@ -238,29 +248,40 @@ Sobald Ihre Seite aktiviert ist, f&uuml;llen Sie bitte Ihre Schulinformationen i
             ),
             10 => 
             array (
+                'id' => 11,
                 'template_code' => 'school',
                 'template_name' => 'School Activation email',
                 'subject_text' => 'Welcome! Your school [~~SCHOOL_NAME~~] has been opened',
-                'body_text' => '<p><strong>Hello and welcome,</strong></p>
+                'body_text' => '<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+<tbody>
+<tr>
+<td style="background-color:#0e2245; height:100px; text-align:center"><a href="[~~HOSTNAME~~][~~USER_NAME~~]/index.html"><img alt="SPORTLOGIN" src="http://sportlogin.ch/img/banner-sport-login.jpg" style="height:100%; width:100%" /></a></td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN BODY -->
 
-<p>You have just been accepted into the team of Vanessa Gusmeroli. Your access to the<strong> [~~ SCHOOL_CODE ~~]</strong> software has been opened. Here step by step the procedure to follow:</p>
+<p><strong>Hello and welcome,</strong></p>
 
-<p>The login page is accessible by clicking on the following link:<strong> [~~ HOSTNAME ~~][~~ SCHOOL_CODE ~~]/</strong></p>
+<p>You have just been accepted into the team of Sportlogin. Your access to the<strong> </strong>[~~SCHOOL_NAME~~] software has been opened. Here step by step the procedure to follow:</p>
 
-<p>&nbsp;&nbsp;&nbsp; Your username is: <strong>[~~USER_NAME~~]</strong><br />
-&nbsp;&nbsp;&nbsp; Your password is: <strong>11223344</strong></p>
+<p>The login page is accessible by clicking on the following link:<strong> [~~ HOSTNAME ~~]/#login</strong></p>
+
+<p>&nbsp;&nbsp;&nbsp; Your username is: <strong>[~~USER_NAME~~] </strong><br />
+&nbsp;&nbsp;&nbsp; Your password is: [your choosen password]</p>
 
 <p>Once your page is activated, please fill in your school information in your account (address, phone). We remain of course at your disposal for any question.</p>',
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 21:56:34',
-                'modified_at' => '2022-01-03 21:56:34',
+                'modified_at' => '2022-07-14 11:36:48',
                 'created_by' => 0,
-                'modified_by' => NULL,
+                'modified_by' => 1,
                 'deleted_at' => NULL,
             ),
             11 => 
             array (
+                'id' => 12,
                 'template_code' => 'school',
             'template_name' => 'E-mail d\'activation scolaire(School Activation email)',
                 'subject_text' => 'Bienvenue! Votre école [~~SCHOOL_NAME~~] a été ouverte',
@@ -287,6 +308,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             12 => 
             array (
+                'id' => 13,
                 'template_code' => 'send_approve_pdf_invoice',
                 'template_name' => 'Rechnungs-E-Mail senden',
                 'subject_text' => 'Rechnung ist online verfügbar',
@@ -307,6 +329,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             13 => 
             array (
+                'id' => 14,
                 'template_code' => 'send_approve_pdf_invoice',
                 'template_name' => 'Send bill email',
                 'subject_text' => 'Invoice is available online',
@@ -329,6 +352,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             14 => 
             array (
+                'id' => 15,
                 'template_code' => 'send_approve_pdf_invoice',
                 'template_name' => 'email d\'annonce facture',
                 'subject_text' => 'Facture est accessible en ligne',
@@ -349,6 +373,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             15 => 
             array (
+                'id' => 16,
                 'template_code' => 'sign_up_confirmation_email',
                 'template_name' => 'Sign up confirmation Congratulation mail',
                 'subject_text' => 'Willkommen bei Sportlogin',
@@ -389,10 +414,11 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             16 => 
             array (
+                'id' => 17,
                 'template_code' => 'sign_up_confirmation_email',
                 'template_name' => 'Sign up confirmation Congratulation mail',
                 'subject_text' => 'Welcome to Sportlogin',
-                'body_text' => '<table border="0" cellpadding="0" cellspacing="0" width="100%">
+                'body_text' => '<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
 <tbody>
 <tr>
 <td style="background-color:#0e2245; height:100px; text-align:center"><a href="[~~HOSTNAME~~][~~USER_NAME~~]/index.html"><img alt="SPORTLOGIN" src="http://sportlogin.ch/img/banner-sport-login.jpg" style="height:100%; width:100%" /></a></td>
@@ -405,13 +431,13 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 <tbody>
 <tr>
 <td style="text-align:center">
-<h2><span style="color:#2980b9"><strong>Welcome to Sportlogin!</strong></span></h2>
+<h2><strong>Welcome to Sportlogin!</strong></h2>
 
-<p><span style="color:#2980b9">Please confirm your account by clicking on</span></p>
+<p><em>Welcome to Sportlogin, an invite has been sent to you by </em>[~~SCHOOL_NAME~~]</p>
 
-<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>
+<p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
-<p>[~~HOSTNAME~~][~~USER_NAME~~]/index.html</p>
+<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
 </tr>
 </tbody>
@@ -422,13 +448,14 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'language' => 'en',
                 'is_active' => 'Y',
                 'created_at' => '2022-01-03 22:20:15',
-                'modified_at' => '2022-01-03 22:20:15',
+                'modified_at' => '2022-07-27 19:52:23',
                 'created_by' => 0,
-                'modified_by' => NULL,
+                'modified_by' => 1,
                 'deleted_at' => NULL,
             ),
             17 => 
             array (
+                'id' => 18,
                 'template_code' => 'sign_up_confirmation_email',
                 'template_name' => 'Sign up confirmation Congratulation mail',
                 'subject_text' => 'Bienvenue sur Sportlogin',
@@ -469,6 +496,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             18 => 
             array (
+                'id' => 19,
                 'template_code' => 'student',
                 'template_name' => 'Willkommen E-Mail und Kontoaktivierung für Schüler',
                 'subject_text' => 'Willkommen! Ihr Zugang zu [~~SCHOOL_CODE~~] wurde geöffnet',
@@ -500,6 +528,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             19 => 
             array (
+                'id' => 20,
                 'template_code' => 'student',
                 'template_name' => 'welcome email and account activation for student',
                 'subject_text' => 'Welcome ! Your access to [~~SCHOOL_CODE~~] has been opened',
@@ -531,6 +560,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             20 => 
             array (
+                'id' => 21,
                 'template_code' => 'student',
                 'template_name' => 'email de bienvenue et activation du compte pour élève',
                 'subject_text' => 'Bienvenue ! Votre accès à [~~SCHOOL_CODE~~] a été ouvert',
@@ -562,6 +592,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             21 => 
             array (
+                'id' => 22,
                 'template_code' => 'student_activation_email',
                 'template_name' => 'Student Activation Mail',
                 'subject_text' => 'Welcome to Sportlogin',
@@ -602,6 +633,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             22 => 
             array (
+                'id' => 23,
                 'template_code' => 'student_activation_email',
                 'template_name' => 'Student Activation Mail',
                 'subject_text' => 'Welcome to Sportlogin',
@@ -642,6 +674,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             23 => 
             array (
+                'id' => 24,
                 'template_code' => 'student_activation_email',
                 'template_name' => 'Student Activation Mail',
                 'subject_text' => 'Bienvenue sur Sportlogin',
@@ -682,6 +715,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             24 => 
             array (
+                'id' => 25,
                 'template_code' => 'teacher',
                 'template_name' => 'Willkommensmail und Kontoaktivierung für den Lehrer',
                 'subject_text' => 'Willkommen! Ihr Zugang zu [~~SCHOOL_CODE~~] wurde geöffnet',
@@ -712,6 +746,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             25 => 
             array (
+                'id' => 26,
                 'template_code' => 'teacher',
                 'template_name' => 'welcome email and account activation for the teacher',
                 'subject_text' => 'Welcome ! Your access to [~~SCHOOL_CODE~~] has been opened',
@@ -744,6 +779,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
             ),
             26 => 
             array (
+                'id' => 27,
                 'template_code' => 'teacher',
                 'template_name' => 'email de bienvenue et activation du compte pour le professeur',
                 'subject_text' => 'Bienvenue ! Votre accès à [~~SCHOOL_CODE~~] a été ouvert',
@@ -772,6 +808,47 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
                 'modified_at' => '2022-01-03 21:56:34',
                 'created_by' => 0,
                 'modified_by' => NULL,
+                'deleted_at' => NULL,
+            ),
+            27 => 
+            array (
+                'id' => 28,
+                'template_code' => 'sign_up_confirmation_email_exist',
+                'template_name' => 'Sign up confirmation mail existing user',
+                'subject_text' => 'Welcome to Sportlogin',
+                'body_text' => '<table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+<tbody>
+<tr>
+<td style="background-color:#0e2245; height:100px; text-align:center"><a href="[~~HOSTNAME~~][~~USER_NAME~~]/index.html"><img alt="SPORTLOGIN" src="http://sportlogin.ch/img/banner-sport-login.jpg" style="height:100%; width:100%" /></a></td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN BODY -->
+
+<table align="center" cellpadding="15" style="width:100%">
+<tbody>
+<tr>
+<td style="text-align:center">
+<h2><strong>Welcome to Sportlogin!</strong></h2>
+
+<p><em>Welcome to Sportlogin, an invite has been sent to you by </em>[~~SCHOOL_NAME~~]</p>
+
+<p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
+
+<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table cellpadding="0" cellspacing="0" style="width:100%">
+</table>',
+                'language' => 'en',
+                'is_active' => 'Y',
+                'created_at' => '2022-01-03 22:20:15',
+                'modified_at' => '2022-07-27 19:52:45',
+                'created_by' => 0,
+                'modified_by' => 1,
                 'deleted_at' => NULL,
             ),
         ));

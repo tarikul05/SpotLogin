@@ -36,14 +36,20 @@
 					{{ __('Contact Information') }}
 				</button>
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
+					{{ __('Photo')}}
 				</button>
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
-				</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+				</a>
+				<!-- <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Sections and prices')}}
+				</button> -->
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Lesson')}}
+				</a>
+				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Lesson') }}
-				</button>
+				</button> -->
 				@can('teachers-users-update')
 					@if($teacher->user)
 					<!-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
@@ -71,18 +77,22 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="availability_select" id="availability_select">
-												<option value="10" >Active</option>
-												<option value="0">Inactive</option>
-												<option value="-9">Deleted</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="availability_select">
+													<option value="">Select</option>
+													<option value="1" {{!empty($relationalData->is_active) ?  'selected' : '' }}>{{ __('Active')}}</option>
+													<option value="0" {{ ($relationalData->is_active == 0) ? 'selected' : ''}}>{{ __('Inactive')}}</option>
+												
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -141,7 +151,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{!empty($teacher->birth_date) ? old('birth_date', $teacher->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
+											<input id="birth_date" value="{{!empty($teacher->birth_date) ? date('d/m/Y', strtotime($teacher->birth_date)) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -163,14 +173,14 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row" id="shas_user_account_div">
+								<!-- <div class="form-group row" id="shas_user_account_div">
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Enable teacher account') }} :</label>
 										<div class="col-sm-7">
 											<input id="shas_user_account"  name="has_user_account" type="checkbox" value="1" {{!empty($relationalData->has_user_account) ? (old('has_user_account', $relationalData->has_user_account) == 1 ? 'checked' : '') : (old('has_user_account') == 1 ? 'checked' : '')}}>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
@@ -236,8 +246,8 @@
 											<div class="selectdiv">
 												<select class="form-control" id="province_id" name="province_id">
 													<option value="">Select Province</option>
-													@foreach($provinces as $key => $province)
-														<option value="{{ $key }}" {{!empty($teacher->province_id) ? (old('province_id', $teacher->province_id) == $key ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province }}</option>
+													@foreach($provinces as $province)
+														<option value="{{ $province['id'] }}" {{!empty($teacher->province_id) ? (old('province_id', $teacher->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
 													@endforeach
 												</select>
 											</div>
@@ -280,7 +290,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<!-- <div class="col-md-6">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
@@ -290,23 +300,25 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 							</div>
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"> {{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}} </textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"> {{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}} </textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 					@can('teachers-update')
@@ -500,7 +512,7 @@
 				<div class="row">
 					<div class="col-sm-12 col-xs-12 header-area">
 						<div class="page_header_class">
-							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
+							<label id="page_header" class="page_title text-black">{{ __('Photo')}}</label>
 						</div>
 					</div>
 				
@@ -663,6 +675,11 @@
 <script type="text/javascript">
 	var saction = getUrlVarsO()["action"];
 $(document).ready(function(){
+
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -1165,5 +1182,14 @@ function populate_teacher_lesson() {
 // 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 // 		}	            
 // });  
+$('#country_code').change(function(){
+	var country = $(this).val();
+
+	if(country == 'CA'){
+		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
+	}
+})
 </script>
 @endsection

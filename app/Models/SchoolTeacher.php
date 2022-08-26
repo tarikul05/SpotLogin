@@ -20,7 +20,8 @@ class SchoolTeacher extends BaseModel
      */
     protected $fillable = [
         'school_id',
-        'teacher_id'
+        'teacher_id',
+        'is_sent_invite'
     ];
 
    
@@ -63,6 +64,17 @@ class SchoolTeacher extends BaseModel
     public function getFullNameAttribute()
     {
         return $this->teacher->full_name;
+    }
+
+    /**
+     * Scope a query to only include Teachers users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeOnlyTeacher($query)
+    {
+        $query->wherein('role_type',['teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
     }
 
 }

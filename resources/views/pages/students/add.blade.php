@@ -67,17 +67,19 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" name="is_active" id="is_active">
-												<option value="1">Active</option>
-												<option value="0">Inactive</option>
-											</select>
+								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="is_active" id="is_active">
+													<option value="1">Active</option>
+													<option value="0">Inactive</option>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -102,19 +104,21 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Hourly rate applied') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="billing_method" id="visibility_label_id">{{__('Rate') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control"id="billing_method" name="billing_method">
+												<option value="E" >coming soon</option>
+												<!-- comented for 1st release
 												<option value="E" {{ old('billing_method') == 'Y' ? 'selected' : ''}} >Event-wise</option>
 												<option value="M" {{ old('billing_method') == 'M' ? 'selected' : ''}} >Monthly</option>
-												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option>
+												<option value="Y" {{ old('billing_method') == 'Y' ? 'selected' : ''}}>Yearly</option> -->
 											</select>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the student will receive an email with instructions to connect to his student account.')}}"></i> :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -136,7 +140,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->lastname : '' }}" {{ $exStudent ? 'disabled' : '' }} id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
+										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->lastname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
 										@if ($errors->has('lastname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('lastname') }}.</strong>
@@ -147,7 +151,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="firstname" id="first_name_label_id">{{__('First Name') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->firstname : '' }}" {{ $exStudent ? 'disabled' : '' }} id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
+										<input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->firstname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
 										@if ($errors->has('firstname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('firstname') }}.</strong>
@@ -159,7 +163,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{ $exStudent ? $exStudent->birth_date : '' }}" {{ $exStudent ? 'disabled' : '' }} name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
+											<input id="birth_date" value="{{ $exStudent ? $exStudent->birth_date : '' }}" {{ $exStudent ? 'readonly' : '' }} name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
@@ -191,19 +195,20 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="">Select level</option>
+													<option selected value="">Select level</option>
 													@foreach($levels as $key => $level)
-														<option value="{{ $level->id }}" {{ old('level_id') == $key ? 'selected' : ''}}>{{ $level->title }}</option>
+														<option value="{{ $level->id }}">{{ $level->title }}</option>
 													@endforeach
 												</select>
 											</div>
 										</div>
 									</div>
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group"> 
-												<input id="level_date_arp" value="{{ $exStudent ? $exStudent->level_date_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
+												<input id="level_date_arp" value="{{ $exStudent ? $exStudent->level_date_arp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -213,52 +218,56 @@
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="licence_arp" id="postal_code_caption">{{__('ARP license') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
+											<input class="form-control" id="licence_arp" value="{{ $exStudent ? $exStudent->licence_arp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="licence_arp" type="text" value="{{old('licence_arp')}}">
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="licence_usp" id="locality_caption">{{__('License number') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
+											<input class="form-control" id="licence_usp" value="{{ $exStudent ? $exStudent->licence_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="licence_usp" type="text" value="{{old('licence_usp')}}">
 										</div>
 									</div>
+									@if($school->country_code == 'CH')
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
 										<div class="col-sm-7">
-											<input class="form-control" id="level_skating_usp" value="{{ $exStudent ? $exStudent->level_skating_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_skating_usp" type="text" value="{{old('level_skating_usp')}}">
+											<input class="form-control" id="level_skating_usp" value="{{ $exStudent ? $exStudent->level_skating_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_skating_usp" type="text" value="{{old('level_skating_usp')}}">
 										</div>
 									</div>
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="date_last_level_usp_div"> 
-												<input id="level_date_usp" value="{{ $exStudent ? $exStudent->level_date_usp : '' }}" {{ $exStudent ? 'disabled' : '' }} name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
+												<input id="level_date_usp" value="{{ $exStudent ? $exStudent->level_date_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
 										</div>
 									</div>
+									@endif
 								</div>
 							</div>
-							
-							<div id="commentaire_div">
-								<div class="section_header_class">
-									<label id="private_comment_caption">{{__('Private comment') }}</label>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group row">
-											<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-											<div class="col-sm-7">
-												<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{old('comment')}}</textarea>
+							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								<div id="commentaire_div">
+									<div class="section_header_class">
+										<label id="private_comment_caption">{{__('Private comment') }}</label>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
+												<div class="col-sm-7">
+													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{old('comment')}}</textarea>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -271,25 +280,25 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street" id="street_caption">{{__('Street') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street" value="{{ $exStudent ? $exStudent->street : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street" value="{{old('street')}}" type="text">
+									<input class="form-control" id="street" value="{{ $exStudent ? $exStudent->street : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street" value="{{old('street')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street_number" id="street_number_caption">{{__('Street No') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street_number" value="{{ $exStudent ? $exStudent->street_number : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street_number" value="{{old('street_number')}}" type="text">
+									<input class="form-control" id="street_number" value="{{ $exStudent ? $exStudent->street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street_number" value="{{old('street_number')}}" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'disabled' : '' }} name="street2" type="text">
+									<input class="form-control" id="street2" value="{{ $exStudent ? $exStudent->street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="street2" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="zip_code" value="{{ $exStudent ? $exStudent->zip_code : '' }}" {{ $exStudent ? 'disabled' : '' }} name="zip_code" value="{{old('zip_code')}}" type="text">
+									<input class="form-control" id="zip_code" value="{{ $exStudent ? $exStudent->zip_code : '' }}" {{ $exStudent ? 'readonly' : '' }} name="zip_code" value="{{old('zip_code')}}" type="text">
 								</div>
 							</div>
 						</div>
@@ -297,7 +306,7 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="place" id="locality_caption">{{__('City') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="place" value="{{ $exStudent ? $exStudent->place : '' }}" {{ $exStudent ? 'disabled' : '' }} name="place" value="{{old('place')}}" type="text">
+									<input class="form-control" id="place" value="{{ $exStudent ? $exStudent->place : '' }}" {{ $exStudent ? 'readonly' : '' }} name="place" value="{{old('place')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -312,14 +321,14 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row" id="province_id_div">
+							<div class="form-group row" id="province_id_div" style="display: none;">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="province_id" name="province_id">
 											<option value="">Select Province</option>
-											@foreach($provinces as $key => $province)
-												<option value="{{ $key }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -335,25 +344,25 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street" id="street_caption">{{__('Street') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street" value="{{ $exStudent ? $exStudent->billing_street : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street" value="{{old('billing_street')}}" type="text">
+									<input class="form-control" id="billing_street" value="{{ $exStudent ? $exStudent->billing_street : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street" value="{{old('billing_street')}}" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street_number" id="street_number_caption">{{__('Street No') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street_number" value="{{ $exStudent ? $exStudent->billing_street_number : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street_number" type="text">
+									<input class="form-control" id="billing_street_number" value="{{ $exStudent ? $exStudent->billing_street_number : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street_number" type="text">
 								</div>
 							</div>
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_street2" id="street_caption">{{__('Street2') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_street2" value="{{ $exStudent ? $exStudent->billing_street2 : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_street2" type="text">
+									<input class="form-control" id="billing_street2" value="{{ $exStudent ? $exStudent->billing_street2 : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_street2" type="text">
 								</div>
-							</div>
+							</div> -->
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_zip_code" id="postal_code_caption">{{__('Postal Code') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_zip_code" value="{{ $exStudent ? $exStudent->billing_zip_code : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_zip_code" type="text">
+									<input class="form-control" id="billing_zip_code" value="{{ $exStudent ? $exStudent->billing_zip_code : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_zip_code" type="text">
 								</div>
 							</div>
 						</div>
@@ -361,7 +370,7 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_place" id="locality_caption">{{__('City') }} :</label>
 								<div class="col-sm-7">
-									<input class="form-control" id="billing_place" value="{{ $exStudent ? $exStudent->billing_place : '' }}" {{ $exStudent ? 'disabled' : '' }} name="billing_place" type="text">
+									<input class="form-control" id="billing_place" value="{{ $exStudent ? $exStudent->billing_place : '' }}" {{ $exStudent ? 'readonly' : '' }} name="billing_place" type="text">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -382,8 +391,8 @@
 									<div class="selectdiv">
 										<select class="form-control" id="billing_province_id" name="billing_province_id">
 											<option value="">Select Province</option>
-											@foreach($provinces as $key => $province)
-												<option value="{{ $key }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province }}</option>
+											@foreach($provinces as $province)
+												<option value="{{ $province['id'] }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -400,7 +409,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" id="father_phone">{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="father_phone" value="{{ $exStudent ? $exStudent->father_phone : '' }}" {{ $exStudent ? 'disabled' : '' }} name="father_phone"  type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="father_phone" value="{{ $exStudent ? $exStudent->father_phone : '' }}" {{ $exStudent ? 'readonly' : '' }} name="father_phone"  type="text">
 									</div>
 								</div>
 							</div>
@@ -408,7 +417,7 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mother_phone" name="mother_phone" value="{{ $exStudent ? $exStudent->mother_phone : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mother_phone" name="mother_phone" value="{{ $exStudent ? $exStudent->mother_phone : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text">
 									</div>
 								</div>
 							</div>
@@ -416,7 +425,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{ $exStudent ? $exStudent->mobile : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{ $exStudent ? $exStudent->mobile : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text">
 									</div>
 								</div>
 							</div>
@@ -426,7 +435,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox"value="1" name="father_notify"></span> <input class="form-control" id="father_email" name="father_email" value="{{ $exStudent ? $exStudent->father_email : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox"value="1" name="father_notify"></span> <input class="form-control" id="father_email" name="father_email" value="{{ $exStudent ? $exStudent->father_email : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
@@ -434,7 +443,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="mother_email">{{__("Mother’s email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" value="1" name="mother_notify"></span> <input class="form-control" id="mother_email" name="mother_email" value="{{ $exStudent ? $exStudent->mother_email : '' }}" {{ $exStudent ? 'disabled' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><input type="checkbox" value="1" name="mother_notify"></span> <input class="form-control" id="mother_email" name="mother_email" value="{{ $exStudent ? $exStudent->mother_email : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
@@ -475,6 +484,16 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+
+	var b_country = $('#billing_country_code option:selected').val();
+	var country_code = $('#country_code option:selected').val();
+	if(country_code == 'CA'){
+		$('#province_id_div').show();
+	}
+	if(b_country == 'CA'){
+		$('#billing_province_id_div').show();
+	}
+	
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -510,7 +529,7 @@ $(function() {
 		if($(this).is(':checked')){
 			$('#billing_place').val( $('#place').val() );
 			$('#billing_street').val( $('#street').val() );
-			$('#billing_street2').val( $('#street2').val() );
+			// $('#billing_street2').val( $('#street2').val() );
 			$('#billing_street_number').val( $('#street_number').val() );
 			$('#billing_zip_code').val( $('#zip_code').val() );
 			$('#billing_country_code').val( $('#country_code option:selected').val() );

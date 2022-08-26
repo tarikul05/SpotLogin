@@ -3,14 +3,20 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
-  <div class="container-fluid">
+  <div class="container-fluid students_list">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
                 <th>{{ __('#') }}</th>
+                <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -23,13 +29,22 @@
             if ($student->pivot->role_type == 'school_admin') continue;
             @endphp
             <tr>
-                <td>{{ $student->id; }}
+                <td>{{ $student->id; }} </td>
+                <td>
+                    <?php if (!empty($student->profileImageStudent->path_name)): ?>
+                        <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php elseif (!empty($student->user->profileImage->path_name)): ?>
+                        <img src="{{ $student->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe"> 
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </td>
                 <td>
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
                 
                 <td>{{ $student->email; }}</td>
-                <td>{{ !empty($student->is_active) && !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td>{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($student->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else
@@ -46,10 +61,28 @@
                                 <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('studentDelete',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                                     @method('delete')
                                     @csrf
-                                    <button  class="dropdown-item btn" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
+                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                                 </form>
                                 @endcan
-                                <a class="dropdown-item" href=""><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</a>
+                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                                  @method('post')
+                                  @csrf
+                                  @if($student->pivot->is_sent_invite)
+                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Send invitation')}}</button>
+                                  @else
+                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Resend invitation')}}</button>
+                                  @endif
+                                </form>
+                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                                    @method('post')
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $student->pivot->is_active }}">
+                                    @if($student->pivot->is_active)
+                                        <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</button>
+                                    @else
+                                        <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
+                                    @endif
+                                </form>
                             </div>
                         </div>  
                     </td>
@@ -60,15 +93,65 @@
     </table>
   </div>
 @endsection
-
-
+@include('layouts.elements.modal_csv_import')
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#example').DataTable();
+        $('#example').DataTable({
+            language: { search: "" },
+            "responsive": true,
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_",
+            }
+        });
         @can('students-create')
-        $("#example_filter").append('<a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
+        $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.export',['school'=> $schoolId]) : route('student.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Download CSV")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Upload CSV")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
         @endcan
-    } );
+
+        if (window.location.href.indexOf('#login') != -1) {
+            $('#importModal').modal('show');
+        }
+        function validateForm() {
+            var currency_code = document.getElementById("currency_code").value;
+            var currency_title = document.getElementById("currency_title").value;
+            var sort_order = document.getElementById("sort_order").value;
+            let error = false;
+            if (currency_code == null || currency_code == "") {
+                    $('#currency_code').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+                    document.getElementById("currency_code").focus();
+                    error = true;
+            }
+            if (currency_title == null || currency_title == "") {
+                document.getElementById("currency_title").focus();
+                $('#currency_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
+                error = true;             
+            }
+
+
+            if (error) {
+                return false;
+            }else{
+                return true;
+            }
+        } 
+        $("#csv_import").validate({
+            // Specify validation rules
+            rules: {
+                csvFile: {
+                    required: true
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                csvFile:"{{ __('Please select a csv file') }}"
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            },
+            submitHandler: function (form) {
+                return true;
+            }
+        });
+    });
 </script>
 @endsection

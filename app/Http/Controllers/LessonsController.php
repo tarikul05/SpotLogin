@@ -18,6 +18,7 @@ use App\Models\Location;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
 use App\Models\Currency;
+use Redirect;
 use DB;
 
 class LessonsController extends Controller
@@ -48,7 +49,7 @@ class LessonsController extends Controller
         }
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
 
@@ -77,42 +78,56 @@ class LessonsController extends Controller
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
                 $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
-                $stu_num = count($eventData['student']);
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $eventData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
 
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 100,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'date_start' => $start_date,
+                    'date_end' => $end_date,
                     'price_currency' => isset($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                     'price_amount_buy' => $eventData['sprice_amount_buy'],
                     'price_amount_sell' => $eventData['sprice_amount_sell'],
                     'extra_charges' => $eventData['extra_charges'],
                     'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
                     'description' => $eventData['description'],
-                    'location_id' => $eventData['location'],
+                    'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
-                    'no_of_students' => !empty($stu_num) ? $stu_num : null,
+                    'no_of_students' => !empty($eventData['student']) ? count($eventData['student']) : null,
                 ];
 
                 $event = Event::create($data);
-                foreach($eventData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $eventData['teacher_select'],
-                        'student_id' => $std,
-                        'buy_price' => $eventData['sprice_amount_buy'],
-                        'sell_price' => $eventData['sprice_amount_sell'],
-                        'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($eventData['student'])) {
+                    foreach($eventData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $eventData['teacher_select'],
+                            'student_id' => $std,
+                            'buy_price' => $eventData['sprice_amount_buy'],
+                            'sell_price' => $eventData['sprice_amount_sell'],
+                            'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
 
                 DB::commit();
                  
-                 // return back()->withInput($request->all())->with('success', __('Successfully Registered'));
-                 return back()->with('success', __('Successfully Registered'));
+                 if($eventData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
                 
             }  
         }catch (Exception $e) {
@@ -141,9 +156,9 @@ class LessonsController extends Controller
         $relationData = EventDetails::active()->where(['event_id'=>$eventId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
 
@@ -176,21 +191,25 @@ class LessonsController extends Controller
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']).' '.$eventData['start_time'];
                 $end_date = str_replace('/', '-', $eventData['end_date']).' '.$eventData['end_time'];
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $eventData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
                 $stu_num = count($eventData['student']);
 
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 100,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'date_start' => $start_date,
+                    'date_end' => $end_date,
                     'price_currency' => !empty($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                     'price_amount_buy' => $eventData['sprice_amount_buy'],
                     'price_amount_sell' => $eventData['sprice_amount_sell'],
                     'extra_charges' => $eventData['extra_charges'],
                     'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
                     'description' => $eventData['description'],
-                    'location_id' => $eventData['location'],
+                    'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
                     'no_of_students' => !empty($stu_num) ? $stu_num : null,
                 ];
@@ -240,12 +259,12 @@ class LessonsController extends Controller
         }
         $eventId = $request->route('event'); 
         $eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
-        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
         $professors = DB::table('events')->select('school_teacher.nickname')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
         $eventCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.view_event')->with(compact('eventData','schoolId','eventCategory','locations','professors','studentOffList','lessonPrice'));
+        return view('pages.calendar.view_event')->with(compact('eventData','schoolId','eventCategory','locations','professors','studentOffList','lessonPrice','eventId'));
     }
 
     /**
@@ -254,21 +273,25 @@ class LessonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function addLesson(Request $request, $schoolId = null)
-    {
+    {   
+        $lessonlId= $_GET['id'];
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
+        $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
+        $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
 
-        return view('pages.calendar.add_lesson')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
+        return view('pages.calendar.add_lesson')->with(compact('lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency','studentOffList'));
     }
 
      /**
@@ -291,6 +314,10 @@ class LessonsController extends Controller
                 $lessonData = $request->all();
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
 
 
@@ -300,8 +327,8 @@ class LessonsController extends Controller
                     'event_type' => 10,
                     'event_category' => $lessonData['category_select'],
                     'teacher_id' => $lessonData['teacher_select'],
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'date_start' => $start_date,
+                    'date_end' => $end_date,
                     'duration_minutes' => $lessonData['duration'],
                     'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
                     'price_amount_buy' => $lessonData['sprice_amount_buy'],
@@ -309,24 +336,40 @@ class LessonsController extends Controller
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
-                    'location_id' => $lessonData['location'],
+                    'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
                     'sis_paying' => $lessonData['sis_paying']
                 ];
 
                 $event = Event::create($data);
-                
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id'   => $event->id,
-                        'teacher_id' => $lessonData['teacher_select'],
-                        'student_id' => $std,
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                   foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'teacher_id' => $lessonData['teacher_select'],
+                            'student_id' => $std,
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
+                    
                 DB::commit();
-                 
-                 return back()->with('success', __('Successfully Registered'));
+
+                if($lessonData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else if($lessonData['save_btn_more'] == 2){
+                    return Redirect::to($schoolId.'/add-lesson?id='.$event->id)->withInput($request->all())->with('success', __('Successfully Registered'));
+                }else if($lessonData['save_btn_more'] == 3){
+                    return Redirect::to('/agenda');
+                }else{
+                     return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }     
                
             }  
         }catch (Exception $e) {
@@ -353,6 +396,7 @@ class LessonsController extends Controller
             $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
         }
 
         $lessonlId = $request->route('lesson'); 
@@ -360,9 +404,9 @@ class LessonsController extends Controller
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
-        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
         $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData->event_category,'lesson_price_id'=>$lessonData->no_of_students,'teacher_id'=>$lessonData->teacher_id])->first();
@@ -394,6 +438,10 @@ class LessonsController extends Controller
                 $lessonData = $request->all();
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
 
                 $data = [
@@ -402,8 +450,8 @@ class LessonsController extends Controller
                     'event_type' => 10,
                     'event_category' => $lessonData['category_select'],
                     'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' => date('Y-m-d H:i:s',strtotime($end_date)),
+                    'date_start' => $start_date,
+                    'date_end' => $end_date,
                     'duration_minutes' => $lessonData['duration'],
                     'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
                     'price_amount_buy' => $lessonData['sprice_amount_buy'],
@@ -411,28 +459,34 @@ class LessonsController extends Controller
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
-                    'location_id' => $lessonData['location'],
+                    'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
                     'is_paying' => $lessonData['sis_paying']
                 ];
 
                 $event = Event::where('id', $lessonlId)->update($data);
                 EventDetails::where('event_id',$lessonlId)->forceDelete();
-                foreach($lessonData['student'] as $std){
-                    $dataDetails = [
-                        'event_id' => $lessonlId,
-                        'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
-                        'student_id' => $std,
-                        'buy_price' => $lessonData['attendBuyPrice'],
-                        'sell_price' => $lessonData['attendSellPrice'],
-                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
-                        'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
-                    ];
-                    $eventDetails = EventDetails::create($dataDetails);
+                if (!empty($lessonData['student'])) {
+                    foreach($lessonData['student'] as $std){
+                        $dataDetails = [
+                            'event_id' => $lessonlId,
+                            'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
+                            'student_id' => $std,
+                            'buy_price' => $lessonData['attendBuyPrice'],
+                            'sell_price' => $lessonData['attendSellPrice'],
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
+                            'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
                 DB::commit();
-                 
-                 return back()->with('success', __('Successfully Registered'));
-            }  
+            
+                if($lessonData['save_btn_more'] == 1){
+                    return Redirect::to($schoolId.'/add-lesson?id='.$lessonlId);
+                }else{
+                    return back()->with('success', __('Successfully Registered'));
+                } 
+        }  
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -457,7 +511,7 @@ class LessonsController extends Controller
         }
         $lessonlId = $request->route('lesson'); 
         $lessonData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
-        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
+        $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
         $professors = DB::table('events')->select('school_teacher.nickname','school_teacher.teacher_id')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
         $professors->full_name = "";
         if (!empty($professors->teacher_id)) {
@@ -467,7 +521,7 @@ class LessonsController extends Controller
         $lessonCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.view_lesson')->with(compact('lessonData','schoolId','lessonCategory','locations','professors','studentOffList','lessonPrice'));
+        return view('pages.calendar.view_lesson')->with(compact('lessonData','schoolId','lessonCategory','locations','professors','studentOffList','lessonPrice','lessonlId'));
     }
 
     /**
@@ -506,15 +560,18 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']);
-
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';                
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $studentOffData['zone'],'UTC');
                 $data = [
                     'title' => $studentOffData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 51,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'date_start' => $start_date,
+                    'date_end' =>$end_date,
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : 'Y',
                     'description' => $studentOffData['description']
                 ];
 
@@ -528,7 +585,19 @@ class LessonsController extends Controller
                     $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-                 return back()->with('success', __('Successfully Registered'));
+                
+                if($studentOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
+                 
             }  
         }catch (Exception $e) {
             DB::rollBack();
@@ -581,17 +650,21 @@ class LessonsController extends Controller
                 }
 
                 $studentOffData = $request->all();
-                $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']);
+                $start_date = str_replace('/', '-', $studentOffData['start_date']).' 00:00:00';
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $studentOffData['zone'],'UTC');
                 $studoffId = $request->route('id'); 
 
                 $data = [
                     'title' => $studentOffData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 51,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : null,
+                    'date_start' => $start_date,
+                    'date_end' =>$end_date,
+                    'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : 'Y',
                     'description' => $studentOffData['description']
                 ];
 
@@ -634,7 +707,7 @@ class LessonsController extends Controller
         $studoffId = $request->route('id'); 
         $studentOffData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->select('school_student.nickname')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->get();
-        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId'));
+        return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId','studoffId'));
     }
 
     /**
@@ -650,7 +723,7 @@ class LessonsController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         return view('pages.calendar.add_coach_off')->with(compact('schoolId','professors'));
     }
 
@@ -673,16 +746,19 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $coachOffData['end_date']);
-
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $coachOffData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $coachOffData['zone'],'UTC');
                 $data = [
                     'title' => $coachOffData['title'],
                     'school_id' => $schoolId,
                     'teacher_id' => $coachOffData['teacher_select'],
                     'event_type' => 50,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
+                    'date_start' => $start_date,
+                    'date_end' =>$end_date,
+                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : 'Y',
                     'description' => $coachOffData['description']
                 ];
                 
@@ -696,7 +772,18 @@ class LessonsController extends Controller
                 $eventDetails = EventDetails::create($dataDetails);
                 
                 DB::commit();
-                return back()->with('success', __('Successfully Registered'));
+                
+                if($coachOffData['save_btn_more'] == 1){
+                    return [
+                        'status' => 1,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }else{
+                    return [
+                        'status' => 2,
+                        'message' =>  __('Successfully Registered')
+                    ];
+                }
             }  
         }catch (Exception $e) {
             DB::rollBack();
@@ -722,9 +809,9 @@ class LessonsController extends Controller
         }
         $coachoffId = $request->route('id'); 
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
         if (!empty($coachoffData)){
-            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors'));    
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors','coachoffId'));    
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
@@ -749,16 +836,20 @@ class LessonsController extends Controller
                 $coachOffData = $request->all();
 
                 $start_date = str_replace('/', '-', $coachOffData['start_date']);
-                $end_date = str_replace('/', '-', $coachOffData['end_date']);
+                $end_date = str_replace('/', '-', $coachOffData['end_date']).' 23:59:59';
+                $start_date = date('Y-m-d H:i:s',strtotime($start_date));
+                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $start_date = $this->formatDateTimeZone($start_date, 'long', $coachOffData['zone'],'UTC');
+                $end_date = $this->formatDateTimeZone($end_date, 'long', $coachOffData['zone'],'UTC');
                 $coachoffId = $request->route('id'); 
 
                 $data = [
                     'title' => $coachOffData['title'],
                     'school_id' => $schoolId,
                     'event_type' => 50,
-                    'date_start' => date('Y-m-d H:i:s',strtotime($start_date)),
-                    'date_end' =>date('Y-m-d H:i:s',strtotime($end_date)),
-                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : null,
+                    'date_start' => $start_date,
+                    'date_end' =>$end_date,
+                    'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : 'Y',
                     'description' => $coachOffData['description'],
                     'teacher_id' => $coachOffData['teacher_select']
                 ];
@@ -816,7 +907,7 @@ class LessonsController extends Controller
                 $lessonlId = $request->route('id');
                 $lessonData = $request->all();
                 $type = $lessonData['type'];
-                
+              
                 if($type == 1){
                     $dataDetails = [
                         'participation_id' => $lessonData['typeId']

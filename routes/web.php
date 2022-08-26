@@ -30,10 +30,10 @@ Route::get('/verify-account/{token}', 'UserController@verify_user')->name('verif
 Route::post('/change_first_password', [App\Http\Controllers\AuthController::class, 'changeFirstPassword'])->name('change_password.first');
 
 
-// after user add verify it 
+// after user add verify it
 Route::get('/verify-user-account/{token}', 'UserController@verify_user_added')->name('add.verify.email');
-Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add');
-Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school');
+Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 
@@ -80,6 +80,7 @@ Route::post('/get_event', [App\Http\Controllers\AgendaController::class, 'getEve
 Route::post('/get_locations', [App\Http\Controllers\AgendaController::class, 'getLocations'])->name('event.get_locations')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_teachers', [App\Http\Controllers\AgendaController::class, 'getTeachers'])->name('event.get_teachers')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_event_category', [App\Http\Controllers\AgendaController::class, 'getEventCategory'])->name('event.get_event_category')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/get_school_currency', [App\Http\Controllers\AgendaController::class, 'getSchoolCurrency'])->name('event.get_school_currency')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_students', [App\Http\Controllers\AgendaController::class, 'getStudents'])->name('event.get_students')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event1.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -87,7 +88,7 @@ Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class,
 
 
 Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
+Route::post('delete_event', [App\Http\Controllers\AgendaController::class, 'deleteEvent'])->name('event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::class, 'validateMultipleEvent'])->name('multiple_event.validate')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
@@ -122,7 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
     'uses' => 'AuthController@permission_check',
     'as' => 'check.permission'
   ));
-  // Add edit language translations from json 
+  // Add edit language translations from json
   Route::get('languages', 'LanguageTranslationController@index')->name('languages');
   Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
   Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
@@ -130,6 +131,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::delete('translations/destroy/{key}', 'LanguageTranslationController@destroy')->name('translations.destroy');
 
   // add parameters for schools
+  Route::post('/add-school-parameters', 'SchoolsController@addParameters')->name('school_parameter.create')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   Route::get('/parameters/category', 'EventCategoryController@index')->name('event_category.index');
   Route::post('/add-event-category', 'EventCategoryController@addEventCategory')->name('event_category.create');
   Route::delete('/remove-event-category/{key}', 'EventCategoryController@removeEventCategory')->name('event_category.destroy');
@@ -144,21 +146,26 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('roles', "RoleController");
     Route::resource('permissions', "PermissionController");
-        
-    // Language 
+
+    // ical personal events
+    Route::post('/{school}/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEventss')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+    Route::get('/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEvents');
+
+
+    // Language
     Route::get('/language', [App\Http\Controllers\LanguagesController::class, 'index'])->name('list.language');
     Route::post('/add-language', [App\Http\Controllers\LanguagesController::class, 'addUpdate'])->name('add.language');
 
-    // currency 
+    // currency
     Route::get('/currency', [App\Http\Controllers\CurrencyController::class, 'index'])->name('list.currency');
     Route::post('/add-currency', [App\Http\Controllers\CurrencyController::class, 'addUpdate'])->name('add.currency');
 
 
-    // email template 
+    // email template
     Route::get('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'index'])->name('view.email_template');
     Route::post('/email-template', [App\Http\Controllers\EmailTemplateController::class, 'addUpdate'])->name('add.email_template');
 
-    // tc template 
+    // tc template
     Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
 
@@ -167,7 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('profile-update', ['as' =>'profile.update','uses' =>'ProfileController@profileUpdate' ]);
     Route::post('update-profile-photo', ['as' =>'profile.update_photo','uses' =>'ProfileController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-    
+
     // School update
     Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
@@ -188,13 +195,29 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.teachers.create'
     ));
     Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
-    
+    Route::match(array('GET', 'POST'), "/{school}/export-teacher", array(
+        'uses' => 'TeachersController@export',
+        'as' => 'admin.teacher.export'
+    ));
+    Route::match(array('GET', 'POST'), "/{school}/import-teacher", array(
+        'uses' => 'TeachersController@import',
+        'as' => 'admin.teacher.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
     // Students
     Route::get('/{school}/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('adminStudents');
     Route::match(array('GET', 'POST'), "/{school}/add-student", array(
       'uses' => 'StudentsController@create',
       'as' => 'admin.student.create'
     ));
+    Route::match(array('GET', 'POST'), "/{school}/export-student", array(
+      'uses' => 'StudentsController@export',
+      'as' => 'admin.student.export'
+    ));
+    Route::match(array('GET', 'POST'), "/{school}/import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'admin.student.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
@@ -217,9 +240,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit');
     Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
     Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
-  
-  
-    // Invoice 
+
+
+    // Invoice
     Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
     Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList.id');
     Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
@@ -229,25 +252,40 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
-  // school 
+  // school
   Route::get('school-update', 'SchoolsController@edit')->name('school-update');
   Route::post('school-update/{school}', ['as' =>'school.update','uses' =>'SchoolsController@update' ]);
   Route::post('school-user-update/{school}', ['as' =>'school.user_update','uses' =>'SchoolsController@userUpdate' ]);
   Route::post('update-school-logo', ['as' =>'school.update_logo','uses' =>'SchoolsController@logoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   Route::post('delete-school-logo', ['as' =>'school.delete_logo','uses' =>'SchoolsController@logoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-  
+
 
 
   Route::middleware(['select_role'])->group(function () {
+
+    Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
+    Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
+
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
     Route::match(array('GET', 'POST'), "add-teacher", array(
       'uses' => 'TeachersController@create',
       'as' => 'teachers.create'
     ));
+    Route::match(array('GET', 'POST'), "export-teacher", array(
+        'uses' => 'TeachersController@export',
+        'as' => 'teacher.export'
+    ));
+    Route::match(array('GET', 'POST'), "import-teacher", array(
+        'uses' => 'TeachersController@import',
+        'as' => 'teacher.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
     Route::post('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
     Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
+
+    Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
+    Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'sendInvitation'])->name('teacherInvitation');
 
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
@@ -263,10 +301,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
 
+    
     // Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   });
+    Route::get('/update-student', [App\Http\Controllers\StudentsController::class, 'self_edit'])->name('updateStudent');
+    Route::post('/update-student', [App\Http\Controllers\StudentsController::class, 'self_update'])->name('updateStudentAction');
 
- 
+
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
     Route::post('/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
     Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
@@ -275,16 +316,26 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'StudentsController@create',
       'as' => 'student.create'
     ));
+    Route::match(array('GET', 'POST'), "export-student", array(
+      'uses' => 'StudentsController@export',
+      'as' => 'student.export'
+    ));
+    Route::match(array('GET', 'POST'), "import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'student.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     Route::delete('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('studentDelete');
-    
+    Route::post('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'changeStatus'])->name('studentStatus');
+    Route::post('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitation'])->name('studentInvitation');
+
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
-    
+
     Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
     Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
-  
+
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
     Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
@@ -304,7 +355,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
     Route::get('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit');
     Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
-    Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');  
+    Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
     Route::post('/{school}/student-attend-action/{id}', [App\Http\Controllers\LessonsController::class, 'StudentAttendAction'])->name('studentAttend.Action');
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
     Route::get('invoice', 'InvoiceController@view')->name('invoice');

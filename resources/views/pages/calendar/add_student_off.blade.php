@@ -67,6 +67,7 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -91,7 +92,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="1">
+											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
 										</div>
 									</div>
 								</div>
@@ -125,6 +126,9 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,

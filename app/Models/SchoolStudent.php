@@ -30,7 +30,8 @@ class SchoolStudent extends BaseModel
         'licence_usp',
         'level_skating_usp',
         'level_date_usp',
-        'comment'
+        'comment',
+        'is_sent_invite'
     ];
 
    
@@ -50,7 +51,7 @@ class SchoolStudent extends BaseModel
      *
      * @var array
      */
-    protected $appends = [];
+    protected $appends = ['full_name'];
 
      /**
      * Get the user for the user enquiry.
@@ -68,6 +69,11 @@ class SchoolStudent extends BaseModel
     public function student()
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->student->full_name;
     }
 
 }

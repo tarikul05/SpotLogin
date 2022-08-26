@@ -12,7 +12,7 @@
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Confirmation login') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -29,19 +29,32 @@
 					<input type="hidden" name="school_id" value="{{ !empty($verifyToken) ? $verifyToken->school_id : '' }}">
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
+							<label id="teacher_personal_data_caption">{{ __('Confirm via login') }}</label>
+							<p>You are requested to join this school ({{ $school->school_name }})</p>
 						</div>
 						<div class="row">
-							<div class="col-md-6">
-                <div class="form-group row">
-									You are requested to join this school. Please click here.
-                  <div class="col-sm-6 col-xs-12 btn-area">
-                    <div class="float-end btn-group">
-                      <button id="save_btn" name="save_btn" class="btn btn-theme-success">
-                        <i class="fa fa-save"></i>{{ __('Save') }} 
-                      </button>
-                    </div>
-                  </div>
+							<div class="col-md-4">
+								<div class="form-group">
+						            <input type="text" class="form-control" placeholder="Username" id="login_username" name="login_username" required>
+						          </div>
+						          <div class="form-group">
+						            <div class="input-group" id="show_hide_password">
+						              <input class="form-control" autocomplete="on" type="password" placeholder="Password" id="login_password" name="login_password" required>
+						              <!-- <div class="input-group-addon">
+						                <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+						              </div> -->
+						            </div>
+						          </div>
+
+
+
+				                <div class="form-group">
+													
+				                    <div class="float-end btn-group">
+				                      <button id="save_btn" name="save_btn" class="btn btn-theme-success">
+				                        <i class="fa fa-save"></i>{{ __('Login') }} 
+				                      </button>
+				                    </div>
 								</div>
 							</div>
 							<div class="clearfix"></div>
@@ -82,7 +95,18 @@ $(document).ready(function(){
 		}
 	});
 });
-
+	$("body").on('click', '#show_hide_password a', function(event) {
+    event.preventDefault();
+    if ($('#show_hide_password input').attr("type") == "text") {
+      $('#show_hide_password input').attr('type', 'password');
+      $('#show_hide_password i').addClass("fa-eye-slash");
+      $('#show_hide_password i').removeClass("fa-eye");
+    } else if ($('#show_hide_password input').attr("type") == "password") {
+      $('#show_hide_password input').attr('type', 'text');
+      $('#show_hide_password i').removeClass("fa-eye-slash");
+      $('#show_hide_password i').addClass("fa-eye");
+    }
+  });
 
 function validateUserForm() {
   let error = false;

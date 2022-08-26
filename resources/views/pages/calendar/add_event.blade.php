@@ -48,6 +48,7 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
+												<option value="">{{__('Select Location') }}</option>
 												@foreach($locations as $key => $location)
 													<option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
 												@endforeach
@@ -64,16 +65,23 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									@if(!$AppUI->isTeacherAdmin())
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									@endif
+									@if($AppUI->isTeacherAdmin())
+										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+									@else	
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
+													<option value="">{{__('Select Professor') }}</option>
 												@foreach($professors as $key => $professor)
 													<option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->full_name }}</option>
 												@endforeach
 											</select>
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
@@ -93,6 +101,7 @@
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -133,7 +142,7 @@
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="1">
+											<input id="all_day" name="fullday_flag" type="checkbox" value="Y">
 										</div>
 									</div>
 								</div>
@@ -162,7 +171,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
@@ -278,6 +287,9 @@ $( document ).ready(function() {
 })
 
 $( document ).ready(function() {
+	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // document.getElementById("zone").value = zone;
+	var zone = document.getElementById("zone").value;
 	var value = $('#sis_paying').val();
 	$('#hourly').hide();
 	$('#price_per_student').hide();
@@ -313,18 +325,25 @@ $('#add_event').on('submit', function() {
 
 	var errMssg = '';
 	
-	if(title == ''){
-		var errMssg = 'Title required';
-		$('#Title').addClass('error');
-	}else{
-		$('#Title').removeClass('error');
-	}
+	// if(title == ''){
+	// 	var errMssg = 'Title required';
+	// 	$('#Title').addClass('error');
+	// }else{
+	// 	$('#Title').removeClass('error');
+	// }
 
 	if( selected < 1){
 		var errMssg = 'Select student';
 		$('.student_list').addClass('error');
 	}else{
 		$('.student_list').removeClass('error');
+	}
+
+	if(professor == ''){
+		var errMssg = 'professor required';
+		$('#teacher_select').addClass('error');
+	}else{
+		$('#teacher_select').removeClass('error');
 	}
 
 	if(startDate == ''){

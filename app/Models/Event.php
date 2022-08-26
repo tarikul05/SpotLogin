@@ -119,6 +119,14 @@ class Event extends BaseModel
         return $this->belongsTo(EventCategory::class);
     }
 
+    /**
+     * Get the user for the News.
+     */
+    public function details()
+    {
+        return $this->hasMany(EventDetails::class);
+    }
+
 
 
     /**
@@ -138,22 +146,15 @@ class Event extends BaseModel
 
         if (isset($params['p_from_date'])) {
             $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
-            
-            if (!$toFilterDate) {
-                $toFilterDate = now();
-            }
         } 
         
         if (isset($params['p_to_date'])) {
             $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
-            
-            if (!$fromFilterDate) {
-                $fromFilterDate = now();
-            }
         }
 
 
         $query->where('deleted_at', null);
+        $query->where('is_locked', 0);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
@@ -318,27 +319,35 @@ class Event extends BaseModel
             unset($params['zone']);
         }
         if (isset($params['start_date'])) {
-            //$fromFilterDate = null;
-            //$toFilterDate = null;
-        
-          //$fromFilterDate = str_replace('/', '-',$params['start_date']);
-          $fromFilterDate = $params['start_date'];
-        //   if (!$toFilterDate) {
-        //       $toFilterDate = now();
-        //   }
-          unset($params['start_date']);
+            $fromFilterDate = $params['start_date'];
+            if ($params['p_view'] =='CurrentListView') {
+                $fromFilterDate = now();
+            }
+          
+            //   if (!$toFilterDate) {
+            //       $toFilterDate = now();
+            //   }
+            unset($params['start_date']);
         } 
       
         if (isset($params['end_date'])) {
            // $fromFilterDate = null;
             //$toFilterDate = null;
-            $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            
             $toFilterDate = $params['end_date'];
+            if ($params['p_view'] =='CurrentListView') {
+                $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+            }
           
             //   if (!$fromFilterDate) {
             //       $fromFilterDate = now();
             //   }
             unset($params['end_date']);
+        }
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->select(['events.*']);
         }
         
         //$query->where('deleted_at', null);
@@ -353,7 +362,13 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        $query->whereIn($key, $value);
+                        
+                        $query->where(function ($query) use($key,$value) {
+                            $query->whereIn($key, $value)
+                                ->orWhereNull($key);
+                        });
+                        
+                        //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
                         $query->where($key, '=', $value);
@@ -366,6 +381,14 @@ class Event extends BaseModel
                 // }
                 
             }
+        }
+        
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $query->where('event_details.student_id', $params['person_id']);
+        }
+        if ($user_role == 'teacher') {
+            $query->where('events.teacher_id', $params['person_id']);
         }
 
         if (!empty($sortingParams)) { 
@@ -444,6 +467,12 @@ class Event extends BaseModel
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
+        if (isset($params['type'])) { 
+            unset($params['type']);
+        }
+        if (isset($params['zone'])) { 
+            unset($params['zone']);
+        }
        //dd($params);
         
         //$query->where('deleted_at', null);
@@ -458,7 +487,11 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        $query->whereIn($key, $value);
+                        $query->where(function ($query) use($key,$value) {
+                            $query->whereIn($key, $value)
+                                ->orWhereNull($key);
+                        });
+                        //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
                         $query->where($key, '=', $value);
@@ -538,6 +571,83 @@ class Event extends BaseModel
         }
         //dd($query->toSql());
         return $query;
+    }
+
+
+
+
+
+
+
+
+
+ /**
+     * filter data based request parameters
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function filter_for_iCal($params)
+    {
+        //dd($params);
+        $query = $this->newQuery();
+        //$request = request();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+
+
+        
+
+
+    $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+          ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+          ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
+          ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
+        //->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
+    
+        $query->select(
+            'events.id as event_id',
+            'school_teacher.nickname as teacher_name',
+            'events.fullday_flag as fullday_flag',
+            'events.date_start as date_start',
+            'events.date_end as date_end',
+            'events.title as event_title',
+            'events.event_type as event_type',
+            'event_categories.title as event_category_name', 
+            'locations.title as location_name'
+            )
+        ->selectRaw("concat(replace(events.id,'-',''),events.event_type,'@sportlogin') as id")
+        ->selectRaw("if(events.fullday_flag='Y', date_format(ifnull(events.date_start,events.date_start),'%Y%m%d') ,date_format(events.date_start,'%Y%m%dT%H%i%sZ')) as start_datetime")
+        ->selectRaw("if(events.fullday_flag='Y', date_format(DATE_ADD(ifnull(events.date_end,events.date_end),INTERVAL 1 DAY),'%Y%m%d') ,date_format(events.date_end,'%Y%m%dT%H%i%sZ')) as end_datetime")
+        ->where(
+            [
+                'events.is_active' => 1
+            ]);
+        
+        if (isset($params['school_id']) && !empty($params['school_id'])) {
+            $teacherEvents->where('events.school_id', '=', $params['school_id']);
+        }
+
+        
+        
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $studentEvents->where('event_details.student_id', $params['person_id']);
+        }
+        if ($user_role == 'teacher') {
+            $studentEvents->where('events.teacher_id', $params['person_id']);
+        }
+
+
+        $params['v_start_date'] = '2021-06-12';
+        $query->where('events.date_start', '>=', $params['v_start_date']);
+        $query->where('events.date_end', '<=', $params['v_end_date']);
+        $query->distinct('events.id');
+        //$query->groupBy('events.id');
+        
+       //dd($query->toSql());
+       return $query;
     }
 
     

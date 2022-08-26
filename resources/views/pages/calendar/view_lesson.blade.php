@@ -3,7 +3,13 @@
 @section('head_links')
 
 @endsection
-
+<!-- Code within resources/views/blade.php -->
+@php
+	//$zone = $_COOKIE['timezone_user'];
+	$zone = $timezone;
+	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
+	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+@endphp
 @section('content')
   <div class="content">
 	<div class="container-fluid">
@@ -13,7 +19,15 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
-				</div>    
+				</div>
+				<div class="col-sm-6 col-xs-12 btn-area">
+					<div class="pull-right btn-group">
+						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+							<i class="fa fa-arrow-left"></i>
+							{{ __('Back')}}
+						</a>
+					</div>
+				</div>   
 			</div>          
 		</header>
 		<!-- Tabs navs -->
@@ -24,7 +38,8 @@
 			</div>
 		</nav>
 		<!-- Tabs navs -->
-
+		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
+							
 		<!-- Tabs content -->
 		<div class="tab-content view_part" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -32,10 +47,13 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
-						<div class="alert alert-warning">
-							<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
-							<button class="btn btn-sm btn-warning">Unlock</button>
-						</div>
+						@if($lessonData->is_locked ==1)
+							<div class="alert alert-warning">
+								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								
+							</div>
+						@endif
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
@@ -81,13 +99,13 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Start date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($lessonData->date_start) ? date('l jS F-Y', strtotime($lessonData->date_start)) : ''; }}
+										{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('End Date') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($lessonData->date_end) ? date('l jS F-Y', strtotime($lessonData->date_end)) : ''; }}
+										{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
@@ -146,7 +164,7 @@
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->id }}</td>
+																<td>{{ $student->student_id }}</td>
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
@@ -190,6 +208,46 @@
 
 @section('footer_js')
 <script type="text/javascript">
+	function confirm_event(unlock=false){
+        var p_event_auto_id=document.getElementById('confirm_event_id').value;
+        console.log(p_event_auto_id);
+        var data = 'p_event_auto_id=' + p_event_auto_id;
+        if (unlock) {
+            var data = 'unlock=1&p_event_auto_id=' + p_event_auto_id;
+        }
+        
+        var status = '';
+        $.ajax({
+            url: BASE_URL + '/confirm_event',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function( xhr ) {
+                $("#pageloader").show();
+            },
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+                    // if (unlock) {
+                    //     successModalCall('{{ __("Event has been unlocked ")}}');
+                    // } else{
+                    //     successModalCall('{{ __("Event has been validated ")}}');
+                    // }
+					// window.location.reload();
+					window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
+                }
+                else {
+                    errorModalCall('{{ __("Event validation error ")}}');
+                }
+            },   //success
+            complete: function( xhr ) {
+                $("#pageloader").hide();
+            },
+            error: function (ts) { 
+                ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+            }
+        }); //ajax-type            
 
+    }
 </script>
 @endsection

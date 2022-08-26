@@ -16,9 +16,10 @@ use Route;
 use Illuminate\Support\Facades\URL;
 use App\Mail\SportloginEmail;
 use App\Models\EmailTemplate;
+use App\Models\School;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as InterventionImageManager;
-
+use Carbon\Carbon;
 
 class Controller extends BaseController
 {
@@ -32,6 +33,7 @@ class Controller extends BaseController
     public $action = null;
     public $all_authority = null;
     public $schoolId = 0;
+    public $timezone = 'UTC';
 
     public function __construct()
     {
@@ -80,7 +82,11 @@ class Controller extends BaseController
             if (Auth::check() && $this->isAuthorized()) {
                 $user = Auth::user();
                 $this->schoolId = $user->isSuperAdmin() ? $this->schoolId : $user->selectedSchoolId() ;
-
+                $school = School::active()->find($this->schoolId);
+                $this->timezone = !empty($school->timezone) ? $school->timezone : 'UTC';
+                if ($user->isSuperAdmin()) {
+                    $this->timezone = 'UTC';
+                } 
                 $this->AppUI = Auth::user();
             }
             $data = array(
@@ -89,7 +95,9 @@ class Controller extends BaseController
                 'CURRENT_URL' => $this->CURRENT_URL,
                 'BASE_URL' => $this->BASE_URL,
                 'AppUI' => $this->AppUI,
-                'schoolId' => $this->schoolId
+                'schoolId' => $this->schoolId,
+                'timezone' => $this->timezone,
+                'timezones' => config('global.timezones')
             );
             View::share($data);
             return $next($request);
@@ -152,11 +160,13 @@ class Controller extends BaseController
                 
             }  
             $data['body_text'] = $email_body;
-            if (isset($data['token'])) {
-                $data['url'] = route('add.verify.email',$data['token']); 
-            }
+            
             if (isset($data['url'])) {
                 $data['url'] = $data['url']; 
+            } else {
+                if (isset($data['token'])) {
+                    $data['url'] = route('add.verify.email',$data['token']); 
+                }
             }
             \Mail::to($data['email'])->send(new SportloginEmail($data));
             return true;
@@ -262,6 +272,50 @@ class Controller extends BaseController
             throw new HttpResponseException(response()->error('Image could not be uploaded', Response::HTTP_BAD_REQUEST));
         }
         return [$this->img_config['target_url'][$type] .date('Y/m/d') . '/'. $imageNewName, $imageNewName];
+    }
+
+
+
+    public function sdateFormat($date){
+        return $date = str_replace('/', '-', $date);
+    }
+
+    public function get_local_time(){
+
+        $ip = file_get_contents("http://ipecho.net/plain");
+     
+        $url = 'http://ip-api.com/json/'.$ip;
+     
+        $tz = file_get_contents($url);
+     
+        $tz = json_decode($tz,true)['timezone'];
+     
+        return $tz;
+     
+     }
+    /**
+     * Return the formated date based on timezone selected from sidebar nav | Front-end user | Saved in Cookie | Sent $to
+     *
+     * @param Carbon $date
+     * @param null $type (long | short)
+     * @return Carbon date
+     */
+    public function formatDateTimeZone($date, $type = 'long', $from = null, $to = null)
+    {
+        if (!$from)
+            $from = 'UTC';
+
+        if (!$to){
+            $to = $this->get_local_time();
+        }
+        $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
+        $carbon->setTimezone($to)->format('Y-m-d H:i:s');
+        if ($type == 'short')
+        {
+            $carbon = Carbon::createFromFormat('Y-m-d', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
+            $carbon->setTimezone($to)->format('Y-m-d');
+        }
+        return $carbon->toDateTimeString();
     }
 
 }

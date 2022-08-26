@@ -24,8 +24,8 @@
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -34,19 +34,22 @@
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
 				</button>
-				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Logo')}}
-				</button>
 				@can('parameters-list')
-					<a class="nav-link" href="{{ route('event_category.index') }}">{{ __('Parameters')}}</a>
+					<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
+					{{ __('Parameters')}}
+					</button>
 				@endcan
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
-				</button>
-				
+				</a>
+				<!-- comented for 1st release
+				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Sections and prices')}}
+				</button> -->
 
-				
-			</div>	
+
+
+			</div>
 		</nav>
 		<!-- Tabs navs -->
 
@@ -58,14 +61,14 @@
 					@csrf
 					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
-					
+
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -76,11 +79,11 @@
 											</select>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" 
+										<input class="form-control" disabled="disabled" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text"
 										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
 										>
 										@if ($errors->has('nickname'))
@@ -90,7 +93,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -106,7 +109,7 @@
 											@endif
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }} : *</label>
 									<div class="col-sm-7">
@@ -131,38 +134,38 @@
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
-											<input id="birth_date" value="{{!empty($teacher->birth_date) ? old('birth_date', $teacher->birth_date) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
+										<div class="input-group" id="birth_date_div">
+											<input id="birth_date" value="{{!empty($teacher->birth_date) ? date('d/m/Y', strtotime($teacher->birth_date)) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="slicence_js_caption">{{__('License number') }} :</label>
 									<div class="col-sm-7">
-										<input class="form-control" value="{{!empty($relationalData->licence_js) ? old('licence_js', $relationalData->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
+										<input class="form-control" value="{{!empty($teacher->licence_js) ? old('licence_js', $teacher->licence_js) : old('licence_js')}}" id="licence_js" name="licence_js" type="text">
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 											<input class="form-control" value="{{!empty($teacher->email) ? old('email', $teacher->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
 									</div>
 								</div>
-								<div class="form-group row" id="sbg_color_agenda_div">
+								<!-- <div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
 										<input type="text" name="bg_color_agenda" value="{{!empty($relationalData->bg_color_agenda) ? $relationalData->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot" />
 									</div>
-								</div>
+								</div> -->
 							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -220,7 +223,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 												<input class="form-control" value="{{!empty($teacher->phone) ? old('phone', $teacher->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
 										</div>
@@ -239,7 +242,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
 												<input class="form-control" value="{{!empty($teacher->mobile) ? old('mobile', $teacher->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
@@ -250,14 +253,14 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 												<input class="form-control" value="{{!empty($teacher->email2) ? old('email2', $teacher->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div id="commentaire_div">
+							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
 								</div>
@@ -271,12 +274,12 @@
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</fieldset>
-					@can('teachers-update')
-						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-					@endcan
+					
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+					
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
@@ -307,8 +310,8 @@
 								@foreach($lessonPrices as $key => $lessionPrice)
 								<tr>
 									<td>{{$lessionPrice->divider}}
-										<input type="hidden" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
+										<input type="hidden"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
 										>
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
@@ -320,17 +323,17 @@
 									@else
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif
-									
+
 									<!-- <td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
 										style="text-align:right" class="form-control numeric float"
 										>
 									</td> -->
 									<td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
 										style="text-align:right" class="form-control numeric float"
 										>
@@ -341,65 +344,18 @@
 						</tbody>
 						</table>
 
-					@can('teachers-update')
+					
 						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
-					@endcan
+					
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<div class="row">
-					<div class="col-sm-12 col-xs-12 header-area">
-						<div class="page_header_class">
-							<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
-						</div>
-					</div>
-				
-					<div class="col-md-6">
-						<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
-							<div class="form-group row">
-								<div class="col-sm-8">
-									<fieldset>
-										<div class="profile-image-cropper responsive">
-										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
-											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
-													height="128" width="128" class="img-circle"
-													style="margin-right:10px;">
-										<?php else: ?>
-											<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
-													height="128" width="128" class="img-circle"
-													style="margin-right:10px;">
-										<?php endif; ?>
+			
 
-											@can('teachers-update')
-											<div style="display:flex;flex-direction: column;">
-												<div style="margin:5px;">
-													<span class="btn btn-theme-success">
-														<i class="fa fa-picture-o"></i>
-														<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
-														<input onchange="ChangeImage()"
-																class="custom-file-input" id="profile_image_file"
-																type="file" name="profile_image_file"
-																accept="image/*" style="display: none;">
-													</span>
-												</div>
-												<?php //if (!empty($AppUI->profile_image_id)): ?>
-													<div style="margin:5px;">
-														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->user->profile_image_id) ? '' : 'display:none;'}}">
-															<i class="fa fa-trash"></i>
-															<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
-														</a>
-													</div>
-												<?php //endif; ?>
-											</div>
-											@endcan
-										</div>
-									</fieldset>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
+			<!--Start of Tab 5 -->
+			<div id="tab_5" class="tab-pane">
+				@include('pages.schools.elements.school-parameters')
 			</div>
+			<!--End of Tab 5-->
 		</div>
 	</div>
 	<!-- success modal-->
@@ -432,18 +388,65 @@ $(document).ready(function(){
 		viewSelect: 3,
 		todayBtn:false,
 	});
-	
+	var x = document.getElementsByClassName("tab-pane active");
+	//var update_btn = document.getElementById("update_btn");
+	console.log(x[0].id);
+	if (x[0].id == "tab_5") {
+		document.getElementById("save_btn").style.display = "none";
+	}
+	else  {
+		document.getElementById("save_btn").style.display = "block";
+	}
+	var vtab=getUrlVarsO()["tab"];
+	console.log(vtab);
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_5') {//?action=edit&tab=tab_5
+		document.getElementById("save_btn").style.display = "none";
+		activaTab('tab_5');
+	} else {
+		document.getElementById("save_btn").style.display = "block";
+	}
+
+	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+		console.log(e.target.id) // activated tab
+		if (e.target.id == 'nav-parameters-tab') {
+			document.getElementById("save_btn").style.display = "none";
+		}
+		else  {
+			document.getElementById("save_btn").style.display = "block";
+		}
+	})
+
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
 
 })
 
-$(function() { 
-	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
+$(function() {
+	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" });
 	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
 });
 
+function activaTab(tab) {
+	$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+};
+function getUrlVarsO()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	//alert(hashes);
+	for(var i = 0; i < hashes.length; i++)
+	{
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+	//Salert(vars);
+	return vars;
+}  //getUrlVarsO
 function UploadImage() {
 	document.getElementById("profile_image_file").value = "";
 	$("#profile_image_file").trigger('click');
@@ -456,7 +459,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('user_id', user_id);
-	
+
 	let loader = $('#pageloader');
 	loader.show("fast");
 	$.ajax({
@@ -481,7 +484,7 @@ function ChangeImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -510,7 +513,7 @@ function DeleteProfileImage() {
 				$("#delete_profile_image").hide();
 				successModalCall(response.message);
 			}
-						
+
 		},
 		error: function (reject) {
 			loader.hide("fast");
@@ -518,7 +521,7 @@ function DeleteProfileImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {

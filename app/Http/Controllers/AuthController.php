@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Session;
 use App\Mail\SportloginEmail;
 use URL;
 use Spatie\Permission\Models\Role;
+use Cookie;
+use Illuminate\Support\Str;
 
 
 class AuthController extends Controller
@@ -169,6 +171,9 @@ class AuthController extends Controller
                             "person_id"  => $user['person_id'],
                             "login_url" => RouteServiceProvider::HOME
                         );
+                        if (!$user->isSuperAdmin()) {
+                            $result['login_url'] = '/permission-check';
+                        }
                         return response()->json($result);
                     }
                 }
@@ -429,8 +434,15 @@ class AuthController extends Controller
     {
         Auth::logout();
         Session::flush();
-        
-        return redirect('/');
+
+        $cal_view_mode = Cookie::forget('cal_view_mode');
+        $date_from = Cookie::forget('date_from');
+        $view_mode = Cookie::forget('view_mode');
+        $date_to = Cookie::forget('date_to');
+        return redirect('/')->withCookie($cal_view_mode)
+        ->withCookie($view_mode)
+        ->withCookie($date_from)
+        ->withCookie($date_to);
     }
 
     

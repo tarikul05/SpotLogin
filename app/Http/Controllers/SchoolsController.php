@@ -11,8 +11,12 @@ use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\User;
 use App\Models\MonthlyInvoiceRun;
+use App\Models\EventCategory;
+use App\Models\Location;
+use App\Models\Level;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\URL;
@@ -21,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 use App\Http\Requests\ProfilePhotoUpdateRequest;
 use App\Http\Requests\SchoolUpdateRequest;
+use DB;
 
 class SchoolsController extends Controller
 {
@@ -38,13 +43,14 @@ class SchoolsController extends Controller
         $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
         $this->middleware('permission:schools-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:parameters-create-udpate', ['only' => ['addParameters']]);
 
     }
 
 
     /**
      *  Display a listing of the resource.
-     * 
+     *
      * @return view
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
@@ -61,7 +67,7 @@ class SchoolsController extends Controller
         } catch(\Exception $e){
             echo $e->getMessage(); exit;
         }
-        
+
     }
 
     /**
@@ -71,7 +77,7 @@ class SchoolsController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -97,7 +103,7 @@ class SchoolsController extends Controller
     }
 
 
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -109,7 +115,7 @@ class SchoolsController extends Controller
     */
     public function edit(Request $request, School $school)
     {
-       
+
         $response = [];
         $authUser = $request->user();
         if ($authUser->person_type != 'SUPER_ADMIN') {
@@ -137,10 +143,10 @@ class SchoolsController extends Controller
                         return redirect()->route('schools')->with('error', __('School admin not exist'));
                     }
                 }
-            } 
+            }
         } else {
             $role_type = $authUser->person_type;
-            
+
             // try{
             //     $teacher = SchoolTeacher::where([
             //         ['school_id', $school->id],
@@ -160,34 +166,34 @@ class SchoolsController extends Controller
 
             $school_admin = null;
         }
-        
-            
+
+
         $lanCode = 'en';
         if (Session::has('locale')) {
             $lanCode = Session::get('locale');
         }
-        $currency = Currency::all();  
+        $currency = Currency::all();
         $country = Country::active()->get();
         $legal_status = config('global.legal_status');
-        
-        
+
+
         $emailTemplate = EmailTemplate::where([
             ['template_code', 'school'],
             ['language', $lanCode]
-        ])->first(); 
+        ])->first();
         if ($emailTemplate) {
             $http_host=$this->BASE_URL."/";
             if (!empty($emailTemplate->body_text)) {
                 $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
                 $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
             }
-        } 
-        
+        }
+
         if($school->incorporation_date != null){
-            
+
             $school->incorporation_date = str_replace('-', '/', $school->incorporation_date);
             //$school->incorporation_date = Carbon::createFromFormat('Y/m/d', $school->incorporation_date);
-        } 
+        }
 
 
         $monthly_issue = MonthlyInvoiceRun::where([
@@ -200,10 +206,32 @@ class SchoolsController extends Controller
             $monthly_issue = 0;
         }
 
-        
+        $eventCat = EventCategory::active()->where('school_id', $school->id)->get();
+        $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
+        $schoolId = $school->id;
+        $locations = Location::active()->where('school_id', $schoolId)->get();
+        $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
+        $levels = Level::active()->where('school_id', $schoolId)->get();
+        $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
+        $timezones = config('global.timezones');
         return view('pages.schools.edit')
-        ->with(compact('legal_status','currency','school','emailTemplate','country','role_type','school_admin'));
-        
+        ->with(compact(
+            'levels',
+            'eventLastLevelId',
+            'locations',
+            'eventLastLocaId',
+            'eventCat',
+            'eventLastCatId',
+            'legal_status',
+            'currency',
+            'school',
+            'emailTemplate',
+            'country',
+            'role_type',
+            'school_admin',
+            'timezones'
+        ));
+
     }
 
     /**
@@ -221,7 +249,7 @@ class SchoolsController extends Controller
         try{
             $school->update($request->except(['_token']));
             if (!empty($params['monthly_job_day'])) {
-                
+
                 $monthly_issue = MonthlyInvoiceRun::updateOrCreate([
                     'school_id' => $school->id,
                     'active_flag' =>1
@@ -276,7 +304,7 @@ class SchoolsController extends Controller
 
     /**
      *  AJAX action to update logo
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
@@ -287,21 +315,21 @@ class SchoolsController extends Controller
         $result = array(
         'status' => 0,
         "file_id" => '0',
-        "image_file" => '',   
+        "image_file" => '',
         'message' => __('failed to change image'),
         );
         try{
-            $school = School::find($data['school_id']); 
+            $school = School::find($data['school_id']);
             if($request->file('profile_image_file'))
             {
-                
+
                 $image = $request->file('profile_image_file');
                 $mime_type = $image->getMimeType();
                 $extension = $image->getClientOriginalExtension();
                 if($image->getSize()>0)
-                { 
-                    list($path, $imageNewName) = $this->__processImg($image,'SchoolLogo',$school); 
-                    
+                {
+                    list($path, $imageNewName) = $this->__processImg($image,'SchoolLogo',$school);
+
                     if (!empty($path)) {
                         $fileData = [
                             'visibility' => 1,
@@ -312,24 +340,24 @@ class SchoolsController extends Controller
                             'extension'=>$extension,
                             'mime_type'=>$mime_type
                         ];
-                        
+
                         $attachedImage = AttachedFile::create($fileData);
-                        
+
                         $data['logo_image_id'] = $attachedImage->id;
-                        
+
                     }
                 }
             }
-            
+
             if ($school->update($data)) {
                 $result = array(
                 "status"     => 1,
                 "file_id" => $school->logo_image_id,
-                "image_file" => $path,   
+                "image_file" => $path,
                 'message' => __('Successfully Changed School Logo')
                 );
             }
-        
+
         } catch (\Exception $e) {
             //return error message
             $result['message'] = __('Internal server error');
@@ -339,7 +367,7 @@ class SchoolsController extends Controller
 
     /**
      *  AJAX action to delete logo and unlink
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
@@ -347,9 +375,9 @@ class SchoolsController extends Controller
     public function logoDelete(Request $request)
     {
         $data = $request->all();
-        $school = School::find($data['school_id']); 
+        $school = School::find($data['school_id']);
         $result = array(
-            'status' => 'failed',   
+            'status' => 'failed',
             'message' => __('failed to remove image'),
         );
         try{
@@ -379,7 +407,7 @@ class SchoolsController extends Controller
 
     /**
      *  AJAX action to send email to school admin
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-03-10
@@ -392,18 +420,18 @@ class SchoolsController extends Controller
         );
         try {
             $data = $request->all();
-            
-            $user = User::find($data['user_id']); 
+
+            $user = User::find($data['user_id']);
             if ($user) {
                 //sending email for forgot password
                 if (config('global.email_send') == 1) {
-                    
+
                     try {
                         $data['email'] = $data['email_to_id'];
                         $data['name'] = $user->username;
-                        $data['username'] = $user->username; 
+                        $data['username'] = $user->username;
                         if (!empty($data['admin_password'])) {
-                            $data['password'] = $data['admin_password']; 
+                            $data['password'] = $data['admin_password'];
                         } else {
                             $data['password'] = config('global.user_default_password');
                         }
@@ -442,11 +470,103 @@ class SchoolsController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-        
+
     }
 
 
-    
+
+     /**
+     *
+     * @return Response
+    */
+
+    public function addParameters(Request $request)
+    {
+        try{
+            if ($request->isMethod('post')){
+                $data = $request->all();
+                $user = Auth::user();
+                if ($user->isSuperAdmin()) {
+                    $userSchoolId = $data['school_id'];
+                }else {
+                    $userSchoolId = $user->selectedSchoolId();
+                }
+
+                if (isset($data['level']) && !empty($data['level'])) {
+                    foreach($data['level'] as $level){
+                        if(isset($level['id']) && !empty($level['id'])){
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $level['name']
+                            ];
+                            $eventLevel = Level::where('id', $level['id'])->update($answers);
+                        }else{
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $level['name']
+                            ];
+                            $eventLevel = Level::create($answers);
+                        }
+                    }
+                }
+                if (isset($data['location']) && !empty($data['location'])) {
+
+                    foreach($data['location'] as $location){
+                        if(isset($location['id']) && !empty($location['id'])){
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $location['name']
+                            ];
+                            $eventLocation = Location::where('id', $location['id'])->update($answers);
+                        }else{
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $location['name']
+                            ];
+                            $eventLocation = Location::create($answers);
+                        }
+                    }
+                }
+                if (isset($data['category']) && !empty($data['category'])) {
+
+                    foreach($data['category'] as $cat){
+                        $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
+                        if(isset($cat['id']) && !empty($cat['id'])){
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $cat['name'],
+                                'invoiced_type' => $invoicedType
+                            ];
+                            $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
+                        }else{
+                            $answers = [
+                                'school_id' => $userSchoolId,
+                                'title' => $cat['name'],
+                                'invoiced_type' => $invoicedType
+                            ];
+                            $eventCat = EventCategory::create($answers);
+                        }
+                    }
+                }
+
+                $result = array(
+                    "status"     => 1,
+                    'message' => __('Successfully Registered')
+                );
+            }
+        }catch (Exception $e) {
+            DB::rollBack();
+            $result= [
+                'status' => 0,
+                'message' =>  __('Internal server error')
+            ];
+        }
+
+        return $result;
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.

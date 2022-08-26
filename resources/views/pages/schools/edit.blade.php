@@ -43,8 +43,12 @@
 						{{ __('User Account')}}
 						</button>
 					@endcan -->
+					
 					@can('parameters-list')
-						<a class="nav-link" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $school->id]) : route('event_category.index') }}">{{ __('Parameters')}}</a>
+						<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
+						{{ __('Parameters')}}
+						</button>
+						
 					@endcan
 					<!-- </button> -->
 				</div>
@@ -66,6 +70,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
 										<div class="col-sm-7">
@@ -83,6 +88,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 									<!-- <div class="form-group row">
 											<label id="school_code_caption" name="school_code_caption" class="col-lg-3 col-sm-3 text-left">School Code
 													*:</label>
@@ -108,6 +114,8 @@
 										</div>
 										
 									</div>
+
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label id="organization_type_caption"
 										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}}:</label>
@@ -125,9 +133,10 @@
 											</div>
 										</div>
 									</div>
+									@endif
 								</div>
 								<div class="col-md-6">
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 
 										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
 											{{ __('Account Type')}}:
@@ -135,7 +144,7 @@
 										<label id="school_type" class="col-lg-3 col-sm-3 text-left">
 											School
 										</label>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label id="sender_email_label" name="sender_email_label" 
 										class="col-lg-3 col-sm-3 text-left">{{ __('Sender email address')}} :</label>
@@ -154,6 +163,24 @@
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label id="organization_type_caption"
+										class="col-lg-3 col-sm-3 text-left">{{ __('Timezone')}}:</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="timezone" id="timezone">
+													<option value="">Select</option>
+													@foreach ($timezones as $key => $value)
+														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
+															
+														{{ $value }}
+														</option>
+													@endforeach
+												</select>
 											</div>
 										</div>
 									</div>
@@ -215,7 +242,7 @@
 							</div>
 							@endrole	
 							@unlessrole('superadmin')
-							<div class="clearfix"></div>
+						<!-- 	<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Billing Method')}}</label>
 							</div>
@@ -321,7 +348,7 @@
 													</div>
 											</div>
 									</div>
-							</div>
+							</div> -->
 							<!-- End Billing Methid -->
 							@endunlessrole
 
@@ -331,6 +358,7 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
+									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
 										<div class="col-sm-7">
@@ -343,6 +371,7 @@
 											</div>
 										</div>
 									</div>
+									@endif
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :*</label>
 										<div class="col-sm-7">
@@ -400,13 +429,13 @@
 											value="{{!empty($school->street_number) ? old('street_number', $school->street_number) : old('street_number')}}">
 										</div>
 									</div>
-									<div class="form-group row">
+									<!-- <div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street 2')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="street2" name="street2" type="text"
 											value="{{!empty($school->street2) ? old('street2', $school->street2) : old('street2')}}">
 										</div>
-									</div>
+									</div> -->
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
 										<div class="col-sm-7">
@@ -473,7 +502,8 @@
 											</div>
 										</div>
 									</div>
-									<div class="form-group row">
+
+									<!-- <div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="smobile" id="mobile_caption">{{ __('Mobile')}}:</label>
 										<div class="col-sm-7">
 											<div class="input-group">
@@ -484,7 +514,7 @@
 												value="{{!empty($school->mobile) ? old('mobile', $school->mobile) : old('mobile')}}">
 											</div>
 										</div>
-									</div>
+									</div> -->
 								
 								</div>
 								<div class="col-md-6">
@@ -518,6 +548,7 @@
 							</div>
 							
 							<div class="clearfix"></div>
+							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
 							</div>
@@ -598,6 +629,23 @@
 									</div>
 								</div>
 							</div>
+							@else
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+												value="{{!empty($school->etransfer_acc) ? old('etransfer_acc', $school->etransfer_acc) : old('etransfer_acc')}}">
+												<span class="etransfer_acc"></span>	
+										</div>
+									</div>
+								</div>	
+							</div>
+							@endif	
 							
 							<div class="clearfix"></div>
 							
@@ -750,10 +798,28 @@
 
 				</div>
 				<!--End of Tab 4-->
+
+				<!--Start of Tab 5 -->
+				<div id="tab_5" class="tab-pane">
+					@include('pages.schools.elements.school-parameters')
+				</div>
+				<!--End of Tab 5-->
 			</div>
 		
 	</div>
-
+	<!-- success modal-->
+	<div class="modal modal_parameter" id="modal_parameter">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p id="modal_alert_body"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- End Tabs content -->
 @endsection
 
@@ -773,6 +839,37 @@ $(document).ready(function(){
 		viewSelect: 3,
 		todayBtn:false,
 	});
+
+
+	var x = document.getElementsByClassName("tab-pane active");
+	//var update_btn = document.getElementById("update_btn");
+	console.log(x[0].id);
+	if (x[0].id == "tab_5") {
+		document.getElementById("update_btn").style.display = "none";
+	} 
+	else  {
+		document.getElementById("update_btn").style.display = "block";
+	} 
+	var vtab=getUrlVarsO()["tab"];
+	if (typeof vtab === "undefined") {
+		vtab='';
+	}
+	if (vtab == 'tab_5') {//?action=edit&tab=tab_5
+		document.getElementById("update_btn").style.display = "none";					
+		activaTab('tab_5');
+	} else {
+		document.getElementById("update_btn").style.display = "block";
+	}
+
+	$(document).on( 'shown.bs.tab', 'button[data-bs-toggle="tab"]', function (e) {
+		console.log(e.target.id) // activated tab
+		if (e.target.id == 'nav-parameters-tab') {
+			document.getElementById("update_btn").style.display = "none";
+		} 
+		else  {
+			document.getElementById("update_btn").style.display = "block";
+		} 
+	})
 
 	// CKEDITOR.replace( "body_text", {
 	// 	customConfig: '/ckeditor/config_email.js',
@@ -873,9 +970,30 @@ $(document).ready(function(){
 		});
 	
 	});    //contact us button click 
+
+	
+
 })
 
+function activaTab(tab) {
+	$('.nav-tabs button[data-bs-target="#' + tab + '"]').tab('show');
+};
 
+
+function getUrlVarsO()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	//alert(hashes);
+	for(var i = 0; i < hashes.length; i++)
+	{
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+	//Salert(vars);
+	return vars;
+}  //getUrlVarsO
 function UploadImage() {
 	document.getElementById("profile_image_file").value = "";
 	$("#profile_image_file").trigger('click');
@@ -962,7 +1080,7 @@ function DeleteProfileImage() {
 
 
 function validateSchoolForm() {
-
+	return true;
 	//var p_school_code = document.getElementById("school_code").value;
 	let error = false;
 
@@ -971,29 +1089,40 @@ function validateSchoolForm() {
 	// 	error = true;
 	// }
 	//added for max students and teachers
-	var max_students = document.getElementById("max_students").value;
-	var max_teachers = document.getElementById("max_teachers").value;
+	// var max_students = document.getElementById("max_students").value;
+	// var max_teachers = document.getElementById("max_teachers").value;
 
-	if (max_students.trim() == 0) {
-			//alert("nombre max invalide");
-			errorModalCall("{{ __('Maximum students required') }}");
-			document.getElementById("max_students").focus();
-			error = true;
-	}
-	if (max_teachers.trim() == 0) {
-			//alert("nombre max invalide");	
-			errorModalCall("{{ __('Maximum teacher required') }}");
-			document.getElementById("max_teachers").focus();
-			error = true;
-	}
-	if (error) {
-		return false;
-	}            			
-	else
-	{
-		return true;
-	}
+	// if (max_students.trim() == 0) {
+	// 		//alert("nombre max invalide");
+	// 		errorModalCall("{{ __('Maximum students required') }}");
+	// 		document.getElementById("max_students").focus();
+	// 		error = true;
+	// }
+	// if (max_teachers.trim() == 0) {
+	// 		//alert("nombre max invalide");	
+	// 		errorModalCall("{{ __('Maximum teacher required') }}");
+	// 		document.getElementById("max_teachers").focus();
+	// 		error = true;
+	// }
+	// if (error) {
+	// 	return false;
+	// }            			
+	// else
+	// {
+	// 	return true;
+	// }
 }
+
+$('#etransfer_acc').on('input', function() {
+	var val = $(this).val();
+	var validRegex =  /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
+	if (val.match(validRegex)) {
+		$('.etransfer_acc').html('');
+	}else{
+		$('.etransfer_acc').html('Invalid email address!');
+	}
+
+});
 
   
 </script>

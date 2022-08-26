@@ -103,8 +103,9 @@
 				</form>	
 			</div>
 		</div>
+		<!-- End Tabs content -->
 	</div>
-	<!-- End Tabs content -->
+	
 
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
