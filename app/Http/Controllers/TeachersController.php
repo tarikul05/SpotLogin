@@ -30,6 +30,8 @@ use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 
+use App\Imports\TeachersImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class TeachersController extends Controller
@@ -65,7 +67,7 @@ class TeachersController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
         $teachers = $school->teachers;
-
+        
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
 
@@ -1095,8 +1097,45 @@ class TeachersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function importExcel($schoolId = null, Request $request, Teacher $teacher)
+    {
+        $alldata = $request->all();
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id;
+        } else {
+            $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+            $schoolId = $school->id;
+        }
+
+        $dataArry = Excel::import(new TeachersImport($schoolId), $request->file('csvFile'));
+        // $dataArry = (new TeachersImport($schoolId))->toArray($request->file('csvFile'));
+        // dd($dataArry);
+        if (!empty($dataArry)) {
+            return back()->with('success', __('Teacher updated successfully!'));
+        }
+        return redirect()->back()->with('error', __('Internal server error'));
+        
+    }
+
+    /**
+     * export teacher school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function import($schoolId = null, Request $request, Teacher $teacher)
     {
+
         try {
             $alldata = $request->all();
             $user = Auth::user();
