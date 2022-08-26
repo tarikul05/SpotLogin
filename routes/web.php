@@ -196,7 +196,7 @@ Route::group(['middleware' => ['auth']], function () {
     ));
     Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
     Route::match(array('GET', 'POST'), "/{school}/export-teacher", array(
-        'uses' => 'TeachersController@export',
+        'uses' => 'TeachersController@exportExcel',
         'as' => 'admin.teacher.export'
     ));
     Route::match(array('GET', 'POST'), "/{school}/import-teacher", array(
@@ -273,7 +273,7 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'teachers.create'
     ));
     Route::match(array('GET', 'POST'), "export-teacher", array(
-        'uses' => 'TeachersController@export',
+        'uses' => 'TeachersController@exportExcel',
         'as' => 'teacher.export'
     ));
     Route::match(array('GET', 'POST'), "import-teacher", array(

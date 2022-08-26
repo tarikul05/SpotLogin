@@ -65,6 +65,14 @@ class SchoolTeacher extends BaseModel
         return $this->belongsTo(Teacher::class);
     }
 
+        /**
+     * Get the user through Teacher.
+     */
+    public function getUserAttribute()
+    {
+        return isset($this->teacher->user) && !empty($this->teacher->user) ? $this->teacher->user : null;
+    }
+
     public function getFullNameAttribute()
     {
         return $this->teacher->full_name;

@@ -30,8 +30,9 @@ use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 
-use App\Imports\TeachersImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TeachersImport;
+use App\Exports\TeachersExport;
 
 
 class TeachersController extends Controller
@@ -1023,6 +1024,20 @@ class TeachersController extends Controller
         return response()->json($result);
     }
 
+
+/**
+     * export teacher school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function exportExcel($schoolId = null, Request $request, Teacher $teacher)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        return Excel::download(new TeachersExport($schoolId), 'teachers_'.$schoolId.'_'.date('YmdHis').'.xlsx');
+    }
     /**
      * export teacher school wise
      *
