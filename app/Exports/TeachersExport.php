@@ -73,12 +73,7 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function query()
     {
-    	// dd($this->school_id);
-    	// $teacherIdsFromRelatons = SchoolTeacher::where(['school_id' => $this->school_id])->whereIn('role_type',['teachers_all', 'teachers_medium','teachers_minimum'])->select('teacher_id');
-    	// $teachers = Teacher::with('schools')->whereIn('id', $teacherIdsFromRelatons);
-    	// dd($teachers);
     	$schoolTeachers = SchoolTeacher::with(['teacher'])->where(['school_id' => $this->school_id])->whereIn('role_type',['teachers_all', 'teachers_medium','teachers_minimum']);
-    	// dd($teachers[0]->user->username);
         return $schoolTeachers;
     }
 
@@ -92,7 +87,7 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     	$bg_color_agenda = isset($schTeacher->bg_color_agenda) ? $schTeacher->bg_color_agenda : null;
     	$comment = isset($schTeacher->comment) ? $schTeacher->comment : null;
     	$gender = ($schTeacher->teacher->gender_id ==1) ? 'Male' : (($schTeacher->teacher->gender_id ==2) ? 'Female' : 'Not specified' );
-// dd($gender,$nickname, $username);
+    	
         return [
             $schTeacher->teacher->email,
             $username ,
