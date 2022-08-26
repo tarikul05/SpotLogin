@@ -40,6 +40,17 @@
 
                       </select>
                   </div>
+                    <div class="form-group custom-selection">
+                        <select class="selectpicker" id="timezone" name="timezone" required>
+                            <option value="">{{ __('Select Timezone')}}</option>
+                            @foreach ($timezones as $key => $value)
+                            <option 
+                            value="{{ $key }}"
+                            >  {{ $value }}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
                   <div class="form-group">
                       <div class="input-group" id="show_hide_password">
                             <input class="form-control" autocomplete="on" type="password" id="password" placeholder="password" name="password"> 

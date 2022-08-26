@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Student;
 use App\Models\Teacher;
+use App\Models\Province;
 use App\Models\EmailTemplate;
 use App\Models\AttachedFile;
 use App\Mail\SportloginEmail;
@@ -720,7 +721,7 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-        $provinces = config('global.provinces'); 
+        $provinces = Province::active()->get()->toArray(); 
         $invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
         $invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
         
@@ -758,7 +759,7 @@ class InvoiceController extends Controller
     public function manualInvoice()
     {
         $genders = config('global.gender');
-        $provinces = config('global.provinces'); 
+        $provinces = Province::active()->get()->toArray(); 
         $countries = Country::active()->get();
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',

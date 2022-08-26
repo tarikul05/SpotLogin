@@ -47,7 +47,8 @@ admin_main_style.css
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
 							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="">
-							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">                                        
+							<input type="hidden" name="user_role" id="user_role" value="{{$user_role}}">
+                            <input type="hidden" name="coach_user" id="coach_user" value="{{$coach_user}}">
                             <input type="hidden" name="person_id" id="person_id" value="">
 							<input type="hidden" name="evt_t_id" id="evt_t_id" value="">
                             <input type="hidden" name="event_teacher_id" size="14px" id="event_teacher_id" value="0"> 
@@ -322,7 +323,7 @@ admin_main_style.css
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-2 p-l-n p-r-n">
-                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('No selected') }}</span>
+                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i> </span>
                                                         </div>
                                                     </div>
                                                     
@@ -332,6 +333,7 @@ admin_main_style.css
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="start_date_div"> 
                                                                     <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+                                                                    <input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
                                                                     </span>
@@ -339,7 +341,7 @@ admin_main_style.css
                                                             </div>	
                                                             <div class="col-sm-4 offset-md-1 hide_on_off">
                                                                 <div class="input-group"> 
-                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
+                                                                    <input id="start_time" name="start_time" type="text" class="form-control timepicker_start" value="{{old('start_time')}}">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-clock-o"></i>
                                                                     </span>
@@ -490,6 +492,24 @@ admin_main_style.css
 </div>
 
 <!-- success modal-->
+<div class="modal modal_parameter" id="add_lesson_success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>        
+            <div class="modal-body">
+                <p class="success_message">Successfully added</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- success modal-->
 <div class="modal modal_parameter" id="modal_lesson_price">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -565,6 +585,7 @@ admin_main_style.css
     var m = date.getMonth();
     var y = date.getFullYear();
     var user_role=document.getElementById("user_role").value;
+    var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
 
     var json_events = @json($events);
@@ -644,12 +665,15 @@ admin_main_style.css
     }  
     
 
-
-    var currentTimezone = 'local';
+    var currentTimezone = document.getElementById("zone").value;
+    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    var zone =getTimeZone();
+    //var zone =getTimeZone();
+    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var zone = document.getElementById("zone").value;
+    document.getElementById("zone").value = zone;
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -1627,14 +1651,6 @@ admin_main_style.css
     }
 
 
-    function getTimeZone() {
-        var offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
-        return (offset < 0 ? "+" : "-") + ("00" + Math.floor(o / 60)).slice(-2) + ":" + ("00" + (o % 60)).slice(-2);
-    }
-    
-
-
-    
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
@@ -2543,19 +2559,8 @@ admin_main_style.css
                             selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
-                        
-
-
-                        
+                         
                     }
-
-
-
-
-
-
-
-
 
                         stime=moment(JSON.parse(json_events)[key].start).format('HH:mm');
                         etime=moment(JSON.parse(json_events)[key].end).format('HH:mm');
@@ -2604,7 +2609,10 @@ admin_main_style.css
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].title+'</td>';
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].cours_name+'</td>';
                         resultHtml_cc+='<td>'+JSON.parse(json_events)[key].duration_minutes+' minutes</td>';
-                        resultHtml_cc+='<td>'+JSON.parse(json_events)[key].teacher_name+'</td>';
+                        var coach_user=document.getElementById("coach_user").value;
+                        if (coach_user =='') {
+                            resultHtml_cc+='<td>'+JSON.parse(json_events)[key].teacher_name+'</td>';
+                        }
                         resultHtml_cc+='</tr>';
 
 
@@ -2737,7 +2745,12 @@ admin_main_style.css
             $('#event_teacher_div').hide();
             $('#event_student_div').hide();
         } else {
-            $('#event_location_div').show();
+            if ($("#event_location option").length > 0 ) {
+                $('#event_location_div').show();
+            }else{
+               $('#event_location_div').hide(); 
+            }
+
             $('#event_teacher_div').show();
             $('#event_student_div').show();
         }	
@@ -2832,20 +2845,18 @@ admin_main_style.css
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id;
+        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
         e.preventDefault();
         $.ajax({
             type: "POST",
             url: BASE_URL + '/copy_paste_events',
-            //url: "copy_paste_events.php",
             data: data,
             dataType: "JSON",
             async: false,
             success:function(result){
                 var status =  result.status;
-                //alert(status);
                 if(status == 0)
                 {
                     document.getElementById("copy_date_from").value = '';
@@ -2912,6 +2923,9 @@ admin_main_style.css
 			document.cookie = "date_to="+document.getElementById("date_to").value+";path=/";
 
 			document.cookie = "view_mode="+document.getElementById("view_mode").value+";path=/";        
+			
+            //document.cookie = "timezone_user="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";        
+			document.cookie = "timezone_user="+document.getElementById("zone").value+";path=/";        
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);
@@ -3010,7 +3024,7 @@ $( document ).ready(function() {
 	}else if(value == 2){
 		$('#price_per_student').show();
 	}
-	$('.timepicker').timepicker({
+	$('.timepicker_start').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
 		minTime: '0',
@@ -3021,9 +3035,25 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+            $('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
 			CalcDuration();
 		}
 	});
+
+    $('.timepicker').timepicker({
+        timeFormat: 'HH:mm',
+        interval: 15,
+        minTime: '0',
+        maxTime: '23:59',
+        defaultTime: '11',
+        startTime: '00:00',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true,
+        change:function(time){
+            CalcDuration();
+        }
+    });
 	
 	function CalcDuration(){
 		var el_start = $('#start_time'),
@@ -3089,6 +3119,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
+        console.log("tttt: ")
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
@@ -3267,16 +3298,17 @@ $('#add_lesson').on('submit', function(e) {
             dataType: 'json',
             success: function(response){
                 if(response.status == 1){
-                    $("#add_lesson")[0].reset();
-                    $('#student').val([]).multiselect('refresh');
-                    const startresult = moment().format('DD/MM/YYYY');
-                    const startTime = moment().format('HH:mm');
-                    $('#start_date').val(startresult);
-                    $('#start_time').val(startTime);
-                    const endTime = moment().add(15, 'm').format('HH:mm');
-                    const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
-                    $('#end_date').val(endresult);
-                    $('#end_time').val(endTime).trigger('change');
+                    $('#add_lesson_success').modal('show');
+                    // $("#add_lesson")[0].reset();
+                    // $('#student').val([]).multiselect('refresh');
+                    // const startresult = moment().format('DD/MM/YYYY');
+                    // const startTime = moment().format('HH:mm');
+                    // $('#start_date').val(startresult);
+                    // $('#start_time').val(startTime);
+                    // const endTime = moment().add(15, 'm').format('HH:mm');
+                    // const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
+                    // $('#end_date').val(endresult);
+                    // $('#end_time').val(endTime).trigger('change');
                 }else{
                     location.reload();
                 }

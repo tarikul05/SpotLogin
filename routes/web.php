@@ -195,6 +195,14 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.teachers.create'
     ));
     Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
+    Route::match(array('GET', 'POST'), "/{school}/export-teacher", array(
+        'uses' => 'TeachersController@export',
+        'as' => 'admin.teacher.export'
+    ));
+    Route::match(array('GET', 'POST'), "/{school}/import-teacher", array(
+        'uses' => 'TeachersController@import',
+        'as' => 'admin.teacher.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     // Students
     Route::get('/{school}/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('adminStudents');
@@ -202,6 +210,14 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'StudentsController@create',
       'as' => 'admin.student.create'
     ));
+    Route::match(array('GET', 'POST'), "/{school}/export-student", array(
+      'uses' => 'StudentsController@export',
+      'as' => 'admin.student.export'
+    ));
+    Route::match(array('GET', 'POST'), "/{school}/import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'admin.student.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
     Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
@@ -256,9 +272,20 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'TeachersController@create',
       'as' => 'teachers.create'
     ));
+    Route::match(array('GET', 'POST'), "export-teacher", array(
+        'uses' => 'TeachersController@export',
+        'as' => 'teacher.export'
+    ));
+    Route::match(array('GET', 'POST'), "import-teacher", array(
+        'uses' => 'TeachersController@import',
+        'as' => 'teacher.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
     Route::post('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'update'])->name('editTeacherAction');
     Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
+
+    Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
+    Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'sendInvitation'])->name('teacherInvitation');
 
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
@@ -289,8 +316,18 @@ Route::group(['middleware' => ['auth']], function () {
       'uses' => 'StudentsController@create',
       'as' => 'student.create'
     ));
+    Route::match(array('GET', 'POST'), "export-student", array(
+      'uses' => 'StudentsController@export',
+      'as' => 'student.export'
+    ));
+    Route::match(array('GET', 'POST'), "import-student", array(
+      'uses' => 'StudentsController@import',
+      'as' => 'student.import'
+    ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     Route::delete('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('studentDelete');
+    Route::post('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'changeStatus'])->name('studentStatus');
+    Route::post('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitation'])->name('studentInvitation');
 
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

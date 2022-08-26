@@ -20,7 +20,8 @@ class SchoolTeacher extends BaseModel
      */
     protected $fillable = [
         'school_id',
-        'teacher_id'
+        'teacher_id',
+        'is_sent_invite'
     ];
 
    
