@@ -12,7 +12,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav">
-                       <?php  ?>
                         @php 
                         $url = route('agenda');
                         $urlInvoice = route('invoiceList');
@@ -20,7 +19,7 @@
                         $urlTeacherInvoice = route('invoiceList');
                         if(!empty($schoolId)){ 
                             $url = route('agenda.id',[$schoolId]);
-                            $urlInvoice = route('invoiceList.id',[$schoolId]);
+                            $urlInvoice = route('adminInvoiceList',[$schoolId]);
                             $urlStudentInvoice = route('studentInvoiceList.id',[$schoolId]);
                             $urlTeacherInvoice = route('teacherInvoiceList.id',[$schoolId]);
                         }
@@ -56,14 +55,14 @@
                             @endif
                         @endcan
                         <div class="nav-item dropdown">
-                            <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
-                            <!-- comented for 1st release
+                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
+                            <!-- comented for 1st release -->
                             <div class="dropdown-menu header">
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
                                 <a href="#" class="dropdown-item">{{ __('Manual Invoice') }}</a>
-                            </div> -->
+                            </div>
                         </div>
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')

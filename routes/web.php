@@ -244,7 +244,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Invoice
     Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
-    Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList.id');
+    Route::get('/{school}/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('adminInvoiceList');
     Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
     Route::get('/{school}/teacher-invoices', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id');
     Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');

@@ -71,6 +71,7 @@
                 <td>
                   <a class="btn btn-sm btn-primary" href="{{ route('adminTeachers',[$school->id]) }}"> {{ __('Teachers')}} </a>
                   <a class="btn btn-sm btn-warning" href="{{ route('adminStudents',[$school->id]) }}"> {{ __('Students')}} </a>
+                   <a class="btn btn-sm btn-primary" href="{{ route('adminInvoiceList',[$school->id]) }}"> {{ __('Invoices')}} </a>
                   <a class="btn btn-sm btn-theme-success" href="{{ URL::to('/admin/school-update/'.$school->id)}}"> {{ __('Edit')}} </a>
                 </td>
               </tr>
