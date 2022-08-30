@@ -17,11 +17,13 @@
                         $urlInvoice = route('invoiceList');
                         $urlStudentInvoice = route('invoiceList');
                         $urlTeacherInvoice = route('invoiceList');
+                        $manualInvoice = route('manualInvoice');
                         if(!empty($schoolId)){ 
                             $url = route('agenda.id',[$schoolId]);
                             $urlInvoice = route('adminInvoiceList',[$schoolId]);
                             $urlStudentInvoice = route('studentInvoiceList.id',[$schoolId]);
                             $urlTeacherInvoice = route('teacherInvoiceList.id',[$schoolId]);
+                            $manualInvoice = route('adminmanualInvoice',[$schoolId]);
                         }
                         @endphp
                         <a href="{{ $url }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
@@ -61,7 +63,7 @@
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
-                                <a href="#" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                                <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
                             </div>
                         </div>
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>

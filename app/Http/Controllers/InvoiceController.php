@@ -706,14 +706,20 @@ class InvoiceController extends Controller
      * @version 0.1 written in 2022-05-27
      */
 
-    public function manualInvoice()
+    public function manualInvoice(Request $request, $schoolId = null)
     {
+        $user = $request->user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders', 'countries', 'provinces'));
+        ])->with(compact('genders','schoolId','countries', 'provinces'));
     }
 }
