@@ -27,6 +27,11 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\StudentsImport;
+use App\Exports\StudentsExport;
+
+
 
 class StudentsController extends Controller
 {
@@ -1037,6 +1042,20 @@ class StudentsController extends Controller
             //return error message
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
+    }
+
+    /**
+     * export student school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function exportExcel($schoolId = null, Request $request, Student $student)
+    {
+        $user = Auth::user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        return Excel::download(new StudentsExport($schoolId), 'students_'.$schoolId.'_'.date('YmdHis').'.xlsx');
     }
      /**
      * export student school wise

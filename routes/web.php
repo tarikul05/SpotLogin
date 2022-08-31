@@ -211,7 +211,7 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.student.create'
     ));
     Route::match(array('GET', 'POST'), "/{school}/export-student", array(
-      'uses' => 'StudentsController@export',
+      'uses' => 'StudentsController@exportExcel',
       'as' => 'admin.student.export'
     ));
     Route::match(array('GET', 'POST'), "/{school}/import-student", array(
@@ -317,7 +317,7 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'student.create'
     ));
     Route::match(array('GET', 'POST'), "export-student", array(
-      'uses' => 'StudentsController@export',
+      'uses' => 'StudentsController@exportExcel',
       'as' => 'student.export'
     ));
     Route::match(array('GET', 'POST'), "import-student", array(

@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-// class TeachersExport implements FromCollection
+
 class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithColumnWidths
 {
     use Exportable;
@@ -28,41 +28,31 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         $this->school_id = $school_id;
     }
 
-	public function headings(): array
-    {
-    	$headerRow = [
-            'Email',
-            'Family Name',
-            'Firstname',
-            'Nickname',
-            'Gender',
-            'Licence',
-            'Comment',
-            'Billing Method',
-            'Birth date',
-            'Street',
-            'Street No',
-            'Postal Code',
-            'City',
-            'Billing Street',
-            'Billing street No',
-            'Billing Postal code',
-            'Billing city',
-            "Father's Phone",
-            "Father's email",
-            "Mother's phone",
-            "Mother's email",
-            "Student's Phone",
-            "Student's 2nd Email",
-        ];
-        return $headerRow;
-    }
-
     public function columnWidths(): array
     {
         return [
             'A' => 20,
-            '*' => 15,
+            'B' => 15,
+			'C' => 15,
+			'D' => 15,
+			'E' => 15,
+			'F' => 15,
+			'G' => 15,
+			'H' => 15,
+			'I' => 15,
+			'J' => 15,
+			'K' => 15,
+			'L' => 15,
+			'M' => 15,
+			'N' => 15,
+			'O' => 15,
+			'P' => 15,
+			'Q' => 15,
+			'R' => 15,
+			'S' => 15,
+			'T' => 15,
+			'U' => 15,
+			'V' => 15,
         ];
     }
 
@@ -85,22 +75,57 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     	
         return [
             $schoolStd->student->email,
-            $username ,
             $schoolStd->student->lastname,
             $schoolStd->student->firstname,
             $nickname,
             $gender,
-            $schoolStd->student->licence_js,
-            $bg_color_agenda,
+            $schoolStd->student->licence_usp,
             $comment,
             $schoolStd->student->birth_date,
             $schoolStd->student->street,
             $schoolStd->student->street_number,
             $schoolStd->student->zip_code,
             $schoolStd->student->place,
-            $schoolStd->student->phone,
+            $schoolStd->student->billing_street,
+            $schoolStd->student->billing_street_number,
+            $schoolStd->student->billing_zip_code,
+            $schoolStd->student->billing_place,
+            $schoolStd->student->father_phone,
+            $schoolStd->student->father_email,
+            $schoolStd->student->mother_phone,
+            $schoolStd->student->mother_email,
             $schoolStd->student->mobile,
+            $schoolStd->student->email2,
         ];
+    }
+
+    public function headings(): array
+    {
+    	$headerRow = [
+            'Email',
+            'Family Name',
+            'Firstname',
+            'Nickname',
+            'Gender',
+            'Licence',
+            'Comment',
+            'Birth date',
+            'Street',
+            'Street No',
+            'Postal Code',
+            'City',
+            'Billing Street',
+            'Billing street No',
+            'Billing Postal code',
+            'Billing city',
+            "Father's Phone",
+            "Father's email",
+            "Mother's phone",
+            "Mother's email",
+            "Student's Phone",
+            "Student's 2nd Email",
+        ];
+        return $headerRow;
     }
 
 
@@ -109,9 +134,9 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         return [
             // Styling an entire column.
             'A1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
+            'B1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
             'C1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
             'D1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
-            'E1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
         ];
     }
 }
