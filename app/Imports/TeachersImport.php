@@ -36,7 +36,6 @@ class TeachersImport implements ToModel, WithHeadingRow
         // dd($row);
         $data = [
             'email' => $row['email'],
-            'username' => $row['username'],
             'lastname' => $row['family_name'],
             'firstname' => $row['firstname'],
             'nickname' => $row['nickname'],
