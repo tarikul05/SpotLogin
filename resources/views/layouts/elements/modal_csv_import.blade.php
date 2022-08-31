@@ -13,7 +13,7 @@
         <form id="csv_import" name="csv_import" method="POST" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.import',['school'=> $schoolId]) : route('student.import') }}" enctype="multipart/form-data">
 
           <div class="form-group">
-            <input type="file" name="csvFile" id="csvFile" accept=".csv"/>
+            <input type="file" name="csvFile" id="csvFile" accept=".xlsx"/>
           </div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Import Excel') }}</button>
         </form>

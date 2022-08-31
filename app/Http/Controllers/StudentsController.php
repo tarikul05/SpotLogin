@@ -1057,6 +1057,44 @@ class StudentsController extends Controller
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
         return Excel::download(new StudentsExport($schoolId), 'students_'.$schoolId.'_'.date('YmdHis').'.xlsx');
     }
+
+         /**
+     * export student school wise
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function importExcel($schoolId = null, Request $request, Student $student)
+    {
+        $alldata = $request->all();
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('School not selected')
+                ];
+            }
+            $schoolId = $school->id;
+        } else {
+            $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+            $schoolId = $school->id;
+        }
+
+        $dataArry = Excel::import(new StudentsImport($schoolId), $request->file('csvFile'));
+        // $dataArry = (new TeachersImport($schoolId))->toArray($request->file('csvFile'));
+        // dd($dataArry);
+        if (!empty($dataArry)) {
+            return back()->with('success', __('Student updated successfully!'));
+        }
+        return redirect()->back()->with('error', __('Internal server error'));
+    }
+
+
+
      /**
      * export student school wise
      *

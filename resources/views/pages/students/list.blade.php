@@ -137,9 +137,9 @@
         $("#csv_import").validate({
             // Specify validation rules
             rules: {
-                csvFile: {
-                    required: true
-                }
+                // csvFile: {
+                //     required: true
+                // }
             },
             // Specify validation error messages
             messages: {

@@ -79,7 +79,7 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $schoolStd->student->firstname,
             $nickname,
             $gender,
-            $schoolStd->student->licence_usp,
+            $schoolStd->licence_usp,
             $comment,
             $schoolStd->student->birth_date,
             $schoolStd->student->street,
