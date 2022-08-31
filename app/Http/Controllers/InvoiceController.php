@@ -336,7 +336,7 @@ class InvoiceController extends Controller
             $value->student_full_name = "";
             if (!empty($value->person_id)) {
                 $student = Student::find($value->person_id);
-                $value->student_full_name = $student->full_name;
+                $value->student_full_name = $value->student_name;
             } else {
                 continue;
             }
