@@ -30,7 +30,6 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     {
     	$headerRow = [
             'email',
-            'username',
             'family_name',
             'firstname',
             'nickname',
@@ -82,7 +81,6 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     */
     public function map($schTeacher): array
     {
-    	$username = isset($schTeacher->user) ? $schTeacher->user->username : null;
     	$nickname = isset($schTeacher->nickname) ? $schTeacher->nickname : null;
     	$bg_color_agenda = isset($schTeacher->bg_color_agenda) ? $schTeacher->bg_color_agenda : null;
     	$comment = isset($schTeacher->comment) ? $schTeacher->comment : null;
@@ -90,7 +88,6 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     	
         return [
             $schTeacher->teacher->email,
-            $username ,
             $schTeacher->teacher->lastname,
             $schTeacher->teacher->firstname,
             $nickname,
@@ -114,9 +111,9 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         return [
             // Styling an entire column.
             'A1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
+            'B1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
             'C1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
             'D1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
-            'E1'  => ['font' => ['bold' => true], 'fill' => ['fillType' => 'solid','rotation' => 0, 'color' => ['rgb' => 'ff1800']] ],
         ];
     }
 }
