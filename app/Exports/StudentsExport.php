@@ -5,7 +5,7 @@ namespace App\Exports;
 use App\Models\Student;
 
 use App\Models\Teacher;
-use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
 
@@ -62,58 +62,44 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     {
         return [
             'A' => 20,
-            'B' => 15,
-			'C' => 15,
-			'D' => 15,
-			'E' => 15,
-			'F' => 15,
-			'G' => 15,
-			'H' => 15,
-			'I' => 15,
-			'J' => 15,
-			'K' => 15,
-			'L' => 15,
-			'M' => 15,
-			'N' => 15,
-			'O' => 15,
-			'P' => 15,        
+            '*' => 15,
         ];
     }
 
     public function query()
     {
-    	$schoolTeachers = SchoolTeacher::with(['teacher'])->where(['school_id' => $this->school_id])->whereIn('role_type',['teachers_all', 'teachers_medium','teachers_minimum']);
-        return $schoolTeachers;
+    	$schoolStudent = SchoolStudent::with(['student'])->where(['school_id' => $this->school_id]);
+        return $schoolStudent;
     }
 
     /**
     * @var Invoice $teacher
     */
-    public function map($schTeacher): array
+    public function map($schoolStd): array
     {
-    	$username = isset($schTeacher->user) ? $schTeacher->user->username : null;
-    	$nickname = isset($schTeacher->nickname) ? $schTeacher->nickname : null;
-    	$bg_color_agenda = isset($schTeacher->bg_color_agenda) ? $schTeacher->bg_color_agenda : null;
-    	$comment = isset($schTeacher->comment) ? $schTeacher->comment : null;
-    	$gender = ($schTeacher->teacher->gender_id ==1) ? 'Male' : (($schTeacher->teacher->gender_id ==2) ? 'Female' : 'Not specified' );
+    	$username = isset($schoolStd->user) ? $schoolStd->user->username : null;
+    	$nickname = isset($schoolStd->nickname) ? $schoolStd->nickname : null;
+    	$bg_color_agenda = isset($schoolStd->bg_color_agenda) ? $schoolStd->bg_color_agenda : null;
+    	$comment = isset($schoolStd->comment) ? $schoolStd->comment : null;
+    	$gender = ($schoolStd->student->gender_id ==1) ? 'Male' : (($schoolStd->student->gender_id ==2) ? 'Female' : 'Not specified' );
     	
         return [
-            $schTeacher->teacher->email,
+            $schoolStd->student->email,
             $username ,
-            $schTeacher->teacher->lastname,
-            $schTeacher->teacher->firstname,
+            $schoolStd->student->lastname,
+            $schoolStd->student->firstname,
             $nickname,
             $gender,
-            $schTeacher->teacher->licence_js,
+            $schoolStd->student->licence_js,
             $bg_color_agenda,
             $comment,
-            $schTeacher->teacher->birth_date,
-            $schTeacher->teacher->street,
-            $schTeacher->teacher->street_number,
-            $schTeacher->teacher->zip_code,
-            $schTeacher->teacher->place,
-            $schTeacher->teacher->phone,
-            $schTeacher->teacher->mobile,
+            $schoolStd->student->birth_date,
+            $schoolStd->student->street,
+            $schoolStd->student->street_number,
+            $schoolStd->student->zip_code,
+            $schoolStd->student->place,
+            $schoolStd->student->phone,
+            $schoolStd->student->mobile,
         ];
     }
 
