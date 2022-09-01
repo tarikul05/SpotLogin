@@ -6,16 +6,16 @@
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
 
-        <h3 class="modal-title light-blue-txt gilroy-bold" id="importModalLabel">{{ __('Import CSV') }}</h3>
+        <h3 class="modal-title light-blue-txt gilroy-bold" id="importModalLabel">{{ __('Import Excel') }}</h3>
 
       </div>
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="csv_import" name="csv_import" method="POST" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.import',['school'=> $schoolId]) : route('student.import') }}" enctype="multipart/form-data">
 
           <div class="form-group">
-            <input type="file" name="csvFile" id="csvFile" accept=".csv"/>
+            <input type="file" name="csvFile" id="csvFile" accept=".xlsx"/>
           </div>
-          <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Import CSV') }}</button>
+          <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Import Excel') }}</button>
         </form>
       </div>
     </div>

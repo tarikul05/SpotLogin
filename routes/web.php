@@ -196,11 +196,11 @@ Route::group(['middleware' => ['auth']], function () {
     ));
     Route::get('/{school}/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('adminEditTeacher');
     Route::match(array('GET', 'POST'), "/{school}/export-teacher", array(
-        'uses' => 'TeachersController@export',
+        'uses' => 'TeachersController@exportExcel',
         'as' => 'admin.teacher.export'
     ));
     Route::match(array('GET', 'POST'), "/{school}/import-teacher", array(
-        'uses' => 'TeachersController@import',
+        'uses' => 'TeachersController@importExcel',
         'as' => 'admin.teacher.import'
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
@@ -211,11 +211,11 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'admin.student.create'
     ));
     Route::match(array('GET', 'POST'), "/{school}/export-student", array(
-      'uses' => 'StudentsController@export',
+      'uses' => 'StudentsController@exportExcel',
       'as' => 'admin.student.export'
     ));
     Route::match(array('GET', 'POST'), "/{school}/import-student", array(
-      'uses' => 'StudentsController@import',
+      'uses' => 'StudentsController@importExcel',
       'as' => 'admin.student.import'
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
@@ -273,11 +273,11 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'teachers.create'
     ));
     Route::match(array('GET', 'POST'), "export-teacher", array(
-        'uses' => 'TeachersController@export',
+        'uses' => 'TeachersController@exportExcel',
         'as' => 'teacher.export'
     ));
     Route::match(array('GET', 'POST'), "import-teacher", array(
-        'uses' => 'TeachersController@import',
+        'uses' => 'TeachersController@importExcel',
         'as' => 'teacher.import'
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/edit-teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'edit'])->name('editTeacher');
@@ -317,11 +317,11 @@ Route::group(['middleware' => ['auth']], function () {
       'as' => 'student.create'
     ));
     Route::match(array('GET', 'POST'), "export-student", array(
-      'uses' => 'StudentsController@export',
+      'uses' => 'StudentsController@exportExcel',
       'as' => 'student.export'
     ));
     Route::match(array('GET', 'POST'), "import-student", array(
-      'uses' => 'StudentsController@import',
+      'uses' => 'StudentsController@importExcel',
       'as' => 'student.import'
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 

@@ -9,7 +9,7 @@
       <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="csv_import" name="csv_import" method="POST" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teacher.import',['school'=> $schoolId]) : route('teacher.import') }}" enctype="multipart/form-data">
           <div class="form-group">
-            <input type="file" name="csvFile" id="csvFile" accept=".csv"/>
+            <input type="file" name="csvFile" id="csvFile" accept=".xlsx" />
           </div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Import CSV') }}</button>
         </form>
