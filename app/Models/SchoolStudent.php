@@ -71,6 +71,11 @@ class SchoolStudent extends BaseModel
         return $this->belongsTo(Student::class);
     }
 
+    public function getUserAttribute()
+    {
+        return isset($this->student->user) && !empty($this->student->user) ? $this->student->user : null;
+    }
+
     public function getFullNameAttribute()
     {
         return $this->student->full_name;

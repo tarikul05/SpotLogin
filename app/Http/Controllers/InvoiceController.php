@@ -312,7 +312,7 @@ class InvoiceController extends Controller
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $studentEvents->where('events.date_start', '>=', $dateS);
         $studentEvents->distinct('events.id');
-        $studentEvents->groupBy('events.id');
+        //$studentEvents->groupBy('event_details.student_id');
         //dd($studentEvents->toSql());
 
         $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
@@ -335,7 +335,6 @@ class InvoiceController extends Controller
             }
             $value->student_full_name = "";
             if (!empty($value->person_id)) {
-                $student = Student::find($value->person_id);
                 $value->student_full_name = $value->student_name;
             } else {
                 continue;
@@ -402,9 +401,9 @@ class InvoiceController extends Controller
         $teacherEvents->where('events.date_start', '>=', $dateS);
         $teacherEvents->where('events.date_end', '<=', $dateEnd);
         $teacherEvents->distinct('events.id');
-        $teacherEvents->groupBy('events.id');
+        //$teacherEvents->groupBy('event_details.teacher_id');
 
-        //dd($studentEvents->toSql());
+        //dd($teacherEvents->toSql());
         //dd($data);
         $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
             ->select(
@@ -429,8 +428,7 @@ class InvoiceController extends Controller
             }
             $value->teacher_full_name = "";
             if (!empty($value->person_id)) {
-                $teacher = Teacher::find($value->person_id);
-                $value->teacher_full_name = $teacher->full_name;
+                $value->teacher_full_name = $value->teacher_name;
             }
             $allTeacherEvents[] = $value;
         }
