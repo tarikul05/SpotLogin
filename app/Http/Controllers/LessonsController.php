@@ -320,6 +320,10 @@ class LessonsController extends Controller
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
 
+                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+
+                $attendBuyPrice = (($lessonPriceTeacher['price_buy'])*($stu_num[1])*($lessonData['duration']))/60 ;
+                $attendSellPrice = (($lessonPriceTeacher['price_sell'])*($stu_num[1])*($lessonData['duration']))/60 ;
 
                 $data = [
                     'title' => $lessonData['title'],
@@ -347,6 +351,8 @@ class LessonsController extends Controller
                             'event_id'   => $event->id,
                             'teacher_id' => $lessonData['teacher_select'],
                             'student_id' => $std,
+                            'buy_price' => $attendBuyPrice,
+                            'sell_price' => $attendSellPrice,
                             'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
@@ -444,6 +450,11 @@ class LessonsController extends Controller
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
 
+                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+
+                $attendBuyPrice = (($lessonPriceTeacher['price_buy'])*($stu_num[1])*($lessonData['duration']))/60 ;
+                $attendSellPrice = (($lessonPriceTeacher['price_sell'])*($stu_num[1])*($lessonData['duration']))/60 ;
+
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,
@@ -471,8 +482,8 @@ class LessonsController extends Controller
                             'event_id' => $lessonlId,
                             'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
                             'student_id' => $std,
-                            'buy_price' => $lessonData['attendBuyPrice'],
-                            'sell_price' => $lessonData['attendSellPrice'],
+                            'buy_price' => $attendBuyPrice,
+                            'sell_price' => $attendSellPrice,
                             'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
                             'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
                         ];

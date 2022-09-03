@@ -223,7 +223,6 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData->price_amount_buy) && !empty($lessonData->price_amount_buy) ? $lessonData->price_amount_buy : 0 }}" autocomplete="off">
-											<input type="hidden" name="attendBuyPrice" value="{{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -235,7 +234,6 @@
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData->price_amount_sell) && !empty($lessonData->price_amount_sell) ? $lessonData->price_amount_sell : 0 }}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
 										</div>
 									</div>
 								</div>
@@ -357,17 +355,13 @@ $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
 	
-	//if ((action == "new") && (price == 1)){
-	if (price == 1){                   
-		if (cnt >= 10) {
-			document.getElementById("sevent_price").value='price_10';
-		}
-		else
-		{
-			document.getElementById("sevent_price").value='price_'+cnt;
-		}
+	if (cnt >= 10) {
+		document.getElementById("sevent_price").value='price_10';
+	}else{
+		document.getElementById("sevent_price").value='price_'+cnt;
+	}
 		
-	} 
+	 
 })
 
 $( document ).ready(function() {

@@ -463,6 +463,23 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
+            $assData = DB::table('events')
+                ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
+                ->select(
+                    'events.event_type as event_type',
+                    'events.event_category as category_id',
+                    'teachers.id as teacher_id',
+                )
+                ->where(
+                    [
+                        'event_details.student_id' => $p_person_id,
+                        'event_details.billing_method' => "E",
+                        'events.is_active' => 1,
+                    ]
+                )->distinct('events.id')->get();
+
             $studentEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
@@ -470,6 +487,7 @@ class InvoiceController extends Controller
                 ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
                 ->leftJoin('schools', 'schools.id', '=', 'events.school_id')
+                ->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
                 ->select(
                     'events.id as event_id',
                     'events.duration_minutes as duration_minutes',
@@ -487,7 +505,10 @@ class InvoiceController extends Controller
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     'event_details.price_currency as price_currency',
                     'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2'
+                    'event_details.costs_2 as costs_2',
+                    'teachers.id as teacher_id',
+                    'lesson_price_teachers.price_buy as price_buy',
+                    'lesson_price_teachers.price_sell as price_sell'
                     //'events.is_locked as ready_flag'
 
                     // 'users.profile_image_id as profile_image_id'
@@ -506,7 +527,9 @@ class InvoiceController extends Controller
                     [
                         'event_details.student_id' => $p_person_id,
                         'event_details.billing_method' => "E",
-                        'events.is_active' => 1
+                        'events.is_active' => 1,
+                        'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
+                        'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
                     ]
                 );
 
