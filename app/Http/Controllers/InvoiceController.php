@@ -312,7 +312,7 @@ class InvoiceController extends Controller
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $studentEvents->where('events.date_start', '>=', $dateS);
         $studentEvents->distinct('events.id');
-        $studentEvents->groupBy('events.id');
+        $studentEvents->groupBy('event_details.student_id');
         //dd($studentEvents->toSql());
 
         $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
@@ -402,9 +402,9 @@ class InvoiceController extends Controller
         $teacherEvents->where('events.date_start', '>=', $dateS);
         $teacherEvents->where('events.date_end', '<=', $dateEnd);
         $teacherEvents->distinct('events.id');
-        $teacherEvents->groupBy('events.id');
+        $teacherEvents->groupBy('event_details.teacher_id');
 
-        //dd($studentEvents->toSql());
+        dd($teacherEvents->toSql());
         //dd($data);
         $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
             ->select(
