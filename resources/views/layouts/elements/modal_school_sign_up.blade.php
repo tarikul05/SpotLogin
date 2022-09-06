@@ -41,7 +41,7 @@
                       </select>
                   </div>
                     <div class="form-group custom-selection">
-                        <select class="selectpicker" id="timezone" name="timezone" required>
+                        <select class="selectpicker" data-live-search="true" id="timezone" name="timezone" required>
                             <option value="">{{ __('Select Timezone')}}</option>
                             @foreach ($timezones as $key => $value)
                             <option 
@@ -239,5 +239,6 @@ $(document).ready(function () {
         
         return v_cnt;
     }
+
 });
 </script>
