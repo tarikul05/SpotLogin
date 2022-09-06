@@ -117,15 +117,15 @@
         }
         $("#csv_import").validate({
             // Specify validation rules
-            // rules: {
-            //     csvFile: {
-            //         required: true
-            //     }
-            // },
-            // // Specify validation error messages
-            // messages: {
-            //     csvFile:"{{ __('Please select a csv file') }}"
-            // },
+            rules: {
+                csvFile: {
+                    required: true
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                csvFile:"{{ __('Please select a Excel file') }}"
+            },
             errorPlacement: function (error, element) {
                 $(element).parents('.form-group').append(error);
             },
