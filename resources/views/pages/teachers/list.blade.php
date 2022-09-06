@@ -42,7 +42,22 @@
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}">{{ $teacher->full_name }}</a>
                 </td>
                 <td>{{ $teacher->email; }} </td>
-                <td>{{ !empty($teacher->user) ? 'Yes' : 'No' }} </td>
+                <td>
+                    @if(!$teacher->user)
+                        <span>{{ __('No') }}</span>
+                        <form method="post" style="display: inline;" class="form-inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
+                          @method('post')
+                          @csrf
+                          @if($teacher->pivot->is_sent_invite)
+                              <button  class="btn" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                          @else
+                              <button  class="btn" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                          @endif
+                        </form>
+                    @else
+                        <span>{{ __('Yes') }}</span>
+                    @endif
+                </td>
                 <td>{{ !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($teacher->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
@@ -57,7 +72,6 @@
                             @can('teachers-update')
                             <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $teacher->id]) : route('editTeacher',['teacher' => $teacher->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                             @endcan
-
                             @can('teachers-delete')
                             <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('teacherDelete',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('delete')
@@ -65,15 +79,6 @@
                                 <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                             </form>
                             @endcan
-                            <form method="post" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('teacherInvitation',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
-                              @method('post')
-                              @csrf
-                              @if($teacher->pivot->is_sent_invite)
-                                  <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Send invitation')}}</button>
-                              @else
-                                  <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Resend invitation')}}</button>
-                              @endif
-                            </form>
                             <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('teacherStatus',['school'=>$teacher->pivot->school_id,'teacher'=>$teacher->id])}}">
                                 @method('post')
                                 @csrf
