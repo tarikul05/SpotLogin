@@ -285,7 +285,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'destroy'])->name('teacherDelete');
 
     Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
-    Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'sendInvitation'])->name('teacherInvitation');
+    Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
 
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
