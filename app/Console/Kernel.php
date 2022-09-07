@@ -24,14 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule
-        //     ->command('emailinvitation:send')
-        //     ->withoutOverlapping()
-        //     //->everyMinute()
-        //     ->everyFiveMinutes()
-        //     //->everyThirtyMinutes()
-        //     // ->runInBackground()
-        // ;
+        $schedule
+            ->command('emailinvitation:send')
+            ->withoutOverlapping()
+            //->everyMinute()
+            ->everyFiveMinutes()
+            //->everyThirtyMinutes()
+            // ->runInBackground()
+        ;
     }
 
     /**
