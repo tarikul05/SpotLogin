@@ -87,7 +87,7 @@ class TeachersImport implements ToModel, WithHeadingRow
             'bg_color_agenda'=>$data['bg_color_agenda'],
             'comment' => $data['comment'],
             'is_active' => 1,
-            'is_sent_invite' => 1,
+            'is_sent_invite' => 0,
         ];
 Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
         $teacherExist = Teacher::where(['email'=> $data['email']])->first();

@@ -142,6 +142,7 @@ class StudentsController extends Controller
         }
         DB::beginTransaction();
         try{
+            // dd($alldata);
             $authUser = $request->user();
             if ($request->isMethod('post')){
                 if (!empty($alldata['user_id'])) {
@@ -174,7 +175,7 @@ class StudentsController extends Controller
                             $data['token'] = $verifyUser->token;
                             $data['url'] = route('add.verify.email',$data['token']); 
 
-                            if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
+                            if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                             }
                         }
@@ -251,12 +252,15 @@ class StudentsController extends Controller
                     $student = Student::create($studentData);
                     $student->save();
 
+                    $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
+
                     $schoolStudent = [
                         'student_id' => $student->id,
                         'school_id' => $schoolId,
                         'has_user_account' => isset($alldata['has_user_account']) && !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
                         'nickname' => $alldata['nickname'],
                         'email' => $alldata['email'],
+                        'is_sent_invite' => $sentInvite,
                         'billing_method' => $alldata['billing_method'],
                         'level_id' => isset($alldata['level_id']) && !empty($alldata['level_id']) ? $alldata['level_id'] : null ,
                         'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
@@ -273,7 +277,7 @@ class StudentsController extends Controller
                     if (!empty($alldata['email'])) {
 
                         //sending activation email after successful signed up
-                        if (config('global.email_send') == 1) {
+                        if (config('global.email_send') == 1 && ($sentInvite == 1)) {
                             $data = [];
                             $data['email'] = $alldata['email'];
                             $data['username'] = $data['name'] = $alldata['nickname'];
@@ -297,22 +301,22 @@ class StudentsController extends Controller
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                             }
                         } else {
-                            $usersData = [
-                                'person_id' => $student->id,
-                                'person_type' =>'App\Models\Student',
-                                'username' =>Str::random(10),
-                                'lastname' => $alldata['lastname'],
-                                'middlename'=>'',
-                                'firstname'=>$alldata['firstname'],
-                                'email'=>$alldata['email'],
-                                // 'password'=>$alldata['password'],
-                                'password'=>Str::random(10),
-                                'is_mail_sent'=>0,
-                                'is_active'=>1,
-                                'is_firstlogin'=>0
-                            ];
-                            $user = User::create($usersData);
-                            $user->save();
+                            // $usersData = [
+                            //     'person_id' => $student->id,
+                            //     'person_type' =>'App\Models\Student',
+                            //     'username' =>Str::random(10),
+                            //     'lastname' => $alldata['lastname'],
+                            //     'middlename'=>'',
+                            //     'firstname'=>$alldata['firstname'],
+                            //     'email'=>$alldata['email'],
+                            //     // 'password'=>$alldata['password'],
+                            //     'password'=>Str::random(10),
+                            //     'is_mail_sent'=>0,
+                            //     'is_active'=>1,
+                            //     'is_firstlogin'=>0
+                            // ];
+                            // $user = User::create($usersData);
+                            // $user->save();
                         }
                     }
                 }

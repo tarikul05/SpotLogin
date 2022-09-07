@@ -44,17 +44,17 @@
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
                 
-                <td>{{ $student->email; }}</td>
+                <td>{{ $student->email; }} </td>
                 <td>
-                    @if($student->user)
+                    @if(!$student->user)
                         <span>{{ __('No') }}</span>
                         <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                           @method('post')
                           @csrf
-                          @if($student->pivot->is_sent_invite)
-                              <button  class="btn" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                          @if(!$student->pivot->is_sent_invite)
+                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
                           @else
-                              <button  class="btn" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
                           @endif
                         </form>
                     @else

@@ -2878,7 +2878,7 @@
             },   //success
             error: function(ts) { 
                 // alert(ts.responseText)
-                errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
+                errorModalCall('Someting went wrong on copy events' + GetAppMessage('error_message_text'));
                 }
         }); //ajax-type
         return false;
