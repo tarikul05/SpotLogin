@@ -1084,11 +1084,22 @@ class StudentsController extends Controller
             $schoolId = $school->id;
         }
 
-        $dataArry = Excel::import(new StudentsImport($schoolId), $request->file('csvFile'));
-        // $dataArry = (new TeachersImport($schoolId))->toArray($request->file('csvFile'));
-        // dd($dataArry);
-        if (!empty($dataArry)) {
-            return back()->with('success', __('Student updated successfully!'));
+        try {
+            $userImport = new StudentsImport($schoolId);
+            $dataArry = Excel::import($userImport, $request->file('csvFile'));
+            $msg = $userImport->getMessage();
+            return back()->with('success', __($msg));
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            //  $failures = $e->failures();
+            //  $errMsg = '';
+            //  foreach ($failures as $failure) {
+            //      $failure->row(); // row that went wrong
+            //      $failure->attribute(); // either heading key (if using heading row concern) or column index
+            //      $failure->errors(); // Actual error messages from Laravel validator
+            //      $failure->values(); // The values of the row that has failed.
+            //      $errMsg .= "Column {$failure->attribute()} value {$failure->values()} error: $failure->errors()<br/> ";
+            //  }
+            // return redirect()->back()->with('error', __($errMsg));
         }
         return redirect()->back()->with('error', __('Internal server error'));
     }

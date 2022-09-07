@@ -99,8 +99,8 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $teacher = Teacher::create($teacherData);
                 $schoolTeacherData['teacher_id'] = $teacher->id;
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
-                ++$this->recordInserted;
                DB::commit(); 
+                ++$this->recordInserted;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 1st condtions in schoolId=".$this->school_id);
@@ -112,8 +112,8 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $schoolTeacherData['teacher_id'] = $teacherExist->id;
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
-                ++$this->recordInserted;
                DB::commit(); 
+                ++$this->recordInserted;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 2nd condtions in schoolId=".$this->school_id);
@@ -124,8 +124,8 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
             try {
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
                 $teacherSchool = SchoolTeacher::where(['teacher_id'=> $teacherExist->id, 'school_id'=> $this->school_id])->update($schoolTeacherData);
-                ++$this->recordUpdated;
                 DB::commit(); 
+                ++$this->recordUpdated;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 3rd condtions in schoolId=".$this->school_id);
