@@ -172,7 +172,7 @@
 										class="col-lg-3 col-sm-3 text-left">{{ __('Timezone')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" name="timezone" id="timezone">
+												<select class="form-control" name="timezone" data-live-search="true" id="timezone">
 													<option value="">Select</option>
 													@foreach ($timezones as $key => $value)
 														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>

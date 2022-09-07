@@ -19,6 +19,7 @@
                 <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
+                <th>{{ __('User Account') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
@@ -44,6 +45,22 @@
                 </td>
                 
                 <td>{{ $student->email; }}</td>
+                <td>
+                    @if($student->user)
+                        <span>{{ __('No') }}</span>
+                        <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                          @method('post')
+                          @csrf
+                          @if($student->pivot->is_sent_invite)
+                              <button  class="btn" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                          @else
+                              <button  class="btn" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"></i></button>
+                          @endif
+                        </form>
+                    @else
+                        <span>{{ __('Yes') }}</span>
+                    @endif
+                </td>
                 <td>{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($student->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
@@ -64,15 +81,6 @@
                                     <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                                 </form>
                                 @endcan
-                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
-                                  @method('post')
-                                  @csrf
-                                  @if($student->pivot->is_sent_invite)
-                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Send invitation')}}</button>
-                                  @else
-                                      <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Resend invitation')}}</button>
-                                  @endif
-                                </form>
                                 <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                                     @method('post')
                                     @csrf
@@ -137,13 +145,13 @@
         $("#csv_import").validate({
             // Specify validation rules
             rules: {
-                // csvFile: {
-                //     required: true
-                // }
+                csvFile: {
+                    required: true
+                }
             },
             // Specify validation error messages
             messages: {
-                csvFile:"{{ __('Please select a csv file') }}"
+                csvFile:"{{ __('Please select a Excel file') }}"
             },
             errorPlacement: function (error, element) {
                 $(element).parents('.form-group').append(error);

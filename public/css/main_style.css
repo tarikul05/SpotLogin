@@ -205,7 +205,7 @@ p {
     padding: 10px;
     background-color: #e8f3f9;
 }
-.custom-selection .dropdown-item.selected.active {
+.custom-selection .dropdown-item.selected.active, .custom-selection .dropdown-item.active {
     background-color: #007bff !important;
 }
 #show_hide_password .input-group-addon {

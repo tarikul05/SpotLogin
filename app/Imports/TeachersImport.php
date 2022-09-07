@@ -20,6 +20,9 @@ class TeachersImport implements ToModel, WithHeadingRow
 
     private $school_id;
 
+    private $recordUpdated = 0;
+    private $recordInserted = 0;
+
     public function __construct(int $school_id) 
     {
         $this->school_id = $school_id;
@@ -54,7 +57,11 @@ class TeachersImport implements ToModel, WithHeadingRow
         if (!empty($row['email'])) {
             $this->dataFormate($data);
         }
+    }
 
+    public function getMessage()
+    {
+        return "There is $this->recordInserted record inserted and $this->recordUpdated record updated.";
     }
 
     public function dataFormate($data=[])
@@ -92,6 +99,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $teacher = Teacher::create($teacherData);
                 $schoolTeacherData['teacher_id'] = $teacher->id;
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
+                ++$this->recordInserted;
                DB::commit(); 
             } catch (Exception $e) {
                 DB::rollBack();
@@ -104,6 +112,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $schoolTeacherData['teacher_id'] = $teacherExist->id;
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
+                ++$this->recordInserted;
                DB::commit(); 
             } catch (Exception $e) {
                 DB::rollBack();
@@ -115,6 +124,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
             try {
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
                 $teacherSchool = SchoolTeacher::where(['teacher_id'=> $teacherExist->id, 'school_id'=> $this->school_id])->update($schoolTeacherData);
+                ++$this->recordUpdated;
                 DB::commit(); 
             } catch (Exception $e) {
                 DB::rollBack();
