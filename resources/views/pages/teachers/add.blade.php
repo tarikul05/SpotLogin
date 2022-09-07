@@ -149,7 +149,7 @@
 									<div id="shas_user_account_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Send account invite') }} :</label>
 										<div class="col-sm-7">
-											<input id="shas_user_account" name="is_sent_invite" type="checkbox" value="0">
+											<input id="shas_user_account" name="is_sent_invite" type="checkbox" value="1">
 										</div>
 									</div>
 								</div>
