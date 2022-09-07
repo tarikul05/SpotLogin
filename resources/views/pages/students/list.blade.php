@@ -51,7 +51,7 @@
                         <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                           @method('post')
                           @csrf
-                          @if($student->pivot->is_sent_invite)
+                          @if(!$student->pivot->is_sent_invite)
                               <button  class="btn" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"></i></button>
                           @else
                               <button  class="btn" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"></i></button>

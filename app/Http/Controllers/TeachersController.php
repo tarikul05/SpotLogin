@@ -137,6 +137,7 @@ class TeachersController extends Controller
         try{
             if ($request->isMethod('post')){
                 $alldata = $request->all();
+                // dd($alldata);
                 if (!empty($alldata['user_id'])) {
                     
                     $user = User::find($alldata['user_id']);
@@ -209,21 +210,23 @@ class TeachersController extends Controller
                     ];
                     $teacher = Teacher::create($teacherData);
                     // $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
-                
+                    
+                    $sentInvite = isset($alldata['is_sent_invite']) && ($alldata['is_sent_invite'] == 0) ? 0 : 1 ;
+
                     $relationalData = [
                         'role_type'=>$alldata['role_type'],
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
                         'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
-                        'is_teacher'=> 1,
+                        'is_teacher'=> $sentInvite,
+                        'is_sent_invite'=> 1,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
                     ];
                     $teacher->save();
                     $teacher->schools()->attach($schoolId,$relationalData);
 
-
                     //sending activation email after successful signed up
-                    if (config('global.email_send') == 1) {
+                    if ((config('global.email_send') == 1) && ($sentInvite == 0) ) {
                         $data = [];
                         $data['email'] = $alldata['email'];
                         $data['username'] = $data['name'] = $alldata['firstname'];
