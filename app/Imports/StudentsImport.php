@@ -20,6 +20,9 @@ class StudentsImport implements ToModel, WithHeadingRow
 
     private $school_id;
 
+    private $recordUpdated = 0;
+    private $recordInserted = 0;
+
     public function __construct(int $school_id) 
     {
         $this->school_id = $school_id;
@@ -66,6 +69,11 @@ class StudentsImport implements ToModel, WithHeadingRow
             $this->dataFormate($data);
         }
 
+    }
+
+    public function getMessage()
+    {
+        return "There is $this->recordInserted record inserted and $this->recordUpdated record updated.";
     }
 
 
@@ -115,6 +123,7 @@ Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
                 $schoolStudentData['student_id'] = $teacher->id;
                 $teacherSchool = SchoolStudent::create($schoolStudentData);
                DB::commit(); 
+               ++$this->recordInserted;
                Log::info("student and school_student new entry");
             } catch (Exception $e) {
                 DB::rollBack();
@@ -128,6 +137,8 @@ Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
                 $teacherSchool = SchoolStudent::create($schoolStudentData);
                 $teacher =Student::where('id', $stdExist->id)->update($studentData);
                DB::commit(); 
+               ++$this->recordInserted;
+               
                Log::info("student update and school_student new entry");
             } catch (Exception $e) {
                 DB::rollBack();
@@ -141,6 +152,7 @@ Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
                 $teacher =Student::where('id', $stdExist->id)->update($studentData);
                 $teacherSchool = SchoolStudent::where(['student_id'=> $stdExist->id, 'school_id'=> $this->school_id])->update($schoolStudentData);
                 DB::commit(); 
+                ++$this->recordUpdated;
                 Log::info("both exist and updated");
             } catch (Exception $e) {
                 DB::rollBack();
