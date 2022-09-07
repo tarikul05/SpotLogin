@@ -253,22 +253,22 @@ class TeachersController extends Controller
                             );
                         }
                     } else {
-                        $usersData = [
-                            'person_id' => $teacher->id,
-                            'person_type' =>'App\Models\Teacher',
-                            'username' =>Str::random(10),
-                            'lastname' => $alldata['lastname'],
-                            'middlename'=>'',
-                            'firstname'=>$alldata['firstname'],
-                            'email'=>$alldata['email'],
-                            // 'password'=>$alldata['password'],
-                            'password'=>Str::random(10),
-                            'is_mail_sent'=>0,
-                            'is_active' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
-                            'is_firstlogin'=>0
-                        ];
-                        $user = User::create($usersData);
-                        $user->save();
+                        // $usersData = [
+                        //     'person_id' => $teacher->id,
+                        //     'person_type' =>'App\Models\Teacher',
+                        //     'username' =>Str::random(10),
+                        //     'lastname' => $alldata['lastname'],
+                        //     'middlename'=>'',
+                        //     'firstname'=>$alldata['firstname'],
+                        //     'email'=>$alldata['email'],
+                        //     // 'password'=>$alldata['password'],
+                        //     'password'=>Str::random(10),
+                        //     'is_mail_sent'=>0,
+                        //     'is_active' => isset($alldata['availability_select']) ? $alldata['availability_select'] : $teacher->availability_select,
+                        //     'is_firstlogin'=>0
+                        // ];
+                        // $user = User::create($usersData);
+                        // $user->save();
                     }
                     $msg = 'Successfully Registered';
                 }

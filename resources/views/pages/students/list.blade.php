@@ -44,7 +44,7 @@
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
                 
-                <td>{{ $student->email; }}</td>
+                <td>{{ $student->email; }} </td>
                 <td>
                     @if(!$student->user)
                         <span>{{ __('No') }}</span>

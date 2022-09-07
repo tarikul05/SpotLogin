@@ -301,22 +301,22 @@ class StudentsController extends Controller
                                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                             }
                         } else {
-                            $usersData = [
-                                'person_id' => $student->id,
-                                'person_type' =>'App\Models\Student',
-                                'username' =>Str::random(10),
-                                'lastname' => $alldata['lastname'],
-                                'middlename'=>'',
-                                'firstname'=>$alldata['firstname'],
-                                'email'=>$alldata['email'],
-                                // 'password'=>$alldata['password'],
-                                'password'=>Str::random(10),
-                                'is_mail_sent'=>0,
-                                'is_active'=>1,
-                                'is_firstlogin'=>0
-                            ];
-                            $user = User::create($usersData);
-                            $user->save();
+                            // $usersData = [
+                            //     'person_id' => $student->id,
+                            //     'person_type' =>'App\Models\Student',
+                            //     'username' =>Str::random(10),
+                            //     'lastname' => $alldata['lastname'],
+                            //     'middlename'=>'',
+                            //     'firstname'=>$alldata['firstname'],
+                            //     'email'=>$alldata['email'],
+                            //     // 'password'=>$alldata['password'],
+                            //     'password'=>Str::random(10),
+                            //     'is_mail_sent'=>0,
+                            //     'is_active'=>1,
+                            //     'is_firstlogin'=>0
+                            // ];
+                            // $user = User::create($usersData);
+                            // $user->save();
                         }
                     }
                 }
