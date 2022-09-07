@@ -587,6 +587,12 @@
     var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
 
+
+
+    var currentTimezone = document.getElementById("zone").value;
+    var zone = document.getElementById("zone").value;
+    document.getElementById("zone").value = zone;
+
     var json_events = @json($events);
 
    
@@ -664,15 +670,10 @@
     }  
     
 
-    var currentTimezone = document.getElementById("zone").value;
-    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    //var zone =getTimeZone();
-    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    var zone = document.getElementById("zone").value;
-    document.getElementById("zone").value = zone;
+    
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -886,15 +887,16 @@
     .on('changeDate', function(ev){
         
         var dt=$(this).datetimepicker('getDate');
-        
         var jsDate = $(this).datetimepicker('getDate');
-        if (jsDate !== null) { // if any date selected in datepicker
-            jsDate instanceof Date; // -> true
-            jsDate.getDate();
-            jsDate.getMonth();
-            var month = jsDate.getMonth() + 1;   
-            jsDate.getFullYear();
-            dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+
+        if (dt !== null) { // if any date selected in datepicker
+            // jsDate instanceof Date; // -> true
+            // jsDate.getDate();
+            // jsDate.getMonth();
+            // var month = jsDate.getMonth() + 1; 
+            // jsDate.getFullYear();
+            // dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+            dt = moment(dt).format("YYYY-MM-DD")
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
         }
@@ -932,10 +934,10 @@
         //getFreshEvents('CurrentListView');
        // CallListView();	  
         
-		console.log('lllll----------------')
+		// console.log('lllll----------------')
           
         getCurrentListFreshEvents();
-        console.log('lllll----------------')
+        // console.log('lllll----------------')
 	});
     
     $('#list_button').on('click', function() {
