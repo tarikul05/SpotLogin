@@ -887,15 +887,16 @@
     .on('changeDate', function(ev){
         
         var dt=$(this).datetimepicker('getDate');
-        
         var jsDate = $(this).datetimepicker('getDate');
-        if (jsDate !== null) { // if any date selected in datepicker
-            jsDate instanceof Date; // -> true
-            jsDate.getDate();
-            jsDate.getMonth();
-            var month = jsDate.getMonth() + 1;   
-            jsDate.getFullYear();
-            dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+
+        if (dt !== null) { // if any date selected in datepicker
+            // jsDate instanceof Date; // -> true
+            // jsDate.getDate();
+            // jsDate.getMonth();
+            // var month = jsDate.getMonth() + 1; 
+            // jsDate.getFullYear();
+            // dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+            dt = moment(dt).format("YYYY-MM-DD")
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
         }
