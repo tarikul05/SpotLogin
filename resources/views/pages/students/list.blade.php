@@ -48,7 +48,7 @@
                 <td>
                     @if(!$student->user)
                         <span>{{ __('No') }}</span>
-                        <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                        <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$schoolId,'student'=>$student->id])}}">
                           @method('post')
                           @csrf
                           @if(!$student->pivot->is_sent_invite)
