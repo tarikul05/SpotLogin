@@ -46,7 +46,7 @@
                 
                 <td>{{ $student->email; }}</td>
                 <td>
-                    @if($student->user)
+                    @if(!$student->user)
                         <span>{{ __('No') }}</span>
                         <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                           @method('post')
