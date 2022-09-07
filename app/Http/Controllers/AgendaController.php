@@ -252,7 +252,7 @@ class AgendaController extends Controller
         );
         try {
 
-
+            $timeZone = $data['zone'];
 
             // $p_app_id=$_SESSION['global_app_id'];
             // $p_school_id=$_SESSION['global_school_id'];
@@ -307,8 +307,8 @@ class AgendaController extends Controller
             // $events = array();
             foreach ($eventData as $key => $fetch) {
 
-                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);
-                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$data['zone']);
+                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$timeZone);
+                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$timeZone);
                 if ($day_diff ==0) {
                     $date_start = strtotime($fetch->date_start);
                     $date_start =$target_start_date.' '.date('H:i:s', $date_start);
@@ -333,8 +333,8 @@ class AgendaController extends Controller
                     // $date_end = strtotime($fetch->date_end);
                     // $date_end =$target_start_date.' '.date('H:i:s', $date_end);
                 }
-                $date_start = $this->formatDateTimeZone($date_start, 'long', $data['zone'],'UTC',);
-                $date_end = $this->formatDateTimeZone($date_end, 'long',$data['zone'],'UTC');
+                $date_start = $this->formatDateTimeZone($date_start, 'long', $timeZone,'UTC',);
+                $date_end = $this->formatDateTimeZone($date_end, 'long',$timeZone,'UTC');
                 $data = [
                     'title' => $fetch->title,
                     'school_id' => $fetch->school_id,
