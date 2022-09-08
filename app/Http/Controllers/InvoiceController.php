@@ -458,6 +458,7 @@ class InvoiceController extends Controller
             $data = $request->all();
             $user = $request->user();
             $p_person_id = trim($data['p_person_id']);
+            $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
@@ -475,6 +476,7 @@ class InvoiceController extends Controller
                         'event_details.student_id' => $p_person_id,
                         'event_details.billing_method' => "E",
                         'events.is_active' => 1,
+                        'events.school_id' => $p_school_id,
                     ]
                 )->distinct('events.id')->get();
 
@@ -526,8 +528,10 @@ class InvoiceController extends Controller
                         'event_details.student_id' => $p_person_id,
                         'event_details.billing_method' => "E",
                         'events.is_active' => 1,
-                        'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
-                        'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
+                        'events.school_id' => $p_school_id,
+                        //'event_categories.invoiced_type' => 'S'
+                        //'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
+                        //'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
                     ]
                 );
 
