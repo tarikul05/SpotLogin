@@ -556,6 +556,7 @@ class AgendaController extends Controller
                     $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'];
                 }
             }elseif ($fetch->event_type==51) { //student time off
+                $e['title'] .= $student_name;
                 $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name;
             }else{
                 if ($user->isTeacherAdmin()) {
