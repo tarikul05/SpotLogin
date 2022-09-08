@@ -1996,7 +1996,7 @@
                     if (document.getElementById("view_mode").value != 'month'){
                         if (event.duration_minutes > 60){        
                             var ooo= icon+''+event.title_extend;
-                            $(el).find('div.fc-content').append(ooo);
+                            $(el).find('div.fc-content').html(ooo);
                         }
                     }
                     prevdt = moment(event.start).format('DD-MM-YYYY');
