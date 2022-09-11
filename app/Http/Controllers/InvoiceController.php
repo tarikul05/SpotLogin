@@ -291,6 +291,7 @@ class InvoiceController extends Controller
 
         $studentEvents = DB::table('events')
             ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
             ->select(
@@ -306,6 +307,40 @@ class InvoiceController extends Controller
                     'events.is_active' => 1
                 ]
             );
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $coach_user = '';
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+            if ($user->isTeacherAdmin()) {
+                $coach_user = 'coach_user';
+            }
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+            $user_role = 'teacher';
+        }
+
+        // dd($user);
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $invoice_type = 'S';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher_all') {
+            $invoice_type = 'T';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher') {
+            $invoice_type = 'T';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            $studentEvents->where('events.teacher_id', $user->person_id);
+        } else {
+        }
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
 
@@ -373,6 +408,7 @@ class InvoiceController extends Controller
 
         $teacherEvents = DB::table('events')
             ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
             ->select(
@@ -389,6 +425,40 @@ class InvoiceController extends Controller
                     'events.is_active' => 1
                 ]
             );
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        $coach_user = '';
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+            if ($user->isTeacherAdmin()) {
+                $coach_user = 'coach_user';
+            }
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+            $user_role = 'teacher';
+        }
+
+        // dd($user);
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $invoice_type = 'S';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher_all') {
+            $invoice_type = 'T';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher') {
+            $invoice_type = 'T';
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            $studentEvents->where('events.teacher_id', $user->person_id);
+        } else {
+        }
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
         $teacherEvents->whereNull('event_details.buy_invoice_id');
 
@@ -529,20 +599,45 @@ class InvoiceController extends Controller
                         'event_details.billing_method' => "E",
                         'events.is_active' => 1,
                         'events.school_id' => $p_school_id,
-                        //'event_categories.invoiced_type' => 'S'
                         //'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
                         //'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
                     ]
                 );
 
-            $invoice_type = 'T';
-            // dd($user);
+
+            $user_role = 'superadmin';
             if ($user->person_type == 'App\Models\Student') {
-                $invoice_type = 'S';
+                $user_role = 'student';
             }
             if ($user->person_type == 'App\Models\Teacher') {
+                $user_role = 'teacher';
+            }
+            $coach_user = '';
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+                if ($user->isTeacherAdmin()) {
+                    $coach_user = 'coach_user';
+                }
+            }
+            if ($user->isTeacherAll()) {
+                $user_role = 'teacher_all';
+            }
+            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+                $user_role = 'teacher';
+            }
+
+            // dd($user);
+            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+                $invoice_type = 'S';
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher_all') {
                 $invoice_type = 'T';
-                // $studentEvents->where('events.teacher_id', $user->person_id);
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher') {
+                $invoice_type = 'T';
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+                $studentEvents->where('events.teacher_id', $user->person_id);
+            } else {
             }
 
             $studentEvents->where(
@@ -562,7 +657,6 @@ class InvoiceController extends Controller
             $studentEvents->distinct('events.id');
 
             //$studentEvents->groupBy('events.id');
-            //dd($studentEvents->toSql());
             $data = $studentEvents->get();
             //dd($data);
 
