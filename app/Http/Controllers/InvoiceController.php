@@ -449,14 +449,14 @@ class InvoiceController extends Controller
         // dd($user);
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
             $invoice_type = 'S';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher_all') {
             $invoice_type = 'T';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher') {
             $invoice_type = 'T';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            $studentEvents->where('events.teacher_id', $user->person_id);
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+            $teacherEvents->where('events.teacher_id', $user->person_id);
         } else {
         }
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
