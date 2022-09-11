@@ -799,6 +799,7 @@
             DownloadEventsICS('PersonnelEvents');
         })
 		
+        $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
 		
 	}); //ready
 
@@ -1996,7 +1997,7 @@
                     if (document.getElementById("view_mode").value != 'month'){
                         if (event.duration_minutes > 60){        
                             var ooo= icon+''+event.title_extend;
-                            $(el).find('div.fc-content').html(ooo);
+                            $(el).find('div.fc-content').append(ooo);
                         }
                     }
                     prevdt = moment(event.start).format('DD-MM-YYYY');

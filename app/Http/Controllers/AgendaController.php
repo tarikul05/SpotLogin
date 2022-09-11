@@ -707,9 +707,9 @@ class AgendaController extends Controller
 
             //$e['title']="dsadasdasd";
             if ($user->isTeacherAdmin()) {
-                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                $e['title_extend']= 'Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
             } else {
-                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                $e['title_extend']= 'Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
             }
             
             // $e['start'] = "2022-07-05 06:30:00";
