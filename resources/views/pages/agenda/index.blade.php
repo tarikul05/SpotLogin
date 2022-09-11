@@ -389,9 +389,9 @@ admin_main_style.css
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sis_paying" name="sis_paying">
-                                                                    <option value="0">Coming Soon</option>
-                                                                    <!-- <option value="1">Hourly rate</option>
-                                                                    <option value="2">Price per student</option> -->
+                                                                    <option value="0">No Charge</option>
+                                                                    <option value="1">Hourly rate</option>
+                                                                    <option value="2">Price per student</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -431,11 +431,10 @@ admin_main_style.css
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
-                                                                    <p>COMING SOON</p> 
-                                                                    <!-- <span class="input-group-addon">
+                                                                    <span class="input-group-addon">
                                                                         <i class="fa fa-calendar1"></i>
-                                                                    </span> -->
-                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+                                                                    </span>
+                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -443,11 +442,10 @@ admin_main_style.css
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_sell_div"> 
-                                                                <p>COMING SOON</p>
-                                                                    <!-- <span class="input-group-addon">
+                                                                    <span class="input-group-addon">
                                                                         <i class="fa fa-calendar1"></i>
-                                                                    </span> -->
-                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="hidden" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+                                                                    </span>
+                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -456,11 +454,10 @@ admin_main_style.css
                                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
                                                     <div class="col-sm-4">
                                                         <div class="input-group" id="extra_charges_div"> 
-                                                            <p>COMING SOON</p>
-                                                            <!-- <span class="input-group-addon">
+                                                            <span class="input-group-addon">
                                                                 <i class="fa fa-calendar1"></i>
-                                                            </span> -->
-                                                            <input id="extra_charges" name="extra_charges" type="hidden" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                            </span>
+                                                            <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
                                                         </div>
                                                     </div>
                                                 </div>

@@ -1116,8 +1116,8 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<td style="text-align:right"></td>';
 							}
 							resultHtml += '</tr>';
-							total_buy += parseFloat(value.buy_total);
-							total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
+							total_buy += parseFloat(value.price_buy);
+							total_sell += parseFloat(value.price_sell) + parseFloat(value.costs_1);
 
 							if (value.event_type == 10) {
 								amount_for_disc=amount_for_disc+parseFloat(value.sell_total);

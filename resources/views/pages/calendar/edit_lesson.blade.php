@@ -182,10 +182,9 @@
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0">Coming Soon</option>
-												<!-- <option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
+												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
 												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Hourly rate</option>
-												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option> -->
+												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option>
 											</select>
 										</div>
 									</div>
@@ -196,7 +195,13 @@
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
-													<option value="{{ $lessprice->lesson_price_student }}" {{!empty($lessonData->no_of_students) ? (old('sevent_price', 'price_'.$lessonData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>Group lessons for {{ $lessprice->divider }} students</option>
+													<option value="{{ $lessprice->lesson_price_student }}" {{!empty($lessonData->no_of_students) ? (old('sevent_price', 'price_'.$lessonData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>
+													@if($lessprice->lesson_price_student == 'price_1')
+														Private Group
+													@else
+														Group lessons for {{ $lessprice->divider }} students
+													@endif	
+													</option>
 												@endforeach
 											</select>
 										</div>
@@ -207,7 +212,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency" disabled="">
+											<select class="form-control" id="sprice_currency" name="sprice_currency" readonly>
 												@foreach($currency as $key => $curr)
 													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
 												@endforeach
@@ -282,8 +287,8 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0  }}</td>
-																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}</td>
+																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
+																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
 															</tr>
 															@endforeach
 														</tbody>

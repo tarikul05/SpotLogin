@@ -743,6 +743,7 @@ button#save_btn_more i {
     right: 7%;
     display: flex;
     grid-gap: 15px;
+    z-index: 99;
 }
 @media only screen and (max-width: 768px) {
     .language_page label,

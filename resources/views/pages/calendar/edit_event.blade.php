@@ -180,12 +180,10 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
-
-											<p>COMING SOON</p>
-											<!-- <span class="input-group-addon">
+											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
-											</span> -->
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+											</span>
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
 											<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
 										</div>
 									</div>
@@ -194,11 +192,10 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div"> 
-											<p>COMING SOON</p>
-											<!-- <span class="input-group-addon">
+											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
-											</span> -->
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="hidden" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+											</span>
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
 											<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
 										</div>
 									</div>
@@ -207,12 +204,11 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="extra_charges_div"> 
-											<p>COMING SOON</p>
-											<!-- <span class="input-group-addon">
+											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
-											</span> -->
-											<input id="extra_charges" name="extra_charges" type="hidden" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) / ($eventData->no_of_students); }}">
+											</span>
+											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
+											<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) }}">
 										</div>
 									</div>
 								</div>
@@ -260,8 +256,8 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ ($eventData->price_amount_buy) / ($eventData->no_of_students); }}</td>
-																<td style="text-align:right"> {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
+																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
+																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
 															</tr>
 															@endforeach
 														</tbody>
