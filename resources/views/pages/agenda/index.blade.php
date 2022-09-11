@@ -1978,7 +1978,8 @@
                     if (event.allDay) {
                         $(el).find('div.fc-content').prepend(icon);
                     } else {
-                        $(el).find('.fc-time').prepend(icon);
+                        // $(el).find('.fc-time').prepend(icon);
+                        $(el).find('.fc-time').html(icon);
                     }
                     var icon ='<span class="fa fa-lock txt-orange"></span>';
                     if (event.is_locked == '1'){        
