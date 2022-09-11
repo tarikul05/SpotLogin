@@ -965,6 +965,7 @@ function populate_teacher_lesson() {
 	prev_week = '',
 	data = '',
 	p_person_id = document.getElementById("person_id").value,
+	school_id = document.getElementById("school_id").value,
 	p_month = document.getElementById("smonth").value,
 	p_year = document.getElementById("syear").value,
 	p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
@@ -987,7 +988,7 @@ function populate_teacher_lesson() {
 		resultHtmlFooter = '',
 		resultHtmlDetails = '';
 	//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-	data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date;
+	data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date;
 
 	$.ajax({
 		url: BASE_URL + '/get_teacher_lessons',
