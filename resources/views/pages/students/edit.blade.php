@@ -1006,7 +1006,7 @@ $('#save_btn').click(function (e) {
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-		data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
+		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
 		console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',
