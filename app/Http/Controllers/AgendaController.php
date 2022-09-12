@@ -252,7 +252,7 @@ class AgendaController extends Controller
         );
         try {
 
-
+            $timeZone = $data['zone'];
 
             // $p_app_id=$_SESSION['global_app_id'];
             // $p_school_id=$_SESSION['global_school_id'];
@@ -306,9 +306,10 @@ class AgendaController extends Controller
 
             // $events = array();
             foreach ($eventData as $key => $fetch) {
+                if (in_array($fetch->event_type, [50,51])) continue;
 
-                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);
-                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$data['zone']);
+                $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$timeZone);
+                $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$timeZone);
                 if ($day_diff ==0) {
                     $date_start = strtotime($fetch->date_start);
                     $date_start =$target_start_date.' '.date('H:i:s', $date_start);
@@ -333,8 +334,8 @@ class AgendaController extends Controller
                     // $date_end = strtotime($fetch->date_end);
                     // $date_end =$target_start_date.' '.date('H:i:s', $date_end);
                 }
-                $date_start = $this->formatDateTimeZone($date_start, 'long', $data['zone'],'UTC',);
-                $date_end = $this->formatDateTimeZone($date_end, 'long',$data['zone'],'UTC');
+                $date_start = $this->formatDateTimeZone($date_start, 'long', $timeZone,'UTC',);
+                $date_end = $this->formatDateTimeZone($date_end, 'long',$timeZone,'UTC');
                 $data = [
                     'title' => $fetch->title,
                     'school_id' => $fetch->school_id,
@@ -528,6 +529,7 @@ class AgendaController extends Controller
 
             $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
             $student_name ='';
+            $first_student_name ='';
             $i=0;
             foreach($eventDetailsStudentId as $std){
                 // $student = Student::find($std['student_id']);
@@ -539,30 +541,48 @@ class AgendaController extends Controller
                         } else {
                             $student_name .=',';
                         }
+                    }else{
+                        $first_student_name = $schoolStudent->nickname;
                     }
                     // $student_name .= $student->firstname;
                     $student_name .= $schoolStudent->nickname;
                     $i++;
                 }
             }
+
+
 			$format_title = '';
-			if (!empty($e['title'])) {
-				$format_title =':'.$e['title'];
-			}
+
+
             if ($fetch->event_type==50) { //coach time off
+                $format_title = $e['event_type_name']; 
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'].''.$format_title;
+                    $e['tooltip']=$e['event_type_name'];
+                    $e['title'] = $e['event_type_name'];
                 } else {
-                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'];
+                    $e['tooltip']=$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'];
+                    $e['title']=$e['event_type_name'].' '.$e['teacher_name'];
                 }
             }elseif ($fetch->event_type==51) { //student time off
-                $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name;
-            }else{
+                $e['title']= $e['event_type_name'].' '.$student_name;
+                $e['tooltip']=$e['event_type_name'].' <br /> Students: '.$student_name;
+            }else{ // lession and event type
+                $e['title']= $e['event_type_name'].' '.$first_student_name;
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=' Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
                 } else {
-                    $e['tooltip']=$e['event_type_name'].''.$format_title.' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=' Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                 }
+
+                if ($fetch->duration_minutes > 60) {
+                    $e['title'] = '';
+                    if ($user->isTeacherAdmin()) {
+                        $e['title_extend']= 'Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    } else {
+                        $e['title_extend']= ' Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    }
+                }
+                
             }
             
 
@@ -702,22 +722,8 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
 
             $e['action_type'] = $action_type;
-            // $e['duration_minutes'] = 90;
-
-            //$e['title']="dsadasdasd";
-            if ($user->isTeacherAdmin()) {
-                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
-            } else {
-                $e['title_extend']=$e['event_type_name'].''.$format_title .' <br /> Teacher: '.$e['teacher_name'].' <br /> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
-            }
             
-            // $e['start'] = "2022-07-05 06:30:00";
-            // $e['end'] = "2022-07-05 07:30:00";
-			$format_title = $e['teacher_name'];
-			if (!empty($e['title'])) {
-				$format_title = $e['title'];
-			}
-			$e['title']= $e['event_type_name'].' '.$format_title;
+            
             array_push($events, $e);
         }
 
