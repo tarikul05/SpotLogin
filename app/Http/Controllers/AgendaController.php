@@ -582,8 +582,9 @@ class AgendaController extends Controller
                         $e['title_extend']= ' Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                 }
-                
             }
+
+            $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
             
 
             $e['content'] = ($e['cours_name']);
