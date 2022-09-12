@@ -527,11 +527,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         
-            <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+            <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
                 <div class="modal-dialog EventModalClass" id="EventModalWin">
                     <div class="modal-content">
                         <div class="modal-body text-center p-4">                    
-                            <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
@@ -2075,10 +2075,11 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
                     }
                     else {
-                        $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        $('#event_modal_title').html(event.event_type_name+'<br/> Time : '+stime+'-'+etime+'<br/> '+event.title_for_modal); 
                     }
                     
                     
