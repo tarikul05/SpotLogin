@@ -24,7 +24,6 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <!-- end the assets area -->
-admin_main_style.css
 @endsection
 
 @section('content')
@@ -528,11 +527,11 @@ admin_main_style.css
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         
-            <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+            <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
                 <div class="modal-dialog EventModalClass" id="EventModalWin">
                     <div class="modal-content">
                         <div class="modal-body text-center p-4">                    
-                            <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
@@ -587,6 +586,12 @@ admin_main_style.css
     var user_role=document.getElementById("user_role").value;
     var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
+
+
+
+    var currentTimezone = document.getElementById("zone").value;
+    var zone = document.getElementById("zone").value;
+    document.getElementById("zone").value = zone;
 
     var json_events = @json($events);
 
@@ -665,15 +670,10 @@ admin_main_style.css
     }  
     
 
-    var currentTimezone = document.getElementById("zone").value;
-    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    //var zone =getTimeZone();
-    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    var zone = document.getElementById("zone").value;
-    document.getElementById("zone").value = zone;
+    
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -799,6 +799,7 @@ admin_main_style.css
             DownloadEventsICS('PersonnelEvents');
         })
 		
+        $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
 		
 	}); //ready
 
@@ -887,15 +888,16 @@ admin_main_style.css
     .on('changeDate', function(ev){
         
         var dt=$(this).datetimepicker('getDate');
-        
         var jsDate = $(this).datetimepicker('getDate');
-        if (jsDate !== null) { // if any date selected in datepicker
-            jsDate instanceof Date; // -> true
-            jsDate.getDate();
-            jsDate.getMonth();
-            var month = jsDate.getMonth() + 1;   
-            jsDate.getFullYear();
-            dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+
+        if (dt !== null) { // if any date selected in datepicker
+            // jsDate instanceof Date; // -> true
+            // jsDate.getDate();
+            // jsDate.getMonth();
+            // var month = jsDate.getMonth() + 1; 
+            // jsDate.getFullYear();
+            // dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+            dt = moment(dt).format("YYYY-MM-DD")
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
         }
@@ -933,10 +935,10 @@ admin_main_style.css
         //getFreshEvents('CurrentListView');
        // CallListView();	  
         
-		console.log('lllll----------------')
+		// console.log('lllll----------------')
           
         getCurrentListFreshEvents();
-        console.log('lllll----------------')
+        // console.log('lllll----------------')
 	});
     
     $('#list_button').on('click', function() {
@@ -1976,7 +1978,8 @@ admin_main_style.css
                     if (event.allDay) {
                         $(el).find('div.fc-content').prepend(icon);
                     } else {
-                        $(el).find('.fc-time').prepend(icon);
+                        // $(el).find('.fc-time').prepend(icon);
+                        $(el).find('.fc-time').html(icon);
                     }
                     var icon ='<span class="fa fa-lock txt-orange"></span>';
                     if (event.is_locked == '1'){        
@@ -2072,10 +2075,11 @@ admin_main_style.css
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
                     }
                     else {
-                        $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        $('#event_modal_title').html(event.event_type_name+'<br/> Time : '+stime+'-'+etime+'<br/> '+event.title_for_modal); 
                     }
                     
                     
@@ -2879,7 +2883,7 @@ admin_main_style.css
             },   //success
             error: function(ts) { 
                 // alert(ts.responseText)
-                errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
+                errorModalCall('Someting went wrong on copy events' + GetAppMessage('error_message_text'));
                 }
         }); //ajax-type
         return false;

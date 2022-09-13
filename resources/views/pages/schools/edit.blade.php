@@ -4,6 +4,8 @@
 <!-- datetimepicker -->
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
@@ -172,7 +174,7 @@
 										class="col-lg-3 col-sm-3 text-left">{{ __('Timezone')}}:</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" name="timezone" id="timezone">
+												<select class="form-control selectpicker" name="timezone" data-live-search="true" id="timezone">
 													<option value="">Select</option>
 													@foreach ($timezones as $key => $value)
 														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>

@@ -58,7 +58,7 @@ class SendEmailInvitation extends Command
         if (!empty($schools)) {
             foreach ($schools as $school) {
                 $schoolId = $school->id;
-                $schoolStudentData = SchoolStudent::where(['is_sent_invite' => 1, 'school_id' => $schoolId])->get();
+                $schoolStudentData = SchoolStudent::where(['is_sent_invite' => 0, 'school_id' => $schoolId])->get();
                 if (!empty($schoolStudentData)) {
                     \Log::info(get_class($this) . ': school '.$school->school_name.' ');
                     foreach ($schoolStudentData as $schoolStudent) {
@@ -71,7 +71,7 @@ class SendEmailInvitation extends Command
                         }
                     }
                 }
-                $schoolTeacherData = SchoolTeacher::where(['is_sent_invite' => 1, 'school_id' => $schoolId])->get();
+                $schoolTeacherData = SchoolTeacher::where(['is_sent_invite' => 0, 'school_id' => $schoolId])->get();
                 if (!empty($schoolTeacherData)) {
                     \Log::info(get_class($this) . ': school '.$school->school_name.' ');
                     foreach ($schoolTeacherData as $schoolTeacher) {
