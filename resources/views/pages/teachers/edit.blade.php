@@ -535,8 +535,8 @@
 								<div class="col-sm-8">
 									<fieldset>
 										<div class="profile-image-cropper responsive">
-										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
-											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
+										<?php if (!empty($teacher->profileImage->path_name)): ?>
+											<img id="profile_image_user_account" src="{{ $teacher->profileImage->path_name }}"
 													height="128" width="128" class="img-circle"
 													style="margin-right:10px;">
 										<?php else: ?>
@@ -875,6 +875,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('user_id', user_id);
+	formData.append('teacher_id', {{ $teacher->id }});
 	
 	let loader = $('#pageloader');
 	loader.show("fast");
@@ -916,7 +917,7 @@ function DeleteProfileImage() {
 	let loader = $('#pageloader');
 	$.ajax({
 		url: BASE_URL + '/delete-teacher-photo',
-		data: 'user_id=' + user_id,
+		data: 'teacher_id=' + {{ $teacher->id }},
 		type: 'POST',
 		dataType: 'json',
 		beforeSend: function (xhr) {

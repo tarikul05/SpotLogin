@@ -120,6 +120,14 @@ class Teacher extends BaseModel
         return $this->morphOne(User::class, 'personable','person_type', 'person_id');
     }
 
+    /**
+     * Get the user for the News.
+    */
+    public function profileImage()
+    {
+        return $this->belongsTo(AttachedFile::class, 'profile_image_id', 'id');
+    }
+
      /**
      * Get the schools for the teacher.
      */

@@ -896,7 +896,8 @@ class TeachersController extends Controller
         );
 
         try{
-            $user = User::find($data['user_id']);
+            $teacher = Teacher::find($data['teacher_id']);
+            $imageId = null;
             if($request->file('profile_image_file'))
             {
 
@@ -905,13 +906,13 @@ class TeachersController extends Controller
                 $extension = $image->getClientOriginalExtension();
                 if($image->getSize()>0)
                 {
-                  list($path, $imageNewName) = $this->__processImg($image,'UserImage',$user);
+                  list($path, $imageNewName) = $this->__processImg($image,'TeacherImage',$teacher);
 
                   if (!empty($path)) {
                     $fileData = [
                       'visibility' => 1,
                       'file_type' =>'image',
-                      'title' => $user->username,
+                      'title' => $teacher->full_name,
                       'path_name' =>$path,
                       'file_name' => $imageNewName,
                       'extension'=>$extension,
@@ -921,22 +922,22 @@ class TeachersController extends Controller
                     $attachedImage = AttachedFile::create($fileData);
 
                     $data['profile_image_id'] = $attachedImage->id;
+                    $imageId = $attachedImage->id;
 
                   }
                 }
             }
 
-            if ($user->update($data)) {
+            if ($teacher->update(['profile_image_id'=>$imageId])) {
                 $result = array(
                   "status"     => 1,
-                  "file_id" => $user->profile_image_id,
+                  "file_id" => $teacher->profile_image_id,
                   "image_file" => $path,
                   'message' => __('Successfully Changed Profile image')
                 );
             }
 
         } catch (\Exception $e) {
-            //return error message
             $result['message'] = __('Internal server error');
         }
         return response()->json($result);
@@ -954,28 +955,28 @@ class TeachersController extends Controller
     {
         $authUser = $request->user();
         $data = $request->all();
-        $user = User::find($data['user_id']);
+        $teacher = Teacher::find($data['teacher_id']);
         $result = array(
           'status' => 'failed',
           'message' => __('failed to remove image'),
         );
         try{
-          $path_name =  $user->profileImage->path_name;
+          $path_name =  $teacher->profileImage->path_name;
           $file = str_replace(URL::to('').'/uploads/','',$path_name);
 
           $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
           if(file_exists($storagePath.$file)) unlink($storagePath.$file);
-          AttachedFile::find($user->profileImage->id)->delete();
-          $data['profile_image_id'] =null;
-          if ($user->update($data)) {
+          AttachedFile::find($teacher->profileImage->id)->delete();
+          if ($teacher->update(['profile_image_id'=>null])) {
             $result = array(
               "status"     => 'success',
-              'message' => __('Successfully Changed Profile image')
+              'message' => __('Successfully removed profile picture')
             );
           }
         }
         catch (\Exception $e) {
           //return error message
+            dd($e);
           $result['message'] = __('Internal server error');
         }
         return response()->json($result);
