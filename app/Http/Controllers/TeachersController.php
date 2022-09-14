@@ -137,6 +137,7 @@ class TeachersController extends Controller
         try{
             if ($request->isMethod('post')){
                 $alldata = $request->all();
+                $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
                 // dd($alldata);
                 if (!empty($alldata['user_id'])) {
                     
@@ -150,13 +151,13 @@ class TeachersController extends Controller
                             'has_user_account'=> 1 ,
                             'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                             'nickname'=> $alldata['nickname'],
-                            // 'is_active'=> 0,
+                            'is_sent_invite'=>$sentInvite,
                             'is_teacher'=> 1,
                             'bg_color_agenda'=> $alldata['bg_color_agenda'],
                         ];
                         $teacher->schools()->attach($schoolId,$relationalData);
                         // notify user by email about new Teacher role
-                        if (config('global.email_send') == 1) {
+                        if ((config('global.email_send') == 1) && ($sentInvite == 1)) {
                             $data = [];
                             $data['email'] = $user->email;
                             $data['username'] = $data['name'] = $user->username;
@@ -210,16 +211,14 @@ class TeachersController extends Controller
                     ];
                     $teacher = Teacher::create($teacherData);
                     // $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
-                    
-                    $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
 
                     $relationalData = [
                         'role_type'=>$alldata['role_type'],
                         'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
                         'comment' => isset($alldata['comment']) ? $alldata['comment'] : '',
                         'nickname'=> $alldata['nickname'],
-                        'is_teacher'=> $sentInvite,
-                        'is_sent_invite'=> 1,
+                        'is_teacher'=> 1,
+                        'is_sent_invite'=> $sentInvite,
                         'bg_color_agenda'=> $alldata['bg_color_agenda'],
                     ];
                     $teacher->save();
