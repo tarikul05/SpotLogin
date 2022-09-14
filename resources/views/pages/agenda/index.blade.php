@@ -3266,7 +3266,7 @@ $('#add_lesson').on('submit', function(e) {
                     var errMssg = 'Select student';
                     $('.student_list').addClass('error');
                 }else{
-                    var errMssg = '';
+                    //var errMssg = '';
                     $('.student_list').removeClass('error');
                 }
             }
@@ -3310,6 +3310,7 @@ $('#add_lesson').on('submit', function(e) {
     }
 
     if(errMssg == ""){
+        // console.log("hello");
         $.ajax({
             url: page_action,
             async: false, 
