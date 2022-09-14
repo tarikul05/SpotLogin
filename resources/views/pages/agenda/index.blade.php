@@ -906,17 +906,14 @@
     //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
 	$('#btn_prev').on('click', function() {
         $('#calendar').fullCalendar('prev');
-        hideExtraRowInMonthView()
 	});
 
 	$('#btn_today').on('click', function() {
         $('#calendar').fullCalendar('today');
-        hideExtraRowInMonthView()        
 	});
 
 	$('#btn_next').on('click', function() {
         $('#calendar').fullCalendar('next');
-        hideExtraRowInMonthView()
 	});
 
 	$('#btn_month').on('click', function() {
@@ -952,7 +949,7 @@
     function hideExtraRowInMonthView() {
         setTimeout(function() {
           $("body").find(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
-        }, 1000);
+        }, 500);
         
     }
 
@@ -2487,6 +2484,7 @@
                     $('#calendar').fullCalendar().find('.fc-day-header').show();
                     $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
                 }
+                hideExtraRowInMonthView();
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
