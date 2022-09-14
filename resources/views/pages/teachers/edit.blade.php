@@ -559,7 +559,7 @@
 												</div>
 												<?php //if (!empty($AppUI->profile_image_id)): ?>
 													<div style="margin:5px;">
-														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->user->profile_image_id) ? '' : 'display:none;'}}">
+														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->profile_image_id) ? '' : 'display:none;'}}">
 															<i class="fa fa-trash"></i>
 															<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
 														</a>
