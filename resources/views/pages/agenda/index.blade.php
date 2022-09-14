@@ -799,7 +799,7 @@
             DownloadEventsICS('PersonnelEvents');
         })
 		
-        $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
+        hideExtraRowInMonthView();
 		
 	}); //ready
 
@@ -906,18 +906,22 @@
     //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
 	$('#btn_prev').on('click', function() {
         $('#calendar').fullCalendar('prev');
+        hideExtraRowInMonthView()
 	});
 
 	$('#btn_today').on('click', function() {
-        $('#calendar').fullCalendar('today');        
+        $('#calendar').fullCalendar('today');
+        hideExtraRowInMonthView()        
 	});
 
 	$('#btn_next').on('click', function() {
         $('#calendar').fullCalendar('next');
+        hideExtraRowInMonthView()
 	});
 
 	$('#btn_month').on('click', function() {
         $('#calendar').fullCalendar('changeView', 'month');
+        hideExtraRowInMonthView()
 	});
 
 	$('#btn_week').on('click', function() {
@@ -944,6 +948,13 @@
     $('#list_button').on('click', function() {
         CallListView();
 	});
+
+    function hideExtraRowInMonthView() {
+        setTimeout(function() {
+          $("body").find(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
+        }, 700);
+        
+    }
 
     $('body').on('click', 'button.fc-prev-button', function() {
         //alert('prev is clicked, do something');
@@ -1777,6 +1788,11 @@
             //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
+                if (bool) {
+                   
+                }else{
+                    hideExtraRowInMonthView(); 
+                }
 			},
   
             // to customize cell text
