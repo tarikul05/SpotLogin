@@ -26,9 +26,7 @@
         </thead>
         <tbody>
             @foreach($students as $student)
-            @php
-            if ($student->pivot->role_type == 'school_admin') continue;
-            @endphp
+            
             <tr>
                 <td>{{ $student->id; }} </td>
                 <td>
