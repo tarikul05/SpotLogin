@@ -799,7 +799,7 @@
             DownloadEventsICS('PersonnelEvents');
         })
 		
-        hideExtraRowInMonthView();
+        $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
 		
 	}); //ready
 
@@ -952,7 +952,7 @@
     function hideExtraRowInMonthView() {
         setTimeout(function() {
           $("body").find(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
-        }, 700);
+        }, 1000);
         
     }
 
