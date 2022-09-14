@@ -53,12 +53,14 @@ class Controller extends BaseController
             'target_path' => [
                 'SchoolLogo' => 'photo/school_photo',
                 'UserImage' => 'photo/user_photo',
-                'StudentImage' => 'photo/student_photo'
+                'StudentImage' => 'photo/student_photo',
+                'TeacherImage' => 'photo/teacher_photo'
             ],
             'target_url' => [
                 'SchoolLogo' => URL::to('').'/uploads/photo/school_photo/',
                 'UserImage' => URL::to('').'/uploads/photo/user_photo/',
-                'StudentImage' => URL::to('').'/uploads/photo/student_photo/'
+                'StudentImage' => URL::to('').'/uploads/photo/student_photo/',
+                'TeacherImage' => URL::to('').'/uploads/photo/teacher_photo/'
             ],
         ];
           

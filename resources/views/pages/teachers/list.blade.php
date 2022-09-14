@@ -32,8 +32,8 @@
             <tr>
                 <td>{{ $teacher->id; }} </td>
                 <td>
-                    <?php if (!empty($teacher->user->profileImage->path_name)): ?>
-                        <img src="{{ $teacher->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php if (!empty($teacher->profileImage->path_name)): ?>
+                        <img src="{{ $teacher->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php else: ?>
                         <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                     <?php endif; ?>
