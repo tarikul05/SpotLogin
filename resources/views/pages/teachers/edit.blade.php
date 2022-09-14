@@ -727,73 +727,73 @@ $(document).ready(function(){
 		defaultDate: moment()
 	});
 	$('#billing_period_end_date').val(moment().format('DD/MM/YYYY'));
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	// CKEDITOR.replace( "body_text", {
+	// 	customConfig: '/ckeditor/config_email.js',
+	// 	height: 300
+	// 	,extraPlugins: 'Cy-GistInsert'
+	// 	,extraPlugins: 'AppFields'
+	// });
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
 
 
-	$("#send_email_btn").click(function (e) {
-		var user_id = $("#user_id").val();
-		var email_to = $("#email_to_id").val(),
-				school_name = $("#school_name").val(),
-				email_body  = CKEDITOR.instances["body_text"].getData()
-		email_body = email_body.replace(/'/g, "''");
-		email_body = email_body.replace(/&/g, "<<~>>");
-		let loader = $('#pageloader');
-    	loader.show();
+	// $("#send_email_btn").click(function (e) {
+	// 	var user_id = $("#user_id").val();
+	// 	var email_to = $("#email_to_id").val(),
+	// 			school_name = $("#school_name").val(),
+	// 			email_body  = CKEDITOR.instances["body_text"].getData()
+	// 	email_body = email_body.replace(/'/g, "''");
+	// 	email_body = email_body.replace(/&/g, "<<~>>");
+	// 	let loader = $('#pageloader');
+ //    	loader.show();
 
-		var teacherUserForm = document.getElementById("teacherUserForm");
-		var formdata = $("#teacherUserForm").serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	// 	var teacherUserForm = document.getElementById("teacherUserForm");
+	// 	var formdata = $("#teacherUserForm").serializeArray();
+	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
 		
-		formdata.push({
-				"name": "_token",
-				"value": csrfToken
-		});
-		formdata.push({
-				"name": "user_id",
-				"value": user_id
-		});
-		formdata.push({
-				"name": "email_body",
-				"value": email_body
-		});
-		formdata.push({
-				"name": "school_name",
-				"value": school_name
-		});
-		//console.log(formdata);
+	// 	formdata.push({
+	// 			"name": "_token",
+	// 			"value": csrfToken
+	// 	});
+	// 	formdata.push({
+	// 			"name": "user_id",
+	// 			"value": user_id
+	// 	});
+	// 	formdata.push({
+	// 			"name": "email_body",
+	// 			"value": email_body
+	// 	});
+	// 	formdata.push({
+	// 			"name": "school_name",
+	// 			"value": school_name
+	// 	});
+	// 	//console.log(formdata);
 
-		$.ajax({
-			url: BASE_URL + '/teacher_email_send',
-			data: formdata,
-			type: 'POST',
-			dataType: 'json',
-			async: false,
-			encode: true,
-			success: function(data) {
-				loader.hide();
-				if (data.status) {
-						successModalCall("{{ __('email_sent')}}");
-				} else {
-						errorModalCall(data.msg);
-				}
+	// 	$.ajax({
+	// 		url: BASE_URL + '/teacher_email_send',
+	// 		data: formdata,
+	// 		type: 'POST',
+	// 		dataType: 'json',
+	// 		async: false,
+	// 		encode: true,
+	// 		success: function(data) {
+	// 			loader.hide();
+	// 			if (data.status) {
+	// 					successModalCall("{{ __('email_sent')}}");
+	// 			} else {
+	// 					errorModalCall(data.msg);
+	// 			}
 
-			}, // sucess
-			error: function(ts) {
-				loader.hide();
-				errorModalCall('error_message_text');
-			}
-		});
+	// 		}, // sucess
+	// 		error: function(ts) {
+	// 			loader.hide();
+	// 			errorModalCall('error_message_text');
+	// 		}
+	// 	});
 	
-	});    //contact us button click 
+	// });    //contact us button click 
 
 
 
