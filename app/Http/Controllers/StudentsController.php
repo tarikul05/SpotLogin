@@ -350,6 +350,7 @@ class StudentsController extends Controller
         $authUser = $user = Auth::user();
         // $authUser = $request->user();
         $alldata = $request->all();
+        // dd($student);
 
         if ($user->isSuperAdmin()) {
             $schoolId = $alldata['school_id'];
@@ -422,80 +423,9 @@ class StudentsController extends Controller
                         $studentData['profile_image_id'] =null;
                     }
                 }
-                $user = User::where(['person_id'=>$student->id])->first();
 
-
-                $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
-                // if (!empty($alldata['email'])) {
-                //     if (!$user) {
-                //         $usersData = [
-                //             'person_id' => $student->id,
-                //             'person_type' =>'App\Models\Student',
-                //             'username' =>$alldata['nickname'],
-                //             'lastname' => $alldata['lastname'],
-                //             'middlename'=>'',
-                //             'firstname'=>$alldata['firstname'],
-                //             'email'=>$alldata['email'],
-                //             // 'password'=>$alldata['password'],
-                //             'password'=>Str::random(10),
-                //             'is_mail_sent'=>0,
-                //             'is_active'=>1,
-                //             'is_firstlogin'=>0
-                //         ];
-                //         $user = User::create($usersData);
-                //         $user->save();
-                //         // notify user by email about new Teacher role
-                //         if (config('global.email_send') == 1) {
-                //             $data = [];
-                //             $data['email'] = $user->email;
-                //             $data['username'] = $data['name'] = $user->username;
-
-                //             $verifyUser = [
-                //                 'school_id' => $alldata['school_id'],
-                //                 'person_id' => $student->id,
-                //                 'person_type' => 'App\Models\Student',
-                //                 'token' => Str::random(10),
-                //                 'token_type' => 'VERIFY_SIGNUP',
-                //                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                //             ];
-                //             $verifyUser = VerifyToken::create($verifyUser);
-                //             $data['token'] = $verifyUser->token;
-                //             $data['url'] = route('add.verify.email',$data['token']); 
-
-                //             if (!$this->emailSend($data,'sign_up_confirmation_email')) {
-                //                 return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                //             }
-                //         }
-                //     }else {
-                //         if ($exist->email != $alldata['email']) {
-                //             // notify user by email about new Teacher role
-                //             if (config('global.email_send') == 1) {
-                //                 $data = [];
-                //                 $data['email'] = $alldata['email'];
-                //                 $user->update($data);
-                //                 $data['username'] = $data['name'] = $user->username;
-
-                //                 $verifyUser = [
-                //                     'school_id' => $alldata['school_id'],
-                //                     'person_id' => $student->id,
-                //                     'person_type' => 'App\Models\Student',
-                //                     'token' => Str::random(10),
-                //                     'token_type' => 'VERIFY_SIGNUP',
-                //                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
-                //                 ];
-                //                 $verifyUser = VerifyToken::create($verifyUser);
-                //                 $data['token'] = $verifyUser->token;
-                //                 $data['url'] = route('add.verify.email',$data['token']); 
-
-                //                 if (!$this->emailSend($data,'sign_up_confirmation_email')) {
-                //                     return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-                //                 }
-                //             }
-                //         }
-                //     } 
-                // }
                 Student::where('id', $student->id)->update($studentData);
-                $schoolStudentData =SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->first();
+                $schoolStudentData =SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
                 $schoolStudent = [
                     'student_id' => $student->id,
                     'school_id' => $schoolId,
@@ -513,7 +443,7 @@ class StudentsController extends Controller
                     'is_active' => isset($alldata['is_active']) ? $alldata['is_active'] : $schoolStudentData->is_active,
                 ];
 
-                SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);
+                SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->update($schoolStudent);
             }
             DB::commit();
             return redirect()->back()->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
