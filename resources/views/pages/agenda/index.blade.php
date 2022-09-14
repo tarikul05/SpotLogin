@@ -909,7 +909,7 @@
 	});
 
 	$('#btn_today').on('click', function() {
-        $('#calendar').fullCalendar('today');        
+        $('#calendar').fullCalendar('today');
 	});
 
 	$('#btn_next').on('click', function() {
@@ -918,6 +918,7 @@
 
 	$('#btn_month').on('click', function() {
         $('#calendar').fullCalendar('changeView', 'month');
+        hideExtraRowInMonthView()
 	});
 
 	$('#btn_week').on('click', function() {
@@ -944,6 +945,13 @@
     $('#list_button').on('click', function() {
         CallListView();
 	});
+
+    function hideExtraRowInMonthView() {
+        setTimeout(function() {
+          $("body").find(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
+        }, 500);
+        
+    }
 
     $('body').on('click', 'button.fc-prev-button', function() {
         //alert('prev is clicked, do something');
@@ -1777,6 +1785,11 @@
             //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
+                if (bool) {
+                   
+                }else{
+                    hideExtraRowInMonthView(); 
+                }
 			},
   
             // to customize cell text
@@ -2471,6 +2484,7 @@
                     $('#calendar').fullCalendar().find('.fc-day-header').show();
                     $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
                 }
+                hideExtraRowInMonthView();
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -3250,7 +3264,7 @@ $('#add_lesson').on('submit', function(e) {
                     var errMssg = 'Select student';
                     $('.student_list').addClass('error');
                 }else{
-                    var errMssg = '';
+                    //var errMssg = '';
                     $('.student_list').removeClass('error');
                 }
             }
@@ -3294,6 +3308,7 @@ $('#add_lesson').on('submit', function(e) {
     }
 
     if(errMssg == ""){
+        // console.log("hello");
         $.ajax({
             url: page_action,
             async: false, 
