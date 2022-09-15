@@ -82,12 +82,12 @@ class TeachersImport implements ToModel, WithHeadingRow
         ];
         $schoolTeacherData = [
             'school_id' => $this->school_id,
-            'role_type' => 'teachers_minimum',
+            'role_type' => 'teachers_all',
             'nickname' => $data['nickname'],
             'bg_color_agenda'=>$data['bg_color_agenda'],
             'comment' => $data['comment'],
             'is_active' => 1,
-            'is_sent_invite' => 0,
+            // 'is_sent_invite' => 0,
         ];
 Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
         $teacherExist = Teacher::where(['email'=> $data['email']])->first();
