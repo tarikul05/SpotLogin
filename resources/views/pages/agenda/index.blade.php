@@ -2010,7 +2010,7 @@
                     }
                     if (document.getElementById("view_mode").value != 'month'){
                         if (event.duration_minutes > 60){        
-                            var ooo= icon+''+event.title_extend;
+                            var ooo= event.title_extend;
                             $(el).find('div.fc-content').append(ooo);
                         }
                     }
