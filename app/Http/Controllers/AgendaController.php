@@ -570,7 +570,7 @@ class AgendaController extends Controller
                 if (empty($e['title'])) {
                     $e['title']= $e['event_type_name'].' '.$first_student_name;
                 }else{
-                    $e['title']= $e['event_type_name'].' '.$e['title'];
+                    $e['title']= $event_types[$e['event_type']].' '.$e['title'];
                 }
                 
                 if ($user->isTeacherAdmin()) {
