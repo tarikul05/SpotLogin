@@ -82,7 +82,7 @@ class TeachersImport implements ToModel, WithHeadingRow
         ];
         $schoolTeacherData = [
             'school_id' => $this->school_id,
-            'role_type' => 'teachers_minimum',
+            'role_type' => 'teachers_all',
             'nickname' => $data['nickname'],
             'bg_color_agenda'=>$data['bg_color_agenda'],
             'comment' => $data['comment'],
