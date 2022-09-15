@@ -660,7 +660,7 @@ class TeachersController extends Controller
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];
-                    $data['is_sent_invite'] = 0;
+                    $data['is_sent_invite'] = 1;
                     $alldata->update($data);
                     
                     //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
