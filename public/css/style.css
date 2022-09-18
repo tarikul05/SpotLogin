@@ -688,6 +688,9 @@ button#changer_btn {
 .fc-time {
     font-size: 85%;
 }
+.fc-time-grid-event .fc-time {
+    display: inline;
+}
 span.etransfer_acc {
     color: red;
     margin-top: 7px;
@@ -738,12 +741,14 @@ button#save_btn_more i {
     padding-right: 10px;
 }
 #edit_lesson .btn_area {
-    position: absolute;
-    top: 178px;
+   position: absolute;
+    top: 130px;
     right: 7%;
     display: flex;
     grid-gap: 15px;
     z-index: 99;
+    grid-gap: 15px;
+    z-index: 22;
 }
 @media only screen and (max-width: 768px) {
     .language_page label,
@@ -870,6 +875,12 @@ button#save_btn_more i {
     }
     .btn_area {
         z-index: 9;
+    }
+    #edit_lesson .btn_area{
+        top: 140px;
+    }
+    #edit_lesson .btn.btn-theme-outline{
+        display: none;
     }
     #all_day_div111 label {
         float: left;

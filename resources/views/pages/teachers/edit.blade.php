@@ -535,8 +535,8 @@
 								<div class="col-sm-8">
 									<fieldset>
 										<div class="profile-image-cropper responsive">
-										<?php if (!empty($teacher->user->profileImage->path_name)): ?>
-											<img id="profile_image_user_account" src="{{ $teacher->user->profileImage->path_name }}"
+										<?php if (!empty($teacher->profileImage->path_name)): ?>
+											<img id="profile_image_user_account" src="{{ $teacher->profileImage->path_name }}"
 													height="128" width="128" class="img-circle"
 													style="margin-right:10px;">
 										<?php else: ?>
@@ -559,7 +559,7 @@
 												</div>
 												<?php //if (!empty($AppUI->profile_image_id)): ?>
 													<div style="margin:5px;">
-														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->user->profile_image_id) ? '' : 'display:none;'}}">
+														<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($teacher->profile_image_id) ? '' : 'display:none;'}}">
 															<i class="fa fa-trash"></i>
 															<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
 														</a>
@@ -727,73 +727,73 @@ $(document).ready(function(){
 		defaultDate: moment()
 	});
 	$('#billing_period_end_date').val(moment().format('DD/MM/YYYY'));
-	CKEDITOR.replace( "body_text", {
-		customConfig: '/ckeditor/config_email.js',
-		height: 300
-		,extraPlugins: 'Cy-GistInsert'
-		,extraPlugins: 'AppFields'
-	});
+	// CKEDITOR.replace( "body_text", {
+	// 	customConfig: '/ckeditor/config_email.js',
+	// 	height: 300
+	// 	,extraPlugins: 'Cy-GistInsert'
+	// 	,extraPlugins: 'AppFields'
+	// });
 	$('#delete_profile_image').click(function (e) {
 		DeleteProfileImage();      // refresh lesson details for billing
 	})
 
 
-	$("#send_email_btn").click(function (e) {
-		var user_id = $("#user_id").val();
-		var email_to = $("#email_to_id").val(),
-				school_name = $("#school_name").val(),
-				email_body  = CKEDITOR.instances["body_text"].getData()
-		email_body = email_body.replace(/'/g, "''");
-		email_body = email_body.replace(/&/g, "<<~>>");
-		let loader = $('#pageloader');
-    	loader.show();
+	// $("#send_email_btn").click(function (e) {
+	// 	var user_id = $("#user_id").val();
+	// 	var email_to = $("#email_to_id").val(),
+	// 			school_name = $("#school_name").val(),
+	// 			email_body  = CKEDITOR.instances["body_text"].getData()
+	// 	email_body = email_body.replace(/'/g, "''");
+	// 	email_body = email_body.replace(/&/g, "<<~>>");
+	// 	let loader = $('#pageloader');
+ //    	loader.show();
 
-		var teacherUserForm = document.getElementById("teacherUserForm");
-		var formdata = $("#teacherUserForm").serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	// 	var teacherUserForm = document.getElementById("teacherUserForm");
+	// 	var formdata = $("#teacherUserForm").serializeArray();
+	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
 		
-		formdata.push({
-				"name": "_token",
-				"value": csrfToken
-		});
-		formdata.push({
-				"name": "user_id",
-				"value": user_id
-		});
-		formdata.push({
-				"name": "email_body",
-				"value": email_body
-		});
-		formdata.push({
-				"name": "school_name",
-				"value": school_name
-		});
-		//console.log(formdata);
+	// 	formdata.push({
+	// 			"name": "_token",
+	// 			"value": csrfToken
+	// 	});
+	// 	formdata.push({
+	// 			"name": "user_id",
+	// 			"value": user_id
+	// 	});
+	// 	formdata.push({
+	// 			"name": "email_body",
+	// 			"value": email_body
+	// 	});
+	// 	formdata.push({
+	// 			"name": "school_name",
+	// 			"value": school_name
+	// 	});
+	// 	//console.log(formdata);
 
-		$.ajax({
-			url: BASE_URL + '/teacher_email_send',
-			data: formdata,
-			type: 'POST',
-			dataType: 'json',
-			async: false,
-			encode: true,
-			success: function(data) {
-				loader.hide();
-				if (data.status) {
-						successModalCall("{{ __('email_sent')}}");
-				} else {
-						errorModalCall(data.msg);
-				}
+	// 	$.ajax({
+	// 		url: BASE_URL + '/teacher_email_send',
+	// 		data: formdata,
+	// 		type: 'POST',
+	// 		dataType: 'json',
+	// 		async: false,
+	// 		encode: true,
+	// 		success: function(data) {
+	// 			loader.hide();
+	// 			if (data.status) {
+	// 					successModalCall("{{ __('email_sent')}}");
+	// 			} else {
+	// 					errorModalCall(data.msg);
+	// 			}
 
-			}, // sucess
-			error: function(ts) {
-				loader.hide();
-				errorModalCall('error_message_text');
-			}
-		});
+	// 		}, // sucess
+	// 		error: function(ts) {
+	// 			loader.hide();
+	// 			errorModalCall('error_message_text');
+	// 		}
+	// 	});
 	
-	});    //contact us button click 
+	// });    //contact us button click 
 
 
 
@@ -875,6 +875,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('user_id', user_id);
+	formData.append('teacher_id', {{ $teacher->id }});
 	
 	let loader = $('#pageloader');
 	loader.show("fast");
@@ -916,7 +917,7 @@ function DeleteProfileImage() {
 	let loader = $('#pageloader');
 	$.ajax({
 		url: BASE_URL + '/delete-teacher-photo',
-		data: 'user_id=' + user_id,
+		data: 'teacher_id=' + {{ $teacher->id }},
 		type: 'POST',
 		dataType: 'json',
 		beforeSend: function (xhr) {

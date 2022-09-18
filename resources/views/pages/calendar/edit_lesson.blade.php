@@ -10,6 +10,11 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<style type="text/css">
+	.alert{
+		top: -30px;
+	}
+</style>
 @endsection
 <!-- Code within resources/views/blade.php -->
 @php

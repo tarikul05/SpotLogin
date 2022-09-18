@@ -115,7 +115,7 @@
 									<div class="col-sm-7">
 										<div class="input-group">
 											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
-											<input class="form-control" id="email" value="{{!empty($relationalData->email) ? old('email', $relationalData->email) : old('email')}}" name="email" type="text">
+											<input class="form-control" id="email" value="{{!empty($student->email) ? $student->email : old('email')}}" name="email" type="text">
 										</div>
 									</div>
 								</div>

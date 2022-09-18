@@ -524,11 +524,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
         
-            <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+            <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
                 <div class="modal-dialog EventModalClass" id="EventModalWin">
                     <div class="modal-content">
                         <div class="modal-body text-center p-4">                    
-                            <h4 class="light-blue-txt gilroy-bold"><span id="event_modal_title">Title</span></h4>
+                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
@@ -906,7 +906,7 @@
 	});
 
 	$('#btn_today').on('click', function() {
-        $('#calendar').fullCalendar('today');        
+        $('#calendar').fullCalendar('today');
 	});
 
 	$('#btn_next').on('click', function() {
@@ -915,6 +915,7 @@
 
 	$('#btn_month').on('click', function() {
         $('#calendar').fullCalendar('changeView', 'month');
+        hideExtraRowInMonthView()
 	});
 
 	$('#btn_week').on('click', function() {
@@ -941,6 +942,13 @@
     $('#list_button').on('click', function() {
         CallListView();
 	});
+
+    function hideExtraRowInMonthView() {
+        setTimeout(function() {
+          $("body").find(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
+        }, 500);
+        
+    }
 
     $('body').on('click', 'button.fc-prev-button', function() {
         //alert('prev is clicked, do something');
@@ -1774,6 +1782,11 @@
             //allDaySlot: true,
             loading: function(bool) {
 				$('#loading').toggle(bool)
+                if (bool) {
+                   
+                }else{
+                    hideExtraRowInMonthView(); 
+                }
 			},
   
             // to customize cell text
@@ -1994,7 +2007,7 @@
                     }
                     if (document.getElementById("view_mode").value != 'month'){
                         if (event.duration_minutes > 60){        
-                            var ooo= icon+''+event.title_extend;
+                            var ooo= event.title_extend;
                             $(el).find('div.fc-content').append(ooo);
                         }
                     }
@@ -2072,10 +2085,11 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title); 
+                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
                     }
                     else {
-                        $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
+                        $('#event_modal_title').html(event.event_type_name+'<br/> Time : '+stime+'-'+etime+'<br/> '+event.title_for_modal); 
                     }
                     
                     
@@ -2467,6 +2481,7 @@
                     $('#calendar').fullCalendar().find('.fc-day-header').show();
                     $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
                 }
+                hideExtraRowInMonthView();
             },
             error: function(ts) { 
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
@@ -3246,7 +3261,7 @@ $('#add_lesson').on('submit', function(e) {
                     var errMssg = 'Select student';
                     $('.student_list').addClass('error');
                 }else{
-                    var errMssg = '';
+                    //var errMssg = '';
                     $('.student_list').removeClass('error');
                 }
             }
@@ -3290,6 +3305,7 @@ $('#add_lesson').on('submit', function(e) {
     }
 
     if(errMssg == ""){
+        // console.log("hello");
         $.ajax({
             url: page_action,
             async: false, 

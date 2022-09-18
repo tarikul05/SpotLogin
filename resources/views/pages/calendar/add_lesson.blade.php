@@ -5,6 +5,7 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
@@ -346,6 +347,7 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+			$('#end_time').val(recalculate_end_time(moment(time).format('HH:mm'),15));
 			CalcDuration();
 		}
 	});
@@ -371,8 +373,8 @@ $( document ).ready(function() {
 		el_duration = $('#duration');
 		
 			if (el_end.val() < el_start.val()) {
-				$('#end_time').val(el_start.val());
-				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val));
+				$('#end_time').val(recalculate_end_time(el_start.val(),15));
+				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val()));
 			}
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));

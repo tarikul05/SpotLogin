@@ -113,7 +113,7 @@ class SendEmailInvitation extends Command
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];
-                    $data['is_sent_invite'] = 0;
+                    $data['is_sent_invite'] = 1;
                     $alldata->update($data);
                     \Log::info(get_class($this) . ': email sent to '.$person->email.' ');
 
