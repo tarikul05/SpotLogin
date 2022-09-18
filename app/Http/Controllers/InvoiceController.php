@@ -459,6 +459,9 @@ class InvoiceController extends Controller
             $teacherEvents->where('events.teacher_id', $user->person_id);
         } else {
         }
+        $teacherEvents->where('event_details.visibility_id', '>', 0);
+        $teacherEvents->whereNotIn('events.event_type', [100]);
+            
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
         $teacherEvents->whereNull('event_details.buy_invoice_id');
 
@@ -470,7 +473,7 @@ class InvoiceController extends Controller
 
         $teacherEvents->where('events.date_start', '>=', $dateS);
         $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        $teacherEvents->distinct('events.id');
+        $teacherEvents->distinct('event_details.id');
         //$teacherEvents->groupBy('event_details.teacher_id');
 
         //dd($teacherEvents->toSql());
@@ -703,13 +706,15 @@ class InvoiceController extends Controller
             $studentEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('teachers', 'teachers.id', '=', 'events.teacher_id')
+                ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
                 ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-                ->leftJoin('users', 'users.person_id', '=', 'events.teacher_id')
-                ->leftJoin('schools', 'schools.id', '=', 'events.school_id')
+                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
                 //->leftJoin('lesson_prices', 'lesson_prices.event_type', '=', 'events.event_type')
                 ->select(
                     'events.id as event_id',
+                    'event_details.id as event_id1',
                     'events.duration_minutes as duration_minutes',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
@@ -739,7 +744,7 @@ class InvoiceController extends Controller
                 //->selectRaw('count(events.id) as invoice_items')
                 ->where(
                     [
-                        'events.teacher_id' => $p_person_id,
+                        'event_details.teacher_id' => $p_person_id,
                         'event_details.billing_method' => "E",
                         //'event_categories.invoiced_type' => "S",
                         'events.is_active' => 1,
@@ -794,7 +799,7 @@ class InvoiceController extends Controller
 
             $studentEvents->orderBy('events.date_start', 'desc');
             //By
-            $studentEvents->distinct('events.id');
+            $studentEvents->distinct('event_details.id');
             //$studentEvents->groupBy('events.id');
             //dd($studentEvents->toSql());
             $data = $studentEvents->get();
