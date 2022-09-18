@@ -24,7 +24,6 @@
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <!-- end the assets area -->
-admin_main_style.css
 @endsection
 
 @section('content')
@@ -585,6 +584,12 @@ admin_main_style.css
     var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
 
+
+
+    var currentTimezone = document.getElementById("zone").value;
+    var zone = document.getElementById("zone").value;
+    document.getElementById("zone").value = zone;
+
     var json_events = @json($events);
 
    
@@ -662,15 +667,10 @@ admin_main_style.css
     }  
     
 
-    var currentTimezone = document.getElementById("zone").value;
-    //var currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var currentLangCode = 'fr';
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
-    //var zone =getTimeZone();
-    //var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    var zone = document.getElementById("zone").value;
-    document.getElementById("zone").value = zone;
+    
     if ((no_of_teachers == 1) || (user_role == "student")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
@@ -796,6 +796,7 @@ admin_main_style.css
             DownloadEventsICS('PersonnelEvents');
         })
 		
+        $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
 		
 	}); //ready
 
@@ -884,15 +885,16 @@ admin_main_style.css
     .on('changeDate', function(ev){
         
         var dt=$(this).datetimepicker('getDate');
-        
         var jsDate = $(this).datetimepicker('getDate');
-        if (jsDate !== null) { // if any date selected in datepicker
-            jsDate instanceof Date; // -> true
-            jsDate.getDate();
-            jsDate.getMonth();
-            var month = jsDate.getMonth() + 1;   
-            jsDate.getFullYear();
-            dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+
+        if (dt !== null) { // if any date selected in datepicker
+            // jsDate instanceof Date; // -> true
+            // jsDate.getDate();
+            // jsDate.getMonth();
+            // var month = jsDate.getMonth() + 1; 
+            // jsDate.getFullYear();
+            // dt=jsDate.getFullYear()+'-'+month+'-'+jsDate.getDate();
+            dt = moment(dt).format("YYYY-MM-DD")
             $('#calendar').fullCalendar( 'gotoDate', dt);
             
         }
@@ -930,10 +932,10 @@ admin_main_style.css
         //getFreshEvents('CurrentListView');
        // CallListView();	  
         
-		console.log('lllll----------------')
+		// console.log('lllll----------------')
           
         getCurrentListFreshEvents();
-        console.log('lllll----------------')
+        // console.log('lllll----------------')
 	});
     
     $('#list_button').on('click', function() {
@@ -1973,7 +1975,8 @@ admin_main_style.css
                     if (event.allDay) {
                         $(el).find('div.fc-content').prepend(icon);
                     } else {
-                        $(el).find('.fc-time').prepend(icon);
+                        // $(el).find('.fc-time').prepend(icon);
+                        $(el).find('.fc-time').html(icon);
                     }
                     var icon ='<span class="fa fa-lock txt-orange"></span>';
                     if (event.is_locked == '1'){        
@@ -2876,7 +2879,7 @@ admin_main_style.css
             },   //success
             error: function(ts) { 
                 // alert(ts.responseText)
-                errorModalCall('btn_goto_planning:' + GetAppMessage('error_message_text'));
+                errorModalCall('Someting went wrong on copy events' + GetAppMessage('error_message_text'));
                 }
         }); //ajax-type
         return false;

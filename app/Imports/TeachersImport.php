@@ -20,6 +20,9 @@ class TeachersImport implements ToModel, WithHeadingRow
 
     private $school_id;
 
+    private $recordUpdated = 0;
+    private $recordInserted = 0;
+
     public function __construct(int $school_id) 
     {
         $this->school_id = $school_id;
@@ -54,7 +57,11 @@ class TeachersImport implements ToModel, WithHeadingRow
         if (!empty($row['email'])) {
             $this->dataFormate($data);
         }
+    }
 
+    public function getMessage()
+    {
+        return "There is $this->recordInserted record inserted and $this->recordUpdated record updated.";
     }
 
     public function dataFormate($data=[])
@@ -80,7 +87,7 @@ class TeachersImport implements ToModel, WithHeadingRow
             'bg_color_agenda'=>$data['bg_color_agenda'],
             'comment' => $data['comment'],
             'is_active' => 1,
-            'is_sent_invite' => 1,
+            'is_sent_invite' => 0,
         ];
 Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
         $teacherExist = Teacher::where(['email'=> $data['email']])->first();
@@ -93,6 +100,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $schoolTeacherData['teacher_id'] = $teacher->id;
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
                DB::commit(); 
+                ++$this->recordInserted;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 1st condtions in schoolId=".$this->school_id);
@@ -105,6 +113,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $teacherSchool = SchoolTeacher::create($schoolTeacherData);
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
                DB::commit(); 
+                ++$this->recordInserted;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 2nd condtions in schoolId=".$this->school_id);
@@ -116,6 +125,7 @@ Log::info("Import Teachers ".$data['email']." in schoolId=".$this->school_id);
                 $teacher = Teacher::where('id', $teacherExist->id)->update($teacherData);
                 $teacherSchool = SchoolTeacher::where(['teacher_id'=> $teacherExist->id, 'school_id'=> $this->school_id])->update($schoolTeacherData);
                 DB::commit(); 
+                ++$this->recordUpdated;
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Teachers email: ".$data['email']." failed 3rd condtions in schoolId=".$this->school_id);

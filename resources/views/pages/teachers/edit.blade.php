@@ -189,6 +189,19 @@
 										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{($relationalData->role_type == 'teachers_minimum') ? 'checked' : '' }}> Minimum<br></b>
 									</div>
 								</div>
+
+								<!-- <div class="form-group row" >
+										<label class="col-lg-3 col-sm-3 text-left"></label>
+									<div class="col-sm-7">
+										@if(!$teacher->user)
+					                        <form method="post" style="display: inline;" class="form-inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('teacherInvitation',['school'=>$schoolId,'teacher'=>$teacher->id])}}">
+					                          @method('post')
+					                          @csrf
+					                          <button  class="btn btn-warning" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey">{{ __(" Send invitation")}}</i></button>
+					                        </form>
+					                    @endif
+									</div>
+								</div> -->
 								<div class="form-group row" id="sbg_color_agenda_div">
 									<label class="col-lg-3 col-sm-3 text-left" for="sbg_color_agenda" id="sbg_color_agenda_caption">{{__('Agenda Color') }} :</label>
 									<div class="col-sm-2">
