@@ -168,7 +168,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency" disabled="">
+											<select class="form-control" id="sprice_currency" name="sprice_currency">
 												@foreach($currency as $key => $curr)
 													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
 												@endforeach
