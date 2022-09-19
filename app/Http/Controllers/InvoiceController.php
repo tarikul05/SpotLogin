@@ -566,6 +566,8 @@ class InvoiceController extends Controller
                     'events.duration_minutes as duration_minutes',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
+                    'event_details.buy_price as buy_price',
+                    'event_details.sell_price as sell_price',
                     'events.title as title',
                     'events.event_type as event_type',
                     'events.event_category as category_id',
@@ -576,7 +578,7 @@ class InvoiceController extends Controller
                     'event_details.participation_id as participation_id',
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
-                    'event_details.price_currency as price_currency',
+                    //'event_details.price_currency as price_currency',
                     'event_details.costs_1 as costs_1',
                     'event_details.costs_2 as costs_2',
                     'teachers.id as teacher_id',
@@ -586,6 +588,7 @@ class InvoiceController extends Controller
 
                     // 'users.profile_image_id as profile_image_id'
                 )
+                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
                 ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
@@ -716,6 +719,8 @@ class InvoiceController extends Controller
                     'events.id as event_id',
                     'event_details.id as event_id1',
                     'events.duration_minutes as duration_minutes',
+                    'event_details.buy_price as buy_price',
+                    'event_details.sell_price as sell_price',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'events.title as title',
@@ -728,10 +733,11 @@ class InvoiceController extends Controller
                     'event_details.participation_id as participation_id',
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
-                    'event_details.price_currency as price_currency',
+                    //'event_details.price_currency as price_currency',
                     'event_details.costs_1 as costs_1',
                     'event_details.costs_2 as costs_2'
                 )
+                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
                 ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")

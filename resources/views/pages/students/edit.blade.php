@@ -1103,10 +1103,10 @@ $('#save_btn').click(function (e) {
 									if (no_of_teachers == 1){
 											resultHtml += '<td style="text-align:right"></td>';
 									}else {
-											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
 									}
 															
-									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
+									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
 							}
 
 							costs_1 = parseFloat(value.costs_1);
@@ -1120,11 +1120,11 @@ $('#save_btn').click(function (e) {
 							total_sell += parseFloat(value.price_sell) + parseFloat(value.costs_1);
 
 							if (value.event_type == 10) {
-								amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
+								amount_for_disc=amount_for_disc+parseFloat(value.sell_price);
 							}
 
-							week_total_buy += parseFloat(value.buy_total);
-							week_total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
+							week_total_buy += parseFloat(value.buy_price);
+							week_total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
 
 							prev_week = value.week_name;
 

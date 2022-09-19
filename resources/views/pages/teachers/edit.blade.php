@@ -1048,7 +1048,7 @@ function populate_teacher_lesson() {
 					//resultHtml+="<td></td>";
 					resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 				} else {
-					resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+					resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
 					//resultHtml+='<td style="text-align:right">'+value.sell_total+'</td>';
 				}
 				if (value.costs_1 != 0) {
