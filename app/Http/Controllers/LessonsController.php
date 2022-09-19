@@ -82,7 +82,8 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $eventData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
-
+                $stu_num = count($eventData['student']);
+                    
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
