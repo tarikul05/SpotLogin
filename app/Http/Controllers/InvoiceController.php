@@ -563,7 +563,6 @@ class InvoiceController extends Controller
                 ->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
                 ->select(
                     'events.id as event_id',
-                    'events.duration_minutes as duration_minutes',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'event_details.buy_price as buy_price',
@@ -588,6 +587,7 @@ class InvoiceController extends Controller
 
                     // 'users.profile_image_id as profile_image_id'
                 )
+                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
@@ -718,7 +718,6 @@ class InvoiceController extends Controller
                 ->select(
                     'events.id as event_id',
                     'event_details.id as event_id1',
-                    'events.duration_minutes as duration_minutes',
                     'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price',
                     'event_details.buy_total as buy_total',
@@ -737,6 +736,7 @@ class InvoiceController extends Controller
                     'event_details.costs_1 as costs_1',
                     'event_details.costs_2 as costs_2'
                 )
+                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
