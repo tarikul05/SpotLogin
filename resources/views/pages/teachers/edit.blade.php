@@ -451,6 +451,7 @@
 					</div>
 					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+						<button class="btn btn-primary" id="btn_convert_invoice">Generate invoice</button>
 					</div>
 				</form>
 			</div>
@@ -968,6 +969,7 @@ function getUrlVarsO()
 }  //getUrlVarsO
 
 function populate_teacher_lesson() {
+	console.log('aaaa');
 	var record_found = 0,
 	all_ready = 1,
 	total_buy = 0,
@@ -990,7 +992,12 @@ function populate_teacher_lesson() {
 	var week_caption = 'week';
 	var month_caption = 'month';
 	var sub_total_caption = 'sub_total';
-
+	if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
+		resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
+		$('#lesson_table').html(resultHtml);
+		document.getElementById("lesson_footer_div").style.display = "none";
+		return false;
+	}
 
 	var invoice_already_generated = 0,
 		person_type = 'teacher_lessons';
@@ -1058,9 +1065,9 @@ function populate_teacher_lesson() {
 				}
 
 				resultHtml += '</tr>';
-				total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
+				total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
 				//total_sell+=parseFloat(value.sell_total);
-				week_total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
+				week_total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
 				//week_total_sell+=parseFloat(value.sell_total);
 
 				prev_week = value.week_name;

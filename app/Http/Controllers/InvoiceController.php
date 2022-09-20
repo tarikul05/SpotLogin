@@ -793,7 +793,7 @@ class InvoiceController extends Controller
             }
             //$studentEvents->where('events.is_paying', '>', 0);
             $studentEvents->where('event_details.visibility_id', '>', 0);
-            $studentEvents->whereNotIn('events.event_type', [100]);
+            //$studentEvents->whereNotIn('events.event_type', [100]);
             $studentEvents->whereNotNull('events.date_start');
 
             $studentEvents->where('event_details.is_buy_invoiced', '=', 0);
