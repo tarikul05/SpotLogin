@@ -3340,6 +3340,8 @@ $('#add_lesson').on('submit', function(e) {
 
 
 $(document).ready(function() {
+    $('#agenda_select').trigger('change');
+
     var agenda_select = $("#agenda_select").val();
     var selected_school_ids = [];
     $.each($("#event_school option:selected"), function(){         
