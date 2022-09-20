@@ -1003,7 +1003,7 @@ function populate_teacher_lesson() {
 		person_type = 'teacher_lessons';
 
 	var disc1_amt = 0;
-
+	let selected_items = 0;
 	var resultHtml = '',
 		resultHtmlHeader = '',
 		resultHtmlFooter = '',
@@ -1036,12 +1036,24 @@ function populate_teacher_lesson() {
 
 				if (prev_week != value.week_name) {
 					//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</td></tr></b>';
-					resultHtml += '<b><tr class="course_week_header"><td colspan="5">' + week_caption + ' ' + value.week_no + '</td>';
-					//resultHtml+='<td colspan="2" style="text-align:right">'+value.price_currency+'</td>';
-					resultHtml += '<td colspan="2" style="text-align:right">' + '' + '</td>';
+					resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
+					//resultHtml += '<b><td colspan="1">Date</td>';
+					resultHtml += '<b><td colspan="1">Time</td>';
+					resultHtml += '<b><td colspan="1">Duration</td>';
+					resultHtml += '<b><td colspan="1">Type</td>';
+					resultHtml += '<b><td colspan="1">Student</td>';
+					resultHtml += '<b><td colspan="1">Lesson</td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + 'Buy price' + '</td>';
 					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
+				resultHtml += '<td style="display:none;">' + value.event_id + '</td>';
+				// if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
+				// 		selected_items += 1;
+				// 		resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+				// } else {
+				// 		resultHtml += "<td>-</td>";
+				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				resultHtml += '<td>' + value.time_start + '</td>';
 				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
