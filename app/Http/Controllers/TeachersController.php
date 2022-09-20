@@ -626,11 +626,12 @@ class TeachersController extends Controller
             
             $school = School::find($schoolId);
             $teacher = Teacher::find($teacherId);
-            if ($teacher) {
+            if ($teacher && !empty($teacher->email)) {
                 $this->emailSet($school, $schoolTeacher, $teacher, 'App\Models\Teacher');
+                return redirect()->back()->with('success', 'Invitation sent successfully');
+            }else{
+                return redirect()->back()->with('error', __('Email not found'));
             }
-            return redirect()->back()
-                ->with('success', 'Invitation sent successfully');
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
