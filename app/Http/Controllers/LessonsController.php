@@ -110,7 +110,7 @@ class LessonsController extends Controller
                             'student_id' => $std,
                             'buy_price' => (($eventData['sprice_amount_buy'])/($stu_num)),
                             'sell_price' => $eventData['sprice_amount_sell'],
-                            'price_currency' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null
+                            'price_currency' => isset($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
                     }
@@ -224,7 +224,7 @@ class LessonsController extends Controller
                         'student_id' => $std,
                         'buy_price' => (($eventData['sprice_amount_buy'])/($stu_num)),
                         'sell_price' => $eventData['sprice_amount_sell'],
-                        'price_currency' => !empty($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
+                        'price_currency' => isset($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                         'participation_id' => !empty($eventData['attnValue'][$std]) ? $eventData['attnValue'][$std] : 0,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
