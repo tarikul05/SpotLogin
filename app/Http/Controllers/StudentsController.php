@@ -550,11 +550,13 @@ class StudentsController extends Controller
             
             $school = School::find($schoolId);
             $student = Student::find($studentId);
-            if ($student) {
+            if ($student && !empty($student->email)) {
                 $this->emailSet($school, $schoolStudent, $student, 'App\Models\Student');
+                return redirect()->back()->with('success', 'Invitation sent successfully');
+            }else{
+                return redirect()->back()->with('error', __('Email not found'));
             }
-            return redirect()->back()
-                ->with('success', 'Invitation sent successfully');
+            
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
