@@ -360,7 +360,7 @@
 											<tbody>
 												<tr>
 													<td width="20%">
-														<input id="discount_perc" name="discount_perc" type="text" value="10" class="form-control">
+														<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control">
 													</td>
 													<td>
 														<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
@@ -1128,7 +1128,7 @@ function populate_teacher_lesson() {
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
-			resultHtml += '<td colspan="2"><strong>total_deduction_caption</strong></td>';
+			resultHtml += '<td colspan="2"><strong>Total Deduction</strong></td>';
 			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
 		}
 
