@@ -380,7 +380,7 @@
                                                     <div class="form-group row" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
-                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
+                                                            <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
@@ -3394,6 +3394,8 @@ $("body").on('click', '#student_empty', function(event) {
 })
 
 $('#agenda_select').on('change', function() {
+    $('#all_day_input').prop( "checked", false)
+
     if(this.value != ''){
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
@@ -3421,7 +3423,8 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
-             $("#std-check-div").css('display', 'block');
+             // $("#std-check-div").css('display', 'block');
+            $('#category_select').trigger('change');
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3438,7 +3441,8 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
-             $("#std-check-div").css('display', 'none');
+             // $("#std-check-div").css('display', 'none');
+            $('#category_select').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3452,7 +3456,8 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
-             $("#std-check-div").css('display', 'none');
+             // $("#std-check-div").css('display', 'none');
+            $('#category_select').trigger('change');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
@@ -3466,7 +3471,8 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
-             $("#std-check-div").css('display', 'none');
+             // $("#std-check-div").css('display', 'none');
+            $('#category_select').trigger('change');
         }
 	}else{
         $('#agenda_form_area').hide();
