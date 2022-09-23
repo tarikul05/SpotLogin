@@ -3441,7 +3441,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
-             // $("#std-check-div").css('display', 'none');
+             $("#std-check-div").css('display', 'none');
             $('#category_select').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
@@ -3456,7 +3456,7 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
-             // $("#std-check-div").css('display', 'none');
+             $("#std-check-div").css('display', 'none');
             $('#category_select').trigger('change');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {
@@ -3471,7 +3471,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
-             // $("#std-check-div").css('display', 'none');
+             $("#std-check-div").css('display', 'none');
             $('#category_select').trigger('change');
         }
 	}else{
