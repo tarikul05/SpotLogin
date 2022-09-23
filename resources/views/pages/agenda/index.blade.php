@@ -2088,7 +2088,7 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
+                        $('#event_modal_title').html(event.event_type_name+' <br/> '+event.title_for_modal); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
