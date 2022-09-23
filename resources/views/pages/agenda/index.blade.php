@@ -3471,6 +3471,10 @@ $('#agenda_select').on('change', function() {
 	}else{
         $('#agenda_form_area').hide();
     }
+
+    $('#EventModal').on('shown.bs.modal', function(event) {
+        $('body').find(".popover.show").removeClass("show")
+    });
 });
 
 $( document ).ready(function() {
