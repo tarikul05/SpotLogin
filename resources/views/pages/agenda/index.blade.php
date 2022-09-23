@@ -2088,7 +2088,7 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
+                        $('#event_modal_title').html(event.event_type_name+' <br/> '+event.title_for_modal); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
@@ -3471,6 +3471,10 @@ $('#agenda_select').on('change', function() {
 	}else{
         $('#agenda_form_area').hide();
     }
+
+    $('#EventModal').on('shown.bs.modal', function(event) {
+        $('body').find(".popover.show").removeClass("show")
+    });
 });
 
 $( document ).ready(function() {
