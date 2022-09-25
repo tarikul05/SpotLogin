@@ -750,6 +750,88 @@ $(document).ready(function(){
 		,extraPlugins: 'Cy-GistInsert'
 		,extraPlugins: 'AppFields'
 	});
+	function GetCheckBoxSelectedValues(p_chkbox) {
+		var selected_events = '';
+		var cboxes = document.getElementsByName(p_chkbox);
+		var len = cboxes.length;
+
+		$("input[name='" + p_chkbox + "']:checked").each(function(i) {
+			selected_events += $(this).val() + ',';
+		});
+		return selected_events;
+	}
+
+	$('#btn_convert_invoice').click(function(e) {
+
+		var p_event_ids = GetCheckBoxSelectedValues('event_check');
+		if (p_event_ids == '') {
+			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
+			return false;
+		}
+
+		var p_person_id = document.getElementById("person_id").value;
+			//p_month = document.getElementById("smonth").value,
+			//p_year = document.getElementById("syear").value;
+
+		// var from_date = moment((p_year + '-' + p_month + '-01'), "YYYY-MM-DD").format("YYYY.MM.DD");
+		// var to_date = moment((p_year + '-' + p_month + '-01'), "YYYY-MM-DD").endOf('month').format("YYYY.MM.DD");
+		
+		var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		var to_date = moment(($("#billing_period_end_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		
+		
+		var p_invoice_id = '';
+		var auto_id = 0;
+		var p_discount_percent_1 = document.getElementById("s_percent_1").value,
+			p_discount_percent_2 = document.getElementById("s_percent_2").value,
+			p_discount_percent_3 = document.getElementById("s_percent_3").value,
+			p_discount_percent_4 = document.getElementById("s_percent_4").value,
+			p_discount_percent_5 = document.getElementById("s_percent_5").value,
+			p_discount_percent_6 = document.getElementById("s_percent_6").value;
+
+
+		data = 'type=generate_student_invoice&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
+		data += '&p_discount_percent_1=' + p_discount_percent_1 + '&p_discount_percent_2=' + p_discount_percent_2;
+		data += '&p_discount_percent_3=' + p_discount_percent_3 + '&p_discount_percent_4=' + p_discount_percent_4;
+		data += '&p_discount_percent_5=' + p_discount_percent_5 + '&p_discount_percent_6=' + p_discount_percent_6;
+		console.log(data);
+
+		$.ajax({
+			url: '../student/student_events_data.php',
+			data: data,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(result) {
+				$.each(result, function(key, value) {
+					if (value.status == 'success') {
+						auto_id = value.auto_id;
+						var msg = GetAppMessage("invoice_generated_msg");
+						DisplayMessage(msg);
+
+						//location.reload(); //commented by soumen divert to invoice screen.     
+					} else {
+						errorModalCall(GetAppMessage('error_message_text'));
+						// alert(value.status);
+					}
+
+				});
+			}, // success
+			error: function(ts) {
+				errorModalCall(GetAppMessage('error_message_text'));
+				// alert(ts.responseText + ' Generate Invoice')
+			}
+		}); // Ajax
+
+		if (auto_id > 0) { 
+			var url = "../invoice/invoice_modification.html?auto_id=" + auto_id + "&action=edit";
+		setTimeout(function(){ window.open(url, "_self"); }, 3000);
+			
+			//window.location(url); 
+		}
+
+		return false;
+	});
 
 	$("#send_email_btn").click(function (e) {
 		var user_id = $("#user_id").val();

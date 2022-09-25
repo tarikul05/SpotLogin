@@ -407,12 +407,14 @@ class InvoiceController extends Controller
 
 
         $teacherEvents = DB::table('events')
-            ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
             ->select(
-                'event_details.id as event_id',
+                //'event_details.event_id as event_id',
+                'event_details.event_id as event_id',
+                'event_details.student_id as student_id',
                 'event_details.teacher_id as person_id',
                 'school_teacher.nickname as teacher_name',
                 'users.profile_image_id as profile_image_id'
@@ -460,7 +462,7 @@ class InvoiceController extends Controller
         } else {
         }
         $teacherEvents->where('event_details.visibility_id', '>', 0);
-        $teacherEvents->whereNotIn('events.event_type', [100]);
+        //$teacherEvents->whereNotIn('events.event_type', [100]);
             
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
         $teacherEvents->whereNull('event_details.buy_invoice_id');
@@ -473,8 +475,9 @@ class InvoiceController extends Controller
 
         $teacherEvents->where('events.date_start', '>=', $dateS);
         $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        $teacherEvents->distinct('event_details.id');
-        //$teacherEvents->groupBy('event_details.teacher_id');
+        //$teacherEvents->distinct('events.id');
+        //$teacherEvents->groupBy('event_details.event_id');
+        //$teacherEvents->groupBy('event.id');
 
         //dd($teacherEvents->toSql());
         //dd($data);
@@ -486,6 +489,7 @@ class InvoiceController extends Controller
             )
             ->selectRaw('count(custom_table.event_id) as invoice_items')
             ->mergeBindings($teacherEvents)
+            ->distinct('custom_table.event_id')
             ->groupBy('custom_table.person_id');
         //dd($allEvents->toSql());
 
@@ -662,7 +666,7 @@ class InvoiceController extends Controller
             //By
             $studentEvents->distinct('events.id');
 
-            //$studentEvents->groupBy('events.id');
+            $studentEvents->groupBy('events.id');
             $data = $studentEvents->get();
             //dd($data);
 
@@ -805,8 +809,8 @@ class InvoiceController extends Controller
 
             $studentEvents->orderBy('events.date_start', 'desc');
             //By
-            $studentEvents->distinct('event_details.id');
-            //$studentEvents->groupBy('events.id');
+            $studentEvents->distinct('events.id');
+            $studentEvents->groupBy('events.id');
             //dd($studentEvents->toSql());
             $data = $studentEvents->get();
             //dd($data);
