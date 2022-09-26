@@ -362,5 +362,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/student-attend-action/{id}', [App\Http\Controllers\LessonsController::class, 'StudentAttendAction'])->name('studentAttend.Action');
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
     Route::get('invoice', 'InvoiceController@view')->name('invoice');
+    Route::post('invoice_data', 'InvoiceController@invoiceData')->name('invoiceData');
 });
 
