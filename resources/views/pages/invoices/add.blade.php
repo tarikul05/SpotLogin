@@ -395,7 +395,7 @@
 
 			<!-- TAB 3-->
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form class="form-horizontal" id="add_teacher" action="http://localhost:8000/edit-teacher/12" method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_teacher" action="/edit-teacher/" method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					<input type="hidden" name="_token" value="sFD17gatUngGK5kuFWC2nZKEa1vtNtraV0nqnMvz">
 					<input type="hidden" id="school_id" name="school_id" value="1">
 					<input type="hidden" id="school_name" name="school_name" value="Tarikul Islam">

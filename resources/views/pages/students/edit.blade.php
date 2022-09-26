@@ -956,6 +956,8 @@ $(function() {
 		populate_student_lesson(); // refresh lesson details for billing
 
 	});
+
+	
 });
 
 
@@ -1171,24 +1173,33 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.time_start + '</td>';
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
-							resultHtml += '<td>' + value.title + '</td>';
+							resultHtml += '<td>' + value.category_name + '</td>';
 							resultHtml += '<td>' + value.teacher_name + '</td>';
-							resultHtml += '<td></td>';
+							resultHtml += '<td>' + value.title + '</td>';
 
 							// all_ready = 0 means not ready to generate invoice
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
 							if (value.ready_flag == 0) {
-									all_ready = 0;
-									resultHtml += "<td></td>";
-									resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								all_ready = 0;
+								resultHtml += "<td></td>";
+								resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 							} else {
-									if (no_of_teachers == 1){
-											resultHtml += '<td style="text-align:right"></td>';
-									}else {
-											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
-									}
-															
-									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								if (no_of_teachers == 1){
+										resultHtml += '<td style="text-align:right"></td>';
+								}else {
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+								}
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								total_buy += parseFloat(value.buy_price);
+								total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
+								
+								week_total_buy += parseFloat(value.buy_price);
+								week_total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
+								
+
+								if (value.event_type == 10) {
+									amount_for_disc=amount_for_disc+parseFloat(value.sell_price);
+								}
 							}
 
 							costs_1 = parseFloat(value.costs_1);
@@ -1198,16 +1209,9 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<td style="text-align:right"></td>';
 							}
 							resultHtml += '</tr>';
-							total_buy += parseFloat(value.buy_price);
-							total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
+							
 
-							if (value.event_type == 10) {
-								amount_for_disc=amount_for_disc+parseFloat(value.sell_price);
-							}
-
-							week_total_buy += parseFloat(value.buy_price);
-							week_total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
-
+							
 							prev_week = value.week_name;
 
 							if (person_type == 'student_lessons') {

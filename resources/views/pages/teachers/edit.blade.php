@@ -969,7 +969,6 @@ function getUrlVarsO()
 }  //getUrlVarsO
 
 function populate_teacher_lesson() {
-	console.log('aaaa');
 	var record_found = 0,
 	all_ready = 1,
 	total_buy = 0,
@@ -1038,12 +1037,12 @@ function populate_teacher_lesson() {
 					//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</td></tr></b>';
 					resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
 					//resultHtml += '<b><td colspan="1">Date</td>';
-					resultHtml += '<b><td colspan="1">Time</td>';
-					resultHtml += '<b><td colspan="1">Duration</td>';
-					resultHtml += '<b><td colspan="1">Type</td>';
-					resultHtml += '<b><td colspan="1">Student</td>';
-					resultHtml += '<b><td colspan="1">Lesson</td>';
-					resultHtml += '<td colspan="2" style="text-align:right">' + 'Buy price' + '</td>';
+					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + '' + '</td>';
 					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
@@ -1059,16 +1058,20 @@ function populate_teacher_lesson() {
 				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 				resultHtml += '<td>' + value.title + '</td>';
 				resultHtml += '<td>' + value.student_name + '</td>';
+				//resultHtml += '<td>' + value.title + '</td>';
 				resultHtml += '<td>' + value.price_name + '</td>';
 
 				// all_ready = 0 means not ready to generate invoice
 				if (value.ready_flag == "0") {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
-					resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+					resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+					//resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 				} else {
 					resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
-					//resultHtml+='<td style="text-align:right">'+value.sell_total+'</td>';
+					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
+					total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
+					week_total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
 				}
 				if (value.costs_1 != 0) {
 					resultHtml += '<td style="text-align:right">' + value.costs_1 + '</td>';
@@ -1077,10 +1080,7 @@ function populate_teacher_lesson() {
 				}
 
 				resultHtml += '</tr>';
-				total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
-				//total_sell+=parseFloat(value.sell_total);
-				week_total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
-				//week_total_sell+=parseFloat(value.sell_total);
+				
 
 				prev_week = value.week_name;
 				// for teacher
@@ -1101,7 +1101,6 @@ function populate_teacher_lesson() {
 			resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
 			resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
 			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-			//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
 			resultHtml += '</tr>'
 			week_total_buy = 0;
 			week_total_sell = 0;
@@ -1110,8 +1109,8 @@ function populate_teacher_lesson() {
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
 		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
-		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';    
-		resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+		resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';    
+		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 		resultHtml += '</tr>'
 
 

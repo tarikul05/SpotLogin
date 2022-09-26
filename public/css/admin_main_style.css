@@ -684,6 +684,18 @@ button#button_lock_and_save {
     background-color: #5bc0de;
     border-color: #46b8da;
 }
+.button_lock_and_save {
+    padding: 0.75rem;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 0.25;
+    height: 35px;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    text-decoration: none;
+    border-radius: 5px;
+}
 ul.dropdown-menu.show {
     max-width: 260px !important;
     right: 0;
