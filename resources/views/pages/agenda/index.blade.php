@@ -287,7 +287,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="input-group"> 
-                                                                <input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+                                                                <input id="Title" name="title" type="text" class="form-control" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2343,6 +2343,8 @@
                     const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
                     $('#end_date').val(endresult);
                     $('#end_time').val(endTime).trigger('change');
+                    $('#agenda_select').trigger('change');
+                    $('#Title').val('');
                 }
                 @endif
                     
@@ -3218,6 +3220,7 @@ $('#add_lesson').on('submit', function(e) {
         "name": "_token",
         "value": csrfToken,
     });
+    var errMssg = '';
 
     if(type == 1 || type == 2){
         if(type==1){
@@ -3269,7 +3272,7 @@ $('#add_lesson').on('submit', function(e) {
                 }
             }
         }else{
-            var errMssg = '';
+            // var errMssg = '';
             $('.student_list').removeClass('error');
         }
 
@@ -3395,6 +3398,7 @@ $("body").on('click', '#student_empty', function(event) {
 
 $('#agenda_select').on('change', function() {
     $('#all_day_input').prop( "checked", false)
+    $('#student_empty').prop( "checked", false)
 
     if(this.value != ''){
 		$('#agenda_form_area').show();
@@ -3500,6 +3504,8 @@ $( document ).ready(function() {
             const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
             $('#end_date').val(endresult);
             $('#end_time').val(endTime).trigger('change');
+            $('#agenda_select').trigger('change');
+            $('#Title').val('');
         }
 
     });
