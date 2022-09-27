@@ -1040,22 +1040,32 @@ $('#save_btn').click(function (e) {
 
 
 	function populate_student_lesson() {
+		let p_pending_only="1";
+		var pendChBox = document.getElementById("chk_show_only_pend");
+		
+		
+		if (pendChBox.checked == false) {
+				p_pending_only="0";
+			}
+		
+		// if ((user_role == 'student')) {
+		// 	return false;
+		// }
 		var costs_1 = 0.00;
 		var record_found = 0,
-		all_ready = 1,
-		total_buy = 0,
-		total_sell = 0,
-		week_total_buy = 0,
-		week_total_sell = 0,
-		total_disc = 0.00,
-		prev_week = '',
-		data = '',
-		//p_person_id='832F4CB7-4596-4EFB-9C86-C6A702412E05',
-		p_person_id = document.getElementById("person_id").value,
-		school_id = document.getElementById("school_id").value,
-		p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
-		p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
-		//alert(p_year+'-'+p_month);
+			all_ready = 1,
+			total_buy = 0,
+			total_sell = 0,
+			week_total_buy = 0,
+			week_total_sell = 0,
+			total_disc = 0.00,
+			prev_week = '',
+			data = '',
+			
+			p_person_id = document.getElementById("person_id").value,
+			school_id = document.getElementById("school_id").value,
+			p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
+			p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
 
 		if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
 				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
@@ -1078,9 +1088,9 @@ $('#save_btn').click(function (e) {
 		var correct_btn_text = 'Validate';
 
 		var resultHtml = '',
-		resultHtmlHeader = '',
-		resultHtmlFooter = '',
-		resultHtmlDetails = '';
+			resultHtmlHeader = '',
+			resultHtmlFooter = '',
+			resultHtmlDetails = '';
 		var amount_for_disc=0.00;
 		var disc_caption = 'DESC';
 		var disc_caption_disp = '';
@@ -1090,7 +1100,7 @@ $('#save_btn').click(function (e) {
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
+		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only;
 		console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',

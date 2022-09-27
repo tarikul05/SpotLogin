@@ -538,7 +538,7 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
-
+            $p_pending_only=trim($data['p_pending_only']);
             $assData = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
@@ -649,13 +649,15 @@ class InvoiceController extends Controller
                 $studentEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
-
-            $studentEvents->where(
-                function ($query) {
-                    $query->where('event_details.is_sell_invoiced', '=', 0)
-                        ->orWhereNull('event_details.is_sell_invoiced');
-                }
-            );
+            if (!empty($p_pending_only)) {
+                $studentEvents->where(
+                    function ($query) {
+                        $query->where('event_details.is_sell_invoiced', '=', 0)
+                            ->orWhereNull('event_details.is_sell_invoiced');
+                    }
+                );
+            }
+            
 
             $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
             $studentEvents->whereRaw($qq);
