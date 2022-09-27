@@ -714,7 +714,7 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
-            $studentEvents = DB::table('events')
+            $teacherEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
                 ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
@@ -789,34 +789,37 @@ class InvoiceController extends Controller
             // dd($user);
             if ($user_role == 'admin_teacher') {
                 $invoice_type = 'S';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher_all') {
                 $invoice_type = 'T';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher') {
                 $invoice_type = 'T';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-                $studentEvents->where('events.teacher_id', $user->person_id);
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+                $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
             //$studentEvents->where('events.is_paying', '>', 0);
-            $studentEvents->where('event_details.visibility_id', '>', 0);
+            $teacherEvents->where('event_details.visibility_id', '>', 0);
             //$studentEvents->whereNotIn('events.event_type', [100]);
-            $studentEvents->whereNotNull('events.date_start');
+            $teacherEvents->whereNotNull('events.date_start');
 
-            $studentEvents->where('event_details.is_buy_invoiced', '=', 0);
-            $studentEvents->whereNull('event_details.buy_invoice_id');
+            $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
+            $teacherEvents->whereNull('event_details.buy_invoice_id');
 
-            $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
-            $studentEvents->whereRaw($qq);
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $teacherEvents->whereRaw($qq);
+
+            // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
+            // $studentEvents->whereRaw($qq);
             //$studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
 
-            $studentEvents->orderBy('events.date_start', 'desc');
+            $teacherEvents->orderBy('events.date_start', 'desc');
             //By
-            $studentEvents->distinct('events.id');
-            $studentEvents->groupBy('events.id');
+            $teacherEvents->distinct('events.id');
+            $teacherEvents->groupBy('events.id');
             //dd($studentEvents->toSql());
-            $data = $studentEvents->get();
+            $data = $teacherEvents->get();
             //dd($data);
 
             $result = array(
