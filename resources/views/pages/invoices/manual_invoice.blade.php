@@ -8,6 +8,7 @@
 <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
@@ -38,6 +39,7 @@
             <div class="col-lg-12">
                 <div id="content">
                     <form role="form" id="form_main" class="form-horizontal tbl_wrp_form" method="post" action="">
+                        @csrf
                         <input type="hidden" id="auto_id" name="auto_id" value="0">
                         <input type="hidden" id="invoice_filename" name="invoice_filename" value="">
                         <input type="hidden" id="action" name="action" value="new">
@@ -92,6 +94,7 @@
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Client Information') }}:</label>
 							</div>
+                            <?php //echo '<pre>'; print_r($students);exit; ?>
                             <div id="client_detail_id" open="">
                                 <div id="table_client">
                                     <div class="row">
@@ -99,34 +102,12 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
-                                                    <option value="ammy roy (STUDENT)" id="2601914D-B642-11EC-BC5D-067B4964D503" <="" option=""></option>
-                                                    <option value="Arindam Biswas (TEACHER)" id="EC7E9C27-1B10-11EC-9CF6-067B4964D503" <="" option=""></option>
-                                                    <option value="Arindam Student (STUDENT)" id="C63B4A39-1C41-11EC-9CF6-067B4964D503" <="" option=""></option>
-                                                    <option value="Arindam1 Biswas1 (STUDENT)" id="9C256610-2B8F-11EC-8F1E-067B4964D503" <="" option=""></option>
-                                                    <option value="avijit chakraborty (STUDENT)" id="30043550-2B7C-11EC-8F1E-067B4964D503" <="" option=""></option>
-                                                    <option value="bappa adak (STUDENT)" id="C141E48D-4248-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="bappa1 adak1 (STUDENT)" id="F85C0586-4248-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="birendra Middey (STUDENT)" id="75236B91-42F7-11EC-A50B-067B4964D503" <="" option=""></option>
-                                                    <option value="Bivas Adak (STUDENT)" id="98B5B50C-4243-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="bobby powali (STUDENT)" id="02ECC159-424A-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="clara clara O`corner (STUDENT)" id="B77DAF18-B42E-11EC-AC37-067B4964D503" <="" option=""></option>
-                                                    <option value="das1 samir1 (STUDENT)" id="AE29659F-7556-11E8-BBE1-0A608F1BF91B" <="" option=""></option>
-                                                    <option value="jani Middey (STUDENT)" id="C71CAAE1-37AE-11EC-8F1E-067B4964D503" <="" option=""></option>
-                                                    <option value="Junior1 middey (STUDENT)" id="085EB422-2E4E-11EC-8F1E-067B4964D503" <="" option=""></option>
-                                                    <option value="manas adak (STUDENT)" id="952DC9E3-41E8-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="megha dutta (STUDENT)" id="E8C9AF95-1EC3-11EC-9CF6-067B4964D503" <="" option=""></option>
-                                                    <option value="Middey O`corner (STUDENT)" id="5DD7E31A-B430-11EC-AC37-067B4964D503" <="" option=""></option>
-                                                    <option value="mihir middey (STUDENT)" id="702E7F7E-41E3-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="sammy middey (STUDENT)" id="08E7AB5F-8615-11EA-8FFD-0A608F1BF91B" <="" option=""></option>
-                                                    <option value="santanu khamaru (STUDENT)" id="7476E688-4249-11EC-82EC-067B4964D503" <="" option=""></option>
-                                                    <option value="Soumendra Middey (STUDENT)" id="A629D0F5-18A6-11EC-9CF6-067B4964D503" <="" option=""></option>
-                                                    <option value="srija middey (STUDENT)" id="06805313-7555-11E8-BBE1-0A608F1BF91B" <="" option=""></option>
-                                                    <option value="sss sss (STUDENT)" id="A3BD258F-AB30-11EC-AC37-067B4964D503" <="" option=""></option>
-                                                    <option value="student1 middey (STUDENT)" id="34552992-2E59-11EC-8F1E-067B4964D503" <="" option=""></option>
-                                                    <option value="suparna dutta (TEACHER)" id="3330B801-1EC4-11EC-9CF6-067B4964D503" <="" option=""></option>
-                                                    <option value="teacher all (TEACHER)" id="6503D09C-9DB7-11EA-8FFD-0A608F1BF91B" <="" option=""></option>
-                                                    <option value="teacher med (TEACHER)" id="CC6AB82C-9DB7-11EA-8FFD-0A608F1BF91B" <="" option=""></option>
-                                                    <option value="teacher min (TEACHER)" id="14086343-9DB8-11EA-8FFD-0A608F1BF91B" <="" option=""></option>
+                                                    @foreach($students as $key => $student)
+													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
+												    @endforeach
+                                                    @foreach($teachers as $key => $professor)
+													    <option value="{{ $professor->full_name }} (TEACHER)" data-type="teacher" id="{{ $professor->teacher_id }}" <="" option=""></option>
+												    @endforeach
                                                 </datalist>
                                             </div>
                                         </div>
@@ -745,5 +726,493 @@ function remove_rows(r){
 
  });
 
+
+function get_client_seller_info(obj){
+    
+	var opt = $("option[value='"+obj.value+"']");
+	if (opt.attr('id') == undefined) return false;
+    var p_code=opt.attr('id');
+	var p_type=opt.attr('data-type');
+
+    $.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$.ajax({
+	url: BASE_URL + '/invoice_data',
+	data: 'p_type='+p_type+'&p_code='+p_code,
+	type: 'POST',                     
+	dataType: 'json',
+	async: false,
+	success: function(data) {
+		var resultHtml ='';
+		$.each(data, function(key,value){
+
+			if (value.class_name == 'student') {
+				document.getElementById("invoice_type").value=1;
+			}else if (value.class_name == 'teacher') {
+				document.getElementById("invoice_type").value=2;
+			}else if (value.class_name == 'school') {
+				document.getElementById("invoice_type").value=0;
+			}
+
+			if (obj.id == "client_list_id") {
+				document.getElementById("client_id").value=p_code;
+				document.getElementById("client_name").value=value.name;
+				
+				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_lastname").value=value.lastname;
+				
+				document.getElementById("client_street_number").value=value.street_number;
+				document.getElementById("client_street").value=value.street;
+				document.getElementById("client_street2").value=value.street2;
+				document.getElementById("client_country_id").value=value.country_code
+				if(value.country_code == 'CA'){
+					 $('#client_province_id_div').show();
+                     $('#seller_province_id_div').show();
+				}else{
+                     $('#client_province_id_div').hide();
+                     $('#seller_province_id_div').hide();
+                }
+				
+				if(value.province_id > 0){
+					$("#client_province_id").val(value.province_id);
+				}
+				
+				document.getElementById("client_zip_code").value=value.zip_code;
+				document.getElementById("client_place").value=value.place;
+				
+		}else if (obj.id == "seller_list_id"){
+		
+			document.getElementById("seller_id").value=p_code;
+			
+			document.getElementById("seller_name").value=value.name;
+
+			document.getElementById("seller_firstname").value=value.firstname;
+			document.getElementById("seller_lastname").value=value.lastname;
+			
+	
+			document.getElementById("seller_street_number").value=value.street_number
+			document.getElementById("seller_street").value=value.street;
+			document.getElementById("seller_street2").value=value.street2;
+			document.getElementById("seller_country_id").value=value.country_code;
+			if(value.country_code == 'CA'){
+				PopulateProvince(value.country_code,'seller');
+			}
+			if(value.province_id > 0){
+				$("#seller_province_id").val(value.province_id);
+			}
+			document.getElementById("seller_zip_code").value=value.zip_code;
+			document.getElementById("seller_place").value=value.place;
+			
+			document.getElementById("seller_email").value=value.email;
+			
+			document.getElementById("payment_bank_account_name").value=value.bank_account;
+			
+			document.getElementById("payment_bank_name").value=value.bank_name;
+			document.getElementById("payment_bank_address").value=value.bank_address;
+			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
+			document.getElementById("payment_bank_place").value=value.bank_place;
+			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+			
+			if(value.bank_country_id == 'CA'){
+				PopulateProvince(value.bank_country_id == 'CA','bank');
+			}
+			if (value.bank_province_id > 0){
+				$("#bank_province_id").val(value.bank_province_id );
+			} 
+			
+			document.getElementById("payment_bank_iban").value=value.bank_iban;
+			document.getElementById("payment_bank_account").value=value.bank_account;
+			document.getElementById("payment_bank_swift").value=value.bank_swift;
+
+			document.getElementById("seller_phone").value=value.phone;
+			document.getElementById("seller_mobile").value=value.mobile;
+		}	
+
+		});
+	},   // sucess
+	error: function(ts) { 
+		errorModalCall(GetAppMessage('error_message_text'));
+
+		}
+	}); 
+	
+}
+
+
+	function set_client_seller_info(obj){
+	   var str=obj.value;
+       //console.log(str);
+       //alert(str);
+       
+       if (str.trim() !=''){
+        
+            try {
+                var opt = $("option[value='"+obj.value+"']");
+                
+                if (opt.attr('id') == undefined) return false;
+               
+                var id=opt.attr('id');
+
+                var str_array_with_province = str.split("|@|");
+                
+                var str_array = str_array_with_province[0].split("|#|");
+                //console.log(str_array);
+                if (obj.id == "client_list_id"){
+                    document.getElementById("client_id").value=id;
+                    document.getElementById("client_name").value=str_array[0];
+                    
+                    var str_name=str_array[0].split(" ");              
+                    document.getElementById("client_firstname").value=str_name[1];
+                    document.getElementById("client_lastname").value=str_name[0];
+                    
+                    document.getElementById("client_street_number").value=str_array[1];
+                    document.getElementById("client_street").value=str_array[2];
+                    document.getElementById("client_street2").value=str_array[3];
+                    document.getElementById("client_country_id").value=str_array[4];
+                    if(str_array[4]){
+                        PopulateProvince(str_array[4],'client');
+                    }
+                    if(str_array_with_province[1] && str_array_with_province[1] > 0){
+                        $("#client_province_id").val(str_array_with_province[1]);
+                    }
+                    document.getElementById("client_zip_code").value=str_array[5];
+                    document.getElementById("client_place").value=str_array[6];
+    
+                    if (str_array[8] == 'student') {
+                        document.getElementById("invoice_type").value=1;    
+                    }
+                    
+                    //document.getElementById(obj.id).value="";
+                }else if (obj.id == "seller_list_id"){
+                    
+                    document.getElementById("seller_id").value=id;
+                    
+                    //document.getElementById("seller_name").value=str_array[0].replace(/^/ig,'\"');;
+                    document.getElementById("seller_name").value=str_array[0];
+                    
+                    document.getElementById("seller_street_number").value=str_array[1];
+                    document.getElementById("seller_street").value=str_array[2];
+                    document.getElementById("seller_street2").value=str_array[3];
+                    document.getElementById("seller_country_id").value=str_array[4];
+                    if(str_array[4]){
+                        PopulateProvince(str_array[4],'seller');
+                    }
+                    if(str_array_with_province[1] && str_array_with_province[1] > 0){
+                        $("#seller_province_id").val(str_array_with_province[1]);
+                    }
+                    document.getElementById("seller_zip_code").value=str_array[5];
+                    document.getElementById("seller_place").value=str_array[6];
+                    
+                    document.getElementById("seller_email").value=str_array[7];
+
+
+                    
+                    document.getElementById("payment_bank_account_name").value=(str_array[8])?str_array[8]:'';
+                    
+                    document.getElementById("payment_bank_name").value=(str_array[9])?str_array[9]:'';
+                    document.getElementById("payment_bank_address").value=(str_array[10])?str_array[10]:'';
+                    document.getElementById("payment_bank_zipcode").value=(str_array[11])?str_array[11]:'';
+                    document.getElementById("payment_bank_place").value=(str_array[12])?str_array[12]:'';
+                    document.getElementById("payment_bank_country_id").value=(str_array[13])?str_array[13]:'';
+                    if(str_array[13]){
+                        PopulateProvince(str_array[13],'bank');
+                    }
+                    if(str_array_with_province[2] && str_array_with_province[2] > 0){
+                        $("#bank_province_id").val(str_array_with_province[2]);
+                    } 
+                    
+                    document.getElementById("payment_bank_iban").value=(str_array[14])?str_array[14]:'';
+                    document.getElementById("payment_bank_account").value=(str_array[15])?str_array[15]:'';
+                    document.getElementById("payment_bank_swift").value=(str_array[16])?str_array[16]:'';
+
+                    document.getElementById("seller_phone").value=(str_array[17])?str_array[17]:'';
+                    document.getElementById("seller_mobile").value=(str_array[18])?str_array[18]:'';
+                    
+                    if (str_array[19] == 'teacher') {
+                        document.getElementById("invoice_type").value=2;
+                        var str_name=str_array[0].split(" ");              
+                        document.getElementById("seller_firstname").value=str_name[1];
+                        document.getElementById("seller_lastname").value=str_name[0];
+                    }else if (str_array[19] == 'school') {
+                        document.getElementById("invoice_type").value=0;
+                        /*var str_name=str_array[0].split(" ");              
+                        document.getElementById("seller_firstname").value=str_name[1];
+                        document.getElementById("seller_lastname").value=str_name[0];
+                        */
+                    }else {document.getElementById("invoice_type").value=0}
+
+                    //document.getElementById(obj.id).value="";                
+                }
+                  
+                //console.log(str_array[17]);
+                    
+            }    
+            catch (err){
+                null;
+            }
+            
+        
+       }
+	}
+
+
+function PopulateProvince(country_code, type = null) {
+    $.ajax({
+        url: '../admin/get_master_data.php',
+        data: 'type=province_list&country_code=' + country_code,
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        success: function (data) {
+            if (type == 'client') {
+                if (data) { $("#client_province_id_div").show(); } else { $("#client_province_id_div").hide(); }
+            }
+            if (type == 'seller') {
+                if (data) { $("#seller_province_id_div").show(); } else { $("#seller_province_id_div").hide(); }
+            }
+            if (type == 'bank') {
+                if (data) { $("#bank_province_id_div").show(); } else { $("#bank_province_id_div").hide(); }
+            }
+            var resultHtml = '<option value="">Select Province</option>';
+            $.each(data, function (key, value) {
+                resultHtml += '<option value="' + value.province_id + '">' + value.province_name + '</option>';
+            });
+
+            if (type == 'address') {
+                $('#client_province_id').html(resultHtml);
+            } else if (type == 'seller') {
+                $("#seller_province_id").html(resultHtml);
+            } else if (type == 'bank') {
+                $("#bank_province_id").html(resultHtml);
+            } else {
+                $('#client_province_id').html(resultHtml);
+                $("#seller_province_id").html(resultHtml);
+                $("#bank_province_id").html(resultHtml);
+            }
+        }, // sucess
+        error: function (ts) {
+            errorModalCall(GetAppMessage('error_message_text'));
+
+        }
+    });
+}
+
+
+
+$('#save_btn').click(function (e) {							
+    AddEditInvoice();    
+});
+
+
+
+function AddEditInvoice(){
+         
+    var p_auto_id= document.getElementById("auto_id").value;
+    var p_invoice_id = document.getElementById("invoice_id").value;
+    var p_date_invoice = document.getElementById("date_invoice").value;
+    var p_invoice_name = document.getElementById("invoice_name").value;
+    var p_price_currency = document.getElementById("price_currency").value;
+    //alert(p_price_currency)
+    if (p_invoice_name ==''){
+        errorModalCall(GetAppMessage('Invalid_invoice')+' name.');
+        
+        //alert(GetAppMessage("Invalid_invoice")+' name.');
+        return false;
+    }
+    if (p_date_invoice ==''){
+        errorModalCall(GetAppMessage('Invalid_invoice')+' date.');
+        
+        //alert(GetAppMessage("Invalid_invoice")+' date');
+        return false;
+    }
+    
+    if (p_price_currency == '') {
+        errorModalCall(GetAppMessage('Invalid_invoice')+' Currency.');
+        
+        //alert(GetAppMessage("Invalid_invoice")+' Currency.');
+        return false;
+    } 
+    
+    p_date_invoice=p_date_invoice.replace("/",".");
+    p_date_invoice=p_date_invoice.replace("/",".");
+    
+    var p_invoice_status_id = document.getElementById("invoice_status_id").value;
+    var p_invoice_type = document.getElementById("invoice_type").value;
+    
+    
+    var p_client_id = document.getElementById("client_id").value;
+    var p_client_name = document.getElementById("client_name").value;
+    var p_client_firstname = document.getElementById("client_firstname").value;
+    var p_client_lastname = document.getElementById("client_lastname").value;
+    var p_client_street_number = document.getElementById("client_street_number").value;
+    var p_client_street = document.getElementById("client_street").value;
+    var p_client_street2 = document.getElementById("client_street2").value;
+    var p_client_country_id = document.getElementById("client_country_id").value;
+    var p_client_province_id = document.getElementById("client_province_id").value;
+
+    
+    var p_client_zip_code = document.getElementById("client_zip_code").value;
+    var p_client_place = document.getElementById("client_place").value;
+    var p_seller_id = document.getElementById("seller_id").value;
+    var p_seller_name = document.getElementById("seller_name").value;
+    var p_seller_firstname = document.getElementById("seller_firstname").value;
+    var p_seller_lastname = document.getElementById("seller_lastname").value;
+    var p_seller_street_number = document.getElementById("seller_street_number").value;
+    var p_seller_street = document.getElementById("seller_street").value;
+    var p_seller_street2 = document.getElementById("seller_street2").value;
+    var p_seller_country_id = document.getElementById("seller_country_id").value;
+    var p_seller_province_id = document.getElementById("seller_province_id").value;
+
+    var p_seller_zip_code = document.getElementById("seller_zip_code").value;
+    var p_seller_place = document.getElementById("seller_place").value;
+    var p_seller_phone = document.getElementById("seller_phone").value;
+    var p_seller_mobile = document.getElementById("seller_mobile").value;
+    var p_seller_email = document.getElementById("seller_email").value;        
+    var p_payment_bank_account_name = document.getElementById("payment_bank_account_name").value;
+    var p_payment_bank_name = document.getElementById("payment_bank_name").value;
+    var p_payment_bank_address = document.getElementById("payment_bank_address").value;
+    var p_payment_bank_country_id = document.getElementById("payment_bank_country_id").value;
+    var p_bank_province_id = document.getElementById("bank_province_id").value;
+
+
+    var p_payment_bank_zipcode = document.getElementById("payment_bank_zipcode").value;
+    var p_payment_bank_place = document.getElementById("payment_bank_place").value;
+    var p_payment_bank_iban = document.getElementById("payment_bank_iban").value;
+    var p_payment_bank_account = document.getElementById("payment_bank_account").value;
+    var p_payment_bank_swift = document.getElementById("payment_bank_swift").value;
+    
+    var p_detail_rows = '';
+    
+    var tbl = document.getElementById("details_tbl");
+    var rCount = tbl.rows.length;
+    var mdt,mcaption,mtotal_item;
+    var valid_det_rec_flag=0;       // to check if any valid detail record exists or not for validation.
+
+    for (var i=1; i<rCount; i++){
+        try {
+            mdt=tbl.rows[i].cells[1].getElementsByTagName('input')[0].value;
+            mcaption=tbl.rows[i].cells[2].getElementsByTagName('input')[0].value;
+            mtotal_item=tbl.rows[i].cells[3].getElementsByTagName('input')[0].value;
+            p_detail_rows+=mdt;
+            
+            if (isNaN(Number(mtotal_item))) {
+                mtotal_item='0';
+            }
+            
+            if (valid_det_rec_flag == 0){
+                //if ( (Number(mtotal_item) == "0") || (Number(mtotal_item) == NaN) ){
+                if ( (Number(mtotal_item) == "0") && (mcaption == "") && (mdt == "") ){
+                    valid_det_rec_flag=0;
+                }else {
+                    valid_det_rec_flag=1;
+                } 
+            }
+            
+            p_detail_rows+='|^|'+mcaption;
+            p_detail_rows+='|^|'+mtotal_item;
+            p_detail_rows+="|~|";
+        }
+        catch(err) {
+            //alert(err.message);
+        }                        
+    };
+
+    var p_e_transfer_email = $("#e_transfer_email").val();
+    var p_name_for_checks = $("#name_for_checks").val();
+
+    var tax_name = $("input[name='tax_name[]']").map(function(){return $(this).val();}).get();
+    var tax_percentage = $("input[name='tax_percentage[]']").map(function(){return $(this).val();}).get();
+    var tax_number = $("input[name='tax_number[]']").map(function(){return $(this).val();}).get();
+    var tax_amount = $("input[name='tax_amount[]']").map(function(){return $(this).val();}).get();
+    
+    var expense_name = $("input[name='expense_name[]']").map(function(){return $(this).val();}).get();
+    var expense_amount = $("input[name='expense_amount[]']").map(function(){return $(this).val();}).get();
+    
+    //console.log(p_detail_rows);
+    //alert(p_detail_rows);
+    
+    if (valid_det_rec_flag == 0 ){
+        errorModalCall(GetAppMessage('ENTER-ONE-VALID-DETAIL-RECORD'));
+        
+        //alert(GetAppMessage("ENTER-ONE-VALID-DETAIL-RECORD"));
+        return false;
+    }
+    
+    if (p_auto_id == ''){
+        p_auto_id = 0;
+    }
+    if (p_invoice_type == ''){
+        p_invoice_type = 0;
+    }
+    var status_flag='';
+    var data='' ;
+        
+        //data=data.replace(/"/ig,'\"');
+        //data=data.replace(/'/ig,"\'");
+        
+        console.log(data);            
+        $.ajax({
+                url: 'invoice_data.php',
+                data: {type:'add_edit_manual_invoice',p_auto_id:p_auto_id,p_invoice_id:p_invoice_id,p_invoice_type:p_invoice_type
+        ,p_invoice_name:p_invoice_name,p_date_invoice:p_date_invoice,p_client_id:p_client_id
+        ,p_client_name:p_client_name,p_client_firstname:p_client_firstname,p_client_lastname:p_client_lastname
+        ,p_client_street_number:p_client_street_number,p_client_street:p_client_street,p_client_street2:p_client_street2
+        ,p_client_country_id:p_client_country_id,p_client_zip_code:p_client_zip_code,p_client_place:p_client_place
+        ,p_seller_id:p_seller_id,p_seller_name:p_seller_name,p_seller_firstname:p_seller_firstname
+        ,p_seller_lastname:p_seller_lastname,p_seller_street_number:p_seller_street_number,p_seller_street:p_seller_street
+        ,p_seller_street2:p_seller_street2,p_seller_country_id:p_seller_country_id,p_seller_zip_code:p_seller_zip_code
+        ,p_seller_phone:p_seller_phone,p_seller_mobile:p_seller_mobile
+        ,p_seller_place:p_seller_place,p_seller_email:p_seller_email,p_payment_bank_account_name:p_payment_bank_account_name
+        ,p_payment_bank_name:p_payment_bank_name,p_payment_bank_address:p_payment_bank_address,p_payment_bank_country_id:p_payment_bank_country_id
+        ,p_payment_bank_zipcode:p_payment_bank_zipcode,p_payment_bank_place:p_payment_bank_place,p_payment_bank_iban:p_payment_bank_iban
+        ,p_payment_bank_account:p_payment_bank_account,p_payment_bank_swift:p_payment_bank_swift,p_price_currency:p_price_currency
+        ,p_detail_rows:p_detail_rows ,p_client_province_id:p_client_province_id,p_seller_province_id:p_seller_province_id,p_bank_province_id:p_bank_province_id 
+        ,tax_name:tax_name ,tax_percentage:tax_percentage,tax_number:tax_number,tax_amount:tax_amount 
+        ,expense_name:expense_name ,expense_amount:expense_amount,p_e_transfer_email:p_e_transfer_email,p_name_for_checks:p_name_for_checks},
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                encode:true,
+                //contentType: false,
+                //cache: false, 
+                //processData:false,                    
+                success:function(result){
+                    $.each(result, function(key,value){
+                        console.log(value.statu);
+                    if(value.status == 'success')
+                    {
+                        status_flag = 'success';
+                        p_auto_id=value.auto_id;
+                        document.getElementById('auto_id').value=value.auto_id;
+                        document.getElementById('invoice_id').value=value.invoice_id;
+                        successModalCall(GetAppMessage('save_confirm_message'));
+                    }
+                    else
+                    {
+                        errorModalCall(GetAppMessage('error_message_text'));
+
+                    } 
+                    });   //for each record
+                },   // success
+                error: function(ts) { 
+                    errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
+
+                }                
+            
+        }); //ajax-type
+        
+        if (status_flag == 'success') {
+            document.getElementById('action').value='edit';
+            var editurl = "invoice_manual.html?auto_id="+p_auto_id+"&action=edit"
+            window.open(editurl,"_self");                        
+        }            
+        
+        return false;
+        
+}   //AddEditInvoice
 </script>
 @endsection

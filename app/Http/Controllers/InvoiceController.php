@@ -10,6 +10,8 @@ use App\Models\InvoiceItem;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Province;
+use App\Models\SchoolTeacher;
+use App\Models\SchoolStudent;
 use App\Models\EmailTemplate;
 use App\Models\AttachedFile;
 use App\Mail\SportloginEmail;
@@ -893,9 +895,44 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
+        
+        $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
+        $students = DB::table('school_student')
+                    ->join('students','school_student.student_id','=','students.id')
+                    ->where(['school_id' => $schoolId, 'school_student.is_active' => 1])
+                    ->get();
+
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces'));
+        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers'));
+    }
+
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function invoiceData(Request $request)
+    {   
+        $user = $request->user();
+        $dataParam = $request->all();
+        
+        $id= trim($dataParam['p_code']);
+        $type= trim($dataParam['p_type']);
+
+        if($type == 'student'){
+            $userData = DB::table('students')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }elseif($type == 'teacher'){
+            $userData = DB::table('teachers')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }    
+        return response()->json($userData);
     }
 }
