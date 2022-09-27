@@ -580,12 +580,12 @@ class AgendaController extends Controller
                 }
 
                 if ($fetch->duration_minutes > 60) {
-                    $e['title'] = '';
                     if ($user->isTeacherAdmin()) {
-                        $e['title_extend']= ' <br/> Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= $e['title'].' <br/> Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
-                        $e['title_extend']= ' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= $e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
+                    $e['title'] = '';
                 }elseif($fetch->duration_minutes > 44){
                     $e['title']= $e['event_type_name'].' '.$student_name;
                 }
