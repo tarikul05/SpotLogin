@@ -57,8 +57,14 @@ Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class
 //AJAX get student lessons for invoice
 Route::post('get_student_lessons', [App\Http\Controllers\InvoiceController::class, 'getStudentLessons'])->name('get_student_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-//AJAX get student lessons for invoice
+//AJAX get teacher lessons for invoice
 Route::post('get_teacher_lessons', [App\Http\Controllers\InvoiceController::class, 'getTeacherLessons'])->name('get_teacher_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+//AJAX generate teacher invoice
+Route::post('generate_teacher_invoice', [App\Http\Controllers\InvoiceController::class, 'generateTeacherInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+//AJAX generate student invoice
+Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController::class, 'generateStudentInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 //AJAX update teacher discount

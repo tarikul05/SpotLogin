@@ -797,7 +797,9 @@ $(document).ready(function(){
 		console.log(data);
 
 		$.ajax({
-			url: '../student/student_events_data.php',
+			url: BASE_URL + '/generate_student_invoice',
+			
+			//url: '../student/student_events_data.php',
 			data: data,
 			type: 'POST',
 			dataType: 'json',

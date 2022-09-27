@@ -708,7 +708,6 @@ class InvoiceController extends Controller
         //$no_of_teachers = $school->max_teachers;
         try {
             $data = $request->all();
-            $user = $request->user();
             $p_person_id = trim($data['p_person_id']);
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
@@ -821,6 +820,100 @@ class InvoiceController extends Controller
             //dd($studentEvents->toSql());
             $data = $teacherEvents->get();
             //dd($data);
+
+            $result = array(
+                'status' => true,
+                'message' => __('We got a list of invoice'),
+                'data' => $data,
+                //'no_of_teachers' =>$no_of_teachers
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    /**
+     *  AJAX action to generate teacher invoice
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-09-27
+     */
+    public function generateTeacherInvoice(Request $request)
+    {
+        $user = $request->user();
+        $result = array(
+            'status' => false,
+            'message' => __('failed to get lesson data'),
+        );
+        try {
+            $data = $request->all();
+            $p_person_id = trim($data['p_person_id']);
+            $p_school_id = trim($data['school_id']);
+            $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
+            $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+
+            $p_invoice_id=trim($data['p_invoice_id']);
+            $p_discount_perc=trim($data['p_discount_perc']);
+            
+            // $query="call generate_new_teacher_invoice_new('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_billing_period_start_date','$p_billing_period_end_date','$p_discount_perc');";
+            // //echo "<script>alert($query);</script>";exit;
+            // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
+            // while($row = mysql_fetch_assoc($result))
+            // {
+            //     $data[]=$row;
+            // }
+            // echo json_encode($data);
+
+            $result = array(
+                'status' => true,
+                'message' => __('We got a list of invoice'),
+                'data' => $data,
+                //'no_of_teachers' =>$no_of_teachers
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    /**
+     *  AJAX action to generate student invoice
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-09-27
+     */
+    public function generateStudentInvoice(Request $request)
+    {
+        $user = $request->user();
+        $result = array(
+            'status' => false,
+            'message' => __('failed to get lesson data'),
+        );
+        try {
+            $data = $request->all();
+            $p_person_id = trim($data['p_person_id']);
+            $p_school_id = trim($data['school_id']);
+            $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
+            $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+
+            $p_invoice_id=trim($data['p_invoice_id']);
+            $p_discount_perc=trim($data['p_discount_perc']);
+            
+            // $query="call generate_new_teacher_invoice_new('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_billing_period_start_date','$p_billing_period_end_date','$p_discount_perc');";
+            // //echo "<script>alert($query);</script>";exit;
+            // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
+            // while($row = mysql_fetch_assoc($result))
+            // {
+            //     $data[]=$row;
+            // }
+            // echo json_encode($data);
 
             $result = array(
                 'status' => true,

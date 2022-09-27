@@ -837,6 +837,62 @@ $(document).ready(function(){
 	});
 
 
+	$('#btn_convert_invoice').click(function(e) {
+		$(this).attr("disabled", "disabled");
+	    var p_person_id = document.getElementById("person_id").value;
+		let school_id = document.getElementById("school_id").value,
+
+	    var from_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").format("YYYY.MM.DD");
+	    var to_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").endOf('month').format("YYYY.MM.DD");
+	    var p_invoice_id = '';
+	    var auto_id = 0;
+	    var p_month = document.getElementById("smonth").value;
+	    var p_year = document.getElementById("syear").value;
+
+		var p_billing_period_start_date = $("#billing_period_start_date").val();
+        var p_billing_period_end_date = $("#billing_period_end_date").val();
+
+	    var p_discount_perc = document.getElementById('discount_perc').value;
+
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date='+p_billing_period_end_date;
+	    $.ajax({
+			url: BASE_URL + '/generate_teacher_invoice',
+			
+			//url: '../teacher/teacher_events_data.php',
+			data: data,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(result) {
+
+				$.each(result, function(key, value) {
+				if (value.status == 'success') {
+					auto_id = value.auto_id;
+					//DisplayMessage("Facture assistant généré avec succès");
+					successModalCall(GetAppMessage('invoice_generated_msg'));
+					// alert(GetAppMessage('invoice_generated_msg'));
+					//location.reload(); //commented by soumen divert to invoice screen.
+				} else {
+					// alert(value.status);
+					errorModalCall(GetAppMessage('error_message_text'));
+				}
+				});
+				//location.reload();
+			}, // success
+			error: function(ts) {
+				errorModalCall(GetAppMessage('error_message_text'));
+				// alert(ts.responseText + ' Generate Invoice')
+			}
+	    }); // Ajax
+	    if (auto_id > 0) {
+	      var url = "../invoice/invoice_modification.html?auto_id=" + auto_id + "&action=edit";
+		  setTimeout(function(){ window.open(url, "_self");}, 3000);
+	      //window.location(url); 
+	    }
+
+	    return false;
+	});
+
 
 
 
