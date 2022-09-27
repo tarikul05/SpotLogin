@@ -592,8 +592,9 @@ class AgendaController extends Controller
                         $e['title_extend']= '<br/>'.$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                     $e['title'] = '';
-                }elseif($fetch->duration_minutes > 44){
-                    $e['title']= $e['event_type_name'].' '.$student_name;
+                }
+                elseif($fetch->duration_minutes > 44){
+                    $e['title']= $e['title'].' '.$student_name;
                 }
             }
 
