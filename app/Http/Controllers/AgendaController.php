@@ -179,45 +179,51 @@ class AgendaController extends Controller
                 ];
             }
             $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
-            foreach ($eventdetails as $key => $eventdetail) {
-                $eventDetailPresent = [
-                    'is_locked' => 1,
-                    'participation_id' => 200,
-                ];
-                if (isset($data['unlock'])) {
+            if (!empty($eventdetails)) {
+                foreach ($eventdetails as $key => $eventdetail) {
                     $eventDetailPresent = [
-                        'is_locked' => 0,
+                        'is_locked' => 1,
                         'participation_id' => 200,
                     ];
-                }
-                $eventDetailAbsent = [
-                    'is_locked' => 1,
-                    // 'participation_id' => 199,
-                ];
-                if (isset($data['unlock'])) {
+                    if (isset($data['unlock'])) {
+                        $eventDetailPresent = [
+                            'is_locked' => 0,
+                            'participation_id' => 200,
+                        ];
+                    }
                     $eventDetailAbsent = [
-                        'is_locked' => 0,
-                        'participation_id' => 200,
+                        'is_locked' => 1,
+                        // 'participation_id' => 199,
                     ];
-                }
+                    if (isset($data['unlock'])) {
+                        $eventDetailAbsent = [
+                            'is_locked' => 0,
+                            'participation_id' => 200,
+                        ];
+                    }
 
-                
-                if ($eventdetail->participation_id !== 199) {
-                    $eventdetail = $eventdetail->update($eventDetailPresent);
-                } else {
-                    $eventdetail = $eventdetail->update($eventDetailAbsent);
-                }
+                    
+                    if ($eventdetail->participation_id !== 199) {
+                        $eventdetail = $eventdetail->update($eventDetailPresent);
+                    } else {
+                        $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    }
 
 
-                if ($eventdetail)
-                {
-                    $result = array(
-                        "status"     => 'success',
-                        'message' => __('Confirmed'),
-                    );
+                    if ($eventdetail)
+                    {
+                        $result = array(
+                            "status"     => 'success',
+                            'message' => __('Confirmed'),
+                        );
+                    }
                 }
+            }else {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed without student'),
+                );
             }
-
 
             return response()->json($result);
 
@@ -1012,13 +1018,15 @@ class AgendaController extends Controller
                         //'participation_id' => 199,
                     ];
                     $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
-                    foreach ($eventdetails as $key => $eventdetail) {
-                        if ($eventdetail->participation_id != 199) {
-                            $eventdetail = $eventdetail->update($eventDetailPresent);
-                        } else {
-                            $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    if (!empty($eventdetails)) {
+                        foreach ($eventdetails as $key => $eventdetail) {
+                            if ($eventdetail->participation_id != 199) {
+                                $eventdetail = $eventdetail->update($eventDetailPresent);
+                            } else {
+                                $eventdetail = $eventdetail->update($eventDetailAbsent);
+                            }
                         }
-                    }
+                    }  
 
                 }
 
