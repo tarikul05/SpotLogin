@@ -487,7 +487,7 @@
 										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
 									</div>
 									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend">
+										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
 										<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
 									</div>
 									<div class="col-sm-1">
