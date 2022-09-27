@@ -997,7 +997,6 @@ class TeachersController extends Controller
     {
         $authUser = $request->user();
         $data = $request->all();
-        $user = User::find($data['user_id']);
         $result = array(
           'status' => 'failed',
           'message' => __('failed to remove image'),
