@@ -840,7 +840,7 @@ $(document).ready(function(){
 	$('#btn_convert_invoice').click(function(e) {
 		$(this).attr("disabled", "disabled");
 	    var p_person_id = document.getElementById("person_id").value;
-		let school_id = document.getElementById("school_id").value,
+		let school_id = document.getElementById("school_id").value;
 
 	    var from_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").format("YYYY.MM.DD");
 	    var to_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").endOf('month').format("YYYY.MM.DD");
@@ -1120,10 +1120,10 @@ function populate_teacher_lesson() {
 					resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					//resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.price_amount_buy + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-					total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
-					week_total_buy += parseFloat(value.buy_price) + parseFloat(value.costs_1);
+					total_buy += parseFloat(value.price_amount_buy) + parseFloat(value.costs_1);
+					week_total_buy += parseFloat(value.price_amount_buy) + parseFloat(value.costs_1);
 				}
 				if (value.costs_1 != 0) {
 					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';

@@ -727,6 +727,7 @@ class InvoiceController extends Controller
                     'event_details.id as event_id1',
                     'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price',
+                    'events.price_amount_buy as price_amount_buy',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'events.title as title',
