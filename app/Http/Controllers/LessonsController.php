@@ -320,8 +320,16 @@ class LessonsController extends Controller
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
+                $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+                if($eventCategory['invoiced_type'] == 'S'){
+                    $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
+                    $teacher_id = $teacherData['teacher_id'];
+                }else{
+                   $teacher_id = $lessonData['teacher_select']; 
+                }
+
+                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
                 if($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = (($lessonPriceTeacher['price_buy'])*($stu_num[1])*($lessonData['duration']))/60 ;
@@ -459,6 +467,14 @@ class LessonsController extends Controller
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
                 $stu_num = explode("_", $lessonData['sevent_price']);
+                $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
+
+                if($eventCategory['invoiced_type'] == 'S'){
+                    $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
+                    $teacher_id = $teacherData['teacher_id'];
+                }else{
+                   $teacher_id = $lessonData['teacher_select']; 
+                }
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
 

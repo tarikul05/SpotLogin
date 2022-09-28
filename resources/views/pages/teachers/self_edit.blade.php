@@ -39,16 +39,9 @@
 					{{ __('Parameters')}}
 					</button>
 				@endcan
-				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Sections and prices')}}
-				</a>
-				<!-- comented for 1st release
 				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
-				</button> -->
-
-
-
+				</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
