@@ -476,7 +476,7 @@ class LessonsController extends Controller
                    $teacher_id = $lessonData['teacher_select']; 
                 }
 
-                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+                $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
                 if($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = (($lessonPriceTeacher['price_buy'])*($stu_num[1])*($lessonData['duration']))/60 ;
