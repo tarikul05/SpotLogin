@@ -119,8 +119,8 @@
                                     @endcan
 
 
-                                    @if($AppUI->isTeacher())
-                                        <!-- <a class="dropdown-item" href="/logout">{{ __('Price') }}</a> -->
+                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin())
+                                        <a href="{{ route('updateTeacher') }}" class="dropdown-item">{{ __('My Account') }}</a> 
                                     @endif
 
                                     <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
