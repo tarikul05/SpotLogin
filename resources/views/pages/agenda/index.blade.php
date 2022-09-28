@@ -287,7 +287,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="input-group"> 
-                                                                <input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
+                                                                <input id="Title" name="title" type="text" class="form-control" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -380,7 +380,7 @@
                                                     <div class="form-group row" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
-                                                            <input id="all_day" name="fullday_flag" type="checkbox" value="Y">
+                                                            <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
@@ -2085,7 +2085,7 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').text(event.event_type_name+' : '+event.title_for_modal); 
+                        $('#event_modal_title').html(event.event_type_name+' <br/> '+event.title_for_modal); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
@@ -2340,6 +2340,8 @@
                     const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
                     $('#end_date').val(endresult);
                     $('#end_time').val(endTime).trigger('change');
+                    $('#agenda_select').trigger('change');
+                    $('#Title').val('');
                 }
                 @endif
                     
@@ -3215,6 +3217,7 @@ $('#add_lesson').on('submit', function(e) {
         "name": "_token",
         "value": csrfToken,
     });
+    var errMssg = '';
 
     if(type == 1 || type == 2){
         if(type==1){
@@ -3266,7 +3269,7 @@ $('#add_lesson').on('submit', function(e) {
                 }
             }
         }else{
-            var errMssg = '';
+            // var errMssg = '';
             $('.student_list').removeClass('error');
         }
 
@@ -3337,6 +3340,8 @@ $('#add_lesson').on('submit', function(e) {
 
 
 $(document).ready(function() {
+    $('#agenda_select').trigger('change');
+
     var agenda_select = $("#agenda_select").val();
     var selected_school_ids = [];
     $.each($("#event_school option:selected"), function(){         
@@ -3389,6 +3394,9 @@ $("body").on('click', '#student_empty', function(event) {
 })
 
 $('#agenda_select').on('change', function() {
+    $('#all_day_input').prop( "checked", false)
+    $('#student_empty').prop( "checked", false)
+
     if(this.value != ''){
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
@@ -3416,7 +3424,8 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
-             $("#std-check-div").css('display', 'block');
+             // $("#std-check-div").css('display', 'block');
+            $('#category_select').trigger('change');
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3434,6 +3443,7 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
+            // $('#category_select').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3448,6 +3458,7 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').hide();
              $("#std-check-div").css('display', 'none');
+            // $('#category_select').trigger('change');
         }else if(this.value == 4){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'coach-off';
@@ -3462,10 +3473,15 @@ $('#agenda_select').on('change', function() {
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
+            // $('#category_select').trigger('change');
         }
 	}else{
         $('#agenda_form_area').hide();
     }
+
+    $('#EventModal').on('shown.bs.modal', function(event) {
+        $('body').find(".popover.show").removeClass("show")
+    });
 });
 
 $( document ).ready(function() {
@@ -3485,6 +3501,8 @@ $( document ).ready(function() {
             const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
             $('#end_date').val(endresult);
             $('#end_time').val(endTime).trigger('change');
+            $('#agenda_select').trigger('change');
+            $('#Title').val('');
         }
 
     });
