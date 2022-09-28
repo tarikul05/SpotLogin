@@ -108,8 +108,11 @@ class LessonsController extends Controller
                             'event_id'   => $event->id,
                             'teacher_id' => $eventData['teacher_select'],
                             'student_id' => $std,
-                            'buy_price' => (($eventData['sprice_amount_buy'])/($stu_num)),
+                            'buy_price' => ($eventData['sprice_amount_buy']),
+                            'buy_total' => (($eventData['sprice_amount_buy'])/($stu_num)),
                             'sell_price' => $eventData['sprice_amount_sell'],
+                            'sell_total' => $eventData['sprice_amount_sell'],
+                            'cost_1' => $eventData['extra_charges'],
                             'price_currency' => isset($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
@@ -222,8 +225,11 @@ class LessonsController extends Controller
                         'event_id'   => $eventId,
                         'teacher_id' => $eventData['teacher_select'],
                         'student_id' => $std,
-                        'buy_price' => (($eventData['sprice_amount_buy'])/($stu_num)),
+                        'buy_price' => ($eventData['sprice_amount_buy']),
+                        'buy_total' => (($eventData['sprice_amount_buy'])/($stu_num)),
                         'sell_price' => $eventData['sprice_amount_sell'],
+                        'sell_total' => $eventData['sprice_amount_sell'],
+                        'cost_1' => $eventData['extra_charges'],
                         'price_currency' => isset($eventData['sprice_currency']) ? $eventData['sprice_currency'] : null,
                         'participation_id' => !empty($eventData['attnValue'][$std]) ? $eventData['attnValue'][$std] : 0,
                     ];
@@ -308,6 +314,7 @@ class LessonsController extends Controller
                 $user = Auth::user();
                 $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
                 $school = School::active()->find($schoolId);
+               
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
@@ -322,7 +329,7 @@ class LessonsController extends Controller
                 $stu_num = explode("_", $lessonData['sevent_price']);
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                if($eventCategory['invoiced_type'] == 'S'){
+                if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
                     $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
                     $teacher_id = $teacherData['teacher_id'];
                 }else{
@@ -469,7 +476,7 @@ class LessonsController extends Controller
                 $stu_num = explode("_", $lessonData['sevent_price']);
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                if($eventCategory['invoiced_type'] == 'S'){
+                if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
                     $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
                     $teacher_id = $teacherData['teacher_id'];
                 }else{
