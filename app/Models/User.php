@@ -18,10 +18,11 @@ use App\Models\AttachedFile;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Traits\CreatedUpdatedBy;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes,CreatedUpdatedBy;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes,CreatedUpdatedBy, Billable;
 
     /**
      * The attributes that are mass assignable.
