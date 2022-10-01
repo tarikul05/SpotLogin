@@ -98,6 +98,9 @@ class UserController extends Controller
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1, 'is_sent_invite'=>1 ]);
 
+            $trialDays = 90;
+            $trialEndsAt = now()->addDays($trialDays);
+
             $usersData = [
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
@@ -110,7 +113,8 @@ class UserController extends Controller
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
                 'is_active'=>1,
-                'is_firstlogin'=>0
+                'is_firstlogin'=>0,
+                'trial_ends_at' => $trialEndsAt,
             ];
 
             $user = User::create($usersData);

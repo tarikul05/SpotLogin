@@ -48,7 +48,8 @@ class User extends Authenticatable
         'is_active',
         'is_firstlogin',
         'created_by',
-        'modified_by'
+        'modified_by',
+        'trial_ends_at',
     ];
 
     /**

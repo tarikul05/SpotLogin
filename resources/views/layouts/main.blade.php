@@ -16,6 +16,7 @@
 @show
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/payment_style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
 <script type="text/javascript">
     var BASE_URL = "{{ URL::to('/')}}";
@@ -39,7 +40,19 @@
 <section class="m-4 top">
     @include('elements.header_menu')
 </section>
+
 <section class="" id="main-content">
+    @if( !$is_subscribed && (!empty($user->trial_ends_at) && ($today_date <= $ends_at)))
+    <div class="bg-white shadow-sm mb-100">
+        <div class="container-fluid area-container">
+            <div class="text-success">
+                <p class="text" style="font-size: 30px;">
+                    <small>Your trail period will expire with in <?php echo $day_diff ?> days <a href=""> upgrade </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    @endif
 	@include('elements/flash-message')
     @yield('content')
     <div id="pageloader">
