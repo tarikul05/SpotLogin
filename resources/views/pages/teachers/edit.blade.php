@@ -33,13 +33,15 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					{{ __('Contact Information') }}
+					<span class="pc">{{ __('Contact Information') }}</span>
+					<span class="sp">{{ __('Information') }}</span>
 				</button>
 				<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Photo')}}
 				</button>
 				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Sections and prices')}}
+					<span class="pc">{{ __('Sections and prices') }}</span>
+					<span class="sp">{{ __('prices') }}</span>
 				</a>
 				<!-- <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
