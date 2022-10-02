@@ -21,7 +21,7 @@
                                         ${{ number_format($plan['amount'], 2) }} / {{ $plan['interval'] }}<br>
                                         <span style="color: green;">save ${{ number_format((15*$plan['interval_count'] - $plan['amount']),2)}}</span>
                                     </li>
-                                    <li class="grey"><a href="" class="button">Choose</a></li>
+                                    <li class="grey"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose</a></li>
                                 </ul>
                             </div>
                         @endforeach

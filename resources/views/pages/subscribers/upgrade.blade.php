@@ -25,7 +25,7 @@
                     <li>Agenda</li>
                     <li>Coach</li>
                     <li>Invoice</li>
-                    <li class="grey"><a href="" class="button">Update</a></li>
+                    <li class="grey"><a href="{{ route('subscription.list') }}" class="button">Update</a></li>
                 </ul>
             </div>
         </div>

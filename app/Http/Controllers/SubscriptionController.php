@@ -23,7 +23,7 @@ class SubscriptionController extends Controller
 
     public function index()
     {
-        
+
     }
 
     public function upgradePlan(Request $request)
@@ -56,6 +56,7 @@ class SubscriptionController extends Controller
                     []
                 );
                 $plans[] = [
+                    'id' => $get_plan->id,
                     'amount' => $get_plan->amount / 100,
                     'interval' => $get_plan->interval,
                     'interval_count' => $get_plan->interval_count,
@@ -65,6 +66,21 @@ class SubscriptionController extends Controller
                 ];
             }
             return view('pages.subscribers.list', compact('plans', 'user'));
+        } catch (Exception $e) {
+            // throw error message
+        }
+    }
+
+    public function supscribePlan( Request $request, $plain_id)
+    {
+        try {
+            $single_plan_info = $this->stripe->plans->retrieve($plain_id, []);
+            $product_object = $this->stripe->products->retrieve(
+                $single_plan_info->product,
+                []
+            );
+            $intent = $request->user()->createSetupIntent();
+            return view('pages.subscribers.single_subs', compact('single_plan_info', 'product_object', 'intent'));
         } catch (Exception $e) {
             // throw error message
         }
