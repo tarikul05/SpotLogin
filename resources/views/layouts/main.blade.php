@@ -47,7 +47,7 @@
         <div class="container-fluid area-container">
             <div class="text-success">
                 <p class="text" style="font-size: 30px;">
-                    <small>Your trail period will expire with in <?php echo $day_diff ?> days <a href=""> upgrade </a>
+                    <small>Your trail period will expire with in <?php echo $day_diff ?> days <a href="{{ route('subscription.upgradePlan') }}"> upgrade </a>
                 </p>
             </div>
         </div>

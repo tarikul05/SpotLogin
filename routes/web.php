@@ -148,6 +148,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/add-event-level', 'EventLevelController@addLevel')->name('event_level.create');
   Route::delete('/remove-event-level/{key}', 'EventLevelController@removeLevel')->name('event_level.destroy');
 
+  // payment routes
+  Route::get('/subscription/upgrade-plan', [App\Http\Controllers\SubscriptionController::class, 'upgradePlan'])->name('subscription.upgradePlan');
+  Route::get('/subscription/plan-list', [App\Http\Controllers\SubscriptionController::class, 'subscribePlanList'])->name('subscription.list');
+
   Route::prefix('admin')->group(function() {
 
     Route::resource('roles', "RoleController");
