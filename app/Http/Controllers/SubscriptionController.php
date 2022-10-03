@@ -85,4 +85,37 @@ class SubscriptionController extends Controller
             // throw error message
         }
     }
+    public function supscribePlanStore(Request $request){
+        try {
+            $user = $request->user();
+            //find reming day
+            $today_date = new DateTime();
+            $ends_at = auth()->user()->trial_ends_at;
+            $ends_at = new DateTime($ends_at);
+            $day_diff = $ends_at->diff($today_date)->format("%a");
+            $plan_id = $request->plan;
+            $plan_name = $request->plan_name;
+            // $plan = $this->stripe->plans->retrieve($plan_id, []);
+            if ($user->subscribed('default')) {
+                return redirect()->route('agenda')->with('success', 'already, You have subscribed ' . $plan_name . ' plan');
+            }
+            $paymentMethod = $request->paymentMethod;
+            $user->createOrGetStripeCustomer();
+            $user->updateDefaultPaymentMethod($paymentMethod);
+            $user->newSubscription('default', $plan_id)
+                    ->create($paymentMethod, [
+                        'email' => $user->email,
+                    ],
+                    [
+                        'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
+                    ]
+                );
+            $user->trail_remain_days = $day_diff;
+            $user->trial_ends_at = NULL;
+            $user->save();
+            return redirect()->route('agenda')->with('success', 'You have subscribed ' . $plan_name . ' plan');
+        } catch (IncompletePayment $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 }

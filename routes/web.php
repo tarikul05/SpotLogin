@@ -152,6 +152,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/subscription/upgrade-plan', [App\Http\Controllers\SubscriptionController::class, 'upgradePlan'])->name('subscription.upgradePlan');
   Route::get('/subscription/plan-list', [App\Http\Controllers\SubscriptionController::class, 'subscribePlanList'])->name('subscription.list');
   Route::get('/subscribe/{plan_id}', [App\Http\Controllers\SubscriptionController::class, 'supscribePlan'])->name('subscribe.plan');
+  Route::post('/subscribe/store', [App\Http\Controllers\SubscriptionController::class, 'supscribePlanStore'])->name('subscribe.store');
 
   Route::prefix('admin')->group(function() {
 
