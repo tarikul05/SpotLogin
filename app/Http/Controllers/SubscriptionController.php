@@ -105,6 +105,7 @@ class SubscriptionController extends Controller
             $user->newSubscription('default', $plan_id)
                     ->create($paymentMethod, [
                         'email' => $user->email,
+                        'name' => $user->firstname,
                     ],
                     [
                         'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
