@@ -1370,19 +1370,19 @@ label.profile_img_area {
         margin-top: 0px;
     }
     .students_list div#example_length {
-        width: 26%;
+        width: 28%;
         float: left;
         margin-right: 4%;
     }
     .students_list div#example_filter {
-        width: 68%;
+        width: 66%;
         padding: 0;
         margin: 0;
         margin-bottom: 30px;
     }
     .students_list div#example_filter label,
     .students_list #example_filter a {
-        margin-top: 20px;
+        margin-top: 0px;
     }
     .students_list div#example_filter input {
         max-width: 95%;
