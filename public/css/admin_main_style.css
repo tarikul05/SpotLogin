@@ -1405,4 +1405,8 @@ label.profile_img_area {
     #main-content {
         margin-top: 65px;
     }
+    .fc-ltr .fc-list-heading-alt{
+        float: left;
+        padding-left: 20%;
+    }
 }
