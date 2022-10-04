@@ -381,7 +381,7 @@ class TeachersController extends Controller
             }
         }
 
-        if($teacher->user->isSchoolAdmin() || $teacher->user->isTeacherAdmin()){
+        if($teacher->isSchoolAndCoachAdmin($schoolId)){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();
@@ -495,7 +495,7 @@ class TeachersController extends Controller
             $lanCode = Session::get('locale');
         }
 
-        if($teacher->user->isSchoolAdmin() || $teacher->user->isTeacherAdmin()){
+        if($teacher->isSchoolAndCoachAdmin($schoolId)){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();

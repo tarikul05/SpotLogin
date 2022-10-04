@@ -145,7 +145,30 @@ class Teacher extends BaseModel
         return $this->firstname . " " . $this->middlename. " " . $this->lastname;
     }
 
-   
+
+    /**
+     * Get the schools for the teacher.
+     */
+    public function related_school_data()
+    {
+        return $this->hasMany(SchoolTeacher::class);
+    }
+
+
+    public function getRole($school_id)     
+    {
+        if (!empty($school_id)) {
+            $scTeacher = $this->related_school_data()->where('school_id',$school_id)->first();
+            return !empty($scTeacher) ? $scTeacher->role_type : null ;
+        }
+        return null;
+    }
+
+    public function isSchoolAndCoachAdmin($school_id)
+    {
+        $role = $this->getRole($school_id);
+        return (in_array($role, ['school_admin','teachers_admin'])) ? true : false;
+    }
 
 }
 
