@@ -783,19 +783,8 @@ $(document).ready(function(){
 		
 		var p_invoice_id = '';
 		var auto_id = 0;
-		var p_discount_percent_1 = document.getElementById("s_percent_1").value,
-			p_discount_percent_2 = document.getElementById("s_percent_2").value,
-			p_discount_percent_3 = document.getElementById("s_percent_3").value,
-			p_discount_percent_4 = document.getElementById("s_percent_4").value,
-			p_discount_percent_5 = document.getElementById("s_percent_5").value,
-			p_discount_percent_6 = document.getElementById("s_percent_6").value;
-
-
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
-		data += '&p_discount_percent_1=' + p_discount_percent_1 + '&p_discount_percent_2=' + p_discount_percent_2;
-		data += '&p_discount_percent_3=' + p_discount_percent_3 + '&p_discount_percent_4=' + p_discount_percent_4;
-		data += '&p_discount_percent_5=' + p_discount_percent_5 + '&p_discount_percent_6=' + p_discount_percent_6;
 		
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',

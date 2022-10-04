@@ -909,14 +909,6 @@ class InvoiceController extends Controller
             $dateEnd = date('Y-m-d', strtotime(str_replace('/', '-', $p_to_date)));
 
             $p_invoice_id=trim($data['p_invoice_id']);
-            // $p_discount_perc=trim($data['p_discount_perc']);
-            // $p_discount_percent_1=trim($data['p_discount_percent_1']);
-            // $p_discount_percent_2=trim($data['p_discount_percent_2']);
-            // $p_discount_percent_3=trim($data['p_discount_percent_3']);
-            // $p_discount_percent_4=trim($data['p_discount_percent_4']);
-            // $p_discount_percent_5=trim($data['p_discount_percent_5']);
-            // $p_discount_percent_6=trim($data['p_discount_percent_6']);
-            
             
             $schoolId = $p_school_id;
             $user = $request->user();
