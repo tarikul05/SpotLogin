@@ -899,15 +899,314 @@ class InvoiceController extends Controller
         );
         try {
             $data = $request->all();
+            //dd($data);
             $p_person_id = trim($data['p_person_id']);
+            $p_student_id = trim($data['p_person_id']);
             $p_school_id = trim($data['school_id']);
-            $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
-            $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $p_from_date = trim($data['p_from_date']);
+            $p_to_date = trim($data['p_to_date']);
+            $dateS = date('Y-m-d', strtotime(str_replace('/', '-', $p_from_date)));
+            $dateEnd = date('Y-m-d', strtotime(str_replace('/', '-', $p_to_date)));
 
             $p_invoice_id=trim($data['p_invoice_id']);
-            $p_discount_perc=trim($data['p_discount_perc']);
+            // $p_discount_perc=trim($data['p_discount_perc']);
+            // $p_discount_percent_1=trim($data['p_discount_percent_1']);
+            // $p_discount_percent_2=trim($data['p_discount_percent_2']);
+            // $p_discount_percent_3=trim($data['p_discount_percent_3']);
+            // $p_discount_percent_4=trim($data['p_discount_percent_4']);
+            // $p_discount_percent_5=trim($data['p_discount_percent_5']);
+            // $p_discount_percent_6=trim($data['p_discount_percent_6']);
             
-            // $query="call generate_new_teacher_invoice_new('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_billing_period_start_date','$p_billing_period_end_date','$p_discount_perc');";
+            
+            $schoolId = $p_school_id;
+            $user = $request->user();
+            $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $user_role = '';
+            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+                $user_role = 'admin_teacher';
+                
+            }
+            if ($user->isTeacherAll()) {
+                $user_role = 'teacher_all';
+            }
+            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+                $user_role = 'teacher';
+            }
+
+            if ($school->school_type == 'C' || $user_role == 'teacher' || $user_role == 'teacher_all') {
+                $invoice_type = 'T';
+            } else {
+                $invoice_type = 'S';
+            }
+
+            // $studentEvents = DB::table('events')
+            //     ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            //     ->select(
+            //         'events.id as event_id',
+            //         'event_details.buy_total as buy_total',
+            //         'event_details.sell_total as sell_total',
+            //         'event_details.buy_price as buy_price',
+            //         'event_details.sell_price as sell_price'
+            //     )
+            //     //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
+            //     ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+            //     ->where(
+            //         [
+            //             'event_details.student_id' => $p_person_id,
+            //             'event_details.billing_method' => "E",
+            //             'events.is_active' => 1,
+            //             'event_details.participation_id >' => 198,
+            //             'events.is_sell_invoiced' => 0,
+            //             'events.school_id' => $p_school_id,
+            //         ]
+            //     );
+
+
+            // $user_role = 'superadmin';
+            // if ($user->person_type == 'App\Models\Student') {
+            //     $user_role = 'student';
+            // }
+            // if ($user->person_type == 'App\Models\Teacher') {
+            //     $user_role = 'teacher';
+            // }
+            // $coach_user = '';
+            // if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            //     $user_role = 'admin_teacher';
+            //     if ($user->isTeacherAdmin()) {
+            //         $coach_user = 'coach_user';
+            //     }
+            // }
+            // if ($user->isTeacherAll()) {
+            //     $user_role = 'teacher_all';
+            // }
+            // if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+            //     $user_role = 'teacher';
+            // }
+
+            // // dd($user);
+            // if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            //     $invoice_type = 'S';
+            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            // } else if ($user_role == 'teacher_all') {
+            //     $invoice_type = 'T';
+            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            // } else if ($user_role == 'teacher') {
+            //     $invoice_type = 'T';
+            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            //     $studentEvents->where('events.teacher_id', $user->person_id);
+            // } else {
+            // }
+
+            
+
+            // $studentEvents->where('events.date_start', '>=', $dateS);
+            // $studentEvents->where('events.date_end', '<=', $dateEnd);
+            
+            // //$studentEvents->where('events.date_start', '>=', $dateS);
+            // $studentEvents->orderBy('events.date_start', 'desc');
+            // //By
+            // $studentEvents->distinct('events.id');
+
+            // $studentEvents->groupBy('events.id');
+            // $data = $studentEvents->get();
+
+            $month_name = 'January';
+
+            //$v_inv_name = 'Facture '.$month_name.' '.year(v_period_starts);
+            
+            if($p_invoice_id=''){
+	            $v_invoice_id='';
+            }
+            else {
+                $v_invoice_id=$p_invoice_id;
+            }
+            $invoiceData['school_id'] = $schoolId;
+            $invoiceData['invoice_no'] = $v_invoice_id;
+            $invoiceData['invoice_type'] = 1;
+            $invoiceData['invoice_status'] = 1;
+            $invoiceData['date_invoice'] = Carbon::now()->format('Y-m-d H:i:s');
+            $invoiceData['period_starts'] = $dateS;
+            $invoiceData['period_ends'] = $dateEnd;
+            $invoiceData['invoice_name'] = 'test invoice name';
+            //$date_invoice = Carbon::createFromFormat('Y-m-d H:i:s', $invoiceData['date_invoice'], 'UTC'); // specify UTC otherwise defaults to locale time zone as per ini setting
+        
+            //$invoiceData['invoice_header'] = $invoiceData['invoice_name'].'-'.$invoiceData['client_name'].' du '.$date_invoice;
+            
+            //$invoiceData['client_id'] = $p_person_id;
+            
+
+            if ($invoice_type = 'T') {
+                $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId);
+                $professors->where('teacher_id',$user->person_id);
+                $professors = $professors->first();
+                $teacher = Teacher::find($professors->teacher_id);
+
+                $invoiceData['seller_id'] = $teacher->id;
+                $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
+                $invoiceData['seller_street'] = $teacher->street;
+                $invoiceData['seller_street_number'] = $teacher->street_number;
+                $invoiceData['seller_street2'] = $teacher->street2;
+                $invoiceData['seller_zip_code'] = $teacher->zip_code;
+                $invoiceData['seller_place'] = $teacher->place;
+                $invoiceData['seller_country_id'] = $teacher->country_code;
+                $invoiceData['seller_phone'] = $teacher->phone;
+                $invoiceData['seller_mobile'] = $teacher->mobile;
+                $invoiceData['seller_email'] = $teacher->email;
+                $invoiceData['seller_gender_id'] = $teacher->gender_id;
+                $invoiceData['seller_lastname'] = $teacher->firstname;
+                $invoiceData['seller_firstname'] = $teacher->lastname;
+            } else {
+                $invoiceData['seller_id'] = $schoolId;
+                $invoiceData['seller_name'] = $school->name;
+                $invoiceData['seller_street'] = $school->street;
+                $invoiceData['seller_street_number'] = $school->street_number;
+                $invoiceData['seller_street2'] = $school->street2;
+                $invoiceData['seller_zip_code'] = $school->zip_code;
+                $invoiceData['seller_place'] = $school->place;
+                $invoiceData['seller_country_id'] = $school->country_code;
+                $invoiceData['seller_phone'] = $school->phone;
+                $invoiceData['seller_mobile'] = $school->mobile;
+                $invoiceData['seller_email'] = $school->email;
+                $invoiceData['seller_gender_id'] = $school->contact_gender_id;
+                $invoiceData['seller_lastname'] = $school->contact_lastname;
+                $invoiceData['seller_firstname'] = $school->contact_firstname;
+            }
+            if (!empty($p_student_id)) {
+                $Sstudent = SchoolStudent::active()->onlyTeacher()->where('school_id',$schoolId);
+                $Sstudent->where('teacher_id',$p_student_id);
+                $studentSchool = $Sstudent->first();
+                $student = Student::find($studentSchool->student_id);
+                $invoiceData['client_id'] = $student->id;
+                $invoiceData['client_name'] = $student->firstname.'N '.$student->lastname;
+                $invoiceData['client_street'] = $student->street;
+                $invoiceData['client_street_number'] = $student->street_number;
+                $invoiceData['client_street2'] = $student->street2;
+                $invoiceData['client_zip_code'] = $student->zip_code;
+                $invoiceData['client_place'] = $student->place;
+                $invoiceData['client_country_id'] = $student->country_code;
+                // $invoiceData['client_phone'] = $student->phone;
+                // $invoiceData['client_mobile'] = $student->mobile;
+                // $invoiceData['client_email'] = $student->email;
+                $invoiceData['client_gender_id'] = $student->gender_id;
+                $invoiceData['client_lastname'] = $student->lastname;
+                $invoiceData['client_firstname'] = $student->firstname;
+            }
+           
+            
+            
+            
+
+
+            $invoiceData['payment_bank_iban'] = $school->bank_iban;
+            
+            $invoiceData['payment_bank_account_name'] = $school->bank_account_holder;
+            $invoiceData['payment_bank_account'] = $school->bank_account;
+            $invoiceData['payment_bank_swift'] = $school->bank_swift;
+            $invoiceData['payment_bank_name'] = $school->bank_name;
+            $invoiceData['payment_bank_address'] = $school->bank_address;
+            $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
+            $invoiceData['payment_bank_place'] = $school->bank_place;
+            $invoiceData['payment_bank_country_id'] = $school->bank_country_code;
+            
+
+            $invoiceData['discount_percent_1'] = $school->discount_percent_1;
+            $invoiceData['discount_percent_2'] = $school->discount_percent_2;
+            $invoiceData['discount_percent_3'] = $school->discount_percent_3;
+            $invoiceData['discount_percent_4'] = $school->discount_percent_4;
+            $invoiceData['discount_percent_5'] = $school->discount_percent_5;
+            $invoiceData['discount_percent_6'] = $school->discount_percent_6;
+            
+            //$invoiceData['invoice_currency'] = $data->price_currency;
+            $invoiceData['category_invoiced_type'] = $invoice_type;
+            $invoiceData['created_by'] = $user->id;
+            $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+            
+            
+
+
+            $invoiceData = Invoice::create($invoiceData);
+            
+
+            // $event->where('event_details.sell_invoice_id' = $v_invoice_id);
+            // update
+            // {
+            //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
+            //     $studentEvents->whereNull('event_details.sell_invoice_id');
+            // }
+
+            //$invoiceData['max_teachers'] = $school->max_teachers;
+            
+           // $invoiceData['school_type'] = $school->school_type;
+            //$invoiceData['person_type'] = $user->person_type;
+            
+            // $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
+
+
+            // foreach($eventDetailsStudentId as $std){
+            //     $dataDetails = [
+            //         'event_id'   => $eventData->id,
+            //         'teacher_id' => $fetch->teacher_id,
+            //         'student_id' => $std['student_id'],
+            //         'buy_price' => $fetch->price_amount_buy,
+            //         'sell_price' => $fetch->price_amount_sell,
+            //     ];
+            //     $eventDetails = EventDetails::create($dataDetails);
+            // }
+
+            
+            $invoiceItemData['invoice_id'] = 1;
+            $invoiceItemData['school_id'] = $schoolId;
+            $invoiceItemData['publication_mode'] = 'N,admin';
+            // if ($event_type == 10) {
+            //    $invoiceItemData['item_type'] = 1;
+            // }
+            // else {
+            //    $invoiceItemData['item_type'] = 2;
+            // }
+            $invoiceItemData['event_id'] = '';
+            $invoiceItemData['teacher_id'] = '';
+            $invoiceItemData['student_id'] = '';
+            $invoiceItemData['participation_id'] = '';
+            $invoiceItemData['price_type_id'] = 'event_price';
+            $invoiceItemData['is_locked'] = 'is_locked';
+            $invoiceItemData['date'] = 'date_start';
+            // if (event_type == 13) {
+            //    $invoiceItemData['caption'] = 'event_type_name: '.title.
+            //    if (costs_1 > 0) {
+            //     $invoiceItemData['caption'] .= '<br>(';
+            //    }
+            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
+            
+            // }
+            // if (event_type == 100) {
+            //    $invoiceItemData['caption'] = 'event_type_name: '.title.
+            //    if (costs_1 > 0) {
+            //     $invoiceItemData['caption'] .= '<br>(';
+            //    }
+            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
+            
+            // }
+            // if (title == null) {
+            //    if (participation_id > 199) {
+            //     $invoiceItemData['caption'] = participation_name;
+            //    }
+            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
+            
+            // }
+            $invoiceItemData['unit'] = 'event.duration_minute';
+            $invoiceItemData['unit_type'] = 'minutes';
+            $invoiceItemData['price'] = 'sell_price+costs_1+costs_2';
+            $invoiceItemData['price_unit'] = 'sell_price';
+            $invoiceItemData['price_currency'] = 'price_currency';
+            $invoiceItemData['total_item'] = 'sell_total+costs_1+costs_2';
+            $invoiceItemData['event_extra_expenses'] = 'costs_1+costs_2';
+
+
+            //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
             // //echo "<script>alert($query);</script>";exit;
             // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
             // while($row = mysql_fetch_assoc($result))

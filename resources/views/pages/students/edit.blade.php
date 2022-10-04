@@ -762,14 +762,15 @@ $(document).ready(function(){
 	}
 
 	$('#btn_convert_invoice').click(function(e) {
-
+		$(this).attr("disabled", "disabled");
 		var p_event_ids = GetCheckBoxSelectedValues('event_check');
 		if (p_event_ids == '') {
 			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
 			return false;
 		}
 
-		var p_person_id = document.getElementById("person_id").value;
+		var p_person_id = document.getElementById("person_id").value,
+			school_id = document.getElementById("school_id").value
 			//p_month = document.getElementById("smonth").value,
 			//p_year = document.getElementById("syear").value;
 
@@ -790,11 +791,11 @@ $(document).ready(function(){
 			p_discount_percent_6 = document.getElementById("s_percent_6").value;
 
 
-		data = 'type=generate_student_invoice&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
 		data += '&p_discount_percent_1=' + p_discount_percent_1 + '&p_discount_percent_2=' + p_discount_percent_2;
 		data += '&p_discount_percent_3=' + p_discount_percent_3 + '&p_discount_percent_4=' + p_discount_percent_4;
 		data += '&p_discount_percent_5=' + p_discount_percent_5 + '&p_discount_percent_6=' + p_discount_percent_6;
-		console.log(data);
+		
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -805,6 +806,8 @@ $(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function(result) {
+				console.log(result);
+				return false;
 				$.each(result, function(key, value) {
 					if (value.status == 'success') {
 						auto_id = value.auto_id;
@@ -827,7 +830,7 @@ $(document).ready(function(){
 
 		if (auto_id > 0) { 
 			var url = "../invoice/invoice_modification.html?auto_id=" + auto_id + "&action=edit";
-		setTimeout(function(){ window.open(url, "_self"); }, 3000);
+			setTimeout(function(){ window.open(url, "_self"); }, 3000);
 			
 			//window.location(url); 
 		}
