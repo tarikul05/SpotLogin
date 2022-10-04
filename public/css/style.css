@@ -741,7 +741,7 @@ button#save_btn_more i {
     padding-right: 10px;
 }
 #edit_lesson .btn_area {
-   /* position: absolute;
+    /* position: absolute;
     top: 130px;
     right: 7%;
     display: flex;
@@ -768,11 +768,15 @@ button#save_btn_more i {
     }
     .navbar-toggler {
         width: 60px;
+        float: right;
+        position: absolute;
+        right: 0;
+        top: 4px;
     }
     span.icon-bar {
         height: 2px;
         background-color: #fff;
-        margin: 5px 0;
+        margin: 4px 0;
         float: left;
         width: 100%;
     }
@@ -780,6 +784,7 @@ button#save_btn_more i {
         color: #fff;
         border: none;
         outline: none;
+        box-shadow: none;
     }
     .section_header_class label {
         margin: 15px 0 0px 0px;
@@ -800,7 +805,7 @@ button#save_btn_more i {
         margin-bottom: 15px;
     }
     .pull-right.btn-group.cal_top {
-        display: block;
+        display: flex;
         float: left;
         width: 100%;
     }
@@ -812,17 +817,22 @@ button#save_btn_more i {
         position: unset;
     }
     input#search_text {
-        max-width: 68%;
+        max-width: 30%;
         float: left;
+        height: 37px;
+        font-size: 13px;
     }
     a#add_lesson_btn {
-        width: 28%;
-        float: right;
+        width: 18%;
+        float: left;
         margin: 0;
-        padding: 6px;
-        position: absolute;
+        padding: 5px 11px;
+        position: relative;
         top: 0px;
         right: 0px;
+        line-height: 0.1;
+        height: 37px;
+        text-align: center;
     }
     a#btn_export_events {
         float: left;
@@ -847,7 +857,7 @@ button#save_btn_more i {
     div#nav-tab {
         display: flex;
         font-size: 14px;
-        margin-top: 40px;
+        margin-top: 0px;
     }
     #nav-tab .nav-link {
         margin-right: 12px;
@@ -874,10 +884,10 @@ button#save_btn_more i {
     .btn_area {
         z-index: 9;
     }
-    #edit_lesson .btn_area{
+    #edit_lesson .btn_area {
         top: 140px;
     }
-    #edit_lesson .btn.btn-theme-outline{
+    #edit_lesson .btn.btn-theme-outline {
         display: none;
     }
     #all_day_div111 label {
@@ -907,5 +917,24 @@ button#save_btn_more i {
     span.no_select {
         margin-top: 15px;
         margin-left: -6px;
+    }
+    .teacher_save {
+        position: absolute;
+        top: 134px;
+        right: 3%;
+        min-height: 30px !important;
+        padding: 7px !important;
+    }
+    button#save_btn {
+        min-width: 73px !important;
+    }
+    a#csv_btn,
+    a#csv_btn_import {
+        display: none;
+    }
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        float: left;
+        text-align: left;
     }
 }
