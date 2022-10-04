@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Language;
 use App\Models\Country;
 use DateTime;
+use Exception;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -60,13 +61,38 @@ class AppServiceProvider extends ServiceProvider
                     $ends_at = new DateTime($ends_at);
                     $day_diff = $ends_at->diff($today_date)->format("%a");
                     $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
+                    $product_info = NULL;
                 }else{
                     $trial_ends_date = null;
                     $day_diff = null;
                     $ends_at = new DateTime($user->trial_ends_at);
+                    $plan = $user->subscriptions()->active()->first();
+                    $product_info = $this->getPlanName($plan);
                 }
-                $view->with(compact('is_subscribed','trial_ends_date', 'day_diff','user', 'today_date', 'ends_at'));
+                $view->with(compact('is_subscribed','trial_ends_date', 'day_diff','user', 'today_date', 'ends_at','product_info'));
             }
         );
     }
+
+    public function getPlanName( $plan = null ){
+        try{
+            $get_product_name = $this->stripe->plans->retrieve($plan->stripe_price, []);
+            return $this->getProductName($get_product_name);
+        }catch(Exception $e){
+            //
+        }
+    }
+
+    public function getProductName( $get_product_name = null ){
+        try{
+            $product_info = $this->stripe->products->retrieve(
+                $get_product_name->product,
+                []
+            );
+            return $product_info;
+        }catch(Exception $e){
+            //
+        }
+    }
+
 }

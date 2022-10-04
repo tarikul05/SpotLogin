@@ -52,6 +52,16 @@
             </div>
         </div>
     </div>
+    @else
+    <div class="bg-white shadow-sm mb-100">
+        <div class="container-fluid area-container">
+            <div class="text-success">
+                <p class="text" style="font-size: 30px;">
+                    Welcome, you have subscribe a <span style="color: red;">{{ $product_info->name }}</span> plan
+                </p>
+            </div>
+        </div>
+    </div>
     @endif
 	@include('elements/flash-message')
     @yield('content')
