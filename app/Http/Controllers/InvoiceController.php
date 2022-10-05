@@ -10,6 +10,7 @@ use App\Models\InvoiceItem;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Province;
+use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
 use App\Models\EmailTemplate;
@@ -93,7 +94,7 @@ class InvoiceController extends Controller
                 $result_data->secondary_email = $student->email2;
             } else {
                 $result_data->class_name = 'teacher';
-                $teacher = Teacher::find($result->seller_id);
+                $teacher = Teacher::find($result_data->seller_id);
                 $result_data->primary_email = $teacher->email;
                 $result_data->secondary_email = $teacher->email2;
             }
@@ -152,7 +153,7 @@ class InvoiceController extends Controller
                 $emails[] = $student->email;
                 $emails[] = $student->email2;
             } else {
-                $target_user = $teacher = Teacher::find($result->seller_id);
+                $target_user = $teacher = Teacher::find($result_data->seller_id);
                 $emails[] = $teacher->email;
                 $emails[] = $teacher->email2;
             }
@@ -905,8 +906,8 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_from_date = trim($data['p_from_date']);
             $p_to_date = trim($data['p_to_date']);
-            $dateS = date('Y-m-d', strtotime(str_replace('/', '-', $p_from_date)));
-            $dateEnd = date('Y-m-d', strtotime(str_replace('/', '-', $p_to_date)));
+            $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $p_from_date)));
+            $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $p_to_date)));
 
             $p_invoice_id=trim($data['p_invoice_id']);
             
@@ -917,7 +918,7 @@ class InvoiceController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $user_role = '';
+            $user_role = 'superadmin';
             if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
                 $user_role = 'admin_teacher';
                 
@@ -928,85 +929,16 @@ class InvoiceController extends Controller
             if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
                 $user_role = 'teacher';
             }
-
-            if ($school->school_type == 'C' || $user_role == 'teacher' || $user_role == 'teacher_all') {
+            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+                $invoice_type = 'S';
+            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
+                $invoice_type = 'T';
+            } else if ($user_role == 'teacher') {
                 $invoice_type = 'T';
             } else {
-                $invoice_type = 'S';
             }
 
-            // $studentEvents = DB::table('events')
-            //     ->join('event_details', 'events.id', '=', 'event_details.event_id')
-            //     ->select(
-            //         'events.id as event_id',
-            //         'event_details.buy_total as buy_total',
-            //         'event_details.sell_total as sell_total',
-            //         'event_details.buy_price as buy_price',
-            //         'event_details.sell_price as sell_price'
-            //     )
-            //     //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-            //     ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-            //     ->where(
-            //         [
-            //             'event_details.student_id' => $p_person_id,
-            //             'event_details.billing_method' => "E",
-            //             'events.is_active' => 1,
-            //             'event_details.participation_id >' => 198,
-            //             'events.is_sell_invoiced' => 0,
-            //             'events.school_id' => $p_school_id,
-            //         ]
-            //     );
-
-
-            // $user_role = 'superadmin';
-            // if ($user->person_type == 'App\Models\Student') {
-            //     $user_role = 'student';
-            // }
-            // if ($user->person_type == 'App\Models\Teacher') {
-            //     $user_role = 'teacher';
-            // }
-            // $coach_user = '';
-            // if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            //     $user_role = 'admin_teacher';
-            //     if ($user->isTeacherAdmin()) {
-            //         $coach_user = 'coach_user';
-            //     }
-            // }
-            // if ($user->isTeacherAll()) {
-            //     $user_role = 'teacher_all';
-            // }
-            // if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            //     $user_role = 'teacher';
-            // }
-
-            // // dd($user);
-            // if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            //     $invoice_type = 'S';
-            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            // } else if ($user_role == 'teacher_all') {
-            //     $invoice_type = 'T';
-            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            // } else if ($user_role == 'teacher') {
-            //     $invoice_type = 'T';
-            //     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            //     $studentEvents->where('events.teacher_id', $user->person_id);
-            // } else {
-            // }
-
             
-
-            // $studentEvents->where('events.date_start', '>=', $dateS);
-            // $studentEvents->where('events.date_end', '<=', $dateEnd);
-            
-            // //$studentEvents->where('events.date_start', '>=', $dateS);
-            // $studentEvents->orderBy('events.date_start', 'desc');
-            // //By
-            // $studentEvents->distinct('events.id');
-
-            // $studentEvents->groupBy('events.id');
-            // $data = $studentEvents->get();
-
-            $month_name = 'January';
 
             //$v_inv_name = 'Facture '.$month_name.' '.year(v_period_starts);
             
@@ -1028,8 +960,7 @@ class InvoiceController extends Controller
         
             //$invoiceData['invoice_header'] = $invoiceData['invoice_name'].'-'.$invoiceData['client_name'].' du '.$date_invoice;
             
-            //$invoiceData['client_id'] = $p_person_id;
-            
+           
 
             if ($invoice_type = 'T') {
                 $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId);
@@ -1123,89 +1054,167 @@ class InvoiceController extends Controller
             $invoiceData = Invoice::create($invoiceData);
             
 
-            // $event->where('event_details.sell_invoice_id' = $v_invoice_id);
-            // update
-            // {
-            //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
-            //     $studentEvents->whereNull('event_details.sell_invoice_id');
-            // }
-
-            //$invoiceData['max_teachers'] = $school->max_teachers;
-            
-           // $invoiceData['school_type'] = $school->school_type;
-            //$invoiceData['person_type'] = $user->person_type;
-            
-            // $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->toArray();
 
 
-            // foreach($eventDetailsStudentId as $std){
-            //     $dataDetails = [
-            //         'event_id'   => $eventData->id,
-            //         'teacher_id' => $fetch->teacher_id,
-            //         'student_id' => $std['student_id'],
-            //         'buy_price' => $fetch->price_amount_buy,
-            //         'sell_price' => $fetch->price_amount_sell,
-            //     ];
-            //     $eventDetails = EventDetails::create($dataDetails);
-            // }
+            $studentEvents = DB::table('events')
+                ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->select(
+                    'events.id as event_id',
+                    'events.event_type as event_type',
+                    'events.title as title',
+                    'event_details.cost_1 as cost_1',
+                    'event_details.cost_2 as cost_2',
+                    'event_details.participation_id as participation_id',
+
+                    'event_details.id as detail_id',
+                    
+                    'event_details.buy_total as buy_total',
+                    'event_details.sell_total as sell_total',
+                    'event_details.buy_price as buy_price',
+                    'event_details.sell_price as sell_price'
+                )
+                //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
+                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+                ->where(
+                    [
+                        'event_details.student_id' => $p_person_id,
+                        'events.is_active' => 1,
+                        'event_details.is_sell_invoiced' => 0,
+                        'events.school_id' => $schoolId,
+                    ]
+                );
+            $studentEvents->where('event_details.participation_id', '>', 198);
+            $studentEvents->where('events.date_start', '>=', $dateS);
+            $studentEvents->where('events.date_end', '<=', $dateEnd);
+            //dd($dateS);
+
+            // dd($user);
+            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+                $invoice_type = 'S';
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
+                $invoice_type = 'T';
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher') {
+                $invoice_type = 'T';
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+                $studentEvents->where('events.teacher_id', $user->person_id);
+            } else {
+            }
 
             
-            $invoiceItemData['invoice_id'] = 1;
-            $invoiceItemData['school_id'] = $schoolId;
-            $invoiceItemData['publication_mode'] = 'N,admin';
-            // if ($event_type == 10) {
-            //    $invoiceItemData['item_type'] = 1;
-            // }
-            // else {
-            //    $invoiceItemData['item_type'] = 2;
-            // }
-            $invoiceItemData['event_id'] = '';
-            $invoiceItemData['teacher_id'] = '';
-            $invoiceItemData['student_id'] = '';
-            $invoiceItemData['participation_id'] = '';
-            $invoiceItemData['price_type_id'] = 'event_price';
-            $invoiceItemData['is_locked'] = 'is_locked';
-            $invoiceItemData['date'] = 'date_start';
-            // if (event_type == 13) {
-            //    $invoiceItemData['caption'] = 'event_type_name: '.title.
-            //    if (costs_1 > 0) {
-            //     $invoiceItemData['caption'] .= '<br>(';
-            //    }
-            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
+
             
-            // }
-            // if (event_type == 100) {
-            //    $invoiceItemData['caption'] = 'event_type_name: '.title.
-            //    if (costs_1 > 0) {
-            //     $invoiceItemData['caption'] .= '<br>(';
-            //    }
-            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
             
-            // }
-            // if (title == null) {
-            //    if (participation_id > 199) {
-            //     $invoiceItemData['caption'] = participation_name;
-            //    }
-            //    //if(costs_1>0,concat('<br>(' '.round(costs_1,2),')'),'');
+            //$studentEvents->where('events.date_start', '>=', $dateS);
+            $studentEvents->orderBy('events.date_start', 'desc');
+            //By
+            $studentEvents->distinct('events.id');
+
+            //$studentEvents->groupBy('events.id');
             
-            // }
-            $invoiceItemData['unit'] = 'event.duration_minute';
-            $invoiceItemData['unit_type'] = 'minutes';
-            $invoiceItemData['price'] = 'sell_price+costs_1+costs_2';
-            $invoiceItemData['price_unit'] = 'sell_price';
-            $invoiceItemData['price_currency'] = 'price_currency';
-            $invoiceItemData['total_item'] = 'sell_total+costs_1+costs_2';
-            $invoiceItemData['event_extra_expenses'] = 'costs_1+costs_2';
+            //dd($studentEvents->toSql());
+            $data = $studentEvents->get()->toArray();
+            foreach ($data as $key => $value) {
+
+                $month_name = 'January';
+
+                // $event->where('event_details.sell_invoice_id' = $v_invoice_id);
+                // update
+                // {
+                //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
+                //     $studentEvents->whereNull('event_details.sell_invoice_id');
+                // }
+
+                
+                
+
+                $invoiceItemData['invoice_id'] = $invoiceData->id;
+                $invoiceItemData['school_id'] = $schoolId;
+                $invoiceItemData['is_locked'] = 0;
+                
+               
+                $invoiceItemData['unit'] = 'duration_minutes';
+                $invoiceItemData['unit_type'] = 'minutes';
+                $invoiceItemData['price'] = $value->sell_price+$value->cost_1+$value->cost_2;
+                $invoiceItemData['price_unit'] = $value->sell_price;
+                $invoiceItemData['price_currency'] = $value->price_currency;
+                $invoiceItemData['event_extra_expenses'] = $value->cost_1+$value->cost_2;
+                
+
+                
+                $invoiceItemData['invoice_id'] = 1;
+                
+                $invoiceItemData['publication_mode'] = 'N,admin';
+                // if ($event_type == 10) {
+                //    $invoiceItemData['item_type'] = 1;
+                // }
+                // else {
+                //    $invoiceItemData['item_type'] = 2;
+                // }
+                $invoiceItemData['event_id'] = '';
+                $invoiceItemData['teacher_id'] = '';
+                $invoiceItemData['student_id'] = '';
+                $invoiceItemData['participation_id'] = '';
+                $invoiceItemData['price_type_id'] = 'event_price';
+                $invoiceItemData['is_locked'] = 'is_locked';
+                $invoiceItemData['date'] = 'date_start';
+                 if ($value->event_type == 10) {
+                    $invoiceItemData['caption'] = 'Lesson:'.$value->title;
+                    if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                    }
+                }
+                else if ($value->event_type == 13) {
+                    $invoiceItemData['caption'] = 'Event:'.$value->title;
+                    if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                    }
+                } else if ($value->event_type == 100) {
+                   $invoiceItemData['caption'] = 'Event:'.$value->title;
+                   if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                   }
+                } else if (!empty($value->title)) {
+                    if ($value->participation_id==199) {
+                        $invoiceItemData['caption'] ='du '.$value->title;
+                    } else{
+                        $invoiceItemData['caption'] =$value->title.'avec '.$value->teacher_id.'('.$value->category_name.')';
+                    }
+                    if ($value->event_type == 10) {
+                        $invoiceItemData['caption'] = 'price_name';
+                        if ($value->cost_1>0) {
+                            $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                        }
+                    }
+                }
 
 
-            //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
-            // //echo "<script>alert($query);</script>";exit;
-            // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
-            // while($row = mysql_fetch_assoc($result))
-            // {
-            //     $data[]=$row;
-            // }
-            // echo json_encode($data);
+                if (!empty($value->event_id)) {
+                    $eventUpdate = [
+                        'sell_invoice_id' => $invoiceData->id,
+                        'is_sell_invoiced' => 1
+                    ];
+                    $eventData = EventDetails::where('student_id', $value->student_id)
+                    ->where('school_id', $schoolId)
+                    ->where('event_id', $value->event_id)
+                    ->where('participation_id', '>', 198)
+                    ->update($eventUpdate);
+                }
+
+                //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
+                // //echo "<script>alert($query);</script>";exit;
+                // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
+                // while($row = mysql_fetch_assoc($result))
+                // {
+                //     $data[]=$row;
+                // }
+                // echo json_encode($data);
+                
+            }
+            
+
+            
 
             $result = array(
                 'status' => true,
