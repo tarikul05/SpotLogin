@@ -898,6 +898,7 @@ class InvoiceController extends Controller
             'status' => false,
             'message' => __('failed to get lesson data'),
         );
+        //echo Carbon::now()->format('F'); exit();
         try {
             $data = $request->all();
             //dd($data);
@@ -956,7 +957,7 @@ class InvoiceController extends Controller
             $invoiceData['date_invoice'] = Carbon::now()->format('Y-m-d H:i:s');
             $invoiceData['period_starts'] = $dateS;
             $invoiceData['period_ends'] = $dateEnd;
-            $invoiceData['invoice_name'] = 'test invoice name';
+            $invoiceData['invoice_name'] = 'Invoice '.Carbon::now()->format('F').' '.Carbon::now()->year;
             //$date_invoice = Carbon::createFromFormat('Y-m-d H:i:s', $invoiceData['date_invoice'], 'UTC'); // specify UTC otherwise defaults to locale time zone as per ini setting
         
             //$invoiceData['invoice_header'] = $invoiceData['invoice_name'].'-'.$invoiceData['client_name'].' du '.$date_invoice;
@@ -1065,6 +1066,8 @@ class InvoiceController extends Controller
                 ->select(
                     'events.id as event_id',
                     'events.teacher_id as teacher_id',
+                    'event_details.student_id as student_id',
+                    
                     'events.duration_minutes as duration_minutes',
                     'events.event_type as event_type',
                     'events.title as title',
@@ -1200,7 +1203,7 @@ class InvoiceController extends Controller
                         'is_sell_invoiced' => 1
                     ];
                     $eventData = EventDetails::where('student_id', $value->student_id)
-                    ->where('school_id', $schoolId)
+                    //->where('school_id', $schoolId)
                     ->where('event_id', $value->event_id)
                     ->where('participation_id', '>', 198)
                     ->update($eventUpdate);
