@@ -320,6 +320,7 @@ class LessonsController extends Controller
                 }
 
                 $lessonData = $request->all();
+                
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -365,7 +366,7 @@ class LessonsController extends Controller
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
                     'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
-                    'sis_paying' => $lessonData['sis_paying']
+                    'is_paying' => $lessonData['sis_paying']
                 ];
 
                 $event = Event::create($data);
