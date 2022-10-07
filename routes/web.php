@@ -367,5 +367,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
     Route::get('invoice', 'InvoiceController@view')->name('invoice');
     Route::post('invoice_data', 'InvoiceController@invoiceData')->name('invoiceData');
+    Route::post('store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');
 });
 

@@ -1342,4 +1342,36 @@ class InvoiceController extends Controller
         }    
         return response()->json($userData);
     }
+
+
+
+        /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function invoiceDataSave(Request $request)
+    {   
+        $user = $request->user();
+        $dataParam = $request->all();
+
+        print_r($dataParam);exit;
+        
+        $id= trim($dataParam['p_code']);
+        $type= trim($dataParam['p_type']);
+
+        if($type == 'student'){
+            $userData = DB::table('students')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }elseif($type == 'teacher'){
+            $userData = DB::table('teachers')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }    
+        return response()->json($userData);
+    }
 }
