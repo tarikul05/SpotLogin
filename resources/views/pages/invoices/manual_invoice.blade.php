@@ -724,6 +724,12 @@ function remove_rows(r){
 		todayBtn:false,
 	});
 
+    var now = new Date();
+    var month = now.getMonth()+1;
+    var day = now.getDate();
+    var current_date = ((''+day).length<2 ? '0' : '') + day+ '.' +((''+month).length<2 ? '0' : '') + month + '.'+ now.getFullYear();
+    $("#date_invoice").val( current_date );
+
  });
 
 
@@ -1017,25 +1023,25 @@ function AddEditInvoice(){
     var p_invoice_name = document.getElementById("invoice_name").value;
     var p_price_currency = document.getElementById("price_currency").value;
     //alert(p_price_currency)
-    if (p_invoice_name ==''){
-        errorModalCall(GetAppMessage('Invalid_invoice')+' name.');
+    // if (p_invoice_name ==''){
+    //     errorModalCall(GetAppMessage('Invalid_invoice')+' name.');
         
-        //alert(GetAppMessage("Invalid_invoice")+' name.');
-        return false;
-    }
-    if (p_date_invoice ==''){
-        errorModalCall(GetAppMessage('Invalid_invoice')+' date.');
+    //     //alert(GetAppMessage("Invalid_invoice")+' name.');
+    //     return false;
+    // }
+    // if (p_date_invoice ==''){
+    //     errorModalCall(GetAppMessage('Invalid_invoice')+' date.');
         
-        //alert(GetAppMessage("Invalid_invoice")+' date');
-        return false;
-    }
+    //     //alert(GetAppMessage("Invalid_invoice")+' date');
+    //     return false;
+    // }
     
-    if (p_price_currency == '') {
-        errorModalCall(GetAppMessage('Invalid_invoice')+' Currency.');
+    // if (p_price_currency == '') {
+    //     errorModalCall(GetAppMessage('Invalid_invoice')+' Currency.');
         
-        //alert(GetAppMessage("Invalid_invoice")+' Currency.');
-        return false;
-    } 
+    //     //alert(GetAppMessage("Invalid_invoice")+' Currency.');
+    //     return false;
+    // } 
     
     p_date_invoice=p_date_invoice.replace("/",".");
     p_date_invoice=p_date_invoice.replace("/",".");
@@ -1156,52 +1162,88 @@ function AddEditInvoice(){
         
         console.log(data);            
         $.ajax({
-                url: 'invoice_data.php',
-                data: {type:'add_edit_manual_invoice',p_auto_id:p_auto_id,p_invoice_id:p_invoice_id,p_invoice_type:p_invoice_type
-        ,p_invoice_name:p_invoice_name,p_date_invoice:p_date_invoice,p_client_id:p_client_id
-        ,p_client_name:p_client_name,p_client_firstname:p_client_firstname,p_client_lastname:p_client_lastname
-        ,p_client_street_number:p_client_street_number,p_client_street:p_client_street,p_client_street2:p_client_street2
-        ,p_client_country_id:p_client_country_id,p_client_zip_code:p_client_zip_code,p_client_place:p_client_place
-        ,p_seller_id:p_seller_id,p_seller_name:p_seller_name,p_seller_firstname:p_seller_firstname
-        ,p_seller_lastname:p_seller_lastname,p_seller_street_number:p_seller_street_number,p_seller_street:p_seller_street
-        ,p_seller_street2:p_seller_street2,p_seller_country_id:p_seller_country_id,p_seller_zip_code:p_seller_zip_code
-        ,p_seller_phone:p_seller_phone,p_seller_mobile:p_seller_mobile
-        ,p_seller_place:p_seller_place,p_seller_email:p_seller_email,p_payment_bank_account_name:p_payment_bank_account_name
-        ,p_payment_bank_name:p_payment_bank_name,p_payment_bank_address:p_payment_bank_address,p_payment_bank_country_id:p_payment_bank_country_id
-        ,p_payment_bank_zipcode:p_payment_bank_zipcode,p_payment_bank_place:p_payment_bank_place,p_payment_bank_iban:p_payment_bank_iban
-        ,p_payment_bank_account:p_payment_bank_account,p_payment_bank_swift:p_payment_bank_swift,p_price_currency:p_price_currency
-        ,p_detail_rows:p_detail_rows ,p_client_province_id:p_client_province_id,p_seller_province_id:p_seller_province_id,p_bank_province_id:p_bank_province_id 
-        ,tax_name:tax_name ,tax_percentage:tax_percentage,tax_number:tax_number,tax_amount:tax_amount 
-        ,expense_name:expense_name ,expense_amount:expense_amount,p_e_transfer_email:p_e_transfer_email,p_name_for_checks:p_name_for_checks},
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                encode:true,
-                //contentType: false,
-                //cache: false, 
-                //processData:false,                    
-                success:function(result){
-                    $.each(result, function(key,value){
-                        console.log(value.statu);
-                    if(value.status == 'success')
-                    {
-                        status_flag = 'success';
-                        p_auto_id=value.auto_id;
-                        document.getElementById('auto_id').value=value.auto_id;
-                        document.getElementById('invoice_id').value=value.invoice_id;
-                        successModalCall(GetAppMessage('save_confirm_message'));
-                    }
-                    else
-                    {
-                        errorModalCall(GetAppMessage('error_message_text'));
+            url: BASE_URL + '/store_invoice_data',
+            data: {
+                p_auto_id:p_auto_id,
+                p_invoice_id:p_invoice_id,
+                p_invoice_type:p_invoice_type,
+                p_invoice_name:p_invoice_name,
+                p_date_invoice:p_date_invoice,
+                p_client_id:p_client_id,
+                p_client_name:p_client_name,
+                p_client_firstname:p_client_firstname,
+                p_client_lastname:p_client_lastname,
+                p_client_street_number:p_client_street_number,
+                p_client_street:p_client_street,
+                p_client_street2:p_client_street2,
+                p_client_country_id:p_client_country_id,
+                p_client_zip_code:p_client_zip_code,
+                p_client_place:p_client_place,
+                p_seller_id:p_seller_id,
+                p_seller_name:p_seller_name,
+                p_seller_firstname:p_seller_firstname,
+                p_seller_lastname:p_seller_lastname,
+                p_seller_street_number:p_seller_street_number,
+                p_seller_street:p_seller_street,
+                p_seller_street2:p_seller_street2,
+                p_seller_country_id:p_seller_country_id,
+                p_seller_zip_code:p_seller_zip_code,
+                p_seller_phone:p_seller_phone,
+                p_seller_mobile:p_seller_mobile,
+                p_seller_place:p_seller_place,
+                p_seller_email:p_seller_email,
+                p_payment_bank_account_name:p_payment_bank_account_name,
+                p_payment_bank_name:p_payment_bank_name,
+                p_payment_bank_address:p_payment_bank_address,
+                p_payment_bank_country_id:p_payment_bank_country_id,
+                p_payment_bank_zipcode:p_payment_bank_zipcode,
+                p_payment_bank_place:p_payment_bank_place,
+                p_payment_bank_iban:p_payment_bank_iban,
+                p_payment_bank_account:p_payment_bank_account,
+                p_payment_bank_swift:p_payment_bank_swift,
+                p_price_currency:p_price_currency,
+                p_detail_rows:p_detail_rows,
+                p_client_province_id:p_client_province_id,
+                p_seller_province_id:p_seller_province_id,
+                p_bank_province_id:p_bank_province_id,
+                tax_name:tax_name,
+                tax_percentage:tax_percentage,
+                tax_number:tax_number,
+                tax_amount:tax_amount, 
+                expense_name:expense_name ,
+                expense_amount:expense_amount,
+                p_e_transfer_email:p_e_transfer_email,
+                p_name_for_checks:p_name_for_checks
+            },
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            encode:true,
+            //contentType: false,
+            //cache: false, 
+            //processData:false,                    
+            success:function(result){
+                $.each(result, function(key,value){
+                    console.log(value.statu);
+                if(value.status == 'success')
+                {
+                    status_flag = 'success';
+                    p_auto_id=value.auto_id;
+                    document.getElementById('auto_id').value=value.auto_id;
+                    document.getElementById('invoice_id').value=value.invoice_id;
+                    successModalCall(GetAppMessage('save_confirm_message'));
+                }
+                else
+                {
+                    errorModalCall(GetAppMessage('error_message_text'));
 
-                    } 
-                    });   //for each record
-                },   // success
-                error: function(ts) { 
-                    errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
+                } 
+                });   //for each record
+            },   // success
+            error: function(ts) { 
+                errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
 
-                }                
+            }                
             
         }); //ajax-type
         
@@ -1214,5 +1256,57 @@ function AddEditInvoice(){
         return false;
         
 }   //AddEditInvoice
+
+
+$(document).on('keyup','.tax_percentage',function(){
+
+    var grand_total = Number($("#grand_total").text());
+    var tax_percentage = Number($(this).val());
+    var tax_amount = parseFloat(Number(grand_total * tax_percentage/100)).toFixed(2);
+    $(this).parents('.add_more_tax_row').find('.tax_amount').val(tax_amount);
+
+})
+
+$(document).on('keyup','.tax_amount',function(){
+
+var grand_total = Number($("#grand_total").text());
+var tax_amount = Number($(this).val());
+var tax_percentage = parseFloat(Number(tax_amount/grand_total * 100)).toFixed(2);
+$(this).parents('.add_more_tax_row').find('.tax_percentage').val(tax_percentage);
+
+})
+
+$(document).on('change','#client_firstname',function(){
+
+    if(!$("#invoice_name").val() && $(this).val()){
+        var now = new Date();
+        var month = now.getMonth()+1;
+        var day = now.getDate();
+        var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        
+        
+        var invoice_name = 'INV/'+$(this).val()+'/'+current_date;
+
+        $("#invoice_name").val(invoice_name);
+    }
+
+})
+
+$(document).on('change','#client_list_id',function(){
+
+    if(!$("#invoice_name").val() && $("#client_firstname").val()){
+        var now = new Date();
+        var month = now.getMonth()+1;
+        var day = now.getDate();
+        var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        
+        var invoice_name = 'INV/'+$("#client_firstname").val()+'/'+current_date;
+
+        $("#invoice_name").val(invoice_name);
+    }
+
+})
 </script>
 @endsection
