@@ -1065,6 +1065,7 @@ class InvoiceController extends Controller
             $studentEvents = DB::table('events')
                 ->select(
                     'events.id as event_id',
+                    'events.event_type as event_type',
                     'events.teacher_id as teacher_id',
                     'event_details.student_id as student_id',
                     
@@ -1127,6 +1128,26 @@ class InvoiceController extends Controller
             //dd($studentEvents->toSql());
             $data = $studentEvents->get()->toArray();
             //dd($invoiceData->id);
+            $count = count($data);
+            $subtotal_amount_all = 0;
+            $subtotal_amount_with_discount = 0;
+            $subtotal_amount_no_discount = 0;
+            $amount_discount_1 = 0;
+            $amount_discount_2 = 0;
+            $amount_discount_3 =0;
+            $amount_discount_4 =0;
+            $amount_discount_5 = 0;
+            $amount_discount_6 =0;
+            $total_amount_discount = 0;
+            $total_amount_no_discount = 0;
+            $total_amount_with_discount = 0;
+            $total_amount = 0;
+            $tax_desc = 0;
+            $tax_perc =0;
+            $tax_amount = 0;
+            $etransfer_acc = 0;
+            $cheque_payee = 0;
+
             foreach ($data as $key => $value) {
                 $month_name = 'January';
 
@@ -1136,10 +1157,6 @@ class InvoiceController extends Controller
                 //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
                 //     $studentEvents->whereNull('event_details.sell_invoice_id');
                 // }
-
-                
-                
-
                 $invoiceItemData['invoice_id'] = $invoiceData->id;
                 $invoiceItemData['school_id'] = $schoolId;
                 $invoiceItemData['is_locked'] = 0;
@@ -1165,6 +1182,61 @@ class InvoiceController extends Controller
                 $invoiceItemData['price_type_id'] = $value->event_price;
                 $invoiceItemData['is_locked'] = $value->is_locked;
                 $invoiceItemData['date'] = $value->date_start;
+                $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
+                
+                $invoiceItemData['subtotal_amount_with_discount'] = 0;
+                $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                if ($value->event_type == 10) {
+                   $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
+                } else {
+                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                } 
+                $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
+                $amt_for_disc = 0;
+                $v_amount_discount_1 = 0;
+                $v_amount_discount_2 = 0;
+                $v_amount_discount_3 = 0;
+                $v_amount_discount_4 = 0;
+                $v_amount_discount_5 = 0;
+                $v_amount_discount_6 = 0;
+                $v_total_amount_discount = 0;
+                if ($invoiceData->invoice_type ==1) {
+                    if($invoiceItemData['subtotal_amount_with_discount'] > 400){
+                        $amt_for_disc=200;
+                    }
+                    else{
+                        $amt_for_disc = $invoiceItemData['subtotal_amount_with_discount']-200;
+                    } 
+                    if ($amt_for_disc>0){
+                        $v_amount_discount_1 = $amt_for_disc*($invoiceData->discount_percent_1/100);
+                    } else{
+                        $v_amount_discount_1 = 0;
+                    }
+                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                    $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
+                    $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
+                } 
+                if ($invoiceData->invoice_type ==2) {
+                    $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
+                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                    $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
+                    $v_total_amount_no_discount = 0;
+                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                }
+                $subtotal_amount_all += $v_subtotal_amount_all;
+                $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
+                $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
+                $amount_discount_1 += $v_amount_discount_1;
+                $amount_discount_2 += $v_amount_discount_2;
+                $amount_discount_3 += $v_amount_discount_3;
+                $amount_discount_4 += $v_amount_discount_4;
+                $amount_discount_5 += $v_amount_discount_5;
+                $amount_discount_6 += $v_amount_discount_6;
+                $total_amount_discount += $v_total_amount_discount;
+                $total_amount_no_discount += $v_total_amount_no_discount;
+                $total_amount_with_discount += $v_total_amount_with_discount;
+                $total_amount += $v_total_amount;
+
                 // if ($value->event_type == 10) {
                 //     $invoiceItemData['caption'] = 'Lesson:'.$value->title;
                 //     if ($value->cost_1>0) {
@@ -1197,14 +1269,14 @@ class InvoiceController extends Controller
                 
 
                 //dd($invoiceItemData);
-                if (!empty($value->event_id)) {
+                if (!empty($value->detail_id)) {
                     $eventUpdate = [
                         'sell_invoice_id' => $invoiceData->id,
                         'is_sell_invoiced' => 1
                     ];
                     $eventData = EventDetails::where('student_id', $value->student_id)
                     //->where('school_id', $schoolId)
-                    ->where('event_id', $value->event_id)
+                    ->where('id', $value->detail_id)
                     ->where('participation_id', '>', 198)
                     ->update($eventUpdate);
                 }
@@ -1222,6 +1294,8 @@ class InvoiceController extends Controller
                 // echo json_encode($data);
                 
             }
+
+
             
 
             
