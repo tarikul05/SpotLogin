@@ -12,6 +12,7 @@ use App\Models\InvoicesExpenses;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Province;
+use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
@@ -1688,6 +1689,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
         
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
@@ -1698,7 +1700,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers'));
+        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers','currency'));
     }
 
     /**
@@ -1720,7 +1722,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
-        
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
                     ->join('students','school_student.student_id','=','students.id')
@@ -1729,12 +1731,13 @@ class InvoiceController extends Controller
 
         $invoiceData = Invoice::active()->where(['id'=>$invoiceId])->first();
         $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();
-        $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();       
+        $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();  
+        $InvoicesItemData = InvoiceItem::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();       
 
         return view('pages.invoices.update_manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData'));
+        ])->with(compact('genders','currency','schoolId','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
     }
 
     /**
@@ -1826,7 +1829,6 @@ class InvoiceController extends Controller
                 'payment_bank_account' => $dataParam['p_payment_bank_account'],
                 'payment_bank_swift' => $dataParam['p_payment_bank_swift'],
                 'invoice_currency' => $dataParam['p_price_currency'],
-                //'detail_rows' => $dataParam['p_detail_rows'],
                 'client_province_id' => $dataParam['p_client_province_id'],
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
@@ -1835,25 +1837,19 @@ class InvoiceController extends Controller
 
             $Invoice = Invoice::create($data);
             
-            $myArray = explode('|', $dataParam['p_detail_rows']);
-            print_r($myArray);
-            echo count($myArray);
-            exit;
-
-            if (!empty($dataParam['tax_name'])) {
-                for($i=0; $i < count($dataParam['tax_name']);$i++){
-                    $taxData = [
+            if (!empty($dataParam['item_total'])) {
+                for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $itemData = [
                         'invoice_id'   => $Invoice->id,
-                        'tax_name' => $dataParam['tax_name'][$i],
-                        'tax_percentage' => $dataParam['tax_percentage'][$i],
-                        'tax_number' => $dataParam['tax_number'][$i],
-                        'tax_amount' => $dataParam['tax_amount'][$i],
+                        'school_id' => $schoolId,
+                        'caption' => $dataParam['item_caption'][$i],
+                        'total_item' => $dataParam['item_total'][$i],
+                        'price_currency' => $dataParam['p_price_currency']
                     ];
-                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                    $InvoiceItem = InvoiceItem::create($itemData);
                 }
             }
-
-
+            
             if (!empty($dataParam['tax_name'])) {
                 for($i=0; $i < count($dataParam['tax_name']);$i++){
                     $taxData = [
@@ -1915,7 +1911,6 @@ class InvoiceController extends Controller
             $dataParam = $request->all();
             $id = $dataParam['p_auto_id'];
 
-
             $data = [
                 'school_id' => $schoolId,
                 'invoice_type' => $dataParam['p_invoice_type'],
@@ -1963,6 +1958,20 @@ class InvoiceController extends Controller
             $Invoice = Invoice::where('id', $id)->update($data);
             InvoicesTaxes::where('invoice_id',$id)->forceDelete();
             InvoicesExpenses::where('invoice_id',$id)->forceDelete();
+            InvoiceItem::where('invoice_id',$id)->forceDelete();
+
+            if (!empty($dataParam['item_total'])) {
+                for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $itemData = [
+                        'invoice_id' => $id,
+                        'school_id' => $schoolId,
+                        'caption' => $dataParam['item_caption'][$i],
+                        'total_item' => $dataParam['item_total'][$i],
+                        'price_currency' => $dataParam['p_price_currency']
+                    ];
+                    $InvoiceItem = InvoiceItem::create($itemData);
+                }
+            }
 
             if (!empty($dataParam['tax_name'])) {
                 for($i=0; $i < count($dataParam['tax_name']);$i++){

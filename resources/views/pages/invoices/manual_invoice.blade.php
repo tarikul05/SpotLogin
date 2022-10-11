@@ -410,21 +410,9 @@
                                                 <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Amount</label>
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
-                                                        <option value="CHF">CHF</option>
-                                                        <option value="DEM">DEM</option>
-                                                        <option value="EUR">EUR</option>
-                                                        <option value="GBP">GBP</option>
-                                                        <option value="USD">USD</option>
-                                                        <option value="AUD">AUD</option>
-                                                        <option value="CAD">CAD</option>
-                                                        <option value="SGD">SGD</option>
-                                                        <option value="JPY">JPY</option>
-                                                        <option value="CNY">CNY</option>
-                                                        <option value="TRY">TRY</option>
-                                                        <option value="RUB">RUB</option>
-                                                        <option value="DKK">DKK</option>
-                                                        <option value="RON">RON</option>
-                                                        <option value="CZK">CZK</option>
+                                                       @foreach($currency as $key => $curr)
+                                                            <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </th>
@@ -436,15 +424,15 @@
                                             <td style="display: none;">1</td>
                                             <td>
                                                 <div class="input-group datetimepicker" id="date_div">
-                                                    <input id="date" name="date" type="text" class="form-control datetimepicker" value="">
+                                                    <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" id="caption" name="caption" placeholder="" class="form-control">
+                                                <input type="text" id="caption" name="caption[]" placeholder="" class="form-control">
                                             </td>
                                             <td class="row_item_value">
-                                                <input type="number" pattern="[0-9.]" id="total_item1" name="total_item1" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
+                                                <input type="number" pattern="[0-9.]" id="total_item1" name="total_item[]" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
                                             </td>
                                             <td>
                                                 <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row">
@@ -658,9 +646,9 @@ $(".add-row").click(function(){
     var i =document.getElementById("details_tbl").rows.length-2;            
     
     var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
-    markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
-    markup+='<td><input type="text" id="caption" name="caption" placeholder="" class="form-control"></td>';                   
-    markup+='<td class="row_item_value"><input type="number" pattern="[0-9.]" id="total_item'+i+'" name="total_item'+i+'" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
+    markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date[]" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
+    markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';                   
+    markup+='<td class="row_item_value"><input type="number" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
     markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><i class="fa fa-remove"></i></button></td>';
     //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
     markup+='</tr>';   
@@ -1020,34 +1008,9 @@ function AddEditInvoice(){
     var mdt,mcaption,mtotal_item;
     var valid_det_rec_flag=0;       // to check if any valid detail record exists or not for validation.
 
-    for (var i=1; i<rCount; i++){
-        try {
-            mdt=tbl.rows[i].cells[1].getElementsByTagName('input')[0].value;
-            mcaption=tbl.rows[i].cells[2].getElementsByTagName('input')[0].value;
-            mtotal_item=tbl.rows[i].cells[3].getElementsByTagName('input')[0].value;
-            p_detail_rows+=mdt;
-            
-            if (isNaN(Number(mtotal_item))) {
-                mtotal_item='0';
-            }
-            
-            if (valid_det_rec_flag == 0){
-                //if ( (Number(mtotal_item) == "0") || (Number(mtotal_item) == NaN) ){
-                if ( (Number(mtotal_item) == "0") && (mcaption == "") && (mdt == "") ){
-                    valid_det_rec_flag=0;
-                }else {
-                    valid_det_rec_flag=1;
-                } 
-            }
-            
-            p_detail_rows+=','+mcaption;
-            p_detail_rows+=','+mtotal_item;
-            p_detail_rows+="|";
-        }
-        catch(err) {
-            //alert(err.message);
-        }                        
-    };
+    var item_date = $("input[name='date[]']").map(function(){return $(this).val();}).get();
+    var item_caption = $("input[name='caption[]']").map(function(){return $(this).val();}).get();
+    var item_total = $("input[name='total_item[]']").map(function(){return $(this).val();}).get();
 
     var p_e_transfer_email = $("#e_transfer_email").val();
     var p_name_for_checks = $("#name_for_checks").val();
@@ -1059,16 +1022,7 @@ function AddEditInvoice(){
     
     var expense_name = $("input[name='expense_name[]']").map(function(){return $(this).val();}).get();
     var expense_amount = $("input[name='expense_amount[]']").map(function(){return $(this).val();}).get();
-    
-    //console.log(p_detail_rows);
-    //alert(p_detail_rows);
-    
-    if (valid_det_rec_flag == 0 ){
-        //errorModalCall(GetAppMessage('ENTER-ONE-VALID-DETAIL-RECORD'));
-        
-        //alert(GetAppMessage("ENTER-ONE-VALID-DETAIL-RECORD"));
-        //return false;
-    }
+
     
     if (p_auto_id == ''){
         p_auto_id = 0;
@@ -1078,9 +1032,6 @@ function AddEditInvoice(){
     }
     var status_flag='';
     var data='' ;
-        
-        //data=data.replace(/"/ig,'\"');
-        //data=data.replace(/'/ig,"\'");
         
         $.ajaxSetup({
 			headers: {
@@ -1133,6 +1084,9 @@ function AddEditInvoice(){
                 p_client_province_id:p_client_province_id,
                 p_seller_province_id:p_seller_province_id,
                 p_bank_province_id:p_bank_province_id,
+                item_date: item_date,
+                item_caption: item_caption,
+                item_total: item_total,
                 tax_name:tax_name,
                 tax_percentage:tax_percentage,
                 tax_number:tax_number,
