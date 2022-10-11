@@ -41,7 +41,7 @@
                 <div id="content">
                     <form role="form" id="form_main" class="form-horizontal tbl_wrp_form" method="post" action="">
                         @csrf
-                        <input type="hidden" id="auto_id" name="auto_id" value="0">
+                        <input type="hidden" id="auto_id" name="auto_id" value="<?= $invoiceData['id']; ?>">
                         <input type="hidden" id="invoice_filename" name="invoice_filename" value="">
                         <input type="hidden" id="action" name="action" value="new">
                         <input type="hidden" id="total_min" name="action" value="">
@@ -77,14 +77,14 @@
                                             <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
                                         </td>
                                         <td>
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150"> </td>
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150" value="<?= $invoiceData['invoice_name'];?> "> </td>
                                         <td width="20%" align="center">
                                             <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
                                         </td>
                                         <td width="20%">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
-                                                <input id="date_invoice" name="date_invoice" type="text" class="form-control datetimepicker"> 
+                                                <input id="date_invoice" value="<?= $invoiceData['date_invoice'];?>" name="date_invoice" type="text" class="form-control datetimepicker"> 
                                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                             </div>
                                         </td>
@@ -101,7 +101,7 @@
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
-                                                <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
+                                                <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" value="<?= $invoiceData['client_name'];?>" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
@@ -116,42 +116,42 @@
                                     <div class="row" id="table_client_detail">
                                         <div class="col-md-6">
                                             <div class="form-group row" style="display: none;">
-                                                <input type="hidden" id="client_id" name="client_id" value="EC7E9C27-1B10-11EC-9CF6-067B4964D503">
+                                                <input type="hidden" id="client_id" name="client_id" value="">
                                                 <label id="client_name_caption" name="client_name_caption" for="client_name" class="col-lg-3 col-sm-3 text-left">Client Name</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_name" name="client_name" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="client_name" name="client_name" value="<?= $invoiceData['client_name'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="first_name_label_id" name="first_name_label_id" for="client_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_firstname" name="client_firstname" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="client_firstname" name="client_firstname" value="<?= $invoiceData['client_firstname'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="street_caption" name="street_caption" for="client_street" class="col-lg-3 col-sm-3 text-left">Street</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_street" name="client_street" value="" placeholder="" maxlength="120"> </div>
+                                                    <input type="text" class="form-control" id="client_street" name="client_street" value="<?= $invoiceData['client_street'];?>" placeholder="" maxlength="120"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="street_number_caption" name="street_number_caption" for="client_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_street_number" name="client_street_number" value="" placeholder="" maxlength="20"> </div>
+                                                    <input type="text" class="form-control" id="client_street_number" name="client_street_number" value="<?= $invoiceData['client_street_number'];?>" placeholder="" maxlength="20"> </div>
                                             </div>
                                             <div class="form-group row" style="display: none;">
                                                 <label id="street2_caption" name="street2_caption" for="client_street2" class="col-lg-3 col-sm-3 text-left">Street 2 :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_street2" name="client_street2" value="" placeholder="" maxlength="100"> </div>
+                                                    <input type="text" class="form-control" id="client_street2" name="client_street2" value="<?= $invoiceData['client_street2'];?>" placeholder="" maxlength="100"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="postal_code_caption" name="postal_code_caption" for="client_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="" placeholder="" maxlength="8"> </div>
+                                                    <input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="<?= $invoiceData['client_zip_code'];?>" placeholder="" maxlength="8"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label id="family_name_label_id" name="family_name_label_id" for="client_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_lastname" name="client_lastname" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="client_lastname" name="client_lastname" value="<?= $invoiceData['client_lastname'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
@@ -159,20 +159,20 @@
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="client_country_id" name="client_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['client_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="client_province_id_div" style="display:none;">
+                                            <div class="form-group row" id="client_province_id_div" <?php if($invoiceData['client_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="client_province_id" name="client_province_id"> 
                                                             <option value="">Select Province</option>
                                                             @foreach($provinces as $province)
-                                                                <option value="{{ $province['id'] }}" {{ old('client_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
+                                                                <option value="{{ $province['id'] }}" {{ $invoiceData['client_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -181,7 +181,7 @@
                                             <div class="form-group row">
                                                 <label id="locality_caption" name="locality_caption" for="client_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="client_place" name="client_place" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="client_place" name="client_place" value="<?= $invoiceData['client_place'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                         </div>
                                     </div>
@@ -201,7 +201,7 @@
                                             <span class="input-group-addon">
                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                             </span>
-                                            <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="on"> </div>
+                                            <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" value="<?= $invoiceData['seller_name'];?>" autocomplete="on"> </div>
                                         </div>
                                     </div>
                                     <div class="row" id="table_seller_detail">
@@ -210,44 +210,44 @@
                                                 <input type="hidden" id="seller_id" name="seller_id" value="">
                                                 <label id="seller_name_caption" name="seller_name_caption" for="seller_name" class="col-lg-3 col-sm-3 text-left">Seller Name</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_name" name="seller_name" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_name" name="seller_name" value="<?= $invoiceData['seller_name'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="first_name_label_id" name="first_name_label_id" for="seller_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="<?= $invoiceData['seller_firstname'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="street_caption" name="street_caption" for="seller_street" class="col-lg-3 col-sm-3 text-left">Street</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_street" name="seller_street" value="" placeholder="" maxlength="120"> </div>
+                                                    <input type="text" class="form-control" id="seller_street" name="seller_street" value="<?= $invoiceData['seller_street'];?>" placeholder="" maxlength="120"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="street_number_caption" name="street_number_caption" for="seller_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="" placeholder="" maxlength="15"> </div>
+                                                    <input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="<?= $invoiceData['seller_street_number'];?>" placeholder="" maxlength="15"> </div>
                                             </div>
                                             <div class="form-group row" style="display: none;">
                                                 <label id="street2_caption" name="street2_caption" for="seller_street2" class="col-lg-3 col-sm-3 text-left">Street 2 :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_street2" name="seller_street2" value="" placeholder="" maxlength="100"> </div>
+                                                    <input type="text" class="form-control" id="seller_street2" name="seller_street2" value="<?= $invoiceData['seller_street2'];?>" placeholder="" maxlength="100"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="postal_code_caption" name="postal_code_caption" for="seller_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="" placeholder="" maxlength="8"> </div>
+                                                    <input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="<?= $invoiceData['seller_zip_code'];?>" placeholder="" maxlength="8"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="phone_caption" name="phone_caption" for="seller_phone" class="col-lg-3 col-sm-3 text-left">Téléphone</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_phone" name="seller_phone" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_phone" name="seller_phone" value="<?= $invoiceData['seller_phone'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label id="family_name_label_id" name="family_name_label_id" for="seller_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="<?= $invoiceData['seller_lastname'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
@@ -255,20 +255,20 @@
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="seller_country_id" name="seller_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['seller_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="seller_province_id_div" style="display:none">
+                                            <div class="form-group row" id="seller_province_id_div" <?php if($invoiceData['seller_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control" id="seller_province_id" name="seller_province_id">
                                                             <option value="">Select Province</option>
                                                             @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('seller_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
+                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['seller_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -277,17 +277,17 @@
                                             <div class="form-group row">
                                                 <label id="locality_caption" name="locality_caption" for="seller_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_place" name="seller_place" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_place" name="seller_place" value="<?= $invoiceData['seller_place'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="email_caption" name="email_caption" for="seller_email" class="col-lg-3 col-sm-3 text-left">email</label>
                                                 <div class="col-sm-7">
-                                                    <input type="email" class="form-control" id="seller_email" name="seller_strseller_emaileet2" value="" placeholder="" maxlength="100"> </div>
+                                                    <input type="email" class="form-control" id="seller_email" name="seller_strseller_emaileet2" value="<?= $invoiceData['seller_email'];?>" placeholder="" maxlength="100"> </div>
                                             </div>
                                             <div class="form-group row" style="display: none;">
                                                 <label id="mobile_caption" name="mobile_caption" for="seller_mobile" class="col-lg-3 col-sm-3 text-left">Mobile</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" id="seller_mobile" name="seller_mobile" value="" placeholder="" maxlength="150"> </div>
+                                                    <input type="text" class="form-control" id="seller_mobile" name="seller_mobile" value="<?= $invoiceData['seller_mobile'];?>" placeholder="" maxlength="150"> </div>
                                             </div>
                                         </div>
                                     </div>
@@ -304,34 +304,34 @@
                                         <div class="form-group row">
                                             <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-2 col-sm-2 text-left">Payment Bank Account Name</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="<?= $invoiceData['payment_bank_account_name'];?>" placeholder="" maxlength="100"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="name_of_bank_caption" name="name_of_bank_caption" for="payment_bank_name" class="col-lg-2 col-sm-2 text-left">Bank Name</label>
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="payment_bank_name" name="payment_bank_name" value="" placeholder="" maxlength="100"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_name" name="payment_bank_name" value="<?= $invoiceData['payment_bank_name'];?>" placeholder="" maxlength="100"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="address_caption" name="address_caption" for="payment_bank_address" class="col-lg-3 col-sm-3 text-left">Address</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_address" name="payment_bank_address" value="<?= $invoiceData['payment_bank_address'];?>" placeholder="" maxlength="100"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="postal_code_caption" name="postal_code_caption" for="payment_bank_zipcode" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="<?= $invoiceData['payment_bank_zipcode'];?>" placeholder="" maxlength="8"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="locality_caption" name="locality_caption" for="payment_bank_place" class="col-lg-3 col-sm-3 text-left">City :</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_place" name="payment_bank_place" value="<?= $invoiceData['payment_bank_place'];?>" placeholder="" maxlength="150"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="account_number" name="account_number" for="payment_bank_account" class="col-lg-3 col-sm-3 text-left">Account No</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_account" name="payment_bank_account" value="<?= $invoiceData['payment_bank_account'];?>" placeholder="" maxlength="30"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -341,20 +341,20 @@
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
                                                         @foreach($countries as $country)
-                                                            <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                            <option value="{{ $country->code }}" <?php if($invoiceData['payment_bank_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row" id="bank_province_id_div" style="display:none">
+                                        <div class="form-group row" id="bank_province_id_div"  <?php if($invoiceData['payment_bank_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="bank_province_id" name="bank_province_id">
                                                         <option value="">Select Province</option>
                                                             @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('bank_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
+                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['bank_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
                                                             @endforeach
                                                     </select>
                                                 </div>
@@ -363,12 +363,12 @@
                                         <div class="form-group row">
                                             <label id="iban_caption" name="iban_caption" for="payment_bank_iban" class="col-lg-3 col-sm-3 text-left">IBAN No</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="<?= $invoiceData['payment_bank_iban'];?>" placeholder="" maxlength="50"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="swift_number" name="swift_number" for="payment_bank_swift" class="col-lg-3 col-sm-3 text-left">SWIFT A/c No</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30"> </div>
+                                                <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="<?= $invoiceData['payment_bank_swift'];?>" placeholder="" maxlength="30"> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -456,7 +456,7 @@
                                         <tr>
                                             <th colspan="2" class="txtdarkblue gilroy-semibold" style="text-align:right">Grand Total:</th>
                                             <th colspan="1" style="text-align:right">
-                                                <label name="grand_total" id="grand_total" class="txtdarkblue gilroy-semibold" style="text-align: right;">0.00</label>
+                                                <label name="grand_total" id="grand_total" class="txtdarkblue gilroy-semibold" style="text-align: right;"><?= number_format((float)$invoiceData['total_amount'], 2, '.', ''); ?></label>
                                             </th>
                                             <th></th>
                                         </tr>
@@ -473,32 +473,35 @@
 								<label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
 							</div>
                             <div id="add_tax_div" open="">
+                            <?php foreach($InvoicesTaxData as $tax): ?>
                                 <div class="add_more_tax_row row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255"> </div>
+                                                <input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5"> </div>
+                                                <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255"> </div>
+                                                <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="255"> </div>
                                         </div>
                                         <div class="form-group row">
                                             <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100"> </div>
+                                                <input type="text" class="form-control tax_amount" name="tax_amount[]" value="<?= $tax['tax_amount'] ?>" placeholder="Tax Amount" maxlength="100"> </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr/>
+                            <?php endforeach; ?>
                                 <div id="add_more_tax_div"></div>
                                 <div class="row col-md-12">
                                     <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
@@ -508,22 +511,25 @@
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Add Expenses') }}:</label>
                                 </div>
+                            <?php foreach($InvoicesExpData as $exp): ?>
                                 <div class="add_more_expense_row row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="expense_name[]" value="" placeholder="Expense Name" maxlength="255"> </div>
+                                                <input type="text" class="form-control" name="expense_name[]" value="<?= $exp['expense_name'] ?>" placeholder="Expense Name" maxlength="255"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">Amount</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100"> </div>
+                                                <input type="text" class="form-control" name="expense_amount[]" value="<?= $exp['expense_amount'] ?>" placeholder="Expense Amount" maxlength="100"> </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr/>
+                            <?php endforeach; ?>
                                 <div id="add_more_expense_div"></div>
                                 <div class="row col-md-12">
                                     <button id="add_more_expense_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
@@ -849,12 +855,6 @@ function get_client_seller_info(obj){
 			document.getElementById("seller_street").value=value.street;
 			document.getElementById("seller_street2").value=value.street2;
 			document.getElementById("seller_country_id").value=value.country_code;
-			if(value.country_code == 'CA'){
-				PopulateProvince(value.country_code,'seller');
-			}
-			if(value.province_id > 0){
-				$("#seller_province_id").val(value.province_id);
-			}
 			document.getElementById("seller_zip_code").value=value.zip_code;
 			document.getElementById("seller_place").value=value.place;
 			
@@ -867,13 +867,6 @@ function get_client_seller_info(obj){
 			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
 			document.getElementById("payment_bank_place").value=value.bank_place;
 			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
-			
-			if(value.bank_country_id == 'CA'){
-				PopulateProvince(value.bank_country_id == 'CA','bank');
-			}
-			if (value.bank_province_id > 0){
-				$("#bank_province_id").val(value.bank_province_id );
-			} 
 			
 			document.getElementById("payment_bank_iban").value=value.bank_iban;
 			document.getElementById("payment_bank_account").value=value.bank_account;
@@ -893,46 +886,6 @@ function get_client_seller_info(obj){
 	
 }
 
-function PopulateProvince(country_code, type = null) {
-    $.ajax({
-        url: '../admin/get_master_data.php',
-        data: 'type=province_list&country_code=' + country_code,
-        type: 'POST',
-        dataType: 'json',
-        async: false,
-        success: function (data) {
-            if (type == 'client') {
-                if (data) { $("#client_province_id_div").show(); } else { $("#client_province_id_div").hide(); }
-            }
-            if (type == 'seller') {
-                if (data) { $("#seller_province_id_div").show(); } else { $("#seller_province_id_div").hide(); }
-            }
-            if (type == 'bank') {
-                if (data) { $("#bank_province_id_div").show(); } else { $("#bank_province_id_div").hide(); }
-            }
-            var resultHtml = '<option value="">Select Province</option>';
-            $.each(data, function (key, value) {
-                resultHtml += '<option value="' + value.province_id + '">' + value.province_name + '</option>';
-            });
-
-            if (type == 'address') {
-                $('#client_province_id').html(resultHtml);
-            } else if (type == 'seller') {
-                $("#seller_province_id").html(resultHtml);
-            } else if (type == 'bank') {
-                $("#bank_province_id").html(resultHtml);
-            } else {
-                $('#client_province_id').html(resultHtml);
-                $("#seller_province_id").html(resultHtml);
-                $("#bank_province_id").html(resultHtml);
-            }
-        }, // sucess
-        error: function (ts) {
-            errorModalCall(GetAppMessage('error_message_text'));
-
-        }
-    });
-}
 
 $('#save_btn').click(function (e) {		
     e.preventDefault();					
@@ -946,26 +899,6 @@ function AddEditInvoice(){
     var p_date_invoice = document.getElementById("date_invoice").value;
     var p_invoice_name = document.getElementById("invoice_name").value;
     var p_price_currency = document.getElementById("price_currency").value;
-    //alert(p_price_currency)
-    if (p_invoice_name ==''){
-        //errorModalCall(GetAppMessage('Invalid_invoice')+' name.');
-        
-        //alert(GetAppMessage("Invalid_invoice")+' name.');
-        //return false;
-    }
-    if (p_date_invoice ==''){
-        //errorModalCall(GetAppMessage('Invalid_invoice')+' date.');
-        
-        //alert(GetAppMessage("Invalid_invoice")+' date');
-        //return false;
-    }
-    
-    if (p_price_currency == '') {
-        //errorModalCall(GetAppMessage('Invalid_invoice')+' Currency.');
-        
-        //alert(GetAppMessage("Invalid_invoice")+' Currency.');
-        //return false;
-    } 
     
     p_date_invoice=p_date_invoice.replace("/",".");
     p_date_invoice=p_date_invoice.replace("/",".");
@@ -1089,7 +1022,7 @@ function AddEditInvoice(){
 		});
 
         $.ajax({
-            url: BASE_URL + '/{{$schoolId}}/store_invoice_data',
+            url: BASE_URL + '/{{$schoolId}}/update_invoice_data',
             data: {
                 p_auto_id:p_auto_id,
                 p_invoice_id:p_invoice_id,
@@ -1151,7 +1084,7 @@ function AddEditInvoice(){
                 if(result.status == 1){
                     status_flag = 'success';
                     p_auto_id=result.id;
-                    window.location.href = window.location.href+'/'+p_auto_id
+                    window.location.href = window.location.href+'?auto_id='+p_auto_id
                 }
             },   // success
             error: function(ts) { 
