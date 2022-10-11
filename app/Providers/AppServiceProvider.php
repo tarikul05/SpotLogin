@@ -76,17 +76,17 @@ class AppServiceProvider extends ServiceProvider
 
     public function getPlanName( $plan = null ){
         try{
-            $get_product_name = $this->stripe->plans->retrieve($plan->stripe_price, []);
-            return $this->getProductName($get_product_name);
+            $product_name = $this->stripe->plans->retrieve($plan->stripe_price, []);
+            return $this->getProductName($product_name);
         }catch(Exception $e){
             //
         }
     }
 
-    public function getProductName( $get_product_name = null ){
+    public function getProductName( $product_name = null ){
         try{
             $product_info = $this->stripe->products->retrieve(
-                $get_product_name->product,
+                $product_name->product,
                 []
             );
             return $product_info;
