@@ -856,8 +856,7 @@ $(document).ready(function(){
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
 	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date;
-	    console.log(data);
-		return false;
+	    
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
 			
@@ -867,6 +866,8 @@ $(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function(result) {
+				console.log(result);
+				return false;
 
 				$.each(result, function(key, value) {
 				if (value.status == 'success') {
