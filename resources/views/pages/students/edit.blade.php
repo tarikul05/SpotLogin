@@ -762,6 +762,7 @@ $(document).ready(function(){
 	}
 
 	$('#btn_convert_invoice').click(function(e) {
+		
 		$(this).attr("disabled", "disabled");
 		var p_event_ids = GetCheckBoxSelectedValues('event_check');
 		if (p_event_ids == '') {
@@ -795,21 +796,16 @@ $(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function(result) {
-				console.log(result);
-				return false;
-				$.each(result, function(key, value) {
-					if (value.status == 'success') {
-						auto_id = value.auto_id;
-						var msg = GetAppMessage("invoice_generated_msg");
-						DisplayMessage(msg);
+				if (result.status == 'success') {
+					auto_id = 1;
+					
+					successModalCall("{{ __('invoice_generated_msg')}}");
 
-						//location.reload(); //commented by soumen divert to invoice screen.     
-					} else {
-						errorModalCall(GetAppMessage('error_message_text'));
-						// alert(value.status);
-					}
-
-				});
+					//location.reload(); //commented by soumen divert to invoice screen.     
+				} else {
+					errorModalCall(GetAppMessage('error_message_text'));
+					// alert(value.status);
+				}
 			}, // success
 			error: function(ts) {
 				errorModalCall(GetAppMessage('error_message_text'));
@@ -818,10 +814,10 @@ $(document).ready(function(){
 		}); // Ajax
 
 		if (auto_id > 0) { 
-			var url = "../invoice/invoice_modification.html?auto_id=" + auto_id + "&action=edit";
-			setTimeout(function(){ window.open(url, "_self"); }, 3000);
-			
-			//window.location(url); 
+			var url = "/admin/"+document.getElementById("school_id").value+"/invoices";
+			//setTimeout(function(){ window.open(url, "_self"); }, 3000);
+			window.location = BASE_URL+ url; 
+			return false;
 		}
 
 		return false;

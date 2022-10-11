@@ -842,8 +842,9 @@ $(document).ready(function(){
 	    var p_person_id = document.getElementById("person_id").value;
 		let school_id = document.getElementById("school_id").value;
 
-	    var from_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").format("YYYY.MM.DD");
-	    var to_date = '' //moment((p_year+'-'+p_month+'-01'), "YYYY-MM-DD").endOf('month').format("YYYY.MM.DD");
+	    var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		var to_date = moment(($("#billing_period_end_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		
 	    var p_invoice_id = '';
 	    var auto_id = 0;
 	    var p_month = document.getElementById("smonth").value;
@@ -854,8 +855,9 @@ $(document).ready(function(){
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date='+p_billing_period_end_date;
-	    $.ajax({
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date;
+	    
+		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
 			
 			//url: '../teacher/teacher_events_data.php',
@@ -864,6 +866,8 @@ $(document).ready(function(){
 			dataType: 'json',
 			async: false,
 			success: function(result) {
+				console.log(result);
+				return false;
 
 				$.each(result, function(key, value) {
 				if (value.status == 'success') {
