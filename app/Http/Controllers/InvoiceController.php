@@ -1021,8 +1021,6 @@ class InvoiceController extends Controller
                     'events.duration_minutes as duration_minutes',
                     'events.event_type as event_type',
                     'events.title as title',
-                    'sum(event_details.costs_1) as costs_1',
-                    'sum(event_details.costs_2) as costs_2',
                     'event_details.participation_id as participation_id',
 
                     'event_details.id as detail_id',
@@ -1031,11 +1029,14 @@ class InvoiceController extends Controller
                     'events.date_start as date_start',
                     
                     
-                    'sum(event_details.buy_total) as buy_total',
-                    'sum(event_details.sell_total) as sell_total',
-                    'sum(event_details.buy_price) as buy_price',
-                    'sum(event_details.sell_price) as sell_price'
                 )
+                ->selectRaw("SUM(event_details.costs_1) AS costs_1")
+                ->selectRaw("SUM(event_details.costs_2) AS costs_2")
+                ->selectRaw("SUM(event_details.buy_total) AS buy_total")
+                ->selectRaw("SUM(event_details.sell_total) AS sell_total")
+                ->selectRaw("SUM(event_details.buy_price) AS buy_price")
+                ->selectRaw("SUM(event_details.sell_price) AS sell_price")
+                
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -1279,7 +1280,7 @@ class InvoiceController extends Controller
             // echo json_encode($data);
 
             $result = array(
-                'status' => true,
+                'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
                 //'no_of_teachers' =>$no_of_teachers
@@ -1744,7 +1745,7 @@ class InvoiceController extends Controller
             $invoiceData = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
             $result = array(
-                'status' => true,
+                'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
                 //'no_of_teachers' =>$no_of_teachers

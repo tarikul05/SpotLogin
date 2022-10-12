@@ -887,8 +887,10 @@ $(document).ready(function(){
 	    }); // Ajax
 	    if (auto_id > 0) {
 	      	var url = "/admin/"+document.getElementById("school_id").value+"/invoices";
-			//setTimeout(function(){ window.open(url, "_self"); }, 3000);
-			window.location = BASE_URL+ url; 
+			setTimeout(function(){ 
+				window.location = BASE_URL+ url;  
+				}, 3000);
+			
 			return false;
 	    }
 
