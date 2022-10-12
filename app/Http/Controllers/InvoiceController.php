@@ -1207,9 +1207,9 @@ class InvoiceController extends Controller
                     $invoiceItemData['caption'] = 'Event:'.$value->title;
                     $invoiceItemData['caption'] .= '('.$value->category_name.') , Number of Students'.$value->count_name;
                     
-                    if ($value->cost_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
-                    }
+                    // if ($value->cost_1>0) {
+                    //     $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    // }
                 } 
 
                
