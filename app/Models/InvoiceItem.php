@@ -24,6 +24,7 @@ class InvoiceItem extends BaseModel
         'is_locked',
         'caption',
         'unit',
+        'item_date',
         'price_unit',
         'event_detail_id',
         'event_id',

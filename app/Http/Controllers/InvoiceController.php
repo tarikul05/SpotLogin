@@ -1956,6 +1956,7 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'invoice_creation_type' => 'Y'
             ];
 
             $Invoice = Invoice::create($data);
@@ -1967,6 +1968,7 @@ class InvoiceController extends Controller
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
                     $InvoiceItem = InvoiceItem::create($itemData);
@@ -2076,6 +2078,7 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'invoice_creation_type' => 'Y'
             ];
 
             $Invoice = Invoice::where('id', $id)->update($data);
@@ -2090,6 +2093,7 @@ class InvoiceController extends Controller
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
                     $InvoiceItem = InvoiceItem::create($itemData);

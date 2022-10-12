@@ -48,7 +48,7 @@
                         <input type="hidden" id="person_id" name="person_id" value="">
                         <input type="hidden" id="invoice_status_id" name="invoice_status_id" value="1">
                         <input type="hidden" id="invoice_id" name="invoice_id" value="">
-                        <input type="hidden" id="invoice_type" name="invoice_type" value="2">
+                        <input type="hidden" id="invoice_type" name="invoice_type" value="0">
                         <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                         <input type="hidden" id="payment_status" name="payment_status" value="0">
                         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
@@ -425,7 +425,7 @@
                                             <td style="display: none;">1</td>
                                             <td>
                                                 <div class="input-group datetimepicker" id="date_div">
-                                                    <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="<?= $item['created_at']; ?>">
+                                                    <input name="date[]" type="text" class="form-control date_picker" value="<?= date("d.m.Y", strtotime($item['item_date'])); ?>">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                                 </div>
                                             </td>
@@ -731,16 +731,16 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 }
 
  $(function() {
-	$("#date").datetimepicker({
-        format: "dd.mm.yyyy",
-        autoclose: true,
-        todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
+	// $("#date").datetimepicker({
+    //     format: "dd.mm.yyyy",
+    //     autoclose: true,
+    //     todayBtn: true,
+	// 	minuteStep: 10,
+	// 	minView: 3,
+	// 	maxView: 3,
+	// 	viewSelect: 3,
+	// 	todayBtn:false,
+	// });
     
     $("#date_invoice").datetimepicker({
         format: "dd.mm.yyyy",
@@ -798,9 +798,9 @@ function get_client_seller_info(obj){
 		$.each(data, function(key,value){
 
 			if (p_type == 'student') {
-				document.getElementById("invoice_type").value=1;
+				document.getElementById("invoice_type").value=0;
 			}else if (p_type == 'teacher') {
-				document.getElementById("invoice_type").value=2;
+				document.getElementById("invoice_type").value=0;
 			}else if (p_type == 'school') {
 				document.getElementById("invoice_type").value=0;
 			}

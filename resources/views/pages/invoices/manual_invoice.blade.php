@@ -48,7 +48,7 @@
                         <input type="hidden" id="person_id" name="person_id" value="">
                         <input type="hidden" id="invoice_status_id" name="invoice_status_id" value="1">
                         <input type="hidden" id="invoice_id" name="invoice_id" value="">
-                        <input type="hidden" id="invoice_type" name="invoice_type" value="2">
+                        <input type="hidden" id="invoice_type" name="invoice_type" value="0">
                         <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                         <input type="hidden" id="payment_status" name="payment_status" value="0">
                         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
@@ -790,9 +790,9 @@ function get_client_seller_info(obj){
 		$.each(data, function(key,value){
 
 			if (p_type == 'student') {
-				document.getElementById("invoice_type").value=1;
+				document.getElementById("invoice_type").value=0;
 			}else if (p_type == 'teacher') {
-				document.getElementById("invoice_type").value=2;
+				document.getElementById("invoice_type").value=0;
 			}else if (p_type == 'school') {
 				document.getElementById("invoice_type").value=0;
 			}
