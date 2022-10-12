@@ -1022,12 +1022,13 @@ class InvoiceController extends Controller
                     'events.title as title',
                     'event_details.participation_id as participation_id',
 
-                    'event_details.id as detail_id',
+                    //'event_details.id as detail_id',
                     'event_details.is_locked as is_locked',
                     'events.event_price as event_price',
                     'events.date_start as date_start',
                     'event_categories.title as category_name'
                 )
+                ->selectRaw("DISTINCT GROUP_CONCAT(event_details.id SEPARATOR ',') AS detail_id")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
                 ->selectRaw("COUNT(event_details.event_id) as count_name")
                 ->selectRaw("SUM(event_details.costs_1) AS costs_1")
@@ -1214,6 +1215,7 @@ class InvoiceController extends Controller
                
 
                 // if (!empty($value->detail_id)) {
+                //     $detail_id =  explode(',',$value->detail_id);
                 //     $eventUpdate = [
                 //         'sell_invoice_id' => $invoiceData->id,
                 //         'is_sell_invoiced' => 1
