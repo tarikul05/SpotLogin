@@ -920,7 +920,7 @@ class InvoiceController extends Controller
                 $professors = SchoolTeacher::active()->where('school_id',$schoolId);
                 $professors->where('teacher_id',$user->person_id);
                 $professors = $professors->first();
-                $teacher = Teacher::find(1);
+                $teacher = Teacher::find($professors->id);
 
                 $invoiceData['seller_id'] = $teacher->id;
                 $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
@@ -1019,7 +1019,6 @@ class InvoiceController extends Controller
                     'event_details.student_id as student_id',
                     
                     'events.duration_minutes as duration_minutes',
-                    'events.event_type as event_type',
                     'events.title as title',
                     'event_details.participation_id as participation_id',
 
@@ -1027,9 +1026,10 @@ class InvoiceController extends Controller
                     'event_details.is_locked as is_locked',
                     'events.event_price as event_price',
                     'events.date_start as date_start',
-                    
-                    
+                    'event_categories.title as category_name'
                 )
+                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
+                ->selectRaw("COUNT(event_details.event_id) as count_name")
                 ->selectRaw("SUM(event_details.costs_1) AS costs_1")
                 ->selectRaw("SUM(event_details.costs_2) AS costs_2")
                 ->selectRaw("SUM(event_details.buy_total) AS buy_total")
@@ -1193,35 +1193,25 @@ class InvoiceController extends Controller
                 $total_amount_with_discount += $v_total_amount_with_discount;
                 $total_amount += $v_total_amount;
 
-                // if ($value->event_type == 10) {
-                //     $invoiceItemData['caption'] = 'Lesson:'.$value->title;
-                //     if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //     }
-                // }
-                // else if ($value->event_type == 13) {
-                //     $invoiceItemData['caption'] = 'Event:'.$value->title;
-                //     if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //     }
-                // } else if ($value->event_type == 100) {
-                //    $invoiceItemData['caption'] = 'Event:'.$value->title;
-                //    if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //    }
-                // } else if (!empty($value->title)) {
-                //     if ($value->participation_id==199) {
-                //         $invoiceItemData['caption'] ='du '.$value->title;
-                //     } else{
-                //         $invoiceItemData['caption'] =$value->title.'avec '.$value->teacher_id.'('.$value->category_name.')';
-                //     }
-                //     if ($value->event_type == 10) {
-                //         $invoiceItemData['caption'] = 'price_name';
-                //         if ($value->cost_1>0) {
-                //             $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //         }
-                //     }
-                // }
+
+                $teacher = Teacher::find($value->teacher_id);
+                if ($value->event_type == 10) {
+                    $invoiceItemData['caption'] = 'Teacher ';
+                    $invoiceItemData['caption'] .= '('.$value->category_name.','.$value->price_name.') , Number of Students'.$value->count_name;
+                    // if ($value->cost_1>0) {
+                    //     $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    // }
+                }
+                else if ($value->event_type == 100) {
+                    $invoiceItemData['caption'] = 'Event:'.$value->title;
+                    $invoiceItemData['caption'] .= '('.$value->category_name.') , Number of Students'.$value->count_name;
+                    
+                    if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    }
+                } 
+
+               
 
                 // if (!empty($value->detail_id)) {
                 //     $eventUpdate = [
@@ -1375,7 +1365,7 @@ class InvoiceController extends Controller
                 $professors = SchoolTeacher::active()->where('school_id',$schoolId);
                 $professors->where('teacher_id',$user->person_id);
                 $professors = $professors->first();
-                $teacher = Teacher::find(1);
+                $teacher = Teacher::find($professors->id);
 
                 $invoiceData['seller_id'] = $teacher->id;
                 $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
@@ -1494,6 +1484,8 @@ class InvoiceController extends Controller
                     'event_details.is_locked as is_locked',
                     'events.event_price as event_price',
                     'events.date_start as date_start',
+
+                    'event_categories.title as category_name',
                     
                     
                     'event_details.buy_total as buy_total',
@@ -1501,6 +1493,7 @@ class InvoiceController extends Controller
                     'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price'
                 )
+                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -1663,23 +1656,22 @@ class InvoiceController extends Controller
                 $total_amount_with_discount += $v_total_amount_with_discount;
                 $total_amount += $v_total_amount;
 
-                // if ($value->event_type == 10) {
-                //     $invoiceItemData['caption'] = 'Lesson:'.$value->title;
-                //     if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //     }
-                // }
-                // else if ($value->event_type == 13) {
-                //     $invoiceItemData['caption'] = 'Event:'.$value->title;
-                //     if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //     }
-                // } else if ($value->event_type == 100) {
-                //    $invoiceItemData['caption'] = 'Event:'.$value->title;
-                //    if ($value->cost_1>0) {
-                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //    }
-                // } else if (!empty($value->title)) {
+
+                $teacher = Teacher::find($value->teacher_id);
+                if ($value->event_type == 10) {
+                    $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
+                    $invoiceItemData['caption'] .= '('.$value->category_name.','.$value->price_name.')';
+                    if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    }
+                }
+                else if ($value->event_type == 100) {
+                    $invoiceItemData['caption'] = 'Event:'.$value->price_name.''.$value->title;
+                    if ($value->cost_1>0) {
+                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    }
+                } 
+                //else if (!empty($value->title)) {
                 //     if ($value->participation_id==199) {
                 //         $invoiceItemData['caption'] ='du '.$value->title;
                 //     } else{
