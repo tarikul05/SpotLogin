@@ -1009,7 +1009,7 @@ class InvoiceController extends Controller
 
             $teacherEvents = DB::table('events')
                 ->select(
-                    'events.id as event_id',
+                    'event_details.event_id as event_id',
                     'events.event_type as event_type',
                     'events.teacher_id as teacher_id',
                     'event_details.student_id as student_id',
@@ -1017,8 +1017,8 @@ class InvoiceController extends Controller
                     'events.duration_minutes as duration_minutes',
                     'events.event_type as event_type',
                     'events.title as title',
-                    'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2',
+                    'sum(event_details.costs_1) as costs_1',
+                    'sum(event_details.costs_2) as costs_2',
                     'event_details.participation_id as participation_id',
 
                     'event_details.id as detail_id',
@@ -1027,10 +1027,10 @@ class InvoiceController extends Controller
                     'events.date_start as date_start',
                     
                     
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price'
+                    'sum(event_details.buy_total) as buy_total',
+                    'sum(event_details.sell_total) as sell_total',
+                    'sum(event_details.buy_price) as buy_price',
+                    'sum(event_details.sell_price) as sell_price'
                 )
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
@@ -1070,11 +1070,11 @@ class InvoiceController extends Controller
             //$studentEvents->where('events.date_start', '>=', $dateS);
             $teacherEvents->orderBy('events.date_start', 'desc');
             //By
-            $teacherEvents->distinct('events.id');
+            //$teacherEvents->distinct('events.id');
 
-            $teacherEvents->groupBy('event_details.teacher_id');
+            $teacherEvents->groupBy('event_details.event_id');
             
-            dd($teacherEvents->toSql());
+            //dd($teacherEvents->toSql());
             $data = $teacherEvents->get()->toArray();
             //print_r($data);
             $count = count($data);
@@ -1130,7 +1130,139 @@ class InvoiceController extends Controller
                 
                 $invoiceItemData['subtotal_amount_with_discount'] = 0;
                 $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                if ($value->event_type == 10) {
+                   $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
+                } else {
+                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                } 
+                $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
+                $amt_for_disc = 0;
+                $v_amount_discount_1 = 0;
+                $v_amount_discount_2 = 0;
+                $v_amount_discount_3 = 0;
+                $v_amount_discount_4 = 0;
+                $v_amount_discount_5 = 0;
+                $v_amount_discount_6 = 0;
+                $v_total_amount_discount = 0;
+                $v_total_amount = 0;
+                $tax_desc = $school->tax_desc;
+                $tax_perc = $school->tax_perc;
+                if ($invoiceData->invoice_type ==1) {
+                    $tax_desc = '';
+                    $tax_perc = 0;
+                    if($invoiceItemData['subtotal_amount_with_discount'] > 400){
+                        $amt_for_disc=200;
+                    }
+                    else{
+                        $amt_for_disc = $invoiceItemData['subtotal_amount_with_discount']-200;
+                    } 
+                    if ($amt_for_disc>0){
+                        $v_amount_discount_1 = $amt_for_disc*($invoiceData->discount_percent_1/100);
+                    } else{
+                        $v_amount_discount_1 = 0;
+                    }
+                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                    $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
+                    $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
+                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                } 
+                if ($invoiceData->invoice_type ==2) {
+                    
+                    $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
+                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                    $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
+                    $v_total_amount_no_discount = 0;
+                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                }
+                $subtotal_amount_all += $v_subtotal_amount_all;
+                $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
+                $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
+                $amount_discount_1 += $v_amount_discount_1;
+                $amount_discount_2 += $v_amount_discount_2;
+                $amount_discount_3 += $v_amount_discount_3;
+                $amount_discount_4 += $v_amount_discount_4;
+                $amount_discount_5 += $v_amount_discount_5;
+                $amount_discount_6 += $v_amount_discount_6;
+                $total_amount_discount += $v_total_amount_discount;
+                $total_amount_no_discount += $v_total_amount_no_discount;
+                $total_amount_with_discount += $v_total_amount_with_discount;
+                $total_amount += $v_total_amount;
+
+                // if ($value->event_type == 10) {
+                //     $invoiceItemData['caption'] = 'Lesson:'.$value->title;
+                //     if ($value->cost_1>0) {
+                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                //     }
+                // }
+                // else if ($value->event_type == 13) {
+                //     $invoiceItemData['caption'] = 'Event:'.$value->title;
+                //     if ($value->cost_1>0) {
+                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                //     }
+                // } else if ($value->event_type == 100) {
+                //    $invoiceItemData['caption'] = 'Event:'.$value->title;
+                //    if ($value->cost_1>0) {
+                //         $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                //    }
+                // } else if (!empty($value->title)) {
+                //     if ($value->participation_id==199) {
+                //         $invoiceItemData['caption'] ='du '.$value->title;
+                //     } else{
+                //         $invoiceItemData['caption'] =$value->title.'avec '.$value->teacher_id.'('.$value->category_name.')';
+                //     }
+                //     if ($value->event_type == 10) {
+                //         $invoiceItemData['caption'] = 'price_name';
+                //         if ($value->cost_1>0) {
+                //             $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
+                //         }
+                //     }
+                // }
+
+                // if (!empty($value->detail_id)) {
+                //     $eventUpdate = [
+                //         'sell_invoice_id' => $invoiceData->id,
+                //         'is_sell_invoiced' => 1
+                //     ];
+                //     $eventData = EventDetails::where('student_id', $value->student_id)
+                //     //->where('school_id', $schoolId)
+                //     ->where('id', $value->detail_id)
+                //     ->where('participation_id', '>', 198)
+                //     ->update($eventUpdate);
+                // }
+
+                 $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
+                
+
+                
             }
+
+            $tax_amount=($total_amount *($tax_perc/100));
+           
+            $updateInvoiceCalculation = [
+               'subtotal_amount_all' => $subtotal_amount_all,
+               'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
+               'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
+               'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
+               'amount_discount_2'=> $amount_discount_2,
+               'amount_discount_3'=> $amount_discount_3,
+               'amount_discount_4'=> $amount_discount_4 ,
+               'amount_discount_5'=> $amount_discount_5,
+               'amount_discount_6'=> $amount_discount_6,
+               'total_amount_discount'=>$total_amount_discount,
+               'total_amount_no_discount'=> $total_amount_no_discount,
+               'total_amount_with_discount'=> $total_amount_with_discount,
+               'total_amount'=> $total_amount,
+               'tax_desc'=> $tax_desc,
+               'tax_perc'=> $tax_perc,
+               'tax_amount'=> $tax_amount,
+               'etransfer_acc'=>$school->etransfer_acc,
+               'cheque_payee' =>$school->cheque_payee,
+               'invoice_currency' => $price_currency
+            
+            ];
+            
+            $invoiceData = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
+            
 
 
             // $query="call generate_new_teacher_invoice_new('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_billing_period_start_date','$p_billing_period_end_date','$p_discount_perc');";
@@ -1145,7 +1277,7 @@ class InvoiceController extends Controller
             $result = array(
                 'status' => true,
                 'message' => __('We got a list of invoice'),
-                'data' => $data,
+                'data' => $invoiceData,
                 //'no_of_teachers' =>$no_of_teachers
             );
             return response()->json($result);
