@@ -376,6 +376,8 @@ class LessonsController extends Controller
                             'event_id'   => $event->id,
                             'teacher_id' => $lessonData['teacher_select'],
                             'student_id' => $std,
+                            'buy_total' => $attendBuyPrice,
+                            'sell_total' => $attendSellPrice,
                             'buy_price' => $attendBuyPrice,
                             'sell_price' => $attendSellPrice,
                             'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
@@ -524,6 +526,8 @@ class LessonsController extends Controller
                             'event_id' => $lessonlId,
                             'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
                             'student_id' => $std,
+                            'buy_total' => $attendBuyPrice,
+                            'sell_total' => $attendSellPrice,
                             'buy_price' => $attendBuyPrice,
                             'sell_price' => $attendSellPrice,
                             'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,

@@ -1660,15 +1660,15 @@ class InvoiceController extends Controller
                 if ($value->event_type == 10) {
                     $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
                     $invoiceItemData['caption'] .= '('.$value->category_name.','.$value->price_name.')';
-                    if ($value->cost_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
-                    }
+                    // if ($value->cost_1>0) {
+                    //     $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    // }
                 }
                 else if ($value->event_type == 100) {
                     $invoiceItemData['caption'] = 'Event:'.$value->price_name.''.$value->title;
-                    if ($value->cost_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
-                    }
+                    // if ($value->cost_1>0) {
+                    //     $invoiceItemData['caption'] .='<br>Extra charges '.$value->cost_1;
+                    // }
                 } 
                 //else if (!empty($value->title)) {
                 //     if ($value->participation_id==199) {
