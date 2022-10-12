@@ -154,6 +154,9 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/subscribe/{plan_id}', [App\Http\Controllers\SubscriptionController::class, 'supscribePlan'])->name('subscribe.plan');
   Route::post('/subscribe/store', [App\Http\Controllers\SubscriptionController::class, 'supscribePlanStore'])->name('subscribe.store');
 
+  Route::get('single-invoice-payment/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'singlePayment'])->name('subscription.payment');
+  Route::post('single-subscription/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'storeSinglePayment'])->name('subscription.singleCharge');
+  
   Route::prefix('admin')->group(function() {
 
     Route::resource('roles', "RoleController");

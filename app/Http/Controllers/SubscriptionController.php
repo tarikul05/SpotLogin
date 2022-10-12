@@ -119,4 +119,44 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
+    public function singlePayment(Request $request, $payment_id = null){
+        try {
+            if(isset(($_GET['payment_method']))){
+                $get_payment_method = $request->get('payment_method');
+            }else{
+                $get_payment_method = null;
+            }
+            $user = auth()->user();
+            $plan = $user->subscriptions()->active()->first();
+            $payment_methods = $user->paymentMethods();
+            $intent = $request->user()->createSetupIntent();
+            return view('pages.subscribers.single_payment', compact('intent','payment_methods','get_payment_method'));
+        } catch ( Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function storeSinglePayment(Request $request, $payment_id = null){
+        try {
+            $user = auth()->user();
+            if($request->get('has_payment') === 'new_card'){
+                $payment_methods = $request->get('paymentMethod');
+            }else{
+                $payment_methods = $request->get('has_payment');
+            }
+            $plan = $user->subscriptions()->active()->first();
+            $plan_id = $plan->stripe_price;
+            $single_plan_info = $this->stripe->plans->retrieve($plan_id, []);
+            $product_object = $this->stripe->products->retrieve(
+                $single_plan_info->product,
+                []
+            );
+            $price = $product_object->price;
+            $user->charge($price, $payment_methods);
+            return redirect()->route('agenda')->with('success', 'Your payment successfully complete');
+        } catch ( Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 }
