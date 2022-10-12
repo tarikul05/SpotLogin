@@ -7,9 +7,12 @@ use App\Models\Country;
 use App\Models\School;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\InvoicesTaxes;
+use App\Models\InvoicesExpenses;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Province;
+use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
@@ -18,6 +21,7 @@ use App\Models\AttachedFile;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Redirect;
 use DB;
 
 class InvoiceController extends Controller
@@ -1807,6 +1811,7 @@ class InvoiceController extends Controller
 
     public function manualInvoice(Request $request, $schoolId = null)
     {
+        $invoiceId = !empty($_GET['auto_id']) ? $_GET['auto_id'] : '';
         $user = $request->user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
         $school = School::active()->find($schoolId);
@@ -1816,6 +1821,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
         
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
@@ -1826,7 +1832,44 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers'));
+        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers','currency'));
+    }
+
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function updatemanualInvoice(Request $request, $schoolId = null, $invoiceId = null)
+    {
+        $user = $request->user();
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $genders = config('global.gender');
+        $provinces = Province::active()->get()->toArray();
+        $countries = Country::active()->get();
+        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
+        $students = DB::table('school_student')
+                    ->join('students','school_student.student_id','=','students.id')
+                    ->where(['school_id' => $schoolId, 'school_student.is_active' => 1])
+                    ->get();
+
+        $invoiceData = Invoice::active()->where(['id'=>$invoiceId])->first();
+        $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();
+        $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();  
+        $InvoicesItemData = InvoiceItem::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();       
+
+        return view('pages.invoices.update_manual_invoice', [
+            'title' => 'Invoice',
+            'pageInfo' => ['siteTitle' => '']
+        ])->with(compact('genders','currency','schoolId','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
     }
 
     /**
@@ -1859,7 +1902,7 @@ class InvoiceController extends Controller
 
 
 
-        /**
+    /**
      *  AJAX action to send email for pay reminder
      * 
      * @return json
@@ -1867,25 +1910,237 @@ class InvoiceController extends Controller
      * @version 0.1 written in 2022-05-27
      */
 
-    public function invoiceDataSave(Request $request)
+    public function invoiceDataSave(Request $request, $schoolId = null)
     {   
-        $user = $request->user();
-        $dataParam = $request->all();
+        DB::beginTransaction();
+        try{
+            $user = Auth::user();
+            $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            
+            $dataParam = $request->all();
 
-        print_r($dataParam);exit;
-        
-        $id= trim($dataParam['p_code']);
-        $type= trim($dataParam['p_type']);
+            $data = [
+                'school_id' => $schoolId,
+                'invoice_type' => $dataParam['p_invoice_type'],
+                'invoice_name' => $dataParam['p_invoice_name'],
+                'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'client_id' => $dataParam['p_client_id'],
+                'client_name' => $dataParam['p_client_name'],
+                'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
+                'client_lastname' => isset($dataParam['p_client_lastname']) ? $dataParam['p_client_lastname'] : null,
+                'client_street_number' => $dataParam['p_client_street_number'],
+                'client_street' => $dataParam['p_client_street'],
+                'client_street2' => $dataParam['p_client_street2'],
+                'client_country_code' => $dataParam['p_client_country_id'],
+                'client_zip_code' => $dataParam['p_client_zip_code'],
+                'client_place' => $dataParam['p_client_place'],
+                'seller_id' => $dataParam['p_seller_id'],
+                'seller_name' => $dataParam['p_seller_name'],
+                'seller_firstname' => $dataParam['p_seller_firstname'],
+                'seller_lastname' => $dataParam['p_seller_lastname'],
+                'seller_street_number' => $dataParam['p_seller_street_number'],
+                'seller_street' => $dataParam['p_seller_street'],
+                'seller_street2' => $dataParam['p_seller_street2'],
+                'seller_country_code' => $dataParam['p_seller_country_id'],
+                'seller_zip_code' => $dataParam['p_seller_zip_code'],
+                'seller_phone' => $dataParam['p_seller_phone'],
+                'seller_mobile' => $dataParam['p_seller_mobile'],
+                'seller_place' => $dataParam['p_seller_place'],
+                'seller_email' => $dataParam['p_seller_email'],
+                'payment_bank_account_name' => $dataParam['p_payment_bank_account_name'],
+                'payment_bank_name' => $dataParam['p_payment_bank_name'],
+                'payment_bank_address' => $dataParam['p_payment_bank_address'],
+                'payment_bank_country_code' => $dataParam['p_payment_bank_country_id'],
+                'payment_bank_zipcode' => $dataParam['p_payment_bank_zipcode'],
+                'payment_bank_place' => $dataParam['p_payment_bank_place'],
+                'payment_bank_iban' => $dataParam['p_payment_bank_iban'],
+                'payment_bank_account' => $dataParam['p_payment_bank_account'],
+                'payment_bank_swift' => $dataParam['p_payment_bank_swift'],
+                'invoice_currency' => $dataParam['p_price_currency'],
+                'client_province_id' => $dataParam['p_client_province_id'],
+                'seller_province_id' => $dataParam['p_seller_province_id'],
+                'bank_province_id' => $dataParam['p_bank_province_id'],
+                'total_amount' => $dataParam['p_total_amount'],
+            ];
 
-        if($type == 'student'){
-            $userData = DB::table('students')
-                    ->where(['id' => $id, 'is_active' => 1])
-                    ->get();
-        }elseif($type == 'teacher'){
-            $userData = DB::table('teachers')
-                    ->where(['id' => $id, 'is_active' => 1])
-                    ->get();
-        }    
-        return response()->json($userData);
+            $Invoice = Invoice::create($data);
+            
+            if (!empty($dataParam['item_total'])) {
+                for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $itemData = [
+                        'invoice_id'   => $Invoice->id,
+                        'school_id' => $schoolId,
+                        'caption' => $dataParam['item_caption'][$i],
+                        'total_item' => $dataParam['item_total'][$i],
+                        'price_currency' => $dataParam['p_price_currency']
+                    ];
+                    $InvoiceItem = InvoiceItem::create($itemData);
+                }
+            }
+            
+            if (!empty($dataParam['tax_name'])) {
+                for($i=0; $i < count($dataParam['tax_name']);$i++){
+                    $taxData = [
+                        'invoice_id'   => $Invoice->id,
+                        'tax_name' => $dataParam['tax_name'][$i],
+                        'tax_percentage' => $dataParam['tax_percentage'][$i],
+                        'tax_number' => $dataParam['tax_number'][$i],
+                        'tax_amount' => $dataParam['tax_amount'][$i],
+                    ];
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+            }
+
+            if (!empty($dataParam['expense_name'])) {
+                for($i=0; $i < count($dataParam['expense_name']);$i++){
+                    $expenseData = [
+                        'invoice_id'   => $Invoice->id,
+                        'expense_name' => $dataParam['expense_name'][$i],
+                        'expense_amount' => $dataParam['expense_amount'][$i]
+                    ];
+                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
+                }
+            }
+                
+            DB::commit();
+
+            return [
+                'id' => $Invoice->id,
+                'status' => 1,
+                'message' =>  __('Successfully Registered')
+            ];
+        }catch (Exception $e) {
+            DB::rollBack();
+            return back()->withInput($request->all())->with('error', __('Internal server error'));
+        }   
+
+        return $result;        
+    }
+
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul 90
+     * @version 0.1 written in 2022-05-27
+     */
+
+    public function invoiceDataUpdate(Request $request, $schoolId = null)
+    {   
+        DB::beginTransaction();
+        try{
+            $user = Auth::user();
+            $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            
+            $dataParam = $request->all();
+            $id = $dataParam['p_auto_id'];
+
+            $data = [
+                'school_id' => $schoolId,
+                'invoice_type' => $dataParam['p_invoice_type'],
+                'invoice_name' => $dataParam['p_invoice_name'],
+                'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'client_id' => $dataParam['p_client_id'],
+                'client_name' => $dataParam['p_client_name'],
+                'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
+                'client_lastname' => isset($dataParam['p_client_lastname']) ? $dataParam['p_client_lastname'] : null,
+                'client_street_number' => $dataParam['p_client_street_number'],
+                'client_street' => $dataParam['p_client_street'],
+                'client_street2' => $dataParam['p_client_street2'],
+                'client_country_code' => $dataParam['p_client_country_id'],
+                'client_zip_code' => $dataParam['p_client_zip_code'],
+                'client_place' => $dataParam['p_client_place'],
+                'seller_id' => $dataParam['p_seller_id'],
+                'seller_name' => $dataParam['p_seller_name'],
+                'seller_firstname' => $dataParam['p_seller_firstname'],
+                'seller_lastname' => $dataParam['p_seller_lastname'],
+                'seller_street_number' => $dataParam['p_seller_street_number'],
+                'seller_street' => $dataParam['p_seller_street'],
+                'seller_street2' => $dataParam['p_seller_street2'],
+                'seller_country_code' => $dataParam['p_seller_country_id'],
+                'seller_zip_code' => $dataParam['p_seller_zip_code'],
+                'seller_phone' => $dataParam['p_seller_phone'],
+                'seller_mobile' => $dataParam['p_seller_mobile'],
+                'seller_place' => $dataParam['p_seller_place'],
+                'seller_email' => $dataParam['p_seller_email'],
+                'payment_bank_account_name' => $dataParam['p_payment_bank_account_name'],
+                'payment_bank_name' => $dataParam['p_payment_bank_name'],
+                'payment_bank_address' => $dataParam['p_payment_bank_address'],
+                'payment_bank_country_code' => $dataParam['p_payment_bank_country_id'],
+                'payment_bank_zipcode' => $dataParam['p_payment_bank_zipcode'],
+                'payment_bank_place' => $dataParam['p_payment_bank_place'],
+                'payment_bank_iban' => $dataParam['p_payment_bank_iban'],
+                'payment_bank_account' => $dataParam['p_payment_bank_account'],
+                'payment_bank_swift' => $dataParam['p_payment_bank_swift'],
+                'invoice_currency' => $dataParam['p_price_currency'],
+                'client_province_id' => $dataParam['p_client_province_id'],
+                'seller_province_id' => $dataParam['p_seller_province_id'],
+                'bank_province_id' => $dataParam['p_bank_province_id'],
+                'total_amount' => $dataParam['p_total_amount'],
+            ];
+
+            $Invoice = Invoice::where('id', $id)->update($data);
+            InvoicesTaxes::where('invoice_id',$id)->forceDelete();
+            InvoicesExpenses::where('invoice_id',$id)->forceDelete();
+            InvoiceItem::where('invoice_id',$id)->forceDelete();
+
+            if (!empty($dataParam['item_total'])) {
+                for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $itemData = [
+                        'invoice_id' => $id,
+                        'school_id' => $schoolId,
+                        'caption' => $dataParam['item_caption'][$i],
+                        'total_item' => $dataParam['item_total'][$i],
+                        'price_currency' => $dataParam['p_price_currency']
+                    ];
+                    $InvoiceItem = InvoiceItem::create($itemData);
+                }
+            }
+
+            if (!empty($dataParam['tax_name'])) {
+                for($i=0; $i < count($dataParam['tax_name']);$i++){
+                    $taxData = [
+                        'invoice_id'   => $id,
+                        'tax_name' => $dataParam['tax_name'][$i],
+                        'tax_percentage' => $dataParam['tax_percentage'][$i],
+                        'tax_number' => $dataParam['tax_number'][$i],
+                        'tax_amount' => $dataParam['tax_amount'][$i],
+                    ];
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+            }            
+
+            if (!empty($dataParam['expense_name'])) {
+                for($i=0; $i < count($dataParam['expense_name']);$i++){
+                    $expenseData = [
+                        'invoice_id'   => $id,
+                        'expense_name' => $dataParam['expense_name'][$i],
+                        'expense_amount' => $dataParam['expense_amount'][$i]
+                    ];
+                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
+                }
+            }
+                
+            DB::commit();
+
+            return [
+                'id' => $id,
+                'status' => 1,
+                'message' =>  __('Successfully Registered')
+            ];
+        }catch (Exception $e) {
+            DB::rollBack();
+            return back()->withInput($request->all())->with('error', __('Internal server error'));
+        }   
+
+        return $result;        
     }
 }

@@ -254,6 +254,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
     Route::get('/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('manualInvoice');
     Route::get('/{school}/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('adminmanualInvoice');
+    Route::get('/{school}/manual-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'updatemanualInvoice'])->name('adminupdatemanualInvoice');
     
   }); //Admin scope end
 
@@ -367,6 +368,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
     Route::get('invoice', 'InvoiceController@view')->name('invoice');
     Route::post('invoice_data', 'InvoiceController@invoiceData')->name('invoiceData');
-    Route::post('store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');
+    Route::post('/{school}/store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');
+    Route::post('/{school}/update_invoice_data', 'InvoiceController@invoiceDataUpdate')->name('invoiceDataUpdate');
 });
 
