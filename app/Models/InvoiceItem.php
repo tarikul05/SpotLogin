@@ -54,6 +54,7 @@ class InvoiceItem extends BaseModel
     protected $casts = [
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
+        'item_date' => 'date:Y/m/d H:i',
     ];
 
     protected $appends = [];

@@ -1131,7 +1131,7 @@ class InvoiceController extends Controller
                 $invoiceItemData['participation_id'] = 200;
                 $invoiceItemData['price_type_id'] = $value->event_price;
                 $invoiceItemData['is_locked'] = $value->is_locked;
-                $invoiceItemData['date'] = $value->date_start;
+                $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
                 $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
                 
                 $invoiceItemData['subtotal_amount_with_discount'] = 0;
@@ -1592,7 +1592,7 @@ class InvoiceController extends Controller
                 $invoiceItemData['participation_id'] = $value->participation_id;
                 $invoiceItemData['price_type_id'] = $value->event_price;
                 $invoiceItemData['is_locked'] = $value->is_locked;
-                $invoiceItemData['date'] = $value->date_start;
+                $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
                 $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
                 
                 $invoiceItemData['subtotal_amount_with_discount'] = 0;
