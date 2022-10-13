@@ -25,7 +25,6 @@ class InvoicesTaxes extends BaseModel
         'tax_amount'
     ];
 
-
     /**
      * The attributes that should be casted to native types.
      *
