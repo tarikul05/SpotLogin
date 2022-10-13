@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
-use App\Models\Invoice;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
@@ -25,7 +24,7 @@ class Invoice extends BaseModel
         'invoice_type',
         'invoice_status',
         'date_invoice',
-        'peroid_starts',
+        'period_starts',
         'period_ends',
         'fully_paid_date',
         'invoice_name',
@@ -35,6 +34,7 @@ class Invoice extends BaseModel
         'client_name',
         'client_gender_id',
         'client_firstname',
+        'client_lastname',
         'client_street',
         'client_street_number',
         'client_street2',
