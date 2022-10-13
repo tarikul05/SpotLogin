@@ -335,7 +335,6 @@ class InvoiceController extends Controller
             $user_role = 'teacher';
         }
 
-        // dd($user);
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
             $invoice_type = 'S';
             $studentEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -383,13 +382,8 @@ class InvoiceController extends Controller
             }
             $allStudentEvents[] = $value;
         }
-        //dd($allStudentEvents);
         return view('pages.invoices.student_list', compact('allStudentEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
     }
-
-
-
-
 
 
 
@@ -411,21 +405,20 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
 
-
-
         $teacherEvents = DB::table('events')
             ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
             ->select(
                 //'event_details.event_id as event_id',
                 'event_details.event_id as event_id',
                 'event_details.student_id as student_id',
                 'event_details.teacher_id as person_id',
-                'school_teacher.nickname as teacher_name',
                 'users.profile_image_id as profile_image_id'
             )
+            ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
             //->selectRaw('count(events.id) as invoice_items')
             ->where(
                 [
