@@ -2145,6 +2145,8 @@ class InvoiceController extends Controller
             'date' => date('m/d/Y')
         ]; 
         $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', $data);
+        $pdf->set_option('isHtml5ParserEnabled', true);
+        $pdf->set_option('isRemoteEnabled', true);
         if ($type == 'stream') {
             return $pdf->stream('invoice.pdf');
         }

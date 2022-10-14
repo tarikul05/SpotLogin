@@ -8,6 +8,86 @@
             body{
                 font-family: 'Gilroy';
             }
+            .logo_area{
+                padding-bottom: 20px;
+                height: 50px;
+            }
+            .logo_area .img_logo{
+                height: 100%;
+            }
+            .logo_area .left_part{
+                width: 60%;
+                float: left;
+            }
+            .logo_area .right_part{
+                width: 40%;
+                float: left;
+            }
+            .logo_area .right_part .invoice_date .txt{
+                font-weight: bold;
+                display: inline-block;
+                font-size: 15px;
+                width: 180px;
+            }
+            .logo_area .right_part .invoice_date .date{
+                font-size: 14px;
+                display: inline-block;
+            }
+            .info_area{
+                width: 100%;
+                height: 160px;
+                padding-bottom: 40px;
+            }
+            .info_area .left_cont{
+                height: 100%;
+                width: 42%;
+                padding: 10px 15px 0;
+                background: #e1eff7;
+                float: left;
+            }
+            .info_area .right_cont{
+                width: 42%;
+                height: 100%;
+                padding: 10px 15px 0;
+                background: #e1eff7;
+                float: right;
+            }
+            .info_area .left_cont p, .info_area .right_cont p{
+                padding: 0;
+            }
+            .first_name{
+                font-weight: bold;
+                color: #0075BF;
+                font-size: 14px;
+                height: 10px;
+            }
+            .last_name{
+                color: #000;
+                font-size: 14px;
+                height: 10px;
+            }
+            .address{
+                color: #000;
+                font-size: 14px;
+                height: 30px;
+            }
+            .phone{
+                color: #000;
+                font-size: 14px;
+                height: 10px;
+            }
+            .email{
+                color: #000;
+                font-size: 14px;
+                height: 10px;
+            }
+            .email a{
+                color: #000;
+                text-decoration: none;
+            }
+            .table-bordered{
+                width: 100%;
+            }
             .table-bordered thead tr th, .table-bordered  tbody tr td{
                 border: 1px solid #B3D6EC;
                 padding: 8px 10px;
@@ -72,10 +152,33 @@
     <body>
         <div class="logo_area">
             <div class="left_part">
-                Logo Area
+                <img class="img_logo" src="{{ public_path('img/invoice_logo.png') }}" alt="">
             </div>
             <div class="right_part">
-                
+                <div class="invoice_date">
+                    <p class="txt">Date of invoice:</p>
+                    <p class="date">08.10.2022</p>
+                </div>
+                <div class="invoice_date">
+                    <p class="txt">Due Date:</p>
+                    <p class="date">08.10.2022</p>
+                </div>
+            </div>
+        </div>
+        <div class="info_area">
+            <div class="left_cont">
+                <p class="first_name">bobby powali</p>
+                <p class="last_name">bobby powali</p>
+                <p class="address">Dilan Tower, House# 21, Road# 7, Block# F, Dhaka 1213</p>
+                <p class="phone">+88012345678910</p>
+                <p class="email"><a href="mailto:jonduo@gmail.com">jonduo@gmail.com</a></p>
+            </div>
+            <div class="right_cont">
+                <p class="first_name">bobby powali</p>
+                <p class="last_name">bobby powali</p>
+                <p class="address">Dilan Tower, House# 21, Road# 7, Block# F, Dhaka 1213</p>
+                <p class="phone">+88012345678910</p>
+                <p class="email"><a href="mailto:jonduo@gmail.com">jonduo@gmail.com</a></p>
             </div>
         </div>
         <div class="invoice_table">
