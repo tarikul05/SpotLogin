@@ -338,7 +338,7 @@ class LessonsController extends Controller
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
                     'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
-                    'is_paying' => $lessonData['sis_paying']
+                    'is_paying' => isset($lessonData['sis_paying']) ? $lessonData['sis_paying'] : 0, 
                 ];
 
                 $event = Event::create($data);
@@ -461,7 +461,7 @@ class LessonsController extends Controller
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
                     'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
-                    'is_paying' => $lessonData['sis_paying']
+                    'is_paying' => isset($lessonData['sis_paying']) ? $lessonData['sis_paying'] : 0,
                 ];
 
                 $event = Event::where('id', $lessonlId)->update($data);
