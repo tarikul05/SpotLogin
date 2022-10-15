@@ -530,7 +530,7 @@ class SchoolsController extends Controller
                 if (isset($data['category']) && !empty($data['category'])) {
 
                     foreach($data['category'] as $cat){
-                        $invoicedType = ($user->isTeacherAdmin() || $user->isSchoolAdmin()) ? $cat['invoice'] : 'T';
+                        $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
                         if(isset($cat['id']) && !empty($cat['id'])){
                             $answers = [
                                 'school_id' => $userSchoolId,

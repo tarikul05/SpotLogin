@@ -3037,7 +3037,7 @@ $('#student').on('change', function(event) {
 })
 $( document ).ready(function() {
 	var value = $('#sis_paying').val();
-	$('#hourly').show();
+	$('#hourly').hide();
 	$('#price_per_student').hide();
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
@@ -3368,7 +3368,7 @@ $(document).ready(function() {
             $( "#end_date" ).attr("readonly", "readonly");;	
             $('.lesson').show();
             $('.event').hide();
-            $('#sis_paying').val(1);
+            $('#sis_paying').val(0);
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
@@ -3422,7 +3422,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("readonly", "readonly");;	
             $('.lesson').show();
             $('.event').hide();
-            $('#sis_paying').val(1);
+            $('#sis_paying').val(0);
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
