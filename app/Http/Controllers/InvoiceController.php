@@ -1742,13 +1742,6 @@ class InvoiceController extends Controller
         }
     }
 
-
-
-
-
-
-
-
     public function view(Request $request, Invoice $invoice)
     {
         $user = Auth::user();
@@ -1780,6 +1773,50 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.add', [
+            'title' => 'Invoice',
+            'pageInfo' => ['siteTitle' => '']
+        ])->with(compact('genders', 'countries', 'provinces'));
+    }
+
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul Islm
+     * @version 0.1 written in 2022-10-15
+     */
+
+    public function modificationInvoice(Request $request, Invoice $invoice)
+    {
+        $user = Auth::user();
+        //$invoiceId = $request->route('invoice'); 
+        //dd($invoice);
+
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+        $provinces = Province::active()->get()->toArray();
+        //$invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
+        //$invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
+
+
+        if ($invoice->invoice_type == 1) {
+            $invoice->person_id = $invoice->client_id;
+        } else {
+            $invoice->person_id = $invoice->seller_id;
+        }
+
+        // $invoiceCurrency = InvoiceItem::active()->where('invoice_id',$invoice->id)->get()->pluck('price_currency')->join(',');
+        $invoice->invoice_items = InvoiceItem::active()->where('invoice_id', $invoice->id)->get();
+        // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
+
+        // if ($invoice->amount_discount_1  > 0) {
+        //     $invoice->disc_text = '1, disc1, disc1_amt, 0';
+        //     # code...
+        // }
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
         ])->with(compact('genders', 'countries', 'provinces'));
