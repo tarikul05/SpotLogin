@@ -414,7 +414,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father’s email") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Parent 1") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span> 
@@ -423,7 +423,7 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother’s email") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Parent 2") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span> 
