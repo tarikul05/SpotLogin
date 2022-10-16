@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Redirect;
 use DB;
+use Exception;
 use PDF;
 
 class InvoiceController extends Controller
@@ -2209,23 +2210,25 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePDF(Request $request,$type = 'stream')
+    public function generateInvoicePDF(Request $request,$type = 'stream')
     {
-        $reqData = $request->all();
-        //dd($data);
-        $data = [
-            'title' => 'Welcome to',
-            'date' => date('m/d/Y')
-        ]; 
-        $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', $data);
-        $pdf->set_option('isHtml5ParserEnabled', true);
-        $pdf->set_option('isRemoteEnabled', true);
-        $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
-        if ($type == 'stream') {
-            return $pdf->stream('invoice.pdf');
-        }
-        if ($type == 'download') {
-            return $pdf->download('invoice.pdf');
+        try{
+            $reqData = $request->all();
+            $invoice_id = $reqData['invoice_id'];
+            $invoice_data = Invoice::with(['invoice_items'])->where('id', $invoice_id)->first();
+            $invoice_name = str_replace(' ', '-', strtolower($invoice_data->invoice_name));
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data]);
+            $pdf->set_option('isHtml5ParserEnabled', true);
+            $pdf->set_option('isRemoteEnabled', true);
+            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+            if ($type == 'stream') {
+                return $pdf->stream( $invoice_name.'.pdf' );
+            }
+            if ($type == 'download') {
+                return $pdf->download( $invoice_name.'.pdf' );
+            }
+        }catch( Exception $e){
+            // throw error
         }
     }
 }
