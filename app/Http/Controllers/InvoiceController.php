@@ -49,7 +49,41 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-        $invoices = Invoice::active()->where('school_id', $this->schoolId)->get();
+
+        $user_role = 'superadmin';
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+            
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+            $user_role = 'teacher';
+        }
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $invoice_type = 'S';
+        } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
+            $invoice_type = 'T';
+        } else if ($user_role == 'teacher') {
+            $invoice_type = 'T';
+        } else {
+            $invoice_type = 'S';
+        }
+        
+
+
+        $invoices = Invoice::active()
+                    ->where('school_id', $this->schoolId);
+        if ($user_role != 'superadmin') {
+            if ($user_role == 'teacher') {
+                $invoices->where('category_invoiced_type', $user->person_id);
+                 $invoices->where('seller_id', $user->id);
+            } else {
+                $invoices->where('category_invoiced_type', $invoice_type);
+            }
+        }
+        $invoices = $invoices->get();
         //dd($invoices);
         return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
     }

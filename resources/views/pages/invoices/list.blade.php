@@ -58,7 +58,7 @@
                         <td style="display: none">{{ $invoice->id; }}</td>
                         <td style="display: none">{{ $invoice->payment_status; }}</td>
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <td>{{ $invoice->date_invoice; }}</td>
+                        <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
                         @php
                         if($invoice->invoice_type ==0){
                             @endphp
