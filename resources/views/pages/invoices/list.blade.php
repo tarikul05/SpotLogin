@@ -55,6 +55,8 @@
                     @endphp
                 
                     <tr>
+                        <td style="display: none">{{ $invoice->id; }}</td>
+                        <td style="display: none">{{ $invoice->payment_status; }}</td>
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>{{ $invoice->date_invoice; }}</td>
                         @php
@@ -69,14 +71,10 @@
                             @php
                         }
                         @endphp
+                        <td>{{ $invoice->invoice_name}}</td>
                         
-                        @if ($invoice->invoice_type == 1)
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
-                        @else
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->seller_name }}</td>
-                        @endif
                         <td>{{ $invoice->total_amount; }}</td>
-                        @if ($invoice->payment_status_flag == 0)
+                        @if ($invoice->payment_status == 0)
                             <td class="text-center">
                                 <div id="status_{{$invoice->id}}">
                                     <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
@@ -111,7 +109,7 @@
                                 @php
                                     $edit_view_url = '';
                                     //invoice_creation_type = y means manual invoice
-                                    if ($invoice->invoice_creation_type == 'Y') {
+                                    if ($invoice->invoice_type == 0) {
                                         $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
                                     } else {
                                         $edit_view_url = '/admin/invoice/'.$invoice->id;
@@ -137,7 +135,7 @@
                                     </a>
                                 
 
-                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
+                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
                                     <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                 @endif
                                     
