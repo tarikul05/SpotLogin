@@ -57,7 +57,19 @@
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>{{ $invoice->date_invoice; }}</td>
-                        <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
+                        @php
+                        if($invoice->invoice_type ==0){
+                            @endphp
+                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}(M)</td>
+
+                            @php
+                        } else {
+                            @endphp
+                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
+                            @php
+                        }
+                        @endphp
+                        
                         @if ($invoice->invoice_type == 1)
                             <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
                         @else
@@ -107,21 +119,23 @@
                                 @endphp
                                 
 
-                                @if ($invoice->invoice_status > 1)
+                                <!-- @if ($invoice->invoice_status > 1) -->
+                                <!-- @else -->
+                                <!-- @endif -->
                                     <a class="dropdown-item" href="{{ $edit_view_url }}">
                                         <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                         {{ __('View')}}
                                     </a>
-                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
+                                    <a class="dropdown-item" href="{{route('generatePDF',['invoice'=> $invoice->id]) }}">
                                         <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
                                         {{ __('PDF')}}
                                     </a>
-                                @else
+                                
                                     <a class="dropdown-item" href="{{ $edit_view_url }}">
                                         <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
                                         {{ __('Edit')}}
                                     </a>
-                                @endif
+                                
 
                                 @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
                                     <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>

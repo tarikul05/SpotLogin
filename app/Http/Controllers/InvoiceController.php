@@ -2175,8 +2175,10 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePDF($type = 'stream')
+    public function generatePDF(Request $request,$type = 'stream')
     {
+        $reqData = $request->all();
+        //dd($data);
         $data = [
             'title' => 'Welcome to',
             'date' => date('m/d/Y')
