@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Redirect;
 use DB;
+use PDF;
 
 class InvoiceController extends Controller
 {
@@ -2167,5 +2168,28 @@ class InvoiceController extends Controller
         }   
 
         return $result;        
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generatePDF($type = 'stream')
+    {
+        $data = [
+            'title' => 'Welcome to',
+            'date' => date('m/d/Y')
+        ]; 
+        $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', $data);
+        $pdf->set_option('isHtml5ParserEnabled', true);
+        $pdf->set_option('isRemoteEnabled', true);
+        $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+        if ($type == 'stream') {
+            return $pdf->stream('invoice.pdf');
+        }
+        if ($type == 'download') {
+            return $pdf->download('invoice.pdf');
+        }
     }
 }
