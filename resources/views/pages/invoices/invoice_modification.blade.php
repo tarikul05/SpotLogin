@@ -321,8 +321,8 @@
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date of invoice</label>
                                 <div class="col-sm-2">
                                     <div class="input-group" id="date_invoice1">
-                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control"> <span class="input-group-addon">
-                                                                                <span class="glyphicon glyphicon-calendar"></span> </span>
+                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control"> 
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -635,14 +635,21 @@
 		</div>
 	</div>
 	<!-- End Tabs content -->
-	<div id="pageloader"> <img src="http://localhost:8000/img/loading.gif" alt="processing..."> </div>
 </div>
 @endsection
 
 
 @section('footer_js')
 <script type="text/javascript">
-
-
+    $("#date_invoice").datetimepicker({
+		format: "dd/mm/yyyy",
+		autoclose: true,
+		todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
 </script>
 @endsection

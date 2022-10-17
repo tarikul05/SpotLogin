@@ -1157,6 +1157,9 @@ input#sextra_expenses {
 #tab_3 .form-group.row label {
     padding: 0 15px;
 }
+#invoice-details-content #tab_3 .form-control {
+    margin-left: 15px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
