@@ -1160,7 +1160,7 @@ input#sextra_expenses {
 #invoice-details-content #tab_3 .form-control {
     margin-left: 15px;
 }
-.form-check.pack_invoice {
+.pack_invoice_area {
     margin-left: 40px;
 }
 input#package_invoice {
@@ -1427,5 +1427,11 @@ input#package_invoice {
     }
     .students_list div#example_filter input {
         max-width: 95%;
+    }
+    .pack_invoice_area {
+        margin-left: 0px;
+    }
+    input#package_invoice {
+        margin-top: 7px;
     }
 }

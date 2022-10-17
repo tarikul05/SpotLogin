@@ -55,8 +55,8 @@
                                                 <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
                                             </div>
 											<div class="col-sm-4">
-												<div class="form-check pack_invoice_area" <?php if($cat->package_invoice == 0){ echo 'style="display:none"'; }  ?> >
-													<input type="checkbox" class="form-check-input" id="package_invoice" name="category[{{$count}}][package_invoice]" value="package_invoice" <?php if($cat->package_invoice == 1){ echo 'checked'; }  ?>>
+												<div class="form-check pack_invoice_area" <?php if( ($cat->invoiced_type == 'T') && ($cat->package_invoice == 0)){ echo 'style="display:none"'; }  ?> >
+													<input type="checkbox" class="form-check-input" id="package_invoice" name="category[{{$count}}][package_invoice]" value="package_invoice" <?php if(($cat->invoiced_type == 'S') && ($cat->package_invoice == 1)){ echo 'checked'; }  ?>>
 													<label class="form-check-label" for="pack_invoice">Package</label>
 												</div>
 											</div>
@@ -466,6 +466,16 @@ $(document).ready(function(){
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
+
+
+	$('.invcat_name').change(function(){
+		var type = $(this).val();
+		if(type == 'T'){
+			$(this).closest(".invoice_part").find('.pack_invoice_area').hide();
+		}else{
+			$(this).closest(".invoice_part").find('.pack_invoice_area').show();	
+		}
+	});
 
 })
 </script>
