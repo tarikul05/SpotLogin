@@ -142,18 +142,6 @@ class LessonPricesTableSeeder extends Seeder
             10 => 
             array (
                 'id' => 11,
-                'lesson_price_student' => 'price_fix',
-                'event_category' => 0,
-                'event_type' => 0,
-                'divider' => -1,
-                'is_active' => 1,
-                'created_at' => NULL,
-                'modified_at' => NULL,
-                'deleted_at' => NULL,
-            ),
-            11 => 
-            array (
-                'id' => 12,
                 'lesson_price_student' => 'price_su',
                 'event_category' => 0,
                 'event_type' => 0,
@@ -163,6 +151,19 @@ class LessonPricesTableSeeder extends Seeder
                 'modified_at' => NULL,
                 'deleted_at' => NULL,
             ),
+            11 => 
+            array (
+                'id' => 12,
+                'lesson_price_student' => 'price_fix',
+                'event_category' => 0,
+                'event_type' => 0,
+                'divider' => -1,
+                'is_active' => 1,
+                'created_at' => NULL,
+                'modified_at' => NULL,
+                'deleted_at' => NULL,
+            ),
+            
         ));
         
         
