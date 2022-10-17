@@ -25,6 +25,8 @@ use Redirect;
 use DB;
 use Exception;
 use PDF;
+use Storage;
+use URL;
 
 class InvoiceController extends Controller
 {
@@ -2210,22 +2212,33 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generateInvoicePDF(Request $request,$type = 'stream')
+    public function generateInvoicePDF(Request $request,$type = 'download')
     {
         try{
             $reqData = $request->all();
             $invoice_id = $reqData['invoice_id'];
             $invoice_data = Invoice::with(['invoice_items'])->where('id', $invoice_id)->first();
-            $invoice_name = str_replace(' ', '-', strtolower($invoice_data->invoice_name));
-            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data]);
+            $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+            $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
             $pdf->set_option('isHtml5ParserEnabled', true);
             $pdf->set_option('isRemoteEnabled', true);
             $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
-            if ($type == 'stream') {
-                return $pdf->stream( $invoice_name.'.pdf' );
-            }
+            // if ($type == 'stream') {
+            //     $file_path = Storage::put('pdf/'. $invoice_name, $pdf->output());
+            //     return $pdf->stream( $invoice_name );
+            // }
             if ($type == 'download') {
-                return $pdf->download( $invoice_name.'.pdf' );
+                // save invoice name if invoice_filename is empty
+                if(empty($invoice_data->invoice_filename)){
+                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                    if($file_upload){
+                        $invoice_pdf_path = URL::to('uploads/pdf/'.$invoice_name);
+                        $invoice_data->invoice_filename = $invoice_pdf_path;
+                        $invoice_data->save();
+                    }
+                }
+                return $pdf->download( $invoice_name );
             }
         }catch( Exception $e){
             // throw error
