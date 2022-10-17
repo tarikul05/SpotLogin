@@ -1198,7 +1198,7 @@ class InvoiceController extends Controller
                     $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                     $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
                     $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    $v_total_amount = $invoiceItemData['price'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                 } 
                 if ($invoiceData->invoice_type ==2) {
                     
@@ -1206,7 +1206,7 @@ class InvoiceController extends Controller
                     $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                     $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
                     $v_total_amount_no_discount = 0;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    $v_total_amount = $invoiceItemData['price'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                 }
                 $subtotal_amount_all += $v_subtotal_amount_all;
                 $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
@@ -1487,7 +1487,7 @@ class InvoiceController extends Controller
             
 
             $invoiceData = Invoice::create($invoiceData);
-            //$invoiceData = Invoice::active()->find(16);
+            //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
             
             
             
@@ -1659,7 +1659,7 @@ class InvoiceController extends Controller
                     $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                     $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
                     $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    $v_total_amount = $invoiceItemData['price'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                 } 
                 if ($invoiceData->invoice_type ==2) {
                     
@@ -1667,7 +1667,7 @@ class InvoiceController extends Controller
                     $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                     $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
                     $v_total_amount_no_discount = 0;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    $v_total_amount = $invoiceItemData['price'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                 }
                 $subtotal_amount_all += $v_subtotal_amount_all;
                 $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
@@ -1712,16 +1712,16 @@ class InvoiceController extends Controller
                 //     }
                 // }
                 
-                if (!empty($value->detail_id)) {
-                    $eventUpdate = [
-                        'sell_invoice_id' => $invoiceData->id,
-                        'is_sell_invoiced' => 1
-                    ];
-                    $eventData = EventDetails::where('student_id', $value->student_id)
-                    ->where('id', $value->detail_id)
-                    ->where('participation_id', '>', 198)
-                    ->update($eventUpdate);
-                }
+                // if (!empty($value->detail_id)) {
+                //     $eventUpdate = [
+                //         'sell_invoice_id' => $invoiceData->id,
+                //         'is_sell_invoiced' => 1
+                //     ];
+                //     $eventData = EventDetails::where('student_id', $value->student_id)
+                //     ->where('id', $value->detail_id)
+                //     ->where('participation_id', '>', 198)
+                //     ->update($eventUpdate);
+                // }
                 
 
                 $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
@@ -1759,6 +1759,8 @@ class InvoiceController extends Controller
                'invoice_currency' => $price_currency
             
             ];
+            // print_r($updateInvoiceCalculation);
+            // exit();
             
             $invoiceData = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             

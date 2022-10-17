@@ -117,9 +117,8 @@
                                 @endphp
                                 
 
-                                <!-- @if ($invoice->invoice_status > 1) -->
-                                <!-- @else -->
-                                <!-- @endif -->
+                                @if ($invoice->invoice_status > 1)
+                                
                                     <a class="dropdown-item" href="{{ $edit_view_url }}">
                                         <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                         {{ __('View')}}
@@ -128,17 +127,16 @@
                                         <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
                                         {{ __('PDF')}}
                                     </a>
-                                
+                                @else
                                     <a class="dropdown-item" href="{{ $edit_view_url }}">
                                         <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
                                         {{ __('Edit')}}
                                     </a>
-                                
+                                @endif
 
                                 @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
                                     <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                 @endif
-                                    
                                 
                                 </div>
                             </div>  
