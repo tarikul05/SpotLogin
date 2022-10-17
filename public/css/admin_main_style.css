@@ -1160,6 +1160,12 @@ input#sextra_expenses {
 #invoice-details-content #tab_3 .form-control {
     margin-left: 15px;
 }
+.form-check.pack_invoice {
+    margin-left: 40px;
+}
+input#package_invoice {
+    margin-top: 12px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;

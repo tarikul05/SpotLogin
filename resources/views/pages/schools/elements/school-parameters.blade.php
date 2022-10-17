@@ -48,12 +48,18 @@
                                     @if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
                                     <div class="col-md-5 col-6">
                                         <div class="form-group row invoice_part">
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+                                            <div class="col-sm-4">
+                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+                                            <div class="col-sm-4">
+                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
                                             </div>
+											<div class="col-sm-4">
+												<div class="form-check pack_invoice_area" <?php if($cat->package_invoice == 0){ echo 'style="display:none"'; }  ?> >
+													<input type="checkbox" class="form-check-input" id="package_invoice" name="category[{{$count}}][package_invoice]" value="package_invoice" <?php if($cat->package_invoice == 1){ echo 'checked'; }  ?>>
+													<label class="form-check-label" for="pack_invoice">Package</label>
+												</div>
+											</div>
                                         </div>
                                     </div>
                                     @endif
@@ -197,11 +203,17 @@ $(document).ready(function(){
 			@if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
 			<div class="col-md-5 col-6">
 				<div class="form-group row invoice_part">
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-check pack_invoice_area">
+							<input type="checkbox" class="form-check-input" id="package_invoice" name="category[`+lst_id+`][package_invoice]" value="package_invoice">
+							<label class="form-check-label" for="pack_invoice">Package</label>
+						</div>
 					</div>
 				</div>
 			</div>
