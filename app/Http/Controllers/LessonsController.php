@@ -330,12 +330,14 @@ class LessonsController extends Controller
                 $stu_num = explode("_", $lessonData['sevent_price']);
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
-                    $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
-                    $teacher_id = $teacherData['teacher_id'];
-                }else{
-                   $teacher_id = $lessonData['teacher_select']; 
-                }
+                $teacher_id = $lessonData['teacher_select'];
+
+                // if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
+                //     $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
+                //     $teacher_id = $teacherData['teacher_id'];
+                // }else{
+                //    $teacher_id = $lessonData['teacher_select']; 
+                // }
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
@@ -479,12 +481,13 @@ class LessonsController extends Controller
                 $stu_num = explode("_", $lessonData['sevent_price']);
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
-                    $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
-                    $teacher_id = $teacherData['teacher_id'];
-                }else{
-                   $teacher_id = $lessonData['teacher_select']; 
-                }
+                $teacher_id = $lessonData['teacher_select']; 
+                // if(isset($eventCategory['invoiced_type']) && ($eventCategory['invoiced_type'] == 'S') && ($school->school_type == 'S')){
+                //     $teacherData = SchoolTeacher::active()->OnlySchoolAdminTeacher()->where('school_id',$schoolId)->first();
+                //     $teacher_id = $teacherData['teacher_id'];
+                // }else{
+                //    $teacher_id = $lessonData['teacher_select']; 
+                // }
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
