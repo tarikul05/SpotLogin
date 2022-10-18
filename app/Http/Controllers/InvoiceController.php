@@ -83,6 +83,8 @@ class InvoiceController extends Controller
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
         }
+        $invoices->orderBy('id', 'desc');
+            
         $invoices = $invoices->get();
         //dd($invoices);
         return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
