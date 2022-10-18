@@ -234,7 +234,7 @@
             //"searching": true,
             //"bProcessing": true,
             "bDestroy": true, 
-            "order": [[0, "asc"]],
+            "order": [[2, "asc"]],
             "bFilter": true,
             "bInfo": false,
             "lengthChange": false,
