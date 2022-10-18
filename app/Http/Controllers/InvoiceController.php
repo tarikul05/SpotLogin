@@ -313,6 +313,48 @@ class InvoiceController extends Controller
         }
     }
 
+    /**
+     *  AJAX action for payment update
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-18
+     */
+    public function updatePaymentStatus(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+            $user = $request->user();
+
+            $p_payment_status = trim($data['p_payment_status']);
+            $p_auto_id = trim($data['p_auto_id']);
+
+            $updateInvoice = [
+               'payment_status' => $p_payment_status
+            
+            ];
+            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice'),
+                'payment_status' => $p_payment_status,
+                //'no_of_teachers' =>$no_of_teachers
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    
+
 
 
     /**

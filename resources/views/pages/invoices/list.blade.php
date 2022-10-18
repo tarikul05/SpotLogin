@@ -30,7 +30,10 @@
         
         
         <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">
-        <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
+        <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status">
+            <option value="1">Paid</option>
+            <option value="0">Unpaid</option>
+        </select>
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -56,7 +59,8 @@
                 
                     <tr>
                         <td style="display: none">{{ $invoice->id; }}</td>
-                        <td style="display: none">{{ $invoice->payment_status; }}</td>
+
+                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td>
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
                         @php
@@ -71,7 +75,16 @@
                             @php
                         }
                         @endphp
-                        <td>{{ $invoice->invoice_name}}</td>
+                        
+                        @php
+                        $invoice_name = $invoice->invoice_name;
+                        if($invoice->invoice_type ==1){
+                            $invoice_name .= '-'.$invoice->client_name;
+                        } else {
+                            $invoice_name .= '-'.$invoice->seller_name;
+                        }
+                        @endphp
+                        <td>{{ $invoice_name}}</td>
                         
                         <td>{{ $invoice->total_amount; }}</td>
                         @if ($invoice->payment_status == 0)
@@ -96,8 +109,7 @@
                                 </span>
                             </td>
                         @else
-                            <td>
-                            </td>
+                            <td></td>
                         @endif
                         
                         <td>
@@ -342,6 +354,70 @@
 
     });
 
+
+    function UpdatePaymentStatus(p_auto_id) {
+        var payment_status;
+        var v_status = "status_" + p_auto_id;
+        var v_status_id = "status_id_" + p_auto_id;
+        var p_payment_status = document.getElementById(v_status_id).innerHTML;
+        
+        if (p_auto_id == '') {
+            //alert('Invalid invoice.. ');
+            errorModalCall(GetAppMessage('error_message_text'));
+            return false;
+        }
+
+        if (p_payment_status == 0) {
+            payment_status = 1;
+        } else {
+            payment_status = 0;
+        }
+
+        $('#inv_payment_status').val(payment_status);
+        //let payment_text_paid = '';
+        //let payment_text_unpaid = '';
+        let payment_text_paid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Paid</span>";
+        let payment_text_unpaid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Unpaid</span>";
+
+        
+        //console.log('status='+((p_payment_status = 0) ? 1 : 0));
+
+        var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_auto_id;
+        console.log(data);
+        var status = '';
+        var data = data;
+        // document.getElementById(v_status_id).innerHTML = payment_status;
+        // document.getElementById(v_status).innerHTML = payment_text;
+        $.ajax({
+        
+                url: BASE_URL + '/update_payment_status',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    status = result.status;
+                    if (status == 'success') {
+                        console.log(result.payment_status);
+                        payment_status = result.payment_status;
+                        document.getElementById(v_status_id).innerHTML = payment_status;
+                        if (payment_status == '1') {
+                            document.getElementById(v_status).innerHTML = payment_text_paid;
+                        } else {
+                            document.getElementById(v_status).innerHTML = payment_text_unpaid;
+                        }
+                    }
+                    else {
+                        //alert('update failed.. Please contact system administrator..');
+                        errorModalCall(GetAppMessage('error_message_text'));
+                    }
+                },   //success
+                error: function (ts) { errorModalCall(GetAppMessage('error_message_text'));
+                //alert(ts.responseText + ' Update Invoice Payment Status=' + status) 
+                }
+        }); //ajax-type            
+        return false;
+    }
 
 </script>
 @endsection
