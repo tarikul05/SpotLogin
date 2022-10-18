@@ -37,6 +37,8 @@
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
+                    <th style="display: none">{{ __('#') }}</th>
+                    <th style="display: none">{{ __('#') }}</th>
                     <th>{{ __('#') }}</th>
                     <th>{{ __('Date') }}</th>
                     <th>{{ __('Type') }}</th>
