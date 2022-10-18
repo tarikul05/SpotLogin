@@ -54,6 +54,9 @@ Route::post('pay_reminder_email_fetch', [App\Http\Controllers\InvoiceController:
 //email-fetch pay reminder AJAX
 Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailSend'])->name('pay_reminder_email_send.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+// update_payment_status AJAX
+Route::post('update_payment_status', [App\Http\Controllers\InvoiceController::class, 'updatePaymentStatus'])->name('update_payment_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 //AJAX get student lessons for invoice
 Route::post('get_student_lessons', [App\Http\Controllers\InvoiceController::class, 'getStudentLessons'])->name('get_student_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
