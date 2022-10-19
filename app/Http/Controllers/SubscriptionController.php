@@ -37,8 +37,25 @@ class SubscriptionController extends Controller
             } else {
                 $trial_ends_date = null;
             }
+            $plans = [];
+            $get_plans = $this->stripe->plans->all(); // get plan form stripe
+            foreach ($get_plans as $get_plan) {
+                $product_object = $this->stripe->products->retrieve(
+                    $get_plan->product,
+                    []
+                );
+                $plans[] = [
+                    'id' => $get_plan->id,
+                    'amount' => $get_plan->amount / 100,
+                    'interval' => $get_plan->interval,
+                    'interval_count' => $get_plan->interval_count,
+                    'metadata' => $get_plan->metadata,
+                    'nickname' => $get_plan->nickname,
+                    'plan_name' => $product_object,
+                ];
+            }
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent', 'trial_ends_date'));
+            return view('pages.subscribers.upgrade', compact('intent', 'trial_ends_date', 'plans'));
         } catch (Exception $e) {
             // throw error message
         }
