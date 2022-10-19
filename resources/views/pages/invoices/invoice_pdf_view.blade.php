@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title>invoice</title>
+    <title>Sportlogin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style type='text/css'>
         body {
@@ -219,6 +219,11 @@
         .text_center{
             text-align: center;
         }
+        .payment-info .txt{
+            font-size: 12px;
+            padding-top: 4px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -230,8 +235,8 @@
             </div>
             <div class="right_part">
                 <div class="invoice_date">
-                    <div><span class="txt">Date of invoice: </span><span class="date">08.10.2022</span></div>
-                    <div class="padding_top"><span class="txt">Due Date: </span><span class="date">08.10.2022</span></div>
+                    <div><span class="txt">Date of invoice: </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
+                    <div class="padding_top"><span class="txt">Due Date: </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->period_ends)->format('d.m.Y');}}</span></div>
                 </div>
             </div>
         </div>
@@ -239,16 +244,16 @@
     <main>
         <div class="info_area" style="clear: both">
             <div class="left_cont">
-                <p class="first_name">bobby powali</p>
-                <p class="last_name">bobby powali</p>
-                <p class="email"><a href="mailto:jonduo@gmail.com">jonduo@gmail.com</a></p>
+                <p class="first_name">{{$invoice_data->client_name}}</p>
+                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
+                <p class="info_txt">{{$invoice_data->client_place}}</p>
             </div>
             <div class="right_cont">
-                <p class="first_name">bobby powali</p>
-                <p class="info_txt">A7/5 DIAMOND PARK, JOKA</p>
-                <p class="info_txt">A7/5 DIAMOND PARK, JOKA</p>
-                <p class="info_txt">-700104 Joka</p>
-                <p class="email"><a href="mailto:jonduo@gmail.com">jonduo@gmail.com</a></p>
+                <p class="first_name">{{$invoice_data->seller_name}}</p>
+                <p class="info_txt">{{$invoice_data->seller_place}}</p>
+                <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
+                <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
+                <p class="email"><a href="mailto:{{$invoice_data->seller_email}}">{{$invoice_data->seller_email}}</a></p>
             </div>
         </div>
         <div class="invoice_table">
@@ -262,19 +267,21 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php 
+                        $sub_total = 0;
+                        $total_min = 0;
+                        foreach($invoice_data->invoice_items as $key=> $item){ 
+                            $sub_total += $item->price_unit;
+                            $total_min += $item->unit;
+                    ?>
                     <tr>
-                        <td>20.10.2022 00:00</td>
-                        <td>3e</td>
-                        <td align="right">20 minutes</td>
-                        <td align="right">30.00</td>
+                        <td>{{ Carbon\Carbon::parse($item->created_at)->format('d.m.Y');}}</td>
+                        <td>{{ !empty($item->caption) ? $item->caption : ''; }}</td>
+                        <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
+                        <td align="right">{{ number_format($item->price_unit,'2') }}</td>
                     </tr>
-                    <tr>
-                        <td>27.10.2022 00:00</td>
-                        <td>asDXCZ</td>
-                        <td align="right">20 minutes</td>
-                        <td align="right">50.00</td>
-                    </tr>
-                    <tr class="sub-total">
+                    <?php } ?>
+                    <!-- <tr class="sub-total">
                         <td colspan="3" class="txt" style="border: 0px; padding:10px 0;">Sub-total</td>
                         <td class="price" style="border: 0px;padding:10px 0;">50.00</td>
                     </tr>
@@ -283,40 +290,49 @@
                         <td>asDXCZ</td>
                         <td align="right">20 minutes</td>
                         <td align="right">50.00</td>
-                    </tr>
+                    </tr> -->
+
                     <tr class="sub-total">
                         <td colspan="3" class="txt" style="border: 0px; padding:10px 0;">Sub-total</td>
-                        <td class="price" style="border: 0px;padding:10px 0;">76.57</td>
+                        <td align="right" class="price total" style="border: 0px;padding:10px 10px 0;text-align:right">{{ number_format($sub_total,'2') }}</td>
                     </tr>
-                    <tr>
+
+                    <!-- <tr>
                         <td>27.10.2022 00:00</td>
                         <td>asDXCZ</td>
                         <td align="right">20 minutes</td>
                         <td align="right">50.00</td>
-                    </tr>
+                    </tr> -->
 
                 </tbody>
                 <tfoot>
-                    <tr>
+                    <!-- <tr>
                         <td colspan="4" class="total">80.00</td>
-                    </tr>
+                    </tr> -->
+                    <?php if($invoice_data->extra_expenses > 0){ ?>
                     <tr class="extra_col">
                         <td colspan="2" class="text">Extra charges </td>
-                        <td colspan="2" class="price">+ 45.00</td>
+                        <td colspan="2" class="price">+ {{ $invoice_data->extra_expenses }}</td>
                     </tr>
-                    <tr class="extra_col">
+                    <?php } ?>
+                    <!-- <tr class="extra_col">
                         <td colspan="2" class="text"></td>
                         <td colspan="2" class="price">+ 45.00</td>
-                    </tr>
+                    </tr> -->
+                    <?php $total = $sub_total+ $invoice_data->extra_expenses; ?>
                     <tr class="total_col">
-                        <td colspan="2" class="text">Total (CHF) </td>
-                        <td colspan="2" class="price">165.00</td>
+                        <td colspan="2" class="text">Total <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
+                        <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
         <div class="course-duration">
-            <p>Total duration of courses 75 minutes, 01 hours and 15 minutes.</p>
+            <?php 
+                $hours = floor($total_min / 60);
+                $minutes = $total_min % 60;
+            ?>
+            <p>Total duration of courses {{ $total_min }} minutes, {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} hours and {{ $minutes }} minutes.</p>
         </div>
     </main>
     <footer>
@@ -326,12 +342,27 @@
                 <tr>
                     <td>
                         <div class="payment_title">For payment by E-Transfer</div>
+                        <?php if($invoice_data->etransfer_acc){ ?>
+                            <div class="txt"><b>AC No:</b>{{ $invoice_data->etransfer_acc }}</div>
+                        <?php } ?>
+                        <?php if($invoice_data->e_transfer_email){ ?>
+                            <div class="txt"><b>Email:</b>{{ $invoice_data->e_transfer_email }}</div>
+                        <?php } ?>
                     </td>
                     <td>
                         <div class="payment_title">For payment by check</div>
+                        <?php if($invoice_data->name_for_checks){ ?>
+                            <div class="txt"><b>Check Name:</b>{{ $invoice_data->name_for_checks }}</div>
+                        <?php } ?>
+                        <?php if($invoice_data->cheque_payee){ ?>
+                            <div class="txt"><b>Pay By:</b>{{ $invoice_data->cheque_payee }}</div>
+                        <?php } ?>
                     </td>
                     <td>
                         <div class="payment_title text_center">Tax Number</div>
+                        <?php if($invoice_data->tax_amount){ ?>
+                            <div class="txt"><b>Amount:</b>{{ $invoice_data->tax_amount }}</div>
+                        <?php } ?>
                     </td>
                 </tr>
             </table>

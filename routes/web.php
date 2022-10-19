@@ -375,7 +375,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');
     Route::post('/{school}/update_invoice_data', 'InvoiceController@invoiceDataUpdate')->name('invoiceDataUpdate');
 
-    Route::get('/generate-pdf', [App\Http\Controllers\InvoiceController::class, 'generatePDF'])->name('generatePDF');
+    Route::get('/invoice-pdf', [App\Http\Controllers\InvoiceController::class, 'generateInvoicePDF'])->name('generateInvoicePDF');
     
 });
 
