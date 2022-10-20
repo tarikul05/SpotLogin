@@ -27,7 +27,7 @@
                             <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
 
                             <a id="payment_btn" target="" href="" class="btn"><i class="fa fa-money" aria-hidden="true"></i> payé</a>
-                            <button id="approved_btn" target="" href="" class="btn btn-theme-success">Send by email</button>
+                            <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">Send by email</button>
                             <a id="download_pdf_btn_a" target="" href="" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                 <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
                             </a>
@@ -695,6 +695,65 @@
 		</div>
 	</div>
 	<!-- End Tabs content -->
+
+    <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
+        aria-labelledby="email_list_modal" name="email_list_modal">
+        <div class="modal-dialog mt-5" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center border-0">
+                    <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+                </div>
+                <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+                    <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
+
+                        <div class="form-group col-md-12" id="father_email_div">
+                            <div class="btn-group text-left">
+                                <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12" id="mother_email_div">
+                            <div class="btn-group text-left">
+                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12" id="student_email_div">
+                            <div class="btn-group text-left">
+                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <div class="text-left">
+                                <div class="checked">
+                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12 text-left">
+                                <div>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                        </div>
+
+                    <!-- </form> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -815,10 +874,56 @@
         */
         Generate_View_PDF('preview');
     });
+    $('#issue_inv_btn').click(function (e) {
+        Generate_View_PDF('issue_pdf');
+    });
 
     function Generate_View_PDF(p_type) {
-        console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
-        window.open('{!! $invoice->invoice_filename !!}', '_blank');
+        if (p_type =='preview') {
+            console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
+            window.open('{!! $invoice->invoice_filename !!}', '_blank');
+        } else {
+            var p_invoice_id = document.getElementById("invoice_id").value;
+        
+            //UpodateInvStatusIssue(p_invoice_id)
+        }
+        
+    }
+
+    function UpodateInvStatusIssue(p_invoice) {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "block";
+        $.ajax({
+            url: 'invoice_data.php',
+            data: 'type=update_status_issue&p_invoice_id=' + p_invoice,
+            type: 'POST',
+            dataType: 'json',
+            //async: false,
+            success: function (result) {
+                var status = result.status;
+
+                if (status == 'success') {
+                    $("#invoice_status").text('Emise');
+                    //document.getElementById("invoice_status").text='Emise';
+                    document.getElementById("invoice_status_id").value = '10';
+                    document.getElementById("unlock_btn").style.display = "block";
+                    //$('#unlock_btn').style.display="block";
+                    DisplayOnOff_buttons();
+                    modal.style.display = "none";
+                }
+                else {
+
+                    errorModalCall(GetAppMessage('error_message_text'));
+
+                }
+            },   //success
+            error: function (ts) {
+                modal.style.display = "none";
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        }); //ajax-type        
+
     }
 
     $('#delete_btn').click(function (e) {
@@ -867,5 +972,91 @@
             }
         }); //ajax-type
     }
+
+
+    function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
+        
+        $('#seleted_auto_id').val(p_value);
+        $('#p_school_id').val(p_school_id);
+        
+        $('#seleted_invoice_type').val(p_invoice_type);
+        //console.log('p_value='+p_value);
+        var p_attached_file = '';
+
+        var find_flag = 0;
+        //return false;
+        //populate lis of emails
+        $.ajax({
+            url: BASE_URL + '/pay_reminder_email_fetch',
+            //url: 'invoice_data.php',
+            data: 'type=email_list&p_auto_id=' + p_value,
+            type: 'POST',
+            dataType: 'json',
+            //async: false,
+            success: function (result) {
+                //console.log(result);
+                if (result.status) {
+                    confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
+                    return false;
+                    
+                }
+                else {
+                    errorModalCall('{{ __("Event validation error ")}}');
+                }
+                
+            },   // sucess
+            error: function (ts) { 
+                errorModalCall(GetAppMessage('error_message_text'));
+                //alert(ts.responseText + 'populate Invoice Payment Status') 
+            }
+        }); // Ajax        
+
+
+        $("#email_list_modal").modal('show');
+
+    };
+
+    $('#email_send').click(function (e) {
+        var p_emails = '', p_attached_file = '';
+        var p_inv_auto_id = $('#seleted_auto_id').val();
+        var p_seleted_invoice_type = $('#seleted_invoice_type').val();
+        var p_school_id = document.getElementById("p_school_id").value;
+        if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
+            p_emails = document.getElementById("father_email_chk").value + "|";
+        }
+        if ((document.getElementById("mother_email_chk").checked == true) && (document.getElementById("mother_email_chk").value != '')) {
+            p_emails += document.getElementById("mother_email_chk").value + "|";
+        }
+
+        if ((document.getElementById("student_email_chk").checked == true) && (document.getElementById("student_email_chk").value != '')) {
+            p_emails += document.getElementById("student_email_chk").value + "|";
+        }
+        if ($('#other_email').val() != '') {
+            p_emails += $('#other_email').val();
+        }
+
+
+        console.log(p_seleted_invoice_type);
+        if (p_seleted_invoice_type == 2) {
+            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        } else {
+            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        }
+
+
+    });
+
+    $('#download_pdf_btn_a').click(function (e) {
+        //var inv='invoice-'+document.getElementById("invoice_id").value.toLowerCase().replace(/-/ig,'');
+
+        var inv = document.getElementById("invoice_filename").value;
+        //var filename='../medias/vgskating/pdf/invoice-'+inv+'.pdf';
+        var filename = '../medias/schools/teamvg/' + 'pdf/';
+        //filename=filename+inv+'.pdf';
+        filename = filename + inv;
+        //window.open(filename,'_blank');
+        window.open('../invoice/viewdownload_pdf.php?type=D&filename=' + inv, '_blank');
+
+    });
 </script>
 @endsection
