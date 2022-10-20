@@ -57,6 +57,21 @@
                 @foreach($invoices as $invoice)
                     @php
                         $i++;
+                        $urlInvoice = route('invoiceList');
+                        
+
+                        $edit_view_url = '';
+                        //invoice_type = 0 means manual invoice
+                        if ($invoice->invoice_type == 0) {
+                            $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                        } else {
+                            if(!empty($schoolId)){ 
+                                $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
+                            } else {
+                                $edit_view_url = route('modificationInvoice',[$invoice->id]);
+                            }
+                        }
+
                     @endphp
                 
                     <tr>
@@ -120,15 +135,7 @@
                                     <i class="fa fa-ellipsis-h txt-grey"></i>
                                 </a>
                                 <div class="dropdown-menu list action text-left">
-                                @php
-                                    $edit_view_url = '';
-                                    //invoice_creation_type = y means manual invoice
-                                    if ($invoice->invoice_type == 0) {
-                                        $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
-                                    } else {
-                                        $edit_view_url = '/admin/invoice/'.$invoice->id;
-                                    }
-                                @endphp
+                               
                                 
 
                                 @if ($invoice->invoice_status > 1)

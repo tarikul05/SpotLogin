@@ -1207,6 +1207,9 @@ class InvoiceController extends Controller
                 $invoiceItemData['price_type_id'] = $value->event_price;
                 $invoiceItemData['is_locked'] = $value->is_locked;
                 $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                if ($value->sell_total == 0) {
+                    $value->sell_total = $value->sell_price;
+                }
                 $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
                 
                 $invoiceItemData['subtotal_amount_with_discount'] = 0;
@@ -1668,6 +1671,9 @@ class InvoiceController extends Controller
                 $invoiceItemData['price_type_id'] = $value->event_price;
                 $invoiceItemData['is_locked'] = $value->is_locked;
                 $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
+                if ($value->sell_total == 0) {
+                    $value->sell_total = $value->sell_price;
+                }
                 $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
                 
                 $invoiceItemData['subtotal_amount_with_discount'] = 0;
@@ -1830,7 +1836,7 @@ class InvoiceController extends Controller
     {
         $user = Auth::user();
         //$invoiceId = $request->route('invoice'); 
-        //dd($invoice);
+        
 
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
@@ -1870,18 +1876,25 @@ class InvoiceController extends Controller
      * @version 0.1 written in 2022-10-15
      */
 
-    public function modificationInvoice(Request $request, Invoice $invoice)
+    public function modificationInvoice(Request $request, $schoolId = null, $invoice = null)
     {
-        $user = Auth::user();
-        //$invoiceId = $request->route('invoice'); 
+        $user = $request->user();
+        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($this->schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $invoice = Invoice::active()->find($invoice);
+        if (empty($invoice)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
         //dd($invoice);
-
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
         $provinces = Province::active()->get()->toArray();
-        //$invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
-        //$invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
+        $invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
+        $invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
 
 
         if ($invoice->invoice_type == 1) {
@@ -1903,7 +1916,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders', 'countries', 'provinces'));
+        ])->with(compact('genders', 'countries', 'provinces','invoice'));
     }
 
     /**

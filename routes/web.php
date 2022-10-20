@@ -255,7 +255,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
     Route::get('/{school}/teacher-invoices', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id');
     Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
-    Route::get('/{school}/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('modificationInvoice');
+    Route::get('/{school}/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('adminmodificationInvoice');
+    Route::get('/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('modificationInvoice');
     Route::get('/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('manualInvoice');
     Route::get('/{school}/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('adminmanualInvoice');
     Route::get('/{school}/manual-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'updatemanualInvoice'])->name('adminupdatemanualInvoice');

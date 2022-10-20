@@ -16,7 +16,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">Student Information: std updated test</label>
+						<label id="page_header" name="page_header">Invoice Detail</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -39,46 +39,81 @@
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
                         <fieldset>
-                            <label class="section_header_class">{{__('InvoiceJune 2020-samir das du 16.06.2020') }}</label>
+                            @if ($invoice->seller_country_id != 'CA')
+                                <label class="section_header_class">{{ $invoice->invoice_header }}</label>
+                            @endif
                             <table class="table" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
                                 <tbody>
                                     <tr class="header_tbl">
-                                        <th width="30%"><span id="row_hdr_date" name="row_hdr_date">Date</span></th>
-                                        <th width="40%"><span id="item_particular_caption" name="item_particular_caption">Details</span></th>
-                                        <th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">Unit</span></th>
-                                        <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">Amount</span></th>
+                                        <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('Date') }}</span></th>
+                                        <th width="40%"><span id="item_particular_caption" name="item_particular_caption">{{ __('Details') }}</span></th>
+                                        <th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
+                                        <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Amount') }}</span></th>
                                     </tr>
-                                    <tr>
-                                        <td>09.06.2020 08:00</td>
-                                        <td>Test events avec dora (off ice, group lessons for 3 students)</td>
-                                        <td style="text-align:right">60 minutes</td>
-                                        <td style="text-align:right">5.00</td>
-                                    </tr>
+                                    @php 
+                                        $total_min = 0;
+                                        $total_amount = 0;
+                                    @endphp
+                                    @if (!empty($invoice->invoice_items))
+                                        @foreach($invoice->invoice_items as $key => $item)
+                                            <tr>
+                                                <td>{{ !empty($item->created_at) ? $item->created_at : ''; }}</td>
+                                                <td style="text-align:right">{{ !empty($item->caption) ? $item->caption : ''; }}</td>
+                                                @if ($item->unit == 0)
+                                                    <td></td>
+                                                @else
+                                                    <td style="text-align:right">{{ $item->unit }} minutes</td>
+                                                @endif
+                                                <td style="text-align:right">{{ !empty($item->total_item) ? round($item->total_item,2) : ''; }}</td>
+                                            </tr>
+                                            @php 
+                                                $total_amount +=$item->total_item;
+                                                $total_min = $total_min + $item->unit;
+                                            @endphp
+                                        @endforeach
+                                    @endif
+                                    
+                                   
                                     <tr>
                                         <td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>
                                     </tr>
+                                    @if ($invoice->subtotal_amount_all >0)
                                     <tr>
                                         <td colspan="1" style="text-align:right">Sub-total </td>
-                                        <td style="text-align:right">60 minutes</td>
-                                        <td style="text-align:right">5.00</td>
+                                        <td style="text-align:right">{{$total_min}} minutes</td>
+                                        <td style="text-align:right">{{$invoice->subtotal_amount_all}}</td>
                                     </tr>
+                                    @endif
+                                    @if ($invoice->total_amount_discount != 0)
+                                        <tr>
+                                            <td colspan="1" style="text-align:right">Discount</td>
+                                            <td></td>
+                                            <td style="text-align:right">- {{$invoice->total_amount_discount}}</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <td colspan="1" style="text-align:right">Extra charges</td>
                                         <td></td>
-                                        <td style="text-align:right">+ <span id="extra_expenses_cap">0.00</span></td>
+                                        <td style="text-align:right">+ <span id="extra_expenses_cap">{{$invoice->extra_expenses}}</span></td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="1" style="text-align:right"></td>
-                                        <td></td>
-                                        <td style="text-align:right">+<span id="tax_amount_cap">0.00</span></td>
-                                    </tr>
+                                    @if ($invoice->tax_amount != 0)
+                                        <tr>
+                                            <td colspan="1" style="text-align:right">{{$invoice->tax_desc}}</td>
+                                            <td></td>
+                                            <td style="text-align:right">+<span id="tax_amount_cap">{{$invoice->tax_amount}}</span></td>
+                                        </tr>
+                                    @endif
+                                    @php
+                                        $grand_total = $invoice->total_amount + $invoice->extra_expenses;
+                                    @endphp
                                     <tr>
                                         <td colspan="1" style="text-align:right">Total</td>
                                         <td></td>
-                                        <td style="text-align:right"><span id="grand_total_cap">5.00</span></td>
+                                        <td style="text-align:right"><span id="grand_total_cap">{{$grand_total}}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
                         </fieldset>
                     </form>
 				</div>
