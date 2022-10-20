@@ -732,6 +732,8 @@
             document.getElementById("delete_btn_inv").style.display = "block";
             document.getElementById("approved_btn").style.display = "none";
             document.getElementById("payment_btn").style.display = "none";
+            document.getElementById("print_preview_btn").style.display = "block";
+                
         }
 
         // tabclick event
@@ -803,78 +805,12 @@
         var url='../invoice/invoice_view.php?auto_id='+auto_id+'&action=view';
         window.open(url, '_blank');
         */
-        //Generate_View_PDF('preview');
+        Generate_View_PDF('preview');
     });
 
     function Generate_View_PDF(p_type) {
-        loader_start();
-        var modal = document.getElementById('myModal');
-        //modal.style.display = "block";
-        var p_invoice_id = document.getElementById("invoice_id").value;
-        var p_auto_id = document.getElementById("auto_id").value;
-
-        var data = 'type=' + p_type + '&p_invoice_id=' + p_invoice_id + '&p_auto_id=' + p_auto_id;
-
-        // added for generate PDF invoice
-        data += '&sub_total_for_drivers=' + GetAppMessage("sub_total_for_drivers");
-        data += '&deductionon_course_cap=' + GetAppMessage("deductionon_course_cap");
-        data += '&sextra_expenses_cap=' + GetAppMessage("sextra_expenses_cap");
-        data += '&total_invoice_amt_cap=' + GetAppMessage("total_invoice_amt_cap");
-        data += '&total_duration_during_course=' + GetAppMessage("total_duration_during_course");
-        data += '&DISC_PEFC=' + GetAppMessage("DISC_PEFC");
-        data += '&sub_total_caption=' + GetAppMessage("sub_total_caption");
-        data += '&row_hdr_date=' + $("#row_hdr_date").text();
-        data += '&item_particular_caption=' + $("#item_particular_caption").text();
-        data += '&item_unit_caption=' + $("#item_unit_caption").text();
-        data += '&row_hdr_amount=' + $("#row_hdr_amount").text();
-        data += '&invoice_date_cap=' + $("#invoice_date_cap").text();
-        data += '&payment_info_cap=' + $("#payment_info_cap").text();
-        data += '&bank_caption=' + $("#bank_caption").text();
-        data += '&holder_cap=' + $("#holder_cap").text();
-        data += '&total_before_tax_cap=' + GetAppMessage("total_before_tax_cap");
-
-
-        //data=data.replace(/'/g,"''");
-        //console.log(data);
-        //return false;
-        //p_keyword=p_keyword.replace(/&/g,"<<~>>");
-
-        $.ajax({
-            url: 'invoice_issue_pdf.php',
-            data: data,
-            type: 'POST',
-            dataType: 'json',
-            //async: false,
-            success: function (result) {
-                var status = result.status;
-                if (status == 'success') {
-                    modal.style.display = "none";
-                    loader_end();
-                    if (p_type == 'preview') {
-
-                        window.open(result.file_name, '_blank');
-                        //window.open('../invoice/viewdownload_pdf.php?type=D&filename='+result.file_name,'_blank');
-                        //window.location.href = result.file_name;
-
-                    } else if (p_type == 'issue_pdf') {
-                        UpodateInvStatusIssue(p_invoice_id);
-                    }
-                }
-                else {
-
-                    errorModalCall(GetAppMessage('error_message_text'));
-
-                }
-            },   //success
-            error: function (ts) {
-                loader_end();
-                modal.style.display = "none";
-                errorModalCall(GetAppMessage('error_message_text'));
-
-            }
-        }); //ajax-type
-        //return false;
-        //modal.style.display = "none";
+        console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
+        window.open('{!! $invoice->invoice_filename !!}', '_blank');
     }
 </script>
 @endsection
