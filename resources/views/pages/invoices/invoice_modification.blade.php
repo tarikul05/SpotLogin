@@ -20,8 +20,23 @@
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="float-end btn-group">
-						<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>Save</button> <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete:</a> </div>
+					    <div class="pull-right btn-group save-button">
+                            <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-theme-success" target="" ><em class="glyphicon glyphicon-cog"></em> Issue invoice</a>
+                            <a id="print_preview_btn" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
+                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
+                            <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
+
+                            <a id="payment_btn" target="" href="" class="btn"><i class="fa fa-money" aria-hidden="true"></i> payé</a>
+                            <button id="approved_btn" target="" href="" class="btn btn-theme-success">Send by email</button>
+                            <a id="download_pdf_btn_a" target="" href="" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                                <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
+                            </a>
+
+                        </div>
+                        <!-- <div class="float-end btn-group">
+                            <button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>Save</button> 
+                            <a style="display: none;" id="delete_btn_inv" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete:</a> 
+                        </div> -->
 				</div>
 			</div>
 		</header>
@@ -30,7 +45,7 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
 				<button class="nav-link" id="nav-calculation-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Calculation') }}</button>
-				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Basic Data') }}</button>
+				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Basic Data') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -114,6 +129,8 @@
                                 </tbody>
                             </table>
                             <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
+                            <input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
+                            <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                         </fieldset>
                     </form>
 				</div>
@@ -686,5 +703,99 @@
 		viewSelect: 3,
 		todayBtn:false,
 	});
+    $(document).ready(function () {
+        document.getElementById("save_btn").style.display = "none";
+        document.getElementById("print_preview_btn").style.display = "none";
+        document.getElementById("issue_inv_btn").style.display = "none";
+        document.getElementById("delete_btn_inv").style.display = "none";
+        document.getElementById("download_pdf_btn_a").style.display = "none";
+        document.getElementById("approved_btn").style.display = "none";
+        document.getElementById("payment_btn").style.display = "none";
+        if (document.getElementById("invoice_status").val == 10) {
+            document.getElementById("unlock_btn").style.display = "block";
+            document.getElementById("issue_inv_btn").style.display = "none";
+            document.getElementById("print_preview_btn").style.display = "none";
+            document.getElementById("delete_btn_inv").style.display = "none";
+            document.getElementById("save_btn").style.display = "none";
+            document.getElementById("download_pdf_btn_a").style.display = "block";
+            document.getElementById("payment_btn").style.display = "block";
+            if ($("#approved_flag").val() == '0') {
+                document.getElementById("approved_btn").style.display = "block";
+            }
+            else {
+                document.getElementById("approved_btn").style.display = "none";
+            }
+           
+        } else {
+            document.getElementById("unlock_btn").style.display = "none";
+            document.getElementById("issue_inv_btn").style.display = "block";
+            document.getElementById("delete_btn_inv").style.display = "block";
+            document.getElementById("approved_btn").style.display = "none";
+            document.getElementById("payment_btn").style.display = "none";
+        }
+
+        // tabclick event
+        var x = document.getElementsByClassName("tab-pane active");
+		// $('#active_tab').val(x[0].id);
+		// $('#active_tab_user').val(x[0].id);
+        $('button[data-bs-toggle=tab]').click(function(e){
+            var target = $(e.target).attr("data-bs-target_val") // activated tab
+            
+            document.getElementById("save_btn").style.display = "none";
+            document.getElementById("delete_btn_inv").style.display = "none";
+            document.getElementById("issue_inv_btn").style.display = "none";
+            document.getElementById("print_preview_btn").style.display = "none";
+            document.getElementById("download_pdf_btn_a").style.display = "none";
+
+
+            var x = document.getElementsByClassName("tab-pane active");
+            //console.log(x[0].id);
+            console.log(target);
+            DisplayOnOff_buttons(target);
+
+            //invoice_status: 10 - issued, 1- create
+            if (target == "tab_1") {
+
+            } else if (target == "tab_2") {
+
+            } else if (target == "tab_3") {
+
+            }
+
+        });
+
+        
+    });
+
+    function DisplayOnOff_buttons(p_tab) {
+        var invoice_status = document.getElementById("invoice_status").value;
+        if (invoice_status == 10) {
+            document.getElementById("issue_inv_btn").style.display = "none";
+            document.getElementById("print_preview_btn").style.display = "none";
+            document.getElementById("delete_btn_inv").style.display = "none";
+            document.getElementById("save_btn").style.display = "none";
+            document.getElementById("download_pdf_btn_a").style.display = "block";
+
+            if ($("#approved_flag").val() == '0') {
+                document.getElementById("approved_btn").style.display = "block";
+            }
+            else {
+                document.getElementById("approved_btn").style.display = "none";
+            }
+        } else {
+            if (p_tab == "tab_1") {
+                document.getElementById("save_btn").style.display = "none";
+                document.getElementById("issue_inv_btn").style.display = "block";
+                document.getElementById("print_preview_btn").style.display = "block";
+                document.getElementById("delete_btn_inv").style.display = "block";
+            } else {
+                document.getElementById("save_btn").style.display = "block";
+                document.getElementById("print_preview_btn").style.display = "block";
+                document.getElementById("delete_btn_inv").style.display = "block";
+
+            }
+
+        }
+    }
 </script>
 @endsection
