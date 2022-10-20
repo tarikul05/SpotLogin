@@ -131,6 +131,14 @@
                             <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
                             <input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
                             <input type="hidden" id="approved_flag" name="approved_flag" value="0">
+                            <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice->id}}">
+                            <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoice->invoice_type}}">
+                            
+                            @if($invoice->invoice_type ==1)
+                                <input type="hidden" id="person_id" name="person_id" value="{{$invoice->client_id}}">
+                            @else
+                                <input type="hidden" id="person_id" name="person_id" value="{{$invoice->seller_id}}">
+                            @endif
                         </fieldset>
                     </form>
 				</div>
@@ -811,6 +819,53 @@
     function Generate_View_PDF(p_type) {
         console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
         window.open('{!! $invoice->invoice_filename !!}', '_blank');
+    }
+
+    $('#delete_btn').click(function (e) {
+        var x = document.getElementsByClassName("tab-pane active");
+        DeleteInvoice();
+        window.history.back();
+        return false;
+    });
+
+    function DeleteInvoice() {
+        var p_invoice_id = document.getElementById("invoice_id").value;
+        var p_person_id = document.getElementById("person_id").value;
+        var p_invoice_type = document.getElementById("invoice_type").value;
+
+        if (p_invoice_id == '') {
+            errorModalCall(GetAppMessage('Invalid_invoice'));
+
+            return false;
+        }
+        var status = '';
+        var data = 'type=delete_invoice&p_invoice_id=' + p_invoice_id;
+        data += '&p_person_id=' + p_person_id + '&p_invoice_type=' + p_invoice_type;
+        $.ajax({
+            //url: 'invoice_data.php',
+            url: BASE_URL + '/delete_invoice',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                status = result.status;
+                if (status == 'success') {
+
+                    successModalCall(GetAppMessage('save_confirm_message'));
+                        
+                        setTimeout(function(){ window.location.replace('/admin/invoices'); }, 3000);
+                }
+                else {
+                    errorModalCall(GetAppMessage('error_message_text'));
+
+                }
+            },   //success
+            error: function (ts) { 
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        }); //ajax-type
     }
 </script>
 @endsection

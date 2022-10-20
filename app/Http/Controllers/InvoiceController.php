@@ -2303,4 +2303,36 @@ class InvoiceController extends Controller
             // throw error
         }
     }
+
+
+     /**
+     *  AJAX delete Invoice
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-10
+     */
+    public function deleteInvoice(Request $request, Invoice $invoice)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to delete'),
+        );
+        try {
+            $dataParam = $request->all();
+            $id = trim($dataParam['p_invoice_id']);
+            $invoiceData = Invoice::find($id)->delete();
+            if ($invoiceData == 1) {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
 }

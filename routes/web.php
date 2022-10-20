@@ -98,6 +98,8 @@ Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::cl
 Route::post('delete_event', [App\Http\Controllers\AgendaController::class, 'deleteEvent'])->name('event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::class, 'validateMultipleEvent'])->name('multiple_event.validate')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::post('delete_invoice', [App\Http\Controllers\InvoiceController::class, 'deleteInvoice'])->name('invoice.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 
 
 
