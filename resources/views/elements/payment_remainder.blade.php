@@ -3,7 +3,7 @@
         <div class="container-fluid area-container">
             <div class="text-success">
                 <p class="text">
-                    <span class="day_count"><?php echo $day_diff ?></span> remaining in your trial period. <a href="{{ route('subscription.upgradePlan') }}"> Upgrade now! </a>
+                    <span class="day_count"><?php echo $day_diff ?></span> days remaining in your trial period. <a href="{{ route('subscription.upgradePlan') }}"> Upgrade now! </a>
                 </p>
             </div>
         </div>
