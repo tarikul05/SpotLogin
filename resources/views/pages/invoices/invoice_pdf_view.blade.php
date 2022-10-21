@@ -321,7 +321,7 @@
                     </tr> -->
                     <?php $total = $sub_total+ $invoice_data->extra_expenses; ?>
                     <tr class="total_col">
-                        <td colspan="2" class="text">Total <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
+                        <td align="center" colspan="2" class="text">Total <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
                     </tr>
                 </tfoot>
