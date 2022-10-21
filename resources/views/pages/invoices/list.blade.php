@@ -144,7 +144,7 @@
                                         <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                         {{ __('View')}}
                                     </a>
-                                    <a target="_blank" class="dropdown-item" href="{{route('generateInvoicePDF',['invoice_id'=> $invoice->id]) }}">
+                                    <a target="_blank" class="dropdown-item" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>">
                                         <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
                                         {{ __('PDF')}}
                                     </a>
