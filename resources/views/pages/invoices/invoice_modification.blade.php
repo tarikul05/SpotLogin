@@ -22,13 +22,13 @@
 				<div class="col-sm-6 col-xs-12 btn-area">
 					    <div class="pull-right btn-group save-button">
                             <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-theme-success" target="" ><em class="glyphicon glyphicon-cog"></em> Issue invoice</a>
-                            <a id="print_preview_btn" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
+                            <a id="print_preview_btn" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
                             <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
                             <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
 
                             <a id="payment_btn" target="" href="" class="btn"><i class="fa fa-money" aria-hidden="true"></i> payé</a>
                             <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">Send by email</button>
-                            <a id="download_pdf_btn_a" target="" href="" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                 <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
                             </a>
 
@@ -866,17 +866,17 @@
 
         }
     }
-    $('#print_preview_btn').click(function (e) {
-        /*
-        var auto_id=document.getElementById("auto_id").value;
-        var url='../invoice/invoice_view.php?auto_id='+auto_id+'&action=view';
-        window.open(url, '_blank');
-        */
-        Generate_View_PDF('preview');
-    });
-    $('#issue_inv_btn').click(function (e) {
-        Generate_View_PDF('issue_pdf');
-    });
+    // $('#print_preview_btn').click(function (e) {
+    //     /*
+    //     var auto_id=document.getElementById("auto_id").value;
+    //     var url='../invoice/invoice_view.php?auto_id='+auto_id+'&action=view';
+    //     window.open(url, '_blank');
+    //     */
+    //     Generate_View_PDF('preview');
+    // });
+    // $('#issue_inv_btn').click(function (e) {
+    //     Generate_View_PDF('issue_pdf');
+    // });
 
     function Generate_View_PDF(p_type) {
         if (p_type =='preview') {
