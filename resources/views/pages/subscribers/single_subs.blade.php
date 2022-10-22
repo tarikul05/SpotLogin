@@ -48,13 +48,13 @@
                                     <!-- <input data-stripe="cvc" name="" type="input" class="form-control" id="cvv" placeholder="123"> -->
                                 </div>
                             </div>
-                            <div class="padding_left">
+                            <!-- <div class="padding_left">
                                 <div class="form-group">
                                     <label for="cvv">ZIP</label>
                                     <div id="cardZip"></div>
-                                    <!-- <input data-stripe="zip" name="" type="input" class="form-control" id="cvv" placeholder="123"> -->
+                                    <input data-stripe="zip" name="" type="input" class="form-control" id="cvv" placeholder="123">
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="button-area">
                             <div class="btn btn_c">
@@ -165,17 +165,15 @@
         });
         cardCvc.mount('#cardCvc');
 
-        var postalCode = elements.create('postalCode', {
-            style: elementStyles,
-            classes: elementClasses,
-        });
-        postalCode.mount('#cardZip');
+        // var postalCode = elements.create('postalCode', {
+        //     style: elementStyles,
+        //     classes: elementClasses,
+        // });
+        // postalCode.mount('#cardZip');
 
-        const cardElement = '';
-        // const cardElement = registerElements([cardNumber, cardExpiry, cardCvc], 'payment-form');
+        // const cardElement = '';
         const cardButton = document.getElementById('card-button');
         const clientSecret = cardButton.dataset.secret;
-        console.log(clientSecret,'clientSecretclientSecret');
         // cardElement.mount('#card-element');
         // Handle real-time validation errors from the card Element.
         // cardElement.addEventListener('change', function(event) {
@@ -209,7 +207,6 @@
         });
 
         function stripeTokenHandler(paymentMethod) {
-            console.log(paymentMethod,'paymentMethodpaymentMethodpaymentMethod');
             var form = document.getElementById('payment-form-sub');
             var hiddenInput = document.createElement('input');
             hiddenInput.setAttribute('type', 'hidden');
