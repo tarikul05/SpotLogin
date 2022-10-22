@@ -877,9 +877,9 @@ $(document).ready(function(){
 			success: function(result) {
 
 				if (result.status == 'success') {
-					auto_id = 1;
+					auto_id = result.auto_id;
 					
-					successModalCall("{{ __('invoice_generated_msg')}}");
+					successModalCall("{{ __('invoice generated')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
@@ -895,7 +895,7 @@ $(document).ready(function(){
 			}
 	    }); // Ajax
 	    if (auto_id > 0) {
-	      	var url = "/admin/"+document.getElementById("school_id").value+"/invoices";
+	      	var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){ 
 				window.location = BASE_URL+ url;  
 				}, 3000);
@@ -1130,8 +1130,11 @@ function populate_teacher_lesson() {
 				if (value.ready_flag == "0") {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
-					resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
-					//resultHtml += "<td><a href='../admin/events_entry.html?event_type=" + value.event_type + "&event_id=" + value.event_id + "&action=edit' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+					if (value.event_type == 100) {
+						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+					} else {
+						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+					}
 				} else {
 					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';

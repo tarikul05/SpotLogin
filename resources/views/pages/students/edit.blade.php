@@ -797,9 +797,9 @@ $(document).ready(function(){
 			async: false,
 			success: function(result) {
 				if (result.status == 'success') {
-					auto_id = 1;
+					auto_id = result.auto_id;
 					
-					successModalCall("{{ __('invoice_generated_msg')}}");
+					successModalCall("{{ __('invoice generated')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
@@ -814,7 +814,8 @@ $(document).ready(function(){
 		}); // Ajax
 
 		if (auto_id > 0) { 
-			var url = "/admin/"+document.getElementById("school_id").value+"/invoices";
+			//admin/1/modification-invoice/42
+			var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){ 
 				window.location = BASE_URL+ url;  
 			}, 3000);

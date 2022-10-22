@@ -1350,7 +1350,7 @@ class InvoiceController extends Controller
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
-                //'no_of_teachers' =>$no_of_teachers
+                'auto_id' =>$invoiceData->id
             );
             return response()->json($result);
         } catch (Exception $e) {
@@ -1821,7 +1821,7 @@ class InvoiceController extends Controller
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
-                //'no_of_teachers' =>$no_of_teachers
+                'auto_id' =>$invoiceData->id
             );
             return response()->json($result);
         } catch (Exception $e) {
