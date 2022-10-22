@@ -875,9 +875,9 @@
     //     */
     //     Generate_View_PDF('preview');
     // });
-    // $('#issue_inv_btn').click(function (e) {
-    //     Generate_View_PDF('issue_pdf');
-    // });
+    $('#issue_inv_btn').click(function (e) {
+        Generate_View_PDF('issue_pdf');
+    });
 
     function Generate_View_PDF(p_type) {
         if (p_type =='preview') {
@@ -885,18 +885,20 @@
             window.open('{!! $invoice->invoice_filename !!}', '_blank');
         } else {
             var p_invoice_id = document.getElementById("invoice_id").value;
-        
-            //UpodateInvStatusIssue(p_invoice_id)
+            var data = 'type=' + p_type + '&p_invoice_id=' + p_invoice_id;
+
+            UpodateInvStatusIssue(p_invoice_id)
         }
         
     }
 
     function UpodateInvStatusIssue(p_invoice) {
         var modal = document.getElementById('myModal');
-        modal.style.display = "block";
+        //modal.style.display = "block";
         $.ajax({
-            url: 'invoice_data.php',
-            data: 'type=update_status_issue&p_invoice_id=' + p_invoice,
+            url: BASE_URL + '/update_payment_status',
+            //url: 'update_status_issue',
+            data: 'invoice_status=10&approved_flag=0&p_auto_id=' + p_invoice,
             type: 'POST',
             dataType: 'json',
             //async: false,
@@ -906,11 +908,11 @@
                 if (status == 'success') {
                     $("#invoice_status").text('Emise');
                     //document.getElementById("invoice_status").text='Emise';
-                    document.getElementById("invoice_status_id").value = '10';
+                    document.getElementById("invoice_status").value = '10';
                     document.getElementById("unlock_btn").style.display = "block";
                     //$('#unlock_btn').style.display="block";
                     DisplayOnOff_buttons();
-                    modal.style.display = "none";
+                    //modal.style.display = "none";
                 }
                 else {
 

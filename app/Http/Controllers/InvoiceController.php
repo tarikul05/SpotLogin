@@ -328,25 +328,44 @@ class InvoiceController extends Controller
         $result = array(
             'status' => false,
             'payment_status' => 0,
+            'invoice_status' =>0,
             'message' => __('failed to send email'),
         );
+        $result = array(
+            'status' => 'success',
+            'payment_status' => 0,
+            'invoice_status' =>1,
+            'message' => __('failed to send email'),
+        );
+        return response()->json($result);
         try {
             $data = $request->all();
             $user = $request->user();
+            $p_payment_status = 0;
+            $invoice_status =0;
 
-            $p_payment_status = trim($data['p_payment_status']);
+            if (isset($data['p_payment_status'])) {
+                $p_payment_status = trim($data['p_payment_status']);
+                $updateInvoice['payment_status'] = $p_payment_status;
+            }
+            if (isset($data['invoice_status'])) {
+                $invoice_status = trim($data['invoice_status']);
+                $updateInvoice['invoice_status'] = $invoice_status;
+            }
+            if (isset($data['approved_flag'])) {
+                $approved_flag = trim($data['approved_flag']);
+                $updateInvoice['approved_flag'] = $approved_flag;
+            }
+            
             $p_auto_id = trim($data['p_auto_id']);
 
-            $updateInvoice = [
-               'payment_status' => $p_payment_status
             
-            ];
             $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
             $result = array(
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'payment_status' => $p_payment_status,
-                //'no_of_teachers' =>$no_of_teachers
+                'invoice_status' =>$invoice_status
             );
             return response()->json($result);
         } catch (Exception $e) {
@@ -2313,6 +2332,38 @@ class InvoiceController extends Controller
      * @version 0.1 written in 2022-10-10
      */
     public function deleteInvoice(Request $request, Invoice $invoice)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to delete'),
+        );
+        try {
+            $dataParam = $request->all();
+            $id = trim($dataParam['p_invoice_id']);
+            $invoiceData = Invoice::find($id)->delete();
+            if ($invoiceData == 1) {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+
+     /**
+     *  AJAX update Invoice
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-22
+     */
+    public function updateInvoice(Request $request, Invoice $invoice)
     {
         $result = array(
             'status' => 'failed',

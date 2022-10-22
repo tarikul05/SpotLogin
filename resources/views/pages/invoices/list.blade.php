@@ -144,7 +144,7 @@
                                         <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                         {{ __('View')}}
                                     </a>
-                                    <a target="_blank" class="dropdown-item" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>">
+                                    <a target="_blank" class="dropdown-item" href="{{route('generateInvoicePDF',['invoice_id'=> $invoice->id]) }}">
                                         <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
                                         {{ __('PDF')}}
                                     </a>
@@ -170,64 +170,64 @@
     </div>
   </div>
 
-  <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
+<div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
     aria-labelledby="email_list_modal" name="email_list_modal">
-        <div class="modal-dialog mt-5" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
-                </div>
-                <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
-                    <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
+    <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center border-0">
+                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+            </div>
+            <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+                <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
 
-                        <div class="form-group col-md-12" id="father_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                    <div class="form-group col-md-12" id="father_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="mother_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="student_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="text-left">
+                            <div class="checked">
+                                <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-12" id="mother_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-left">
+                            <div>
+                                <p></p>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-12" id="student_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
-                            </div>
+                    <div class="form-group col-sm-12">
+                            <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                    </div>
 
-                        </div>
+                <!-- </form> -->
 
-                        <div class="form-group col-md-12">
-                            <div class="text-left">
-                                <div class="checked">
-                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-12 text-left">
-                                <div>
-                                    <p></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-12">
-                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
-                        </div>
-
-                    <!-- </form> -->
-
-                </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 

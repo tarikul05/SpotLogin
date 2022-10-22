@@ -100,6 +100,7 @@ Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::
 
 Route::post('delete_invoice', [App\Http\Controllers\InvoiceController::class, 'deleteInvoice'])->name('invoice.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+Route::post('update_invoice_status', [App\Http\Controllers\InvoiceController::class, 'updateInvoice'])->name('invoice.update')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 
