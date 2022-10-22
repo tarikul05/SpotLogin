@@ -2271,7 +2271,7 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generateInvoicePDF(Request $request,$type = 'download')
+    public function generateInvoicePDF(Request $request,$type = 'stream')
     {
         try{
             $reqData = $request->all();
@@ -2287,7 +2287,7 @@ class InvoiceController extends Controller
             //     $file_path = Storage::put('pdf/'. $invoice_name, $pdf->output());
             //     return $pdf->stream( $invoice_name );
             // }
-            if ($type == 'download') {
+            if ($type == 'stream') {
                 // save invoice name if invoice_filename is empty
                 if(empty($invoice_data->invoice_filename)){
                     $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
@@ -2297,7 +2297,7 @@ class InvoiceController extends Controller
                         $invoice_data->save();
                     }
                 }
-                return $pdf->download( $invoice_name );
+                return $pdf->stream( $invoice_name );
             }
         }catch( Exception $e){
             // throw error
