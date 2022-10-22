@@ -332,7 +332,7 @@
                 $hours = floor($total_min / 60);
                 $minutes = $total_min % 60;
             ?>
-            <p>Total duration of courses {{ $total_min }} minutes, {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} hours and {{ $minutes }} minutes.</p>
+            <p>Total duration of courses {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} hours and {{ $minutes }} minutes.</p>
         </div>
     </main>
     <footer>
