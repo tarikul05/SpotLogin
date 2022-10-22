@@ -275,7 +275,7 @@
                             $total_min += $item->unit;
                     ?>
                     <tr>
-                        <td>{{ Carbon\Carbon::parse($item->created_at)->format('d.m.Y');}}</td>
+                        <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
                         <td>{{ !empty($item->caption) ? $item->caption : ''; }}</td>
                         <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
                         <td align="right">{{ number_format($item->price_unit,'2') }}</td>

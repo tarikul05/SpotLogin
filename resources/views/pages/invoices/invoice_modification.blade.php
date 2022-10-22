@@ -68,20 +68,22 @@
                                     @php 
                                         $total_min = 0;
                                         $total_amount = 0;
+                                        $sub_total = 0;
                                     @endphp
                                     @if (!empty($invoice->invoice_items))
                                         @foreach($invoice->invoice_items as $key => $item)
                                             <tr>
-                                                <td>{{ !empty($item->item_date) ? date("Y-m-d", strtotime($item->item_date)) : ''; }}</td>
+                                                <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                 <td style="text-align:right">{{ !empty($item->caption) ? $item->caption : ''; }}</td>
                                                 @if ($item->unit == 0)
                                                     <td></td>
                                                 @else
                                                     <td style="text-align:right">{{ $item->unit }} minutes</td>
                                                 @endif
-                                                <td style="text-align:right">{{ !empty($item->total_item) ? round($item->total_item,2) : ''; }}</td>
+                                                <td style="text-align:right">{{ !empty($item->total_item) ? number_format($item->total_item,'2') : ''; }}</td>
                                             </tr>
                                             @php 
+                                                $sub_total += $item->price_unit;
                                                 $total_amount +=$item->total_item;
                                                 $total_min = $total_min + $item->unit;
                                             @endphp
@@ -92,13 +94,12 @@
                                     <tr>
                                         <td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>
                                     </tr>
-                                    @if ($invoice->subtotal_amount_all >0)
+                                    
                                     <tr>
                                         <td colspan="1" style="text-align:right">Sub-total </td>
                                         <td style="text-align:right">{{$total_min}} minutes</td>
-                                        <td style="text-align:right">{{$invoice->subtotal_amount_all}}</td>
+                                        <td style="text-align:right">{{ number_format($sub_total,'2') }}</td>
                                     </tr>
-                                    @endif
                                     @if ($invoice->total_amount_discount != 0)
                                         <tr>
                                             <td colspan="1" style="text-align:right">Discount</td>
@@ -119,12 +120,12 @@
                                         </tr>
                                     @endif
                                     @php
-                                        $grand_total = $invoice->total_amount + $invoice->extra_expenses;
+                                        $grand_total = $sub_total + $invoice->extra_expenses;
                                     @endphp
                                     <tr>
                                         <td colspan="1" style="text-align:right">Total</td>
                                         <td></td>
-                                        <td style="text-align:right"><span id="grand_total_cap">{{$grand_total}}</span></td>
+                                        <td style="text-align:right"><span id="grand_total_cap">{{ number_format($grand_total,'2') }}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
