@@ -72,7 +72,7 @@
                                     @if (!empty($invoice->invoice_items))
                                         @foreach($invoice->invoice_items as $key => $item)
                                             <tr>
-                                                <td>{{ !empty($item->created_at) ? $item->created_at : ''; }}</td>
+                                                <td>{{ !empty($item->item_date) ? date("Y-m-d", strtotime($item->item_date)) : ''; }}</td>
                                                 <td style="text-align:right">{{ !empty($item->caption) ? $item->caption : ''; }}</td>
                                                 @if ($item->unit == 0)
                                                     <td></td>
