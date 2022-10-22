@@ -160,12 +160,12 @@
                                 <label id="disc_on_course_hrs_cap" class="col-lg-3 col-sm-3 text-right">Subtotal (not subject to reduction)</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_no_discount">0.00</label>
+                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? $invoice->subtotal_amount_no_discount :''; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -173,12 +173,12 @@
                                 <label class="col-lg-3 col-sm-3 text-right">{{__("Subtotal (subject to reduction)")}}</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount">5.00</label>
+                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? $invoice->subtotal_amount_with_discount :''; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -186,12 +186,12 @@
                                 <label id="sub_total_caption" name="sub_total_caption" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Sous-total:</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> =
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all">5.00</label>
+                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? $invoice->subtotal_amount_all :''; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
                                 <div class="col-sm-2">
                                     <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                             style="text-align:right;">0.00</p> -->
-                                    <div class="input-group"><span class="input-group-addon currency_display">AUD</span>
+                                    <div class="input-group"><span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
                                         <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="0" placeholder=""> </div>
                                 </div>
                                 <div class="col-sm-2 text-right">
@@ -214,7 +214,7 @@
                                     <label id="sdiscount_percent_2_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_2">Taux réduction 401-600:</label>
                                     <div class="col-sm-1" style="width:80px;">
                                         <p class="form-control-static" style="text-align:right;">+
-                                            <label class="currency_display">AUD</label>
+                                            <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                         </p>
                                     </div>
                                     <div class="col-sm-2">
@@ -230,7 +230,7 @@
                                     <label id="sdiscount_percent_3_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_3">Taux réduction 601-800:</label>
                                     <div class="col-sm-1" style="width:80px;">
                                         <p class="form-control-static" style="text-align:right;">+
-                                            <label class="currency_display">AUD</label>
+                                            <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                         </p>
                                     </div>
                                     <div class="col-sm-2">
@@ -246,7 +246,7 @@
                                     <label id="sdiscount_percent_4_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_4">Taux réduction 801-1000:</label>
                                     <div class="col-sm-1" style="width:80px;">
                                         <p class="form-control-static" style="text-align:right;">+
-                                            <label class="currency_display">AUD</label>
+                                            <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                         </p>
                                     </div>
                                     <div class="col-sm-2">
@@ -262,7 +262,7 @@
                                     <label id="sdiscount_percent_5_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_5">Taux réduction 1001-1200:</label>
                                     <div class="col-sm-1" style="width:80px;">
                                         <p class="form-control-static" style="text-align:right;">+
-                                            <label class="currency_display">AUD</label>
+                                            <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                         </p>
                                     </div>
                                     <div class="col-sm-2">
@@ -278,7 +278,7 @@
                                     <label id="sdiscount_percent_6_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_6">Taux réduction 1200 et plus:</label>
                                     <div class="col-sm-1" style="width:80px;">
                                         <p class="form-control-static" style="text-align:right;">+
-                                            <label class="currency_display">AUD</label>
+                                            <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
                                         </p>
                                     </div>
                                     <div class="col-sm-2">
@@ -294,7 +294,7 @@
                             <div class="form-group row">
                                 <label id="stotal_amount_discount_cap" class="col-sm-3 text-right" style="text-align:right;">Total de la réduction:</label>
                                 <div class="col-sm-2">
-                                    <div class="input-group"><span class="input-group-addon currency_display">AUD</span>
+                                    <div class="input-group"><span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
                                         <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="0" placeholder="" readonly=""> </div>
                                 </div>
                                 <!-- <div class="col-sm-1">
@@ -309,29 +309,29 @@
                                 <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;">
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;">0.00</p>
+                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? $invoice->total_amount_no_discount :''; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label id="stotal_amount_with_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount after Discount</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;">5.00</p>
+                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? $invoice->total_amount_with_discount :''; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Frais (Additional Expenses):</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
@@ -341,7 +341,7 @@
                                 <label id="tax_cap" name="tax_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Tax:</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
@@ -351,12 +351,12 @@
                                 <label id="grand_total_amount_cap" name="grand_total_amount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Grand Total</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> =
-                                        <label class="currency_display">AUD</label>
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency : ''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;">5.00</p>
-                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;">5.00</p>
+                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;"><?php echo $invoice->total_amount ? $invoice->total_amount : ''; ?></p>
+                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount ? $invoice->total_amount : ''; ?></p>
                                 </div>
                             </div>
                         </fieldset>

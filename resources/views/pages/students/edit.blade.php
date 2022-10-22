@@ -1032,6 +1032,9 @@ $('#save_btn').click(function (e) {
 
 
 	function populate_student_lesson() {
+		//var CURRENT_URL = '{{ $CURRENT_URL ?? '' }}';
+		//console.log(CURRENT_URL);
+		//location.href = "/1/edit-lesson/30/?redirect_url="+CURRENT_URL;
 		let p_pending_only="1";
 		var pendChBox = document.getElementById("chk_show_only_pend");
 		
@@ -1184,7 +1187,12 @@ $('#save_btn').click(function (e) {
 							if (value.ready_flag == 0) {
 								all_ready = 0;
 								resultHtml += "<td></td>";
-								resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								if (value.event_type == 100) {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								} else {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								}
+								
 							} else {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';

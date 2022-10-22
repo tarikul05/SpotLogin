@@ -165,9 +165,14 @@ class LessonsController extends Controller
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->get();
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
-
+        $reqData = $request->all();
+        $redirect_url = '';
+        if (!empty($reqData['redirect_url'])) {
+            $redirect_url = $reqData['redirect_url'].'&tab=tab_3';
+            
+        }
         if (!empty($eventData)){
-            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','studentOffList','students','lessonPrice','currency'));
+            return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','studentOffList','students','lessonPrice','currency','redirect_url'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
@@ -445,9 +450,13 @@ class LessonsController extends Controller
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::active()->ByCountry($school->country_code)->get();
         $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData->event_category,'lesson_price_id'=>$lessonData->no_of_students,'teacher_id'=>$lessonData->teacher_id])->first();
-
+        $reqData = $request->all();
+        $redirect_url = '';
+        if (!empty($reqData['redirect_url'])) {
+            $redirect_url = $reqData['redirect_url'].'&tab=tab_3';
+        }
         if (!empty($lessonData)){
-            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','studentOffList','students','lessonPrice','lessonPriceTeacher','currency'));
+            return view('pages.calendar.edit_lesson')->with(compact('lessonlId','lessonData','relationData','schoolId','eventCategory','locations','professors','studentOffList','students','lessonPrice','lessonPriceTeacher','currency','redirect_url'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
