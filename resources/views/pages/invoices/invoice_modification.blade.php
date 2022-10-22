@@ -21,7 +21,9 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					    <div class="pull-right btn-group save-button">
-                            <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-theme-success" target="" ><em class="glyphicon glyphicon-cog"></em> Issue invoice</a>
+                            <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                                <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
+                            </a> 
                             <a id="print_preview_btn" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
                             <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
                             <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
@@ -929,7 +931,7 @@
 
     }
 
-    $('#delete_btn').click(function (e) {
+    $('#delete_btn_inv').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
         DeleteInvoice();
         window.history.back();

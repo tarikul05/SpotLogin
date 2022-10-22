@@ -331,13 +331,13 @@ class InvoiceController extends Controller
             'invoice_status' =>0,
             'message' => __('failed to send email'),
         );
-        $result = array(
-            'status' => 'success',
-            'payment_status' => 0,
-            'invoice_status' =>1,
-            'message' => __('failed to send email'),
-        );
-        return response()->json($result);
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
         try {
             $data = $request->all();
             $user = $request->user();
