@@ -1138,11 +1138,11 @@ function populate_teacher_lesson() {
 				} else {
 					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-					total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
-					week_total_buy += parseFloat(value.buy_total) + parseFloat(value.costs_1);
+					total_buy += parseFloat(value.buy_total) + parseFloat(value.extra_charges);
+					week_total_buy += parseFloat(value.buy_total) + parseFloat(value.extra_charges);
 				}
-				if (value.costs_1 != 0) {
-					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';
+				if (value.extra_charges != 0) {
+					resultHtml += '<td style="text-align:right" colspan="3">' + value.extra_charges + '</td>';
 				} else {
 					//resultHtml += '<td style="text-align:right"></td>';
 					resultHtml+='<td style="text-align:right" colspan="3"></td>';

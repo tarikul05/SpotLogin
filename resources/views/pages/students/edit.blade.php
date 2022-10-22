@@ -1213,8 +1213,8 @@ $('#save_btn').click(function (e) {
 								}
 							}
 
-							costs_1 = parseFloat(value.costs_1);
-							if (value.costs_1 != 0) {
+							costs_1 = parseFloat(value.extra_charges);
+							if (value.extra_charges != 0) {
 									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
 							} else {
 									resultHtml += '<td style="text-align:right"></td>';

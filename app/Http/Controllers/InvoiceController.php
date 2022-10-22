@@ -683,7 +683,9 @@ class InvoiceController extends Controller
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
+                    
                     'event_details.costs_1 as costs_1',
+                    'events.extra_charges as extra_charges',
                     'event_details.costs_2 as costs_2',
                     'teachers.id as teacher_id',
                     'lesson_price_teachers.price_buy as price_buy',
@@ -841,7 +843,8 @@ class InvoiceController extends Controller
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
                     'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2'
+                    'event_details.costs_2 as costs_2',
+                    'events.extra_charges as extra_charges'
                 )
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
