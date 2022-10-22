@@ -47,15 +47,31 @@
                                 <b>Share your calendar</b> with <br>your team & students
                             </span>
                         </li>
-                        <li class="free-plan-button"><a class="button" href="jabascript::void(0)">Choose plan</a></li>
+                        <?php 
+                            $active_class = '';
+                            if(!empty($trial_ends_date)){
+                                $active_class = 'disabled';
+                            }
+                        ?>
+                        <li class="free-plan-button <?= $active_class; ?>">
+                            <a class="button" href="jabascript::void(0)">
+                                <?php
+                                    if(!empty($trial_ends_date)){
+                                        echo 'Active plan';
+                                    }else{
+                                        echo 'Choose plan';
+                                    }
+                                ?>
+                            </a>
+                        </li>
                     </ul>
                 </div>
-
+                @foreach($plans as $plan)                   
                 <div class="columns premium-plan">
                     <ul class="price">
                         <li>
-                            <div class="plan_name">Premium plan</div>
-                            <div class="plan_interval">20$ <span class="plan_type">/month</span></div>
+                            <div class="plan_name">{{ $plan['plan_name']->name }}</div>
+                            <div class="plan_interval">{{ number_format($plan['amount'], 2) }}$ <span class="plan_type">/{{ $plan['interval'] }}</span></div>
                         </li>
                         <li>
                             <span class="svg_img">
@@ -105,9 +121,10 @@
                             </span>
                             <span class="text-area">Create <b>manual invoices</b></span>
                         </li>
-                        <li class="submit-button"><a href="{{ route('subscription.list') }}" class="button">Choose plan</a></li>
+                        <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose plan</a></li>
                     </ul>
                 </div>
+                @endforeach
             </div>
         </div>
     </div>

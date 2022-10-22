@@ -164,6 +164,10 @@
     border: 1.7078px solid #0187DB;
     border-radius: 8px;
 }
+.plans .columns .free-plan-button.disabled{
+    pointer-events: none;
+    opacity: .5;
+}
 .plans .premium-plan .submit-button {
     margin: 0 auto;
     width: 307px;
@@ -186,6 +190,181 @@
 }
 
 
+/*
+** subscription-form css
+*/
+.subscribe-plan{
+    background: #f2fbff;
+    margin-top: 0 !important;
+    padding: 85px 0 99px;
+    min-height: 40vw;
+}
+.subscription-form-wrapper{
+    margin: 0 auto;
+    width: 492px;
+    background: #FFFFFF;
+    box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
+    border-radius: 8px;
+    padding: 44px;
+}
+.subscription-form-wrapper p, 
+.subscription-form-wrapper h4, 
+.subscription-form-wrapper h2, 
+.subscription-form-wrapper h3{
+    padding: 0;
+    margin: 0;
+}
+.subscription-form-wrapper .payment-info-top .h4{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #152245;
+}
+.subscription-form-wrapper .payment-info-top .txt{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #152245;
+}
+.subscription-form-wrapper .subscription-plan-info{
+    margin-top: 24px;
+}
+.subscription-form-wrapper .subscription-plan-info .h4{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0187DB;
+}
+.subscription-form-wrapper .subscription-plan-info .h2{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 44px;
+    color: #0187DB;
+}
+.subscription-form-wrapper .subscription-plan-info .h2 .intervation_type{
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23.2px;
+}
+.subscription-form-wrapper  .payment-form{
+    padding: 16px 0 0;
+}
+.subscription-form-wrapper  .payment-form label{
+    padding: 0 0 5px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+}
+.subscription-form-wrapper .payment-form .StripeElement, .subscription-form-wrapper .payment-form .form-control{
+    border: 1px solid #C0E7FF;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    height: 40px;
+    line-height: 35px;
+    color: #002A44;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-clip: padding-box;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.subscription-form-wrapper .payment-form .StripeElement.invalid{
+    border: 1px solid #E25950;
+    border-radius: 4px;
+}
+.subscription-form-wrapper .payment-form .form-group{
+    padding-bottom: 6px;
+}
+.subscription-form-wrapper .payment-form .form-control::placeholder {
+    color: #002A44;
+    opacity: 1;
+}
+.subscription-form-wrapper .payment-form .form-control:-ms-input-placeholder {
+    color: #002A44;
+} 
+.subscription-form-wrapper .payment-form .form-control::-ms-input-placeholder {
+    color: #002A44;
+}
+.subscription-form-wrapper .payment-form .col_sep_div{
+    display: flex;
+}
+.subscription-form-wrapper .payment-form .padding_left{
+    margin-left: 5px;
+    width: 50%;
+}
+.subscription-form-wrapper .payment-form .padding_right{
+    margin-right: 5px;
+    width: 50%;
+}
+.subscription-form-wrapper .button-area{
+    margin-top: 15px;
+}
+.subscription-form-wrapper .button-area .btn_c{
+    width: 98px;
+    height: 52px;
+    margin-right: 8px;
+    background: #FFFFFF;
+    cursor: default;
+}
+.subscription-form-wrapper .button-area .btn-cancle{
+    border-radius: 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #657E8E;
+    text-decoration: none;
+}
+.subscription-form-wrapper .button-area .btn-blue{
+    width: 294px;
+    height: 52px;
+    background: #0187DB;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+.payment-footer-wrapper{
+    margin-top: 23px;
+}
+.payment-footer-wrapper .title{
+    margin: 0 0 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+}
+.payment-footer-wrapper .f-txt{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 127%;
+    color: #657E8E;
+}
+.payment-footer-wrapper .f_margin_top{
+    margin-top: 25px;
+}
 /* .plan_center .price {
     list-style-type: none;
     border: 1px solid #eee;
@@ -225,12 +404,14 @@
     text-decoration: none;
     font-size: 18px;
 } */
+
 .pc_only{
     display: block;
 }
 .sp_only{
     display: none;
 }
+
 /**
 * nav bar adjustment
 ***/

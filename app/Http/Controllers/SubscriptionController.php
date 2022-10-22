@@ -61,32 +61,32 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function subscribePlanList(Request $request)
-    {
-        try {
-            $user = auth()->user();
-            $plans = [];
-            $get_plans = $this->stripe->plans->all(); // get plan form stripe
-            foreach ($get_plans as $get_plan) {
-                $product_object = $this->stripe->products->retrieve(
-                    $get_plan->product,
-                    []
-                );
-                $plans[] = [
-                    'id' => $get_plan->id,
-                    'amount' => $get_plan->amount / 100,
-                    'interval' => $get_plan->interval,
-                    'interval_count' => $get_plan->interval_count,
-                    'metadata' => $get_plan->metadata,
-                    'nickname' => $get_plan->nickname,
-                    'plan_name' => $product_object,
-                ];
-            }
-            return view('pages.subscribers.list', compact('plans', 'user'));
-        } catch (Exception $e) {
-            // throw error message
-        }
-    }
+    // public function subscribePlanList(Request $request)
+    // {
+    //     try {
+    //         $user = auth()->user();
+    //         $plans = [];
+    //         $get_plans = $this->stripe->plans->all(); // get plan form stripe
+    //         foreach ($get_plans as $get_plan) {
+    //             $product_object = $this->stripe->products->retrieve(
+    //                 $get_plan->product,
+    //                 []
+    //             );
+    //             $plans[] = [
+    //                 'id' => $get_plan->id,
+    //                 'amount' => $get_plan->amount / 100,
+    //                 'interval' => $get_plan->interval,
+    //                 'interval_count' => $get_plan->interval_count,
+    //                 'metadata' => $get_plan->metadata,
+    //                 'nickname' => $get_plan->nickname,
+    //                 'plan_name' => $product_object,
+    //             ];
+    //         }
+    //         return view('pages.subscribers.list', compact('plans', 'user'));
+    //     } catch (Exception $e) {
+    //         // throw error message
+    //     }
+    // }
 
     public function supscribePlan( Request $request, $plain_id)
     {
@@ -121,8 +121,7 @@ class SubscriptionController extends Controller
             $user->updateDefaultPaymentMethod($paymentMethod);
             $user->newSubscription('default', $plan_id)
                     ->create($paymentMethod, [
-                        'email' => $user->email,
-                        'name' => $user->firstname,
+                        'email' => $user->email
                     ],
                     [
                         'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
@@ -131,7 +130,7 @@ class SubscriptionController extends Controller
             $user->trail_remain_days = $day_diff;
             $user->trial_ends_at = NULL;
             $user->save();
-            return redirect()->route('agenda')->with('success', 'You have subscribed ' . $plan_name . ' plan');
+            return redirect()->route('agenda')->with('success', 'Welcome, You have subscribed ' . $plan_name);
         } catch (IncompletePayment $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
