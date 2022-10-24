@@ -1938,7 +1938,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders', 'countries', 'provinces','invoice'));
+        ])->with(compact('genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
     }
 
     /**
