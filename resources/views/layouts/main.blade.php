@@ -53,7 +53,7 @@
     </div>
 </section>
 
-<section class="{{ $get_action }}" id="main-content">
+<section class="{{ $get_action }}">
 	@include('elements/flash-message')
     @yield('content')
     <div id="pageloader">

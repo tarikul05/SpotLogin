@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
 @section('head_links')
-
     <script src="https://js.stripe.com/v3/"></script>
 @endsection
 
 @section('content')
+<div id="card-errors" role="alert"></div>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -19,7 +19,7 @@
                     <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
                 </div>
                 <div class="payment-form card_payment">
-                    <div id="card-errors" role="alert"></div>
+                    
                     <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
                         @csrf
                         <div class="form-group">
@@ -199,7 +199,11 @@
                 .then(function(result) {
                     if (result.error) {
                         var errorElement = document.getElementById('card-errors');
-                        errorElement.textContent = result.error.message;
+                        errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
+                        '<strong>' + result.error.message +'</strong>'+
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+   
+                        '</div>';
+                        window.scrollTo(0, 10);
                     } else {
                         stripeTokenHandler(result.setupIntent.payment_method);
                     }
