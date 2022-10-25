@@ -1,6 +1,9 @@
 /*
 * top payment info section sp
 */
+.content.agenda_page {
+    margin-top: 29px;
+}
 .subscription_info{
     width: 100%;
     height: 56px;
@@ -48,6 +51,8 @@
 .subscription-upgradeplan{
     background: #f2fbff;
     margin-top: 0 !important;
+}
+.subscription-upgradeplan .container{
     padding-top: 85px;
 }
 .pricing{
@@ -196,8 +201,10 @@
 .subscribe-plan{
     background: #f2fbff;
     margin-top: 0 !important;
-    padding: 85px 0 99px;
     min-height: 40vw;
+}
+.subscribe-plan .container{
+    padding: 85px 0 99px;
 }
 .subscription-form-wrapper{
     margin: 0 auto;
@@ -448,6 +455,18 @@
     display: flex;
     align-items: center;
 }
+
+/*
+** Other adjustment
+**
+*/
+.teacherhome, .studenthome{
+    padding-top: 85px;
+}
+.teacher_save {
+    top: 128px;
+    z-index: 9;
+}
 @media only screen and (max-width: 767px) {
     .plan_center .columns {
         width: 100%;
@@ -522,6 +541,42 @@
     }
     .plans .premium-plan .submit-button {
         width: 100%;
+    }
+    .header-navbar, .header-navbar .navbar .container-fluid{
+        height: unset;
+    }
+    button:focus:not(:focus-visible) {
+        box-shadow: unset;
+    }
+    .header-navbar .navbar{
+        min-height: unset;
+    }
+    .header-navbar .navbar .navbar-collapse, 
+    .header-navbar .navbar .navbar-nav{
+        height: unset;
+        background: #152245;
+        z-index: 99;
+    }
+    .header-navbar .navbar .navbar-nav .dropdown a{
+        padding-left: 0;
+    }
+    .header-navbar .navbar .navbar-nav .dropdown{
+        position: relative;
+    }
+    .header-navbar .navbar .navbar-nav .dropdown a{
+        padding-left: 0;
+    }
+    .dropdown-menu.header.show{
+        position: absolute;
+        left: 114px !important;
+        top: 0 !important;
+    }
+    .user-area{
+        display: inline-block;
+        padding-left: 20px;
+    }
+    .header-navbar .navbar .navbar-nav .nav-item{
+        padding-left: 20px;
     }
 
 }
