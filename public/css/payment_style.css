@@ -173,6 +173,10 @@
     pointer-events: none;
     opacity: .5;
 }
+.disabled{
+    pointer-events: none;
+    opacity: .5;
+}
 .plans .premium-plan .submit-button {
     margin: 0 auto;
     width: 307px;

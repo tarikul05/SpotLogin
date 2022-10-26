@@ -55,7 +55,7 @@ class SubscriptionController extends Controller
                 ];
             }
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent', 'trial_ends_date', 'plans'));
+            return view('pages.subscribers.upgrade', compact('intent','is_subscribed', 'trial_ends_date', 'plans'));
         } catch (Exception $e) {
             // throw error message
         }

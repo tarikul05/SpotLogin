@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-<section class="pricing">
+<div class="pricing">
     <div class="container">
         <div class="pricing-title">
             <h3 class="h3">Simple, transparent pricing </h3>
@@ -121,14 +121,18 @@
                             </span>
                             <span class="text-area">Create <b>manual invoices</b></span>
                         </li>
-                        <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose plan</a></li>
+                        <?php if(!$is_subscribed){ ?>
+                            <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose plan</a></li>
+                        <?php }else{ ?>
+                            <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Active plan</a></li>
+                        <?php } ?>
                     </ul>
                 </div>
                 @endforeach
             </div>
         </div>
     </div>
-</section>
+</div>
 <style>
     .main-content{
         background: #f2fbff;
