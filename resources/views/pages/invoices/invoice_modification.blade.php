@@ -24,7 +24,7 @@
                             <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                                 <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
                             </a> 
-                            <a id="print_preview_btn" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
+                            <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
                             <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
                             <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
 
