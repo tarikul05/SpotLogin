@@ -467,7 +467,13 @@
     top: 128px;
     z-index: 9;
 }
+.sp_main_footer{
+    display: none;
+}
 @media only screen and (max-width: 767px) {
+    body{
+        margin-bottom: 70px;
+    }
     .plan_center .columns {
         width: 100%;
     }
@@ -578,5 +584,40 @@
     .header-navbar .navbar .navbar-nav .nav-item{
         padding-left: 20px;
     }
-
+    .sp_main_footer{
+        position: fixed;
+        display: block;
+        padding: 0;
+        width: 100%;
+        bottom: 0%;
+        height: 65px;
+        background: #152245;
+        z-index: 2;
+    }
+    .sp_main_footer .footer_sp_menu ul{
+        height: 65px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+    .sp_main_footer .footer_sp_menu ul li{
+        width: 20%;
+    }
+    .sp_main_footer .footer_sp_menu ul li a{
+        font-family: 'Segoe UI';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        text-decoration: none;
+        color: #FFFFFF;
+    }
+    .sp_main_footer .footer_sp_menu ul li a span{
+        display: block;
+    }
+    .sp_main_footer .footer_sp_menu ul li a .menu{
+        padding-top: 7px;
+    }
 }

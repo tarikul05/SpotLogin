@@ -60,7 +60,9 @@
       <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
     </div>
 </section>
-
+<footer class="sp_main_footer">
+    @include('elements/footer_sp_menu')
+</footer>
 <!-- js comes form inner page start -->
 @section('footer_js')
 @show
