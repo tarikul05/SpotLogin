@@ -235,8 +235,8 @@
             </div>
             <div class="right_part">
                 <div class="invoice_date">
-                    <div><span class="txt">Date of invoice: </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
-                    <div class="padding_top"><span class="txt">Due Date: </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->period_ends)->format('d.m.Y');}}</span></div>
+                    <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
+                    <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ Carbon\Carbon::parse($invoice_data->period_ends)->format('d.m.Y');}}</span></div>
                 </div>
             </div>
         </div>
@@ -260,10 +260,10 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="col_date">Date</th>
-                        <th class="col_details">Details</th>
-                        <th class="col_duration">Duration</th>
-                        <th class="col_amount">Amount</th>
+                        <th class="col_date">{{ __('invoice_column_date') }}</th>
+                        <th class="col_details">{{ __('invoice_column_details') }}</th>
+                        <th class="col_duration">{{ __('invoice_column_duration') }}</th>
+                        <th class="col_amount">{{ __('invoice_column_amount') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -293,7 +293,7 @@
                     </tr> -->
 
                     <tr class="sub-total">
-                        <td colspan="3" class="txt" style="border: 0px; padding:10px 0;">Sub-total</td>
+                        <td colspan="3" class="txt" style="border: 0px; padding:10px 0;">{{ __('invoice_sub_total') }}</td>
                         <td align="right" class="price total" style="border: 0px;padding:10px 10px 0;text-align:right">{{ number_format($sub_total,'2') }}</td>
                     </tr>
 
@@ -311,7 +311,7 @@
                     </tr> -->
                     <?php if($invoice_data->extra_expenses > 0){ ?>
                     <tr class="extra_col">
-                        <td colspan="2" class="text">Extra charges </td>
+                        <td colspan="2" class="text">{{ __('invoice_extra_charges') }} </td>
                         <td colspan="2" class="price">+ {{ $invoice_data->extra_expenses }}</td>
                     </tr>
                     <?php } ?>
@@ -321,7 +321,7 @@
                     </tr> -->
                     <?php $total = $sub_total+ $invoice_data->extra_expenses; ?>
                     <tr class="total_col">
-                        <td align="center" colspan="2" class="text">Total <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
+                        <td align="center" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
                     </tr>
                 </tfoot>
@@ -332,39 +332,65 @@
                 $hours = floor($total_min / 60);
                 $minutes = $total_min % 60;
             ?>
-            <p>Total duration of courses {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} hours and {{ $minutes }} minutes.</p>
+            <p>{{ __('invoice_duration_text') }} {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} {{ __('invoice_duration_hours') }} {{ $minutes }} {{ __('invoice_duration_minutes') }}.</p>
         </div>
     </main>
     <footer>
-        <div class="title-top">Payment Information</div>
+        <div class="title-top">{{ __('invoice_payment_title') }}</div>
         <div class="payment-info">
             <table class="table" style="border: 0;">
+                <?php if($invoice_data->seller_country_code === 'CA') {?>
                 <tr>
                     <td>
-                        <div class="payment_title">For payment by E-Transfer</div>
+                        <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
                         <?php if($invoice_data->etransfer_acc){ ?>
-                            <div class="txt"><b>AC No:</b>{{ $invoice_data->etransfer_acc }}</div>
+                            <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
                         <?php } ?>
                         <?php if($invoice_data->e_transfer_email){ ?>
-                            <div class="txt"><b>Email:</b>{{ $invoice_data->e_transfer_email }}</div>
+                            <div class="txt"><b>{{ __('invoice_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>
                         <?php } ?>
                     </td>
                     <td>
-                        <div class="payment_title">For payment by check</div>
+                        <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
                         <?php if($invoice_data->name_for_checks){ ?>
-                            <div class="txt"><b>Check Name:</b>{{ $invoice_data->name_for_checks }}</div>
+                            <div class="txt"><b>{{ __('invoice_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
                         <?php } ?>
                         <?php if($invoice_data->cheque_payee){ ?>
-                            <div class="txt"><b>Pay By:</b>{{ $invoice_data->cheque_payee }}</div>
+                            <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>
                     </td>
                     <td>
-                        <div class="payment_title text_center">Tax Number</div>
+                        <div class="payment_title text_center">{{ __('invoice_payment_subtitle_3') }}</div>
                         <?php if($invoice_data->tax_amount){ ?>
-                            <div class="txt"><b>Amount:</b>{{ $invoice_data->tax_amount }}</div>
+                            <div class="txt"><b>{{ __('invoice_tax_amount') }}</b>{{ $invoice_data->tax_amount }}</div>
                         <?php } ?>
                     </td>
                 </tr>
+                <?php } else { ?>
+                    <tr>
+                        <td>
+                            <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                            <?php if($invoice_data->etransfer_acc){ ?>
+                                <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
+                            <?php } ?>
+                            <?php if($invoice_data->e_transfer_email){ ?>
+                                <div class="txt"><b>{{ __('invoice_payment_subtitle_1_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
+                            <?php if($invoice_data->payment_bank_iban){ ?>
+                                <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
+                            <?php } ?>
+                            <?php if($invoice_data->payment_bank_account){ ?>
+                                <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->payment_bank_account }}</div>
+                            <?php } ?>
+                            <?php if($invoice_data->cheque_payee){ ?>
+                                <div class="txt"><b>{{ __('invoice_swift_no') }}</b>{{ $invoice_data->payment_bank_swift }}</div>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
             </table>
         </div>
     </footer>
