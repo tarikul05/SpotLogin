@@ -1111,7 +1111,7 @@ function populate_teacher_lesson() {
 					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
-				resultHtml += '<td style="display:none;">' + value.event_id + '</td>';
+				resultHtml += '<td style="display:none;">' + value.detail_id + '</td>';
 				// if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
 				// 		selected_items += 1;
 				// 		resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
