@@ -271,14 +271,14 @@
                         $sub_total = 0;
                         $total_min = 0;
                         foreach($invoice_data->invoice_items as $key=> $item){ 
-                            $sub_total += $item->price_unit;
+                            $sub_total += $item->total_item;
                             $total_min += $item->unit;
                     ?>
                     <tr>
                         <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
                         <td>{{ !empty($item->caption) ? $item->caption : ''; }}</td>
                         <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
-                        <td align="right">{{ number_format($item->price_unit,'2') }}</td>
+                        <td align="right">{{ number_format($item->total_item,'2') }}</td>
                     </tr>
                     <?php } ?>
                     <!-- <tr class="sub-total">
