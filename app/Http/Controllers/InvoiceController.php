@@ -25,8 +25,8 @@ use Redirect;
 use DB;
 use Exception;
 use PDF;
-use Storage;
-use URL;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class InvoiceController extends Controller
 {
@@ -373,7 +373,7 @@ class InvoiceController extends Controller
                 if(empty($invoice_data->invoice_filename)){
                     $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
                     if($file_upload){
-                        $invoice_pdf_path = URL::to('uploads/pdf/'.$invoice_name);
+                        $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
                         $invoice_data->invoice_filename = $invoice_pdf_path;
                         $invoice_data->save();
                     }
@@ -2442,7 +2442,7 @@ class InvoiceController extends Controller
                 if(empty($invoice_data->invoice_filename)){
                     $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
                     if($file_upload){
-                        $invoice_pdf_path = URL::to('uploads/pdf/'.$invoice_name);
+                        $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
                         $invoice_data->invoice_filename = $invoice_pdf_path;
                         $invoice_data->save();
                     }

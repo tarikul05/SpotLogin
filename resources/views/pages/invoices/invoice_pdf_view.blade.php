@@ -271,14 +271,26 @@
                         $sub_total = 0;
                         $total_min = 0;
                         foreach($invoice_data->invoice_items as $key=> $item){ 
-                            $sub_total += $item->total_item;
-                            $total_min += $item->unit;
+                            $total_min += $item->unit;    
+                            if($invoice_data->invoice_type = 1 || $invoice_data->invoice_type = 2 ){
+                                $sub_total += $item->price_unit;
+                            }else{
+                                $sub_total += $item->item_total;
+                            }
                     ?>
                     <tr>
                         <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
                         <td>{{ !empty($item->caption) ? $item->caption : ''; }}</td>
                         <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
-                        <td align="right">{{ number_format($item->total_item,'2') }}</td>
+                        <td align="right">
+                        <?php 
+                            if($invoice_data->invoice_type = 1 || $invoice_data->invoice_type = 2 ){
+                                echo number_format($item->price_unit, '2');
+                            }else{
+                                echo number_format($item->item_total, '2');
+                            }
+                        ?>
+                        </td>
                     </tr>
                     <?php } ?>
                     <!-- <tr class="sub-total">
@@ -315,11 +327,18 @@
                         <td colspan="2" class="price">+ {{ $invoice_data->extra_expenses }}</td>
                     </tr>
                     <?php } ?>
+
+                    <?php if($invoice_data->total_amount_discount != 0){ ?>
+                    <tr class="extra_col">
+                        <td colspan="2" class="text">Discount</td>
+                        <td colspan="2" class="price">- {{ $invoice_data->total_amount_discount }}</td>
+                    </tr>
+                    <?php } ?>
                     <!-- <tr class="extra_col">
                         <td colspan="2" class="text"></td>
                         <td colspan="2" class="price">+ 45.00</td>
                     </tr> -->
-                    <?php $total = $sub_total+ $invoice_data->extra_expenses; ?>
+                    <?php $total = $sub_total + $invoice_data->extra_expenses - $invoice_data->total_amount_discount; ?>
                     <tr class="total_col">
                         <td align="center" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
