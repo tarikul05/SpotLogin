@@ -525,18 +525,19 @@ class InvoiceController extends Controller
         $invoice_status_all = config('global.invoice_status');
 
         $teacherEvents = DB::table('events')
-            ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+            ->join('event_details', 'events.id', '=', 'event_details.event_id')
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
             ->select(
-                //'event_details.event_id as event_id',
-                'event_details.event_id as event_id',
+                'event_details.id as detail_id',
+                'events.id as event_id',
                 'event_details.student_id as student_id',
                 'event_details.teacher_id as person_id',
                 'users.profile_image_id as profile_image_id'
             )
+            ->selectRaw('count(event_details.id) as invoice_items')
             ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
             //->selectRaw('count(events.id) as invoice_items')
             ->where(
@@ -588,18 +589,21 @@ class InvoiceController extends Controller
 
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateEnd = Carbon::now()->endOfMonth()->subMonth(1)->format('Y-m-d');
+        $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
         //exit();
 
-
-        $teacherEvents->where('events.date_start', '>=', $dateS);
-        $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        //$teacherEvents->distinct('events.id');
+        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
+        //exit();
+        $teacherEvents->whereRaw($qq);
+        // $teacherEvents->where('events.date_start', '>=', $dateS);
+        // $teacherEvents->where('events.date_end', '<=', $dateEnd);
+        $teacherEvents->distinct('event_details.id');
         //$teacherEvents->groupBy('event_details.event_id');
-        //$teacherEvents->groupBy('event.id');
+        $teacherEvents->groupBy('event_details.event_id');
 
         //dd($teacherEvents->toSql());
-        //dd($data);
+        $allEventData =  $teacherEvents->get();
+        //dd($allEventData);
         $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
             ->select(
                 'custom_table.person_id as person_id',
@@ -608,7 +612,7 @@ class InvoiceController extends Controller
             )
             ->selectRaw('count(custom_table.event_id) as invoice_items')
             ->mergeBindings($teacherEvents)
-            ->distinct('custom_table.event_id')
+            ->distinct('custom_table.detail_id')
             ->groupBy('custom_table.person_id');
         //dd($allEvents->toSql());
 

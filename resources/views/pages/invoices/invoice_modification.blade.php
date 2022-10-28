@@ -82,7 +82,7 @@
                                                 @else
                                                     <td style="text-align:right">{{ $item->unit }} minutes</td>
                                                 @endif
-                                                <td style="text-align:right">{{ !empty($item->total_item) ? number_format($item->total_item,'2') : ''; }}</td>
+                                                <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
                                             </tr>
                                             @php 
                                                 $sub_total += $item->price_unit;
