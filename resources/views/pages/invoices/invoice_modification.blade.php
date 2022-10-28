@@ -122,7 +122,7 @@
                                         </tr>
                                     @endif
                                     @php
-                                        $grand_total = $sub_total + $invoice->extra_expenses;
+                                        $grand_total = $sub_total + $invoice->extra_expenses-$invoice->total_amount_discount ;
                                     @endphp
                                     <tr>
                                         <td colspan="1" style="text-align:right">Total</td>
@@ -1023,10 +1023,10 @@
         var x = document.getElementsByClassName("tab-pane active");
         if (x[0].id == "pane_main") {
 
-        } else if (x[0].id == "pane_finance") {
+        } else if (x[0].id == "tab_2") {
             UpdateInvoiceSummaryAmount();
         }
-        else if (x[0].id == "pane_details") {
+        else if (x[0].id == "tab_3") {
             UpdateInvoiceInfo();
         }
     });
@@ -1046,16 +1046,18 @@
         var p_extra_expenses = $("#sextra_expenses").val();
 
 
-        var p_total_amount = $("#stotal_amount").text();
+        var p_total_amount =  $("#grand_total_amount").text();
+        var total_amount_with_discount = $("#stotal_amount_with_discount").text();
         var p_tax_amount = $("#tax_amount").val();
 
         var data = 'type=update_invoice_discount&p_invoice_id=' + p_invoice_id;
         data += '&p_disc1=' + p_disc1;
         data += '&p_amt1=' + p_amt1;
-        data += '&p_total_amount=' + p_total_amount + '&p_extra_expenses=' + p_extra_expenses;
+        data += '&total_amount_with_discount=' + total_amount_with_discount + '&p_extra_expenses=' + p_extra_expenses;
+        data += '&p_total_amount=' + p_total_amount;
         data += '&p_tax_amount=' + p_tax_amount;
-
-        //e.preventDefault();
+        // console.log(data);
+        // return false;
         $.ajax({
             url: BASE_URL + '/update_invoice_discount',
             //url: 'invoice_data.php',

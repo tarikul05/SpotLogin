@@ -418,14 +418,16 @@ class InvoiceController extends Controller
         try {
             $data = $request->all();
             $user = $request->user();
-            $updateInvoice['id'] = $p_invoice_id = trim($data['p_invoice_id']);
+            $p_invoice_id = trim($data['p_invoice_id']);
             $updateInvoice['discount_percent_1'] = $p_disc1 = trim($data['p_disc1']);
            
             $updateInvoice['amount_discount_1'] = $p_amt1 = trim($data['p_amt1']);
            
             $updateInvoice['extra_expenses'] = $p_extra_expenses = trim($data['p_extra_expenses']);
 
+            $updateInvoice['total_amount_with_discount']  = $total_amount_with_discount = trim($data['total_amount_with_discount']);
             $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
+            
             $v_total_amount_discount = $p_amt1;
             $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
             
@@ -435,7 +437,7 @@ class InvoiceController extends Controller
             
             // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
             // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
-            
+            //dd($updateInvoice);
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
             if($invoiceData){
