@@ -1329,9 +1329,9 @@ class InvoiceController extends Controller
                     $invoiceItemData['price_type_id'] = $value->event_price;
                     $invoiceItemData['is_locked'] = $value->is_locked;
                     $invoiceItemData['item_date'] = $value->date_start;
-                    if ($value->buy_total == 0) {
+                    //if ($value->buy_total == 0) {
                         $value->buy_total = $value->buy_price;
-                    }
+                    //}
                     $invoiceItemData['total_item'] = $value->buy_total+$value->extra_charges;
                     
                     $invoiceItemData['subtotal_amount_with_discount'] = 0;
