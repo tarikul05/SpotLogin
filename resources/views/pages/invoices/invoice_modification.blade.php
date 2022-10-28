@@ -954,7 +954,7 @@
                 status = result.status;
                 if (status == 'success') {
 
-                    successModalCall(GetAppMessage('save_confirm_message'));
+                    successModalCall('save_confirm_message');
                         
                         setTimeout(function(){ window.location.replace('/admin/invoices'); }, 3000);
                 }
@@ -1105,7 +1105,7 @@
             success: function (result) {
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall(GetAppMessage('save_confirm_message'));
+                    successModalCall('save_confirm_message');
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {
@@ -1147,7 +1147,7 @@
             success: function (result) {
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall(GetAppMessage('save_confirm_message'));
+                    successModalCall('save_confirm_message');
 
                     //alert(GetAppMessage("save_confirm_message"));
                 }
