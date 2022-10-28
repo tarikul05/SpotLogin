@@ -69,6 +69,9 @@ Route::post('generate_teacher_invoice', [App\Http\Controllers\InvoiceController:
 //AJAX generate student invoice
 Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController::class, 'generateStudentInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+// update_payment_status AJAX
+Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceDiscount'])->name('update_payment_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 
 //AJAX update teacher discount
 Route::post('teacher_update_discount_perc', [App\Http\Controllers\TeachersController::class, 'updateDiscountPerc'])->name('teacher_update_discount_perc.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

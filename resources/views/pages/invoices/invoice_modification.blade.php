@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? $invoice->subtotal_amount_no_discount :''; ?></label>
+                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? $invoice->subtotal_amount_no_discount : '0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? $invoice->subtotal_amount_with_discount :''; ?></label>
+                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? $invoice->subtotal_amount_with_discount :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? $invoice->subtotal_amount_all :''; ?></label>
+                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? $invoice->subtotal_amount_all :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@
                                 <div class="col-sm-2">
                                     <div class="input-group">
                                         <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
-                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? $invoice->total_amount_discount :0}}" placeholder="" readonly=""> 
+                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? $invoice->total_amount_discount :0.00}}" placeholder="" readonly=""> 
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +236,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? $invoice->total_amount_no_discount :''; ?></p>
+                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? $invoice->total_amount_no_discount :'0.00'; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -247,7 +247,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? $invoice->total_amount_with_discount :''; ?></p>
+                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? $invoice->total_amount_with_discount :'0.00'; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -280,8 +280,8 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;"><?php echo $invoice->total_amount ? $invoice->total_amount : ''; ?></p>
-                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount ? $invoice->total_amount : ''; ?></p>
+                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;"><?php echo $invoice->total_amount ? $invoice->total_amount : '0.00'; ?></p>
+                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount ? $invoice->total_amount : '0.00'; ?></p>
                                 </div>
                             </div>
                         </fieldset>
@@ -782,6 +782,14 @@
 
         });
 
+        $(".numeric").keyup(function () {
+            CalculateDiscount('discount');
+        });
+
+        $(".numeric_amount").keyup(function () {
+            CalculateDiscount('amount');
+        });
+
         
     });
 
@@ -1010,5 +1018,190 @@
         window.open('../invoice/viewdownload_pdf.php?type=D&filename=' + inv, '_blank');
 
     });
+
+    $('#save_btn').click(function (e) {
+        var x = document.getElementsByClassName("tab-pane active");
+        if (x[0].id == "pane_main") {
+
+        } else if (x[0].id == "pane_finance") {
+            UpdateInvoiceSummaryAmount();
+        }
+        else if (x[0].id == "pane_details") {
+            UpdateInvoiceInfo();
+        }
+    });
+
+    function UpdateInvoiceSummaryAmount() {
+        var p_invoice_id = document.getElementById("invoice_id").value;
+
+        if (p_invoice_id == '') {
+            errorModalCall(GetAppMessage('Invalid_invoice'));
+
+            return false;
+        }
+
+        var p_disc1 = $("#sdiscount_percent_1").val();
+        
+        var p_amt1 = $("#samount_discount_1").val();
+        var p_extra_expenses = $("#sextra_expenses").val();
+
+
+        var p_total_amount = $("#stotal_amount").text();
+        var p_tax_amount = $("#tax_amount").val();
+
+        var data = 'type=update_invoice_discount&p_invoice_id=' + p_invoice_id;
+        data += '&p_disc1=' + p_disc1;
+        data += '&p_amt1=' + p_amt1;
+        data += '&p_total_amount=' + p_total_amount + '&p_extra_expenses=' + p_extra_expenses;
+        data += '&p_tax_amount=' + p_tax_amount;
+
+        //e.preventDefault();
+        $.ajax({
+            url: BASE_URL + '/update_invoice_discount',
+            //url: 'invoice_data.php',
+            data: data,
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                var status = result.status;
+                if (status == 'success') {
+                    successModalCall(GetAppMessage('save_confirm_message'));
+                    //alert(GetAppMessage("save_confirm_message"));
+                }
+                else {
+                    errorModalCall(GetAppMessage('error_message_text'));
+
+                }
+            }, //success
+            error: function (ts) { 
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        }); //ajax-type
+        return false;
+    }
+
+    function UpdateInvoiceInfo() {
+        var p_invoice_id = document.getElementById("invoice_id").value;
+
+        if (p_invoice_id == '') {
+            errorModalCall(GetAppMessage('error_message_text'));
+
+            return false;
+        }
+
+        var vform = $("#form_details")[0];
+        var form_data = new FormData(vform);
+        form_data.append('type', 'update_invoice_info');
+        form_data.append('p_invoice_id', p_invoice_id);
+
+        $.ajax({
+            url: 'invoice_data.php',
+            data: form_data,
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (result) {
+                var status = result.status;
+                if (status == 'success') {
+                    successModalCall(GetAppMessage('save_confirm_message'));
+
+                    //alert(GetAppMessage("save_confirm_message"));
+                }
+                else {
+                    errorModalCall(GetAppMessage('error_message_text'));
+
+                }
+            },   //success
+            error: function (ts) { 
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        }); //ajax-type
+        return false;
+    }
+
+    function CalculateDiscount(type) {
+        var subtotal_amount_all = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+        var disc1 = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
+        var disc1_amt = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
+
+        subtotal_amount_all = $("#ssubtotal_amount_all").text();
+        disc1 = $("#sdiscount_percent_1").val();
+        // disc2 = $("#sdiscount_percent_2").val();
+        // disc3 = $("#sdiscount_percent_3").val();
+        // disc4 = $("#sdiscount_percent_4").val();
+        // disc5 = $("#sdiscount_percent_5").val();
+        // disc6 = $("#sdiscount_percent_6").val();
+
+
+        disc1_amt = $("#samount_discount_1").val();
+        // disc2_amt = $("#samount_discount_2").val();
+        // disc3_amt = $("#samount_discount_3").val();
+        // disc4_amt = $("#samount_discount_4").val();
+        // disc5_amt = $("#samount_discount_5").val();
+        // disc6_amt = $("#samount_discount_6").val();
+
+        
+        disc1_amt = ((type == 'discount')?Number((subtotal_amount_all * disc1) / 100):Number(disc1_amt));
+        disc1 = ((type == 'amount')?Number((disc1_amt * 100) / subtotal_amount_all):Number(disc1));
+
+        if(type == 'discount'){
+
+            $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
+            // $("#samount_discount_2").val(parseFloat(disc2_amt).toFixed(2));
+            // $("#samount_discount_3").val(parseFloat(disc3_amt).toFixed(2));
+            // $("#samount_discount_4").val(parseFloat(disc4_amt).toFixed(2));
+            // $("#samount_discount_5").val(parseFloat(disc5_amt).toFixed(2));
+            // $("#samount_discount_6").val(parseFloat(disc6_amt).toFixed(2));
+        
+        } else {
+
+            $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
+            // $("#sdiscount_percent_2").val(parseFloat(disc2).toFixed(2));
+            // $("#sdiscount_percent_3").val(parseFloat(disc3).toFixed(2));
+            // $("#sdiscount_percent_4").val(parseFloat(disc4).toFixed(2));
+            // $("#sdiscount_percent_5").val(parseFloat(disc5).toFixed(2));
+            // $("#sdiscount_percent_6").val(parseFloat(disc6).toFixed(2));
+
+        }
+        
+
+        total_amount_discount = Number(disc1_amt);
+        $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
+
+        var subtotal_amount_with_discount = 0.0;
+        //subtotal_amount_with_discount=parseFloat($("#ssubtotal_amount_with_discount").text());
+        subtotal_amount_with_discount = Number($("#ssubtotal_amount_with_discount").text());
+        subtotal_amount_with_discount = Number(+subtotal_amount_with_discount) - Number(+total_amount_discount);
+        $("#stotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount).toFixed(2));
+
+        //subtotal_amount_no_discount=parseFloat($("#ssubtotal_amount_no_discount").text());
+        subtotal_amount_no_discount = $("#ssubtotal_amount_no_discount").text();
+
+        total_amount = (+subtotal_amount_no_discount) + (+subtotal_amount_with_discount);
+
+        tax_amount = Number($("#tax_amount").val());
+
+        total_amount = (Number(total_amount) + (tax_amount));
+
+        $("#stotal_amount").text(total_amount);
+        console.log(tax_amount);
+
+        var extra = Number(document.getElementById("sextra_expenses").value);
+        var grand_total = (+total_amount) + (+extra);
+
+        console.log(grand_total);
+        $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
+
+        $("#grand_total_cap").html(parseFloat(grand_total).toFixed(2));
+        $("#tax_amount_cap").html(parseFloat(tax_amount).toFixed(2));
+        $("#extra_expenses_cap").html(parseFloat(extra).toFixed(2));
+
+    }
 </script>
 @endsection
