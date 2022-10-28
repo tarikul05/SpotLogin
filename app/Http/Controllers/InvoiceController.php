@@ -393,6 +393,68 @@ class InvoiceController extends Controller
         }
     }
 
+    /**
+     *  AJAX action for invoice discount
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-28
+     */
+    public function updateInvoiceDiscount(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+            $updateInvoice['discount_percent_1'] = $p_disc1 = trim($data['p_disc1']);
+           
+            $updateInvoice['amount_discount_1'] = $p_amt1 = trim($data['p_amt1']);
+           
+            $updateInvoice['extra_expenses'] = $p_extra_expenses = trim($data['p_extra_expenses']);
+
+            $updateInvoice['total_amount_with_discount']  = $total_amount_with_discount = trim($data['total_amount_with_discount']);
+            $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
+            
+            $v_total_amount_discount = $p_amt1;
+            $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
+            
+            $updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
+            
+            $updateInvoice['modified_by'] = $user->id;
+            
+            // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
+            // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
+            //dd($updateInvoice);
+            
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+               
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice')
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
     
 
 
@@ -1234,6 +1296,7 @@ class InvoiceController extends Controller
                 $etransfer_acc = 0;
                 $cheque_payee = 0;
                 $extra_expenses = 0;
+                $total_amount_extra = 0;
             
 
             foreach ($data as $key => $value) {
@@ -1278,8 +1341,8 @@ class InvoiceController extends Controller
                     // } else {
                     //     $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
                     // } 
-                    $invoiceItemData['subtotal_amount_with_discount'] =0;
-                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
                     //$v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
@@ -1299,12 +1362,12 @@ class InvoiceController extends Controller
                         
                         $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                        $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
+                        $v_total_amount_with_discount = $v_subtotal_amount_all - $value->extra_charges - $v_total_amount_discount;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
                         $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                     }
-                    $subtotal_amount_all += $v_subtotal_amount_all;
-                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
+                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
                     $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
                     $amount_discount_1 += $v_amount_discount_1;
                     $amount_discount_2 += $v_amount_discount_2;
@@ -1315,7 +1378,7 @@ class InvoiceController extends Controller
                     $total_amount_discount += $v_total_amount_discount;
                     $total_amount_no_discount += $v_total_amount_no_discount;
                     $total_amount_with_discount += $v_total_amount_with_discount;
-                    //$total_amount += $v_total_amount;
+                    $total_amount_extra += $v_subtotal_amount_all;
 
 
                     $teacher = Teacher::find($value->teacher_id);
@@ -1376,7 +1439,7 @@ class InvoiceController extends Controller
                 'total_amount_discount'=>$total_amount_discount,
                 'total_amount_no_discount'=> $total_amount_no_discount,
                 'total_amount_with_discount'=> $total_amount_with_discount,
-                'total_amount'=> $subtotal_amount_all,
+                'total_amount'=> $total_amount_extra,
                 'tax_desc'=> $tax_desc,
                 'tax_perc'=> $tax_perc,
                 'tax_amount'=> $tax_amount,
@@ -1700,6 +1763,7 @@ class InvoiceController extends Controller
             $etransfer_acc = 0;
             $cheque_payee = 0;
             $extra_expenses = 0;
+            $total_amount_extra = 0;
 
             foreach ($data as $key => $value) {
                 try{
@@ -1743,9 +1807,12 @@ class InvoiceController extends Controller
                     $invoiceItemData['total_item'] = $value->sell_total+$value->extra_charges;
                     
                     //$invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
-                    $invoiceItemData['subtotal_amount_with_discount'] =0;
-                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                    //$invoiceItemData['subtotal_amount_with_discount'] =0;
+                    //$invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     
+
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
                     $amt_for_disc = 0;
                     $v_amount_discount_1 = 0;
@@ -1761,25 +1828,14 @@ class InvoiceController extends Controller
                     if ($invoiceData->invoice_type ==1) {
                         $tax_desc = '';
                         $tax_perc = 0;
-                        // if($invoiceItemData['subtotal_amount_with_discount'] > 400){
-                        //     $amt_for_disc=200;
-                        // }
-                        // else{
-                        //     $amt_for_disc = $invoiceItemData['subtotal_amount_with_discount']-200;
-                        // } 
-                        // if ($amt_for_disc>0){
-                        //     $v_amount_discount_1 = $amt_for_disc*($invoiceData->discount_percent_1/100);
-                        // } else{
-                        //     $v_amount_discount_1 = 0;
-                        // }
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                        $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
+                        $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount - $value->extra_charges;
                         $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                     } 
                     
-                    $subtotal_amount_all += $v_subtotal_amount_all;
-                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
+                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
                     $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
                     $amount_discount_1 += $v_amount_discount_1;
                     $amount_discount_2 += $v_amount_discount_2;
@@ -1791,7 +1847,7 @@ class InvoiceController extends Controller
                     $total_amount_no_discount += $v_total_amount_no_discount;
                     $total_amount_with_discount += $v_total_amount_with_discount;
                     //$total_amount += $v_total_amount;
-
+                    $total_amount_extra += $v_subtotal_amount_all;
 
                     if ($value->event_type == 10) {
                         $teacher = Teacher::find($value->teacher_id);
@@ -1807,19 +1863,6 @@ class InvoiceController extends Controller
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     } 
-                    //else if (!empty($value->title)) {
-                    //     if ($value->participation_id==199) {
-                    //         $invoiceItemData['caption'] ='du '.$value->title;
-                    //     } else{
-                    //         $invoiceItemData['caption'] =$value->title.'avec '.$value->teacher_id.'('.$value->category_name.')';
-                    //     }
-                    //     if ($value->event_type == 10) {
-                    //         $invoiceItemData['caption'] = 'price_name';
-                    //         if ($value->cost_1>0) {
-                    //             $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                    //         }
-                    //     }
-                    // }
                     
                     if (!empty($value->detail_id)) {
                         $eventUpdate = [
@@ -1864,7 +1907,7 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> $subtotal_amount_all,
+               'total_amount'=> $total_amount_extra,
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
                'tax_amount'=> $tax_amount,
