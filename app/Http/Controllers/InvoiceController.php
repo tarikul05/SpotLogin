@@ -1450,8 +1450,8 @@ class InvoiceController extends Controller
                     if (!empty($value->detail_id)) {
                         $detail_id =  explode(',',$value->detail_id);
                         $eventUpdate = [
-                            'sell_invoice_id' => $invoiceData->id,
-                            'is_sell_invoiced' => 1
+                            'buy_invoice_id' => $invoiceData->id,
+                            'is_buy_invoiced' => 1
                         ];
                         $eventData = EventDetails::whereIn('id', $detail_id)
                         ->update($eventUpdate);
