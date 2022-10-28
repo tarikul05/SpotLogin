@@ -457,6 +457,52 @@ class InvoiceController extends Controller
 
     
 
+    /**
+     *  AJAX action for invoice unlock
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-28
+     */
+    public function unlockInvoice(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+            $updateInvoice['invoice_status'] = 1;
+            $updateInvoice['approved_flag'] = 0;
+            $updateInvoice['payment_status'] = 0;
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('We got a list of invoice')
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    
+
 
 
     /**

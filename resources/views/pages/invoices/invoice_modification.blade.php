@@ -298,7 +298,7 @@
                             <div class="form-group row">
                                 <label id="row_hdr_status" name="row_hdr_status" for="invoice_status" class="col-lg-3 col-sm-3 text-right">Status</label>
                                 <div class="col-lg-2 col-sm-2 text-left">
-                                    <label id="invoice_status">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
+                                    <label id="invoice_status_text">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
                                     <div> 
                                         <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: none;">
                                             <span id="unlock_btn_cap">Unlock</span>
@@ -790,6 +790,43 @@
             CalculateDiscount('amount');
         });
 
+
+        $('#unlock_btn').click(function (e) {
+            var p_invoice_id = document.getElementById("invoice_id").value;
+
+            if (p_invoice_id == '') {
+                errorModalCall(GetAppMessage('Invalid_invoice'));
+
+                return false;
+            }
+            var status = '';
+            var data = 'type=unlock_invoice&p_invoice_id=' + p_invoice_id;
+            $.ajax({
+                url: BASE_URL+'/unlock_invoice',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    status = result.status;
+                    if (status == 'success') {
+                        document.getElementById("invoice_status_text").text = 'En création';
+                        document.getElementById("invoice_status").value = '1';
+                        DisplayOnOff_buttons();
+                    }
+                    else {
+                        errorModalCall(GetAppMessage('error_message_text'));
+
+                    }
+                },   //success
+                error: function (ts) { 
+                    errorModalCall(GetAppMessage('error_message_text'));
+
+                }
+            }); //ajax-type            
+
+        });
+
         
     });
 
@@ -863,7 +900,7 @@
                 var status = result.status;
 
                 if (status == 'success') {
-                    $("#invoice_status").text('Emise');
+                    $("#invoice_status_text").text('Emise');
                     //document.getElementById("invoice_status").text='Emise';
                     document.getElementById("invoice_status").value = '10';
                     document.getElementById("unlock_btn").style.display = "block";
