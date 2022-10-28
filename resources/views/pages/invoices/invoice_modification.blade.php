@@ -953,10 +953,11 @@
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-
-                    successModalCall('save_confirm_message');
-                        
-                        setTimeout(function(){ window.location.replace('/admin/invoices'); }, 3000);
+                    successModalCall('Invoice Updated successfully!');
+                    
+                    var p_school_id = document.getElementById("p_school_id").value;
+        
+                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                 }
                 else {
                     errorModalCall(GetAppMessage('error_message_text'));
@@ -1105,7 +1106,10 @@
             success: function (result) {
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('save_confirm_message');
+                    successModalCall('Invoice Updated successfully!');
+                    var p_school_id = document.getElementById("p_school_id").value;
+        
+                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {
@@ -1147,8 +1151,10 @@
             success: function (result) {
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('save_confirm_message');
-
+                    successModalCall('Invoice Updated successfully!');
+                    var p_school_id = document.getElementById("p_school_id").value;
+        
+                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {

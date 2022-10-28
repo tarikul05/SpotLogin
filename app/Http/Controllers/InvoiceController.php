@@ -956,7 +956,7 @@ class InvoiceController extends Controller
                 ->select(
                     'events.id as event_id',
                     'event_details.id as event_id1',
-                    'event_details.buy_price as buy_price',
+                    //'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price',
                     'events.price_amount_buy as price_amount_buy',
                     //'event_details.buy_total as buy_total',
@@ -978,6 +978,7 @@ class InvoiceController extends Controller
                 )
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
+                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
                 ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
                 
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
