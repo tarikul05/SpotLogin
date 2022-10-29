@@ -224,6 +224,9 @@
             padding-top: 4px;
             font-weight: bold;
         }
+        .payment-info table tr td{
+            width: 33.33%;
+        }
     </style>
 </head>
 
@@ -235,7 +238,7 @@
             </div>
             <div class="right_part">
                 <div class="invoice_date">
-                    <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
+                    <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse()->format('d.m.Y');}}</span></div>
                     <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ Carbon\Carbon::parse($invoice_data->period_ends)->format('d.m.Y');}}</span></div>
                 </div>
             </div>
@@ -243,17 +246,17 @@
     </header>
     <main>
         <div class="info_area" style="clear: both">
-            <div class="left_cont">
-                <p class="first_name">{{$invoice_data->client_name}}</p>
-                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
-                <p class="info_txt">{{$invoice_data->client_place}}</p>
-            </div>
             <div class="right_cont">
                 <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_place}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
                 <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
                 <p class="email"><a href="mailto:{{$invoice_data->seller_email}}">{{$invoice_data->seller_email}}</a></p>
+            </div>
+            <div class="left_cont">
+                <p class="first_name">{{$invoice_data->client_name}}</p>
+                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
+                <p class="info_txt">{{$invoice_data->client_place}}</p>
             </div>
         </div>
         <div class="invoice_table">
@@ -362,51 +365,31 @@
                 <tr>
                     <td>
                         <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
-                        <?php if($invoice_data->etransfer_acc){ ?>
-                            <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
-                        <?php } ?>
-                        <?php if($invoice_data->e_transfer_email){ ?>
-                            <div class="txt"><b>{{ __('invoice_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>
-                        <?php } ?>
+                        <div class="txt">{{ __('invoice_ac_no') }} {{ $invoice_data->etransfer_acc }}</div>
+                        <div class="txt"><b>{{ __('invoice_footer_Email') }}</b> {{ $invoice_data->e_transfer_email }}</div>
                     </td>
                     <td>
                         <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
-                        <?php if($invoice_data->name_for_checks){ ?>
-                            <div class="txt"><b>{{ __('invoice_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
-                        <?php } ?>
-                        <?php if($invoice_data->cheque_payee){ ?>
-                            <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
-                        <?php } ?>
+                        <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
+                        <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                     </td>
                     <td>
                         <div class="payment_title text_center">{{ __('invoice_payment_subtitle_3') }}</div>
-                        <?php if($invoice_data->tax_amount){ ?>
-                            <div class="txt"><b>{{ __('invoice_tax_amount') }}</b>{{ $invoice_data->tax_amount }}</div>
-                        <?php } ?>
+                        <div class="txt">{{ $invoice_data->tax_amount }}</div>
                     </td>
                 </tr>
                 <?php } else { ?>
                     <tr>
                         <td>
                             <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
-                            <?php if($invoice_data->etransfer_acc){ ?>
-                                <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
-                            <?php } ?>
-                            <?php if($invoice_data->e_transfer_email){ ?>
-                                <div class="txt"><b>{{ __('invoice_payment_subtitle_1_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>
-                            <?php } ?>
+                            <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
+                            <div class="txt"><b>{{ __('invoice_footer_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>
                         </td>
                         <td>
                             <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
-                            <?php if($invoice_data->payment_bank_iban){ ?>
-                                <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
-                            <?php } ?>
-                            <?php if($invoice_data->payment_bank_account){ ?>
-                                <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->payment_bank_account }}</div>
-                            <?php } ?>
-                            <?php if($invoice_data->cheque_payee){ ?>
-                                <div class="txt"><b>{{ __('invoice_swift_no') }}</b>{{ $invoice_data->payment_bank_swift }}</div>
-                            <?php } ?>
+                            <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
+                            <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->payment_bank_account }}</div>
+                            <div class="txt"><b>{{ __('invoice_swift_no') }}</b>{{ $invoice_data->payment_bank_swift }}</div>
                         </td>
                     </tr>
                 <?php } ?>
