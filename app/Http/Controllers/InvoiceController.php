@@ -1149,6 +1149,7 @@ class InvoiceController extends Controller
             $invoiceData['period_starts'] = $dateS;
             $invoiceData['period_ends'] = $dateEnd;
             $invoiceData['discount_percent_1'] = $p_discount_perc;
+            $invoiceData['date_invoice'] = Carbon::now()->format('Y-m-d H:i:s');
             
 
             if ($invoice_type == 'T') {
