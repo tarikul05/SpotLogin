@@ -727,7 +727,7 @@
         document.getElementById("download_pdf_btn_a").style.display = "none";
         document.getElementById("approved_btn").style.display = "none";
         document.getElementById("payment_btn").style.display = "none";
-        if (document.getElementById("invoice_status").val == 10) {
+        if (document.getElementById("invoice_status").value == '10') {
             document.getElementById("unlock_btn").style.display = "block";
             document.getElementById("issue_inv_btn").style.display = "none";
             document.getElementById("print_preview_btn").style.display = "none";
@@ -832,7 +832,7 @@
 
     function DisplayOnOff_buttons(p_tab) {
         var invoice_status = document.getElementById("invoice_status").value;
-        if (invoice_status == 10) {
+        if (invoice_status == '10') {
             document.getElementById("unlock_btn").style.display = "block";
             document.getElementById("issue_inv_btn").style.display = "none";
             document.getElementById("print_preview_btn").style.display = "none";

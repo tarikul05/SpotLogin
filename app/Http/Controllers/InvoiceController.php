@@ -1348,6 +1348,7 @@ class InvoiceController extends Controller
                 $cheque_payee = 0;
                 $extra_expenses = 0;
                 $total_amount_extra = 0;
+                $teacher_fullname = '';
             
 
             foreach ($data as $key => $value) {
@@ -1433,6 +1434,7 @@ class InvoiceController extends Controller
 
 
                     $teacher = Teacher::find($value->teacher_id);
+                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
                     if ($value->event_type == 10) { // lesson
                         if ($value->invoiced_type == 'S') {
                             //$invoiceItemData['caption'] = 'test school invoice package with 2 student(s)';
@@ -1512,6 +1514,8 @@ class InvoiceController extends Controller
                 'extra_expenses' => $extra_expenses
                 
                 ];
+                $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
+            
                 // print_r($updateInvoiceCalculation);
                 // exit();
             
@@ -1686,7 +1690,6 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
-            $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
             
             
             if (!empty($p_student_id)) {
@@ -1828,6 +1831,7 @@ class InvoiceController extends Controller
             $cheque_payee = 0;
             $extra_expenses = 0;
             $total_amount_extra = 0;
+            $teacher_fullname = '';
 
             foreach ($data as $key => $value) {
                 try{
@@ -1912,9 +1916,10 @@ class InvoiceController extends Controller
                     $total_amount_with_discount += $v_total_amount_with_discount;
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
-
+                    $teacher = Teacher::find($value->teacher_id);
+                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
                     if ($value->event_type == 10) { //lesson
-                        $teacher = Teacher::find($value->teacher_id);
+                        
                         $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
                         $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
                         if ($value->extra_charges>0) {
@@ -1981,6 +1986,8 @@ class InvoiceController extends Controller
                'extra_expenses' => $extra_expenses
             
             ];
+            $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
+            
             // print_r($updateInvoiceCalculation);
             // exit();
             
