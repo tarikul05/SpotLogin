@@ -26,7 +26,7 @@
                             <label for="card_holder_name">Card holder</label>
                             <input type="hidden" name="plan" value="{{ $single_plan_info['id'] }}" />
                             <input type="hidden" name="plan_name" value="{{ $product_object['name'] }}" />
-                            <input name="" type="input" class="form-control" id="card_holder_name" placeholder="Card holder">
+                            <input name="card_holder_name" type="input" class="form-control" id="card_holder_name" placeholder="Card holder">
                         </div>
                         <div class="form-group">
                             <label for="card_number">Card number</label>
