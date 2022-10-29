@@ -1161,10 +1161,14 @@ input#sextra_expenses {
     margin-left: 15px;
 }
 .pack_invoice_area {
-    margin-left: 40px;
+    margin-left: 20px;
 }
 input#package_invoice {
     margin-top: 12px;
+}
+label.titl {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
 }
 @media only screen and (max-width: 991px) {
     h1 {
