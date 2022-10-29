@@ -900,6 +900,8 @@ class InvoiceController extends Controller
             $studentEvents->orderBy('events.date_start', 'desc');
             //By
             $studentEvents->distinct('events.id');
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
 
             //$studentEvents->groupBy('events.id');
             $data = $studentEvents->get();
@@ -1037,6 +1039,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
+            $teacherEvents->whereNull('events.deleted_at');
+            $teacherEvents->whereNull('event_details.deleted_at');
             //$studentEvents->where('events.is_paying', '>', 0);
             $teacherEvents->where('event_details.visibility_id', '>', 0);
             //$studentEvents->whereNotIn('events.event_type', [100]);
@@ -1298,6 +1302,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('event_details.participation_id', '>', 198);
                 $teacherEvents->where('events.date_start', '>=', $dateS);
                 $teacherEvents->where('events.date_end', '<=', $dateEnd);
+                $teacherEvents->whereNull('events.deleted_at');
+                $teacherEvents->whereNull('event_details.deleted_at');
                 //dd($dateS);
                 if ($user_role != 'superadmin') {
                     if ($user_role == 'teacher') {
@@ -1792,6 +1798,8 @@ class InvoiceController extends Controller
                     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
             
             
             //dd($dateEnd);
