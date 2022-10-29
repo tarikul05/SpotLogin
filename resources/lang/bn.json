@@ -93,6 +93,7 @@
     "invoice_footer_Email": "Email : ",
     "invoice_footer_check_name": "Check Name : ",
     "invoice_pay_by": "Pay By : ",
+    "invoice_cheque_no": "Cheque No",
     "invoice_tax_amount": "Amount : ",
     "invoice_iban_no": "IBAN : ",
     "invoice_swift_no": "Swift : "
