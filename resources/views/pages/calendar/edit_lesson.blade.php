@@ -50,6 +50,7 @@
 				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
+					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -678,6 +679,7 @@ $("#button_lock_and_save").on('click', function(event) {
 	confirm_event();
 });
 function confirm_event(){
+	var redirect_url = $('#redirect_url').val();
 	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
 	var status = '';
 	$.ajax({
@@ -692,7 +694,11 @@ function confirm_event(){
 			status = result.status;
 			if (status == 'success') {
 				successModalCall('{{ __("Event has been validated ")}}');
-				window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}'
+				if (redirect_url !='') {
+					window.location.href = redirect_url;
+				} else {
+					window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}';
+				}
 			}
 			else {
 				errorModalCall('{{ __("Event validation error ")}}');

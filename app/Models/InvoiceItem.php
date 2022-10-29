@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
@@ -58,6 +60,14 @@ class InvoiceItem extends BaseModel
     ];
 
     protected $appends = [];
+
+    /**
+     * @return belongsTo
+     */
+    public function invoice_items(): BelongsTo
+    {
+        return $this->BelongsTo(Invoice::class, 'invoice_id');
+    }
 
 }
 

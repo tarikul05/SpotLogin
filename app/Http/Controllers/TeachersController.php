@@ -381,13 +381,13 @@ class TeachersController extends Controller
             }
         }
 
-        if($teacher->isSchoolAndCoachAdmin($schoolId)){
+        if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();
         }
 
-        $lessonPrices = LessonPrice::active()->orderBy('divider')->get();
+        $lessonPrices = LessonPrice::active()->get();
         $lessonPriceTeachers = LessonPriceTeacher::active()
                               ->where(['teacher_id' => $teacher->id])
                               ->whereIn('event_category_id',$eventCategory->pluck('id'))
@@ -495,7 +495,8 @@ class TeachersController extends Controller
             $lanCode = Session::get('locale');
         }
 
-        if($teacher->isSchoolAndCoachAdmin($schoolId)){
+
+        if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();

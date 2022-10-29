@@ -301,6 +301,10 @@
 								<td align="right" colspan="1"></td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
+									@if(($category->package_invoice &&  $lessionPrice->divider != -1) ||  
+									(!$category->package_invoice &&  $lessionPrice->divider == -1))
+										@continue
+									@endif
 								<tr>
 									<td>{{$lessionPrice->divider}}
 										<input type="hidden"
@@ -313,6 +317,10 @@
 									<td>{{__('Lessons/Events..')}}</td>
 									@if($lessionPrice->divider == 1)
 										<td>{{ __('Private session') }}</td>
+									@elseif($lessionPrice->divider == -2)
+										<td>{{ __('Student more then 10') }}</td>
+									@elseif($lessionPrice->divider == -1)
+										<td>{{ __('Fix price') }}</td>
 									@else
 										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
 									@endif

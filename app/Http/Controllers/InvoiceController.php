@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Redirect;
 use DB;
+use Exception;
+use PDF;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class InvoiceController extends Controller
 {
@@ -48,7 +52,43 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-        $invoices = Invoice::active()->where('school_id', $this->schoolId)->get();
+
+        $user_role = 'superadmin';
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+            
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+            $user_role = 'teacher';
+        }
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $invoice_type = 'S';
+        } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
+            $invoice_type = 'T';
+        } else if ($user_role == 'teacher') {
+            $invoice_type = 'T';
+        } else {
+            $invoice_type = 'S';
+        }
+        
+
+
+        $invoices = Invoice::active()
+                    ->where('school_id', $this->schoolId);
+        if ($user_role != 'superadmin') {
+            if ($user_role == 'teacher') {
+                $invoices->where('category_invoiced_type', $user->person_id);
+                 $invoices->where('seller_id', $user->id);
+            } else {
+                $invoices->where('category_invoiced_type', $invoice_type);
+            }
+        }
+        $invoices->orderBy('id', 'desc');
+            
+        $invoices = $invoices->get();
         //dd($invoices);
         return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
     }
@@ -276,6 +316,193 @@ class InvoiceController extends Controller
         }
     }
 
+    /**
+     *  AJAX action for payment update
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-18
+     */
+    public function updatePaymentStatus(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_payment_status = 0;
+            $invoice_status =0;
+
+            if (isset($data['p_payment_status'])) {
+                $p_payment_status = trim($data['p_payment_status']);
+                $updateInvoice['payment_status'] = $p_payment_status;
+            }
+            if (isset($data['invoice_status'])) {
+                $invoice_status = trim($data['invoice_status']);
+                $updateInvoice['invoice_status'] = $invoice_status;
+            }
+            if (isset($data['approved_flag'])) {
+                $approved_flag = trim($data['approved_flag']);
+                $updateInvoice['approved_flag'] = $approved_flag;
+            }
+            
+            $p_auto_id = trim($data['p_auto_id']);
+
+            
+            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
+            if($invoiceData){
+                $invoice_data = Invoice::with(['invoice_items'])->where('id', $p_auto_id)->first();
+                $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+                $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+                $pdf->set_option('isHtml5ParserEnabled', true);
+                $pdf->set_option('isRemoteEnabled', true);
+                $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+                // save invoice name if invoice_filename is empty
+                if(empty($invoice_data->invoice_filename)){
+                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                    if($file_upload){
+                        $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
+                        $invoice_data->invoice_filename = $invoice_pdf_path;
+                        $invoice_data->save();
+                    }
+                }
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice'),
+                'payment_status' => $p_payment_status,
+                'invoice_status' =>$invoice_status
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    /**
+     *  AJAX action for invoice discount
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-28
+     */
+    public function updateInvoiceDiscount(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+            $updateInvoice['discount_percent_1'] = $p_disc1 = trim($data['p_disc1']);
+           
+            $updateInvoice['amount_discount_1'] = $p_amt1 = trim($data['p_amt1']);
+           
+            $updateInvoice['extra_expenses'] = $p_extra_expenses = trim($data['p_extra_expenses']);
+
+            $updateInvoice['total_amount_with_discount']  = $total_amount_with_discount = trim($data['total_amount_with_discount']);
+            $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
+            
+            $v_total_amount_discount = $p_amt1;
+            $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
+            
+            $updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
+            
+            $updateInvoice['modified_by'] = $user->id;
+            
+            // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
+            // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
+            //dd($updateInvoice);
+            
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+               
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice')
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    
+
+    /**
+     *  AJAX action for invoice unlock
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-28
+     */
+    public function unlockInvoice(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+            $updateInvoice['invoice_status'] = 1;
+            $updateInvoice['approved_flag'] = 0;
+            $updateInvoice['payment_status'] = 0;
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('We got a list of invoice')
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+    
+
 
 
     /**
@@ -406,18 +633,19 @@ class InvoiceController extends Controller
         $invoice_status_all = config('global.invoice_status');
 
         $teacherEvents = DB::table('events')
-            ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+            ->join('event_details', 'events.id', '=', 'event_details.event_id')
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
             ->select(
-                //'event_details.event_id as event_id',
-                'event_details.event_id as event_id',
+                'event_details.id as detail_id',
+                'events.id as event_id',
                 'event_details.student_id as student_id',
                 'event_details.teacher_id as person_id',
                 'users.profile_image_id as profile_image_id'
             )
+            ->selectRaw('count(event_details.id) as invoice_items')
             ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
             //->selectRaw('count(events.id) as invoice_items')
             ->where(
@@ -469,18 +697,21 @@ class InvoiceController extends Controller
 
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateEnd = Carbon::now()->endOfMonth()->subMonth(1)->format('Y-m-d');
+        $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
         //exit();
 
-
-        $teacherEvents->where('events.date_start', '>=', $dateS);
-        $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        //$teacherEvents->distinct('events.id');
+        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
+        //exit();
+        $teacherEvents->whereRaw($qq);
+        // $teacherEvents->where('events.date_start', '>=', $dateS);
+        // $teacherEvents->where('events.date_end', '<=', $dateEnd);
+        $teacherEvents->distinct('event_details.id');
         //$teacherEvents->groupBy('event_details.event_id');
-        //$teacherEvents->groupBy('event.id');
+        $teacherEvents->groupBy('event_details.event_id');
 
         //dd($teacherEvents->toSql());
-        //dd($data);
+        $allEventData =  $teacherEvents->get();
+        //dd($allEventData);
         $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
             ->select(
                 'custom_table.person_id as person_id',
@@ -489,7 +720,7 @@ class InvoiceController extends Controller
             )
             ->selectRaw('count(custom_table.event_id) as invoice_items')
             ->mergeBindings($teacherEvents)
-            ->distinct('custom_table.event_id')
+            ->distinct('custom_table.detail_id')
             ->groupBy('custom_table.person_id');
         //dd($allEvents->toSql());
 
@@ -563,8 +794,8 @@ class InvoiceController extends Controller
                 ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
                 ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-                ->leftJoin('schools', 'schools.id', '=', 'events.school_id')
-                ->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
+                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
+                //->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
                 ->select(
                     'events.id as event_id',
                     'event_details.buy_total as buy_total',
@@ -582,11 +813,13 @@ class InvoiceController extends Controller
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
+                    
                     'event_details.costs_1 as costs_1',
+                    'events.extra_charges as extra_charges',
                     'event_details.costs_2 as costs_2',
-                    'teachers.id as teacher_id',
-                    'lesson_price_teachers.price_buy as price_buy',
-                    'lesson_price_teachers.price_sell as price_sell'
+                    'teachers.id as teacher_id'
+                    //'lesson_price_teachers.price_buy as price_buy',
+                    //'lesson_price_teachers.price_sell as price_sell'
                     //'events.is_locked as ready_flag'
 
                     // 'users.profile_image_id as profile_image_id'
@@ -668,7 +901,7 @@ class InvoiceController extends Controller
             //By
             $studentEvents->distinct('events.id');
 
-            $studentEvents->groupBy('events.id');
+            //$studentEvents->groupBy('events.id');
             $data = $studentEvents->get();
             //dd($data);
 
@@ -723,10 +956,10 @@ class InvoiceController extends Controller
                 ->select(
                     'events.id as event_id',
                     'event_details.id as event_id1',
-                    'event_details.buy_price as buy_price',
+                    //'event_details.buy_price as buy_price',
                     'event_details.sell_price as sell_price',
                     'events.price_amount_buy as price_amount_buy',
-                    'event_details.buy_total as buy_total',
+                    //'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'events.title as title',
                     'events.event_type as event_type',
@@ -739,9 +972,15 @@ class InvoiceController extends Controller
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
-                    'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2'
+                    //'event_details.costs_1 as costs_1',
+                    'event_details.costs_2 as costs_2',
+                    'events.extra_charges as extra_charges'
                 )
+                ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
+                ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
+                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
+                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
+                
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
@@ -814,8 +1053,10 @@ class InvoiceController extends Controller
 
             $teacherEvents->orderBy('events.date_start', 'desc');
             //By
-            $teacherEvents->distinct('events.id');
-            $teacherEvents->groupBy('events.id');
+            //$teacherEvents->distinct('event_details.id');
+            //$teacherEvents->groupBy('events.id');
+            $teacherEvents->groupBy('event_details.event_id');
+                
             //dd($studentEvents->toSql());
             $data = $teacherEvents->get();
             //dd($data);
@@ -947,7 +1188,7 @@ class InvoiceController extends Controller
                 $invoiceData['seller_street2'] = $school->street2;
                 $invoiceData['seller_zip_code'] = $school->zip_code;
                 $invoiceData['seller_place'] = $school->place;
-                $invoiceData['seller_country_id'] = $school->country_code;
+                $invoiceData['seller_country_code'] = $school->country_code;
                 $invoiceData['seller_phone'] = $school->phone;
                 $invoiceData['seller_mobile'] = $school->mobile;
                 $invoiceData['seller_email'] = $school->email;
@@ -963,7 +1204,7 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_address'] = $school->bank_address;
                 $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
                 $invoiceData['payment_bank_place'] = $school->bank_place;
-                $invoiceData['payment_bank_country_id'] = $school->bank_country_code;
+                $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
 
@@ -979,7 +1220,7 @@ class InvoiceController extends Controller
                 $invoiceData['client_street2'] = $teacher->street2;
                 $invoiceData['client_zip_code'] = $teacher->zip_code;
                 $invoiceData['client_place'] = $teacher->place;
-                $invoiceData['client_country_id'] = $teacher->country_code;
+                $invoiceData['client_country_code'] = $teacher->country_code;
                 $invoiceData['client_gender_id'] = $teacher->gender_id;
                 $invoiceData['client_lastname'] = $teacher->lastname;
                 $invoiceData['client_firstname'] = $teacher->firstname;
@@ -998,257 +1239,273 @@ class InvoiceController extends Controller
             
             
             
-
+            
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceData = Invoice::active()->find(16);
             
+            
+            
+            
 
+                $teacherEvents = DB::table('events')
+                    ->select(
+                        'event_details.event_id as event_id',
+                        'events.event_type as event_type',
+                        'events.teacher_id as teacher_id',
+                        //'event_details.student_id as student_id',
+                        
+                        'events.duration_minutes as duration_minutes',
+                        'events.title as title',
+                        'event_details.participation_id as participation_id',
 
-            $teacherEvents = DB::table('events')
-                ->select(
-                    'event_details.event_id as event_id',
-                    'events.event_type as event_type',
-                    'events.teacher_id as teacher_id',
-                    'event_details.student_id as student_id',
-                    
-                    'events.duration_minutes as duration_minutes',
-                    'events.title as title',
-                    'event_details.participation_id as participation_id',
-
-                    //'event_details.id as detail_id',
-                    'event_details.is_locked as is_locked',
-                    'events.event_price as event_price',
-                    'events.date_start as date_start',
-                    'event_categories.title as category_name'
-                )
-                ->selectRaw("DISTINCT GROUP_CONCAT(event_details.id SEPARATOR ',') AS detail_id")
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
-                ->selectRaw("COUNT(event_details.event_id) as count_name")
-                ->selectRaw("SUM(event_details.costs_1) AS costs_1")
-                ->selectRaw("SUM(event_details.costs_2) AS costs_2")
-                ->selectRaw("SUM(event_details.buy_total) AS buy_total")
-                ->selectRaw("SUM(event_details.sell_total) AS sell_total")
-                ->selectRaw("SUM(event_details.buy_price) AS buy_price")
-                ->selectRaw("SUM(event_details.sell_price) AS sell_price")
+                        //'event_details.id as detail_id',
+                        'event_details.is_locked as is_locked',
+                        'events.event_price as event_price',
+                        'events.date_start as date_start',
+                        'event_categories.title as category_name',
+                        'events.extra_charges as extra_charges'
+                    )
+                    ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
+                    ->selectRaw("GROUP_CONCAT(DISTINCT event_details.student_id SEPARATOR ',') AS student_id ")
                 
-                //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->where(
-                    [
-                        'event_details.teacher_id' => $p_person_id,
-                        'events.is_active' => 1,
-                        'events.school_id' => $schoolId,
-                    ]
-                );
-            $teacherEvents->whereNotIn('events.event_type', [100]);
-            $teacherEvents->where('event_details.participation_id', '>', 198);
-            $teacherEvents->where('events.date_start', '>=', $dateS);
-            $teacherEvents->where('events.date_end', '<=', $dateEnd);
-            //dd($dateS);
-            if ($user_role != 'superadmin') {
-                if ($user_role == 'teacher') {
-                    $teacherEvents->where('events.teacher_id', $user->person_id);
-                } else {
-                    $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+                    ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
+                    ->selectRaw("COUNT(event_details.event_id) as count_name")
+                    ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
+                    ->selectRaw("SUM(event_details.sell_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_total")
+                    
+                    ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
+                    ->selectRaw("SUM(event_details.costs_2) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_2")
+                    ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
+                    ->selectRaw("SUM(event_details.sell_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_price")
+                    
+                    //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
+                    ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+                    ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                    ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+                    ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+                    ->where(
+                        [
+                            'event_details.teacher_id' => $p_person_id,
+                            'events.is_active' => 1,
+                            'events.school_id' => $schoolId,
+                        ]
+                    );
+                //$teacherEvents->whereNotIn('events.event_type', [100]);
+                $teacherEvents->where('event_details.participation_id', '>', 198);
+                $teacherEvents->where('events.date_start', '>=', $dateS);
+                $teacherEvents->where('events.date_end', '<=', $dateEnd);
+                //dd($dateS);
+                if ($user_role != 'superadmin') {
+                    if ($user_role == 'teacher') {
+                        $teacherEvents->where('events.teacher_id', $user->person_id);
+                    } else {
+                        $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+                    }
                 }
-            }
-            $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-            $teacherEvents->whereNull('event_details.buy_invoice_id');
+                $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
+                $teacherEvents->whereNull('event_details.buy_invoice_id');
 
-            
-            
-            //dd($dateEnd);
+                
+                
+                //dd($dateEnd);
 
-            
+                
 
-            
-            
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $teacherEvents->orderBy('events.date_start', 'desc');
-            //By
-            //$teacherEvents->distinct('events.id');
+                
+                
+                //$studentEvents->where('events.date_start', '>=', $dateS);
+                $teacherEvents->orderBy('events.date_start', 'desc');
+                //By
+                //$teacherEvents->distinct('events.id');
 
-            $teacherEvents->groupBy('event_details.event_id');
+                $teacherEvents->groupBy('event_details.event_id');
+                
+                //dd($teacherEvents->toSql());
+                $data = $teacherEvents->get();
             
-            //dd($teacherEvents->toSql());
-            $data = $teacherEvents->get()->toArray();
-            //print_r($data);
-            $count = count($data);
-            $subtotal_amount_all = 0;
-            $subtotal_amount_with_discount = 0;
-            $subtotal_amount_no_discount = 0;
-            $amount_discount_1 = 0;
-            $amount_discount_2 = 0;
-            $amount_discount_3 =0;
-            $amount_discount_4 =0;
-            $amount_discount_5 = 0;
-            $amount_discount_6 =0;
-            $total_amount_discount = 0;
-            $total_amount_no_discount = 0;
-            $total_amount_with_discount = 0;
-            $total_amount = 0;
-            $tax_desc = 0;
-            $tax_perc =0;
-            $tax_amount = 0;
-            $etransfer_acc = 0;
-            $cheque_payee = 0;
+                $count = count($data);
+                $subtotal_amount_all = 0;
+                $subtotal_amount_with_discount = 0;
+                $subtotal_amount_no_discount = 0;
+                $amount_discount_1 = 0;
+                $amount_discount_2 = 0;
+                $amount_discount_3 =0;
+                $amount_discount_4 =0;
+                $amount_discount_5 = 0;
+                $amount_discount_6 =0;
+                $total_amount_discount = 0;
+                $total_amount_no_discount = 0;
+                $total_amount_with_discount = 0;
+                $total_amount = 0;
+                $tax_desc = 0;
+                $tax_perc =0;
+                $tax_amount = 0;
+                $etransfer_acc = 0;
+                $cheque_payee = 0;
+                $extra_expenses = 0;
+                $total_amount_extra = 0;
+            
 
             foreach ($data as $key => $value) {
 
+                try {
 
-
-                $invoiceItemData['invoice_id'] = $invoiceData->id;
-                $invoiceItemData['school_id'] = $schoolId;
-                $invoiceItemData['is_locked'] = 0;
-                
-                
-                $invoiceItemData['unit'] = $value->duration_minutes;
-                $invoiceItemData['unit_type'] = 'minutes';
-                $invoiceItemData['price'] = $value->sell_price+$value->costs_1+$value->costs_2;
-                $invoiceItemData['price_unit'] = $value->sell_price;
-                $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
-                $invoiceItemData['event_extra_expenses'] = $value->costs_1+$value->costs_2;            
-                $invoiceItemData['publication_mode'] = 'N,admin';
-                if ($value->event_type == 10) {
-                    $invoiceItemData['item_type'] = 1;
-                }
-                else {
-                    $invoiceItemData['item_type'] = 2;
-                }
-                $invoiceItemData['event_id'] = $value->event_id;
-                $invoiceItemData['teacher_id'] = $p_person_id;
-                $invoiceItemData['student_id'] = $value->teacher_id;
-                $invoiceItemData['participation_id'] = 200;
-                $invoiceItemData['price_type_id'] = $value->event_price;
-                $invoiceItemData['is_locked'] = $value->is_locked;
-                $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
-                
-                $invoiceItemData['subtotal_amount_with_discount'] = 0;
-                $invoiceItemData['subtotal_amount_no_discount'] = 0;
-                if ($value->event_type == 10) {
-                   $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
-                } else {
-                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
-                } 
-                $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
-                $amt_for_disc = 0;
-                $v_amount_discount_1 = 0;
-                $v_amount_discount_2 = 0;
-                $v_amount_discount_3 = 0;
-                $v_amount_discount_4 = 0;
-                $v_amount_discount_5 = 0;
-                $v_amount_discount_6 = 0;
-                $v_total_amount_discount = 0;
-                $v_total_amount = 0;
-                $tax_desc = $school->tax_desc;
-                $tax_perc = $school->tax_perc;
-                if ($invoiceData->invoice_type ==1) {
-                    $tax_desc = '';
-                    $tax_perc = 0;
-                    if($invoiceItemData['subtotal_amount_with_discount'] > 400){
-                        $amt_for_disc=200;
+                    $invoiceItemData['invoice_id'] = $invoiceData->id;
+                    $invoiceItemData['school_id'] = $schoolId;
+                    $invoiceItemData['is_locked'] = 0;
+                    
+                    
+                    $invoiceItemData['unit'] = $value->duration_minutes;
+                    $invoiceItemData['unit_type'] = 'minutes';
+                    $invoiceItemData['price'] = $value->buy_price+$value->extra_charges;
+                    $invoiceItemData['price_unit'] = $value->buy_price;
+                    $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
+                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
+                    $invoiceItemData['publication_mode'] = 'N,admin';
+                    if ($value->event_type == 10) {
+                        $invoiceItemData['item_type'] = 1;
                     }
-                    else{
-                        $amt_for_disc = $invoiceItemData['subtotal_amount_with_discount']-200;
+                    else {
+                        $invoiceItemData['item_type'] = 2;
+                    }
+                    $invoiceItemData['event_id'] = $value->event_id;
+                    $invoiceItemData['event_detail_id'] = $value->detail_id;
+                    $invoiceItemData['teacher_id'] = $p_person_id;
+                    $invoiceItemData['student_id'] = $value->student_id;
+                    $invoiceItemData['participation_id'] = 200;
+                    $invoiceItemData['price_type_id'] = $value->event_price;
+                    $invoiceItemData['is_locked'] = $value->is_locked;
+                    $invoiceItemData['item_date'] = $value->date_start;
+                    //if ($value->buy_total == 0) {
+                        $value->buy_total = $value->buy_price;
+                    //}
+                    $invoiceItemData['total_item'] = $value->buy_total+$value->extra_charges;
+                    
+                    $invoiceItemData['subtotal_amount_with_discount'] = 0;
+                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                    // if ($value->event_type == 10) {
+                    //     $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
+                    // } else {
+                    //     $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                    // } 
+                    $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                    
+                    $v_subtotal_amount_all = $invoiceItemData['total_item'];
+                    //$v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
+                    $amt_for_disc = 0;
+                    $v_amount_discount_1 = 0;
+                    $v_amount_discount_2 = 0;
+                    $v_amount_discount_3 = 0;
+                    $v_amount_discount_4 = 0;
+                    $v_amount_discount_5 = 0;
+                    $v_amount_discount_6 = 0;
+                    $v_total_amount_discount = 0;
+                    $v_total_amount = 0;
+                    $tax_desc = $school->tax_desc;
+                    $tax_perc = $school->tax_perc;
+                     
+                    if ($invoiceData->invoice_type ==2) {
+                        
+                        $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
+                        $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                        $v_total_amount_with_discount = $v_subtotal_amount_all - $value->extra_charges - $v_total_amount_discount;
+                        $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
+                        $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    }
+                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
+                    $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
+                    $amount_discount_1 += $v_amount_discount_1;
+                    $amount_discount_2 += $v_amount_discount_2;
+                    $amount_discount_3 += $v_amount_discount_3;
+                    $amount_discount_4 += $v_amount_discount_4;
+                    $amount_discount_5 += $v_amount_discount_5;
+                    $amount_discount_6 += $v_amount_discount_6;
+                    $total_amount_discount += $v_total_amount_discount;
+                    $total_amount_no_discount += $v_total_amount_no_discount;
+                    $total_amount_with_discount += $v_total_amount_with_discount;
+                    $total_amount_extra += $v_subtotal_amount_all;
+
+
+                    $teacher = Teacher::find($value->teacher_id);
+                    if ($value->event_type == 10) {
+                        $invoiceItemData['caption'] = 'Teacher ';
+                        $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.') , Number of Students'.$value->count_name;
+                        if ($value->extra_charges>0) {
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
+                        }
+                    }
+                    else if ($value->event_type == 100) {
+                        $invoiceItemData['caption'] = 'Event : '.$value->title;
+                        $invoiceItemData['caption'] .= ' ('.$value->category_name.') , Number of Students'.$value->count_name;
+                        
+                        if ($value->extra_charges>0) {
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
+                        }
                     } 
-                    if ($amt_for_disc>0){
-                        $v_amount_discount_1 = $amt_for_disc*($invoiceData->discount_percent_1/100);
-                    } else{
-                        $v_amount_discount_1 = 0;
+
+                
+
+                    if (!empty($value->detail_id)) {
+                        $detail_id =  explode(',',$value->detail_id);
+                        $eventUpdate = [
+                            'buy_invoice_id' => $invoiceData->id,
+                            'is_buy_invoiced' => 1
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
                     }
-                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                    $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                    $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
-                } 
-                if ($invoiceData->invoice_type ==2) {
-                    
-                    $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
-                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                    $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
-                    $v_total_amount_no_discount = 0;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    //print_r($invoiceItemData);
+                
+
+                    $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+
                 }
-                $subtotal_amount_all += $v_subtotal_amount_all;
-                $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
-                $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
-                $amount_discount_1 += $v_amount_discount_1;
-                $amount_discount_2 += $v_amount_discount_2;
-                $amount_discount_3 += $v_amount_discount_3;
-                $amount_discount_4 += $v_amount_discount_4;
-                $amount_discount_5 += $v_amount_discount_5;
-                $amount_discount_6 += $v_amount_discount_6;
-                $total_amount_discount += $v_total_amount_discount;
-                $total_amount_no_discount += $v_total_amount_no_discount;
-                $total_amount_with_discount += $v_total_amount_with_discount;
-                $total_amount += $v_total_amount;
-
-
-                $teacher = Teacher::find($value->teacher_id);
-                if ($value->event_type == 10) {
-                    $invoiceItemData['caption'] = 'Teacher ';
-                    $invoiceItemData['caption'] .= '('.$value->category_name.','.$value->price_name.') , Number of Students'.$value->count_name;
-                    if ($value->costs_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->costs_1;
-                    }
-                }
-                else if ($value->event_type == 100) {
-                    $invoiceItemData['caption'] = 'Event:'.$value->title;
-                    $invoiceItemData['caption'] .= '('.$value->category_name.') , Number of Students'.$value->count_name;
-                    
-                    if ($value->costs_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->costs_1;
-                    }
-                } 
-
-               
-
-                if (!empty($value->detail_id)) {
-                    $detail_id =  explode(',',$value->detail_id);
-                    $eventUpdate = [
-                        'sell_invoice_id' => $invoiceData->id,
-                        'is_sell_invoiced' => 1
-                    ];
-                    $eventData = EventDetails::whereIn('id', $detail_id)
-                    ->update($eventUpdate);
-                }
-
-                 $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
                 
 
                 
             }
+            //exit();
+            try {
+                $tax_amount=($total_amount *($tax_perc/100));
+            
+                $updateInvoiceCalculation = [
+                'subtotal_amount_all' => $subtotal_amount_all,
+                'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
+                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
+                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
+                'amount_discount_1'=> $amount_discount_1,
+                'amount_discount_2'=> $amount_discount_2,
+                'amount_discount_3'=> $amount_discount_3,
+                'amount_discount_4'=> $amount_discount_4 ,
+                'amount_discount_5'=> $amount_discount_5,
+                'amount_discount_6'=> $amount_discount_6,
+                'total_amount_discount'=>$total_amount_discount,
+                'total_amount_no_discount'=> $total_amount_no_discount,
+                'total_amount_with_discount'=> $total_amount_with_discount,
+                'total_amount'=> $total_amount_extra,
+                'tax_desc'=> $tax_desc,
+                'tax_perc'=> $tax_perc,
+                'tax_amount'=> $tax_amount,
+                'etransfer_acc'=>$school->etransfer_acc,
+                'cheque_payee' =>$school->cheque_payee,
+                'invoice_currency' => $price_currency,
+                'extra_expenses' => $extra_expenses
+                
+                ];
+                // print_r($updateInvoiceCalculation);
+                // exit();
+            
+            
+                $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
+            } catch (Exception $e) {
+                echo $e->getMessage();
 
-            $tax_amount=($total_amount *($tax_perc/100));
-           
-            $updateInvoiceCalculation = [
-               'subtotal_amount_all' => $subtotal_amount_all,
-               'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
-               'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
-               'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
-               'amount_discount_2'=> $amount_discount_2,
-               'amount_discount_3'=> $amount_discount_3,
-               'amount_discount_4'=> $amount_discount_4 ,
-               'amount_discount_5'=> $amount_discount_5,
-               'amount_discount_6'=> $amount_discount_6,
-               'total_amount_discount'=>$total_amount_discount,
-               'total_amount_no_discount'=> $total_amount_no_discount,
-               'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> $total_amount,
-               'tax_desc'=> $tax_desc,
-               'tax_perc'=> $tax_perc,
-               'tax_amount'=> $tax_amount,
-               'etransfer_acc'=>$school->etransfer_acc,
-               'cheque_payee' =>$school->cheque_payee,
-               'invoice_currency' => $price_currency
-            
-            ];
-            
-            $invoiceData = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
+            }
+            //dd($invoiceData);
             
 
 
@@ -1265,7 +1522,7 @@ class InvoiceController extends Controller
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
-                //'no_of_teachers' =>$no_of_teachers
+                'auto_id' => $invoiceData->id
             );
             return response()->json($result);
         } catch (Exception $e) {
@@ -1366,7 +1623,7 @@ class InvoiceController extends Controller
                 $invoiceData['seller_street2'] = $teacher->street2;
                 $invoiceData['seller_zip_code'] = $teacher->zip_code;
                 $invoiceData['seller_place'] = $teacher->place;
-                $invoiceData['seller_country_id'] = $teacher->country_code;
+                $invoiceData['seller_country_code'] = $teacher->country_code;
                 $invoiceData['seller_phone'] = $teacher->phone;
                 $invoiceData['seller_mobile'] = $teacher->mobile;
                 $invoiceData['seller_email'] = $teacher->email;
@@ -1383,7 +1640,7 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_address'] = $teacher->bank_address;
                 $invoiceData['payment_bank_zipcode'] = $teacher->bank_zipcode;
                 $invoiceData['payment_bank_place'] = $teacher->bank_place;
-                $invoiceData['payment_bank_country_id'] = $teacher->bank_country_code;
+                $invoiceData['payment_bank_country_code'] = $teacher->bank_country_code;
                 
 
             } else {
@@ -1394,7 +1651,7 @@ class InvoiceController extends Controller
                 $invoiceData['seller_street2'] = $school->street2;
                 $invoiceData['seller_zip_code'] = $school->zip_code;
                 $invoiceData['seller_place'] = $school->place;
-                $invoiceData['seller_country_id'] = $school->country_code;
+                $invoiceData['seller_country_code'] = $school->country_code;
                 $invoiceData['seller_phone'] = $school->phone;
                 $invoiceData['seller_mobile'] = $school->mobile;
                 $invoiceData['seller_email'] = $school->email;
@@ -1410,7 +1667,7 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_address'] = $school->bank_address;
                 $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
                 $invoiceData['payment_bank_place'] = $school->bank_place;
-                $invoiceData['payment_bank_country_id'] = $school->bank_country_code;
+                $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
             
@@ -1427,7 +1684,7 @@ class InvoiceController extends Controller
                 $invoiceData['client_street2'] = $student->street2;
                 $invoiceData['client_zip_code'] = $student->zip_code;
                 $invoiceData['client_place'] = $student->place;
-                $invoiceData['client_country_id'] = $student->country_code;
+                $invoiceData['client_country_code'] = $student->country_code;
                 $invoiceData['client_gender_id'] = $student->gender_id;
                 $invoiceData['client_lastname'] = $student->lastname;
                 $invoiceData['client_firstname'] = $student->firstname;
@@ -1452,7 +1709,7 @@ class InvoiceController extends Controller
             
 
             $invoiceData = Invoice::create($invoiceData);
-            //$invoiceData = Invoice::active()->find(16);
+            //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
             
             
             
@@ -1469,7 +1726,8 @@ class InvoiceController extends Controller
                     'events.duration_minutes as duration_minutes',
                     'events.title as title',
                     'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2',
+                    'event_details.costs_2 as costs_2', 
+                    'events.extra_charges as extra_charges',
                     'event_details.participation_id as participation_id',
 
                     'event_details.id as detail_id',
@@ -1530,7 +1788,7 @@ class InvoiceController extends Controller
             //$studentEvents->groupBy('events.id');
             
             //dd($studentEvents->toSql());
-            $data = $studentEvents->get()->toArray();
+            $data = $studentEvents->get();
             //print_r($data);
             $count = count($data);
             $subtotal_amount_all = 0;
@@ -1551,155 +1809,136 @@ class InvoiceController extends Controller
             $tax_amount = 0;
             $etransfer_acc = 0;
             $cheque_payee = 0;
+            $extra_expenses = 0;
+            $total_amount_extra = 0;
 
             foreach ($data as $key => $value) {
-                $month_name = 'January';
+                try{
+                    $month_name = 'January';
+                   
 
-                // $event->where('event_details.sell_invoice_id' = $v_invoice_id);
-                // update
-                // {
-                //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
-                //     $studentEvents->whereNull('event_details.sell_invoice_id');
-                // }
-                $invoiceItemData['invoice_id'] = $invoiceData->id;
-                $invoiceItemData['school_id'] = $schoolId;
-                $invoiceItemData['is_locked'] = 0;
-                
-               
-                $invoiceItemData['unit'] = $value->duration_minutes;
-                $invoiceItemData['unit_type'] = 'minutes';
-                $invoiceItemData['price'] = $value->sell_price+$value->costs_1+$value->costs_2;
-                $invoiceItemData['price_unit'] = $value->sell_price;
-                $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
-                $invoiceItemData['event_extra_expenses'] = $value->costs_1+$value->costs_2;            
-                $invoiceItemData['publication_mode'] = 'N,admin';
-                if ($value->event_type == 10) {
-                    $invoiceItemData['item_type'] = 1;
-                }
-                else {
-                    $invoiceItemData['item_type'] = 2;
-                }
-                $invoiceItemData['event_id'] = $value->event_id;
-                $invoiceItemData['teacher_id'] = $value->teacher_id;
-                $invoiceItemData['student_id'] = $p_person_id;
-                $invoiceItemData['participation_id'] = $value->participation_id;
-                $invoiceItemData['price_type_id'] = $value->event_price;
-                $invoiceItemData['is_locked'] = $value->is_locked;
-                $invoiceItemData['item_date'] = Carbon::now()->format('Y-m-d H:i:s');
-                $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1+$value->costs_2;
-                
-                $invoiceItemData['subtotal_amount_with_discount'] = 0;
-                $invoiceItemData['subtotal_amount_no_discount'] = 0;
-                if ($value->event_type == 10) {
-                   $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
-                } else {
-                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
-                } 
-                $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
-                $amt_for_disc = 0;
-                $v_amount_discount_1 = 0;
-                $v_amount_discount_2 = 0;
-                $v_amount_discount_3 = 0;
-                $v_amount_discount_4 = 0;
-                $v_amount_discount_5 = 0;
-                $v_amount_discount_6 = 0;
-                $v_total_amount_discount = 0;
-                $v_total_amount = 0;
-                $tax_desc = $school->tax_desc;
-                $tax_perc = $school->tax_perc;
-                if ($invoiceData->invoice_type ==1) {
-                    $tax_desc = '';
-                    $tax_perc = 0;
-                    if($invoiceItemData['subtotal_amount_with_discount'] > 400){
-                        $amt_for_disc=200;
-                    }
-                    else{
-                        $amt_for_disc = $invoiceItemData['subtotal_amount_with_discount']-200;
-                    } 
-                    if ($amt_for_disc>0){
-                        $v_amount_discount_1 = $amt_for_disc*($invoiceData->discount_percent_1/100);
-                    } else{
-                        $v_amount_discount_1 = 0;
-                    }
-                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                    $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                    $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
-                } 
-                if ($invoiceData->invoice_type ==2) {
+                    // $event->where('event_details.sell_invoice_id' = $v_invoice_id);
+                    // update
+                    // {
+                    //     $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
+                    //     $studentEvents->whereNull('event_details.sell_invoice_id');
+                    // }
+                    $invoiceItemData['invoice_id'] = $invoiceData->id;
+                    $invoiceItemData['school_id'] = $schoolId;
+                    $invoiceItemData['is_locked'] = 0;
                     
-                    $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
-                    $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                    $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
-                    $v_total_amount_no_discount = 0;
-                    $v_total_amount = $v_total_amount_no_discount+$v_total_amount_with_discount;
-                }
-                $subtotal_amount_all += $v_subtotal_amount_all;
-                $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] ;
-                $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
-                $amount_discount_1 += $v_amount_discount_1;
-                $amount_discount_2 += $v_amount_discount_2;
-                $amount_discount_3 += $v_amount_discount_3;
-                $amount_discount_4 += $v_amount_discount_4;
-                $amount_discount_5 += $v_amount_discount_5;
-                $amount_discount_6 += $v_amount_discount_6;
-                $total_amount_discount += $v_total_amount_discount;
-                $total_amount_no_discount += $v_total_amount_no_discount;
-                $total_amount_with_discount += $v_total_amount_with_discount;
-                $total_amount += $v_total_amount;
-
-
-                $teacher = Teacher::find($value->teacher_id);
-                if ($value->event_type == 10) {
-                    $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
-                    $invoiceItemData['caption'] .= '('.$value->category_name.','.$value->price_name.')';
-                    if ($value->costs_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->costs_1;
-                    }
-                }
-                else if ($value->event_type == 100) {
-                    $invoiceItemData['caption'] = 'Event:'.$value->price_name.''.$value->title;
-                    if ($value->costs_1>0) {
-                        $invoiceItemData['caption'] .='<br>Extra charges '.$value->costs_1;
-                    }
-                } 
-                //else if (!empty($value->title)) {
-                //     if ($value->participation_id==199) {
-                //         $invoiceItemData['caption'] ='du '.$value->title;
-                //     } else{
-                //         $invoiceItemData['caption'] =$value->title.'avec '.$value->teacher_id.'('.$value->category_name.')';
-                //     }
-                //     if ($value->event_type == 10) {
-                //         $invoiceItemData['caption'] = 'price_name';
-                //         if ($value->cost_1>0) {
-                //             $invoiceItemData['caption'] .='<br>Extra '.$value->cost_1;
-                //         }
-                //     }
-                // }
                 
-                if (!empty($value->detail_id)) {
-                    $eventUpdate = [
-                        'sell_invoice_id' => $invoiceData->id,
-                        'is_sell_invoiced' => 1
-                    ];
-                    $eventData = EventDetails::where('student_id', $value->student_id)
-                    ->where('id', $value->detail_id)
-                    ->where('participation_id', '>', 198)
-                    ->update($eventUpdate);
-                }
-                
+                    $invoiceItemData['unit'] = $value->duration_minutes;
+                    $invoiceItemData['unit_type'] = 'minutes';
+                    $invoiceItemData['price'] = $value->sell_price+$value->extra_charges;
+                    $invoiceItemData['price_unit'] = $value->sell_price;
+                    $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
+                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
+                    $invoiceItemData['publication_mode'] = 'N,admin';
+                    if ($value->event_type == 10) {
+                        $invoiceItemData['item_type'] = 1;
+                    }
+                    else {
+                        $invoiceItemData['item_type'] = 2;
+                    }
+                    $invoiceItemData['event_id'] = $value->event_id;
+                    $invoiceItemData['teacher_id'] = $value->teacher_id;
+                    $invoiceItemData['student_id'] = $p_person_id;
+                    $invoiceItemData['participation_id'] = $value->participation_id;
+                    $invoiceItemData['price_type_id'] = $value->event_price;
+                    $invoiceItemData['is_locked'] = $value->is_locked;
+                    $invoiceItemData['item_date'] = $value->date_start;
+                    if ($value->sell_total == 0) {
+                        $value->sell_total = $value->sell_price;
+                    }
+                    $invoiceItemData['total_item'] = $value->sell_total+$value->extra_charges;
+                    
+                    //$invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
+                    //$invoiceItemData['subtotal_amount_with_discount'] =0;
+                    //$invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                    
 
-                $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
-                //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
-                // //echo "<script>alert($query);</script>";exit;
-                // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
-                // while($row = mysql_fetch_assoc($result))
-                // {
-                //     $data[]=$row;
-                // }
-                // echo json_encode($data);
+                    $v_subtotal_amount_all = $invoiceItemData['total_item'];
+                    $amt_for_disc = 0;
+                    $v_amount_discount_1 = 0;
+                    $v_amount_discount_2 = 0;
+                    $v_amount_discount_3 = 0;
+                    $v_amount_discount_4 = 0;
+                    $v_amount_discount_5 = 0;
+                    $v_amount_discount_6 = 0;
+                    $v_total_amount_discount = 0;
+                    $v_total_amount = 0;
+                    $tax_desc = $school->tax_desc;
+                    $tax_perc = $school->tax_perc;
+                    if ($invoiceData->invoice_type ==1) {
+                        $tax_desc = '';
+                        $tax_perc = 0;
+                        $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
+                        $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
+                        $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount - $value->extra_charges;
+                        $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
+                    } 
+                    
+                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
+                    $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
+                    $amount_discount_1 += $v_amount_discount_1;
+                    $amount_discount_2 += $v_amount_discount_2;
+                    $amount_discount_3 += $v_amount_discount_3;
+                    $amount_discount_4 += $v_amount_discount_4;
+                    $amount_discount_5 += $v_amount_discount_5;
+                    $amount_discount_6 += $v_amount_discount_6;
+                    $total_amount_discount += $v_total_amount_discount;
+                    $total_amount_no_discount += $v_total_amount_no_discount;
+                    $total_amount_with_discount += $v_total_amount_with_discount;
+                    //$total_amount += $v_total_amount;
+                    $total_amount_extra += $v_subtotal_amount_all;
+
+                    if ($value->event_type == 10) {
+                        $teacher = Teacher::find($value->teacher_id);
+                        $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
+                        $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
+                        if ($value->extra_charges>0) {
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
+                        }
+                    }
+                    else if ($value->event_type == 100) {
+                        $invoiceItemData['caption'] = 'Event : '.$value->price_name.''.$value->title;
+                        if ($value->extra_charges>0) {
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
+                        }
+                    } 
+                    
+                    if (!empty($value->detail_id)) {
+                        $eventUpdate = [
+                            'sell_invoice_id' => $invoiceData->id,
+                            'is_sell_invoiced' => 1
+                        ];
+                        $eventData = EventDetails::where('student_id', $value->student_id)
+                        ->where('id', $value->detail_id)
+                        ->where('participation_id', '>', 198)
+                        ->update($eventUpdate);
+                    }
+                    
+
+                    $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
+                    //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
+                    // //echo "<script>alert($query);</script>";exit;
+                    // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
+                    // while($row = mysql_fetch_assoc($result))
+                    // {
+                    //     $data[]=$row;
+                    // }
+                    // echo json_encode($data);
+                } catch (Exception $e) {
+                    echo $e->getMessage();
+
+                }
                 
             }
+            
             $tax_amount=($total_amount *($tax_perc/100));
            
             $updateInvoiceCalculation = [
@@ -1715,23 +1954,26 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> $total_amount,
+               'total_amount'=> $total_amount_extra,
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
                'tax_amount'=> $tax_amount,
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
-               'invoice_currency' => $price_currency
+               'invoice_currency' => $price_currency,
+               'extra_expenses' => $extra_expenses
             
             ];
+            // print_r($updateInvoiceCalculation);
+            // exit();
             
-            $invoiceData = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
+            $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
             $result = array(
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
                 'data' => $invoiceData,
-                //'no_of_teachers' =>$no_of_teachers
+                'auto_id' =>$invoiceData->id
             );
             return response()->json($result);
         } catch (Exception $e) {
@@ -1742,18 +1984,11 @@ class InvoiceController extends Controller
         }
     }
 
-
-
-
-
-
-
-
     public function view(Request $request, Invoice $invoice)
     {
         $user = Auth::user();
         //$invoiceId = $request->route('invoice'); 
-        //dd($invoice);
+        
 
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
@@ -1783,6 +2018,57 @@ class InvoiceController extends Controller
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
         ])->with(compact('genders', 'countries', 'provinces'));
+    }
+
+    /**
+     *  AJAX action to send email for pay reminder
+     * 
+     * @return json
+     * @author Tarikul Islm
+     * @version 0.1 written in 2022-10-15
+     */
+
+    public function modificationInvoice(Request $request, $schoolId = null, $invoice = null)
+    {
+        $user = $request->user();
+        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($this->schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $invoice = Invoice::active()->find($invoice);
+        if (empty($invoice)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        //dd($invoice);
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+        $provinces = Province::active()->get()->toArray();
+        $invoice->invoice_type_name = $invoice_type_all[$invoice->invoice_type];
+        $invoice->invoice_status_name = $invoice_status_all[$invoice->invoice_status];
+
+
+        if ($invoice->invoice_type == 1) {
+            $invoice->person_id = $invoice->client_id;
+        } else {
+            $invoice->person_id = $invoice->seller_id;
+        }
+
+        // $invoiceCurrency = InvoiceItem::active()->where('invoice_id',$invoice->id)->get()->pluck('price_currency')->join(',');
+        $invoice->invoice_items = InvoiceItem::active()->where('invoice_id', $invoice->id)->get();
+        // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
+
+        // if ($invoice->amount_discount_1  > 0) {
+        //     $invoice->disc_text = '1, disc1, disc1_amt, 0';
+        //     # code...
+        // }
+        $genders = config('global.gender');
+        $countries = Country::active()->get();
+        return view('pages.invoices.invoice_modification', [
+            'title' => 'Invoice',
+            'pageInfo' => ['siteTitle' => '']
+        ])->with(compact('genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
     }
 
     /**
@@ -2130,5 +2416,109 @@ class InvoiceController extends Controller
         }   
 
         return $result;        
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generateInvoicePDF(Request $request, $type = 'stream')
+    {
+        try{
+            $reqData = $request->all();
+            $type = $request->type ? $request->type : $type;
+            $invoice_id = $reqData['invoice_id'];
+            $invoice_data = Invoice::with(['invoice_items'])->where('id', $invoice_id)->first();
+            $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+            $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+            $pdf->set_option('isHtml5ParserEnabled', true);
+            $pdf->set_option('isRemoteEnabled', true);
+            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+            // print and save data
+            if ($type == 'stream') {
+                // save invoice name if invoice_filename is empty
+                if(empty($invoice_data->invoice_filename)){
+                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                    if($file_upload){
+                        $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                        $invoice_data->invoice_filename = $invoice_pdf_path;
+                        $invoice_data->save();
+                    }
+                }
+                return $pdf->stream( $invoice_name );
+            }
+            // only print view without save invoice and upload
+            if ($type == 'print_view') {
+                return $pdf->stream( $invoice_name );
+            }
+        }catch( Exception $e){
+            // throw error
+        }
+    }
+
+
+     /**
+     *  AJAX delete Invoice
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-10
+     */
+    public function deleteInvoice(Request $request, Invoice $invoice)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to delete'),
+        );
+        try {
+            $dataParam = $request->all();
+            $id = trim($dataParam['p_invoice_id']);
+            $invoiceData = Invoice::find($id)->delete();
+            if ($invoiceData == 1) {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+
+     /**
+     *  AJAX update Invoice
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-22
+     */
+    public function updateInvoice(Request $request, Invoice $invoice)
+    {
+        $result = array(
+            'status' => 'failed',
+            'message' => __('failed to delete'),
+        );
+        try {
+            $dataParam = $request->all();
+            $id = trim($dataParam['p_invoice_id']);
+            $invoiceData = Invoice::find($id)->delete();
+            if ($invoiceData == 1) {
+                $result = array(
+                    "status"     => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
     }
 }

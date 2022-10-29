@@ -535,14 +535,16 @@ class SchoolsController extends Controller
                             $answers = [
                                 'school_id' => $userSchoolId,
                                 'title' => $cat['name'],
-                                'invoiced_type' => $invoicedType
+                                'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0
                             ];
                             $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
                         }else{
                             $answers = [
                                 'school_id' => $userSchoolId,
                                 'title' => $cat['name'],
-                                'invoiced_type' => $invoicedType
+                                'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0
                             ];
                             $eventCat = EventCategory::create($answers);
                         }

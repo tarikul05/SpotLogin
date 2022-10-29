@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
@@ -134,5 +136,13 @@ class Invoice extends BaseModel
     {
         return $this->belongsToMany(School::class)
             ->withPivot('id', 'nickname', 'billing_method', 'has_user_account', 'level_id', 'licence_arp', 'level_skating_arp', 'level_date_arp', 'licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at', 'deleted_at');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function invoice_items(): HasMany
+    {
+        return $this->HasMany(InvoiceItem::class, 'invoice_id');
     }
 }
