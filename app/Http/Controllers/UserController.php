@@ -116,9 +116,13 @@ class UserController extends Controller
                 'is_firstlogin'=>0,
                 'trial_ends_at' => $trialEndsAt,
             ];
-
+            $strip_userdata = [
+                'email'=> $data['email'],
+                'name' => $data['fullname'],
+            ];
             $user = User::create($usersData);
             $user->save();
+            $user->createAsStripeCustomer($strip_userdata);
             $result = array(
                 "status"     => 1,
                 'message' => __('Successfully Registered')
