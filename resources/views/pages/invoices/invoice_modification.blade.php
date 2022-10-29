@@ -76,7 +76,7 @@
                                         @foreach($invoice->invoice_items as $key => $item)
                                             <tr>
                                                 <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
-                                                <td style="text-align:right">{{ !empty($item->caption) ? $item->caption : ''; }}</td>
+                                                <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>
                                                 @if ($item->unit == 0)
                                                     <td></td>
                                                 @else
@@ -1138,7 +1138,8 @@
         var form_data = new FormData(vform);
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-
+        console.log(form_data);
+        return false;
         $.ajax({
             url: 'invoice_data.php',
             data: form_data,
