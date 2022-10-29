@@ -246,14 +246,14 @@
     </header>
     <main>
         <div class="info_area" style="clear: both">
-            <div class="right_cont">
-                <p class="first_name">{{$invoice_data->seller_name}}</p>
+            <div class="left_cont">
+                <p class="first_name">{{$invoice_data->seller_name}}fgfg</p>
                 <p class="info_txt">{{$invoice_data->seller_place}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
                 <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
                 <p class="email"><a href="mailto:{{$invoice_data->seller_email}}">{{$invoice_data->seller_email}}</a></p>
             </div>
-            <div class="left_cont">
+            <div class="right_cont">
                 <p class="first_name">{{$invoice_data->client_name}}</p>
                 <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
                 <p class="info_txt">{{$invoice_data->client_place}}</p>
