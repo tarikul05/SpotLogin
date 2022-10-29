@@ -246,17 +246,17 @@
     </header>
     <main>
         <div class="info_area" style="clear: both">
-            <div class="left_cont">
-                <p class="first_name">{{$invoice_data->client_name}}</p>
-                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
-                <p class="info_txt">{{$invoice_data->client_place}}</p>
-            </div>
             <div class="right_cont">
                 <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_place}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
                 <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
                 <p class="email"><a href="mailto:{{$invoice_data->seller_email}}">{{$invoice_data->seller_email}}</a></p>
+            </div>
+            <div class="left_cont">
+                <p class="first_name">{{$invoice_data->client_name}}</p>
+                <p class="last_name">{{$invoice_data->client_street_number ? $invoice_data->client_street_number.',': ''}} {{$invoice_data->client_street?$invoice_data->client_street:''}}</p>
+                <p class="info_txt">{{$invoice_data->client_place}}</p>
             </div>
         </div>
         <div class="invoice_table">
@@ -375,7 +375,7 @@
                     </td>
                     <td>
                         <div class="payment_title text_center">{{ __('invoice_payment_subtitle_3') }}</div>
-                        <div class="txt"><b>{{ __('invoice_tax_amount') }}</b>{{ $invoice_data->tax_amount }}</div>
+                        <div class="txt">{{ $invoice_data->tax_amount }}</div>
                     </td>
                 </tr>
                 <?php } else { ?>
