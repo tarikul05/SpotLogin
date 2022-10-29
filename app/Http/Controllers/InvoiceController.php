@@ -827,7 +827,7 @@ class InvoiceController extends Controller
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
+                ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
                 ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
@@ -984,7 +984,8 @@ class InvoiceController extends Controller
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname) AS student_name")
+                
+                ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
                 ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
@@ -1207,7 +1208,8 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
-
+            $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
+            
             if (!empty($p_teacher_id)) {
                 $Steacher = SchoolTeacher::active()->where('school_id',$schoolId);
                 $Steacher->where('teacher_id',$p_teacher_id);
@@ -1263,6 +1265,7 @@ class InvoiceController extends Controller
                         'events.event_price as event_price',
                         'events.date_start as date_start',
                         'event_categories.title as category_name',
+                        'event_categories.invoiced_type as invoiced_type',
                         'events.extra_charges as extra_charges'
                     )
                     ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
@@ -1429,17 +1432,29 @@ class InvoiceController extends Controller
 
 
                     $teacher = Teacher::find($value->teacher_id);
-                    if ($value->event_type == 10) {
-                        $invoiceItemData['caption'] = 'Teacher ';
-                        $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.') , Number of Students'.$value->count_name;
+                    if ($value->event_type == 10) { // lesson
+                        if ($value->invoiced_type == 'S') {
+                            //$invoiceItemData['caption'] = 'test school invoice package with 2 student(s)';
+                            $invoiceItemData['caption'] = $value->category_name.' with '.$value->count_name.' Student(s)';
+                        
+                        } else{
+                            $invoiceItemData['caption'] = 'Teacher ';
+                            $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.') , Number of Students'.$value->count_name;
+                        
+                        }
                         if ($value->extra_charges>0) {
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
                         }
                     }
-                    else if ($value->event_type == 100) {
-                        $invoiceItemData['caption'] = 'Event : '.$value->title;
-                        $invoiceItemData['caption'] .= ' ('.$value->category_name.') , Number of Students'.$value->count_name;
+                    else if ($value->event_type == 100) { // event
+                        if ($value->invoiced_type == 'S') {
+                            //$invoiceItemData['caption'] = 'test school invoice package with 2 student(s)';
+                            $invoiceItemData['caption'] = $value->title.' with '.$value->count_name.' Student(s)';
                         
+                        } else{
+                            $invoiceItemData['caption'] = 'Event : '.$value->title;
+                            $invoiceItemData['caption'] .= ' ('.$value->category_name.') , Number of Students'.$value->count_name;
+                        }
                         if ($value->extra_charges>0) {
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
                         }
@@ -1607,7 +1622,7 @@ class InvoiceController extends Controller
             $invoiceData['period_ends'] = $dateEnd;
             $invoiceData['invoice_name'] = 'Invoice '.Carbon::now()->format('F').' '.Carbon::now()->year;
             //$date_invoice = Carbon::createFromFormat('Y-m-d H:i:s', $invoiceData['date_invoice'], 'UTC'); // specify UTC otherwise defaults to locale time zone as per ini setting
-        
+            
             //$invoiceData['invoice_header'] = $invoiceData['invoice_name'].'-'.$invoiceData['client_name'].' du '.$date_invoice;
             
             if ($invoice_type == 'T') {
@@ -1670,6 +1685,7 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
+            $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
             
             
             if (!empty($p_student_id)) {
@@ -1896,7 +1912,7 @@ class InvoiceController extends Controller
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
 
-                    if ($value->event_type == 10) {
+                    if ($value->event_type == 10) { //lesson
                         $teacher = Teacher::find($value->teacher_id);
                         $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
                         $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
@@ -1904,7 +1920,7 @@ class InvoiceController extends Controller
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     }
-                    else if ($value->event_type == 100) {
+                    else if ($value->event_type == 100) { // event
                         $invoiceItemData['caption'] = 'Event : '.$value->price_name.''.$value->title;
                         if ($value->extra_charges>0) {
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
