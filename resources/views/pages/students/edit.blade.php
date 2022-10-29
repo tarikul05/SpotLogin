@@ -797,9 +797,9 @@ $(document).ready(function(){
 			async: false,
 			success: function(result) {
 				if (result.status == 'success') {
-					auto_id = 1;
+					auto_id = result.auto_id;
 					
-					successModalCall("{{ __('invoice_generated_msg')}}");
+					successModalCall("{{ __('invoice generated')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
@@ -814,7 +814,8 @@ $(document).ready(function(){
 		}); // Ajax
 
 		if (auto_id > 0) { 
-			var url = "/admin/"+document.getElementById("school_id").value+"/invoices";
+			//admin/1/modification-invoice/42
+			var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){ 
 				window.location = BASE_URL+ url;  
 			}, 3000);
@@ -1032,6 +1033,9 @@ $('#save_btn').click(function (e) {
 
 
 	function populate_student_lesson() {
+		//var CURRENT_URL = '{{ $CURRENT_URL ?? '' }}';
+		//console.log(CURRENT_URL);
+		//location.href = "/1/edit-lesson/30/?redirect_url="+CURRENT_URL;
 		let p_pending_only="1";
 		var pendChBox = document.getElementById("chk_show_only_pend");
 		
@@ -1184,28 +1188,33 @@ $('#save_btn').click(function (e) {
 							if (value.ready_flag == 0) {
 								all_ready = 0;
 								resultHtml += "<td></td>";
-								resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								if (value.event_type == 100) {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								} else {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								}
+								
 							} else {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
-								total_buy += parseFloat(value.buy_price);
-								total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
+								total_buy += parseFloat(value.buy_total);
+								total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
 								
-								week_total_buy += parseFloat(value.buy_price);
-								week_total_sell += parseFloat(value.sell_price) + parseFloat(value.costs_1);
+								week_total_buy += parseFloat(value.buy_total);
+								week_total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
 								
 
 								if (value.event_type == 10) {
-									amount_for_disc=amount_for_disc+parseFloat(value.sell_price);
+									amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
 								}
 							}
 
-							costs_1 = parseFloat(value.costs_1);
-							if (value.costs_1 != 0) {
+							costs_1 = parseFloat(value.extra_charges);
+							if (value.extra_charges != 0) {
 									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
 							} else {
 									resultHtml += '<td style="text-align:right"></td>';

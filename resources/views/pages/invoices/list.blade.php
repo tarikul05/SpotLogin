@@ -30,10 +30,15 @@
         
         
         <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">
-        <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
+        <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status">
+            <option value="1">Paid</option>
+            <option value="0">Unpaid</option>
+        </select>
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
+                    <th style="display: none">{{ __('#') }}</th>
+                    <th style="display: none">{{ __('#') }}</th>
                     <th>{{ __('#') }}</th>
                     <th>{{ __('Date') }}</th>
                     <th>{{ __('Type') }}</th>
@@ -52,19 +57,54 @@
                 @foreach($invoices as $invoice)
                     @php
                         $i++;
+                        $urlInvoice = route('invoiceList');
+                        
+
+                        $edit_view_url = '';
+                        //invoice_type = 0 means manual invoice
+                        if ($invoice->invoice_type == 0) {
+                            $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                        } else {
+                            if(!empty($schoolId)){ 
+                                $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
+                            } else {
+                                $edit_view_url = route('modificationInvoice',[$invoice->id]);
+                            }
+                        }
+
                     @endphp
                 
                     <tr>
+                        <td style="display: none">{{ $invoice->id; }}</td>
+
+                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td>
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <td>{{ $invoice->date_invoice; }}</td>
-                        <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
-                        @if ($invoice->invoice_type == 1)
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->client_name}}</td>
-                        @else
-                            <td>{{ $invoice->invoice_name.'-'.$invoice->seller_name }}</td>
-                        @endif
+                        <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
+                        @php
+                        if($invoice->invoice_type ==0){
+                            @endphp
+                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}(M)</td>
+
+                            @php
+                        } else {
+                            @endphp
+                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
+                            @php
+                        }
+                        @endphp
+                        
+                        @php
+                        $invoice_name = $invoice->invoice_name;
+                        if($invoice->invoice_type ==1){
+                            $invoice_name .= '-'.$invoice->client_name;
+                        } else {
+                            $invoice_name .= '-'.$invoice->seller_name;
+                        }
+                        @endphp
+                        <td>{{ $invoice_name}}</td>
+                        
                         <td>{{ $invoice->total_amount; }}</td>
-                        @if ($invoice->payment_status_flag == 0)
+                        @if ($invoice->payment_status == 0)
                             <td class="text-center">
                                 <div id="status_{{$invoice->id}}">
                                     <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
@@ -86,8 +126,7 @@
                                 </span>
                             </td>
                         @else
-                            <td>
-                            </td>
+                            <td></td>
                         @endif
                         
                         <td>
@@ -96,23 +135,16 @@
                                     <i class="fa fa-ellipsis-h txt-grey"></i>
                                 </a>
                                 <div class="dropdown-menu list action text-left">
-                                @php
-                                    $edit_view_url = '';
-                                    //invoice_creation_type = y means manual invoice
-                                    if ($invoice->invoice_creation_type == 'Y') {
-                                        $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
-                                    } else {
-                                        $edit_view_url = '/admin/invoice/'.$invoice->id;
-                                    }
-                                @endphp
+                               
                                 
 
                                 @if ($invoice->invoice_status > 1)
+                                
                                     <a class="dropdown-item" href="{{ $edit_view_url }}">
                                         <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                         {{ __('View')}}
                                     </a>
-                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('login.submit',['school'=> $schoolId,'invoice'=> $invoice->id]) : route('login.submit',['invoice' => $invoice->id]) }}">
+                                    <a target="_blank" class="dropdown-item" href="{{route('generateInvoicePDF',['invoice_id'=> $invoice->id]) }}">
                                         <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
                                         {{ __('PDF')}}
                                     </a>
@@ -123,10 +155,9 @@
                                     </a>
                                 @endif
 
-                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status_flag == 0)) 
+                                @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
                                     <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                 @endif
-                                    
                                 
                                 </div>
                             </div>  
@@ -139,64 +170,64 @@
     </div>
   </div>
 
-  <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
+<div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
     aria-labelledby="email_list_modal" name="email_list_modal">
-        <div class="modal-dialog mt-5" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
-                </div>
-                <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
-                    <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
+    <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center border-0">
+                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+            </div>
+            <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+                <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
 
-                        <div class="form-group col-md-12" id="father_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                    <div class="form-group col-md-12" id="father_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="mother_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="student_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="text-left">
+                            <div class="checked">
+                                <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-12" id="mother_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                    <div class="form-group">
+                        <div class="col-sm-12 text-left">
+                            <div>
+                                <p></p>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-12" id="student_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
-                            </div>
+                    <div class="form-group col-sm-12">
+                            <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                    </div>
 
-                        </div>
+                <!-- </form> -->
 
-                        <div class="form-group col-md-12">
-                            <div class="text-left">
-                                <div class="checked">
-                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-12 text-left">
-                                <div>
-                                    <p></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-12">
-                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
-                        </div>
-
-                    <!-- </form> -->
-
-                </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 
@@ -210,7 +241,7 @@
             //"searching": true,
             //"bProcessing": true,
             "bDestroy": true, 
-            "order": [[0, "asc"]],
+            "order": [[2, "asc"]],
             "bFilter": true,
             "bInfo": false,
             "lengthChange": false,
@@ -332,6 +363,70 @@
 
     });
 
+
+    function UpdatePaymentStatus(p_auto_id) {
+        var payment_status;
+        var v_status = "status_" + p_auto_id;
+        var v_status_id = "status_id_" + p_auto_id;
+        var p_payment_status = document.getElementById(v_status_id).innerHTML;
+        
+        if (p_auto_id == '') {
+            //alert('Invalid invoice.. ');
+            errorModalCall(GetAppMessage('error_message_text'));
+            return false;
+        }
+
+        if (p_payment_status == 0) {
+            payment_status = 1;
+        } else {
+            payment_status = 0;
+        }
+
+        $('#inv_payment_status').val(payment_status);
+        //let payment_text_paid = '';
+        //let payment_text_unpaid = '';
+        let payment_text_paid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Paid</span>";
+        let payment_text_unpaid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Unpaid</span>";
+
+        
+        //console.log('status='+((p_payment_status = 0) ? 1 : 0));
+
+        var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_auto_id;
+        console.log(data);
+        var status = '';
+        var data = data;
+        // document.getElementById(v_status_id).innerHTML = payment_status;
+        // document.getElementById(v_status).innerHTML = payment_text;
+        $.ajax({
+        
+                url: BASE_URL + '/update_payment_status',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    status = result.status;
+                    if (status == 'success') {
+                        console.log(result.payment_status);
+                        payment_status = result.payment_status;
+                        document.getElementById(v_status_id).innerHTML = payment_status;
+                        if (payment_status == '1') {
+                            document.getElementById(v_status).innerHTML = payment_text_paid;
+                        } else {
+                            document.getElementById(v_status).innerHTML = payment_text_unpaid;
+                        }
+                    }
+                    else {
+                        //alert('update failed.. Please contact system administrator..');
+                        errorModalCall(GetAppMessage('error_message_text'));
+                    }
+                },   //success
+                error: function (ts) { errorModalCall(GetAppMessage('error_message_text'));
+                //alert(ts.responseText + ' Update Invoice Payment Status=' + status) 
+                }
+        }); //ajax-type            
+        return false;
+    }
 
 </script>
 @endsection

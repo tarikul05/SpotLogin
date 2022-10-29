@@ -26,11 +26,13 @@
                         <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                         <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
                         </a> 
-                        <a id="print_preview_btn" style="display: block;" name="print_preview_btn" class="btn btn-sm btn-default" target="_blank">Print Preview</a> 
-                        <a id="delete_btn" style="display: block!important;" name="delete_btn" class="btn btn-sm btn-danger" href="">Delete</a>
+                        <a id="print_preview_btn" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
+                        <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
                         <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
-                        <button id="approved_btn" style="display: none;" target="" href="" class="btn btn-sm btn-primary">Send by email</button> 
-                        <a id="download_pdf_btn" name="download_pdf_btn" style="display: none;" target="" href="" class="btn btn-sm btn-default">Download PDF</a> 
+                        <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoiceData['id']}},{{$invoiceData['invoice_type']}},{{$invoiceData['school_id']}})">Send by email</button>
+                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                                <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
+                            </a> 
                     </div>
                 </div>
 			</div>
@@ -41,6 +43,11 @@
                 <div id="content">
                     <form role="form" id="form_main" class="form-horizontal tbl_wrp_form" method="post" action="">
                         @csrf
+                        @if($invoiceData['invoice_type'] ==1)
+                            <input type="hidden" id="person_id" name="person_id" value="{{$invoiceData['client_id']}}">
+                        @else
+                            <input type="hidden" id="person_id" name="person_id" value="{{$invoiceData['seller_id']}}">
+                        @endif
                         <input type="hidden" id="auto_id" name="auto_id" value="<?= $invoiceData['id']; ?>">
                         <input type="hidden" id="invoice_filename" name="invoice_filename" value="">
                         <input type="hidden" id="action" name="action" value="new">
@@ -48,7 +55,7 @@
                         <input type="hidden" id="person_id" name="person_id" value="">
                         <input type="hidden" id="invoice_status_id" name="invoice_status_id" value="1">
                         <input type="hidden" id="invoice_id" name="invoice_id" value="">
-                        <input type="hidden" id="invoice_type" name="invoice_type" value="0">
+                        <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoiceData['invoice_type']}}">
                         <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                         <input type="hidden" id="payment_status" name="payment_status" value="0">
                         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
@@ -532,7 +539,64 @@
         </div>
     </div>
 </div>
+<div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
+    aria-labelledby="email_list_modal" name="email_list_modal">
+    <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center border-0">
+                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+            </div>
+            <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+                <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
 
+                    <div class="form-group col-md-12" id="father_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="mother_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12" id="student_email_div">
+                        <div class="btn-group text-left">
+                            <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
+                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="text-left">
+                            <div class="checked">
+                                <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12 text-left">
+                            <div>
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                            <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                    </div>
+
+                <!-- </form> -->
+
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 
@@ -770,6 +834,33 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
     var day = now.getDate();
     var current_date = ((''+day).length<2 ? '0' : '') + day+ '.' +((''+month).length<2 ? '0' : '') + month + '.'+ now.getFullYear();
     $("#date_invoice").val( current_date );
+
+    document.getElementById("issue_inv_btn").style.display = "none";
+    document.getElementById("print_preview_btn").style.display = "none";
+    document.getElementById("delete_btn_inv").style.display = "none";
+    document.getElementById("download_pdf_btn_a").style.display = "none";
+    document.getElementById("approved_btn").style.display = "none";
+        
+    if (document.getElementById("invoice_status_id").val == 10) {
+        document.getElementById("issue_inv_btn").style.display = "none";
+        document.getElementById("print_preview_btn").style.display = "none";
+        document.getElementById("delete_btn_inv").style.display = "none";
+        document.getElementById("download_pdf_btn_a").style.display = "block";
+            
+        if ($("#approved_flag").val() == '0') {
+            document.getElementById("approved_btn").style.display = "block";
+        }
+        else {
+            document.getElementById("approved_btn").style.display = "none";
+        }
+    } else{
+        document.getElementById("issue_inv_btn").style.display = "block";
+        document.getElementById("print_preview_btn").style.display = "block";
+        document.getElementById("delete_btn_inv").style.display = "block";
+        document.getElementById("approved_btn").style.display = "none";
+    }
+    
+    
 
  });
 
@@ -1098,7 +1189,212 @@ $(document).on('change','#client_list_id',function(){
     }
 
 })
+$('#issue_inv_btn').click(function (e) {
+    Generate_View_PDF('issue_pdf');
+});
+function Generate_View_PDF(p_type) {
+    if (p_type =='preview') {
+        
+    } else {
+        var p_invoice_id = document.getElementById("invoice_id").value;
+        var data = 'type=' + p_type + '&p_invoice_id=' + p_invoice_id;
 
+        UpodateInvStatusIssue(p_invoice_id)
+    }
+    
+}
+
+function UpodateInvStatusIssue(p_invoice) {
+    var modal = document.getElementById('myModal');
+    //modal.style.display = "block";
+    $.ajax({
+        url: BASE_URL + '/update_payment_status',
+        //url: 'update_status_issue',
+        data: 'invoice_status=10&approved_flag=0&p_auto_id=' + p_invoice,
+        type: 'POST',
+        dataType: 'json',
+        //async: false,
+        success: function (result) {
+            var status = result.status;
+
+            if (status == 'success') {
+                $("#invoice_status_id").text('Emise');
+                //document.getElementById("invoice_status").text='Emise';
+                document.getElementById("invoice_status_id").value = '10';
+                //document.getElementById("unlock_btn").style.display = "block";
+                //$('#unlock_btn').style.display="block";
+                DisplayOnOff_buttons();
+                //modal.style.display = "none";
+            }
+            else {
+
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        },   //success
+        error: function (ts) {
+            modal.style.display = "none";
+            errorModalCall(GetAppMessage('error_message_text'));
+
+        }
+    }); //ajax-type        
+}
+function DisplayOnOff_buttons(p_tab) {
+    var invoice_status = document.getElementById("invoice_status_id").value;
+    if (invoice_status == 10) {
+        document.getElementById("issue_inv_btn").style.display = "none";
+        document.getElementById("print_preview_btn").style.display = "none";
+        document.getElementById("delete_btn_inv").style.display = "none";
+        // document.getElementById("save_btn").style.display = "none";
+        document.getElementById("download_pdf_btn_a").style.display = "block";
+
+        if ($("#approved_flag").val() == '0') {
+            document.getElementById("approved_btn").style.display = "block";
+        }
+        else {
+            document.getElementById("approved_btn").style.display = "none";
+        }
+    } else {
+        
+            //document.getElementById("save_btn").style.display = "none";
+            document.getElementById("issue_inv_btn").style.display = "block";
+            document.getElementById("print_preview_btn").style.display = "block";
+            document.getElementById("delete_btn_inv").style.display = "block";
+       
+
+    }
+}
+
+$('#delete_btn_inv').click(function (e) {
+    DeleteInvoice();
+    window.history.back();
+    return false;
+});
+
+function DeleteInvoice() {
+    var p_invoice_id = document.getElementById("invoice_id").value;
+    var p_person_id = document.getElementById("person_id").value;
+    var p_invoice_type = document.getElementById("invoice_type").value;
+
+    if (p_invoice_id == '') {
+        errorModalCall(GetAppMessage('Invalid_invoice'));
+
+        return false;
+    }
+    var status = '';
+    var data = 'type=delete_invoice&p_invoice_id=' + p_invoice_id;
+    data += '&p_person_id=' + p_person_id + '&p_invoice_type=' + p_invoice_type;
+    $.ajax({
+        //url: 'invoice_data.php',
+        url: BASE_URL + '/delete_invoice',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        success: function (result) {
+            status = result.status;
+            if (status == 'success') {
+
+                successModalCall(GetAppMessage('save_confirm_message'));
+                    
+                    setTimeout(function(){ window.location.replace('/admin/invoices'); }, 3000);
+            }
+            else {
+                errorModalCall(GetAppMessage('error_message_text'));
+
+            }
+        },   //success
+        error: function (ts) { 
+            errorModalCall(GetAppMessage('error_message_text'));
+
+        }
+    }); //ajax-type
+}
+
+$('#download_pdf_btn_a').click(function (e) {
+    //var inv='invoice-'+document.getElementById("invoice_id").value.toLowerCase().replace(/-/ig,'');
+
+    var inv = document.getElementById("invoice_filename").value;
+    //var filename='../medias/vgskating/pdf/invoice-'+inv+'.pdf';
+    var filename = '../medias/schools/teamvg/' + 'pdf/';
+    //filename=filename+inv+'.pdf';
+    filename = filename + inv;
+    //window.open(filename,'_blank');
+    window.open('../invoice/viewdownload_pdf.php?type=D&filename=' + inv, '_blank');
+
+});
+
+    function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
+        
+        $('#seleted_auto_id').val(p_value);
+        $('#p_school_id').val(p_school_id);
+        
+        $('#seleted_invoice_type').val(p_invoice_type);
+        //console.log('p_value='+p_value);
+        var p_attached_file = '';
+
+        var find_flag = 0;
+        //return false;
+        //populate lis of emails
+        $.ajax({
+            url: BASE_URL + '/pay_reminder_email_fetch',
+            //url: 'invoice_data.php',
+            data: 'type=email_list&p_auto_id=' + p_value,
+            type: 'POST',
+            dataType: 'json',
+            //async: false,
+            success: function (result) {
+                //console.log(result);
+                if (result.status) {
+                    confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
+                    return false;
+                    
+                }
+                else {
+                    errorModalCall('{{ __("Event validation error ")}}');
+                }
+                
+            },   // sucess
+            error: function (ts) { 
+                errorModalCall(GetAppMessage('error_message_text'));
+                //alert(ts.responseText + 'populate Invoice Payment Status') 
+            }
+        }); // Ajax        
+
+
+        $("#email_list_modal").modal('show');
+
+    };
+
+    $('#email_send').click(function (e) {
+        var p_emails = '', p_attached_file = '';
+        var p_inv_auto_id = $('#seleted_auto_id').val();
+        var p_seleted_invoice_type = $('#seleted_invoice_type').val();
+        var p_school_id = document.getElementById("p_school_id").value;
+        if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
+            p_emails = document.getElementById("father_email_chk").value + "|";
+        }
+        if ((document.getElementById("mother_email_chk").checked == true) && (document.getElementById("mother_email_chk").value != '')) {
+            p_emails += document.getElementById("mother_email_chk").value + "|";
+        }
+
+        if ((document.getElementById("student_email_chk").checked == true) && (document.getElementById("student_email_chk").value != '')) {
+            p_emails += document.getElementById("student_email_chk").value + "|";
+        }
+        if ($('#other_email').val() != '') {
+            p_emails += $('#other_email').val();
+        }
+
+
+        console.log(p_seleted_invoice_type);
+        if (p_seleted_invoice_type == 2) {
+            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        } else {
+            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        }
+
+
+    });
 
 </script>
 @endsection

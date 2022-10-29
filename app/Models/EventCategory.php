@@ -23,6 +23,7 @@ class EventCategory extends BaseModel
       'school_id',
       'title',
       'invoiced_type',
+      'package_invoice',
       'file_id',
       'is_active',
       'created_by',

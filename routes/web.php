@@ -54,6 +54,9 @@ Route::post('pay_reminder_email_fetch', [App\Http\Controllers\InvoiceController:
 //email-fetch pay reminder AJAX
 Route::post('pay_reminder_email', [App\Http\Controllers\InvoiceController::class, 'payReminderEmailSend'])->name('pay_reminder_email_send.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+// update_payment_status AJAX
+Route::post('update_payment_status', [App\Http\Controllers\InvoiceController::class, 'updatePaymentStatus'])->name('update_payment_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 //AJAX get student lessons for invoice
 Route::post('get_student_lessons', [App\Http\Controllers\InvoiceController::class, 'getStudentLessons'])->name('get_student_lessons.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
@@ -65,6 +68,9 @@ Route::post('generate_teacher_invoice', [App\Http\Controllers\InvoiceController:
 
 //AJAX generate student invoice
 Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController::class, 'generateStudentInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+// update_payment_status AJAX
+Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceDiscount'])->name('update_payment_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 //AJAX update teacher discount
@@ -94,6 +100,11 @@ Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class,
 Route::post('delete_multiple_events', [App\Http\Controllers\AgendaController::class, 'deleteMultipleEvent'])->name('multiple_event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('delete_event', [App\Http\Controllers\AgendaController::class, 'deleteEvent'])->name('event.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('validate_multiple_events', [App\Http\Controllers\AgendaController::class, 'validateMultipleEvent'])->name('multiple_event.validate')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('delete_invoice', [App\Http\Controllers\InvoiceController::class, 'deleteInvoice'])->name('invoice.delete')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+Route::post('update_invoice_status', [App\Http\Controllers\InvoiceController::class, 'updateInvoice'])->name('invoice.update')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('unlock_invoice', [App\Http\Controllers\InvoiceController::class, 'unlockInvoice'])->name('invoice.unlock')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 
@@ -252,6 +263,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/student-invoices', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id');
     Route::get('/{school}/teacher-invoices', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id');
     Route::get('/invoice/{invoice}', [App\Http\Controllers\InvoiceController::class, 'view'])->name('invoice.view');
+    Route::get('/{school}/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('adminmodificationInvoice');
+    Route::get('/modification-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'modificationInvoice'])->name('modificationInvoice');
     Route::get('/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('manualInvoice');
     Route::get('/{school}/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('adminmanualInvoice');
     Route::get('/{school}/manual-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'updatemanualInvoice'])->name('adminupdatemanualInvoice');
@@ -370,5 +383,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('invoice_data', 'InvoiceController@invoiceData')->name('invoiceData');
     Route::post('/{school}/store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');
     Route::post('/{school}/update_invoice_data', 'InvoiceController@invoiceDataUpdate')->name('invoiceDataUpdate');
+
+    Route::get('/invoice-pdf', [App\Http\Controllers\InvoiceController::class, 'generateInvoicePDF'])->name('generateInvoicePDF');
+    
 });
 

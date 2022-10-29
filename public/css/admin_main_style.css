@@ -1118,6 +1118,54 @@ label.profile_img_area {
     background-position: 7px 6px !important;
 }
 
+label.section_header_class {
+    color: #152245;
+    font-size: 20px;
+    font-family: "Gilroy-Bold";
+    margin: 0px 0 10px 0;
+    text-align: left;
+    font-weight: normal;
+}
+
+tr.header_tbl {
+    font-size: 18px;
+    font-family: "Gilroy-Bold";
+}
+
+#invoice-details-content .text-right {
+    text-align: right;
+}
+
+label#sdiscount_percent_1_cap,
+label#stotal_amount_discount_cap {
+    margin-right: 35px;
+}
+
+input#samount_discount_1,
+input#stotal_amount_discount {
+    margin-right: 30px;
+}
+
+input#sextra_expenses {
+    margin-left: 35px;
+}
+
+#invoice-details-content .form-group.row label {
+    margin-top: 0px;
+}
+
+#tab_3 .form-group.row label {
+    padding: 0 15px;
+}
+#invoice-details-content #tab_3 .form-control {
+    margin-left: 15px;
+}
+.pack_invoice_area {
+    margin-left: 40px;
+}
+input#package_invoice {
+    margin-top: 12px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
@@ -1379,5 +1427,11 @@ label.profile_img_area {
     }
     .students_list div#example_filter input {
         max-width: 95%;
+    }
+    .pack_invoice_area {
+        margin-left: 0px;
+    }
+    input#package_invoice {
+        margin-top: 7px;
     }
 }

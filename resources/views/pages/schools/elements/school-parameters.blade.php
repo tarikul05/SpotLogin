@@ -25,7 +25,7 @@
                         <div class="col-md-3 col-5">
                             <label>{{ __('Category Name') }}</label>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-md-4 col-6">
                             <label class="invoice_type_label">{{ __('Invoice Type') }}</label>
                         </div>
                         <div class="col-md-2 col-1">
@@ -33,11 +33,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div id="add_more_event_category_div" class="col-md-8">
+                        <div id="add_more_event_category_div" class="col-md-10">
                         @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
                             @foreach($eventCat as $cat)
                                 <div class="col-md-12 add_more_event_category_row row">
-                                    <div class="col-md-5 col-5">
+                                    <div class="col-md-4 col-5">
                                         <div class="form-group row">
                                             <div class="col-sm-11">
                                                 <input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
@@ -46,14 +46,20 @@
                                         </div>
                                     </div>
                                     @if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
-                                    <div class="col-md-5 col-6">
+                                    <div class="col-md-6 col-6">
                                         <div class="form-group row invoice_part">
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+                                            <div class="col-sm-4">
+                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+                                            <div class="col-sm-4">
+                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
                                             </div>
+											<div class="col-sm-4">
+												<div class="form-check pack_invoice_area" <?php if( ($cat->invoiced_type == 'T') && ($cat->package_invoice == 0)){ echo 'style="display:none"'; }  ?> >
+													<input type="checkbox" class="form-check-input" id="package_invoice" name="category[{{$count}}][package_invoice]" value="package_invoice" <?php if(($cat->invoiced_type == 'S') && ($cat->package_invoice == 1)){ echo 'checked'; }  ?>>
+													<label class="form-check-label" for="pack_invoice">Package</label>
+												</div>
+											</div>
                                         </div>
                                     </div>
                                     @endif
@@ -187,7 +193,7 @@ $(document).ready(function(){
 		var incre = (parseInt(lst_id)+1);
 		$(this).attr('data-last_event_cat_id',incre);
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
-			<div class="col-md-5 col-5">
+			<div class="col-md-4 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
 						<input class="form-control category_name" name="category[`+lst_id+`][name]" placeholder="Category Name" type="text">
@@ -195,13 +201,19 @@ $(document).ready(function(){
 				</div>
 			</div>
 			@if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
-			<div class="col-md-5 col-6">
+			<div class="col-md-6 col-6">
 				<div class="form-group row invoice_part">
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-4">
 						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-check pack_invoice_area">
+							<input type="checkbox" class="form-check-input" id="package_invoice" name="category[`+lst_id+`][package_invoice]" value="package_invoice">
+							<label class="form-check-label" for="pack_invoice">Package</label>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -454,6 +466,15 @@ $(document).ready(function(){
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-
 })
+
+	$("body").find('.invcat_name').on('change', function(){
+		var type = $(this).val();
+		if(type == 'T'){
+			$(this).closest(".invoice_part").find('.pack_invoice_area').hide();
+		}else{
+			$(this).closest(".invoice_part").find('.pack_invoice_area').show();	
+		}
+	});
+
 </script>
