@@ -189,14 +189,15 @@
     "invoice_duration_hours": " hours and ",
     "invoice_duration_minutes": "minutes",
     "invoice_payment_title": "Payment Information ",
-    "invoice_payment_subtitle": "For payment by E-Transfe ",
+    "invoice_payment_subtitle": "For payment by E-Transfer ",
     "invoice_payment_subtitle_2": "For payment by check ",
     "invoice_payment_subtitle_3": "Tax Number",
     "invoice_ac_no": "A/C No : ",
     "invoice_footer_Email": "Email : ",
     "invoice_footer_check_name": "Check Name : ",
+    "invoice_cheque_no": "Cheque No",
     "invoice_pay_by": "Pay By : ",
     "invoice_tax_amount": "Amount : ",
     "invoice_iban_no": "IBAN : ",
-    "invoice_swift_no": "Swift : "  
+    "invoice_swift_no": "Swift : "
 }
