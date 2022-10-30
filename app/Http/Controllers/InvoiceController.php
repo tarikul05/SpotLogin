@@ -455,6 +455,99 @@ class InvoiceController extends Controller
         }
     }
 
+
+    /**
+     *  AJAX action for invoice info update
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-30
+     */
+    public function updateInvoiceInfo(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+
+            $updateInvoice['date_invoice']=trim($data['date_invoice']);
+            $updateInvoice['invoice_title']=trim($data['invoice_title']);
+            $updateInvoice['invoice_header']=trim($data['invoice_header']);
+            $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
+            $updateInvoice['client_name']=trim($data['client_name']);
+            $updateInvoice['client_gender_id']=trim($data['client_gender_id']);
+            $updateInvoice['client_lastname']=trim($data['client_lastname']);
+            $updateInvoice['client_firstname']=trim($data['client_firstname']);
+            $updateInvoice['client_street']=trim($data['client_street']);
+            $updateInvoice['client_street_number']=trim($data['client_street_number']);
+            $updateInvoice['client_street2']=trim($data['client_street2']);
+            $updateInvoice['client_zip_code']=trim($data['client_zip_code']);
+            $updateInvoice['client_place']=trim($data['client_place']);
+            $updateInvoice['client_country_code']=trim($data['client_country_id']);
+        
+            $updateInvoice['seller_name']=trim($data['seller_name']);
+            $updateInvoice['seller_gender_id']=trim($data['seller_gender_id']);
+            $updateInvoice['seller_lastname']=trim($data['seller_lastname']);
+            $updateInvoice['seller_firstname']=trim($data['seller_firstname']);
+            $updateInvoice['seller_street']=trim($data['seller_street']);
+            $updateInvoice['seller_street_number']=trim($data['seller_street_number']);
+            $updateInvoice['seller_street2']=trim($data['seller_street2']);
+            $updateInvoice['seller_zip_code']=trim($data['seller_zip_code']);
+            $updateInvoice['seller_place']=trim($data['seller_place']);
+            $updateInvoice['seller_country_code']=trim($data['seller_country_id']);
+            $updateInvoice['seller_phone']=trim($data['seller_phone']);
+            $updateInvoice['seller_mobile']=trim($data['seller_mobile']);
+            $updateInvoice['seller_email']=trim($data['seller_email']);
+            $updateInvoice['seller_eid']=trim($data['seller_eid']);
+        
+            $updateInvoice['spayment_bank_account_name']=trim($data['spayment_bank_account_name']);
+            $updateInvoice['spayment_bank_iban']=trim($data['spayment_bank_iban']);
+            $updateInvoice['spayment_bank_account']=trim($data['spayment_bank_account']);
+            $updateInvoice['spayment_bank_swift']=trim($data['spayment_bank_swift']);
+            $updateInvoice['spayment_bank_name']=trim($data['spayment_bank_name']);
+            $updateInvoice['spayment_bank_address']=trim($data['spayment_bank_address']);
+            $updateInvoice['spayment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
+            $updateInvoice['spayment_bank_place']=trim($data['spayment_bank_place']);
+            $updateInvoice['spayment_bank_country_code']=trim($data['spayment_bank_country_id']);
+
+            $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
+            $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
+
+        
+            //$auto_id=trim($_POST['auto_id']);
+        
+
+            //dd($updateInvoice);
+            
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+               
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice')
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
     
 
     /**
@@ -900,6 +993,8 @@ class InvoiceController extends Controller
             $studentEvents->orderBy('events.date_start', 'desc');
             //By
             $studentEvents->distinct('events.id');
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
 
             //$studentEvents->groupBy('events.id');
             $data = $studentEvents->get();
@@ -1037,6 +1132,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
+            $teacherEvents->whereNull('events.deleted_at');
+            $teacherEvents->whereNull('event_details.deleted_at');
             //$studentEvents->where('events.is_paying', '>', 0);
             $teacherEvents->where('event_details.visibility_id', '>', 0);
             //$studentEvents->whereNotIn('events.event_type', [100]);
@@ -1298,6 +1395,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('event_details.participation_id', '>', 198);
                 $teacherEvents->where('events.date_start', '>=', $dateS);
                 $teacherEvents->where('events.date_end', '<=', $dateEnd);
+                $teacherEvents->whereNull('events.deleted_at');
+                $teacherEvents->whereNull('event_details.deleted_at');
                 //dd($dateS);
                 if ($user_role != 'superadmin') {
                     if ($user_role == 'teacher') {
@@ -1348,6 +1447,7 @@ class InvoiceController extends Controller
                 $cheque_payee = 0;
                 $extra_expenses = 0;
                 $total_amount_extra = 0;
+                $teacher_fullname = '';
             
 
             foreach ($data as $key => $value) {
@@ -1433,6 +1533,7 @@ class InvoiceController extends Controller
 
 
                     $teacher = Teacher::find($value->teacher_id);
+                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
                     if ($value->event_type == 10) { // lesson
                         if ($value->invoiced_type == 'S') {
                             //$invoiceItemData['caption'] = 'test school invoice package with 2 student(s)';
@@ -1512,6 +1613,8 @@ class InvoiceController extends Controller
                 'extra_expenses' => $extra_expenses
                 
                 ];
+                $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
+            
                 // print_r($updateInvoiceCalculation);
                 // exit();
             
@@ -1686,7 +1789,6 @@ class InvoiceController extends Controller
                 $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
                 
             }
-            $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
             
             
             if (!empty($p_student_id)) {
@@ -1789,6 +1891,8 @@ class InvoiceController extends Controller
                     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
             
             
             //dd($dateEnd);
@@ -1828,6 +1932,7 @@ class InvoiceController extends Controller
             $cheque_payee = 0;
             $extra_expenses = 0;
             $total_amount_extra = 0;
+            $teacher_fullname = '';
 
             foreach ($data as $key => $value) {
                 try{
@@ -1912,9 +2017,10 @@ class InvoiceController extends Controller
                     $total_amount_with_discount += $v_total_amount_with_discount;
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
-
+                    $teacher = Teacher::find($value->teacher_id);
+                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
                     if ($value->event_type == 10) { //lesson
-                        $teacher = Teacher::find($value->teacher_id);
+                        
                         $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
                         $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
                         if ($value->extra_charges>0) {
@@ -1981,6 +2087,8 @@ class InvoiceController extends Controller
                'extra_expenses' => $extra_expenses
             
             ];
+            $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
+            
             // print_r($updateInvoiceCalculation);
             // exit();
             
