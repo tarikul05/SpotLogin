@@ -1136,12 +1136,15 @@
 
         var vform = $("#form_details")[0];
         var form_data = new FormData(vform);
+        for (var [key, value] of form_data.entries()) { 
+            console.log(key, value);
+        }
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-        console.log(form_data);
-        return false;
+        // console.log(form_data);
+        // return false;
         $.ajax({
-            url: 'invoice_data.php',
+            url: BASE_URL+'/update_invoice_info',
             data: form_data,
             type: 'POST',
             dataType: 'json',

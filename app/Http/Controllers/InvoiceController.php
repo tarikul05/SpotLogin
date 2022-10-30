@@ -455,6 +455,99 @@ class InvoiceController extends Controller
         }
     }
 
+
+    /**
+     *  AJAX action for invoice info update
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-30
+     */
+    public function updateInvoiceInfo(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+
+            $updateInvoice['date_invoice']=trim($data['date_invoice']);
+            $updateInvoice['invoice_title']=trim($data['invoice_title']);
+            $updateInvoice['invoice_header']=trim($data['invoice_header']);
+            $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
+            $updateInvoice['client_name']=trim($data['client_name']);
+            $updateInvoice['client_gender_id']=trim($data['client_gender_id']);
+            $updateInvoice['client_lastname']=trim($data['client_lastname']);
+            $updateInvoice['client_firstname']=trim($data['client_firstname']);
+            $updateInvoice['client_street']=trim($data['client_street']);
+            $updateInvoice['client_street_number']=trim($data['client_street_number']);
+            $updateInvoice['client_street2']=trim($data['client_street2']);
+            $updateInvoice['client_zip_code']=trim($data['client_zip_code']);
+            $updateInvoice['client_place']=trim($data['client_place']);
+            $updateInvoice['client_country_code']=trim($data['client_country_id']);
+        
+            $updateInvoice['seller_name']=trim($data['seller_name']);
+            $updateInvoice['seller_gender_id']=trim($data['seller_gender_id']);
+            $updateInvoice['seller_lastname']=trim($data['seller_lastname']);
+            $updateInvoice['seller_firstname']=trim($data['seller_firstname']);
+            $updateInvoice['seller_street']=trim($data['seller_street']);
+            $updateInvoice['seller_street_number']=trim($data['seller_street_number']);
+            $updateInvoice['seller_street2']=trim($data['seller_street2']);
+            $updateInvoice['seller_zip_code']=trim($data['seller_zip_code']);
+            $updateInvoice['seller_place']=trim($data['seller_place']);
+            $updateInvoice['seller_country_code']=trim($data['seller_country_id']);
+            $updateInvoice['seller_phone']=trim($data['seller_phone']);
+            $updateInvoice['seller_mobile']=trim($data['seller_mobile']);
+            $updateInvoice['seller_email']=trim($data['seller_email']);
+            $updateInvoice['seller_eid']=trim($data['seller_eid']);
+        
+            $updateInvoice['spayment_bank_account_name']=trim($data['spayment_bank_account_name']);
+            $updateInvoice['spayment_bank_iban']=trim($data['spayment_bank_iban']);
+            $updateInvoice['spayment_bank_account']=trim($data['spayment_bank_account']);
+            $updateInvoice['spayment_bank_swift']=trim($data['spayment_bank_swift']);
+            $updateInvoice['spayment_bank_name']=trim($data['spayment_bank_name']);
+            $updateInvoice['spayment_bank_address']=trim($data['spayment_bank_address']);
+            $updateInvoice['spayment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
+            $updateInvoice['spayment_bank_place']=trim($data['spayment_bank_place']);
+            $updateInvoice['spayment_bank_country_code']=trim($data['spayment_bank_country_id']);
+
+            $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
+            $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
+
+        
+            //$auto_id=trim($_POST['auto_id']);
+        
+
+            //dd($updateInvoice);
+            
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+               
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice')
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
     
 
     /**
