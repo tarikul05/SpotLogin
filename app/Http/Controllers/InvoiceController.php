@@ -90,7 +90,7 @@ class InvoiceController extends Controller
             
         $invoices = $invoices->get();
         //dd($invoices);
-        return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.list', compact('school','invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
     }
 
 
@@ -343,6 +343,7 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_payment_status = 0;
             $invoice_status =0;
+            //dd($data);
 
             if (isset($data['p_payment_status'])) {
                 $p_payment_status = trim($data['p_payment_status']);

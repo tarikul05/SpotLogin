@@ -26,7 +26,7 @@
     </header>
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
-        <input id="p_school_id" name="p_school_id" style="display: none;">
+        <input id="p_school_id" name="p_school_id" style="display: none;" value="<?php echo $school->id;?>">
         
         
         <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">

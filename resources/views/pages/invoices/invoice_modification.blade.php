@@ -147,7 +147,8 @@
                             <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice->id}}">
                             <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoice->invoice_type}}">
                             <input type="hidden" id="payment_status" name="payment_status" value="{{$invoice->payment_status}}">
-
+                            <input id="p_school_id" name="p_school_id" style="display: none;" value="{{$invoice->school_id}}">
+        
                             @if($invoice->invoice_type ==1)
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->client_id}}">
                             @else
@@ -1044,7 +1045,7 @@
             dataType: 'json',
             //async: false,
             success: function (result) {
-                //console.log(result);
+                console.log(result);
                 if (result.status) {
                     confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
                     return false;
