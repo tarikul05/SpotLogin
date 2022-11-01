@@ -32,6 +32,7 @@
                             <label></label>
                         </div>
                     </div>
+					<?php //echo '<pre>';print_r($eventCat); ?>
                     <div class="row">
                         <div id="add_more_event_category_div" class="col-md-10">
                         @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
@@ -55,30 +56,50 @@
                                                 <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
                                             </div>
 											<div class="col-sm-6">
-												<div class="pack_invoice_area form-group row" <?php if( ($cat->invoiced_type == 'T') && ($cat->package_invoice == 0)){ echo 'style="display:none"'; }  ?> >
+												<div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?> >
 													<div class="col-md-6">
 														<label class="titl">Teachers</label>
 														<div class="form-check">
-															<label class="form-check-label" for="radio{{$count}}">
-																<input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][teacher_price]" value="1" checked>Fix price per hour
+															<label class="form-check-label" for="radio2{{$count}}">
+																<input type="radio" class="form-check-input" id="radio2{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="0" <?php if($cat->s_thr_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
 															</label>
 														</div>
 														<div class="form-check">
-															<label class="form-check-label" for="radio2{{$count}}">
-																<input type="radio" class="form-check-input" id="radio2{{$count}}" name="category[{{$count}}][teacher_price]" value="0">Price per student/hour
+															<label class="form-check-label" for="radio{{$count}}">
+																<input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
 															</label>
 														</div>
 													</div>
 													<div class="col-md-6">
 														<label class="titl">Students</label>
 														<div class="form-check">
-															<label class="form-check-label" for="sradio{{$count}}">
-																<input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][student_price]" value="1" checked>Package payment
+															<label class="form-check-label" for="sradio2{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="0" <?php if($cat->s_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
 															</label>
 														</div>
 														<div class="form-check">
-															<label class="form-check-label" for="sradio2{{$count}}">
-																<input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][student_price]" value="0">Payment per lesson
+															<label class="form-check-label" for="sradio{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="sradio3{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio3{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="2" <?php if($cat->s_std_pay_type == 2){ echo 'checked'; }  ?>>Packaged
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="pack_invoice_area teacher form-group row" <?php if($cat->invoiced_type == 'S'){ echo 'style="display:none"'; }  ?> >
+													<div class="col-md-6">
+														<label class="titl">Students</label>
+														<div class="form-check">
+															<label class="form-check-label" for="tradio2{{$count}}">
+																<input type="radio" class="form-check-input" id="tradio2{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="0" <?php if($cat->t_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="tradio{{$count}}">
+																<input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="1" <?php if($cat->t_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
 															</label>
 														</div>
 													</div>
@@ -228,36 +249,56 @@ $(document).ready(function(){
 			<div class="col-md-8 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-3">
-						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
+						<input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
 					</div>
 					<div class="col-sm-3">
-						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+						<input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
 					</div>
 					<div class="col-sm-6">
-						<div class="pack_invoice_area form-group row">
+						<div class="pack_invoice_area student form-group row">
 							<div class="col-md-6">
 								<label class="titl">Teachers</label>
 								<div class="form-check">
-									<label class="form-check-label" for="radio`+lst_id+`">
-										<input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][teacher_price]" value="1" checked>Fix price per hour
+									<label class="form-check-label" for="radio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="radio2`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="0">Hourly rate
 									</label>
 								</div>
 								<div class="form-check">
-									<label class="form-check-label" for="radio2`+lst_id+`">
-										<input type="radio" class="form-check-input" id="radio2`+lst_id+`" name="category[`+lst_id+`][teacher_price]" value="0">Price per student/hour
+									<label class="form-check-label" for="radio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price
 									</label>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<label class="titl">Students</label>
 								<div class="form-check">
-									<label class="form-check-label" for="sradio`+lst_id+`">
-										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][student_price]" value="1" checked>Package payment
+									<label class="form-check-label" for="sradio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio2`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="0">Hourly rate
 									</label>
 								</div>
 								<div class="form-check">
-									<label class="form-check-label" for="sradio2`+lst_id+`">
-										<input type="radio" class="form-check-input" id="sradio2`+lst_id+`" name="category[`+lst_id+`][student_price]" value="0">Payment per lesson
+									<label class="form-check-label" for="sradio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price
+									</label>
+								</div>
+								<div class="form-check">
+									<label class="form-check-label" for="sradio3`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio3`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="2">Packaged
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="pack_invoice_area teacher form-group row" style="display:none">
+							<div class="col-md-6">
+								<label class="titl">Students</label>
+								<div class="form-check">
+									<label class="form-check-label" for="tradio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="tradio2`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="0">Hourly rate
+									</label>
+								</div>
+								<div class="form-check">
+									<label class="form-check-label" for="tradio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="tradio`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="1">Fixed price
 									</label>
 								</div>
 							</div>
@@ -516,12 +557,14 @@ $(document).ready(function(){
 	}
 })
 
-	$("body").find('.invcat_name').on('change', function(){
+	$('#add_more_event_category_div').on('click', '.invcat_name', function() {
 		var type = $(this).val();
 		if(type == 'T'){
-			$(this).closest(".invoice_part").find('.pack_invoice_area').hide();
-		}else{
-			$(this).closest(".invoice_part").find('.pack_invoice_area').show();	
+			$(this).closest(".invoice_part").find('.pack_invoice_area.student').hide();
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').show();	
+		}else if(type == 'S'){
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').hide();	
+			$(this).closest(".invoice_part").find('.pack_invoice_area.student').show();	
 		}
 	});
 
