@@ -1069,8 +1069,8 @@
 
     $('#email_send').click(function (e) {
         var p_emails = '', p_attached_file = '';
-        var p_inv_auto_id = $('#seleted_auto_id').val();
-        var p_seleted_invoice_type = $('#seleted_invoice_type').val();
+        var p_inv_auto_id = document.getElementById("invoice_id").value;
+        var p_seleted_invoice_type = document.getElementById("invoice_type").value;
         var p_school_id = document.getElementById("p_school_id").value;
         if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
             p_emails = document.getElementById("father_email_chk").value + "|";
@@ -1088,11 +1088,9 @@
 
 
         console.log(p_seleted_invoice_type);
-        if (p_seleted_invoice_type == 2) {
-            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        } else {
-            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        }
+        
+        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        
 
 
     });

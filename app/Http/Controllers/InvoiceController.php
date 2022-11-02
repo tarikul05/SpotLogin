@@ -168,6 +168,7 @@ class InvoiceController extends Controller
      */
     public function payReminderEmailSend(Request $request)
     {
+
         $result = array(
             'status' => false,
             'message' => __('failed to send email'),
@@ -203,6 +204,8 @@ class InvoiceController extends Controller
             }
             $result_data->emails = $emails;
             $result_data->target_user = $target_user;
+            $client_name=$result_data->client_name;
+            $invoice_filename=$result_data->invoice_filename;
 
             if ($user->isSuperAdmin()) {
 
@@ -241,6 +244,8 @@ class InvoiceController extends Controller
 
                     $email_data['username'] = $target_user->firstname;
                     $email_data['school_name'] = $schoolName;
+                    $email_data['client_name'] = $client_name;
+                    $email_data['p_attachment'] = $invoice_filename;
                     //$this->schoolId =
                     if ($p_email != '') {
                         //dd($p_email);
@@ -278,6 +283,8 @@ class InvoiceController extends Controller
                         //dd($email_data);
                         foreach ($result_data->emails as $key => $value) {
                             $email_data['email'] = $value;
+                            $email_data['client_name'] = $client_name;
+                            $email_data['p_attachment'] = $invoice_filename;
 
                             if ($this->emailSend($email_data, $p_template_code)) {
 
@@ -310,6 +317,8 @@ class InvoiceController extends Controller
 
             return response()->json($result);
         } catch (Exception $e) {
+            // echo $e->getMessage();
+            // exit();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
