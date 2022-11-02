@@ -26,14 +26,14 @@
                         <td>
                             <?php 
                                 if($subscription){
-                                    echo date('F j, Y, g:i a', $subscription['current_period_end']);
+                                    echo date('M j, Y', $subscription['current_period_end']);
                                 }
                             ?>
                         </td>
                         <td>
                             <?php 
                                 if($subscription){
-                                    echo date('F j, Y, g:i a', $subscription['billing_cycle_anchor']);
+                                    echo date('M j, Y', $subscription['billing_cycle_anchor']);
                                 }
                             ?>
                         </td>

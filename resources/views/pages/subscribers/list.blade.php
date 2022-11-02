@@ -1,33 +1,43 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header"> Plans </div>
-                <div class="card-body">
-                    @if(session()->get('success'))
-                        <div class="alert alert-success">
-                            {{ session()->get('success') }}
-                        </div>
-                    @endif
-                    <div class="plan-lists plan_center">
-                        @foreach($plans as $plan)
-                            <div class="columns">
-                                <ul class="price">
-                                    <li class="header" style="background-color:#04AA6D">{{ $plan['plan_name']->name }}</li>
-                                    <li class="grey">
-                                        ${{ number_format($plan['amount'], 2) }} / {{ $plan['interval'] }}<br>
-                                        <span style="color: green;">save ${{ number_format((15*$plan['interval_count'] - $plan['amount']),2)}}</span>
-                                    </li>
-                                    <li class="grey"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose</a></li>
-                                </ul>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+<div class="my-subscription dataTables_wrapper">
+    <div class="container">
+        <div class="title">
+            <h3 class="h3">List of subscribers</h3>
+        </div>
+        <div class="row justify-content-center">
+            <table class="table my_subscription">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Plan Type</th>
+                        <th>Expired Date</th>
+                        <th>Next Payment</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <?php foreach($subscribers as $subscriber){ ?>
+                    <tr>
+                        <th><?= $subscriber['user_name'] ?></th>
+                        <th><?= $subscriber['email'] ?></th>
+                        <th><?= $subscriber['plan_name'] ?></th>
+                        <th><?= date('M j, Y', $subscriber['current_period_end']); ?></th>
+                        <th><?= date('M j, Y', $subscriber['billing_cycle_anchor']); ?></th>
+                        <th>
+                            <span class="price"><?= '$'.($subscriber['amount_decimal'])/100 ?></span>
+                            <span class="interval"><?= '/'.$subscriber['interval'] ?></span>
+                        </th>
+                        <th>
+                            <a class="action_link" target="_blank" href="<?= $subscriber['invoice_url'] ?>"> View Invoice </a>
+                        </th>
+                    </tr>
+                    <?php } ?>    
+                </thead>
+            </table>
         </div>
     </div>
 </div>

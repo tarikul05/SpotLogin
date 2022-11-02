@@ -421,6 +421,7 @@
 .my_subscription .interval{
     font-family: 'Gilroy';
     font-style: normal;
+    font-weight: normal;
     font-size: 18px;
     line-height: 21px;
     color: #152245;

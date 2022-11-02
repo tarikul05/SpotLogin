@@ -66,6 +66,7 @@
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
                             </div>
                         </div>
+                        <a href="{{ route('subscriber_list') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-item nav-link">{{ __('Billing') }}</a>
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
                             @unlessrole('student')
