@@ -24,7 +24,55 @@ class SubscriptionController extends Controller
 
     public function index()
     {
-
+        try{
+            $user = auth()->user();
+            $subscriptions = $this->stripe->subscriptions->all();
+            $subscribers = [];
+            $email = null;
+            $firstname = null;
+            $invoice_obj = null;
+            if($subscriptions['data']){
+                foreach($subscriptions['data'] as $subscription){
+                    $product_object = $this->stripe->products->retrieve(
+                        $subscription->plan['product'],
+                        []
+                    );
+                    $customer_obj = Cashier::findBillable($subscription->customer);
+                    if($customer_obj){
+                        $email = $customer_obj->email;
+                        $firstname = $customer_obj->firstname;
+                        $lastname = $customer_obj->lastname;
+                    }
+                    $invoice = $this->stripe->invoices->retrieve(
+                        $subscription->latest_invoice,
+                        []
+                    );
+                    if($invoice){
+                        $invoice_obj = $invoice;
+                    }
+                    $subscribers[] = [
+                        'billing_cycle_anchor' => $subscription->billing_cycle_anchor,
+                        'current_period_end' => $subscription->current_period_end,
+                        'current_period_start' => $subscription->current_period_start,
+                        'customer' => $subscription->customer,
+                        'days_until_due' => $subscription->days_until_due,
+                        'latest_invoice' => $subscription->latest_invoice,
+                        'start_date' => $subscription->start_date,
+                        'amount' => $subscription->plan['amount'],
+                        'amount_decimal' => $subscription->plan?$subscription->plan['amount_decimal']:'',
+                        'interval' => $subscription->plan?$subscription->plan['interval']:'',
+                        'product' => $subscription->plan['product'],
+                        'plan_name' => $product_object->name,
+                        'email' => $email,
+                        'user_name' => $firstname.' '.$lastname,
+                        'invoice_url' => $invoice_obj->hosted_invoice_url,
+                    ];
+                }
+            }
+            return view('pages.subscribers.list', compact('subscribers'));
+        } catch (Exception $e) {
+            // throw error message
+        }
     }
 
     public function upgradePlan(Request $request)
@@ -112,32 +160,30 @@ class SubscriptionController extends Controller
         try {
             $user = $request->user();
             //find reming day
-            $today_date = new DateTime();
             $ends_at = auth()->user()->trial_ends_at;
-            $ends_at = new DateTime($ends_at);
-            $day_diff = $ends_at->diff($today_date)->format("%a");
+            // $today_date = new DateTime();
+            // $ends_at = new DateTime($ends_at);
+            // $day_diff = $ends_at->diff($today_date)->format("%a");
             $plan_id = $request->plan;
             $plan_name = $request->plan_name;
             // $plan = $this->stripe->plans->retrieve($plan_id, []);
             if ($user->subscribed('default')) {
-                return redirect()->route('agenda')->with('success', 'already, You have subscribed ' . $plan_name . ' plan');
+                return redirect()->route('agenda')->with('success', 'already, You have subscribed ' . $plan_name);
             }
-            $anchor_date = now()->addDays($day_diff);
-            $anchor = Carbon::parse($anchor_date);
+            $anchor = Carbon::parse($ends_at);
             $paymentMethod = $request->paymentMethod;
             $user->createOrGetStripeCustomer();
             $user->updateDefaultPaymentMethod($paymentMethod);
             $user->newSubscription('default', $plan_id)
+                    ->trialUntil($anchor->endOfDay())
                     ->create($paymentMethod, [
                         'email' => $user->email,
                         'name'  => $request->card_holder_name,
-                        'billing_cycle_anchor' => $anchor,
                     ],
                     [
                         'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
                     ]
                 );
-            $user->trail_remain_days = $day_diff;
             $user->trial_ends_at = NULL;
             $user->save();
             return redirect()->route('agenda')->with('success', 'Welcome, You have subscribed ' . $plan_name);
