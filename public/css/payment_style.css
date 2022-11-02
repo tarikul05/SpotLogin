@@ -79,7 +79,7 @@
 .plans .columns {
     float: left;
     width: 379px;
-    height: 597px;
+    height: 632px;
     background: #FFFFFF;
     box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
     border-radius: 8px;
@@ -176,6 +176,14 @@
 .disabled{
     pointer-events: none;
     opacity: .5;
+}
+.plans .premium-plan .info-txt{
+    font-family: 'Gilroy';
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    text-align: center;
+    color: #FFFFFF;
 }
 .plans .premium-plan .submit-button {
     margin: 0 auto;
@@ -330,6 +338,7 @@
     background: #FFFFFF;
     cursor: default;
 }
+
 .subscription-form-wrapper .button-area .btn-cancle{
     border-radius: 8px;
     font-family: 'Gilroy';
@@ -375,6 +384,57 @@
 }
 .payment-footer-wrapper .f_margin_top{
     margin-top: 25px;
+}
+
+/*
+** my subscription css
+*/
+.mysubscription{
+    background: #F5F5F5;
+    min-height: 40vw;
+}
+.my_subscription{
+    border: 2px solid #E1EFF7;
+}
+.my-subscription .title{
+    padding: 52px 0 36px;
+}
+.my-subscription .title .h3{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 36px;
+    color: #0075BF;
+}
+.my_subscription tr{
+    border: 2px solid #E1EFF7;
+}
+.my_subscription .price{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 21px;
+    color: #152245;
+}
+.my_subscription .interval{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+.my_subscription .action_link{
+    text-decoration: none;
+}
+.my_subscription .action_icon{
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #657E8E;
 }
 /* .plan_center .price {
     list-style-type: none;

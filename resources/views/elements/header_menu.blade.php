@@ -121,6 +121,7 @@
 
                                     @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin())
                                         <a href="{{ route('updateTeacher') }}" class="dropdown-item">{{ __('My Account') }}</a> 
+                                        <a href="{{ route('mySubscription') }}" class="dropdown-item">{{ __('My Subscription') }}</a> 
                                     @endif
 
                                     <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>

@@ -8,6 +8,7 @@ use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Subscription as CashierSubscription;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Laravel\Cashier\PaymentMethod;
+use Carbon\Carbon;
 use Exception;
 use DateTime;
 
@@ -30,6 +31,11 @@ class SubscriptionController extends Controller
     {
         try {
             $user = auth()->user();
+            $subscription = null;
+            $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+            if(!empty($subscription_info['data'])){
+                $subscription = $subscription_info['data'][0];
+            }
             $is_subscribed = $user->subscribed('default');
             $today_date = new DateTime();
             if (!$is_subscribed) {
@@ -55,7 +61,7 @@ class SubscriptionController extends Controller
                 ];
             }
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent','is_subscribed', 'trial_ends_date', 'plans'));
+            return view('pages.subscribers.upgrade', compact('intent','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
             // throw error message
         }
@@ -116,6 +122,8 @@ class SubscriptionController extends Controller
             if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'already, You have subscribed ' . $plan_name . ' plan');
             }
+            $anchor_date = now()->addDays($day_diff);
+            $anchor = Carbon::parse($anchor_date);
             $paymentMethod = $request->paymentMethod;
             $user->createOrGetStripeCustomer();
             $user->updateDefaultPaymentMethod($paymentMethod);
@@ -123,6 +131,7 @@ class SubscriptionController extends Controller
                     ->create($paymentMethod, [
                         'email' => $user->email,
                         'name'  => $request->card_holder_name,
+                        'billing_cycle_anchor' => $anchor,
                     ],
                     [
                         'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
@@ -174,6 +183,28 @@ class SubscriptionController extends Controller
             return redirect()->route('agenda')->with('success', 'Your payment successfully complete');
         } catch ( Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function mySubscription(Request $request){
+        try{
+            $user = auth()->user();
+            $subscription = null;
+            $product_object = null;
+            if($user->stripe_id){
+                $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+                if(!empty($subscription_info['data'])){
+                    $subscription = $subscription_info['data'][0];
+                    $product_object = $this->stripe->products->retrieve(
+                        $subscription['plan']['product'],
+                        []
+                    );
+                }
+            }
+            // dd($subscription);
+            return view('pages.subscribers.my_subscription', compact('subscription','product_object','user'));
+        }catch(Exception $exception){
+            // throw error
         }
     }
 }
