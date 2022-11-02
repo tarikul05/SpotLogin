@@ -123,8 +123,10 @@
                         </li>
                         <?php if(!$is_subscribed){ ?>
                             <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose plan</a></li>
+                            <li class="info-txt">you will not be the charged until the end of the trial period</li>
                         <?php }else{ ?>
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Active plan</a></li>
+                            <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('F j, Y, g:i a', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } ?>
                     </ul>
                 </div>
