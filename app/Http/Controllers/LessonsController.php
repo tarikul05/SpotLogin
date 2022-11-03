@@ -346,10 +346,10 @@ class LessonsController extends Controller
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
-                if($lessonData['sis_paying'] == 1){
+                if($lessonData['sis_paying'] == 0){
                    $attendBuyPrice = ($lessonPriceTeacher['price_buy']*($lessonData['duration']/60))/$stu_num[1];
                    $attendSellPrice = ($lessonPriceTeacher['price_sell']*($lessonData['duration']/60))/$stu_num[1];
-                }elseif($lessonData['sis_paying'] == 2){
+                }elseif($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = $lessonData['sprice_amount_buy'];
                     $attendSellPrice = $lessonData['sprice_amount_sell'];
                 }else{
@@ -500,10 +500,10 @@ class LessonsController extends Controller
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
-                if($lessonData['sis_paying'] == 1){
+                if($lessonData['sis_paying'] == 0){
                     $attendBuyPrice = ($lessonPriceTeacher['price_buy']*($lessonData['duration']/60))/$stu_num[1];
                     $attendSellPrice = ($lessonPriceTeacher['price_sell']*($lessonData['duration']/60))/$stu_num[1];
-                }elseif($lessonData['sis_paying'] == 2){
+                }elseif($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = $lessonData['sprice_amount_buy'];
                     $attendSellPrice = $lessonData['sprice_amount_sell'];
                 }else{

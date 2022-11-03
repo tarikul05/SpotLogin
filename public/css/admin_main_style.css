@@ -1170,6 +1170,16 @@ label.titl {
     font-weight: bold;
     border-bottom: 1px solid #ccc;
 }
+select#sis_paying,
+select#student_sis_paying {
+    border: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.lesson .selectdiv:after {
+    content: none;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;

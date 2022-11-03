@@ -264,8 +264,19 @@
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="category_select" name="category_select">
                                                                     @foreach($eventCategoryList as $key => $eventcat)
-                                                                        <option category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                                        <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
                                                                     @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row event hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="invoice_cat_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="invoice_cat_type" name="invoice_cat_type">
+                                                                    <option value="1">School invoice</option>
+                                                                    <option value="2">Teacher invoice</option>  
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -384,13 +395,24 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
-                                                                <select class="form-control" id="sis_paying" name="sis_paying">
-                                                                    <option value="0">No Charge</option>
-                                                                    <option value="1">Hourly rate</option>
-                                                                    <option value="2">Price per student</option>
+                                                                <select class="form-control" id="sis_paying" name="sis_paying" disabled>
+                                                                    <option value="0">Hourly rate</option>
+                                                                    <option value="1">Fixed price</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row lesson hide_on_off">
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
+                                                        <div class="col-sm-7">
+                                                            <div class="selectdiv">
+                                                                <select class="form-control" id="student_sis_paying" name="student_sis_paying" disabled>
+                                                                    <option value="0">Hourly rate</option>
+                                                                    <option value="1">Fixed price</option>
+                                                                    <option value="2">Packaged</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -1144,7 +1166,7 @@
                         var resultHtml ="";
                         var i='0';
                         $.each(data, function(key,value){
-                            resultHtml+='<option value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>'; 
+                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>'; 
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
@@ -3031,14 +3053,22 @@ $('#student').on('change', function(event) {
 	
 })
 $( document ).ready(function() {
-	var value = $('#sis_paying').val();
+    var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+    var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+    var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+    if (datainvoiced == 'S') {
+        $("#student_sis_paying").val(s_std_pay_type);
+        $("#sis_paying").val(s_thr_pay_type);
+    }else{
+        $("#student_sis_paying").val(t_std_pay_type);
+    }
 	$('#hourly').show();
 	$('#price_per_student').hide();
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
-	if(value == 1){
+	if(s_thr_pay_type == 0){
 		$('#hourly').show();
-	}else if(value == 2){
+	}else if(s_thr_pay_type == 1){
 		$('#price_per_student').show();
 	}
 	$('.timepicker_start').timepicker({
@@ -3363,7 +3393,7 @@ $(document).ready(function() {
             $( "#end_date" ).attr("readonly", "readonly");;	
             $('.lesson').show();
             $('.event').hide();
-            $('#sis_paying').val(1);
+            //$('#sis_paying').val(1);
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
@@ -3377,9 +3407,16 @@ $(document).ready(function() {
 });
 $("body").on('change', '#category_select', function(event) {
     var datainvoiced = $("#category_select option:selected").data('invoice');
+    var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+    var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+    var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+    
     if (datainvoiced == 'S') {
         $("#std-check-div").css('display', 'block');
+        $("#student_sis_paying").val(s_std_pay_type);
+        $("#sis_paying").val(s_thr_pay_type);
     }else{
+        $("#student_sis_paying").val(t_std_pay_type);
         $("#std-check-div").css('display', 'none');
         $("#student_empty").prop('checked', false)
     }
@@ -3417,7 +3454,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("readonly", "readonly");;	
             $('.lesson').show();
             $('.event').hide();
-            $('#sis_paying').val(1);
+            //$('#').val(1);
             $('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
