@@ -3053,6 +3053,7 @@ $('#student').on('change', function(event) {
 	
 })
 $( document ).ready(function() {
+    var datainvoiced = $("#category_select option:selected").data('invoice');
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
@@ -3062,13 +3063,14 @@ $( document ).ready(function() {
     }else{
         $("#student_sis_paying").val(t_std_pay_type);
     }
-	$('#hourly').show();
-	$('#price_per_student').hide();
+	
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
 	if(s_thr_pay_type == 0){
 		$('#hourly').show();
+        $('#price_per_student').hide();
 	}else if(s_thr_pay_type == 1){
+        $('#hourly').hide();
 		$('#price_per_student').show();
 	}
 	$('.timepicker_start').timepicker({
@@ -3194,17 +3196,17 @@ $( document ).ready(function() {
 		}
 	});
 })
-$('#sis_paying').on('change', function() {
-	$('#hourly').hide();
-	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
-	if(this.value == 1){
-		$('#hourly').show();
-	}else if(this.value == 2){
-		$('#price_per_student').show();
-	}
-});
+// $('#sis_paying').on('change', function() {
+// 	$('#hourly').hide();
+// 	$('#price_per_student').hide();
+// 	$('#sprice_amount_buy').val(0);
+// 	$('#sprice_amount_sell').val(0);
+// 	if(this.value == 1){
+// 		$('#hourly').show();
+// 	}else if(this.value == 2){
+// 		$('#price_per_student').show();
+// 	}
+// });
 $("body").on('click', '#all_day', function(event) {
     if ($(this).prop('checked')) {
         $(".not-allday").hide();
@@ -3394,7 +3396,7 @@ $(document).ready(function() {
             $('.lesson').show();
             $('.event').hide();
             //$('#sis_paying').val(1);
-            $('#price_per_student').hide();
+            //$('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
             $("form.form-horizontal").attr("action", page_action);
@@ -3420,6 +3422,13 @@ $("body").on('change', '#category_select', function(event) {
         $("#std-check-div").css('display', 'none');
         $("#student_empty").prop('checked', false)
     }
+    if(s_thr_pay_type == 0){
+		$('#hourly').show();
+        $('#price_per_student').hide();
+	}else if(s_thr_pay_type == 1){
+        $('#hourly').hide();
+		$('#price_per_student').show();
+	}
 });
 
 $("body").on('click', '#student_empty', function(event) {
@@ -3455,7 +3464,7 @@ $('#agenda_select').on('change', function() {
             $('.lesson').show();
             $('.event').hide();
             //$('#').val(1);
-            $('#price_per_student').hide();
+            //$('#price_per_student').hide();
             $('.hide_on_off').show();
             $('.event.hide_on_off').hide();
             $("form.form-horizontal").attr("action", page_action);
@@ -3473,7 +3482,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $('.lesson').hide();
             $('.event').show();
-            $('#price_per_student').show();
+            //$('#price_per_student').show();
             $('.hide_on_off').show();
             $('.lesson.hide_on_off').hide();
             $("form.form-horizontal").attr("action", page_action);
@@ -3489,7 +3498,7 @@ $('#agenda_select').on('change', function() {
             }
             $('#all_day').hide();
             $('.hide_on_off').hide();
-            $('#price_per_student').hide();
+            //$('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
@@ -3505,7 +3514,7 @@ $('#agenda_select').on('change', function() {
             $('#all_day').hide();
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
-            $('#price_per_student').hide();
+            //$('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
