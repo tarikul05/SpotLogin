@@ -50,7 +50,7 @@
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
-													<option data-invoice="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
+													<option data-invoice="{{ $eventcat->invoiced_type }}" data-s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" data-s_std_pay_type="{{  $eventcat->s_std_pay_type }}" data-t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -172,14 +172,25 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
+								<div class="form-group row" id="teacher_type_billing">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0">No charge</option>
-												<option value="1" selected>Hourly rate</option>
-												<option value="2">Price per student</option>
+												<option value="0">Hourly rate</option>
+												<option value="1">Fixed price</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
+									<div class="col-sm-7">
+										<div class="selectdiv">
+											<select class="form-control" id="student_sis_paying" name="student_sis_paying">
+												<option value="0">Hourly rate</option>
+												<option value="1">Fixed price</option>
+												<option value="2">Packaged</option>
 											</select>
 										</div>
 									</div>
@@ -324,13 +335,26 @@ $( document ).ready(function() {
     // document.getElementById("zone").value = zone;
 	var zone = document.getElementById("zone").value;
 	var value = $('#sis_paying').val();
-	$('#hourly').hide();
-	$('#price_per_student').hide();
+	var datainvoiced = $("#category_select option:selected").data('invoice');
+    var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+    var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+    var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+    if (datainvoiced == 'S') {
+        $("#student_sis_paying").val(s_std_pay_type);
+        $("#sis_paying").val(s_thr_pay_type);
+        $("#teacher_type_billing").show();
+    }else{
+        $("#teacher_type_billing").hide();
+        $("#student_sis_paying").val(t_std_pay_type);
+    }
+	
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
-	if(value == 1){
+	if(s_thr_pay_type == 0){
 		$('#hourly').show();
-	}else if(value == 2){
+        $('#price_per_student').hide();
+	}else if(s_thr_pay_type == 1){
+        $('#hourly').hide();
 		$('#price_per_student').show();
 	}
 
@@ -570,11 +594,46 @@ $('#add_lesson').on('submit', function(e) {
 
 $("body").on('change', '#category_select', function(event) {
 	var datainvoiced = $("#category_select option:selected").data('invoice');
+	var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+	var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+	var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+	
 	if (datainvoiced == 'S') {
 		$("#std-check-div").css('display', 'block');
+		$("#teacher_type_billing").show();
+		$("#student_sis_paying").val(s_std_pay_type);
+		$("#sis_paying").val(s_thr_pay_type);
 	}else{
+		$("#student_sis_paying").val(t_std_pay_type);
 		$("#std-check-div").css('display', 'none');
+		$("#teacher_type_billing").hide();
 		$("#student_empty").prop('checked', false)
+	}
+	if(s_thr_pay_type == 0){
+		$('#hourly').show();
+		$('#price_per_student').hide();
+	}else if(s_thr_pay_type == 1){
+		$('#hourly').hide();
+		$('#price_per_student').show();
+		var formData = $('#edit_lesson').serializeArray();
+			var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+			formData.push({
+				"name": "_token",
+				"value": csrfToken,
+			});
+
+			$.ajax({
+				url: BASE_URL + '/check-lesson-fixed-price',
+				async: false, 
+				data: formData,
+				type: 'POST',
+				dataType: 'json',
+				success: function(response){
+					if(response.status == 1){
+						var errMssg = '';	
+					}
+				}
+			})
 	}
 });
 

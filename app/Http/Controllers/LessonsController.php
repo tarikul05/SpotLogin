@@ -346,10 +346,10 @@ class LessonsController extends Controller
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
-                if($lessonData['sis_paying'] == 1){
+                if($lessonData['sis_paying'] == 0){
                    $attendBuyPrice = ($lessonPriceTeacher['price_buy']*($lessonData['duration']/60))/$stu_num[1];
                    $attendSellPrice = ($lessonPriceTeacher['price_sell']*($lessonData['duration']/60))/$stu_num[1];
-                }elseif($lessonData['sis_paying'] == 2){
+                }elseif($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = $lessonData['sprice_amount_buy'];
                     $attendSellPrice = $lessonData['sprice_amount_sell'];
                 }else{
@@ -373,7 +373,8 @@ class LessonsController extends Controller
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
                     'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
-                    'is_paying' => $lessonData['sis_paying']
+                    'is_paying' => $lessonData['sis_paying'],
+                    'student_is_paying' => $lessonData['student_sis_paying'],
                 ];
 
                 $event = Event::create($data);
@@ -500,10 +501,10 @@ class LessonsController extends Controller
 
                 $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$teacher_id])->first();
 
-                if($lessonData['sis_paying'] == 1){
+                if($lessonData['sis_paying'] == 0){
                     $attendBuyPrice = ($lessonPriceTeacher['price_buy']*($lessonData['duration']/60))/$stu_num[1];
                     $attendSellPrice = ($lessonPriceTeacher['price_sell']*($lessonData['duration']/60))/$stu_num[1];
-                }elseif($lessonData['sis_paying'] == 2){
+                }elseif($lessonData['sis_paying'] == 1){
                     $attendBuyPrice = $lessonData['sprice_amount_buy'];
                     $attendSellPrice = $lessonData['sprice_amount_sell'];
                 }else{
@@ -527,7 +528,8 @@ class LessonsController extends Controller
                     'no_of_students' => isset($stu_num) ? $stu_num[1] : null,
                     'description' => $lessonData['description'],
                     'location_id' => isset($lessonData['location']) ? $lessonData['location'] : null,
-                    'is_paying' => $lessonData['sis_paying']
+                    'is_paying' => $lessonData['sis_paying'],
+                    'student_is_paying' => $lessonData['student_sis_paying'],
                 ];
 
                 $event = Event::where('id', $lessonlId)->update($data);
@@ -1066,6 +1068,34 @@ class LessonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function lessonPriceCheck(Request $request)
+    {   
+        if ($request->isMethod('post')){
+            $lessonData = $request->all();
+            $stu_num = explode("_", $lessonData['sevent_price']);    
+            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+            if (!empty($lessonPriceTeacher)) {
+                return [
+                    'status' => 1,
+                    'message' =>  __('Successfully get price for this teacher')
+                ];
+            }else{
+                return [
+                    'status' => 0,
+                    'message' =>  __('No price for this teacher')
+                ];
+            }
+        }
+
+    }
+
+
+        /**
+     * check if price exist for student 
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function lessonFixedPrice(Request $request)
     {   
         if ($request->isMethod('post')){
             $lessonData = $request->all();

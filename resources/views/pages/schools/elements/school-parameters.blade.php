@@ -22,14 +22,14 @@
                 <div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
                     @csrf
                     <div class="section_header_class row">
-                        <div class="col-md-3 col-5">
+                        <div class="col-md-3 col-5 cat_name">
                             <label>{{ __('Category Name') }}</label>
                         </div>
-                        <div class="col-md-4 col-6">
+                        <div class="col-md-2 col-6 inv_type">
                             <label class="invoice_type_label">{{ __('Invoice Type') }}</label>
                         </div>
-                        <div class="col-md-2 col-1">
-                            <label></label>
+                        <div class="col-md-2 col-1 ty_bill">
+                            <label class="invoice_type_label">{{ __('Type of billing') }}</label>
                         </div>
                     </div>
 					<?php //echo '<pre>';print_r($eventCat); ?>
@@ -50,12 +50,14 @@
                                     <div class="col-md-8 col-6">
                                         <div class="form-group row invoice_part">
                                             <div class="col-sm-3">
-                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+												<div>
+                                                	<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+                                                </div>
+												<div>
+													<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+												</div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
-                                            </div>
-											<div class="col-sm-6">
+											<div class="col-sm-8">
 												<div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?> >
 													<div class="col-md-6">
 														<label class="titl">Teachers</label>
