@@ -24,6 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrencyTableSeeder::class);
         $this->call(EmailTemplateTableSeeder::class);
         $this->call(ProvincesTableSeeder::class);
-        $this->call(EventCategorySeeder::class);
+        //$this->call(EventCategorySeeder::class);
     }
 }
