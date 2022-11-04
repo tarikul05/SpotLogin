@@ -757,7 +757,7 @@
         } else {
             document.getElementById("unlock_btn").style.display = "none";
             document.getElementById("issue_inv_btn").style.display = "block";
-            document.getElementById("delete_btn_inv").style.display = "none";
+            document.getElementById("delete_btn_inv").style.display = "block";
             document.getElementById("approved_btn").style.display = "none";
             document.getElementById("payment_btn").style.display = "none";
             document.getElementById("print_preview_btn").style.display = "block";
@@ -904,11 +904,11 @@
                 document.getElementById("save_btn").style.display = "none";
                 document.getElementById("issue_inv_btn").style.display = "block";
                 document.getElementById("print_preview_btn").style.display = "block";
-                document.getElementById("delete_btn_inv").style.display = "none";
+                document.getElementById("delete_btn_inv").style.display = "block";
             } else {
                 document.getElementById("save_btn").style.display = "block";
                 document.getElementById("print_preview_btn").style.display = "block";
-                document.getElementById("delete_btn_inv").style.display = "none";
+                document.getElementById("delete_btn_inv").style.display = "block";
 
             }
 

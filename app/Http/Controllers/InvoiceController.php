@@ -2064,14 +2064,7 @@ class InvoiceController extends Controller
                     
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
-                    //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
-                    // //echo "<script>alert($query);</script>";exit;
-                    // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
-                    // while($row = mysql_fetch_assoc($result))
-                    // {
-                    //     $data[]=$row;
-                    // }
-                    // echo json_encode($data);
+                   
                 } catch (Exception $e) {
                     echo $e->getMessage();
 
@@ -2617,18 +2610,40 @@ class InvoiceController extends Controller
         try {
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
-            //$invoiceData = Invoice::find($id);
-            $invoiceData = Invoice::find($id)->delete();
-            // if (!empty($value->detail_id)) {
-            //     $detail_id =  explode(',',$value->detail_id);
-            //     $eventUpdate = [
-            //         'buy_invoice_id' => $invoiceData->id,
-            //         'is_buy_invoiced' => 1
-            //     ];
-            //     $eventData = EventDetails::whereIn('id', $detail_id)
-            //     ->update($eventUpdate);
-            // }
-            if ($invoiceData == 1) {
+            $invoiceData = Invoice::find($id);
+            $invoiceDelete = Invoice::find($id)->delete();
+            
+            if ($invoiceDelete == 1) {
+                if ($invoiceData->invoice_type ==2) {
+                    $invoiceItems= InvoiceItem::active()
+                        ->where('invoice_id', $id);
+                    foreach ($invoiceItems as $key => $invoiceData) {
+                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $eventUpdate = [
+                            'buy_invoice_id' => null,
+                            'is_buy_invoiced' => 0
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
+                    }
+                    $invoiceItems->delete();
+                }
+                if ($invoiceData->invoice_type ==1) {
+                    $invoiceItems= InvoiceItem::active()
+                        ->where('invoice_id', $id);
+                    foreach ($invoiceItems as $key => $invoiceData) {
+                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $eventUpdate = [
+                            'sell_invoice_id' => null,
+                            'is_sell_invoiced' => 0
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
+                    }
+                    $invoiceItems->delete();
+                }
+                
+                
                 $result = array(
                     "status"     => 'success',
                     'message' => __('Confirmed'),
