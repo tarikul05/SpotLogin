@@ -203,7 +203,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
         find_flag = 1;
         console.log(value.father_email);
         if (value.class_name == 'student') {
-            if (value.father_email != '') {
+            if (value.father_email && value.father_email != '') {
                 //document.getElementById("father_email_chk").value = value.father_email;
                 document.getElementById("father_email_chk").checked = true;
                 $('#father_email_cap').html(value.father_email);
@@ -212,7 +212,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#father_email_div").hide();
             }
 
-            if (value.mother_email != '') {
+            if (value.mother_email && value.mother_email != '') {
                 //document.getElementById("mother_email_chk").value = value.mother_email;
                 document.getElementById("mother_email_chk").checked = true;
                 $('#mother_email_cap').html(value.mother_email);
@@ -221,7 +221,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#mother_email_div").hide();
             }
 
-            if (value.student_email != '') {
+            if (value.student_email  && value.student_email != '') {
                 //document.getElementById("student_email_chk").value = value.student_email;
                 document.getElementById("student_email_chk").checked = true;
                 $('#student_email_cap').html(value.student_email);
@@ -233,7 +233,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
 
             $("#student_email_div").hide();
             document.getElementById("student_email_chk").value = "";
-            if (value.primary_email != '') {
+            if (value.primary_email && value.primary_email != '') {
                 document.getElementById("father_email_chk").checked = true;
                 $('#father_email_cap').html(value.primary_email);
                 $("#father_email_div").show();
@@ -242,7 +242,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#father_email_div").hide();
             }
 
-            if (value.secondary_email != '') {
+            if (value.secondary_email && value.secondary_email != '') {
                 document.getElementById("mother_email_chk").checked = true;
                 $('#mother_email_cap').html(value.secondary_email);
                 $("#mother_email_div").show();
