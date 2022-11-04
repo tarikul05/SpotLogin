@@ -478,8 +478,8 @@
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
 
-									@if(($category->package_invoice &&  $lessionPrice->divider != -1) ||  
-									(!$category->package_invoice &&  $lessionPrice->divider == -1))
+									@if(($category->s_thr_pay_type &&  $lessionPrice->divider != -1) ||  
+									(!$category->s_thr_pay_type &&  $lessionPrice->divider == -1))
 										@continue
 									@endif
 								<tr>
