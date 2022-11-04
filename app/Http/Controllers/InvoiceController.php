@@ -123,19 +123,23 @@ class InvoiceController extends Controller
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
                 $result_data->class_name = 'student';
                 $student = Student::find($result_data->client_id);
-                //$result->client = $student;
-                if ($student->student_notify == 1) {
-                    $result_data->student_email = $student->email;
+                //dd($student);
+                if ($student) {
+                    //$result->client = $student;
+                    if (isset($student->student_notify) && $student->student_notify == 1) {
+                        $result_data->student_email = $student->email;
+                    }
+                    if (isset($student->father_notify) && $student->father_notify == 1) {
+                        $result_data->father_email = $student->father_email;
+                    }
+                    if (isset($student->mother_notify) && $student->mother_notify == 1) {
+                        $result_data->mother_email = $student->mother_email;
+                    }
+                    $result_data->class_name = 'student';
+                    $result_data->primary_email = $student->email;
+                    $result_data->secondary_email = $student->email2;
                 }
-                if ($student->father_notify == 1) {
-                    $result_data->father_email = $student->father_email;
-                }
-                if ($student->mother_notify == 1) {
-                    $result_data->mother_email = $student->mother_email;
-                }
-                $result_data->class_name = 'student';
-                $result_data->primary_email = $student->email;
-                $result_data->secondary_email = $student->email2;
+                
             } else {
                 $result_data->class_name = 'teacher';
                 $teacher = Teacher::find($result_data->seller_id);
@@ -152,6 +156,7 @@ class InvoiceController extends Controller
 
             return response()->json($result);
         } catch (Exception $e) {
+            echo $e->getMessage();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -370,25 +375,26 @@ class InvoiceController extends Controller
             $p_auto_id = trim($data['p_auto_id']);
 
             
-            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
-            if($invoiceData){
-                $invoice_data = Invoice::with(['invoice_items'])->where('id', $p_auto_id)->first();
-                $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
-                $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
-                $pdf->set_option('isHtml5ParserEnabled', true);
-                $pdf->set_option('isRemoteEnabled', true);
-                $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
-                // save invoice name if invoice_filename is empty
-                if(empty($invoice_data->invoice_filename)){
-                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
-                    if($file_upload){
-                        $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
-                        $invoice_data->invoice_filename = $invoice_pdf_path;
-                        $invoice_data->save();
-                    }
+            
+            
+            
+            $invoice_data = Invoice::with(['invoice_items'])->where('id', $p_auto_id)->first();
+            $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+            $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+            $pdf->set_option('isHtml5ParserEnabled', true);
+            $pdf->set_option('isRemoteEnabled', true);
+            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+            // save invoice name if invoice_filename is empty
+            if(empty($invoice_data->invoice_filename)){
+                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                if($file_upload){
+                    $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
+                    $updateInvoice['invoice_filename'] = $invoice_pdf_path;
+                    //$invoice_data->save();
                 }
             }
+            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
             $result = array(
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
@@ -1836,7 +1842,7 @@ class InvoiceController extends Controller
             $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
             
             
-            
+            //dd($invoiceData);
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
@@ -2100,7 +2106,7 @@ class InvoiceController extends Controller
             ];
             $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
-            // print_r($updateInvoiceCalculation);
+            // print_r($invoiceData->id);
             // exit();
             
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
@@ -2611,7 +2617,17 @@ class InvoiceController extends Controller
         try {
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
+            //$invoiceData = Invoice::find($id);
             $invoiceData = Invoice::find($id)->delete();
+            // if (!empty($value->detail_id)) {
+            //     $detail_id =  explode(',',$value->detail_id);
+            //     $eventUpdate = [
+            //         'buy_invoice_id' => $invoiceData->id,
+            //         'is_buy_invoiced' => 1
+            //     ];
+            //     $eventData = EventDetails::whereIn('id', $detail_id)
+            //     ->update($eventUpdate);
+            // }
             if ($invoiceData == 1) {
                 $result = array(
                     "status"     => 'success',
