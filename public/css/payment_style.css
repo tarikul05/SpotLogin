@@ -1,6 +1,10 @@
 /*
 * top payment info section sp
 */
+body {
+    height: 55vw;
+}
+
 .content.agenda_page {
     margin-top: 29px;
 }
