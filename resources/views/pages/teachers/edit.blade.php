@@ -462,10 +462,10 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>{{__('Type of course')}}</th>
-								<th>{{__('Hourly rate applied')}}</th>
-								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
-								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+								<th>{{__('Category Type')}}</th>
+								<th>{{__('Type of billing')}}</th>
+								<th class="buy"><span>{{__('Teacher price') }}</span></th>
+								<th class="sell"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
