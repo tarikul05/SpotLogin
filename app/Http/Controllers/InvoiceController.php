@@ -1581,15 +1581,15 @@ class InvoiceController extends Controller
 
                 
 
-                    // if (!empty($value->detail_id)) {
-                    //     $detail_id =  explode(',',$value->detail_id);
-                    //     $eventUpdate = [
-                    //         'buy_invoice_id' => $invoiceData->id,
-                    //         'is_buy_invoiced' => 1
-                    //     ];
-                    //     $eventData = EventDetails::whereIn('id', $detail_id)
-                    //     ->update($eventUpdate);
-                    // }
+                    if (!empty($value->detail_id)) {
+                        $detail_id =  explode(',',$value->detail_id);
+                        $eventUpdate = [
+                            'buy_invoice_id' => $invoiceData->id,
+                            'is_buy_invoiced' => 1
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
+                    }
                     //print_r($invoiceItemData);
                 
 
@@ -2051,16 +2051,16 @@ class InvoiceController extends Controller
                         }
                     } 
                     
-                    // if (!empty($value->detail_id)) {
-                    //     $eventUpdate = [
-                    //         'sell_invoice_id' => $invoiceData->id,
-                    //         'is_sell_invoiced' => 1
-                    //     ];
-                    //     $eventData = EventDetails::where('student_id', $value->student_id)
-                    //     ->where('id', $value->detail_id)
-                    //     ->where('participation_id', '>', 198)
-                    //     ->update($eventUpdate);
-                    // }
+                    if (!empty($value->detail_id)) {
+                        $eventUpdate = [
+                            'sell_invoice_id' => $invoiceData->id,
+                            'is_sell_invoiced' => 1
+                        ];
+                        $eventData = EventDetails::where('student_id', $value->student_id)
+                        ->where('id', $value->detail_id)
+                        ->where('participation_id', '>', 198)
+                        ->update($eventUpdate);
+                    }
                     
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
