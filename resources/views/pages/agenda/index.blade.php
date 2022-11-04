@@ -274,7 +274,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="invoice_cat_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
-                                                                <select class="form-control" id="invoice_cat_type" name="invoice_cat_type">
+                                                                <select class="form-control" id="invoice_cat_type" name="invoice_cat_type" disable>
                                                                     <option value="1">School invoice</option>
                                                                     <option value="2">Teacher invoice</option>  
                                                                 </select>
@@ -394,11 +394,11 @@
                                                             <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row lesson hide_on_off">
+                                                    <div class="form-group row lesson hide_on_off" id="teacher_type_billing">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
-                                                                <select class="form-control" id="sis_paying" name="sis_paying" disabled>
+                                                                <select class="form-control" id="sis_paying" name="sis_paying">
                                                                     <option value="0">Hourly rate</option>
                                                                     <option value="1">Fixed price</option>
                                                                 </select>
@@ -409,7 +409,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
-                                                                <select class="form-control" id="student_sis_paying" name="student_sis_paying" disabled>
+                                                                <select class="form-control" id="student_sis_paying" name="student_sis_paying">
                                                                     <option value="0">Hourly rate</option>
                                                                     <option value="1">Fixed price</option>
                                                                     <option value="2">Packaged</option>
@@ -3060,7 +3060,9 @@ $( document ).ready(function() {
     if (datainvoiced == 'S') {
         $("#student_sis_paying").val(s_std_pay_type);
         $("#sis_paying").val(s_thr_pay_type);
+        $("#teacher_type_billing").show();
     }else{
+        $("#teacher_type_billing").hide();
         $("#student_sis_paying").val(t_std_pay_type);
     }
 	
@@ -3415,11 +3417,13 @@ $("body").on('change', '#category_select', function(event) {
     
     if (datainvoiced == 'S') {
         $("#std-check-div").css('display', 'block');
+        $("#teacher_type_billing").show();
         $("#student_sis_paying").val(s_std_pay_type);
         $("#sis_paying").val(s_thr_pay_type);
     }else{
         $("#student_sis_paying").val(t_std_pay_type);
         $("#std-check-div").css('display', 'none');
+        $("#teacher_type_billing").hide();
         $("#student_empty").prop('checked', false)
     }
     if(s_thr_pay_type == 0){
@@ -3428,6 +3432,25 @@ $("body").on('change', '#category_select', function(event) {
 	}else if(s_thr_pay_type == 1){
         $('#hourly').hide();
 		$('#price_per_student').show();
+        var formData = $('#edit_lesson').serializeArray();
+        var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+        formData.push({
+            "name": "_token",
+            "value": csrfToken,
+        });
+
+        $.ajax({
+            url: BASE_URL + '/check-lesson-fixed-price',
+            async: false, 
+            data: formData,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response){
+                if(response.status == 1){
+                    var errMssg = '';	
+                }
+            }
+        })
 	}
 });
 
