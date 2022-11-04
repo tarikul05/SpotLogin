@@ -28,7 +28,17 @@
                             <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
                             <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
 
-                            <a id="payment_btn" target="" href="" class="btn"><i class="fa fa-money" aria-hidden="true"></i> payé</a>
+                            
+                                @if($invoice->payment_status ==0)
+                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                        Flag as Paid
+                                    </a>
+                                @else
+                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                        Flag as UnPaid
+                                    </a>
+                                @endif
+                            
                             <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">Send by email</button>
                             <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                 <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
@@ -136,7 +146,9 @@
                             <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                             <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice->id}}">
                             <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoice->invoice_type}}">
-                            
+                            <input type="hidden" id="payment_status" name="payment_status" value="{{$invoice->payment_status}}">
+                            <input id="p_school_id" name="p_school_id" style="display: none;" value="{{$invoice->school_id}}">
+        
                             @if($invoice->invoice_type ==1)
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->client_id}}">
                             @else
@@ -827,7 +839,48 @@
 
         });
 
-        
+        $('#payment_btn').click(function (e) {
+            var p_invoice_id = document.getElementById("invoice_id").value;
+            var payment_status = ''; /* 0=unpaid, 1=paid*/
+
+            if (p_invoice_id == '') {
+                errorModalCall('Invalid_invoice');
+                return false;
+            }
+
+            if (document.getElementById("payment_status").value == '1') {
+                payment_status = '0';
+            } else {
+                payment_status = '1';
+            }
+            //alert('payment_status='+payment_status);
+            var status = '';
+            var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_invoice_id;
+            // console.log(data);
+            // return false;
+            $.ajax({
+                url: BASE_URL+'/update_payment_status',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                   
+                    status = result.status;
+                    if (status == 'success') {
+				        successModalCall('invoice payment paid');
+                    }
+                    else {
+                        errorModalCall('error_message_text');
+                    }
+                },   //success
+                error: function (ts) { 
+                    errorModalCall('error_message_text');
+
+                }
+            }); //ajax-type            
+
+        });    
     });
 
     function DisplayOnOff_buttons(p_tab) {
@@ -992,7 +1045,7 @@
             dataType: 'json',
             //async: false,
             success: function (result) {
-                //console.log(result);
+                console.log(result);
                 if (result.status) {
                     confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
                     return false;
@@ -1016,8 +1069,8 @@
 
     $('#email_send').click(function (e) {
         var p_emails = '', p_attached_file = '';
-        var p_inv_auto_id = $('#seleted_auto_id').val();
-        var p_seleted_invoice_type = $('#seleted_invoice_type').val();
+        var p_inv_auto_id = document.getElementById("invoice_id").value;
+        var p_seleted_invoice_type = document.getElementById("invoice_type").value;
         var p_school_id = document.getElementById("p_school_id").value;
         if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
             p_emails = document.getElementById("father_email_chk").value + "|";
@@ -1035,11 +1088,9 @@
 
 
         console.log(p_seleted_invoice_type);
-        if (p_seleted_invoice_type == 2) {
-            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        } else {
-            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        }
+        
+        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        
 
 
     });
@@ -1136,12 +1187,15 @@
 
         var vform = $("#form_details")[0];
         var form_data = new FormData(vform);
+        for (var [key, value] of form_data.entries()) { 
+            console.log(key, value);
+        }
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-        console.log(form_data);
-        return false;
+        // console.log(form_data);
+        // return false;
         $.ajax({
-            url: 'invoice_data.php',
+            url: BASE_URL+'/update_invoice_info',
             data: form_data,
             type: 'POST',
             dataType: 'json',

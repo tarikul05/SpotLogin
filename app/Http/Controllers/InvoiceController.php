@@ -90,7 +90,7 @@ class InvoiceController extends Controller
             
         $invoices = $invoices->get();
         //dd($invoices);
-        return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.list', compact('school','invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
     }
 
 
@@ -168,6 +168,7 @@ class InvoiceController extends Controller
      */
     public function payReminderEmailSend(Request $request)
     {
+
         $result = array(
             'status' => false,
             'message' => __('failed to send email'),
@@ -203,6 +204,8 @@ class InvoiceController extends Controller
             }
             $result_data->emails = $emails;
             $result_data->target_user = $target_user;
+            $client_name=$result_data->client_name;
+            $invoice_filename=$result_data->invoice_filename;
 
             if ($user->isSuperAdmin()) {
 
@@ -241,6 +244,8 @@ class InvoiceController extends Controller
 
                     $email_data['username'] = $target_user->firstname;
                     $email_data['school_name'] = $schoolName;
+                    $email_data['client_name'] = $client_name;
+                    $email_data['p_attachment'] = $invoice_filename;
                     //$this->schoolId =
                     if ($p_email != '') {
                         //dd($p_email);
@@ -278,6 +283,8 @@ class InvoiceController extends Controller
                         //dd($email_data);
                         foreach ($result_data->emails as $key => $value) {
                             $email_data['email'] = $value;
+                            $email_data['client_name'] = $client_name;
+                            $email_data['p_attachment'] = $invoice_filename;
 
                             if ($this->emailSend($email_data, $p_template_code)) {
 
@@ -310,6 +317,8 @@ class InvoiceController extends Controller
 
             return response()->json($result);
         } catch (Exception $e) {
+            // echo $e->getMessage();
+            // exit();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -343,6 +352,7 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_payment_status = 0;
             $invoice_status =0;
+            //dd($data);
 
             if (isset($data['p_payment_status'])) {
                 $p_payment_status = trim($data['p_payment_status']);
@@ -437,6 +447,99 @@ class InvoiceController extends Controller
             
             // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
             // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
+            //dd($updateInvoice);
+            
+            $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
+            if($invoiceData){
+               
+            }
+            $result = array(
+                'status' => 'success',
+                'message' => __('We got a list of invoice')
+            );
+            return response()->json($result);
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
+
+
+    /**
+     *  AJAX action for invoice info update
+     * 
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-10-30
+     */
+    public function updateInvoiceInfo(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'payment_status' => 0,
+            'invoice_status' =>0,
+            'message' => __('failed to send email'),
+        );
+        // $result = array(
+        //     'status' => 'success',
+        //     'payment_status' => 0,
+        //     'invoice_status' =>1,
+        //     'message' => __('failed to send email'),
+        // );
+        // return response()->json($result);
+        try {
+            $data = $request->all();
+            $user = $request->user();
+            $p_invoice_id = trim($data['p_invoice_id']);
+
+            $updateInvoice['date_invoice']=trim($data['date_invoice']);
+            $updateInvoice['invoice_title']=trim($data['invoice_title']);
+            $updateInvoice['invoice_header']=trim($data['invoice_header']);
+            $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
+            $updateInvoice['client_name']=trim($data['client_name']);
+            $updateInvoice['client_gender_id']=trim($data['client_gender_id']);
+            $updateInvoice['client_lastname']=trim($data['client_lastname']);
+            $updateInvoice['client_firstname']=trim($data['client_firstname']);
+            $updateInvoice['client_street']=trim($data['client_street']);
+            $updateInvoice['client_street_number']=trim($data['client_street_number']);
+            $updateInvoice['client_street2']=trim($data['client_street2']);
+            $updateInvoice['client_zip_code']=trim($data['client_zip_code']);
+            $updateInvoice['client_place']=trim($data['client_place']);
+            $updateInvoice['client_country_code']=trim($data['client_country_id']);
+        
+            $updateInvoice['seller_name']=trim($data['seller_name']);
+            $updateInvoice['seller_gender_id']=trim($data['seller_gender_id']);
+            $updateInvoice['seller_lastname']=trim($data['seller_lastname']);
+            $updateInvoice['seller_firstname']=trim($data['seller_firstname']);
+            $updateInvoice['seller_street']=trim($data['seller_street']);
+            $updateInvoice['seller_street_number']=trim($data['seller_street_number']);
+            $updateInvoice['seller_street2']=trim($data['seller_street2']);
+            $updateInvoice['seller_zip_code']=trim($data['seller_zip_code']);
+            $updateInvoice['seller_place']=trim($data['seller_place']);
+            $updateInvoice['seller_country_code']=trim($data['seller_country_id']);
+            $updateInvoice['seller_phone']=trim($data['seller_phone']);
+            $updateInvoice['seller_mobile']=trim($data['seller_mobile']);
+            $updateInvoice['seller_email']=trim($data['seller_email']);
+            $updateInvoice['seller_eid']=trim($data['seller_eid']);
+        
+            $updateInvoice['spayment_bank_account_name']=trim($data['spayment_bank_account_name']);
+            $updateInvoice['spayment_bank_iban']=trim($data['spayment_bank_iban']);
+            $updateInvoice['spayment_bank_account']=trim($data['spayment_bank_account']);
+            $updateInvoice['spayment_bank_swift']=trim($data['spayment_bank_swift']);
+            $updateInvoice['spayment_bank_name']=trim($data['spayment_bank_name']);
+            $updateInvoice['spayment_bank_address']=trim($data['spayment_bank_address']);
+            $updateInvoice['spayment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
+            $updateInvoice['spayment_bank_place']=trim($data['spayment_bank_place']);
+            $updateInvoice['spayment_bank_country_code']=trim($data['spayment_bank_country_id']);
+
+            $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
+            $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
+
+        
+            //$auto_id=trim($_POST['auto_id']);
+        
+
             //dd($updateInvoice);
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
@@ -900,6 +1003,8 @@ class InvoiceController extends Controller
             $studentEvents->orderBy('events.date_start', 'desc');
             //By
             $studentEvents->distinct('events.id');
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
 
             //$studentEvents->groupBy('events.id');
             $data = $studentEvents->get();
@@ -1037,6 +1142,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
+            $teacherEvents->whereNull('events.deleted_at');
+            $teacherEvents->whereNull('event_details.deleted_at');
             //$studentEvents->where('events.is_paying', '>', 0);
             $teacherEvents->where('event_details.visibility_id', '>', 0);
             //$studentEvents->whereNotIn('events.event_type', [100]);
@@ -1298,6 +1405,8 @@ class InvoiceController extends Controller
                 $teacherEvents->where('event_details.participation_id', '>', 198);
                 $teacherEvents->where('events.date_start', '>=', $dateS);
                 $teacherEvents->where('events.date_end', '<=', $dateEnd);
+                $teacherEvents->whereNull('events.deleted_at');
+                $teacherEvents->whereNull('event_details.deleted_at');
                 //dd($dateS);
                 if ($user_role != 'superadmin') {
                     if ($user_role == 'teacher') {
@@ -1792,6 +1901,8 @@ class InvoiceController extends Controller
                     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
             
             
             //dd($dateEnd);
