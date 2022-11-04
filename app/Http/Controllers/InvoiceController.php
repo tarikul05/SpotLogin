@@ -500,7 +500,7 @@ class InvoiceController extends Controller
             $p_invoice_id = trim($data['p_invoice_id']);
 
             $updateInvoice['date_invoice']=trim($data['date_invoice']);
-            $updateInvoice['invoice_title']=trim($data['invoice_title']);
+            $updateInvoice['invoice_name']=trim($data['invoice_name']);
             $updateInvoice['invoice_header']=trim($data['invoice_header']);
             $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
             $updateInvoice['client_name']=trim($data['client_name']);
@@ -529,15 +529,15 @@ class InvoiceController extends Controller
             $updateInvoice['seller_email']=trim($data['seller_email']);
             $updateInvoice['seller_eid']=trim($data['seller_eid']);
         
-            $updateInvoice['spayment_bank_account_name']=trim($data['spayment_bank_account_name']);
-            $updateInvoice['spayment_bank_iban']=trim($data['spayment_bank_iban']);
-            $updateInvoice['spayment_bank_account']=trim($data['spayment_bank_account']);
-            $updateInvoice['spayment_bank_swift']=trim($data['spayment_bank_swift']);
-            $updateInvoice['spayment_bank_name']=trim($data['spayment_bank_name']);
-            $updateInvoice['spayment_bank_address']=trim($data['spayment_bank_address']);
-            $updateInvoice['spayment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
-            $updateInvoice['spayment_bank_place']=trim($data['spayment_bank_place']);
-            $updateInvoice['spayment_bank_country_code']=trim($data['spayment_bank_country_id']);
+            $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account_name']);
+            $updateInvoice['payment_bank_iban']=trim($data['spayment_bank_iban']);
+            $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account']);
+            $updateInvoice['payment_bank_swift']=trim($data['spayment_bank_swift']);
+            $updateInvoice['payment_bank_name']=trim($data['spayment_bank_name']);
+            $updateInvoice['payment_bank_address']=trim($data['spayment_bank_address']);
+            $updateInvoice['payment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
+            $updateInvoice['payment_bank_place']=trim($data['spayment_bank_place']);
+            $updateInvoice['payment_bank_country_code']=trim($data['spayment_bank_country_id']);
 
             $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
             $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
