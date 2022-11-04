@@ -139,6 +139,14 @@ class Invoice extends BaseModel
     }
 
     /**
+     * Get the schools for the Student.
+     */
+    public function school()
+    {
+        return $this->BelongsTo(School::class, 'school_id');
+    }
+
+    /**
      * @return HasMany
      */
     public function invoice_items(): HasMany

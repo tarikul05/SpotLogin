@@ -374,24 +374,25 @@ class InvoiceController extends Controller
             
             $p_auto_id = trim($data['p_auto_id']);
 
-            
-            
-            
-            
-            $invoice_data = Invoice::with(['invoice_items'])->where('id', $p_auto_id)->first();
-            $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
-            $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
-            $pdf->set_option('isHtml5ParserEnabled', true);
-            $pdf->set_option('isRemoteEnabled', true);
-            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
-            // save invoice name if invoice_filename is empty
-            if(empty($invoice_data->invoice_filename)){
-                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
-                if($file_upload){
-                    $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
-                    $updateInvoice['invoice_filename'] = $invoice_pdf_path;
-                    //$invoice_data->save();
+            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
+            if($invoiceData){
+                $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
+                    $q->select('id','tax_number');
+                }])->where('id', $p_auto_id)->first();
+                $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
+                $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
+                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+                $pdf->set_option('isHtml5ParserEnabled', true);
+                $pdf->set_option('isRemoteEnabled', true);
+                $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+                // save invoice name if invoice_filename is empty
+                if(empty($invoice_data->invoice_filename)){
+                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                    if($file_upload){
+                        $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                        $invoice_data->invoice_filename = $invoice_pdf_path;
+                        $invoice_data->save();
+                    }
                 }
             }
             $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
@@ -2571,7 +2572,9 @@ class InvoiceController extends Controller
             $reqData = $request->all();
             $type = $request->type ? $request->type : $type;
             $invoice_id = $reqData['invoice_id'];
-            $invoice_data = Invoice::with(['invoice_items'])->where('id', $invoice_id)->first();
+            $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
+                $q->select('id','tax_number');
+            }])->where('id', $invoice_id)->first();
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
             $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
