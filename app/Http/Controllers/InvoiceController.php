@@ -2616,17 +2616,17 @@ class InvoiceController extends Controller
         try {
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
-            $invoiceData = Invoice::find($id);
+            //$invoiceData = Invoice::find($id);
             $invoiceData = Invoice::find($id)->delete();
-            if (!empty($value->detail_id)) {
-                $detail_id =  explode(',',$value->detail_id);
-                $eventUpdate = [
-                    'buy_invoice_id' => $invoiceData->id,
-                    'is_buy_invoiced' => 1
-                ];
-                $eventData = EventDetails::whereIn('id', $detail_id)
-                ->update($eventUpdate);
-            }
+            // if (!empty($value->detail_id)) {
+            //     $detail_id =  explode(',',$value->detail_id);
+            //     $eventUpdate = [
+            //         'buy_invoice_id' => $invoiceData->id,
+            //         'is_buy_invoiced' => 1
+            //     ];
+            //     $eventData = EventDetails::whereIn('id', $detail_id)
+            //     ->update($eventUpdate);
+            // }
             if ($invoiceData == 1) {
                 $result = array(
                     "status"     => 'success',
