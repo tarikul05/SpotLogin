@@ -30,6 +30,7 @@ class SubscriptionController extends Controller
             $subscribers = [];
             $email = null;
             $firstname = null;
+            $lastname = null;
             $invoice_obj = null;
             if($subscriptions['data']){
                 foreach($subscriptions['data'] as $subscription){
@@ -64,7 +65,7 @@ class SubscriptionController extends Controller
                         'product' => $subscription->plan['product'],
                         'plan_name' => $product_object->name,
                         'email' => $email,
-                        'user_name' => $firstname.' '.$lastname,
+                        'user_name' => $firstname.''.$lastname,
                         'invoice_url' => $invoice_obj->hosted_invoice_url,
                     ];
                 }
