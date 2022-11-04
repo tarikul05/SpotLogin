@@ -342,9 +342,9 @@
                                 <label id="placement" class="col-sm-5"></label>
                             </div>
                             <div class="form-group row">
-                                <label id="invoice_title_cap" for="invoice_title" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
+                                <label id="invoice_title_cap" for="invoice_name" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="invoice_title" name="invoice_title" value="{{$invoice->invoice_name ? $invoice->invoice_name :''}}" placeholder="" maxlength="150"> 
+                                    <input type="text" class="form-control" id="invoice_name" name="invoice_name" value="{{$invoice->invoice_name ? $invoice->invoice_name :''}}" placeholder="" maxlength="150"> 
                                 </div>
                             </div>
                             <div class="form-group" style="display:none;">
@@ -613,10 +613,10 @@
                                         <div class="col-sm-5">
                                             <div class="selectdiv">
                                                 <select class="form-control" id="spayment_bank_country_id" name="spayment_bank_country_id">
-                                                    <option value="CA">Canada</option>
-                                                    <option value="FR">France</option>
-                                                    <option value="CH">Switzerland</option>
-                                                    <option value="US">United States</option>
+                                                    <option value="CA" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'CA') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>Canada</option>
+                                                    <option value="FR" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'FR') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>France</option>
+                                                    <option value="CH" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'CH') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>Switzerland</option>
+                                                    <option value="US" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'US') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>United States</option>
                                                 </select>
                                             </div>
                                         </div>
