@@ -170,6 +170,11 @@ class Controller extends BaseController
                     $data['url'] = route('add.verify.email',$data['token']); 
                 }
             }
+            if (isset($data["p_attachment"])) {
+                $data["p_attachment"] = trim($data["p_attachment"]);
+            }else {
+                $data["p_attachment"] = "";
+            }
             \Mail::to($data['email'])->send(new SportloginEmail($data));
             return true;
         } catch (\Exception $e) {
