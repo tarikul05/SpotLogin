@@ -123,19 +123,23 @@ class InvoiceController extends Controller
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
                 $result_data->class_name = 'student';
                 $student = Student::find($result_data->client_id);
-                //$result->client = $student;
-                if ($student->student_notify == 1) {
-                    $result_data->student_email = $student->email;
+                //dd($student);
+                if ($student) {
+                    //$result->client = $student;
+                    if (isset($student->student_notify) && $student->student_notify == 1) {
+                        $result_data->student_email = $student->email;
+                    }
+                    if (isset($student->father_notify) && $student->father_notify == 1) {
+                        $result_data->father_email = $student->father_email;
+                    }
+                    if (isset($student->mother_notify) && $student->mother_notify == 1) {
+                        $result_data->mother_email = $student->mother_email;
+                    }
+                    $result_data->class_name = 'student';
+                    $result_data->primary_email = $student->email;
+                    $result_data->secondary_email = $student->email2;
                 }
-                if ($student->father_notify == 1) {
-                    $result_data->father_email = $student->father_email;
-                }
-                if ($student->mother_notify == 1) {
-                    $result_data->mother_email = $student->mother_email;
-                }
-                $result_data->class_name = 'student';
-                $result_data->primary_email = $student->email;
-                $result_data->secondary_email = $student->email2;
+                
             } else {
                 $result_data->class_name = 'teacher';
                 $teacher = Teacher::find($result_data->seller_id);
@@ -152,6 +156,7 @@ class InvoiceController extends Controller
 
             return response()->json($result);
         } catch (Exception $e) {
+            echo $e->getMessage();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -1575,15 +1580,15 @@ class InvoiceController extends Controller
 
                 
 
-                    if (!empty($value->detail_id)) {
-                        $detail_id =  explode(',',$value->detail_id);
-                        $eventUpdate = [
-                            'buy_invoice_id' => $invoiceData->id,
-                            'is_buy_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::whereIn('id', $detail_id)
-                        ->update($eventUpdate);
-                    }
+                    // if (!empty($value->detail_id)) {
+                    //     $detail_id =  explode(',',$value->detail_id);
+                    //     $eventUpdate = [
+                    //         'buy_invoice_id' => $invoiceData->id,
+                    //         'is_buy_invoiced' => 1
+                    //     ];
+                    //     $eventData = EventDetails::whereIn('id', $detail_id)
+                    //     ->update($eventUpdate);
+                    // }
                     //print_r($invoiceItemData);
                 
 
@@ -1836,7 +1841,7 @@ class InvoiceController extends Controller
             $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
             
             
-            
+            //dd($invoiceData);
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
@@ -2045,16 +2050,16 @@ class InvoiceController extends Controller
                         }
                     } 
                     
-                    if (!empty($value->detail_id)) {
-                        $eventUpdate = [
-                            'sell_invoice_id' => $invoiceData->id,
-                            'is_sell_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::where('student_id', $value->student_id)
-                        ->where('id', $value->detail_id)
-                        ->where('participation_id', '>', 198)
-                        ->update($eventUpdate);
-                    }
+                    // if (!empty($value->detail_id)) {
+                    //     $eventUpdate = [
+                    //         'sell_invoice_id' => $invoiceData->id,
+                    //         'is_sell_invoiced' => 1
+                    //     ];
+                    //     $eventData = EventDetails::where('student_id', $value->student_id)
+                    //     ->where('id', $value->detail_id)
+                    //     ->where('participation_id', '>', 198)
+                    //     ->update($eventUpdate);
+                    // }
                     
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
@@ -2100,7 +2105,7 @@ class InvoiceController extends Controller
             ];
             $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
-            // print_r($updateInvoiceCalculation);
+            // print_r($invoiceData->id);
             // exit();
             
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
@@ -2611,7 +2616,17 @@ class InvoiceController extends Controller
         try {
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
+            $invoiceData = Invoice::find($id);
             $invoiceData = Invoice::find($id)->delete();
+            if (!empty($value->detail_id)) {
+                $detail_id =  explode(',',$value->detail_id);
+                $eventUpdate = [
+                    'buy_invoice_id' => $invoiceData->id,
+                    'is_buy_invoiced' => 1
+                ];
+                $eventData = EventDetails::whereIn('id', $detail_id)
+                ->update($eventUpdate);
+            }
             if ($invoiceData == 1) {
                 $result = array(
                     "status"     => 'success',
