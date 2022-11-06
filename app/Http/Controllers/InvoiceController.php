@@ -27,9 +27,11 @@ use Exception;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use App\Traits\UserRoleTrait;
 
 class InvoiceController extends Controller
 {
+    use UserRoleTrait;
 
     public function __construct()
     {
@@ -51,30 +53,8 @@ class InvoiceController extends Controller
         }
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
-        $invoice_status_all = config('global.invoice_status');
 
-        $user_role = 'superadmin';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
-        } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-            $invoice_type = 'T';
-        } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
-        } else {
-            $invoice_type = 'S';
-        }
-        
-
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
@@ -87,10 +67,8 @@ class InvoiceController extends Controller
             }
         }
         $invoices->orderBy('id', 'desc');
-            
         $invoices = $invoices->get();
-        //dd($invoices);
-        return view('pages.invoices.list', compact('school','invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
 
@@ -651,35 +629,13 @@ class InvoiceController extends Controller
                     'events.is_active' => 1
                 ]
             );
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        $coach_user = '';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            if ($user->isTeacherAdmin()) {
-                $coach_user = 'coach_user';
-            }
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
             $studentEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher_all') {
-            $invoice_type = 'T';
             $studentEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
             $studentEvents->where('event_categories.invoiced_type', $invoice_type);
             $studentEvents->where('events.teacher_id', $user->person_id);
         } else {
@@ -765,36 +721,14 @@ class InvoiceController extends Controller
                     'events.is_active' => 1
                 ]
             );
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        $coach_user = '';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            if ($user->isTeacherAdmin()) {
-                $coach_user = 'coach_user';
-            }
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
         // dd($user);
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
             $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher_all') {
-            $invoice_type = 'T';
             $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
             $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             $teacherEvents->where('events.teacher_id', $user->person_id);
         } else {
@@ -957,37 +891,18 @@ class InvoiceController extends Controller
                     ]
                 );
 
-
-            $user_role = 'superadmin';
-            if ($user->person_type == 'App\Models\Student') {
-                $user_role = 'student';
-            }
-            if ($user->person_type == 'App\Models\Teacher') {
-                $user_role = 'teacher';
-            }
-            $coach_user = '';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                if ($user->isTeacherAdmin()) {
-                    $coach_user = 'coach_user';
-                }
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+            
 
             // dd($user);
             if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
+                
                 $studentEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher_all') {
-                $invoice_type = 'T';
+                
                 $studentEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
+                
                 $studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 $studentEvents->where('events.teacher_id', $user->person_id);
             } else {
@@ -1116,36 +1031,18 @@ class InvoiceController extends Controller
                         'events.school_id' => $p_school_id
                     ]
                 );
-            $user_role = 'superadmin';
-            if ($user->person_type == 'App\Models\Student') {
-                $user_role = 'student';
-            }
-            if ($user->person_type == 'App\Models\Teacher') {
-                $user_role = 'teacher';
-            }
-            $coach_user = '';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                if ($user->isTeacherAdmin()) {
-                    $coach_user = 'coach_user';
-                }
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+
 
             // dd($user);
             if ($user_role == 'admin_teacher') {
-                $invoice_type = 'S';
+                
                 $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher_all') {
-                $invoice_type = 'T';
+                
                 $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
+                
                 $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             } else {
@@ -1224,27 +1121,7 @@ class InvoiceController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-
-            $user_role = 'superadmin';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
-            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-                $invoice_type = 'T';
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-            } else {
-                $invoice_type = 'S';
-            }
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
             if($p_invoice_id=''){
 	            $v_invoice_id='';
@@ -1704,28 +1581,7 @@ class InvoiceController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $user_role = 'superadmin';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
-            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-                $invoice_type = 'T';
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-            } else {
-                $invoice_type = 'S';
-            }
-
-            
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
             //$v_inv_name = 'Facture '.$month_name.' '.year(v_period_starts);
             
