@@ -200,7 +200,7 @@
                     if (result.error) {
                         var errorElement = document.getElementById('card-errors');
                         errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
-                        '<strong>' + result.error.message +'</strong>'+
+                        '<strong>' + errorMessage(result.error.code) +'</strong>'+
                         '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+   
                         '</div>';
                         window.scrollTo(0, 10);
@@ -210,6 +210,27 @@
                 });
         });
 
+        function errorMessage(error_code){
+            var error_message = '';
+            if(error_code === 'incomplete_number'){
+                error_message = 'Incomplete card number'
+            }else if(error_code === 'incomplete_expiry'){
+                error_message = 'Incomplete expiry date'
+            }else if(error_code === 'incomplete_cvc'){
+                error_message = 'Incomplete security code'
+            }else if(error_code === 'incorrect_cvc'){
+                error_message = 'Incorrect security code'
+            }else if(error_code === 'expired_card'){
+                error_message = 'Your card has expired'
+            }else if(error_code === 'processing_error'){
+                error_message = 'An error occurred while processing your card. Please try again later'
+            }else if(error_code === 'card_declined'){
+                error_message = 'your card has been declined'
+            }else{
+                error_message = 'error occurred'
+            }
+            return error_message;
+        }
         function stripeTokenHandler(paymentMethod) {
             var form = document.getElementById('payment-form-sub');
             var hiddenInput = document.createElement('input');

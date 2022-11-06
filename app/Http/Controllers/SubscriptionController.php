@@ -187,9 +187,9 @@ class SubscriptionController extends Controller
                 );
             $user->trial_ends_at = NULL;
             $user->save();
-            return redirect()->route('agenda')->with('success', 'Welcome, You have subscribed ' . $plan_name);
+            return redirect()->route('agenda')->with('success', 'Congratulations, you have succesully subscribed to our ' . $plan_name);
         } catch (IncompletePayment $exception) {
-            return redirect()->back()->with('error', $exception->getMessage());
+            return redirect()->back()->with('error', $exception->getCode().', '.$exception->getMessage());
         }
     }
 
