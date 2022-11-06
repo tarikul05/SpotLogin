@@ -227,7 +227,7 @@
             }else if(error_code === 'card_declined'){
                 error_message = 'your card has been declined'
             }else{
-                error_message = 'error occurred'
+                error_message = error_code.'error occurred'
             }
             return error_message;
         }
