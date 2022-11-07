@@ -581,7 +581,7 @@ class Event extends BaseModel
 
 
 
- /**
+    /**
      * filter data based request parameters
      * 
      * @param array $params
@@ -597,15 +597,15 @@ class Event extends BaseModel
         }
 
 
-        
 
 
-    $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-          ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-          ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
-          ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
+
+        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+        ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+        ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
+        ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
         //->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
-    
+
         $query->select(
             'events.id as event_id',
             'school_teacher.nickname as teacher_name',
@@ -614,23 +614,24 @@ class Event extends BaseModel
             'events.date_end as date_end',
             'events.title as event_title',
             'events.event_type as event_type',
-            'event_categories.title as event_category_name', 
+            'event_categories.title as event_category_name',
             'locations.title as location_name'
-            )
-        ->selectRaw("concat(replace(events.id,'-',''),events.event_type,'@sportlogin') as id")
-        ->selectRaw("if(events.fullday_flag='Y', date_format(ifnull(events.date_start,events.date_start),'%Y%m%d') ,date_format(events.date_start,'%Y%m%dT%H%i%sZ')) as start_datetime")
-        ->selectRaw("if(events.fullday_flag='Y', date_format(DATE_ADD(ifnull(events.date_end,events.date_end),INTERVAL 1 DAY),'%Y%m%d') ,date_format(events.date_end,'%Y%m%dT%H%i%sZ')) as end_datetime")
-        ->where(
-            [
-                'events.is_active' => 1
-            ]);
-        
+        )
+            ->selectRaw("concat(replace(events.id,'-',''),events.event_type,'@sportlogin') as id")
+            ->selectRaw("if(events.fullday_flag='Y', date_format(ifnull(events.date_start,events.date_start),'%Y%m%d') ,date_format(events.date_start,'%Y%m%dT%H%i%sZ')) as start_datetime")
+            ->selectRaw("if(events.fullday_flag='Y', date_format(DATE_ADD(ifnull(events.date_end,events.date_end),INTERVAL 1 DAY),'%Y%m%d') ,date_format(events.date_end,'%Y%m%dT%H%i%sZ')) as end_datetime")
+            ->where(
+                [
+                    'events.is_active' => 1
+                ]
+            );
+
         if (isset($params['school_id']) && !empty($params['school_id'])) {
             $teacherEvents->where('events.school_id', '=', $params['school_id']);
         }
 
-        
-        
+
+
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $studentEvents->where('event_details.student_id', $params['person_id']);
@@ -645,10 +646,13 @@ class Event extends BaseModel
         $query->where('events.date_end', '<=', $params['v_end_date']);
         $query->distinct('events.id');
         //$query->groupBy('events.id');
-        
-       //dd($query->toSql());
-       return $query;
+
+        //dd($query->toSql());
+        return $query;
     }
+
+
+    
 
     
 }

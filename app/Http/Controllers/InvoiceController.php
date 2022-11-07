@@ -10,15 +10,14 @@ use App\Models\InvoiceItem;
 use App\Models\InvoicesTaxes;
 use App\Models\InvoicesExpenses;
 use App\Models\Student;
+use App\Models\Event;
 use App\Models\Teacher;
 use App\Models\Province;
 use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
-use App\Models\EmailTemplate;
 use App\Models\AttachedFile;
-use App\Mail\SportloginEmail;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Redirect;
@@ -294,33 +293,23 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_invoice_id = trim($data['p_invoice_id']);
             $updateInvoice['discount_percent_1'] = $p_disc1 = trim($data['p_disc1']);
-           
             $updateInvoice['amount_discount_1'] = $p_amt1 = trim($data['p_amt1']);
-           
             $updateInvoice['extra_expenses'] = $p_extra_expenses = trim($data['p_extra_expenses']);
-
             $updateInvoice['total_amount_with_discount']  = $total_amount_with_discount = trim($data['total_amount_with_discount']);
             $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
-            
             $v_total_amount_discount = $p_amt1;
             $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
-            
             $updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
-            
             $updateInvoice['modified_by'] = $user->id;
-            
-            // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
-            // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
-            //dd($updateInvoice);
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
             if($invoiceData){
-               
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('We got a list of invoice')
+                );
             }
-            $result = array(
-                'status' => 'success',
-                'message' => __('We got a list of invoice')
-            );
+            
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
@@ -396,16 +385,9 @@ class InvoiceController extends Controller
             $updateInvoice['payment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
             $updateInvoice['payment_bank_place']=trim($data['spayment_bank_place']);
             $updateInvoice['payment_bank_country_code']=trim($data['spayment_bank_country_id']);
-
             $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
             $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
 
-        
-            //$auto_id=trim($_POST['auto_id']);
-        
-
-            //dd($updateInvoice);
-            
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
             if($invoiceData){
                
@@ -489,56 +471,12 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-
-        $studentEvents = DB::table('events')
-            ->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-            ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
-            ->select(
-                'events.id as event_id',
-                'event_details.student_id as person_id',
-                'school_student.nickname as student_name',
-                'users.profile_image_id as profile_image_id'
-            )
-            ->where(
-                [
-                    'events.school_id' => $schoolId,
-                    'event_details.billing_method' => "E",
-                    'events.is_active' => 1
-                ]
-            );
+        
+        
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
-
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher_all') {
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher') {
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            $studentEvents->where('events.teacher_id', $user->person_id);
-        } else {
-        }
-        $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
-        $studentEvents->whereNull('event_details.sell_invoice_id');
-
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $studentEvents->where('events.date_start', '>=', $dateS);
-        $studentEvents->distinct('events.id');
-        //$studentEvents->groupBy('event_details.student_id');
-        //dd($studentEvents->toSql());
-
-        $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
-            ->select(
-                'custom_table.person_id as person_id',
-                'custom_table.student_name as student_name',
-                'custom_table.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(custom_table.event_id) as invoice_items')
-            ->mergeBindings($studentEvents)
-            ->groupBy('custom_table.person_id')
-            ->get();
-
+        $query = new Invoice;
+        $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type);
+        
         //dd($allEvents);
         $allStudentEvents = [];
         foreach ($allEvents as $key => $value) {
@@ -577,82 +515,13 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
 
-        $teacherEvents = DB::table('events')
-            ->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-            ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-            ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-            ->select(
-                'event_details.id as detail_id',
-                'events.id as event_id',
-                'event_details.student_id as student_id',
-                'event_details.teacher_id as person_id',
-                'users.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(event_details.id) as invoice_items')
-            ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
-            //->selectRaw('count(events.id) as invoice_items')
-            ->where(
-                [
-                    'events.school_id' => $schoolId,
-                    'event_details.billing_method' => "E",
-                    'events.is_active' => 1
-                ]
-            );
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
-
-        // dd($user);
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher_all') {
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher') {
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-            $teacherEvents->where('events.teacher_id', $user->person_id);
-        } else {
-        }
-        $teacherEvents->where('event_details.visibility_id', '>', 0);
-        //$teacherEvents->whereNotIn('events.event_type', [100]);
-            
-        $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-        $teacherEvents->whereNull('event_details.buy_invoice_id');
-
-
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
-        //exit();
-
-        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
-        //exit();
-        $teacherEvents->whereRaw($qq);
-        // $teacherEvents->where('events.date_start', '>=', $dateS);
-        // $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        $teacherEvents->distinct('event_details.id');
-        //$teacherEvents->groupBy('event_details.event_id');
-        $teacherEvents->groupBy('event_details.event_id');
-
-        //dd($teacherEvents->toSql());
-        $allEventData =  $teacherEvents->get();
-        //dd($allEventData);
-        $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
-            ->select(
-                'custom_table.person_id as person_id',
-                'custom_table.teacher_name as teacher_name',
-                'custom_table.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(custom_table.event_id) as invoice_items')
-            ->mergeBindings($teacherEvents)
-            ->distinct('custom_table.detail_id')
-            ->groupBy('custom_table.person_id');
-        //dd($allEvents->toSql());
-
-        $allEventData =  $allEvents->get();
-
-        //dd($allEventData);
-
+        $query = new Invoice;
+        $allEvents = $query->getTeacherInvoiceList($user,$schoolId,$user_role,$invoice_type);
+        
+        
         $allTeacherEvents = [];
-        foreach ($allEventData as $key => $value) {
+        foreach ($allEvents as $key => $value) {
             $profile_image = !empty($value->profile_image_id) ? AttachedFile::find($value->profile_image_id) : null;
             if (!empty($profile_image)) {
                 $value->profile_image = $profile_image->path_name;
@@ -693,99 +562,10 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
             $p_pending_only=trim($data['p_pending_only']);
-            $assData = DB::table('events')
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-                ->select(
-                    'events.event_type as event_type',
-                    'events.event_category as category_id',
-                    'teachers.id as teacher_id',
-                )
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'event_details.billing_method' => "E",
-                        'events.is_active' => 1,
-                        'events.school_id' => $p_school_id,
-                    ]
-                )->distinct('events.id')->get();
-
-            $studentEvents = DB::table('events')
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-                ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
-                //->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
-                ->select(
-                    'events.id as event_id',
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price',
-                    'events.title as title',
-                    'events.event_type as event_type',
-                    'events.event_category as category_id',
-                    'event_categories.title as category_name',
-                    'events.is_paying as is_paying',
-                    'events.event_price as price_id',
-                    'event_details.is_locked as ready_flag',
-                    'event_details.participation_id as participation_id',
-                    'event_details.is_buy_invoiced as is_buy_invoiced',
-                    'event_details.is_sell_invoiced as is_sell_invoiced',
-                    //'event_details.price_currency as price_currency',
-                    
-                    'event_details.costs_1 as costs_1',
-                    'events.extra_charges as extra_charges',
-                    'event_details.costs_2 as costs_2',
-                    'teachers.id as teacher_id'
-                    //'lesson_price_teachers.price_buy as price_buy',
-                    //'lesson_price_teachers.price_sell as price_sell'
-                    //'events.is_locked as ready_flag'
-
-                    // 'users.profile_image_id as profile_image_id'
-                )
-                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname)  AS student_name")
-                ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
-                ->selectRaw('week(events.date_start,5) week_no')
-                ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
-                //->selectRaw('count(events.id) as invoice_items')
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'event_details.billing_method' => "E",
-                        'events.is_active' => 1,
-                        'events.school_id' => $p_school_id,
-                        //'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
-                        //'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
-                    ]
-                );
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
-            
-
-            // dd($user);
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher_all') {
-                
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher') {
-                
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-                $studentEvents->where('events.teacher_id', $user->person_id);
-            } else {
-            }
+            $query = new Invoice;
+            $studentEvents = $query->getStudentEventList($user,$user_role,$invoice_type);
             if (!empty($p_pending_only)) {
                 $studentEvents->where(
                     function ($query) {
@@ -794,20 +574,6 @@ class InvoiceController extends Controller
                     }
                 );
             }
-            
-
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
-            $studentEvents->whereRaw($qq);
-
-
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->orderBy('events.date_start', 'desc');
-            //By
-            $studentEvents->distinct('event_details.id');
-            $studentEvents->whereNull('events.deleted_at');
-            $studentEvents->whereNull('event_details.deleted_at');
-
-            //$studentEvents->groupBy('events.id');
             //dd($studentEvents->toSql());
             $data = $studentEvents->get();
             //dd($data);

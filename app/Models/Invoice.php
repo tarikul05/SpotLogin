@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
+use Carbon\Carbon;
+use DB;
 
 class Invoice extends BaseModel
 {
@@ -153,4 +155,219 @@ class Invoice extends BaseModel
     {
         return $this->HasMany(InvoiceItem::class, 'invoice_id');
     }
+
+
+    /**
+     * getStudentInvoiceList for invoicing
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type)
+    {
+        $studentEvents = DB::table('events')
+            ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+            ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
+            ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
+            ->select(
+                'events.id as event_id',
+                'event_details.student_id as person_id',
+                'school_student.nickname as student_name',
+                'users.profile_image_id as profile_image_id'
+            )
+            ->where(
+                [
+                    'events.school_id' => $schoolId,
+                    'event_details.billing_method' => "E",
+                    'events.is_active' => 1
+                ]
+            );
+        
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher_all') {
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher') {
+            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            $studentEvents->where('events.teacher_id', $user->person_id);
+        } else {
+        }
+        $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
+        $studentEvents->whereNull('event_details.sell_invoice_id');
+
+        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        $studentEvents->where('events.date_start', '>=', $dateS);
+        $studentEvents->distinct('events.id');
+        //$studentEvents->groupBy('event_details.student_id');
+        //dd($studentEvents->toSql());
+
+        return $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
+            ->select(
+                'custom_table.person_id as person_id',
+                'custom_table.student_name as student_name',
+                'custom_table.profile_image_id as profile_image_id'
+            )
+            ->selectRaw('count(custom_table.event_id) as invoice_items')
+            ->mergeBindings($studentEvents)
+            ->groupBy('custom_table.person_id')
+            ->get();
+    }
+
+
+    /**
+     * getTeacherInvoiceList for invoicing
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function getTeacherInvoiceList($user,$schoolId,$user_role,$invoice_type)
+    {
+        $teacherEvents = DB::table('events')
+            ->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+            ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
+            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+            ->select(
+                'event_details.id as detail_id',
+                'events.id as event_id',
+                'event_details.student_id as student_id',
+                'event_details.teacher_id as person_id',
+                'users.profile_image_id as profile_image_id'
+            )
+            ->selectRaw('count(event_details.id) as invoice_items')
+            ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
+            //->selectRaw('count(events.id) as invoice_items')
+            ->where(
+                [
+                    'events.school_id' => $schoolId,
+                    'event_details.billing_method' => "E",
+                    'events.is_active' => 1
+                ]
+            );
+        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher_all') {
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+        } else if ($user_role == 'teacher') {
+            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+            $teacherEvents->where('events.teacher_id', $user->person_id);
+        } else {
+        }
+        $teacherEvents->where('event_details.visibility_id', '>', 0);
+        $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
+        $teacherEvents->whereNull('event_details.buy_invoice_id');
+
+
+        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
+        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
+        
+        $teacherEvents->whereRaw($qq);
+        $teacherEvents->distinct('event_details.id');
+        $teacherEvents->groupBy('event_details.event_id');
+
+        //dd($teacherEvents->toSql());
+        $allEventData =  $teacherEvents->get();
+        $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
+            ->select(
+                'custom_table.person_id as person_id',
+                'custom_table.teacher_name as teacher_name',
+                'custom_table.profile_image_id as profile_image_id'
+            )
+            ->selectRaw('count(custom_table.event_id) as invoice_items')
+            ->mergeBindings($teacherEvents)
+            ->distinct('custom_table.detail_id')
+            ->groupBy('custom_table.person_id');
+        //dd($allEvents->toSql());
+        return $allEvents->get();
+    }
+
+    /**
+     * getStudentEventList for invoicing
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type)
+    {
+        $studentEvents = DB::table('events')
+                ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
+                ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
+                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+                ->select(
+                    'events.id as event_id',
+                    'event_details.buy_total as buy_total',
+                    'event_details.sell_total as sell_total',
+                    'event_details.buy_price as buy_price',
+                    'event_details.sell_price as sell_price',
+                    'events.title as title',
+                    'events.event_type as event_type',
+                    'events.event_category as category_id',
+                    'event_categories.title as category_name',
+                    'events.is_paying as is_paying',
+                    'events.event_price as price_id',
+                    'event_details.is_locked as ready_flag',
+                    'event_details.participation_id as participation_id',
+                    'event_details.is_buy_invoiced as is_buy_invoiced',
+                    'event_details.is_sell_invoiced as is_sell_invoiced',
+                    'event_details.costs_1 as costs_1',
+                    'events.extra_charges as extra_charges',
+                    'event_details.costs_2 as costs_2',
+                    'teachers.id as teacher_id'
+                )
+                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
+                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
+                ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname)  AS student_name")
+                ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
+                ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
+                ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
+                ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
+                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('week(events.date_start,5) week_no')
+                ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
+                //->selectRaw('count(events.id) as invoice_items')
+                ->where(
+                    [
+                        'event_details.student_id' => $p_person_id,
+                        'event_details.billing_method' => "E",
+                        'events.is_active' => 1,
+                        'events.school_id' => $p_school_id,
+                    ]
+                );
+
+            
+
+            // dd($user);
+            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+                
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher_all') {
+                
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher') {
+                
+                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
+                $studentEvents->where('events.teacher_id', $user->person_id);
+            } else {
+            }
+            
+            
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $studentEvents->whereRaw($qq);
+
+
+            //$studentEvents->where('events.date_start', '>=', $dateS);
+            
+            $studentEvents->whereNull('events.deleted_at');
+            $studentEvents->whereNull('event_details.deleted_at');
+
+            return $studentEvents;
+    }
+
 }
