@@ -370,4 +370,112 @@ class Invoice extends BaseModel
             return $studentEvents;
     }
 
+
+    /**
+     * getStudentEventList for invoicing
+     * 
+     * @param array $params
+     * @return $query
+     */
+    public function getTeacherEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
+    {
+        $teacherEvents = DB::table('events')
+                ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
+                ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
+                ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
+                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
+                //->leftJoin('lesson_prices', 'lesson_prices.event_type', '=', 'events.event_type')
+                ->select(
+                    'events.id as event_id',
+                    'event_details.id as event_id1',
+                    //'event_details.buy_price as buy_price',
+                    'event_details.sell_price as sell_price',
+                    'events.price_amount_buy as price_amount_buy',
+                    //'event_details.buy_total as buy_total',
+                    'event_details.sell_total as sell_total',
+                    'events.title as title',
+                    'events.event_type as event_type',
+                    'events.event_category as category_id',
+                    'event_categories.title as category_name',
+                    'events.is_paying as is_paying',
+                    'events.event_price as price_id',
+                    'event_details.is_locked as ready_flag',
+                    'event_details.participation_id as participation_id',
+                    'event_details.is_buy_invoiced as is_buy_invoiced',
+                    'event_details.is_sell_invoiced as is_sell_invoiced',
+                    //'event_details.price_currency as price_currency',
+                    //'event_details.costs_1 as costs_1',
+                    'event_details.costs_2 as costs_2',
+                    'events.extra_charges as extra_charges'
+                )
+                ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
+                ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
+                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
+                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
+                
+                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
+                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
+                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
+                
+                ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
+                ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
+                ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
+                ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
+                ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
+                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('week(events.date_start,5) week_no')
+                ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
+                //->selectRaw('count(events.id) as invoice_items')
+                ->where(
+                    [
+                        'event_details.teacher_id' => $p_person_id,
+                        'event_details.billing_method' => "E",
+                        //'event_categories.invoiced_type' => "S",
+                        'events.is_active' => 1,
+                        'events.school_id' => $p_school_id
+                    ]
+                );
+            
+
+            // dd($user);
+            if ($user_role == 'admin_teacher') {
+                
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher_all') {
+                
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+            } else if ($user_role == 'teacher') {
+                
+                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
+                $teacherEvents->where('events.teacher_id', $user->person_id);
+            } else {
+            }
+            $teacherEvents->whereNull('events.deleted_at');
+            $teacherEvents->whereNull('event_details.deleted_at');
+            //$studentEvents->where('events.is_paying', '>', 0);
+            $teacherEvents->where('event_details.visibility_id', '>', 0);
+            //$studentEvents->whereNotIn('events.event_type', [100]);
+            $teacherEvents->whereNotNull('events.date_start');
+
+            $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
+            $teacherEvents->whereNull('event_details.buy_invoice_id');
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $teacherEvents->whereRaw($qq);
+
+            // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
+            // $studentEvents->whereRaw($qq);
+            //$studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
+
+            $teacherEvents->orderBy('events.date_start', 'desc');
+            //By
+            //$teacherEvents->distinct('event_details.id');
+            //$teacherEvents->groupBy('events.id');
+            $teacherEvents->groupBy('event_details.event_id');
+            return $teacherEvents;
+    }
+
 }
