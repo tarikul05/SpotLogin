@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-					    <div class="pull-right btn-group save-button">
+					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                                 <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
                             </a> 
@@ -918,6 +918,7 @@
     // });
     $('#issue_inv_btn').click(function (e) {
         Generate_View_PDF('issue_pdf');
+        location.reload();
     });
 
     function Generate_View_PDF(p_type) {
