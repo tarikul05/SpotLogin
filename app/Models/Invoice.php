@@ -290,7 +290,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type)
+    public function getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
     {
         $studentEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
