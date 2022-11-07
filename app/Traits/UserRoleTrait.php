@@ -43,7 +43,7 @@ trait UserRoleTrait
         } else {
             $invoice_type = 'S';
         }
-        $result['user_role'] = $user_role;
-        $result['invoice_type'] = $invoice_type;
+        $result =[$user_role,$invoice_type];
+        return $result;
     }
 }

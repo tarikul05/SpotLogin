@@ -28,6 +28,7 @@ use PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use App\Traits\UserRoleTrait;
+use App\Helpers\ReminderEmail;
 
 class InvoiceController extends Controller
 {
@@ -87,10 +88,7 @@ class InvoiceController extends Controller
         );
         try {
             $data = $request->all();
-
-
             $p_auto_id = trim($data['p_auto_id']);
-
             $data = array();
             $result_data = Invoice::active()->find($p_auto_id);
             $filtered_invoice = [0, 1, 9];
@@ -101,9 +99,7 @@ class InvoiceController extends Controller
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
                 $result_data->class_name = 'student';
                 $student = Student::find($result_data->client_id);
-                //dd($student);
                 if ($student) {
-                    //$result->client = $student;
                     if (isset($student->student_notify) && $student->student_notify == 1) {
                         $result_data->student_email = $student->email;
                     }
@@ -125,16 +121,14 @@ class InvoiceController extends Controller
                 $result_data->secondary_email = $teacher->email2;
             }
             $data[] = $result_data;
-
             $result = array(
                 'status' => true,
                 'message' => __('We sent an email.'),
                 'data' => $data
             );
-
             return response()->json($result);
         } catch (Exception $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -151,153 +145,38 @@ class InvoiceController extends Controller
      */
     public function payReminderEmailSend(Request $request)
     {
-
         $result = array(
             'status' => false,
             'message' => __('failed to send email'),
         );
         try {
             $data = $request->all();
-            $user = $request->user();
-
-            $p_template_code = trim($data['template_code']);
             $p_inv_auto_id = trim($data['p_inv_auto_id']);
-            $p_inv_file = trim($data['p_inv_file']);
-            $p_email = trim($data['p_email']);
-            $p_school_id = trim($data['p_school_id']);
-            $this->schoolId = $p_school_id;
-
-            $res_data = array();
+            
             $result_data = Invoice::active()->find($p_inv_auto_id);
 
             $emails = [];
-            $target_user = [];
             $filtered_invoice = [0, 1, 9];
-
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
-                $target_user = $student = Student::find($result_data->client_id);
-
-                //$result->client = $student;
+                $result_data->target_user = $student = Student::find($result_data->client_id);
                 $emails[] = $student->email;
                 $emails[] = $student->email2;
             } else {
-                $target_user = $teacher = Teacher::find($result_data->seller_id);
+                $result_data->target_user = $teacher = Teacher::find($result_data->seller_id);
                 $emails[] = $teacher->email;
                 $emails[] = $teacher->email2;
             }
             $result_data->emails = $emails;
-            $result_data->target_user = $target_user;
-            $client_name=$result_data->client_name;
-            $invoice_filename=$result_data->invoice_filename;
-
-            if ($user->isSuperAdmin()) {
-
-                $school = School::active()->find($this->schoolId);
-                //dd($school);
-                if (empty($school)) {
-                    return redirect()->route('schools')->with('error', __('School is not selected'));
-                }
-                $this->schoolId = $school->id;
-                $schoolName = $school->school_name;
-            } else {
-                $this->schoolId = $user->selectedSchoolId();
-                $schoolName = $user->selectedSchoolName();
-            }
-            //$result_data->invoice_filename = $emails;
 
             $invoiceCurrency = InvoiceItem::active()->where('invoice_id', $p_inv_auto_id)->get()->pluck('price_currency')->join(',');
             $result_data->invoice_price = $invoiceCurrency . '' . round($result_data->total_amount, 2);
-
-
-            $res_data[] = $result_data;
-
-            //sending email for forgot password
+            //sending email for payment reminder
             if (config('global.email_send') == 1) {
-
-                try {
-                    $p_lang = 'en';
-                    if (isset($data['p_lang'])) {
-                        $p_lang = $data['p_lang'];
-                    }
-                    $email_data = [];
-                    $email_data['subject'] = 'Pay reminder email';
-
-                    $email_data['p_lang'] = $p_lang;
-                    $email_data['name'] = $target_user->firstname . ' ' . $target_user->lastname;
-
-                    $email_data['username'] = $target_user->firstname;
-                    $email_data['school_name'] = $schoolName;
-                    $email_data['client_name'] = $client_name;
-                    $email_data['p_attachment'] = $invoice_filename;
-                    //$this->schoolId =
-                    if ($p_email != '') {
-                        //dd($p_email);
-                        $email_to = str_replace(',', '|', $p_email);
-                        $email_to = str_replace(';', '|', $p_email);
-
-                        $email_to_arr = explode("|", $p_email);
-
-                        //$cnt=sizeof($email_to_arr);
-                        foreach ($email_to_arr  as &$value) {
-                            if ($value != "") {
-                                //$result_data->emails[]=$p_email;
-                                $email_data['email'] = $value;
-                                //dd($p_email);   
-                                if ($this->emailSend($email_data, $p_template_code)) {
-
-                                    $result = array(
-                                        'status' => true,
-                                        'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                                    );
-                                } else {
-                                    $result = array(
-                                        "status"     => false,
-                                        'message' =>  __('Internal server error')
-                                    );
-                                }
-                                //$mail->addAddress($value, $value);    
-                            }
-                            //unset($value);
-                        }
-                        //dd($email_to_arr);
-
-
-                    } else {
-                        //dd($email_data);
-                        foreach ($result_data->emails as $key => $value) {
-                            $email_data['email'] = $value;
-                            $email_data['client_name'] = $client_name;
-                            $email_data['p_attachment'] = $invoice_filename;
-
-                            if ($this->emailSend($email_data, $p_template_code)) {
-
-                                $result = array(
-                                    'status' => true,
-                                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                                );
-                            } else {
-                                $result = array(
-                                    "status"     => false,
-                                    'message' =>  __('Internal server error')
-                                );
-                            }
-                        }
-                    }
-
-                    return response()->json($result);
-                } catch (\Exception $e) {
-                    $result = array(
-                        'status' => true,
-                        'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
-                    );
-
-                    return response()->json($result);
-                }
+                $payReminderEmail = new ReminderEmail();
+                $result = $payReminderEmail->sendReminderEmail($request,$result_data);
             } else {
                 $result = array('status' => true, 'msg' => __('email sent'));
             }
-
-
             return response()->json($result);
         } catch (Exception $e) {
             // echo $e->getMessage();
@@ -1343,6 +1222,7 @@ class InvoiceController extends Controller
                 $extra_expenses = 0;
                 $total_amount_extra = 0;
                 $teacher_fullname = '';
+                $price_currency = '';
             
 
             foreach ($data as $key => $value) {
@@ -1504,10 +1384,12 @@ class InvoiceController extends Controller
                 'tax_amount'=> $tax_amount,
                 'etransfer_acc'=>$school->etransfer_acc,
                 'cheque_payee' =>$school->cheque_payee,
-                'invoice_currency' => $price_currency,
                 'extra_expenses' => $extra_expenses
                 
                 ];
+                if (!empty($price_currency)) {
+                    $updateInvoiceCalculation['invoice_currency'] = $price_currency;
+                }
                 $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
                 // print_r($updateInvoiceCalculation);
@@ -1807,6 +1689,7 @@ class InvoiceController extends Controller
             $extra_expenses = 0;
             $total_amount_extra = 0;
             $teacher_fullname = '';
+            $price_currency = '';
 
             foreach ($data as $key => $value) {
                 try{
@@ -1950,14 +1833,15 @@ class InvoiceController extends Controller
                'tax_amount'=> $tax_amount,
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
-               'invoice_currency' => $price_currency,
                'extra_expenses' => $extra_expenses
             
             ];
+            if (!empty($price_currency)) {
+                $updateInvoiceCalculation['invoice_currency'] = $price_currency;
+            }
             $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
             // print_r($invoiceData->id);
-            // exit();
             
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
@@ -1969,6 +1853,7 @@ class InvoiceController extends Controller
             );
             return response()->json($result);
         } catch (Exception $e) {
+            echo $e->getMessage();
             //return error message
             $result['status'] = false;
             $result['message'] = __('Internal server error');
