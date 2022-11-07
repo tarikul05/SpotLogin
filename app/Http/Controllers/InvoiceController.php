@@ -680,82 +680,8 @@ class InvoiceController extends Controller
 
             $invoiceData = Invoice::create($invoiceData);
             
-
-            $teacherEvents = DB::table('events')
-                ->select(
-                    'event_details.event_id as event_id',
-                    'events.event_type as event_type',
-                    'events.teacher_id as teacher_id',
-                    //'event_details.student_id as student_id',
-                    
-                    'events.duration_minutes as duration_minutes',
-                    'events.title as title',
-                    'event_details.participation_id as participation_id',
-
-                    //'event_details.id as detail_id',
-                    'event_details.is_locked as is_locked',
-                    'events.event_price as event_price',
-                    'events.date_start as date_start',
-                    'event_categories.title as category_name',
-                    'event_categories.invoiced_type as invoiced_type',
-                    'events.extra_charges as extra_charges'
-                )
-                ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
-                ->selectRaw("GROUP_CONCAT(DISTINCT event_details.student_id SEPARATOR ',') AS student_id ")
-            
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
-                ->selectRaw("COUNT(event_details.event_id) as count_name")
-                ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
-                ->selectRaw("SUM(event_details.sell_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_total")
-                
-                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
-                ->selectRaw("SUM(event_details.costs_2) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_2")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
-                ->selectRaw("SUM(event_details.sell_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_price")
-                
-                //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->where(
-                    [
-                        'event_details.teacher_id' => $p_person_id,
-                        'events.is_active' => 1,
-                        'events.school_id' => $schoolId,
-                    ]
-                );
-            //$teacherEvents->whereNotIn('events.event_type', [100]);
-            $teacherEvents->where('event_details.participation_id', '>', 198);
-            $teacherEvents->where('events.date_start', '>=', $dateS);
-            $teacherEvents->where('events.date_end', '<=', $dateEnd);
-            $teacherEvents->whereNull('events.deleted_at');
-            $teacherEvents->whereNull('event_details.deleted_at');
-            //dd($dateS);
-            if ($user_role != 'superadmin') {
-                if ($user_role == 'teacher') {
-                    $teacherEvents->where('events.teacher_id', $user->person_id);
-                } else {
-                    $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-                }
-            }
-            $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-            $teacherEvents->whereNull('event_details.buy_invoice_id');
-
-            
-            
-            //dd($dateEnd);
-
-            
-
-            
-            
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $teacherEvents->orderBy('events.date_start', 'desc');
-            //By
-            //$teacherEvents->distinct('events.id');
-
-            $teacherEvents->groupBy('event_details.event_id');
+            $query = new Invoice;
+            $teacherEvents = $query->generateTeacherEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             
             //dd($teacherEvents->toSql());
             $data = $teacherEvents->get();
@@ -1032,73 +958,10 @@ class InvoiceController extends Controller
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
-            
-            $studentEvents = DB::table('events')
-                ->select(
-                    'events.id as event_id',
-                    'events.event_type as event_type',
-                    'events.teacher_id as teacher_id',
-                    'event_details.student_id as student_id',
-                    
-                    'events.duration_minutes as duration_minutes',
-                    'events.title as title',
-                    'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2', 
-                    'events.extra_charges as extra_charges',
-                    'event_details.participation_id as participation_id',
 
-                    'event_details.id as detail_id',
-                    'event_details.is_locked as is_locked',
-                    'events.event_price as event_price',
-                    'events.date_start as date_start',
-
-                    'event_categories.title as category_name',
-                    
-                    
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price'
-                )
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'events.is_active' => 1,
-                        'event_details.is_sell_invoiced' => 0,
-                        'events.school_id' => $schoolId,
-                    ]
-                );
-            if (!empty($p_event_ids)) {
-                $p_event_ids = substr($p_event_ids, 0, -1);
-                $p_event_ids = explode(',',$p_event_ids);
-                $studentEvents->whereIn('events.id',$p_event_ids);
-            }
-            $studentEvents->where('event_details.participation_id', '>', 198);
-            $studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->where('events.date_end', '<=', $dateEnd);
-            //dd($dateS);
-            if ($user_role != 'superadmin') {
-                if ($user_role == 'teacher') {
-                    $studentEvents->where('events.teacher_id', $user->person_id);
-                } else {
-                    $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-                }
-            }
-            $studentEvents->whereNull('events.deleted_at');
-            $studentEvents->whereNull('event_details.deleted_at');
+            $query = new Invoice;
+            $studentEvents = $query->generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd);
             
-            
-            
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->orderBy('events.date_start', 'desc');
-            //By
-            $studentEvents->distinct('events.id');
-
             //$studentEvents->groupBy('events.id');
             
             //dd($studentEvents->toSql());
