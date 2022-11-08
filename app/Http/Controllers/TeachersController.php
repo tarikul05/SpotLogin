@@ -530,7 +530,6 @@ class TeachersController extends Controller
         'locations',
         'eventLastLocaId',
         'eventCat',
-        'lessonPrices',
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
     }
 
