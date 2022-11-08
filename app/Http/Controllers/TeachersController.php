@@ -387,7 +387,8 @@ class TeachersController extends Controller
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();
         }
 
-        $lessonPrices = LessonPrice::active()->get();
+        $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();
+        
         $lessonPriceTeachers = LessonPriceTeacher::active()
                               ->where(['teacher_id' => $teacher->id])
                               ->whereIn('event_category_id',$eventCategory->pluck('id'))
