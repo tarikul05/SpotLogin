@@ -526,7 +526,8 @@
 										<?= ($tacherPrice == 1) && ($lessionPrice->divider != -1)  ? 'readonly="readonly"' : '' ?>
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float <?= ($tacherPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
 										>
 									</td>
 									<td>
@@ -534,7 +535,8 @@
 										<?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'readonly="readonly"' : '' ?>
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>
