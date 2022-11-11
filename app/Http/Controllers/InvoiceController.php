@@ -619,7 +619,7 @@ class InvoiceController extends Controller
             
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
             $query = new Invoice;
-            $teacherEvents = $query->getTeacherEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
+            $teacherEvents = $query->getTeacherEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
                 
             //dd($studentEvents->toSql());
             $data = $teacherEvents->get();
