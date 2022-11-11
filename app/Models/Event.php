@@ -686,7 +686,7 @@ class Event extends BaseModel
       
       // dd($buyPrice, $sellPrice);
 
-      return ['buy_price'=>$buyPrice ,'sell_price'=>$sellPrice];
+      return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
     }
 
     
