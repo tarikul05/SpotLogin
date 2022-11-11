@@ -665,18 +665,26 @@ class Event extends BaseModel
       $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>$priceKey])->first();
 
       $buyPrice = $sellPrice = 0;
-      
-      if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
-        $buyPrice = $priceFixed->price_buy;
-        $sellPrice = $priceFixed->price_sell;
-      }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
-        $buyPrice = $priceFixed->price_buy;
-        $sellPrice = $prices->price_sell;
-      }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
-        $buyPrice = $prices->price_buy;
-        $sellPrice = $priceFixed->price_sell;
+      if ($evtCategory->invoiced_type == 'S') {
+        if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
+          $buyPrice = $priceFixed->price_buy;
+          $sellPrice = $priceFixed->price_sell;
+        }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
+          $buyPrice = $priceFixed->price_buy;
+          $sellPrice = $prices->price_sell;
+        }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
+          $buyPrice = $prices->price_buy;
+          $sellPrice = $priceFixed->price_sell;
+        }
+      }else if ($evtCategory->invoiced_type == 'S') {
+        if ($evtCategory->t_std_pay_type == 1) {
+          $sellPrice = $priceFixed->price_sell;
+        }elseif ( $evtCategory->t_std_pay_type == 0 ) {
+          $sellPrice = $prices->price_sell;
+        }
       }
-      dd($buyPrice, $sellPrice);
+      
+      // dd($buyPrice, $sellPrice);
 
       return ['buy_price'=>$buyPrice ,'sell_price'=>$sellPrice];
     }
