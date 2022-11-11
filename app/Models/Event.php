@@ -9,6 +9,7 @@ use App\Traits\CreatedUpdatedBy;
 use App\Models\Teacher;
 use App\Models\School;
 use App\Models\EventCategory;
+use App\Models\LessonPriceTeacher;
 
 class Event extends BaseModel
 {
@@ -650,6 +651,34 @@ class Event extends BaseModel
         
        //dd($query->toSql());
        return $query;
+    }
+
+
+
+    public function priceCalculations($data=[])
+    {
+      $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : 0 ;
+
+      $evtCategory = EventCategory::find($data['event_category_id']);
+      $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>'price_fix'])->first();
+// dd($priceFixed);
+      $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>$priceKey])->first();
+
+      $buyPrice = $sellPrice = 0;
+      
+      if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
+        $buyPrice = $priceFixed->price_buy;
+        $sellPrice = $priceFixed->price_sell;
+      }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
+        $buyPrice = $priceFixed->price_buy;
+        $sellPrice = $prices->price_sell;
+      }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
+        $buyPrice = $prices->price_buy;
+        $sellPrice = $priceFixed->price_sell;
+      }
+      dd($buyPrice, $sellPrice);
+
+      return ['buy_price'=>$buyPrice ,'sell_price'=>$sellPrice];
     }
 
     

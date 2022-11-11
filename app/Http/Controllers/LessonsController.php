@@ -1099,11 +1099,12 @@ class LessonsController extends Controller
     {   
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            $stu_num = explode("_", $lessonData['sevent_price']);    
-            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+            // $stu_num = explode("_", $lessonData['sevent_price']);    
+            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select']])->first();
             if (!empty($lessonPriceTeacher)) {
                 return [
                     'status' => 1,
+                    'data' => $lessonPriceTeacher,
                     'message' =>  __('Successfully get price for this teacher')
                 ];
             }else{

@@ -3409,12 +3409,15 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
-$("body").on('change', '#category_select', function(event) {
+$("#category_select").change();
+$("body").on('change', '#category_select, #teacher_select', function(event) {
+    var categoryId = +$(this).val();
+    var teacherSelect = +$("#teacher_select").val();
     var datainvoiced = $("#category_select option:selected").data('invoice');
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
-    
+    // console.log(teacherSelect, categoryId)
     if (datainvoiced == 'S') {
         $("#std-check-div").css('display', 'block');
         $("#teacher_type_billing").show();
@@ -3439,18 +3442,36 @@ $("body").on('change', '#category_select', function(event) {
             "value": csrfToken,
         });
 
-        $.ajax({
-            url: BASE_URL + '/check-lesson-fixed-price',
-            async: false, 
-            data: formData,
-            type: 'POST',
-            dataType: 'json',
-            success: function(response){
-                if(response.status == 1){
-                    var errMssg = '';	
+        formData.push({
+            "name": "event_category_id",
+            "value": categoryId,
+        });
+        formData.push({
+            "name": "teacher_select",
+            "value": teacherSelect,
+        });
+        
+        if (categoryId > 0 && teacherSelect > 0) {
+            $.ajax({
+                url: BASE_URL + '/check-lesson-fixed-price',
+                async: false, 
+                data: formData,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response){
+                    if(response.status == 1){
+                        if (response.data) {
+                            $("#sprice_amount_buy").val(response.data.price_buy)
+                            $("#sprice_amount_sell").val(response.data.price_sell)
+                        }
+                        
+                        // var errMssg = '';   
+                    }
                 }
-            }
-        })
+            })
+        }
+
+            
 	}
 });
 
