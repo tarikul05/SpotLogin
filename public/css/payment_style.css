@@ -92,7 +92,7 @@ body {
 .plans .columns {
     float: left;
     width: 379px;
-    height: 632px;
+    height: 680px;
     background: #FFFFFF;
     box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
     border-radius: 8px;
@@ -191,7 +191,7 @@ body {
 
 .plans .columns .free-plan-button {
     padding: 0;
-    margin: 75px 0 0;
+    margin: 132px 0 0;
     background: #FFFFFF;
     border: 1.7078px solid #0187DB;
     border-radius: 8px;
@@ -452,7 +452,7 @@ body {
 */
 
 .my_subscription {
-    border: 2px solid #E1EFF7;
+    border: 0px solid #E1EFF7;
 }
 
 .my-subscription .title {
@@ -469,7 +469,37 @@ body {
 }
 
 .my_subscription tr {
-    border: 2px solid #E1EFF7;
+    border: 0px solid #E1EFF7;
+    padding: 5px 0 6px;
+}
+
+.my_subscription tr td:first-child {
+    width: 15%;
+    padding: 10px 0 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription tr td:nth-of-type(2) {
+    width: 1%;
+    font-family: 'Gilroy';
+    color: #152245;
+}
+
+.my_subscription tr td:last-child {
+    width: 84%;
+    padding: 10px 0 8px;
+    padding-left: 10px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
 }
 
 .my_subscription .price {
@@ -479,6 +509,41 @@ body {
     font-size: 21px;
     line-height: 21px;
     color: #152245;
+}
+
+.my_subscription .payment_shudule {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription .plan_type_p {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #97CC04;
+    background: #F6FFDB;
+    border: 1px solid #97CC04;
+    border-radius: 4px;
+}
+
+.my_subscription .plan_type_f {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
 }
 
 .my_subscription .interval {
@@ -500,7 +565,6 @@ body {
     font-weight: 600;
     font-size: 14px;
     line-height: 17px;
-    color: #657E8E;
 }
 
 .subscriber_list {
@@ -513,6 +577,20 @@ body {
     border-radius: 4px;
     padding: 4px 8px;
     color: #97CC04;
+}
+
+.my_subscription .plan_type_free {
+    padding: 4px 8px;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #657E8E;
 }
 
 /* .plan_center .price {
