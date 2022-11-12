@@ -58,7 +58,7 @@
                         </div>
                         <div class="button-area">
                             <div class="btn btn_c">
-                                <a class="btn-cancle" href="">Cancel</a>
+                                <a class="btn-cancle" href="{{ url()->previous() }}">Cancel</a>
                             </div>
                             <button id="card-button" class="btn btn-blue" type="submit" data-secret="{{ $intent->client_secret }}"
                             >Proceed payment</button>
@@ -145,7 +145,7 @@
             empty: 'form-control',
             invalid: 'invalid',
         };
-        const stripe = Stripe('pk_test_51LYWbpFOPvZAjJjOEiWO1I1i5v6iSNKVoIElsrWNBvQtrEqF1e8YEu4hmC48w6V0IAinCuE0clEjEvovs1CWpQz300Kb6MI1BK', { locale: 'en' }); // Create a Stripe client.
+        const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' }); // Create a Stripe client.
         const elements = stripe.elements();
         var cardNumber = elements.create('cardNumber', {
             style: elementStyles,
@@ -227,7 +227,7 @@
             }else if(error_code === 'card_declined'){
                 error_message = 'your card has been declined'
             }else{
-                error_message = error_code.'error occurred'
+                error_message = error_code + 'error occurred'
             }
             return error_message;
         }
