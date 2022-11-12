@@ -1201,19 +1201,19 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
 								}
 								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-								total_buy += parseFloat(value.buy_total);
-								total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
+								total_buy += value.buy_total;
+								total_sell += value.sell_total + value.extra_charges;
 								
-								week_total_buy += parseFloat(value.buy_total);
-								week_total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
+								week_total_buy += value.buy_total;
+								week_total_sell += value.sell_total + value.extra_charges;
 								
 
 								if (value.event_type == 10) {
-									amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
+									amount_for_disc=amount_for_disc+value.sell_total;
 								}
 							}
 
-							costs_1 = parseFloat(value.extra_charges);
+							costs_1 = value.extra_charges;
 							if (value.extra_charges != 0) {
 									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
 							} else {

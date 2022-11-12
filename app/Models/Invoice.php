@@ -314,11 +314,11 @@ class Invoice extends BaseModel
                     'event_details.participation_id as participation_id',
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
-                    'event_details.costs_1 as costs_1',
                     'events.extra_charges as extra_charges',
                     'event_details.costs_2 as costs_2',
                     'teachers.id as teacher_id'
                 )
+                ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
@@ -366,6 +366,7 @@ class Invoice extends BaseModel
             
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
+            $studentEvents->distinct('event_details.id');
 
             return $studentEvents;
     }
@@ -408,14 +409,14 @@ class Invoice extends BaseModel
                     'event_details.is_sell_invoiced as is_sell_invoiced',
                     //'event_details.price_currency as price_currency',
                     //'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2',
-                    'events.extra_charges as extra_charges'
+                    'event_details.costs_2 as costs_2'
                 )
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
                 ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
                 ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
                 
+                ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")

@@ -1205,7 +1205,7 @@ function populate_teacher_lesson() {
 
 		total_disc = disc1_amt;
 		total_buy = total_buy - total_disc;
-		console.log(total_buy);
+		//console.log(total_buy);
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
