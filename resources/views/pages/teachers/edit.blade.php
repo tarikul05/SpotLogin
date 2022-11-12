@@ -1136,10 +1136,10 @@ function populate_teacher_lesson() {
 						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-					total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
-					week_total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
+					total_buy += value.buy_total + value.extra_charges;
+					week_total_buy += value.buy_total + value.extra_charges;
 				}
 				if (value.extra_charges != 0) {
 					resultHtml += '<td style="text-align:right" colspan="3">' + value.extra_charges + '</td>';
@@ -1205,7 +1205,7 @@ function populate_teacher_lesson() {
 
 		total_disc = disc1_amt;
 		total_buy = total_buy - total_disc;
-
+		console.log(total_buy);
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
