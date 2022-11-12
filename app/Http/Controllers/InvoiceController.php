@@ -682,7 +682,7 @@ class InvoiceController extends Controller
             $teacherEvents = $query->generateTeacherEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             
             //dd($teacherEvents->toSql());
-            $data = $teacherEvents->get();
+            $dataFetched = $teacherEvents->get();
             $subtotal_amount_all = 0;
             $subtotal_amount_with_discount = 0;
             $subtotal_amount_no_discount = 0;
@@ -707,9 +707,13 @@ class InvoiceController extends Controller
             $price_currency = '';
             
 
-            foreach ($data as $key => $value) {
+            foreach ($dataFetched as $key => $value) {
 
                 try {
+                    $disc1_amt = 0;
+                    $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
+                    
+                    
 
                     $invoiceItemData['invoice_id'] = $invoiceData->id;
                     $invoiceItemData['school_id'] = $schoolId;
@@ -740,9 +744,7 @@ class InvoiceController extends Controller
                     //if ($value->buy_total == 0) {
                         //$value->buy_total = $value->buy_price;
                     //}
-                    $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
                     
-                    $invoiceItemData['subtotal_amount_with_discount'] = 0;
                     $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     // if ($value->event_type == 10) {
                     //     $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
@@ -750,10 +752,14 @@ class InvoiceController extends Controller
                     //     $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
                     // } 
                     $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    
+                    if (!empty($data['p_discount_perc'])) {
+                        $disc1_amt =(($invoiceItemData['total_item']*$data['p_discount_perc'])/100);
+                    }
                     $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     
-                    $v_subtotal_amount_all = $invoiceItemData['total_item'];
-                    //$v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
+                    //$v_subtotal_amount_all = $invoiceItemData['total_item'];
+                    $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
                     $amt_for_disc = 0;
                     $v_amount_discount_1 = 0;
                     $v_amount_discount_2 = 0;
@@ -768,11 +774,11 @@ class InvoiceController extends Controller
                      
                     if ($invoiceData->invoice_type ==2) {
                         
-                        $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
+                        $v_amount_discount_1 = $disc1_amt;
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                         $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                        $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
+                        $v_subtotal_amount_all = $v_total_amount_no_discount+$v_total_amount_with_discount;
                     }
                     $subtotal_amount_all += $v_subtotal_amount_all;
                     $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'];
@@ -862,6 +868,10 @@ class InvoiceController extends Controller
                 'extra_expenses' => $extra_expenses
                 
                 ];
+                if (!empty($data['p_discount_perc'])) {
+                    $updateInvoiceCalculation['discount_percent_1'] =$data['p_discount_perc'];
+                }
+                
                 if (!empty($price_currency)) {
                     $updateInvoiceCalculation['invoice_currency'] = $price_currency;
                 }
