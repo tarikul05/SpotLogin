@@ -74,8 +74,6 @@ class EventDetails extends BaseModel
             ];
             $eventData = $this->whereIn('id', $detail_id)
                 ->update($eventUpdate);
-                print_r($eventData);
-                exit();
         } else {
             $eventUpdate = [
                 'sell_invoice_id' => $invoice_id,
