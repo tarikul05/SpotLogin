@@ -718,10 +718,10 @@ class InvoiceController extends Controller
                     
                     $invoiceItemData['unit'] = $value->duration_minutes;
                     $invoiceItemData['unit_type'] = 'minutes';
-                    $invoiceItemData['price'] = $value->buy_total+$value->extra_charges;
-                    $invoiceItemData['price_unit'] = $value->buy_total;
+                    $invoiceItemData['price'] = $value->buy_total+$value->costs_1;
+                    $invoiceItemData['price_unit'] = $value->buy_total+$value->costs_1;
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
-                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
+                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;
                     $invoiceItemData['publication_mode'] = 'N,admin';
                     if ($value->event_type == 10) {
                         $invoiceItemData['item_type'] = 1;
@@ -740,7 +740,7 @@ class InvoiceController extends Controller
                     //if ($value->buy_total == 0) {
                         //$value->buy_total = $value->buy_price;
                     //}
-                    $invoiceItemData['total_item'] = $value->buy_total+$value->extra_charges;
+                    $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
                     
                     $invoiceItemData['subtotal_amount_with_discount'] = 0;
                     $invoiceItemData['subtotal_amount_no_discount'] = 0;
@@ -774,8 +774,8 @@ class InvoiceController extends Controller
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
                         $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                     }
-                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
-                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
+                    $subtotal_amount_all += $v_subtotal_amount_all;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'];
                     $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
                     $amount_discount_1 += $v_amount_discount_1;
                     $amount_discount_2 += $v_amount_discount_2;
@@ -802,7 +802,7 @@ class InvoiceController extends Controller
                         
                         }
                         if ($value->extra_charges>0) {
-                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     }
                     else if ($value->event_type == 100) { // event
@@ -1063,11 +1063,11 @@ class InvoiceController extends Controller
                     $total_amount_with_discount += $v_total_amount_with_discount;
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
-                    $teacher = Teacher::find($value->teacher_id);
-                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
+                    $student = Student::find($value->student_id);
+                    $student_fullname = $student->firstname.' '.$student->lastname;
                     if ($value->event_type == 10) { //lesson
                         
-                        $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
+                        $invoiceItemData['caption'] = $student->firstname.' '.$student->lastname;
                         $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
                         if ($value->extra_charges>0) {
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;

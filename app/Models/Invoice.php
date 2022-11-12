@@ -373,7 +373,7 @@ class Invoice extends BaseModel
 
 
     /**
-     * getStudentEventList for invoicing
+     * getTeacherEventLessonList for invoicing
      * 
      * @param array $params
      * @return $query

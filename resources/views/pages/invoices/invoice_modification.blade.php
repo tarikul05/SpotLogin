@@ -86,10 +86,20 @@
                                                 @else
                                                     <td style="text-align:right">{{ $item->unit }} minutes</td>
                                                 @endif
-                                                <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
+                                                @if ($invoice->invoice_type == 2)
+                                                    <td style="text-align:right">{{ !empty($item->price) ? number_format($item->price,'2') : ''; }}</td>
+                                                @else
+                                                    <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
+                                                @endif
                                             </tr>
                                             @php 
-                                                $sub_total += $item->price_unit;
+                                                
+                                                if ($invoice->invoice_type == 2){
+                                                    $sub_total += $item->price;
+                                                }
+                                                else{
+                                                    $sub_total += $item->price_unit;
+                                                }
                                                 $total_amount +=$item->total_item;
                                                 $total_min = $total_min + $item->unit;
                                             @endphp
