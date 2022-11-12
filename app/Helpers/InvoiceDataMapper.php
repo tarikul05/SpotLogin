@@ -124,11 +124,12 @@ class InvoiceDataMapper
 
 
         if ($invoice_type_id == 2) {
-            $invoiceData =[
+            $invoiceDataSchool =[
                 'client_id' => $schoolId,
                 'seller_id' => $p_person_id,
                 'discount_percent_1' => $p_discount_perc,
             ];
+            $invoiceData = array_merge($invoiceData,$invoiceDataSchool);
             if (!empty($p_teacher_id)) {
                 $Steacher = SchoolTeacher::active()->where('school_id',$schoolId);
                 $Steacher->where('teacher_id',$p_teacher_id);
