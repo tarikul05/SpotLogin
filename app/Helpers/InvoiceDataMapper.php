@@ -38,7 +38,7 @@ class InvoiceDataMapper
     {
 
         $p_invoice_id=trim($data['p_invoice_id']);
-        $p_discount_perc=trim($data['p_discount_perc']);
+        $p_discount_perc=isset($data['p_discount_perc']) ? trim($data['p_discount_perc']) : 0 ;
         if ($p_discount_perc=''){
             $p_discount_perc=0;
         }

@@ -924,10 +924,10 @@ class InvoiceController extends Controller
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
-            $p_from_date = trim($data['p_from_date']);
-            $p_to_date = trim($data['p_to_date']);
-            $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $p_from_date)));
-            $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $p_to_date)));
+            $data['p_billing_period_start_date'] = trim($data['p_from_date']);
+            $data['p_billing_period_end_date'] = trim($data['p_to_date']);
+            $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_start_date'])));
+            $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_end_date'])));
 
             $p_invoice_id=trim($data['p_invoice_id']);
             $p_event_ids=trim($data['p_event_ids']);
@@ -1080,10 +1080,10 @@ class InvoiceController extends Controller
                         }
                     } 
 
-                    if (!empty($value->detail_id)) {
-                        $query = new EventDetails;
-                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
-                    }
+                    // if (!empty($value->detail_id)) {
+                    //     $query = new EventDetails;
+                    //     $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
+                    // }
                     
                     
                     
