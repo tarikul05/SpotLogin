@@ -718,8 +718,8 @@ class InvoiceController extends Controller
                     
                     $invoiceItemData['unit'] = $value->duration_minutes;
                     $invoiceItemData['unit_type'] = 'minutes';
-                    $invoiceItemData['price'] = $value->buy_price+$value->extra_charges;
-                    $invoiceItemData['price_unit'] = $value->buy_price;
+                    $invoiceItemData['price'] = $value->buy_total+$value->extra_charges;
+                    $invoiceItemData['price_unit'] = $value->buy_total;
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
                     $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
                     $invoiceItemData['publication_mode'] = 'N,admin';
@@ -738,7 +738,7 @@ class InvoiceController extends Controller
                     $invoiceItemData['is_locked'] = $value->is_locked;
                     $invoiceItemData['item_date'] = $value->date_start;
                     //if ($value->buy_total == 0) {
-                        $value->buy_total = $value->buy_price;
+                        //$value->buy_total = $value->buy_price;
                     //}
                     $invoiceItemData['total_item'] = $value->buy_total+$value->extra_charges;
                     
@@ -1080,10 +1080,10 @@ class InvoiceController extends Controller
                         }
                     } 
 
-                    // if (!empty($value->detail_id)) {
-                    //     $query = new EventDetails;
-                    //     $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
-                    // }
+                    if (!empty($value->detail_id)) {
+                        $query = new EventDetails;
+                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
+                    }
                     
                     
                     
