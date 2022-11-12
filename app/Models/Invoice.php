@@ -562,7 +562,7 @@ class Invoice extends BaseModel
     }
 
     /**
-     * generateTeacherEvent for invoicing
+     * generateStudentEvent for invoicing
      * 
      * @param array $params
      * @return $query

@@ -63,4 +63,29 @@ class EventDetails extends BaseModel
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
     ];
+
+    public function updateEventDetail($id, $invoice_id, $buy_invoice_id = 'buy_invoice_id', $student_id = null)
+    {
+        if ($buy_invoice_id == 'buy_invoice_id') {
+            $detail_id =  explode(',', $id);
+            $eventUpdate = [
+                'buy_invoice_id' => $invoice_id,
+                'is_buy_invoiced' => 1
+            ];
+            $eventData = $this->whereIn('id', $detail_id)
+                ->update($eventUpdate);
+                print_r($eventData);
+                exit();
+        } else {
+            $eventUpdate = [
+                'sell_invoice_id' => $invoice_id,
+                'is_sell_invoiced' => 1
+            ];
+            $eventData = EventDetails::where('student_id', $student_id)
+                ->where('id', $id)
+                ->where('participation_id', '>', 198)
+                ->update($eventUpdate);
+        }
+        return $eventData;
+    }
 }

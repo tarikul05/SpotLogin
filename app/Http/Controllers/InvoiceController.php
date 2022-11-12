@@ -683,8 +683,6 @@ class InvoiceController extends Controller
             
             //dd($teacherEvents->toSql());
             $data = $teacherEvents->get();
-        
-            $count = count($data);
             $subtotal_amount_all = 0;
             $subtotal_amount_with_discount = 0;
             $subtotal_amount_no_discount = 0;
@@ -822,17 +820,10 @@ class InvoiceController extends Controller
                     } 
 
                 
-
                     if (!empty($value->detail_id)) {
-                        $detail_id =  explode(',',$value->detail_id);
-                        $eventUpdate = [
-                            'buy_invoice_id' => $invoiceData->id,
-                            'is_buy_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::whereIn('id', $detail_id)
-                        ->update($eventUpdate);
+                        $query = new EventDetails;
+                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'buy_invoice_id');
                     }
-                    //print_r($invoiceItemData);
                 
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
@@ -1088,17 +1079,13 @@ class InvoiceController extends Controller
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     } 
-                    
+
                     if (!empty($value->detail_id)) {
-                        $eventUpdate = [
-                            'sell_invoice_id' => $invoiceData->id,
-                            'is_sell_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::where('student_id', $value->student_id)
-                        ->where('id', $value->detail_id)
-                        ->where('participation_id', '>', 198)
-                        ->update($eventUpdate);
+                        $query = new EventDetails;
+                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
                     }
+                    
+                    
                     
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
