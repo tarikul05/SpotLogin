@@ -770,7 +770,7 @@ class InvoiceController extends Controller
                         
                         $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                        $v_total_amount_with_discount = $v_subtotal_amount_all - $value->extra_charges - $v_total_amount_discount;
+                        $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
                         $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                     }
