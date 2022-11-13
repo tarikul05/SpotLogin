@@ -169,13 +169,14 @@ class Invoice extends BaseModel
             ->join('event_details', 'events.id', '=', 'event_details.event_id')
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
+            ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
             ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
             ->select(
                 'events.id as event_id',
                 'event_details.student_id as person_id',
-                'school_student.nickname as student_name',
                 'users.profile_image_id as profile_image_id'
             )
+            ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname)  AS student_name")
             ->where(
                 [
                     'events.school_id' => $schoolId,

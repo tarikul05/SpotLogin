@@ -42,7 +42,7 @@ class InvoiceDataMapper
         if ($p_discount_perc=''){
             $p_discount_perc=0;
         }
-        $p_teacher_id = $p_person_id = trim($data['p_person_id']);
+        $p_student_id = $p_teacher_id = $p_person_id = trim($data['p_person_id']);
         $schoolId = $p_school_id = trim($data['school_id']);
         $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
         $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
@@ -154,7 +154,7 @@ class InvoiceDataMapper
                 $studentSchool = $Sstudent->first();
                 $student = Student::find($studentSchool->student_id);
                 $invoiceData['client_id'] = $student->id;
-                $invoiceData['client_name'] = $student->firstname.'N '.$student->lastname;
+                $invoiceData['client_name'] = $student->firstname.' '.$student->middlename.' '.$student->lastname;
                 $invoiceData['client_street'] = $student->street;
                 $invoiceData['client_street_number'] = $student->street_number;
                 $invoiceData['client_street2'] = $student->street2;
