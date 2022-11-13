@@ -15,6 +15,7 @@ class UpdateEventTable extends Migration
     {
         Schema::table('events', function (Blueprint $table) { 
             $table->integer('student_is_paying')->nullable();
+            $table->string('event_invoice_type')->nullable()->nullable()->default('T');
         });
     }
 
@@ -27,6 +28,7 @@ class UpdateEventTable extends Migration
     {
          Schema::table('events', function (Blueprint $table) {
             $table->dropColumn('student_is_paying');
+            $table->dropColumn('event_invoice_type');
         }); 
     }
 }
