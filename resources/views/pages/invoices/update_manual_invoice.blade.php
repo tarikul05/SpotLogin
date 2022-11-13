@@ -53,11 +53,12 @@
                         <input type="hidden" id="action" name="action" value="new">
                         <input type="hidden" id="total_min" name="action" value="">
                         <input type="hidden" id="person_id" name="person_id" value="">
-                        <input type="hidden" id="invoice_status_id" name="invoice_status_id" value="1">
-                        <input type="hidden" id="invoice_id" name="invoice_id" value="">
+                        <input type="hidden" id="invoice_status_id" name="invoice_status_id" value="{{$invoiceData['invoice_status']}}">
+                        <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoiceData['id']}}">
                         <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoiceData['invoice_type']}}">
                         <input type="hidden" id="approved_flag" name="approved_flag" value="0">
-                        <input type="hidden" id="payment_status" name="payment_status" value="0">
+                        <input id="p_school_id" name="p_school_id" style="display: none;" value="{{$invoiceData['school_id']}}">
+                        <input type="hidden" id="payment_status" name="payment_status" value="{{$invoiceData['payment_status']}}">
                         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status"></select>
                         <label style="display:none;" id="invoice_date_cap" name="invoice_date_cap">Date of invoice</label>
                         <label style="display:none;" id="payment_info_cap" name="payment_info_cap">Payment Information</label>
@@ -552,21 +553,21 @@
                     <div class="form-group col-md-12" id="father_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">{{ __("Father's email")}}:</label>
                         </div>
                     </div>
 
                     <div class="form-group col-md-12" id="mother_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">{{ __("Mother's email")}}:</label>
                         </div>
                     </div>
 
                     <div class="form-group col-md-12" id="student_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">{{ __("Student's email")}}:</label>
                         </div>
 
                     </div>
@@ -841,7 +842,7 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
     document.getElementById("download_pdf_btn_a").style.display = "none";
     document.getElementById("approved_btn").style.display = "none";
         
-    if (document.getElementById("invoice_status_id").val == 10) {
+    if (document.getElementById("invoice_status_id").value == 10) {
         document.getElementById("issue_inv_btn").style.display = "none";
         document.getElementById("print_preview_btn").style.display = "none";
         document.getElementById("delete_btn_inv").style.display = "none";
@@ -1368,8 +1369,8 @@ $('#download_pdf_btn_a').click(function (e) {
 
     $('#email_send').click(function (e) {
         var p_emails = '', p_attached_file = '';
-        var p_inv_auto_id = $('#seleted_auto_id').val();
-        var p_seleted_invoice_type = $('#seleted_invoice_type').val();
+        var p_inv_auto_id = document.getElementById("invoice_id").value;
+        var p_seleted_invoice_type = document.getElementById("invoice_type").value;
         var p_school_id = document.getElementById("p_school_id").value;
         if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
             p_emails = document.getElementById("father_email_chk").value + "|";
@@ -1387,11 +1388,8 @@ $('#download_pdf_btn_a').click(function (e) {
 
 
         console.log(p_seleted_invoice_type);
-        if (p_seleted_invoice_type == 2) {
-            SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        } else {
-            SendInvoiceEmail('reminder_email_unpaid', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
-        }
+        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        
 
 
     });

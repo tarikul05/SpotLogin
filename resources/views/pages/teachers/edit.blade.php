@@ -47,13 +47,13 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</a> -->
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Lesson') }}
 				</button>
 				@can('teachers-users-update')
@@ -345,7 +345,7 @@
 					@endcan
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
 					
 					<input type="hidden" name="selected_month" id="selected_month" value="">
@@ -457,7 +457,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
@@ -944,10 +944,10 @@ $(function() {
 	if (typeof vtab === "undefined") {
 		vtab='';
 	}
-	if (vtab == 'tab_2') {
+	if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";					
-		activaTab('tab_2');
+		activaTab('tab_3');
 	}
 
 });
@@ -1159,13 +1159,13 @@ function populate_teacher_lesson() {
 						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-					total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
-					week_total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
+					total_buy += value.buy_total + value.costs_1;
+					week_total_buy += value.buy_total + value.costs_1;
 				}
 				if (value.extra_charges != 0) {
-					resultHtml += '<td style="text-align:right" colspan="3">' + value.extra_charges + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';
 				} else {
 					//resultHtml += '<td style="text-align:right"></td>';
 					resultHtml+='<td style="text-align:right" colspan="3"></td>';
@@ -1228,7 +1228,7 @@ function populate_teacher_lesson() {
 
 		total_disc = disc1_amt;
 		total_buy = total_buy - total_disc;
-
+		//console.log(total_buy);
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';

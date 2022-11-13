@@ -10,15 +10,14 @@ use App\Models\InvoiceItem;
 use App\Models\InvoicesTaxes;
 use App\Models\InvoicesExpenses;
 use App\Models\Student;
+use App\Models\Event;
 use App\Models\Teacher;
 use App\Models\Province;
 use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
-use App\Models\EmailTemplate;
 use App\Models\AttachedFile;
-use App\Mail\SportloginEmail;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Redirect;
@@ -27,9 +26,13 @@ use Exception;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use App\Traits\UserRoleTrait;
+use App\Helpers\ReminderEmail;
+use App\Helpers\InvoiceDataMapper;
 
 class InvoiceController extends Controller
 {
+    use UserRoleTrait;
 
     public function __construct()
     {
@@ -51,30 +54,8 @@ class InvoiceController extends Controller
         }
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
-        $invoice_status_all = config('global.invoice_status');
 
-        $user_role = 'superadmin';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
-        } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-            $invoice_type = 'T';
-        } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
-        } else {
-            $invoice_type = 'S';
-        }
-        
-
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
@@ -87,10 +68,8 @@ class InvoiceController extends Controller
             }
         }
         $invoices->orderBy('id', 'desc');
-            
         $invoices = $invoices->get();
-        //dd($invoices);
-        return view('pages.invoices.list', compact('invoices', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
 
@@ -109,10 +88,7 @@ class InvoiceController extends Controller
         );
         try {
             $data = $request->all();
-
-
             $p_auto_id = trim($data['p_auto_id']);
-
             $data = array();
             $result_data = Invoice::active()->find($p_auto_id);
             $filtered_invoice = [0, 1, 9];
@@ -123,19 +99,21 @@ class InvoiceController extends Controller
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
                 $result_data->class_name = 'student';
                 $student = Student::find($result_data->client_id);
-                //$result->client = $student;
-                if ($student->student_notify == 1) {
-                    $result_data->student_email = $student->email;
+                if ($student) {
+                    if (isset($student->student_notify) && $student->student_notify == 1) {
+                        $result_data->student_email = $student->email;
+                    }
+                    if (isset($student->father_notify) && $student->father_notify == 1) {
+                        $result_data->father_email = $student->father_email;
+                    }
+                    if (isset($student->mother_notify) && $student->mother_notify == 1) {
+                        $result_data->mother_email = $student->mother_email;
+                    }
+                    $result_data->class_name = 'student';
+                    $result_data->primary_email = $student->email;
+                    $result_data->secondary_email = $student->email2;
                 }
-                if ($student->father_notify == 1) {
-                    $result_data->father_email = $student->father_email;
-                }
-                if ($student->mother_notify == 1) {
-                    $result_data->mother_email = $student->mother_email;
-                }
-                $result_data->class_name = 'student';
-                $result_data->primary_email = $student->email;
-                $result_data->secondary_email = $student->email2;
+                
             } else {
                 $result_data->class_name = 'teacher';
                 $teacher = Teacher::find($result_data->seller_id);
@@ -143,15 +121,14 @@ class InvoiceController extends Controller
                 $result_data->secondary_email = $teacher->email2;
             }
             $data[] = $result_data;
-
             $result = array(
                 'status' => true,
                 'message' => __('We sent an email.'),
                 'data' => $data
             );
-
             return response()->json($result);
         } catch (Exception $e) {
+            //echo $e->getMessage();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -174,142 +151,36 @@ class InvoiceController extends Controller
         );
         try {
             $data = $request->all();
-            $user = $request->user();
-
-            $p_template_code = trim($data['template_code']);
             $p_inv_auto_id = trim($data['p_inv_auto_id']);
-            $p_inv_file = trim($data['p_inv_file']);
-            $p_email = trim($data['p_email']);
-            $p_school_id = trim($data['p_school_id']);
-            $this->schoolId = $p_school_id;
-
-            $res_data = array();
+            
             $result_data = Invoice::active()->find($p_inv_auto_id);
 
             $emails = [];
-            $target_user = [];
             $filtered_invoice = [0, 1, 9];
-
             if (in_array($result_data->invoice_type, $filtered_invoice)) {
-                $target_user = $student = Student::find($result_data->client_id);
-
-                //$result->client = $student;
+                $result_data->target_user = $student = Student::find($result_data->client_id);
                 $emails[] = $student->email;
                 $emails[] = $student->email2;
             } else {
-                $target_user = $teacher = Teacher::find($result_data->seller_id);
+                $result_data->target_user = $teacher = Teacher::find($result_data->seller_id);
                 $emails[] = $teacher->email;
                 $emails[] = $teacher->email2;
             }
             $result_data->emails = $emails;
-            $result_data->target_user = $target_user;
-
-            if ($user->isSuperAdmin()) {
-
-                $school = School::active()->find($this->schoolId);
-                //dd($school);
-                if (empty($school)) {
-                    return redirect()->route('schools')->with('error', __('School is not selected'));
-                }
-                $this->schoolId = $school->id;
-                $schoolName = $school->school_name;
-            } else {
-                $this->schoolId = $user->selectedSchoolId();
-                $schoolName = $user->selectedSchoolName();
-            }
-            //$result_data->invoice_filename = $emails;
 
             $invoiceCurrency = InvoiceItem::active()->where('invoice_id', $p_inv_auto_id)->get()->pluck('price_currency')->join(',');
             $result_data->invoice_price = $invoiceCurrency . '' . round($result_data->total_amount, 2);
-
-
-            $res_data[] = $result_data;
-
-            //sending email for forgot password
+            //sending email for payment reminder
             if (config('global.email_send') == 1) {
-
-                try {
-                    $p_lang = 'en';
-                    if (isset($data['p_lang'])) {
-                        $p_lang = $data['p_lang'];
-                    }
-                    $email_data = [];
-                    $email_data['subject'] = 'Pay reminder email';
-
-                    $email_data['p_lang'] = $p_lang;
-                    $email_data['name'] = $target_user->firstname . ' ' . $target_user->lastname;
-
-                    $email_data['username'] = $target_user->firstname;
-                    $email_data['school_name'] = $schoolName;
-                    //$this->schoolId =
-                    if ($p_email != '') {
-                        //dd($p_email);
-                        $email_to = str_replace(',', '|', $p_email);
-                        $email_to = str_replace(';', '|', $p_email);
-
-                        $email_to_arr = explode("|", $p_email);
-
-                        //$cnt=sizeof($email_to_arr);
-                        foreach ($email_to_arr  as &$value) {
-                            if ($value != "") {
-                                //$result_data->emails[]=$p_email;
-                                $email_data['email'] = $value;
-                                //dd($p_email);   
-                                if ($this->emailSend($email_data, $p_template_code)) {
-
-                                    $result = array(
-                                        'status' => true,
-                                        'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                                    );
-                                } else {
-                                    $result = array(
-                                        "status"     => false,
-                                        'message' =>  __('Internal server error')
-                                    );
-                                }
-                                //$mail->addAddress($value, $value);    
-                            }
-                            //unset($value);
-                        }
-                        //dd($email_to_arr);
-
-
-                    } else {
-                        //dd($email_data);
-                        foreach ($result_data->emails as $key => $value) {
-                            $email_data['email'] = $value;
-
-                            if ($this->emailSend($email_data, $p_template_code)) {
-
-                                $result = array(
-                                    'status' => true,
-                                    'message' => __('We sent you an activation link. Check your email and click on the link to verify.'),
-                                );
-                            } else {
-                                $result = array(
-                                    "status"     => false,
-                                    'message' =>  __('Internal server error')
-                                );
-                            }
-                        }
-                    }
-
-                    return response()->json($result);
-                } catch (\Exception $e) {
-                    $result = array(
-                        'status' => true,
-                        'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
-                    );
-
-                    return response()->json($result);
-                }
+                $payReminderEmail = new ReminderEmail();
+                $result = $payReminderEmail->sendReminderEmail($request,$result_data);
             } else {
                 $result = array('status' => true, 'msg' => __('email sent'));
             }
-
-
             return response()->json($result);
         } catch (Exception $e) {
+            // echo $e->getMessage();
+            // exit();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -343,6 +214,7 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_payment_status = 0;
             $invoice_status =0;
+            //dd($data);
 
             if (isset($data['p_payment_status'])) {
                 $p_payment_status = trim($data['p_payment_status']);
@@ -359,10 +231,11 @@ class InvoiceController extends Controller
             
             $p_auto_id = trim($data['p_auto_id']);
 
-            
             $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
             if($invoiceData){
-                $invoice_data = Invoice::with(['invoice_items'])->where('id', $p_auto_id)->first();
+                $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
+                    $q->select('id','tax_number');
+                }])->where('id', $p_auto_id)->first();
                 $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
                 $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
                 $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
@@ -370,15 +243,14 @@ class InvoiceController extends Controller
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
                 // save invoice name if invoice_filename is empty
-                if(empty($invoice_data->invoice_filename)){
-                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
-                    if($file_upload){
-                        $invoice_pdf_path = URL::to("").'uploads/pdf/'.$invoice_name;
-                        $invoice_data->invoice_filename = $invoice_pdf_path;
-                        $invoice_data->save();
-                    }
+                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                if($file_upload){
+                    $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                    $invoice_data->invoice_filename = $invoice_pdf_path;
+                    $invoice_data->save();
                 }
             }
+            $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
             $result = array(
                 'status' => 'success',
                 'message' => __('We got a list of invoice'),
@@ -420,33 +292,23 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_invoice_id = trim($data['p_invoice_id']);
             $updateInvoice['discount_percent_1'] = $p_disc1 = trim($data['p_disc1']);
-           
             $updateInvoice['amount_discount_1'] = $p_amt1 = trim($data['p_amt1']);
-           
             $updateInvoice['extra_expenses'] = $p_extra_expenses = trim($data['p_extra_expenses']);
-
             $updateInvoice['total_amount_with_discount']  = $total_amount_with_discount = trim($data['total_amount_with_discount']);
             $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
-            
             $v_total_amount_discount = $p_amt1;
             $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
-            
             $updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
-            
             $updateInvoice['modified_by'] = $user->id;
-            
-            // $query = "call update_invoice_percentage_proc('$p_invoice_id',$p_disc1,$p_disc2,$p_disc3,$p_disc4,$p_disc5,$p_disc5";
-            // $query = $query . ",$p_amt1,$p_amt2,$p_amt3,$p_amt4,$p_amt5,$p_amt6,$p_total_amount,$p_extra_expenses,'$p_tax_amount','$by_user_id=')";
-            //dd($updateInvoice);
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
             if($invoiceData){
-               
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('We got a list of invoice')
+                );
             }
-            $result = array(
-                'status' => 'success',
-                'message' => __('We got a list of invoice')
-            );
+            
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
@@ -484,7 +346,7 @@ class InvoiceController extends Controller
             $p_invoice_id = trim($data['p_invoice_id']);
 
             $updateInvoice['date_invoice']=trim($data['date_invoice']);
-            $updateInvoice['invoice_title']=trim($data['invoice_title']);
+            $updateInvoice['invoice_name']=trim($data['invoice_name']);
             $updateInvoice['invoice_header']=trim($data['invoice_header']);
             $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
             $updateInvoice['client_name']=trim($data['client_name']);
@@ -513,25 +375,18 @@ class InvoiceController extends Controller
             $updateInvoice['seller_email']=trim($data['seller_email']);
             $updateInvoice['seller_eid']=trim($data['seller_eid']);
         
-            $updateInvoice['spayment_bank_account_name']=trim($data['spayment_bank_account_name']);
-            $updateInvoice['spayment_bank_iban']=trim($data['spayment_bank_iban']);
-            $updateInvoice['spayment_bank_account']=trim($data['spayment_bank_account']);
-            $updateInvoice['spayment_bank_swift']=trim($data['spayment_bank_swift']);
-            $updateInvoice['spayment_bank_name']=trim($data['spayment_bank_name']);
-            $updateInvoice['spayment_bank_address']=trim($data['spayment_bank_address']);
-            $updateInvoice['spayment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
-            $updateInvoice['spayment_bank_place']=trim($data['spayment_bank_place']);
-            $updateInvoice['spayment_bank_country_code']=trim($data['spayment_bank_country_id']);
-
+            $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account_name']);
+            $updateInvoice['payment_bank_iban']=trim($data['spayment_bank_iban']);
+            $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account']);
+            $updateInvoice['payment_bank_swift']=trim($data['spayment_bank_swift']);
+            $updateInvoice['payment_bank_name']=trim($data['spayment_bank_name']);
+            $updateInvoice['payment_bank_address']=trim($data['spayment_bank_address']);
+            $updateInvoice['payment_bank_zipcode']=trim($data['spayment_bank_zipcode']);
+            $updateInvoice['payment_bank_place']=trim($data['spayment_bank_place']);
+            $updateInvoice['payment_bank_country_code']=trim($data['spayment_bank_country_id']);
             $updateInvoice['etransfer_acc']=trim($data['etransfer_acc']);
             $updateInvoice['cheque_payee']=trim($data['cheque_payee']);
 
-        
-            //$auto_id=trim($_POST['auto_id']);
-        
-
-            //dd($updateInvoice);
-            
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
             if($invoiceData){
                
@@ -615,78 +470,12 @@ class InvoiceController extends Controller
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
-
-        $studentEvents = DB::table('events')
-            ->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-            ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
-            ->select(
-                'events.id as event_id',
-                'event_details.student_id as person_id',
-                'school_student.nickname as student_name',
-                'users.profile_image_id as profile_image_id'
-            )
-            ->where(
-                [
-                    'events.school_id' => $schoolId,
-                    'event_details.billing_method' => "E",
-                    'events.is_active' => 1
-                ]
-            );
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        $coach_user = '';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            if ($user->isTeacherAdmin()) {
-                $coach_user = 'coach_user';
-            }
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
-
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher_all') {
-            $invoice_type = 'T';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
-            $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            $studentEvents->where('events.teacher_id', $user->person_id);
-        } else {
-        }
-        $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
-        $studentEvents->whereNull('event_details.sell_invoice_id');
-
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $studentEvents->where('events.date_start', '>=', $dateS);
-        $studentEvents->distinct('events.id');
-        //$studentEvents->groupBy('event_details.student_id');
-        //dd($studentEvents->toSql());
-
-        $allEvents = DB::table(DB::raw('(' . $studentEvents->toSql() . ') as custom_table'))
-            ->select(
-                'custom_table.person_id as person_id',
-                'custom_table.student_name as student_name',
-                'custom_table.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(custom_table.event_id) as invoice_items')
-            ->mergeBindings($studentEvents)
-            ->groupBy('custom_table.person_id')
-            ->get();
-
+        
+        
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
+        $query = new Invoice;
+        $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type);
+        
         //dd($allEvents);
         $allStudentEvents = [];
         foreach ($allEvents as $key => $value) {
@@ -725,104 +514,13 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
 
-        $teacherEvents = DB::table('events')
-            ->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-            ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-            ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-            ->select(
-                'event_details.id as detail_id',
-                'events.id as event_id',
-                'event_details.student_id as student_id',
-                'event_details.teacher_id as person_id',
-                'users.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(event_details.id) as invoice_items')
-            ->selectRaw("CONCAT_WS(' ', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
-            //->selectRaw('count(events.id) as invoice_items')
-            ->where(
-                [
-                    'events.school_id' => $schoolId,
-                    'event_details.billing_method' => "E",
-                    'events.is_active' => 1
-                ]
-            );
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        $coach_user = '';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-            if ($user->isTeacherAdmin()) {
-                $coach_user = 'coach_user';
-            }
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-            $user_role = 'teacher';
-        }
-
-        // dd($user);
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $invoice_type = 'S';
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher_all') {
-            $invoice_type = 'T';
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-        } else if ($user_role == 'teacher') {
-            $invoice_type = 'T';
-            $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-            $teacherEvents->where('events.teacher_id', $user->person_id);
-        } else {
-        }
-        $teacherEvents->where('event_details.visibility_id', '>', 0);
-        //$teacherEvents->whereNotIn('events.event_type', [100]);
-            
-        $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-        $teacherEvents->whereNull('event_details.buy_invoice_id');
-
-
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
-        //exit();
-
-        $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
-        //exit();
-        $teacherEvents->whereRaw($qq);
-        // $teacherEvents->where('events.date_start', '>=', $dateS);
-        // $teacherEvents->where('events.date_end', '<=', $dateEnd);
-        $teacherEvents->distinct('event_details.id');
-        //$teacherEvents->groupBy('event_details.event_id');
-        $teacherEvents->groupBy('event_details.event_id');
-
-        //dd($teacherEvents->toSql());
-        $allEventData =  $teacherEvents->get();
-        //dd($allEventData);
-        $allEvents = DB::table(DB::raw('(' . $teacherEvents->toSql() . ') as custom_table'))
-            ->select(
-                'custom_table.person_id as person_id',
-                'custom_table.teacher_name as teacher_name',
-                'custom_table.profile_image_id as profile_image_id'
-            )
-            ->selectRaw('count(custom_table.event_id) as invoice_items')
-            ->mergeBindings($teacherEvents)
-            ->distinct('custom_table.detail_id')
-            ->groupBy('custom_table.person_id');
-        //dd($allEvents->toSql());
-
-        $allEventData =  $allEvents->get();
-
-        //dd($allEventData);
-
+        list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
+        $query = new Invoice;
+        $allEvents = $query->getTeacherInvoiceList($user,$schoolId,$user_role,$invoice_type);
+        
+        
         $allTeacherEvents = [];
-        foreach ($allEventData as $key => $value) {
+        foreach ($allEvents as $key => $value) {
             $profile_image = !empty($value->profile_image_id) ? AttachedFile::find($value->profile_image_id) : null;
             if (!empty($profile_image)) {
                 $value->profile_image = $profile_image->path_name;
@@ -863,118 +561,10 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
             $p_pending_only=trim($data['p_pending_only']);
-            $assData = DB::table('events')
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-                ->select(
-                    'events.event_type as event_type',
-                    'events.event_category as category_id',
-                    'teachers.id as teacher_id',
-                )
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'event_details.billing_method' => "E",
-                        'events.is_active' => 1,
-                        'events.school_id' => $p_school_id,
-                    ]
-                )->distinct('events.id')->get();
 
-            $studentEvents = DB::table('events')
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-                ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
-                //->leftJoin('lesson_price_teachers', 'lesson_price_teachers.lesson_price_id', '=', 'events.no_of_students')
-                ->select(
-                    'events.id as event_id',
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price',
-                    'events.title as title',
-                    'events.event_type as event_type',
-                    'events.event_category as category_id',
-                    'event_categories.title as category_name',
-                    'events.is_paying as is_paying',
-                    'events.event_price as price_id',
-                    'event_details.is_locked as ready_flag',
-                    'event_details.participation_id as participation_id',
-                    'event_details.is_buy_invoiced as is_buy_invoiced',
-                    'event_details.is_sell_invoiced as is_sell_invoiced',
-                    //'event_details.price_currency as price_currency',
-                    
-                    'event_details.costs_1 as costs_1',
-                    'events.extra_charges as extra_charges',
-                    'event_details.costs_2 as costs_2',
-                    'teachers.id as teacher_id'
-                    //'lesson_price_teachers.price_buy as price_buy',
-                    //'lesson_price_teachers.price_sell as price_sell'
-                    //'events.is_locked as ready_flag'
-
-                    // 'users.profile_image_id as profile_image_id'
-                )
-                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
-                ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
-                ->selectRaw('week(events.date_start,5) week_no')
-                ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
-                //->selectRaw('count(events.id) as invoice_items')
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'event_details.billing_method' => "E",
-                        'events.is_active' => 1,
-                        'events.school_id' => $p_school_id,
-                        //'lesson_price_teachers.event_category_id' => $assData[0]->category_id,
-                        //'lesson_price_teachers.teacher_id' => $assData[0]->teacher_id,
-                    ]
-                );
-
-
-            $user_role = 'superadmin';
-            if ($user->person_type == 'App\Models\Student') {
-                $user_role = 'student';
-            }
-            if ($user->person_type == 'App\Models\Teacher') {
-                $user_role = 'teacher';
-            }
-            $coach_user = '';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                if ($user->isTeacherAdmin()) {
-                    $coach_user = 'coach_user';
-                }
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-
-            // dd($user);
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher_all') {
-                $invoice_type = 'T';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-                $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-                $studentEvents->where('events.teacher_id', $user->person_id);
-            } else {
-            }
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+            $query = new Invoice;
+            $studentEvents = $query->getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             if (!empty($p_pending_only)) {
                 $studentEvents->where(
                     function ($query) {
@@ -983,20 +573,7 @@ class InvoiceController extends Controller
                     }
                 );
             }
-            
-
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
-            $studentEvents->whereRaw($qq);
-
-
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->orderBy('events.date_start', 'desc');
-            //By
-            $studentEvents->distinct('events.id');
-            $studentEvents->whereNull('events.deleted_at');
-            $studentEvents->whereNull('event_details.deleted_at');
-
-            //$studentEvents->groupBy('events.id');
+            //dd($studentEvents->toSql());
             $data = $studentEvents->get();
             //dd($data);
 
@@ -1039,121 +616,10 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
-            $teacherEvents = DB::table('events')
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-                ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-                ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-                ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
-                //->leftJoin('schools', 'schools.id', '=', 'events.school_id')
-                //->leftJoin('lesson_prices', 'lesson_prices.event_type', '=', 'events.event_type')
-                ->select(
-                    'events.id as event_id',
-                    'event_details.id as event_id1',
-                    //'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price',
-                    'events.price_amount_buy as price_amount_buy',
-                    //'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'events.title as title',
-                    'events.event_type as event_type',
-                    'events.event_category as category_id',
-                    'event_categories.title as category_name',
-                    'events.is_paying as is_paying',
-                    'events.event_price as price_id',
-                    'event_details.is_locked as ready_flag',
-                    'event_details.participation_id as participation_id',
-                    'event_details.is_buy_invoiced as is_buy_invoiced',
-                    'event_details.is_sell_invoiced as is_sell_invoiced',
-                    //'event_details.price_currency as price_currency',
-                    //'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2',
-                    'events.extra_charges as extra_charges'
-                )
-                ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
-                ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
-                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
-                
-                ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                
-                ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
-                ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
-                ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
-                ->selectRaw('week(events.date_start,5) week_no')
-                ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
-                //->selectRaw('count(events.id) as invoice_items')
-                ->where(
-                    [
-                        'event_details.teacher_id' => $p_person_id,
-                        'event_details.billing_method' => "E",
-                        //'event_categories.invoiced_type' => "S",
-                        'events.is_active' => 1,
-                        'events.school_id' => $p_school_id
-                    ]
-                );
-            $user_role = 'superadmin';
-            if ($user->person_type == 'App\Models\Student') {
-                $user_role = 'student';
-            }
-            if ($user->person_type == 'App\Models\Teacher') {
-                $user_role = 'teacher';
-            }
-            $coach_user = '';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                if ($user->isTeacherAdmin()) {
-                    $coach_user = 'coach_user';
-                }
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-
-            // dd($user);
-            if ($user_role == 'admin_teacher') {
-                $invoice_type = 'S';
-                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher_all') {
-                $invoice_type = 'T';
-                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-                $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-                $teacherEvents->where('events.teacher_id', $user->person_id);
-            } else {
-            }
-            $teacherEvents->whereNull('events.deleted_at');
-            $teacherEvents->whereNull('event_details.deleted_at');
-            //$studentEvents->where('events.is_paying', '>', 0);
-            $teacherEvents->where('event_details.visibility_id', '>', 0);
-            //$studentEvents->whereNotIn('events.event_type', [100]);
-            $teacherEvents->whereNotNull('events.date_start');
-
-            $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-            $teacherEvents->whereNull('event_details.buy_invoice_id');
-
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
-            $teacherEvents->whereRaw($qq);
-
-            // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
-            // $studentEvents->whereRaw($qq);
-            //$studentEvents->whereBetween('events.date_start', [$p_billing_period_start_date, $p_billing_period_end_date]);
-
-            $teacherEvents->orderBy('events.date_start', 'desc');
-            //By
-            //$teacherEvents->distinct('event_details.id');
-            //$teacherEvents->groupBy('events.id');
-            $teacherEvents->groupBy('event_details.event_id');
+            
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+            $query = new Invoice;
+            $teacherEvents = $query->getTeacherEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
                 
             //dd($studentEvents->toSql());
             $data = $teacherEvents->get();
@@ -1196,263 +662,58 @@ class InvoiceController extends Controller
             $dateS = $p_billing_period_start_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_start_date)));
             $dateEnd = $p_billing_period_end_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_end_date)));
 
-            $p_invoice_id=trim($data['p_invoice_id']);
-            $p_discount_perc=trim($data['p_discount_perc']);
-            if ($p_discount_perc=''){
-                $p_discount_perc=0;
-            }
+            
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
 
-            $user_role = 'superadmin';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
-            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-                $invoice_type = 'T';
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-            } else {
-                $invoice_type = 'S';
-            }
-
-            if($p_invoice_id=''){
-	            $v_invoice_id='';
-            }
-            else {
-                $v_invoice_id=$p_invoice_id;
-            }
-            // invoice_currency
-            $invoiceData['school_id'] = $schoolId;
-            $invoiceData['client_id'] = $schoolId;
-            $invoiceData['seller_id'] = $p_person_id;
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
             
-            $invoiceData['invoice_no'] = $v_invoice_id;
-            $invoiceData['invoice_type'] = 2;
-            $invoiceData['invoice_status'] = 1;
-            $invoiceData['invoice_name'] = 'Invoice '.Carbon::now()->format('F').' '.Carbon::now()->year;
-            $invoiceData['period_starts'] = $dateS;
-            $invoiceData['period_ends'] = $dateEnd;
-            $invoiceData['discount_percent_1'] = $p_discount_perc;
-            $invoiceData['date_invoice'] = Carbon::now()->format('Y-m-d H:i:s');
-            
-
-            if ($invoice_type == 'T') {
-                $professors = SchoolTeacher::active()->where('school_id',$schoolId);
-                $professors->where('teacher_id',$user->person_id);
-                $professors = $professors->first();
-                $teacher = Teacher::find($professors->id);
-
-                $invoiceData['seller_id'] = $teacher->id;
-                $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
-                $invoiceData['seller_street'] = $teacher->street;
-                $invoiceData['seller_street_number'] = $teacher->street_number;
-                $invoiceData['seller_street2'] = $teacher->street2;
-                $invoiceData['seller_zip_code'] = $teacher->zip_code;
-                $invoiceData['seller_place'] = $teacher->place;
-                $invoiceData['seller_country_id'] = $teacher->country_code;
-                $invoiceData['seller_phone'] = $teacher->phone;
-                $invoiceData['seller_mobile'] = $teacher->mobile;
-                $invoiceData['seller_email'] = $teacher->email;
-                $invoiceData['seller_gender_id'] = $teacher->gender_id;
-                $invoiceData['seller_lastname'] = $teacher->lastname;
-                $invoiceData['seller_firstname'] = $teacher->firstname;
-                
-                $invoiceData['payment_bank_iban'] = $teacher->bank_iban;
-                $invoiceData['payment_bank_account'] = $teacher->bank_account;
-                $invoiceData['payment_bank_swift'] = $teacher->bank_swift;
-                $invoiceData['payment_bank_name'] = $teacher->bank_name;
-                $invoiceData['payment_bank_address'] = $teacher->bank_address;
-                $invoiceData['payment_bank_zipcode'] = $teacher->bank_zipcode;
-                $invoiceData['payment_bank_place'] = $teacher->bank_place;
-                $invoiceData['payment_bank_country_id'] = $teacher->bank_country_code;
-
-            } else {
-                $invoiceData['seller_id'] = $schoolId;
-                $invoiceData['seller_name'] = $school->school_name;
-                $invoiceData['seller_street'] = $school->street;
-                $invoiceData['seller_street_number'] = $school->street_number;
-                $invoiceData['seller_street2'] = $school->street2;
-                $invoiceData['seller_zip_code'] = $school->zip_code;
-                $invoiceData['seller_place'] = $school->place;
-                $invoiceData['seller_country_code'] = $school->country_code;
-                $invoiceData['seller_phone'] = $school->phone;
-                $invoiceData['seller_mobile'] = $school->mobile;
-                $invoiceData['seller_email'] = $school->email;
-                $invoiceData['seller_gender_id'] = $school->contact_gender_id;
-                $invoiceData['seller_lastname'] = $school->contact_lastname;
-                $invoiceData['seller_firstname'] = $school->contact_firstname;
-                $invoiceData['payment_bank_iban'] = $school->bank_iban;
-            
-                $invoiceData['payment_bank_account_name'] = $school->bank_account_holder;
-                $invoiceData['payment_bank_account'] = $school->bank_account;
-                $invoiceData['payment_bank_swift'] = $school->bank_swift;
-                $invoiceData['payment_bank_name'] = $school->bank_name;
-                $invoiceData['payment_bank_address'] = $school->bank_address;
-                $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
-                $invoiceData['payment_bank_place'] = $school->bank_place;
-                $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
-                
-            }
+            $dataMap = new InvoiceDataMapper();
+            $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user,2);
             $invoiceData['invoice_header'] = 'From '.$invoiceData['period_starts'].' to '.$invoiceData['period_ends'].' - '.$invoiceData['seller_name'].' "'.$school->school_name.'" from '.$invoiceData['date_invoice'];
-            
-            if (!empty($p_teacher_id)) {
-                $Steacher = SchoolTeacher::active()->where('school_id',$schoolId);
-                $Steacher->where('teacher_id',$p_teacher_id);
-                $teacherSchool = $Steacher->first();
-                $teacher = Teacher::find($teacherSchool->teacher_id);
-                $invoiceData['client_id'] = $teacher->id;
-                $invoiceData['client_name'] = $teacher->firstname.'N '.$teacher->lastname;
-                $invoiceData['client_street'] = $teacher->street;
-                $invoiceData['client_street_number'] = $teacher->street_number;
-                $invoiceData['client_street2'] = $teacher->street2;
-                $invoiceData['client_zip_code'] = $teacher->zip_code;
-                $invoiceData['client_place'] = $teacher->place;
-                $invoiceData['client_country_code'] = $teacher->country_code;
-                $invoiceData['client_gender_id'] = $teacher->gender_id;
-                $invoiceData['client_lastname'] = $teacher->lastname;
-                $invoiceData['client_firstname'] = $teacher->firstname;
-            }
-
-            $invoiceData['discount_percent_1'] = $school->discount_percent_1;
-            $invoiceData['discount_percent_2'] = $school->discount_percent_2;
-            $invoiceData['discount_percent_3'] = $school->discount_percent_3;
-            $invoiceData['discount_percent_4'] = $school->discount_percent_4;
-            $invoiceData['discount_percent_5'] = $school->discount_percent_5;
-            $invoiceData['discount_percent_6'] = $school->discount_percent_6;
-            
-            $invoiceData['category_invoiced_type'] = $invoice_type;
             $invoiceData['created_by'] = $user->id;
-            $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-            
-            
-            
-            
+
             $invoiceData = Invoice::create($invoiceData);
-            //$invoiceData = Invoice::active()->find(16);
             
+            $query = new Invoice;
+            $teacherEvents = $query->generateTeacherEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             
-            
-            
-
-                $teacherEvents = DB::table('events')
-                    ->select(
-                        'event_details.event_id as event_id',
-                        'events.event_type as event_type',
-                        'events.teacher_id as teacher_id',
-                        //'event_details.student_id as student_id',
-                        
-                        'events.duration_minutes as duration_minutes',
-                        'events.title as title',
-                        'event_details.participation_id as participation_id',
-
-                        //'event_details.id as detail_id',
-                        'event_details.is_locked as is_locked',
-                        'events.event_price as event_price',
-                        'events.date_start as date_start',
-                        'event_categories.title as category_name',
-                        'event_categories.invoiced_type as invoiced_type',
-                        'events.extra_charges as extra_charges'
-                    )
-                    ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
-                    ->selectRaw("GROUP_CONCAT(DISTINCT event_details.student_id SEPARATOR ',') AS student_id ")
-                
-                    ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
-                    ->selectRaw("COUNT(event_details.event_id) as count_name")
-                    ->selectRaw("SUM(event_details.buy_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
-                    ->selectRaw("SUM(event_details.sell_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_total")
-                    
-                    ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
-                    ->selectRaw("SUM(event_details.costs_2) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_2")
-                    ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
-                    ->selectRaw("SUM(event_details.sell_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_price")
-                    
-                    //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                    ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                    ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                    ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-                    ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                    ->where(
-                        [
-                            'event_details.teacher_id' => $p_person_id,
-                            'events.is_active' => 1,
-                            'events.school_id' => $schoolId,
-                        ]
-                    );
-                //$teacherEvents->whereNotIn('events.event_type', [100]);
-                $teacherEvents->where('event_details.participation_id', '>', 198);
-                $teacherEvents->where('events.date_start', '>=', $dateS);
-                $teacherEvents->where('events.date_end', '<=', $dateEnd);
-                $teacherEvents->whereNull('events.deleted_at');
-                $teacherEvents->whereNull('event_details.deleted_at');
-                //dd($dateS);
-                if ($user_role != 'superadmin') {
-                    if ($user_role == 'teacher') {
-                        $teacherEvents->where('events.teacher_id', $user->person_id);
-                    } else {
-                        $teacherEvents->where('event_categories.invoiced_type', $invoice_type);
-                    }
-                }
-                $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
-                $teacherEvents->whereNull('event_details.buy_invoice_id');
-
-                
-                
-                //dd($dateEnd);
-
-                
-
-                
-                
-                //$studentEvents->where('events.date_start', '>=', $dateS);
-                $teacherEvents->orderBy('events.date_start', 'desc');
-                //By
-                //$teacherEvents->distinct('events.id');
-
-                $teacherEvents->groupBy('event_details.event_id');
-                
-                //dd($teacherEvents->toSql());
-                $data = $teacherEvents->get();
-            
-                $count = count($data);
-                $subtotal_amount_all = 0;
-                $subtotal_amount_with_discount = 0;
-                $subtotal_amount_no_discount = 0;
-                $amount_discount_1 = 0;
-                $amount_discount_2 = 0;
-                $amount_discount_3 =0;
-                $amount_discount_4 =0;
-                $amount_discount_5 = 0;
-                $amount_discount_6 =0;
-                $total_amount_discount = 0;
-                $total_amount_no_discount = 0;
-                $total_amount_with_discount = 0;
-                $total_amount = 0;
-                $tax_desc = 0;
-                $tax_perc =0;
-                $tax_amount = 0;
-                $etransfer_acc = 0;
-                $cheque_payee = 0;
-                $extra_expenses = 0;
-                $total_amount_extra = 0;
-                $teacher_fullname = '';
+            //dd($teacherEvents->toSql());
+            $dataFetched = $teacherEvents->get();
+            $subtotal_amount_all = 0;
+            $subtotal_amount_with_discount = 0;
+            $subtotal_amount_no_discount = 0;
+            $amount_discount_1 = 0;
+            $amount_discount_2 = 0;
+            $amount_discount_3 =0;
+            $amount_discount_4 =0;
+            $amount_discount_5 = 0;
+            $amount_discount_6 =0;
+            $total_amount_discount = 0;
+            $total_amount_no_discount = 0;
+            $total_amount_with_discount = 0;
+            $total_amount = 0;
+            $tax_desc = 0;
+            $tax_perc =0;
+            $tax_amount = 0;
+            $etransfer_acc = 0;
+            $cheque_payee = 0;
+            $extra_expenses = 0;
+            $total_amount_extra = 0;
+            $teacher_fullname = '';
+            $price_currency = '';
             
 
-            foreach ($data as $key => $value) {
+            foreach ($dataFetched as $key => $value) {
 
                 try {
+                    $disc1_amt = 0;
+                    $invoiceItemData['total_item'] = $value->buy_total+$value->costs_1;
+                    
+                    
 
                     $invoiceItemData['invoice_id'] = $invoiceData->id;
                     $invoiceItemData['school_id'] = $schoolId;
@@ -1461,10 +722,10 @@ class InvoiceController extends Controller
                     
                     $invoiceItemData['unit'] = $value->duration_minutes;
                     $invoiceItemData['unit_type'] = 'minutes';
-                    $invoiceItemData['price'] = $value->buy_price+$value->extra_charges;
-                    $invoiceItemData['price_unit'] = $value->buy_price;
+                    $invoiceItemData['price'] = $value->buy_total+$value->costs_1;
+                    $invoiceItemData['price_unit'] = $value->buy_total+$value->costs_1;
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
-                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
+                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;
                     $invoiceItemData['publication_mode'] = 'N,admin';
                     if ($value->event_type == 10) {
                         $invoiceItemData['item_type'] = 1;
@@ -1481,11 +742,9 @@ class InvoiceController extends Controller
                     $invoiceItemData['is_locked'] = $value->is_locked;
                     $invoiceItemData['item_date'] = $value->date_start;
                     //if ($value->buy_total == 0) {
-                        $value->buy_total = $value->buy_price;
+                        //$value->buy_total = $value->buy_price;
                     //}
-                    $invoiceItemData['total_item'] = $value->buy_total+$value->extra_charges;
                     
-                    $invoiceItemData['subtotal_amount_with_discount'] = 0;
                     $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     // if ($value->event_type == 10) {
                     //     $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
@@ -1493,10 +752,14 @@ class InvoiceController extends Controller
                     //     $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
                     // } 
                     $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
+                    
+                    if (!empty($data['p_discount_perc'])) {
+                        $disc1_amt =(($invoiceItemData['total_item']*$data['p_discount_perc'])/100);
+                    }
                     $invoiceItemData['subtotal_amount_no_discount'] = 0;
                     
-                    $v_subtotal_amount_all = $invoiceItemData['total_item'];
-                    //$v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
+                    //$v_subtotal_amount_all = $invoiceItemData['total_item'];
+                    $v_subtotal_amount_all = $invoiceItemData['subtotal_amount_with_discount'] + $invoiceItemData['subtotal_amount_no_discount'];
                     $amt_for_disc = 0;
                     $v_amount_discount_1 = 0;
                     $v_amount_discount_2 = 0;
@@ -1511,14 +774,14 @@ class InvoiceController extends Controller
                      
                     if ($invoiceData->invoice_type ==2) {
                         
-                        $v_amount_discount_1 = $v_subtotal_amount_all*($invoiceData->discount_percent_1/100);
+                        $v_amount_discount_1 = $disc1_amt;
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
-                        $v_total_amount_with_discount = $v_subtotal_amount_all - $value->extra_charges - $v_total_amount_discount;
+                        $v_total_amount_with_discount = $v_subtotal_amount_all - $v_total_amount_discount;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                        $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
+                        $v_subtotal_amount_all = $v_total_amount_no_discount+$v_total_amount_with_discount;
                     }
-                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
-                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
+                    $subtotal_amount_all += $v_subtotal_amount_all;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'];
                     $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
                     $amount_discount_1 += $v_amount_discount_1;
                     $amount_discount_2 += $v_amount_discount_2;
@@ -1545,7 +808,7 @@ class InvoiceController extends Controller
                         
                         }
                         if ($value->extra_charges>0) {
-                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     }
                     else if ($value->event_type == 100) { // event
@@ -1563,17 +826,10 @@ class InvoiceController extends Controller
                     } 
 
                 
-
                     if (!empty($value->detail_id)) {
-                        $detail_id =  explode(',',$value->detail_id);
-                        $eventUpdate = [
-                            'buy_invoice_id' => $invoiceData->id,
-                            'is_buy_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::whereIn('id', $detail_id)
-                        ->update($eventUpdate);
+                        $query = new EventDetails;
+                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'buy_invoice_id');
                     }
-                    //print_r($invoiceItemData);
                 
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
@@ -1609,10 +865,16 @@ class InvoiceController extends Controller
                 'tax_amount'=> $tax_amount,
                 'etransfer_acc'=>$school->etransfer_acc,
                 'cheque_payee' =>$school->cheque_payee,
-                'invoice_currency' => $price_currency,
                 'extra_expenses' => $extra_expenses
                 
                 ];
+                if (!empty($data['p_discount_perc'])) {
+                    $updateInvoiceCalculation['discount_percent_1'] =$data['p_discount_perc'];
+                }
+                
+                if (!empty($price_currency)) {
+                    $updateInvoiceCalculation['invoice_currency'] = $price_currency;
+                }
                 $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
                 // print_r($updateInvoiceCalculation);
@@ -1672,10 +934,10 @@ class InvoiceController extends Controller
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
-            $p_from_date = trim($data['p_from_date']);
-            $p_to_date = trim($data['p_to_date']);
-            $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $p_from_date)));
-            $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $p_to_date)));
+            $data['p_billing_period_start_date'] = trim($data['p_from_date']);
+            $data['p_billing_period_end_date'] = trim($data['p_to_date']);
+            $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_start_date'])));
+            $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_end_date'])));
 
             $p_invoice_id=trim($data['p_invoice_id']);
             $p_event_ids=trim($data['p_event_ids']);
@@ -1686,226 +948,19 @@ class InvoiceController extends Controller
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $user_role = 'superadmin';
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-                
-            }
-            if ($user->isTeacherAll()) {
-                $user_role = 'teacher_all';
-            }
-            if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
-                $user_role = 'teacher';
-            }
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $invoice_type = 'S';
-            } else if ($school->school_type == 'C' || $user_role == 'teacher_all') {
-                $invoice_type = 'T';
-            } else if ($user_role == 'teacher') {
-                $invoice_type = 'T';
-            } else {
-                $invoice_type = 'S';
-            }
+            list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
-            
-
-            //$v_inv_name = 'Facture '.$month_name.' '.year(v_period_starts);
-            
-            if($p_invoice_id=''){
-	            $v_invoice_id='';
-            }
-            else {
-                $v_invoice_id=$p_invoice_id;
-            }
-            $invoiceData['school_id'] = $schoolId;
-            $invoiceData['invoice_no'] = $v_invoice_id;
-            $invoiceData['invoice_type'] = 1;
-            $invoiceData['invoice_status'] = 1;
-            $invoiceData['date_invoice'] = Carbon::now()->format('Y-m-d H:i:s');
-            $invoiceData['period_starts'] = $dateS;
-            $invoiceData['period_ends'] = $dateEnd;
-            $invoiceData['invoice_name'] = 'Invoice '.Carbon::now()->format('F').' '.Carbon::now()->year;
-            //$date_invoice = Carbon::createFromFormat('Y-m-d H:i:s', $invoiceData['date_invoice'], 'UTC'); // specify UTC otherwise defaults to locale time zone as per ini setting
-            
-            //$invoiceData['invoice_header'] = $invoiceData['invoice_name'].'-'.$invoiceData['client_name'].' du '.$date_invoice;
-            
-            if ($invoice_type == 'T') {
-                $professors = SchoolTeacher::active()->where('school_id',$schoolId);
-                $professors->where('teacher_id',$user->person_id);
-                $professors = $professors->first();
-                $teacher = Teacher::find($professors->id);
-
-                $invoiceData['seller_id'] = $teacher->id;
-                $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
-                $invoiceData['seller_street'] = $teacher->street;
-                $invoiceData['seller_street_number'] = $teacher->street_number;
-                $invoiceData['seller_street2'] = $teacher->street2;
-                $invoiceData['seller_zip_code'] = $teacher->zip_code;
-                $invoiceData['seller_place'] = $teacher->place;
-                $invoiceData['seller_country_code'] = $teacher->country_code;
-                $invoiceData['seller_phone'] = $teacher->phone;
-                $invoiceData['seller_mobile'] = $teacher->mobile;
-                $invoiceData['seller_email'] = $teacher->email;
-                $invoiceData['seller_gender_id'] = $teacher->gender_id;
-                $invoiceData['seller_lastname'] = $teacher->lastname;
-                $invoiceData['seller_firstname'] = $teacher->firstname;
-
-
-                $invoiceData['payment_bank_iban'] = $teacher->bank_iban;
-            
-                $invoiceData['payment_bank_account'] = $teacher->bank_account;
-                $invoiceData['payment_bank_swift'] = $teacher->bank_swift;
-                $invoiceData['payment_bank_name'] = $teacher->bank_name;
-                $invoiceData['payment_bank_address'] = $teacher->bank_address;
-                $invoiceData['payment_bank_zipcode'] = $teacher->bank_zipcode;
-                $invoiceData['payment_bank_place'] = $teacher->bank_place;
-                $invoiceData['payment_bank_country_code'] = $teacher->bank_country_code;
-                
-
-            } else {
-                $invoiceData['seller_id'] = $schoolId;
-                $invoiceData['seller_name'] = $school->school_name;
-                $invoiceData['seller_street'] = $school->street;
-                $invoiceData['seller_street_number'] = $school->street_number;
-                $invoiceData['seller_street2'] = $school->street2;
-                $invoiceData['seller_zip_code'] = $school->zip_code;
-                $invoiceData['seller_place'] = $school->place;
-                $invoiceData['seller_country_code'] = $school->country_code;
-                $invoiceData['seller_phone'] = $school->phone;
-                $invoiceData['seller_mobile'] = $school->mobile;
-                $invoiceData['seller_email'] = $school->email;
-                $invoiceData['seller_gender_id'] = $school->contact_gender_id;
-                $invoiceData['seller_lastname'] = $school->contact_lastname;
-                $invoiceData['seller_firstname'] = $school->contact_firstname;
-                $invoiceData['payment_bank_iban'] = $school->bank_iban;
-            
-                $invoiceData['payment_bank_account_name'] = $school->bank_account_holder;
-                $invoiceData['payment_bank_account'] = $school->bank_account;
-                $invoiceData['payment_bank_swift'] = $school->bank_swift;
-                $invoiceData['payment_bank_name'] = $school->bank_name;
-                $invoiceData['payment_bank_address'] = $school->bank_address;
-                $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
-                $invoiceData['payment_bank_place'] = $school->bank_place;
-                $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
-                
-            }
-            
-            
-            if (!empty($p_student_id)) {
-                $Sstudent = SchoolStudent::active()->where('school_id',$schoolId);
-                $Sstudent->where('student_id',$p_student_id);
-                $studentSchool = $Sstudent->first();
-                $student = Student::find($studentSchool->student_id);
-                $invoiceData['client_id'] = $student->id;
-                $invoiceData['client_name'] = $student->firstname.'N '.$student->lastname;
-                $invoiceData['client_street'] = $student->street;
-                $invoiceData['client_street_number'] = $student->street_number;
-                $invoiceData['client_street2'] = $student->street2;
-                $invoiceData['client_zip_code'] = $student->zip_code;
-                $invoiceData['client_place'] = $student->place;
-                $invoiceData['client_country_code'] = $student->country_code;
-                $invoiceData['client_gender_id'] = $student->gender_id;
-                $invoiceData['client_lastname'] = $student->lastname;
-                $invoiceData['client_firstname'] = $student->firstname;
-            }
-
-            //dd($invoiceData);
-
-            
-
-            $invoiceData['discount_percent_1'] = $school->discount_percent_1;
-            $invoiceData['discount_percent_2'] = $school->discount_percent_2;
-            $invoiceData['discount_percent_3'] = $school->discount_percent_3;
-            $invoiceData['discount_percent_4'] = $school->discount_percent_4;
-            $invoiceData['discount_percent_5'] = $school->discount_percent_5;
-            $invoiceData['discount_percent_6'] = $school->discount_percent_6;
-            
-            $invoiceData['category_invoiced_type'] = $invoice_type;
+            $dataMap = new InvoiceDataMapper();
+            $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user);
             $invoiceData['created_by'] = $user->id;
-            $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-            
-            
-            
+           
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
-            
-            
-            
 
-
-
-            $studentEvents = DB::table('events')
-                ->select(
-                    'events.id as event_id',
-                    'events.event_type as event_type',
-                    'events.teacher_id as teacher_id',
-                    'event_details.student_id as student_id',
-                    
-                    'events.duration_minutes as duration_minutes',
-                    'events.title as title',
-                    'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2', 
-                    'events.extra_charges as extra_charges',
-                    'event_details.participation_id as participation_id',
-
-                    'event_details.id as detail_id',
-                    'event_details.is_locked as is_locked',
-                    'events.event_price as event_price',
-                    'events.date_start as date_start',
-
-                    'event_categories.title as category_name',
-                    
-                    
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price'
-                )
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
-                ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
-                ->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
-                ->where(
-                    [
-                        'event_details.student_id' => $p_person_id,
-                        'events.is_active' => 1,
-                        'event_details.is_sell_invoiced' => 0,
-                        'events.school_id' => $schoolId,
-                    ]
-                );
-            if (!empty($p_event_ids)) {
-                $p_event_ids = substr($p_event_ids, 0, -1);
-                $p_event_ids = explode(',',$p_event_ids);
-                $studentEvents->whereIn('events.id',$p_event_ids);
-            }
-            $studentEvents->where('event_details.participation_id', '>', 198);
-            $studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->where('events.date_end', '<=', $dateEnd);
-            //dd($dateS);
-            if ($user_role != 'superadmin') {
-                if ($user_role == 'teacher') {
-                    $studentEvents->where('events.teacher_id', $user->person_id);
-                } else {
-                    $studentEvents->where('event_categories.invoiced_type', $invoice_type);
-                }
-            }
-            $studentEvents->whereNull('events.deleted_at');
-            $studentEvents->whereNull('event_details.deleted_at');
+            $query = new Invoice;
+            $studentEvents = $query->generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd);
             
-            
-            //dd($dateEnd);
-
-            
-
-            
-            
-            //$studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->orderBy('events.date_start', 'desc');
-            //By
-            $studentEvents->distinct('events.id');
-
             //$studentEvents->groupBy('events.id');
             
             //dd($studentEvents->toSql());
@@ -1933,6 +988,7 @@ class InvoiceController extends Controller
             $extra_expenses = 0;
             $total_amount_extra = 0;
             $teacher_fullname = '';
+            $price_currency = '';
 
             foreach ($data as $key => $value) {
                 try{
@@ -1952,10 +1008,10 @@ class InvoiceController extends Controller
                 
                     $invoiceItemData['unit'] = $value->duration_minutes;
                     $invoiceItemData['unit_type'] = 'minutes';
-                    $invoiceItemData['price'] = $value->sell_price+$value->extra_charges;
-                    $invoiceItemData['price_unit'] = $value->sell_price;
+                    $invoiceItemData['price'] = $value->sell_price+$value->costs_1;
+                    $invoiceItemData['price_unit'] = $value->sell_price+$value->costs_1;
                     $price_currency = $invoiceItemData['price_currency'] = $value->price_currency;
-                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = $value->extra_charges;
+                    $extra_expenses += $invoiceItemData['event_extra_expenses'] = 0;
                     $invoiceItemData['publication_mode'] = 'N,admin';
                     if ($value->event_type == 10) {
                         $invoiceItemData['item_type'] = 1;
@@ -1973,13 +1029,13 @@ class InvoiceController extends Controller
                     if ($value->sell_total == 0) {
                         $value->sell_total = $value->sell_price;
                     }
-                    $invoiceItemData['total_item'] = $value->sell_total+$value->extra_charges;
+                    $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1;
                     
                     //$invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
                     //$invoiceItemData['subtotal_amount_with_discount'] =0;
                     //$invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
-                    $invoiceItemData['subtotal_amount_with_discount'] =$invoiceItemData['total_item'];
-                    $invoiceItemData['subtotal_amount_no_discount'] = 0;
+                    $invoiceItemData['subtotal_amount_with_discount'] =0;
+                    $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
                     
 
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
@@ -1999,12 +1055,12 @@ class InvoiceController extends Controller
                         $tax_perc = 0;
                         $v_total_amount_discount = $v_amount_discount_1 + $v_amount_discount_2 +$v_amount_discount_3 +$v_amount_discount_4 +$v_amount_discount_5 +$v_amount_discount_6;
                         $v_total_amount_no_discount = $invoiceItemData['subtotal_amount_no_discount'];
-                        $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'] - $v_total_amount_discount - $value->extra_charges;
+                        $v_total_amount_with_discount = $invoiceItemData['subtotal_amount_with_discount'];
                         $v_total_amount = $invoiceItemData['total_item'] + $v_total_amount_no_discount+$v_total_amount_with_discount;
                     } 
                     
-                    $subtotal_amount_all += $v_subtotal_amount_all-$value->extra_charges;
-                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'] - $value->extra_charges;
+                    $subtotal_amount_all += $v_subtotal_amount_all;
+                    $subtotal_amount_with_discount += $invoiceItemData['subtotal_amount_with_discount'];
                     $subtotal_amount_no_discount += $invoiceItemData['subtotal_amount_no_discount'];
                     $amount_discount_1 += $v_amount_discount_1;
                     $amount_discount_2 += $v_amount_discount_2;
@@ -2017,11 +1073,11 @@ class InvoiceController extends Controller
                     $total_amount_with_discount += $v_total_amount_with_discount;
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
-                    $teacher = Teacher::find($value->teacher_id);
-                    $teacher_fullname = $teacher->firstname.' '.$teacher->lastname;
+                    $student = Student::find($value->student_id);
+                    $student_fullname = $student->firstname.' '.$student->lastname;
                     if ($value->event_type == 10) { //lesson
                         
-                        $invoiceItemData['caption'] = $teacher->firstname.' '.$teacher->lastname;
+                        $invoiceItemData['caption'] = $student->firstname.' '.$student->lastname;
                         $invoiceItemData['caption'] .= ' ('.$value->category_name.','.$value->price_name.')';
                         if ($value->extra_charges>0) {
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
@@ -2033,28 +1089,17 @@ class InvoiceController extends Controller
                             $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
                         }
                     } 
-                    
+
                     if (!empty($value->detail_id)) {
-                        $eventUpdate = [
-                            'sell_invoice_id' => $invoiceData->id,
-                            'is_sell_invoiced' => 1
-                        ];
-                        $eventData = EventDetails::where('student_id', $value->student_id)
-                        ->where('id', $value->detail_id)
-                        ->where('participation_id', '>', 198)
-                        ->update($eventUpdate);
+                        $query = new EventDetails;
+                        $eventData = $query->updateEventDetail($value->detail_id,$invoiceData->id,'sell_invoice_id',$value->student_id);
                     }
+                    
+                    
                     
 
                     $invoiceItemDataI = InvoiceItem::create($invoiceItemData);
-                    //$query="call generate_new_student_invoice('$p_lang_id','$p_app_id','$p_school_id','$p_invoice_id','$p_person_id','$p_from_date','$p_to_date','$p_event_ids','$p_discount_percent_1','$p_discount_percent_2','$p_discount_percent_3','$p_discount_percent_4','$p_discount_percent_5','$p_discount_percent_6','$by_user_id');";
-                    // //echo "<script>alert($query);</script>";exit;
-                    // $result = mysql_query($query)  or die( $return = 'Error:-3> ' . mysql_error());
-                    // while($row = mysql_fetch_assoc($result))
-                    // {
-                    //     $data[]=$row;
-                    // }
-                    // echo json_encode($data);
+                   
                 } catch (Exception $e) {
                     echo $e->getMessage();
 
@@ -2083,14 +1128,15 @@ class InvoiceController extends Controller
                'tax_amount'=> $tax_amount,
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
-               'invoice_currency' => $price_currency,
                'extra_expenses' => $extra_expenses
             
             ];
+            if (!empty($price_currency)) {
+                $updateInvoiceCalculation['invoice_currency'] = $price_currency;
+            }
             $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
-            // print_r($updateInvoiceCalculation);
-            // exit();
+            // print_r($invoiceData->id);
             
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
@@ -2102,6 +1148,7 @@ class InvoiceController extends Controller
             );
             return response()->json($result);
         } catch (Exception $e) {
+            echo $e->getMessage();
             //return error message
             $result['status'] = false;
             $result['message'] = __('Internal server error');
@@ -2554,7 +1601,9 @@ class InvoiceController extends Controller
             $reqData = $request->all();
             $type = $request->type ? $request->type : $type;
             $invoice_id = $reqData['invoice_id'];
-            $invoice_data = Invoice::with(['invoice_items'])->where('id', $invoice_id)->first();
+            $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
+                $q->select('id','tax_number');
+            }])->where('id', $invoice_id)->first();
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
             $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
@@ -2564,13 +1613,11 @@ class InvoiceController extends Controller
             // print and save data
             if ($type == 'stream') {
                 // save invoice name if invoice_filename is empty
-                if(empty($invoice_data->invoice_filename)){
-                    $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
-                    if($file_upload){
-                        $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
-                        $invoice_data->invoice_filename = $invoice_pdf_path;
-                        $invoice_data->save();
-                    }
+                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                if($file_upload){
+                    $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                    $invoice_data->invoice_filename = $invoice_pdf_path;
+                    $invoice_data->save();
                 }
                 return $pdf->stream( $invoice_name );
             }
@@ -2600,8 +1647,40 @@ class InvoiceController extends Controller
         try {
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
-            $invoiceData = Invoice::find($id)->delete();
-            if ($invoiceData == 1) {
+            $invoiceData = Invoice::find($id);
+            $invoiceDelete = Invoice::find($id)->delete();
+            
+            if ($invoiceDelete == 1) {
+                if ($invoiceData->invoice_type ==2) {
+                    $invoiceItems= InvoiceItem::active()
+                        ->where('invoice_id', $id);
+                    foreach ($invoiceItems as $key => $invoiceData) {
+                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $eventUpdate = [
+                            'buy_invoice_id' => null,
+                            'is_buy_invoiced' => 0
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
+                    }
+                    $invoiceItems->delete();
+                }
+                if ($invoiceData->invoice_type ==1) {
+                    $invoiceItems= InvoiceItem::active()
+                        ->where('invoice_id', $id);
+                    foreach ($invoiceItems as $key => $invoiceData) {
+                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $eventUpdate = [
+                            'sell_invoice_id' => null,
+                            'is_sell_invoiced' => 0
+                        ];
+                        $eventData = EventDetails::whereIn('id', $detail_id)
+                        ->update($eventUpdate);
+                    }
+                    $invoiceItems->delete();
+                }
+                
+                
                 $result = array(
                     "status"     => 'success',
                     'message' => __('Confirmed'),

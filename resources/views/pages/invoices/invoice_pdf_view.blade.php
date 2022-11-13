@@ -238,8 +238,8 @@
             </div>
             <div class="right_part">
                 <div class="invoice_date">
-                    <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse()->format('d.m.Y');}}</span></div>
-                    <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ Carbon\Carbon::parse($invoice_data->period_ends)->format('d.m.Y');}}</span></div>
+                    <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
+                    <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->addDays(7)->format('d.m.Y')}}</span></div>
                 </div>
             </div>
         </div>
@@ -375,7 +375,7 @@
                     </td>
                     <td>
                         <div class="payment_title text_center">{{ __('invoice_payment_subtitle_3') }}</div>
-                        <div class="txt">{{ $invoice_data->tax_amount }}</div>
+                        <div class="txt text_center">{{ $invoice_data->school->tax_number }}</div>
                     </td>
                 </tr>
                 <?php } else { ?>
