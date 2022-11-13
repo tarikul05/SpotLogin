@@ -358,7 +358,7 @@ class LessonsController extends Controller
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
                 $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
-                $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60))/$studentCount;
+                $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
                 if($lessonData['sis_paying'] == 0 ){
                    $attendBuyPrice = $buyPriceCal;
@@ -518,7 +518,7 @@ class LessonsController extends Controller
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
                 $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
-                $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60))/$studentCount;
+                $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
                 if($lessonData['sis_paying'] == 0 ){
                    $attendBuyPrice = $buyPriceCal;
