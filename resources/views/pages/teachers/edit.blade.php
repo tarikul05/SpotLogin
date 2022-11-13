@@ -479,8 +479,8 @@
 							<tr style="background:lightblue;">
 								<td></td>
 								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
-								<td><label></label></td>
-								<td align="right" colspan="1"></td>
+								<td>Total price/hour</td>
+								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
 								
@@ -523,20 +523,20 @@
 									<td>{{ __($textForTypeBilling) }}</td>
 									<td>
 										<input type="text" 
-										<?= ($tacherPrice == 1) && ($lessionPrice->divider != -1)  ? 'readonly="readonly"' : '' ?>
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
 										style="text-align:right" 
-										class="form-control numeric float <?= ($tacherPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
+										class="form-control numeric float 
+										<?= (($tacherPrice == 1) && ($lessionPrice->divider != -1)) || (($tacherPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
 										>
 									</td>
 									<td>
 										<input type="text" 
-										<?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'readonly="readonly"' : '' ?>
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
 										style="text-align:right" 
-										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
+										class="form-control numeric float 
+										<?= ( ($studentPrice == 1) && ($lessionPrice->divider != -1) ) || (($studentPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>
