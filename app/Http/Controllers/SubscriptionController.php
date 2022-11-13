@@ -26,47 +26,55 @@ class SubscriptionController extends Controller
     {
         try{
             $user = auth()->user();
-            $subscriptions = $this->stripe->subscriptions->all();
+            $customers = $this->stripe->customers->all();
             $subscribers = [];
-            $email = null;
-            $firstname = null;
-            $lastname = null;
             $invoice_obj = null;
-            if($subscriptions['data']){
-                foreach($subscriptions['data'] as $subscription){
+            foreach($customers as $customer){
+                $subscription = $this->stripe->subscriptions->all(['customer' => $customer->id]);
+                if(!empty($subscription['data'])){
+                    $subscriber = (object) $subscription['data'][0];
                     $product_object = $this->stripe->products->retrieve(
-                        $subscription->plan['product'],
+                        $subscriber->plan['product'],
                         []
                     );
-                    $customer_obj = Cashier::findBillable($subscription->customer);
-                    if($customer_obj){
-                        $email = $customer_obj->email;
-                        $firstname = $customer_obj->firstname;
-                        $lastname = $customer_obj->lastname;
-                    }
                     $invoice = $this->stripe->invoices->retrieve(
-                        $subscription->latest_invoice,
+                        $subscriber->latest_invoice,
                         []
                     );
-                    if($invoice){
-                        $invoice_obj = $invoice;
-                    }
                     $subscribers[] = [
-                        'billing_cycle_anchor' => $subscription->billing_cycle_anchor,
-                        'current_period_end' => $subscription->current_period_end,
-                        'current_period_start' => $subscription->current_period_start,
-                        'customer' => $subscription->customer,
-                        'days_until_due' => $subscription->days_until_due,
-                        'latest_invoice' => $subscription->latest_invoice,
-                        'start_date' => $subscription->start_date,
-                        'amount' => $subscription->plan['amount'],
-                        'amount_decimal' => $subscription->plan?$subscription->plan['amount_decimal']:'',
-                        'interval' => $subscription->plan?$subscription->plan['interval']:'',
-                        'product' => $subscription->plan['product'],
+                        'billing_cycle_anchor' => $subscriber->billing_cycle_anchor,
+                        'current_period_end' => $subscriber->current_period_end,
+                        'current_period_start' => $subscriber->current_period_start,
+                        'customer' => $customer->name,
+                        'days_until_due' => $subscriber->days_until_due,
+                        'latest_invoice' => $subscriber->latest_invoice,
+                        'start_date' => $subscriber->start_date,
+                        'amount' => $subscriber->plan['amount'],
+                        'amount_decimal' => $subscriber->plan?$subscriber->plan['amount_decimal']:'',
+                        'interval' => $subscriber->plan?$subscriber->plan['interval']:'',
+                        'product' => $subscriber->plan['product'],
                         'plan_name' => $product_object->name,
-                        'email' => $email,
-                        'user_name' => $firstname.''.$lastname,
-                        'invoice_url' => $invoice_obj->hosted_invoice_url,
+                        'email' => $customer->email,
+                        'user_name' => $customer->name,
+                        'invoice_url' => $invoice?$invoice->hosted_invoice_url:'',
+                    ];
+                }else{
+                    $subscribers[] = [
+                        'billing_cycle_anchor' => '',
+                        'current_period_end' => '',
+                        'current_period_start' => '',
+                        'customer' => '',
+                        'days_until_due' => '',
+                        'latest_invoice' => '',
+                        'start_date' => '',
+                        'amount' => '',
+                        'amount_decimal' => '',
+                        'interval' => '',
+                        'product' => '',
+                        'plan_name' => '',
+                        'email' => $customer->email,
+                        'user_name' => $customer->name,
+                        'invoice_url' => '',
                     ];
                 }
             }
@@ -80,10 +88,15 @@ class SubscriptionController extends Controller
     {
         try {
             $user = auth()->user();
+            $user_per = $request->user();
             $subscription = null;
-            $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
-            if(!empty($subscription_info['data'])){
-                $subscription = $subscription_info['data'][0];
+            $has_subscriber = null;
+            if($user->stripe_id){
+                $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id]);
+                // $subscription_info = $this->stripe->subscriptions->search(['query' => 'customer:"'.$user->stripe_id.'"']);
+                if(!empty($subscription_info['data'])){
+                    $subscription = (object) $subscription_info['data'][0];
+                }
             }
             $is_subscribed = $user->subscribed('default');
             $today_date = new DateTime();
@@ -93,27 +106,58 @@ class SubscriptionController extends Controller
                 $trial_ends_date = null;
             }
             $plans = [];
-            $get_plans = $this->stripe->plans->all(); // get plan form stripe
-            foreach ($get_plans as $get_plan) {
-                $product_object = $this->stripe->products->retrieve(
-                    $get_plan->product,
-                    []
-                );
-                $plans[] = [
-                    'id' => $get_plan->id,
-                    'amount' => $get_plan->amount / 100,
-                    'interval' => $get_plan->interval,
-                    'interval_count' => $get_plan->interval_count,
-                    'metadata' => $get_plan->metadata,
-                    'nickname' => $get_plan->nickname,
-                    'plan_name' => $product_object,
-                ];
+            // $get_plans = $this->stripe->plans->all(); // get plan form stripe
+            if ($user_per->isSchoolAdmin()) {
+                $prod_id = env('stripe_school_product_id');
+            }else if($user_per->isTeacherAll() || $user_per->isTeacherMedium() || $user_per->isTeacherMinimum()){
+                $prod_id = env('stripe_teacher_product_id');
+            }else if($user_per->isTeacherAdmin()){
+                $prod_id = env('stripe_single_coach_product_id');
+            }else{
+                $prod_id = '';
+            }
+            if($prod_id){
+                $get_plans = $this->stripe->prices->search(['query' => 'product:"'.$prod_id.'"']);
+                foreach ( $get_plans as $get_plan) {
+                    $product_object = $this->stripe->products->retrieve(
+                        $get_plan->product,
+                        []
+                    );
+                    $plans[] = [
+                        'id' => $get_plan->id,
+                        'nickname' => $get_plan->nickname,
+                        'amount' => $get_plan->unit_amount_decimal / 100,
+                        'interval' => $get_plan->recurring->interval,
+                        'interval_count' => $get_plan->recurring->interval_count,
+                        'metadata' => $get_plan->metadata,
+                        'nickname' => $get_plan->nickname,
+                        'plan_name' => $product_object,
+                    ];
+                }
             }
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
+            return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
             // throw error message
         }
+    }
+
+    public function hasSubscriberInfo($subsciberinfo = null, $plan_id = null){
+        $subs_info = [];
+        if($subsciberinfo){
+            if($subsciberinfo['plan']['id'] == $plain_id){
+                $subs_info= [
+                    'subscribed' => true,
+                    'billing_cycle_anchor' => $subsciberinfo['billing_cycle_anchor']
+                ];
+            }else{
+                $subs_info= [
+                    'subscribed' => false,
+                    'billing_cycle_anchor' => null
+                ];
+            }
+        }
+        return $subs_info;
     }
 
     // public function subscribePlanList(Request $request)
@@ -208,6 +252,10 @@ class SubscriptionController extends Controller
         } catch ( Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function upgradeNewPlan(Request $request, $payment_id = null){
+        return view('pages.subscribers.plan_upgrade');
     }
 
     public function storeSinglePayment(Request $request, $payment_id = null){
