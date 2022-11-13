@@ -234,10 +234,10 @@
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
 																<th width="15%" style="text-align:right;">
-																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
+																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																</th>
 																<th width="15%" style="text-align:right">
-																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
+																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																</th>
 															</tr>
 															
