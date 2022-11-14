@@ -122,8 +122,8 @@
                     <?php if($AppUI->isSchoolAdmin()){ ?> 
                         <ul class="price">
                             <li class="plan_name_display">
-                                <div class="plan_name">Trail period</div>
-                                <div class="plan_interval font_size">Validated until <?= date('M j, Y', strtotime($user->trial_ends_at)) ?></div>
+                                <div class="plan_name">Basic</div>
+                                <div class="plan_interval">Trail period</div>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -224,7 +224,7 @@
                     <ul class="price">
                         <li>
                             <div class="plan_name">{{ $plan['plan_name']->name }}</div>
-                            <div class="plan_interval">${{ number_format($plan['amount'], 2) }}<span class="plan_type">/{{ $plan['interval'] }}</span></div>
+                            <div class="plan_interval">${{ number_format($plan['amount'], 2) }}<span class="plan_type"> /{{ $plan['interval'] }}</span></div>
                         </li>
                         <!-- price id for 200  -->
                         <?php if($plan['id'] == env('stripe_school_premium_plan_one')) {?>
@@ -502,7 +502,7 @@
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Active plan</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
-                            <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose plan</a></li>
+                            <li class="submit-button"><a href="{{ route('subscribe.upgradeNewPlan', ['payment_id'=>$plan['id']]) }}" class="button">Upgrade plan</a></li>
                             <li class="info-txt">you will not be the charged until the end of the trial period</li>
                         <?php   
                                 }

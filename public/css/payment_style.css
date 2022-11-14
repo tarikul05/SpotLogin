@@ -638,6 +638,9 @@ body {
     margin-bottom: 1rem !important;
 }
 
+.subscribe-upgradenewplan .subscription-form-wrapper {
+    margin-top: 60px;
+}
 
 /* .plan_center .price {
     list-style-type: none;

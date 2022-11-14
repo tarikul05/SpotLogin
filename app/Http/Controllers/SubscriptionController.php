@@ -255,7 +255,28 @@ class SubscriptionController extends Controller
     }
 
     public function upgradeNewPlan(Request $request, $payment_id = null){
-        return view('pages.subscribers.plan_upgrade');
+        $user = auth()->user();
+        $plain_id = $request->payment_id;
+        $single_plan_info = $this->stripe->plans->retrieve($plain_id, []);
+        $product_object = $this->stripe->products->retrieve(
+            $single_plan_info->product,
+            []
+        );
+        $payment_methods = $user->paymentMethods();
+        return view('pages.subscribers.plan_upgrade', compact('payment_methods','single_plan_info','product_object'));
+    }
+
+    public function storeUpgradePlan(Request $request){
+        try{
+            $user = auth()->user();
+            $plain_id = $request->price_duration;
+            $plan_name = $request->plan_name;
+            $user->subscription('default')->swap($plain_id);
+            return redirect()->route('agenda')->with('success', 'Congratulations, you have succesully upgrade to our ' . $plan_name);
+        } catch ( Exception $exception) {
+            // throw error
+            // return redirect()->back()->with('error', $exception->getMessage());
+        }
     }
 
     public function storeSinglePayment(Request $request, $payment_id = null){
