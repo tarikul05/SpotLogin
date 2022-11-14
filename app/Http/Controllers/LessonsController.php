@@ -84,21 +84,13 @@ class LessonsController extends Controller
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
                 $stu_num = count($eventData['student']);
 
-                $teacher_id = $lessonData['teacher_select'];
+                $teacher_id = $eventData['teacher_select'];
                 $studentCount = !empty($eventData['student']) ? count($eventData['student']) : 0 ;
 
-                $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+                $eventPrice = Event::priceCalculations(['event_category_id'=>$eventData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
 
-                if($lessonData['sis_paying'] == 0){
-                   $attendBuyPrice = ($$eventPrice['price_buy']*($lessonData['duration']/60))/$stu_num[1];
-                   $attendSellPrice = ($$eventPrice['price_sell']*($lessonData['duration']/60))/$stu_num[1];
-                }elseif($lessonData['sis_paying'] == 1){
-                    $attendBuyPrice = $lessonData['sprice_amount_buy'];
-                    $attendSellPrice = $lessonData['sprice_amount_sell'];
-                }else{
-                    $attendBuyPrice = 0;
-                    $attendSellPrice = 0;
-                }
+                $attendBuyPrice = $eventData['sprice_amount_buy'];
+                $attendSellPrice = $eventData['sprice_amount_sell'];
 
                     
                 $data = [
@@ -116,8 +108,9 @@ class LessonsController extends Controller
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
                     'no_of_students' => $studentCount,
+                    'event_invoice_type' => isset($eventData['event_invoice_type']) ? $eventData['event_invoice_type'] : 'T',
                 ];
-
+// dd($data);
                 $event = Event::create($data);
                 if (!empty($eventData['student'])) {
                     foreach($eventData['student'] as $std){

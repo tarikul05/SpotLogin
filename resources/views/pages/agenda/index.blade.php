@@ -271,12 +271,12 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row event hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="invoice_cat_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
-                                                                <select class="form-control" id="invoice_cat_type" name="invoice_cat_type" disable>
-                                                                    <option value="1">School invoice</option>
-                                                                    <option value="2">Teacher invoice</option>  
+                                                                <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
+                                                                    <option value="T">Teacher invoice</option>  
+                                                                    <option value="S">School invoice</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -470,18 +470,19 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group row event hide_on_off">
-                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
-                                                    <div class="col-sm-4">
-                                                        <div class="input-group" id="extra_charges_div"> 
-                                                            <span class="input-group-addon">
-                                                                <i class="fa fa-calendar1"></i>
-                                                            </span>
-                                                            <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                        <div class="form-group row">
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges') }}{{ __('(per student)')}} : </label>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group" id="extra_charges_div"> 
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa fa-calendar1"></i>
+                                                                    </span>
+                                                                    <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                    
                                                 </div>
                                                 
                                                 <div class="col-md-10 offset-md-1">
@@ -3053,28 +3054,30 @@ $('#student').on('change', function(event) {
 	
 })
 $( document ).ready(function() {
-    var datainvoiced = $("#category_select option:selected").data('invoice');
-    var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
-    var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
-    var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
-    if (datainvoiced == 'S') {
-        $("#student_sis_paying").val(s_std_pay_type);
-        $("#sis_paying").val(s_thr_pay_type);
-        $("#teacher_type_billing").show();
-    }else{
-        $("#teacher_type_billing").hide();
-        $("#student_sis_paying").val(t_std_pay_type);
-    }
+    // var datainvoiced = $("#category_select option:selected").data('invoice');
+    // var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+    // var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+    // var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+    // if (datainvoiced == 'S') {
+    //     $("#student_sis_paying").val(s_std_pay_type);
+    //     $("#sis_paying").val(s_thr_pay_type);
+    //     $("#teacher_type_billing").show();
+    // }else{
+    //     $("#teacher_type_billing").hide();
+    //     $("#student_sis_paying").val(t_std_pay_type);
+    // }
+
+    // if(s_thr_pay_type == 0){
+    //     $('#hourly').show();
+    //     $('#price_per_student').hide();
+    // }else if(s_thr_pay_type == 1){
+    //     $('#hourly').hide();
+    //     $('#price_per_student').show();
+    // }
 	
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
-	if(s_thr_pay_type == 0){
-		$('#hourly').show();
-        $('#price_per_student').hide();
-	}else if(s_thr_pay_type == 1){
-        $('#hourly').hide();
-		$('#price_per_student').show();
-	}
+	
 	$('.timepicker_start').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
@@ -3409,15 +3412,16 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
-$("#category_select").change();
+$("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
-    var categoryId = +$(this).val();
+    var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var datainvoiced = $("#category_select option:selected").data('invoice');
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
     // console.log(teacherSelect, categoryId)
+    // if (categoryId != 1 ) { return }
     if (datainvoiced == 'S') {
         $("#std-check-div").css('display', 'block');
         $("#teacher_type_billing").show();
@@ -3430,10 +3434,10 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         $("#student_empty").prop('checked', false)
     }
     if(s_thr_pay_type == 0){
-		$('#hourly').show();
+		// $('#hourly').show();
         $('#price_per_student').hide();
 	}else if(s_thr_pay_type == 1){
-        $('#hourly').hide();
+        // $('#hourly').hide();
 		$('#price_per_student').show();
         var formData = $('#edit_lesson').serializeArray();
         var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
@@ -3486,7 +3490,8 @@ $("body").on('click', '#student_empty', function(event) {
 $('#agenda_select').on('change', function() {
     $('#all_day_input').prop( "checked", false)
     $('#student_empty').prop( "checked", false)
-
+    $("#hourly").hide()
+console.log(',,,=>',this.value)
     if(this.value != ''){
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
@@ -3526,7 +3531,7 @@ $('#agenda_select').on('change', function() {
             $( "#end_date" ).attr("disabled", false );
             $('.lesson').hide();
             $('.event').show();
-            //$('#price_per_student').show();
+            $('#price_per_student').show();
             $('.hide_on_off').show();
             $('.lesson.hide_on_off').hide();
             $("form.form-horizontal").attr("action", page_action);
