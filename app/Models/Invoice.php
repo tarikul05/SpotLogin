@@ -194,6 +194,8 @@ class Invoice extends BaseModel
             $studentEvents->where('events.teacher_id', $user->person_id);
         } else {
         }
+        $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
+        
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
 
@@ -356,7 +358,7 @@ class Invoice extends BaseModel
                 $studentEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
-            
+            $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
 
             $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
@@ -626,6 +628,8 @@ class Invoice extends BaseModel
                     $studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
+            $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
+            
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             
