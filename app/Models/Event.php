@@ -9,6 +9,7 @@ use App\Traits\CreatedUpdatedBy;
 use App\Models\Teacher;
 use App\Models\School;
 use App\Models\EventCategory;
+use App\Models\LessonPriceTeacher;
 
 class Event extends BaseModel
 {
@@ -32,10 +33,12 @@ class Event extends BaseModel
       'duration_minutes',
       'teacher_id',
       'is_paying',
+      'student_is_paying',
       'event_price',
       'title',
       'description',
       'original_event_id',
+      'event_invoice_type',
       'is_locked',
       'price_amount_sell',
       'price_currency',
@@ -76,6 +79,7 @@ class Event extends BaseModel
         'event_category',
         'duration_minutes',
         'is_paying',
+        'student_is_paying',
         'event_price',
         'title',
         'original_event_id',
@@ -581,7 +585,7 @@ class Event extends BaseModel
 
 
 
- /**
+    /**
      * filter data based request parameters
      * 
      * @param array $params
@@ -597,15 +601,15 @@ class Event extends BaseModel
         }
 
 
-        
 
 
-    $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-          ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-          ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
-          ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
+
+        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+        ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
+        ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
+        ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
         //->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
-    
+
         $query->select(
             'events.id as event_id',
             'school_teacher.nickname as teacher_name',
@@ -614,23 +618,24 @@ class Event extends BaseModel
             'events.date_end as date_end',
             'events.title as event_title',
             'events.event_type as event_type',
-            'event_categories.title as event_category_name', 
+            'event_categories.title as event_category_name',
             'locations.title as location_name'
-            )
-        ->selectRaw("concat(replace(events.id,'-',''),events.event_type,'@sportlogin') as id")
-        ->selectRaw("if(events.fullday_flag='Y', date_format(ifnull(events.date_start,events.date_start),'%Y%m%d') ,date_format(events.date_start,'%Y%m%dT%H%i%sZ')) as start_datetime")
-        ->selectRaw("if(events.fullday_flag='Y', date_format(DATE_ADD(ifnull(events.date_end,events.date_end),INTERVAL 1 DAY),'%Y%m%d') ,date_format(events.date_end,'%Y%m%dT%H%i%sZ')) as end_datetime")
-        ->where(
-            [
-                'events.is_active' => 1
-            ]);
-        
+        )
+            ->selectRaw("concat(replace(events.id,'-',''),events.event_type,'@sportlogin') as id")
+            ->selectRaw("if(events.fullday_flag='Y', date_format(ifnull(events.date_start,events.date_start),'%Y%m%d') ,date_format(events.date_start,'%Y%m%dT%H%i%sZ')) as start_datetime")
+            ->selectRaw("if(events.fullday_flag='Y', date_format(DATE_ADD(ifnull(events.date_end,events.date_end),INTERVAL 1 DAY),'%Y%m%d') ,date_format(events.date_end,'%Y%m%dT%H%i%sZ')) as end_datetime")
+            ->where(
+                [
+                    'events.is_active' => 1
+                ]
+            );
+
         if (isset($params['school_id']) && !empty($params['school_id'])) {
             $teacherEvents->where('events.school_id', '=', $params['school_id']);
         }
 
-        
-        
+
+
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $studentEvents->where('event_details.student_id', $params['person_id']);
@@ -645,9 +650,49 @@ class Event extends BaseModel
         $query->where('events.date_end', '<=', $params['v_end_date']);
         $query->distinct('events.id');
         //$query->groupBy('events.id');
-        
-       //dd($query->toSql());
-       return $query;
+
+        //dd($query->toSql());
+        return $query;
+    }
+
+
+
+    public function priceCalculations($data=[])
+    {
+      $priceKey = isset($data['student_count']) && !empty($data['student_count']) ? ( $data['student_count'] > 10 ? 'price_su' : 'price_'.$data['student_count'] ) : '' ;
+
+      $evtCategory = EventCategory::find($data['event_category_id']);
+      $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>'price_fix'])->first();
+
+      $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>$priceKey])->first();
+ // dd($priceKey,$prices);     
+
+      $buyPrice = $sellPrice = 0;
+      if ($evtCategory->invoiced_type == 'S') {
+        if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
+          $buyPrice = $priceFixed->price_buy;
+          $sellPrice = $priceFixed->price_sell;
+        }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
+          $buyPrice = $priceFixed->price_buy;
+          $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+        }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
+          $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+          $sellPrice = $priceFixed->price_sell;
+        }else{
+          $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+          $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+        }
+      }else if ($evtCategory->invoiced_type == 'T') {
+        if ($evtCategory->t_std_pay_type == 1) {
+          $sellPrice = $priceFixed->price_sell;
+        }elseif ( $evtCategory->t_std_pay_type == 0 ) {
+          $sellPrice = $prices->price_sell;
+        }
+      }
+
+      // dd($buyPrice, $sellPrice);
+
+      return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
     }
 
     
