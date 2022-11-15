@@ -186,21 +186,23 @@ class Invoice extends BaseModel
             );
         
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher_all') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
             $studentEvents->where('events.teacher_id', $user->person_id);
         } else {
         }
-        $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
+        $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
+        $studentEvents->whereRaw($qq);
+        //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
         
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
@@ -256,15 +258,15 @@ class Invoice extends BaseModel
                 ]
             );
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $teacherEvents->whereRaw($qq);
             //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher_all') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $teacherEvents->whereRaw($qq);
             //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
         } else if ($user_role == 'teacher') {
-            $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $teacherEvents->whereRaw($qq);
             //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             $teacherEvents->where('events.teacher_id', $user->person_id);
@@ -359,21 +361,23 @@ class Invoice extends BaseModel
 
             // dd($user);
             if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq);
                 //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher_all') {
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq); 
                 //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher') {
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq);
                 //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 $studentEvents->where('events.teacher_id', $user->person_id);
             } else {
             }
-            $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
+            $studentEvents->whereRaw($qq);
+            //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
 
             $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
@@ -385,6 +389,7 @@ class Invoice extends BaseModel
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             $studentEvents->distinct('event_details.id');
+            //dd($studentEvents->toSql());
 
             return $studentEvents;
     }
@@ -462,15 +467,15 @@ class Invoice extends BaseModel
             // dd($user);
             if ($user_role == 'admin_teacher') {
                 
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $teacherEvents->whereRaw($qq);
                 //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher_all') {
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $teacherEvents->whereRaw($qq);
                 //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
             } else if ($user_role == 'teacher') {
-                $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $teacherEvents->whereRaw($qq);
                 //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
                 $teacherEvents->where('events.teacher_id', $user->person_id);
@@ -565,11 +570,11 @@ class Invoice extends BaseModel
             //dd($dateS);
             if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
-                    $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                    $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                     $teacherEvents->whereRaw($qq);
                     $teacherEvents->where('events.teacher_id', $user->person_id);
                 } else {
-                    $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                    $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                     $teacherEvents->whereRaw($qq);
                     //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
@@ -648,16 +653,18 @@ class Invoice extends BaseModel
             //dd($dateS);
             if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
-                    $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                    $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                     $studentEvents->whereRaw($qq);
                     $studentEvents->where('events.teacher_id', $user->person_id);
                 } else {
-                    $qq = " IF(`events`.`event_category` != '', `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                    $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                     $studentEvents->whereRaw($qq);
                     //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
-            $studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
+            $studentEvents->whereRaw($qq);
+            //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
