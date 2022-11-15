@@ -52,7 +52,7 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a>
+				<!-- <a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a> -->
 				<!-- <button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button> -->
 			</div>
 		</nav>

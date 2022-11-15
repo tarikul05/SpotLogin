@@ -3438,7 +3438,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 		// $('#hourly').show();
         $('#price_per_student').hide();
 	}else if(s_thr_pay_type == 1){
-        // $('#hourly').hide();
+        $('#hourly').hide();
 		$('#price_per_student').show();
         var formData = $('#edit_lesson').serializeArray();
         var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
