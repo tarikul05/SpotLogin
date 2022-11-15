@@ -1181,7 +1181,13 @@ $('#save_btn').click(function (e) {
 							}
 							resultHtml += '<td>' + value.category_name + '</td>';
 							resultHtml += '<td>' + value.teacher_name + '</td>';
-							resultHtml += '<td>' + value.title + '</td>';
+							if (value.event_type == 100) {
+								resultHtml += '<td>Event</td>';
+							} else {
+								resultHtml += '<td>Lesson</td>';
+							}
+
+							//resultHtml += '<td>' + value.title + '</td>';
 
 							// all_ready = 0 means not ready to generate invoice
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
