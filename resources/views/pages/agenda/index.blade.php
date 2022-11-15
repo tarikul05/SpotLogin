@@ -3414,6 +3414,7 @@ $(document).ready(function() {
 });
 $("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
+    var agendaSelect = +$("#agenda_select").val();
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var datainvoiced = $("#category_select option:selected").data('invoice');
@@ -3421,7 +3422,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
     // console.log(teacherSelect, categoryId)
-    // if (categoryId != 1 ) { return }
+    if (agendaSelect != 1 ) { return }
     if (datainvoiced == 'S') {
         $("#std-check-div").css('display', 'block');
         $("#teacher_type_billing").show();
