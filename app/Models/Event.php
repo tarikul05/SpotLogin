@@ -684,9 +684,9 @@ class Event extends BaseModel
         }
       }else if ($evtCategory->invoiced_type == 'T') {
         if ($evtCategory->t_std_pay_type == 1) {
-          $sellPrice = $priceFixed->price_sell;
+          $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
         }elseif ( $evtCategory->t_std_pay_type == 0 ) {
-          $sellPrice = $prices->price_sell;
+          $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
         }
       }
 
