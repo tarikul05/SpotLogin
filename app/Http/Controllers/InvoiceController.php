@@ -808,7 +808,7 @@ class InvoiceController extends Controller
                         
                         }
                         if ($value->extra_charges>0) {
-                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges*$value->count_name;
                         }
                     }
                     else if ($value->event_type == 100) { // event
@@ -821,7 +821,7 @@ class InvoiceController extends Controller
                             $invoiceItemData['caption'] .= ' ('.$value->category_name.') , Number of Students'.$value->count_name;
                         }
                         if ($value->extra_charges>0) {
-                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges;;
+                            $invoiceItemData['caption'] .='<br>Extra charges '.$value->extra_charges*$value->count_name;
                         }
                     } 
 
