@@ -38,6 +38,7 @@ class Event extends BaseModel
       'title',
       'description',
       'original_event_id',
+      'event_invoice_type',
       'is_locked',
       'price_amount_sell',
       'price_currency',
