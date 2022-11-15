@@ -312,12 +312,11 @@
 										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
 									}
 									// 0 = hourly 1= fix
-									$tacherPrice = $category->s_thr_pay_type;
-									$studentPrice = $category->s_std_pay_type; 
+									$studentPrice = $category->t_std_pay_type; 
 
-									if ( ($tacherPrice == 1) && ($studentPrice ==1) ) { // fix and fix price
+									if ( $studentPrice ==1) { // fix and fix price
 										if ($lessionPrice->divider != -1) continue;
-									}elseif (($tacherPrice == 0) && ($studentPrice == 0)) { // hourly and hourly
+									}elseif ($studentPrice == 0) { // hourly and hourly
 										 if ($lessionPrice->divider == -1) continue;
 									}else{
 										
