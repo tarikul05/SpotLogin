@@ -1161,10 +1161,35 @@ input#sextra_expenses {
     margin-left: 15px;
 }
 .pack_invoice_area {
-    margin-left: 40px;
+    margin-left: 20px;
 }
 input#package_invoice {
     margin-top: 12px;
+}
+label.titl {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+select#sis_paying,
+select#student_sis_paying {
+    border: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    pointer-events: none;
+}
+.lesson .selectdiv:after,
+#ex1-content .selectdiv:after {
+    content: none;
+}
+.cat_name {
+    max-width: 255px;
+}
+.inv_type label {
+    padding-left: 24px;
+}
+.ty_bill label.invoice_type_label {
+    padding-left: 5px;
 }
 @media only screen and (max-width: 991px) {
     h1 {
@@ -1433,5 +1458,8 @@ input#package_invoice {
     }
     input#package_invoice {
         margin-top: 7px;
+    }
+    .ty_bill label.invoice_type_label {
+        display: none;
     }
 }

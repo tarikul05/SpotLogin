@@ -9,6 +9,12 @@
 <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+
+<style type="text/css">
+	input[readonly="readonly"] {
+	  border: none;
+	}
+</style>
 @endsection
 
 @section('content')
@@ -41,13 +47,13 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</a> -->
-				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+				<button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Lesson') }}
 				</button>
 				@can('teachers-users-update')
@@ -339,7 +345,7 @@
 					@endcan
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
 					
 					<input type="hidden" name="selected_month" id="selected_month" value="">
@@ -451,7 +457,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
@@ -462,10 +468,10 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>{{__('Type of course')}}</th>
-								<th>{{__('Hourly rate applied')}}</th>
-								<th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th>
-								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+								<th>{{__('Category Type')}}</th>
+								<th>{{__('Type of billing')}}</th>
+								<th class="buy"><span>{{__('Teacher price') }}</span></th>
+								<th class="sell"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -473,16 +479,38 @@
 							<tr style="background:lightblue;">
 								<td></td>
 								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
-								<td><label></label></td>
-								<td align="right" colspan="1"></td>
+								<td>Total price/hour</td>
+								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
+								
+								<?php 
+									if ($lessionPrice->divider == 1) {
+										$textForTypeBilling = 'Private session';
+									}elseif ($lessionPrice->divider == 9999) {
+										$textForTypeBilling = 'Student more then 10';
+									}elseif ($lessionPrice->divider == -1) {
+										$textForTypeBilling = 'Fix price';
+									}else{
+										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+									}
+									// 0 = hourly 1= fix
+									$tacherPrice = $category->s_thr_pay_type;
+									$studentPrice = $category->s_std_pay_type; 
 
-									@if(($category->package_invoice &&  $lessionPrice->divider != -1) ||  
-									(!$category->package_invoice &&  $lessionPrice->divider == -1))
-										@continue
-									@endif
-								<tr>
+									if ( ($tacherPrice == 1) && ($studentPrice ==1) ) { // fix and fix price
+										if ($lessionPrice->divider != -1) continue;
+									}elseif (($tacherPrice == 0) && ($studentPrice == 0)) { // hourly and hourly
+										 if ($lessionPrice->divider == -1) continue;
+									}else{
+										
+
+									}
+
+								 ?>
+
+									
+								<tr class="<?= $lessionPrice->divider != -1 ? 'regular' : 'fix' ?>">
 									<td>{{$key+1}}
 										<input type="hidden" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
@@ -492,28 +520,23 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
 									<td>{{__('Lessons/Events..')}}</td>
-									@if($lessionPrice->divider == 1)
-										<td>{{ __('Private session') }}</td>
-									@elseif($lessionPrice->divider == -2)
-										<td>{{ __('Student more then 10') }}</td>
-									@elseif($lessionPrice->divider == -1)
-										<td>{{ __('Fix price') }}</td>
-									@else
-										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
-									@endif
-									
+									<td>{{ __($textForTypeBilling) }}</td>
 									<td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float 
+										<?= (($tacherPrice == 1) && ($lessionPrice->divider != -1)) || (($tacherPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
 										>
 									</td>
 									<td>
 										<input type="text" 
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float 
+										<?= ( ($studentPrice == 1) && ($lessionPrice->divider != -1) ) || (($studentPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>
@@ -921,10 +944,10 @@ $(function() {
 	if (typeof vtab === "undefined") {
 		vtab='';
 	}
-	if (vtab == 'tab_2') {
+	if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";					
-		activaTab('tab_2');
+		activaTab('tab_3');
 	}
 
 });
@@ -1136,13 +1159,13 @@ function populate_teacher_lesson() {
 						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_price + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-					total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
-					week_total_buy += parseFloat(value.buy_price) + parseFloat(value.extra_charges);
+					total_buy += value.buy_total + value.costs_1;
+					week_total_buy += value.buy_total + value.costs_1;
 				}
 				if (value.extra_charges != 0) {
-					resultHtml += '<td style="text-align:right" colspan="3">' + value.extra_charges + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';
 				} else {
 					//resultHtml += '<td style="text-align:right"></td>';
 					resultHtml+='<td style="text-align:right" colspan="3"></td>';
@@ -1205,7 +1228,7 @@ function populate_teacher_lesson() {
 
 		total_disc = disc1_amt;
 		total_buy = total_buy - total_disc;
-
+		//console.log(total_buy);
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';

@@ -74,7 +74,7 @@ Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::
 
 
 // update_payment_status AJAX
-Route::post('iupdate_invoice_info', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceInfo'])->name('update_invoice_info.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('update_invoice_info', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceInfo'])->name('update_invoice_info.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 //AJAX update teacher discount
 Route::post('teacher_update_discount_perc', [App\Http\Controllers\TeachersController::class, 'updateDiscountPerc'])->name('teacher_update_discount_perc.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -382,6 +382,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
     Route::post('/{school}/student-attend-action/{id}', [App\Http\Controllers\LessonsController::class, 'StudentAttendAction'])->name('studentAttend.Action');
     Route::post('check-lesson-price', 'LessonsController@lessonPriceCheck')->name('lessonPriceCheck');
+     Route::post('check-lesson-fixed-price', 'LessonsController@lessonFixedPrice')->name('lessonFixedPrice');
     Route::get('invoice', 'InvoiceController@view')->name('invoice');
     Route::post('invoice_data', 'InvoiceController@invoiceData')->name('invoiceData');
     Route::post('/{school}/store_invoice_data', 'InvoiceController@invoiceDataSave')->name('invoiceDataSave');

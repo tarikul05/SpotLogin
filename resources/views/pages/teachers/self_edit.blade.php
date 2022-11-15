@@ -287,9 +287,9 @@
 							<tr>
 								<th>#</th>
 								<th>{{__('Type of course')}}</th>
-								<th>{{__('Hourly rate applied')}}</th>
-								<!-- <th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th> -->
-								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+								<th>{{__('Type of billing')}}</th>
+								<!-- <th class="buy"><span>{{__('Teacher price') }}</span></th> -->
+								<th class="sell"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -301,10 +301,30 @@
 								<td align="right" colspan="1"></td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
-									@if(($category->package_invoice &&  $lessionPrice->divider != -1) ||  
-									(!$category->package_invoice &&  $lessionPrice->divider == -1))
-										@continue
-									@endif
+									<?php 
+									if ($lessionPrice->divider == 1) {
+										$textForTypeBilling = 'Private session';
+									}elseif ($lessionPrice->divider == 9999) {
+										$textForTypeBilling = 'Student more then 10';
+									}elseif ($lessionPrice->divider == -1) {
+										$textForTypeBilling = 'Fix price';
+									}else{
+										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+									}
+									// 0 = hourly 1= fix
+									$tacherPrice = $category->s_thr_pay_type;
+									$studentPrice = $category->s_std_pay_type; 
+
+									if ( ($tacherPrice == 1) && ($studentPrice ==1) ) { // fix and fix price
+										if ($lessionPrice->divider != -1) continue;
+									}elseif (($tacherPrice == 0) && ($studentPrice == 0)) { // hourly and hourly
+										 if ($lessionPrice->divider == -1) continue;
+									}else{
+										
+
+									}
+
+								 ?>
 								<tr>
 									<td>{{$lessionPrice->divider}}
 										<input type="hidden"
@@ -315,15 +335,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
 									<td>{{__('Lessons/Events..')}}</td>
-									@if($lessionPrice->divider == 1)
-										<td>{{ __('Private session') }}</td>
-									@elseif($lessionPrice->divider == -2)
-										<td>{{ __('Student more then 10') }}</td>
-									@elseif($lessionPrice->divider == -1)
-										<td>{{ __('Fix price') }}</td>
-									@else
-										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
-									@endif
+									<td>{{ __($textForTypeBilling) }}</td>
 
 									<!-- <td>
 										<input type="text"
@@ -336,7 +348,8 @@
 										<input type="text"
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>

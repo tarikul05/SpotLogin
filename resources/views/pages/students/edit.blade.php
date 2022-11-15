@@ -1181,7 +1181,13 @@ $('#save_btn').click(function (e) {
 							}
 							resultHtml += '<td>' + value.category_name + '</td>';
 							resultHtml += '<td>' + value.teacher_name + '</td>';
-							resultHtml += '<td>' + value.title + '</td>';
+							if (value.event_type == 100) {
+								resultHtml += '<td>Event</td>';
+							} else {
+								resultHtml += '<td>Lesson</td>';
+							}
+
+							//resultHtml += '<td>' + value.title + '</td>';
 
 							// all_ready = 0 means not ready to generate invoice
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
@@ -1198,22 +1204,22 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
-								total_buy += parseFloat(value.buy_total);
-								total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								total_buy += value.buy_price;
+								total_sell += value.sell_price + value.extra_charges;
 								
-								week_total_buy += parseFloat(value.buy_total);
-								week_total_sell += parseFloat(value.sell_total) + parseFloat(value.extra_charges);
+								week_total_buy += value.buy_price;
+								week_total_sell += value.sell_price + value.extra_charges;
 								
 
 								if (value.event_type == 10) {
-									amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
+									amount_for_disc=amount_for_disc+value.sell_price;
 								}
 							}
 
-							costs_1 = parseFloat(value.extra_charges);
+							costs_1 = value.extra_charges;
 							if (value.extra_charges != 0) {
 									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
 							} else {

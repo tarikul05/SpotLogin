@@ -145,7 +145,7 @@ class LessonPricesTableSeeder extends Seeder
                 'lesson_price_student' => 'price_su',
                 'event_category' => 0,
                 'event_type' => 0,
-                'divider' => -2,
+                'divider' => 9999,
                 'is_active' => 1,
                 'created_at' => NULL,
                 'modified_at' => NULL,

@@ -553,21 +553,21 @@
                     <div class="form-group col-md-12" id="father_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                            <label for="father_email_chk" id="father_email_cap" name="father_email_cap">{{ __("Father's email")}}:</label>
                         </div>
                     </div>
 
                     <div class="form-group col-md-12" id="mother_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                            <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">{{ __("Mother's email")}}:</label>
                         </div>
                     </div>
 
                     <div class="form-group col-md-12" id="student_email_div">
                         <div class="btn-group text-left">
                             <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                            <label for="student_email_chk" id="student_email_cap" name="student_email_cap">{{ __("Student's email")}}:</label>
                         </div>
 
                     </div>

@@ -16,39 +16,33 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">Invoice Detail</label>
+						<label id="page_header" name="page_header">{{ __('Invoice Detail')}}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-					    <div class="pull-right btn-group save-button">
+					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
+                                <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
                             </a> 
-                            <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
-                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
-                            <a id="save_btn" name="save_btn" class="btn btn-theme-success">Save</a>
-
+                            <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
+                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                            <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
+                            @if($invoice->payment_status ==0)
+                                <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                    {{__('Flag as Paid')}}
+                                </a>
+                            @else
+                                <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                    {{__('Flag as UnPaid')}}
+                                </a>
+                            @endif
                             
-                                @if($invoice->payment_status ==0)
-                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                        Flag as Paid
-                                    </a>
-                                @else
-                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                        Flag as UnPaid
-                                    </a>
-                                @endif
-                            
-                            <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">Send by email</button>
+                            <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
                             <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
+                                <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                             </a>
 
                         </div>
-                        <!-- <div class="float-end btn-group">
-                            <button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>Save</button> 
-                            <a style="display: none;" id="delete_btn_inv" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete:</a> 
-                        </div> -->
 				</div>
 			</div>
 		</header>
@@ -72,10 +66,10 @@
                             <table class="table" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
                                 <tbody>
                                     <tr class="header_tbl">
-                                        <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('Date') }}</span></th>
-                                        <th width="40%"><span id="item_particular_caption" name="item_particular_caption">{{ __('Details') }}</span></th>
+                                        <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
+                                        <th width="40%"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
                                         <th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
-                                        <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('Amount') }}</span></th>
+                                        <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
                                     </tr>
                                     @php 
                                         $total_min = 0;
@@ -92,10 +86,20 @@
                                                 @else
                                                     <td style="text-align:right">{{ $item->unit }} minutes</td>
                                                 @endif
-                                                <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
+                                                @if ($invoice->invoice_type == 2)
+                                                    <td style="text-align:right">{{ !empty($item->price) ? number_format($item->price,'2') : ''; }}</td>
+                                                @else
+                                                    <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
+                                                @endif
                                             </tr>
                                             @php 
-                                                $sub_total += $item->price_unit;
+                                                
+                                                if ($invoice->invoice_type == 2){
+                                                    $sub_total += $item->price;
+                                                }
+                                                else{
+                                                    $sub_total += $item->price_unit;
+                                                }
                                                 $total_amount +=$item->total_item;
                                                 $total_min = $total_min + $item->unit;
                                             @endphp
@@ -116,19 +120,19 @@
                                         <tr>
                                             <td colspan="1" style="text-align:right">Discount</td>
                                             <td></td>
-                                            <td style="text-align:right">- {{$invoice->total_amount_discount}}</td>
+                                            <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                         </tr>
                                     @endif
                                     <tr>
                                         <td colspan="1" style="text-align:right">Extra charges</td>
                                         <td></td>
-                                        <td style="text-align:right">+ <span id="extra_expenses_cap">{{$invoice->extra_expenses}}</span></td>
+                                        <td style="text-align:right">+ <span id="extra_expenses_cap">{{number_format($invoice->extra_expenses,'2')}}</span></td>
                                     </tr>
                                     @if ($invoice->tax_amount != 0)
                                         <tr>
                                             <td colspan="1" style="text-align:right">{{$invoice->tax_desc}}</td>
                                             <td></td>
-                                            <td style="text-align:right">+<span id="tax_amount_cap">{{$invoice->tax_amount}}</span></td>
+                                            <td style="text-align:right">+<span id="tax_amount_cap">{{number_format($invoice->tax_amount,'2')}}</span></td>
                                         </tr>
                                     @endif
                                     @php
@@ -179,7 +183,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? $invoice->subtotal_amount_no_discount : '0.00'; ?></label>
+                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? number_format($invoice->subtotal_amount_no_discount,'2') : '0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -192,7 +196,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? $invoice->subtotal_amount_with_discount :'0.00'; ?></label>
+                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -205,7 +209,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? $invoice->subtotal_amount_all :'0.00'; ?></label>
+                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -220,7 +224,7 @@
                                     <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                             style="text-align:right;">0.00</p> -->
                                     <div class="input-group"><span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
-                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{$disc1_amt}}" placeholder=""> 
+                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder=""> 
                                     </div>
                                 </div>
                                 <div class="col-sm-2 text-right">
@@ -235,7 +239,7 @@
                                 <div class="col-sm-2">
                                     <div class="input-group">
                                         <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
-                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? $invoice->total_amount_discount :0.00}}" placeholder="" readonly=""> 
+                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly=""> 
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +252,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? $invoice->total_amount_no_discount :'0.00'; ?></p>
+                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? number_format($invoice->total_amount_no_discount,'2') :'0.00'; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -259,7 +263,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? $invoice->total_amount_with_discount :'0.00'; ?></p>
+                                    <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? number_format($invoice->total_amount_with_discount,'2') :'0.00'; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -270,7 +274,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? $invoice->extra_expenses :0}}" placeholder=""> 
+                                    <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder=""> 
                                 </div>
                             </div>
                             <div id="tax_amount_div" name="tax_amount_div" class="form-group" style="display: none;">
@@ -281,7 +285,7 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <input type="text" class="form-control numeric" id="tax_amount" name="tax_amount" value="{{$invoice->tax_amount ? $invoice->tax_amount :0}}" placeholder=""> 
+                                    <input type="text" class="form-control numeric" id="tax_amount" name="tax_amount" value="{{$invoice->tax_amount ? number_format($invoice->tax_amount,'2') :0}}" placeholder=""> 
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -292,8 +296,8 @@
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;"><?php echo $invoice->total_amount ? $invoice->total_amount : '0.00'; ?></p>
-                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount ? $invoice->total_amount : '0.00'; ?></p>
+                                    <p id="stotal_amount" class="form-control-static numeric" style="text-align:right;display: none;"><?php echo $invoice->total_amount ? number_format($invoice->total_amount,'2') : '0.00'; ?></p>
+                                    <p id="grand_total_amount" name="grand_total_amount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount ? number_format($invoice->total_amount,'2') : '0.00'; ?></p>
                                 </div>
                             </div>
                         </fieldset>
@@ -342,9 +346,9 @@
                                 <label id="placement" class="col-sm-5"></label>
                             </div>
                             <div class="form-group row">
-                                <label id="invoice_title_cap" for="invoice_title" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
+                                <label id="invoice_title_cap" for="invoice_name" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="invoice_title" name="invoice_title" value="{{$invoice->invoice_name ? $invoice->invoice_name :''}}" placeholder="" maxlength="150"> 
+                                    <input type="text" class="form-control" id="invoice_name" name="invoice_name" value="{{$invoice->invoice_name ? $invoice->invoice_name :''}}" placeholder="" maxlength="150"> 
                                 </div>
                             </div>
                             <div class="form-group" style="display:none;">
@@ -613,10 +617,10 @@
                                         <div class="col-sm-5">
                                             <div class="selectdiv">
                                                 <select class="form-control" id="spayment_bank_country_id" name="spayment_bank_country_id">
-                                                    <option value="CA">Canada</option>
-                                                    <option value="FR">France</option>
-                                                    <option value="CH">Switzerland</option>
-                                                    <option value="US">United States</option>
+                                                    <option value="CA" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'CA') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>Canada</option>
+                                                    <option value="FR" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'FR') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>France</option>
+                                                    <option value="CH" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'CH') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>Switzerland</option>
+                                                    <option value="US" {{!empty($invoice->payment_bank_country_code) ? (old('spayment_bank_country_id', 'US') == $invoice->payment_bank_country_code ? 'selected' : '') : (old('spayment_bank_country_id') == $invoice->payment_bank_country_code ? 'selected' : '')}}>United States</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -670,21 +674,21 @@
                         <div class="form-group col-md-12" id="father_email_div">
                             <div class="btn-group text-left">
                                 <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">Father's email:</label>
+                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">{{ __("Father's email")}}:</label>
                             </div>
                         </div>
 
                         <div class="form-group col-md-12" id="mother_email_div">
                             <div class="btn-group text-left">
                                 <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">Mother's email:</label>
+                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">{{ __("Mother's email")}}:</label>
                             </div>
                         </div>
 
                         <div class="form-group col-md-12" id="student_email_div">
                             <div class="btn-group text-left">
                                 <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">Student's email:</label>
+                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">{{ __("Student's email")}}:</label>
                             </div>
 
                         </div>
@@ -757,7 +761,7 @@
         } else {
             document.getElementById("unlock_btn").style.display = "none";
             document.getElementById("issue_inv_btn").style.display = "block";
-            document.getElementById("delete_btn_inv").style.display = "none";
+            document.getElementById("delete_btn_inv").style.display = "block";
             document.getElementById("approved_btn").style.display = "none";
             document.getElementById("payment_btn").style.display = "none";
             document.getElementById("print_preview_btn").style.display = "block";
@@ -904,11 +908,11 @@
                 document.getElementById("save_btn").style.display = "none";
                 document.getElementById("issue_inv_btn").style.display = "block";
                 document.getElementById("print_preview_btn").style.display = "block";
-                document.getElementById("delete_btn_inv").style.display = "none";
+                document.getElementById("delete_btn_inv").style.display = "block";
             } else {
                 document.getElementById("save_btn").style.display = "block";
                 document.getElementById("print_preview_btn").style.display = "block";
-                document.getElementById("delete_btn_inv").style.display = "none";
+                document.getElementById("delete_btn_inv").style.display = "block";
 
             }
 
@@ -924,6 +928,7 @@
     // });
     $('#issue_inv_btn').click(function (e) {
         Generate_View_PDF('issue_pdf');
+        location.reload();
     });
 
     function Generate_View_PDF(p_type) {
