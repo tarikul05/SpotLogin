@@ -62,7 +62,7 @@
                             <div class="dropdown-menu header">
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
-                                <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __('Professor\'s Invoice') }}</a>
+                                <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
                             </div>
                         </div>

@@ -355,39 +355,34 @@
 					
 					<div class="row">
 						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
-							<div class="">
-								<label id="perc_deduction_warning_cap_teacher">Enter discount percentance</label>
-							</div>
+							
 							<div class="form-group row">
-								<label id="teacher_disc_perc_cap" class="col-lg-3 col-sm-3 text-left">Discount Perc(%)</label>
-								<div class="col-sm-6">
-									<div class="table-responsive">
-										<table id="tariff_table_id" class="table list-item">
-											<tbody>
-												<tr>
-													<td width="20%">
-														<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control">
-													</td>
-													<td>
-														<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+								<div class="col-md-8">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
+										<div class="col-sm-2">
+											 
+										</div>
+										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+											<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
+										</div>
+										<div class="col-sm-1" style="margin-left: 10px;">
+											<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group row">
-								<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
+								<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
 								<div class="col-sm-2">
 									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
 								</div>
-								<div class="col-sm-2 offset-md-1">
+								<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
 									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
 								</div>
-								<div class="col-sm-1">
+								<div class="col-sm-1" style="margin-left: 10px;">
 									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
 								</div>
 							</div>
@@ -453,7 +448,7 @@
 					</div>
 					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						<button class="btn btn-primary" id="btn_convert_invoice">Generate invoice</button>
+						<button class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 					</div>
 				</form>
 			</div>
@@ -1078,7 +1073,7 @@ function populate_teacher_lesson() {
 	var disc_caption_disp = '';
 	var week_caption = 'week';
 	var month_caption = 'month';
-	var sub_total_caption = 'sub_total';
+	var sub_total_caption = 'Sub Total';
 	if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
 		resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
 		$('#lesson_table').html(resultHtml);
@@ -1144,7 +1139,12 @@ function populate_teacher_lesson() {
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				resultHtml += '<td>' + value.time_start + '</td>';
 				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
-				resultHtml += '<td>' + value.title + '</td>';
+				if (value.event_type == 100) {
+					resultHtml += '<td>Event</td>';
+				} else {
+					resultHtml += '<td>Lesson</td>';
+				}
+				
 				resultHtml += '<td>' + value.student_name + '</td>';
 				//resultHtml += '<td>' + value.title + '</td>';
 				resultHtml += '<td>' + value.price_name + '</td>';
@@ -1200,7 +1200,7 @@ function populate_teacher_lesson() {
 
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
+		resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
 		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>'; 
 		resultHtml+='<td style="text-align:right" colspan="3"></td>';    
 		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1216,15 +1216,15 @@ function populate_teacher_lesson() {
 			disc1_amt = ((amt_for_disc * disc1_perc) / 100);
 		}
 		//Retenue de 10% sur tranche 0.00 à 0.00 soit -0.00
-		if (disc1_amt > 0) {
-			disc_caption_disp = disc_caption;
-			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_DISC_PERC~~]", disc1_perc);
-			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_FROM~~]", '0.00');
-			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_TO~~]", '0.00');
-			disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_AMOUNT~~]", disc1_amt.toFixed(2));
-			resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
-			//resultHtml+='<tr><td colspan="8">Réduction de '+disc1_perc+'% sur tranche 0.00 à 0.00 soit -'+disc1_amt.toFixed(2)+'</tr>';
-		}
+		// if (disc1_amt > 0) {
+		// 	disc_caption_disp = disc_caption;
+		// 	disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_DISC_PERC~~]", disc1_perc);
+		// 	disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_FROM~~]", '0.00');
+		// 	disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_RANGE_TO~~]", '0.00');
+		// 	disc_caption_disp = disc_caption_disp.replace("[~~SYSTEM_AMOUNT~~]", disc1_amt.toFixed(2));
+		// 	resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
+		// 	//resultHtml+='<tr><td colspan="8">Réduction de '+disc1_perc+'% sur tranche 0.00 à 0.00 soit -'+disc1_amt.toFixed(2)+'</tr>';
+		// }
 
 		total_disc = disc1_amt;
 		total_buy = total_buy - total_disc;
@@ -1232,13 +1232,13 @@ function populate_teacher_lesson() {
 		if (total_disc > 0) {
 			resultHtml += '<tr><td colspan="4">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
-			resultHtml += '<td colspan="2"><strong>Total Deduction</strong></td>';
+			resultHtml += '<td colspan="2"><strong>Total Commission</strong></td>';
 			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
 		}
 
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-		resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
+		resultHtml += '<td colspan="2">Total</td>';
 		resultHtml += '<td style="text-align:right" colspan="2">' + total_buy.toFixed(2) + '</td>';
 		resultHtml+='<td style="text-align:right" colspan="3"></td>';   
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';

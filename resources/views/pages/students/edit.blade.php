@@ -479,11 +479,11 @@
 						<div class="row">
 							<div class="col-md-8">
 								<div class="form-group row below_space">
-									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
+									<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
 									<div class="col-sm-2">
 										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
 									</div>
-									<div class="col-sm-2 offset-md-1">
+									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
 										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
 									</div>
 									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
@@ -506,7 +506,7 @@
 						</div>
 						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-								<button class="btn btn-primary" id="btn_convert_invoice">Generate invoice</button>
+								<button class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -1269,7 +1269,7 @@ $('#save_btn').click(function (e) {
 
 				// display grand total
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
+				resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
 
 				if (no_of_teachers == 1){
 				resultHtml += '<td style="text-align:right"></td>';
@@ -1419,7 +1419,7 @@ $('#save_btn').click(function (e) {
 
 				// display grand total
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
+				resultHtml += '<td colspan="2">Total</td>';
 				
 				if (no_of_teachers == 1){
 					resultHtml += '<td style="text-align:right"></td>';
