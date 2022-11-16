@@ -21,26 +21,32 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
-                            <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
-                            </a> 
-                            <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
-                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
-                            <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                            @if($invoice->payment_status ==0)
-                                <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                    {{__('Flag as Paid')}}
+                            
+                            @if($invoice->invoice_status ==10)
+                                @if($invoice->payment_status ==0)
+                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                        {{__('Flag as Paid')}}
+                                    </a>
+                                @else
+                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                        {{__('Flag as UnPaid')}}
+                                    </a>
+                                @endif
+                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                                <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                                    <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
+                            
                             @else
-                                <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                    {{__('Flag as UnPaid')}}
-                                </a>
+                                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                                    <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
+                                </a> 
+                                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
+                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                                <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
+                                
                             @endif
                             
-                            <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
-                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
-                            </a>
 
                         </div>
 				</div>
@@ -736,36 +742,10 @@
 		todayBtn:false,
 	});
     $(document).ready(function () {
-        document.getElementById("save_btn").style.display = "none";
-        document.getElementById("print_preview_btn").style.display = "none";
-        document.getElementById("issue_inv_btn").style.display = "none";
-        document.getElementById("delete_btn_inv").style.display = "none";
-        document.getElementById("download_pdf_btn_a").style.display = "none";
-        document.getElementById("approved_btn").style.display = "none";
-        document.getElementById("payment_btn").style.display = "none";
         if (document.getElementById("invoice_status").value == '10') {
             document.getElementById("unlock_btn").style.display = "block";
-            document.getElementById("issue_inv_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "none";
-            document.getElementById("delete_btn_inv").style.display = "none";
-            document.getElementById("save_btn").style.display = "none";
-            document.getElementById("download_pdf_btn_a").style.display = "block";
-            document.getElementById("payment_btn").style.display = "block";
-            if ($("#approved_flag").val() == '0') {
-                document.getElementById("approved_btn").style.display = "block";
-            }
-            else {
-                document.getElementById("approved_btn").style.display = "none";
-            }
-           
         } else {
-            document.getElementById("unlock_btn").style.display = "none";
-            document.getElementById("issue_inv_btn").style.display = "block";
-            document.getElementById("delete_btn_inv").style.display = "block";
-            document.getElementById("approved_btn").style.display = "none";
-            document.getElementById("payment_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "block";
-                
+            
         }
 
         // tabclick event
@@ -775,17 +755,17 @@
         $('button[data-bs-toggle=tab]').click(function(e){
             var target = $(e.target).attr("data-bs-target_val") // activated tab
             
-            document.getElementById("save_btn").style.display = "none";
-            document.getElementById("delete_btn_inv").style.display = "none";
-            document.getElementById("issue_inv_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "none";
-            document.getElementById("download_pdf_btn_a").style.display = "none";
+            // document.getElementById("save_btn").style.display = "none";
+            // document.getElementById("delete_btn_inv").style.display = "none";
+            // document.getElementById("issue_inv_btn").style.display = "none";
+            // document.getElementById("print_preview_btn").style.display = "none";
+            // document.getElementById("download_pdf_btn_a").style.display = "none";
 
 
             var x = document.getElementsByClassName("tab-pane active");
             //console.log(x[0].id);
             console.log(target);
-            DisplayOnOff_buttons(target);
+            //DisplayOnOff_buttons(target);
 
             //invoice_status: 10 - issued, 1- create
             if (target == "tab_1") {
@@ -963,7 +943,7 @@
                     document.getElementById("invoice_status").value = '10';
                     document.getElementById("unlock_btn").style.display = "block";
                     //$('#unlock_btn').style.display="block";
-                    DisplayOnOff_buttons();
+                    //DisplayOnOff_buttons();
                     //modal.style.display = "none";
                 }
                 else {
@@ -973,7 +953,7 @@
                 }
             },   //success
             error: function (ts) {
-                modal.style.display = "none";
+                //modal.style.display = "none";
                 errorModalCall(GetAppMessage('error_message_text'));
 
             }
