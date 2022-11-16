@@ -56,7 +56,7 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
-				<button class="nav-link" id="nav-calculation-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Calculation') }}</button>
+				<button class="nav-link" id="nav-calculation-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true" style="display:none;">{{ __('Calculation') }}</button>
 				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Basic Data') }}</button>
 			</div>
 		</nav>
@@ -124,7 +124,7 @@
                                     </tr>
                                     @if ($invoice->total_amount_discount != 0)
                                         <tr>
-                                            <td colspan="1" style="text-align:right">Discount</td>
+                                            <td colspan="1" style="text-align:right">Commission</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                         </tr>
@@ -164,65 +164,25 @@
                             @else
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->seller_id}}">
                             @endif
+                            
                         </fieldset>
-                    </form>
-				</div>
-				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-					<form role="form" id="form_finance" class="form-horizontal" method="post" action="">
+
                         <fieldset>
-                            <!-- Subtotal before discounts-->
-                            <label class="section_header_class">{{__('Subtotals before discounts')}}</label>
+                            <label class="section_header_class">{{__('Invoice Calculation')}}</label>
                             <div class="form-group row">
-                                <label id="payment_status_label" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Payment Status:</label>
-                                <div class="col-sm-1">
-                                    <p style="text-align:right;">
-                                        <label id="payment_status_text" name="payment_status_text"></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label id="disc_on_course_hrs_cap" class="col-lg-3 col-sm-3 text-right">Subtotal (not subject to reduction)</label>
+                                <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
                                 <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? number_format($invoice->subtotal_amount_no_discount,'2') : '0.00'; ?></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-sm-3 text-right">{{__("Subtotal (subject to reduction)")}}</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;"> +
+                                    <p class="form-control-static" style="text-align:right;">
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
-                                    </p>
+                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></p>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label id="sub_total_caption" name="sub_total_caption" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Sous-total:</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;"> =
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <label class="section_header_class" id="redu_on_course_hrs_cap" name="redu_on_course_hrs_cap">Reduction on course hours</label>
                             <div class="form-group row">
                                 <label id="sdiscount_percent_1_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_1">Reduction Rate: </label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2" style="display:none;">
 
                                     <?php
                                     $disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
@@ -237,28 +197,6 @@
                                     <div class="input-group"><span class="input-group-addon">%</span>
                                         <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row">
-                                <label id="stotal_amount_discount_cap" class="col-sm-3 text-right" style="text-align:right;">Total de la réduction:</label>
-                                <div class="col-sm-2">
-                                    <div class="input-group">
-                                        <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
-                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly=""> 
-                                    </div>
-                                </div>
-                            </div>
-                            <label class="section_header_class">{{__('Final Total')}}</label>
-                            <div class="form-group row">
-                                <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;">
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? number_format($invoice->total_amount_no_discount,'2') :'0.00'; ?></p>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -309,6 +247,7 @@
                         </fieldset>
                     </form>
 				</div>
+				
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 					<form role="form" id="form_details" class="form-horizontal" method="post" action="">
                         <fieldset>
@@ -649,6 +588,76 @@
                     </form>
 				</div>
 				<!--End of Tab 4 -->
+
+
+
+                <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2" style="display:none;">
+					<form role="form" id="form_finance" class="form-horizontal" method="post" action="">
+                        <fieldset>
+                            <!-- Subtotal before discounts-->
+                            <!-- <label class="section_header_class">{{__('Subtotals before discounts')}}</label>
+                            <div class="form-group row">
+                                <label id="payment_status_label" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Payment Status:</label>
+                                <div class="col-sm-1">
+                                    <p style="text-align:right;">
+                                        <label id="payment_status_text" name="payment_status_text"></label>
+                                    </p>
+                                </div>
+                            </div> -->
+                            <!-- <div class="form-group row">
+                                <label id="disc_on_course_hrs_cap" class="col-lg-3 col-sm-3 text-right">Subtotal (not subject to reduction)</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? number_format($invoice->subtotal_amount_no_discount,'2') : '0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div> -->
+                            <div class="form-group row" style="display:none;">
+                                <label class="col-lg-3 col-sm-3 text-right">{{__("Subtotal (subject to reduction)")}}</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static" style="text-align:right;"> +
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group row"  style="display:none;">
+                                <label id="sub_total_caption" name="sub_total_caption" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Sous-total:</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static" style="text-align:right;"> =
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group row" style="display:none;">
+                                <label id="stotal_amount_discount_cap" class="col-sm-3 text-right" style="text-align:right;">Total de la réduction:</label>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
+                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly=""> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </fieldset>
+                    </form>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -1095,13 +1104,15 @@
 
     $('#save_btn').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
-        if (x[0].id == "pane_main") {
+        //if (x[0].id == "pane_main") {
 
-        } else if (x[0].id == "tab_2") {
-            UpdateInvoiceSummaryAmount();
-        }
-        else if (x[0].id == "tab_3") {
+        // } else if (x[0].id == "tab_2") {
+            
+        if (x[0].id == "tab_3") {
             UpdateInvoiceInfo();
+        } else {
+            //console.log('sss');
+            UpdateInvoiceSummaryAmount();
         }
     });
 
