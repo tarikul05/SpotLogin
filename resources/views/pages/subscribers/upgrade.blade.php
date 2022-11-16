@@ -227,7 +227,7 @@
                             <div class="plan_interval">${{ number_format($plan['amount'], 2) }}<span class="plan_type"> /{{ $plan['interval'] }}</span></div>
                         </li>
                         <!-- price id for 200  -->
-                        <?php if($plan['id'] == env('stripe_school_premium_plan_one')) {?>
+                        <?php if($plan['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
                             <li>
                                 <span class="svg_img">
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -300,7 +300,7 @@
                                 </span>
                                 <span class="text-area">Access the mobile app</span>
                             </li>
-                        <?php } else if($plan['id'] == env('stripe_school_premium_plan_two')){ ?>
+                        <?php } else if($plan['id'] == env('stripe_school_premium_plan_two_price_id')){ ?>
                             <!-- price id for 125  -->
                             <li>
                                 <span class="svg_img">
@@ -382,7 +382,7 @@
                                 </span>
                                 <span class="text-area">Access the mobile app</span>
                             </li>
-                        <?php }else if($plan['id'] == env('stripe_single_cocah_premium_plan')){ ?>
+                        <?php }else if($plan['id'] == env('stripe_single_cocah_premium_plan_price_id')){ ?>
                             <!-- price id for 50  -->
                             <li>
                                 <span class="svg_img">
@@ -448,7 +448,7 @@
                                 </span>
                                 <span class="text-area">Access the mobile app</span>
                             </li>
-                        <?php }else if($plan['id'] == env('stripe_teacher_premium_plan')){ ?>
+                        <?php }else if($plan['id'] == env('stripe_teacher_premium_plan_price_id')){ ?>
                             <!-- price id for 25  -->
                             <li>
                                 <span class="svg_img">

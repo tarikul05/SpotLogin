@@ -77,14 +77,14 @@
                         <tbody>
                             <?php if($AppUI->isSchoolAdmin()){ ?> 
                                 <!-- school first higher plan info -->
-                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_school_premium_plan_one')) {?>
+                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
                                     <tr>
                                         <td>Teachers Unlimited</td>
                                     </tr>
                                     <tr>
                                         <td>Student Unlimited</td>
                                     </tr>
-                                <?php } else if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_school_premium_plan_two')){ ?>
+                                <?php } else if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_school_premium_plan_two_price_id')){ ?>
                                 <!-- school 2nd higher plan info -->
                                     <tr>
                                         <td>Up 5 teachers</td>
@@ -140,7 +140,7 @@
                                 <tr>
                                     <td>Share your schedule with your team and your students</td>
                                 </tr>
-                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_single_cocah_premium_plan')){ ?>
+                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_single_cocah_premium_plan_price_id')){ ?>
                                     <tr>
                                         <td>Automatic invoice based on the Schedule</td>
                                     </tr>
@@ -162,7 +162,7 @@
                                 <tr>
                                     <td>Access the mobile app</td>
                                 </tr>
-                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_teacher_premium_plan')){ ?>
+                                <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_teacher_premium_plan_price_id')){ ?>
                                 <!-- teacher plan info -->
                                     <tr>
                                         <td>Automatic invoice based on your schedule</td>
