@@ -479,7 +479,7 @@
 						<div class="row">
 							<div class="col-md-8">
 								<div class="form-group row below_space">
-									<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
+									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
 									<div class="col-sm-2">
 										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
 									</div>
@@ -506,7 +506,7 @@
 						</div>
 						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-								<button class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -1133,7 +1133,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Time</td>';
 									resultHtml += '<b><td colspan="1">Duration</td>';
 									resultHtml += '<b><td colspan="1">Type</td>';
-									resultHtml += '<b><td colspan="1">Coach</td>';
+									resultHtml += '<b><td colspan="1">Teacher</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';

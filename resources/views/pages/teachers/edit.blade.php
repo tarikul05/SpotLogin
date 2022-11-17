@@ -448,7 +448,7 @@
 					</div>
 					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						<button class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+						<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 					</div>
 				</form>
 			</div>

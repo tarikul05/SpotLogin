@@ -30,7 +30,7 @@
                 <tr>
                     <th>{{ __('#') }}</th>
                     <th>{{ __('invoice_column_date') }}</th>
-                    <th>{{ __('Name of  the Professor') }}</th>
+                    <th>{{ __('Name of the Teacher') }}</th>
                     <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
                 </tr>

@@ -211,7 +211,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Frais (Additional Expenses):</label>
+                                <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Charges and Additional Expenses:</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
@@ -286,10 +286,7 @@
                                 <label id="end_of_period_cap" class="col-lg-3 col-sm-3 text-right">End of Period</label>
                                 <label id="end_date" class="col-sm-7">{{$invoice->period_ends ? $invoice->period_ends :''}}</label>
                             </div>
-                            <div class="form-group row">
-                                <label id="payment_date_cap" class="col-lg-3 col-sm-3 text-right">Date of Payment</label>
-                                <label id="placement" class="col-sm-5"></label>
-                            </div>
+                            
                             <div class="form-group row">
                                 <label id="invoice_title_cap" for="invoice_name" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
                                 <div class="col-sm-7">
