@@ -280,11 +280,11 @@
                             <!-- -->
                             <div class="form-group row">
                                 <label id="start_of_period_cap" class="col-lg-3 col-sm-3 text-right">Start of Period</label>
-                                <label id="start_date" class="col-sm-7">{{$invoice->period_starts ? $invoice->period_starts :''}}</label>
+                                <label id="start_date" class="col-sm-7">{{$invoice->period_starts ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->period_starts))) :''}}</label>
                             </div>
                             <div class="form-group row">
                                 <label id="end_of_period_cap" class="col-lg-3 col-sm-3 text-right">End of Period</label>
-                                <label id="end_date" class="col-sm-7">{{$invoice->period_ends ? $invoice->period_ends :''}}</label>
+                                <label id="end_date" class="col-sm-7">{{$invoice->period_ends ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->period_ends))) :''}}</label>
                             </div>
                             
                             <div class="form-group row">
