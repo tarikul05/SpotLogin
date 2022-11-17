@@ -282,11 +282,12 @@ class LessonsController extends Controller
         $eventId = $request->route('event'); 
         $eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
-        $professors = DB::table('events')->select('school_teacher.nickname')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
-        $eventCategory = DB::table('events')->select('event_categories.title')->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
+        
+        $professors = SchoolTeacher::where(['teacher_id'=>$eventData->teacher_id, 'school_id' => $schoolId])->first();
+        
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
-        return view('pages.calendar.view_event')->with(compact('eventData','schoolId','eventCategory','locations','professors','studentOffList','lessonPrice','eventId'));
+        return view('pages.calendar.view_event')->with(compact('eventData','schoolId','locations','professors','studentOffList','lessonPrice','eventId'));
     }
 
     /**
