@@ -240,24 +240,24 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($relationData['buy_price']) && !empty($relationData['buy_price']) ? $relationData['buy_price'] : 0 }}" autocomplete="off">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div"> 
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($relationData['sell_price']) && !empty($relationData['sell_price']) ? $relationData['sell_price'] : 0 }}" autocomplete="off">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData['price_amount_sell']) && !empty($lessonData['price_amount_sell']) ? $lessonData['price_amount_sell'] : 0 }}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -409,7 +409,7 @@ $( document ).ready(function() {
 	if(s_thr_pay_type == 0){
 		$('#hourly').show();
         $('#price_per_student').hide();
-	}else if(s_thr_pay_type == 1){
+	}else if(s_thr_pay_type == 1 && s_std_pay_type == 1){
         $('#hourly').hide();
 		$('#price_per_student').show();
 	}
