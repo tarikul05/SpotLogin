@@ -71,7 +71,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Assistant Type') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($eventCategory->title) ? $eventCategory->title : ''; }}
+										{{ !empty($lessonCategory->title) ? $lessonCategory->title : ''; }}
 									</div>
 								</div>
 	

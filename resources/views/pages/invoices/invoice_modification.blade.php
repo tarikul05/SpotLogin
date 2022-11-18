@@ -21,26 +21,32 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
-                            <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
-                            </a> 
-                            <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
-                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
-                            <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                            @if($invoice->payment_status ==0)
-                                <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                    {{__('Flag as Paid')}}
+                            
+                            @if($invoice->invoice_status ==10)
+                                @if($invoice->payment_status ==0)
+                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                        {{__('Flag as Paid')}}
+                                    </a>
+                                @else
+                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                        {{__('Flag as UnPaid')}}
+                                    </a>
+                                @endif
+                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                                <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                                    <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
+                            
                             @else
-                                <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                    {{__('Flag as UnPaid')}}
-                                </a>
+                                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                                    <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
+                                </a> 
+                                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
+                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                                <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
+                                
                             @endif
                             
-                            <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
-                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
-                            </a>
 
                         </div>
 				</div>
@@ -50,7 +56,7 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
-				<button class="nav-link" id="nav-calculation-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Calculation') }}</button>
+				<button class="nav-link" id="nav-calculation-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true" style="display:none;">{{ __('Calculation') }}</button>
 				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Basic Data') }}</button>
 			</div>
 		</nav>
@@ -118,7 +124,7 @@
                                     </tr>
                                     @if ($invoice->total_amount_discount != 0)
                                         <tr>
-                                            <td colspan="1" style="text-align:right">Discount</td>
+                                            <td colspan="1" style="text-align:right">Commission</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                         </tr>
@@ -158,65 +164,25 @@
                             @else
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->seller_id}}">
                             @endif
+                            
                         </fieldset>
-                    </form>
-				</div>
-				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-					<form role="form" id="form_finance" class="form-horizontal" method="post" action="">
+
                         <fieldset>
-                            <!-- Subtotal before discounts-->
-                            <label class="section_header_class">{{__('Subtotals before discounts')}}</label>
+                            <label class="section_header_class">{{__('Invoice Calculation')}}</label>
                             <div class="form-group row">
-                                <label id="payment_status_label" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Payment Status:</label>
-                                <div class="col-sm-1">
-                                    <p style="text-align:right;">
-                                        <label id="payment_status_text" name="payment_status_text"></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label id="disc_on_course_hrs_cap" class="col-lg-3 col-sm-3 text-right">Subtotal (not subject to reduction)</label>
+                                <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
                                 <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? number_format($invoice->subtotal_amount_no_discount,'2') : '0.00'; ?></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-3 col-sm-3 text-right">{{__("Subtotal (subject to reduction)")}}</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;"> +
+                                    <p class="form-control-static" style="text-align:right;">
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
                                 <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
-                                    </p>
+                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></p>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label id="sub_total_caption" name="sub_total_caption" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Sous-total:</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;"> =
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
-                                    </p>
-                                </div>
-                            </div>
-                            <label class="section_header_class" id="redu_on_course_hrs_cap" name="redu_on_course_hrs_cap">Reduction on course hours</label>
                             <div class="form-group row">
                                 <label id="sdiscount_percent_1_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;" for="sdiscount_percent_1">Reduction Rate: </label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2" style="display:none;">
 
                                     <?php
                                     $disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
@@ -233,28 +199,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="form-group row">
-                                <label id="stotal_amount_discount_cap" class="col-sm-3 text-right" style="text-align:right;">Total de la réduction:</label>
-                                <div class="col-sm-2">
-                                    <div class="input-group">
-                                        <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
-                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly=""> 
-                                    </div>
-                                </div>
-                            </div>
-                            <label class="section_header_class">{{__('Final Total')}}</label>
-                            <div class="form-group row">
-                                <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
-                                <div class="col-sm-1" style="width:80px;">
-                                    <p class="form-control-static" style="text-align:right;">
-                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
-                                    </p>
-                                </div>
-                                <div class="col-sm-1">
-                                    <p id="stotal_amount_no_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_no_discount ? number_format($invoice->total_amount_no_discount,'2') :'0.00'; ?></p>
-                                </div>
-                            </div>
                             <div class="form-group row">
                                 <label id="stotal_amount_with_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount after Discount</label>
                                 <div class="col-sm-1" style="width:80px;">
@@ -267,7 +211,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Frais (Additional Expenses):</label>
+                                <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Charges and Additional Expenses:</label>
                                 <div class="col-sm-1" style="width:80px;">
                                     <p class="form-control-static" style="text-align:right;"> +
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
@@ -303,6 +247,7 @@
                         </fieldset>
                     </form>
 				</div>
+				
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 					<form role="form" id="form_details" class="form-horizontal" method="post" action="">
                         <fieldset>
@@ -335,16 +280,13 @@
                             <!-- -->
                             <div class="form-group row">
                                 <label id="start_of_period_cap" class="col-lg-3 col-sm-3 text-right">Start of Period</label>
-                                <label id="start_date" class="col-sm-7">{{$invoice->period_starts ? $invoice->period_starts :''}}</label>
+                                <label id="start_date" class="col-sm-7">{{$invoice->period_starts ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->period_starts))) :''}}</label>
                             </div>
                             <div class="form-group row">
                                 <label id="end_of_period_cap" class="col-lg-3 col-sm-3 text-right">End of Period</label>
-                                <label id="end_date" class="col-sm-7">{{$invoice->period_ends ? $invoice->period_ends :''}}</label>
+                                <label id="end_date" class="col-sm-7">{{$invoice->period_ends ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->period_ends))) :''}}</label>
                             </div>
-                            <div class="form-group row">
-                                <label id="payment_date_cap" class="col-lg-3 col-sm-3 text-right">Date of Payment</label>
-                                <label id="placement" class="col-sm-5"></label>
-                            </div>
+                            
                             <div class="form-group row">
                                 <label id="invoice_title_cap" for="invoice_name" class="col-lg-3 col-sm-3 text-right">invoice Title</label>
                                 <div class="col-sm-7">
@@ -643,6 +585,76 @@
                     </form>
 				</div>
 				<!--End of Tab 4 -->
+
+
+
+                <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2" style="display:none;">
+					<form role="form" id="form_finance" class="form-horizontal" method="post" action="">
+                        <fieldset>
+                            <!-- Subtotal before discounts-->
+                            <!-- <label class="section_header_class">{{__('Subtotals before discounts')}}</label>
+                            <div class="form-group row">
+                                <label id="payment_status_label" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Payment Status:</label>
+                                <div class="col-sm-1">
+                                    <p style="text-align:right;">
+                                        <label id="payment_status_text" name="payment_status_text"></label>
+                                    </p>
+                                </div>
+                            </div> -->
+                            <!-- <div class="form-group row">
+                                <label id="disc_on_course_hrs_cap" class="col-lg-3 col-sm-3 text-right">Subtotal (not subject to reduction)</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_no_discount"><?php echo $invoice->subtotal_amount_no_discount ? number_format($invoice->subtotal_amount_no_discount,'2') : '0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div> -->
+                            <div class="form-group row" style="display:none;">
+                                <label class="col-lg-3 col-sm-3 text-right">{{__("Subtotal (subject to reduction)")}}</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static" style="text-align:right;"> +
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group row"  style="display:none;">
+                                <label id="sub_total_caption" name="sub_total_caption" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Sous-total:</label>
+                                <div class="col-sm-1" style="width:80px;">
+                                    <p class="form-control-static" style="text-align:right;"> =
+                                        <label class="currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></label>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="form-control-static numeric" style="text-align:right;">
+                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group row" style="display:none;">
+                                <label id="stotal_amount_discount_cap" class="col-sm-3 text-right" style="text-align:right;">Total de la réduction:</label>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <span class="input-group-addon currency_display"><?php echo $invoice->invoice_currency ? ' ('.$invoice->invoice_currency .') ':''; ?></span>
+                                        <input type="text" class="form-control numeric_amount" id="stotal_amount_discount" name="stotal_amount_discount" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly=""> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </fieldset>
+                    </form>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -736,36 +748,10 @@
 		todayBtn:false,
 	});
     $(document).ready(function () {
-        document.getElementById("save_btn").style.display = "none";
-        document.getElementById("print_preview_btn").style.display = "none";
-        document.getElementById("issue_inv_btn").style.display = "none";
-        document.getElementById("delete_btn_inv").style.display = "none";
-        document.getElementById("download_pdf_btn_a").style.display = "none";
-        document.getElementById("approved_btn").style.display = "none";
-        document.getElementById("payment_btn").style.display = "none";
         if (document.getElementById("invoice_status").value == '10') {
             document.getElementById("unlock_btn").style.display = "block";
-            document.getElementById("issue_inv_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "none";
-            document.getElementById("delete_btn_inv").style.display = "none";
-            document.getElementById("save_btn").style.display = "none";
-            document.getElementById("download_pdf_btn_a").style.display = "block";
-            document.getElementById("payment_btn").style.display = "block";
-            if ($("#approved_flag").val() == '0') {
-                document.getElementById("approved_btn").style.display = "block";
-            }
-            else {
-                document.getElementById("approved_btn").style.display = "none";
-            }
-           
         } else {
-            document.getElementById("unlock_btn").style.display = "none";
-            document.getElementById("issue_inv_btn").style.display = "block";
-            document.getElementById("delete_btn_inv").style.display = "block";
-            document.getElementById("approved_btn").style.display = "none";
-            document.getElementById("payment_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "block";
-                
+            
         }
 
         // tabclick event
@@ -775,17 +761,17 @@
         $('button[data-bs-toggle=tab]').click(function(e){
             var target = $(e.target).attr("data-bs-target_val") // activated tab
             
-            document.getElementById("save_btn").style.display = "none";
-            document.getElementById("delete_btn_inv").style.display = "none";
-            document.getElementById("issue_inv_btn").style.display = "none";
-            document.getElementById("print_preview_btn").style.display = "none";
-            document.getElementById("download_pdf_btn_a").style.display = "none";
+            // document.getElementById("save_btn").style.display = "none";
+            // document.getElementById("delete_btn_inv").style.display = "none";
+            // document.getElementById("issue_inv_btn").style.display = "none";
+            // document.getElementById("print_preview_btn").style.display = "none";
+            // document.getElementById("download_pdf_btn_a").style.display = "none";
 
 
             var x = document.getElementsByClassName("tab-pane active");
             //console.log(x[0].id);
             console.log(target);
-            DisplayOnOff_buttons(target);
+            //DisplayOnOff_buttons(target);
 
             //invoice_status: 10 - issued, 1- create
             if (target == "tab_1") {
@@ -963,7 +949,7 @@
                     document.getElementById("invoice_status").value = '10';
                     document.getElementById("unlock_btn").style.display = "block";
                     //$('#unlock_btn').style.display="block";
-                    DisplayOnOff_buttons();
+                    //DisplayOnOff_buttons();
                     //modal.style.display = "none";
                 }
                 else {
@@ -973,7 +959,7 @@
                 }
             },   //success
             error: function (ts) {
-                modal.style.display = "none";
+                //modal.style.display = "none";
                 errorModalCall(GetAppMessage('error_message_text'));
 
             }
@@ -1115,13 +1101,15 @@
 
     $('#save_btn').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
-        if (x[0].id == "pane_main") {
+        //if (x[0].id == "pane_main") {
 
-        } else if (x[0].id == "tab_2") {
-            UpdateInvoiceSummaryAmount();
-        }
-        else if (x[0].id == "tab_3") {
+        // } else if (x[0].id == "tab_2") {
+            
+        if (x[0].id == "tab_3") {
             UpdateInvoiceInfo();
+        } else {
+            //console.log('sss');
+            UpdateInvoiceSummaryAmount();
         }
     });
 

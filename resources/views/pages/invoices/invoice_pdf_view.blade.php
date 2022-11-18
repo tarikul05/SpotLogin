@@ -364,7 +364,9 @@
                 <?php if($invoice_data->seller_country_code === 'CA') {?>
                 <tr>
                     <td>
-                        <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                        <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)) {?>
+                            <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                        <?php } ?>
                         <?php if(!empty($invoice_data->etransfer_acc)){ ?>
                             <div class="txt">{{ __('invoice_ac_no') }} {{ $invoice_data->etransfer_acc }}</div>
                         <?php } ?>
@@ -373,7 +375,9 @@
                         <?php } ?>
                     </td>
                     <td>
-                        <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
+                        <?php if(!empty($invoice_data->name_for_checks) || !empty($invoice_data->cheque_payee)){ ?>
+                            <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
+                        <?php } ?>
                         <?php if(!empty($invoice_data->name_for_checks)){ ?>
                             <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
                         <?php } ?>
@@ -382,8 +386,8 @@
                         <?php } ?>
                     </td>
                     <td>
-                        <div class="payment_title">{{ __('invoice_payment_subtitle_3') }}</div>
                         <?php if(!empty($invoice_data->school->tax_number)){ ?>
+                            <div class="payment_title">{{ __('invoice_payment_subtitle_3') }}</div>
                             <div class="txt">{{ $invoice_data->school->tax_number }}</div>
                         <?php } ?>
                     </td>
@@ -391,7 +395,9 @@
                 <?php } else { ?>
                     <tr>
                         <td>
-                            <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                            <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)) {?>
+                                <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                            <?php } ?>
                             <?php if(!empty($invoice_data->etransfer_acc)){ ?>
                                 <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
                             <?php } ?>
@@ -400,7 +406,9 @@
                             <?php } ?>
                         </td>
                         <td>
-                            <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
+                            <?php if(!empty($invoice_data->payment_bank_iban) || !empty($invoice_data->payment_bank_account) || !empty($invoice_data->payment_bank_swift)) {?>
+                                <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
+                            <?php } ?>
                             <?php if(!empty($invoice_data->payment_bank_iban)){ ?>
                                 <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
                             <?php } ?>
