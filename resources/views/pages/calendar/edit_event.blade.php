@@ -178,7 +178,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per hour)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
@@ -202,7 +202,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges:') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="extra_charges_div"> 
 											<span class="input-group-addon">
@@ -239,6 +239,9 @@
 																<th width="15%" style="text-align:right">
 																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																</th>
+																<th width="15%" style="text-align:right">
+																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Extra charges') }}</label>
+																</th>
 															</tr>
 															
 															@foreach($studentOffList as $student)
@@ -259,6 +262,7 @@
 																</td>
 																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
 																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
+																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
 															</tr>
 															@endforeach
 														</tbody>

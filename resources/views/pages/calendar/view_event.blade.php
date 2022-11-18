@@ -44,7 +44,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
+							<label id="teacher_personal_data_caption">{{ __('Event information') }}</label>
 						</div>
 						@if($eventData->is_locked ==1)
 						<div class="alert alert-warning">
@@ -60,12 +60,6 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($locations->title) ? $locations->title : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Assistant Type') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventCategory->title) ? $eventCategory->title : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
@@ -120,7 +114,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per event)') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '' }}
 									</div>
