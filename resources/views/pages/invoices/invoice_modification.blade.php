@@ -137,11 +137,17 @@
                                             <tr>
                                                 <td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>
                                             </tr>
+                                            
+                                            
                                             @if ($event_type == 10)
+                                            <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
+                                            
                                             <tr>
                                                 <td colspan="1" style="text-align:right">Sub-total Lessons</td>
                                                 <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
-                                                <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
+                                                <td style="text-align:right">
+                                                    <p>{{ number_format($sub_total_lesson,'2') }}</p>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="1" style="text-align:right">Commission(%) on Lessons:</td>
@@ -176,15 +182,18 @@
                                                     <?php
                                                     $total_lesson = $sub_total_lesson-$disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
                                                     ?>
-                                                    <!-- <p id="samount_discount_1" class="form-control-static numeric"
-                                                                                            style="text-align:right;">0.00</p> -->{{number_format($total_lesson,'2')}}
+                                                    <p id="stotal_amount_with_discount_lesson" 
+                                                    class="form-control-static numeric"
+                                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</p> 
                                                     
                                                 </td>
                                             </tr>
-                                            <div class="input-group"><span class="input-group-addon">%</span>
+                                            <!-- <div class="input-group"><span class="input-group-addon">%</span>
                                                 <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
-                                            </div>
+                                            </div> -->
                                             @else
+                                                <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</>
+                                            
                                                 <tr>
                                                     <td colspan="1" style="text-align:right">Sub-total </td>
                                                     <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
@@ -204,12 +213,12 @@
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                         </tr>
                                     @endif
-                                    @if ($invoice->invoice_type == 2)
+                                    @if ($invoice->invoice_type == 1)
                                     <tr>
                                         <td colspan="2" style="text-align:right">Extra charges</td>
                                         <td></td>
                                         <td style="text-align:right">
-                                            +<input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="">
+                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="">
                                         </td>
                                     </tr>
                                     @endif
@@ -239,7 +248,7 @@
                             
                         </fieldset>
 
-                        <fieldset>
+                        <fieldset style="display: none;">
                             <label class="section_header_class">{{__('Invoice Calculation')}}</label>
                             <div class="form-group row">
                                 <label id="stotal_amount_no_discount_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Total Amount before Discount</label>
@@ -695,7 +704,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_with_discount"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
+                                        <label id="ssubtotal_amount_with_discount1"><?php echo $invoice->subtotal_amount_with_discount ? number_format($invoice->subtotal_amount_with_discount,'2') :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -1340,22 +1349,30 @@
         $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
 
         var subtotal_amount_with_discount = 0.0;
+        var subtotal_amount_with_discount_lesson = 0.0;
+        var subtotal_amount_with_discount_event = 0.0;
         //subtotal_amount_with_discount=parseFloat($("#ssubtotal_amount_with_discount").text());
-        subtotal_amount_with_discount = Number($("#ssubtotal_amount_with_discount").text());
-        subtotal_amount_with_discount = Number(+subtotal_amount_with_discount) - Number(+total_amount_discount);
+        subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
+        subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
+        $("#stotal_amount_with_discount_lesson").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
+        subtotal_amount_with_discount_event = Number($("#stotal_amount_with_discount_event").text());
+        console.log(subtotal_amount_with_discount_event);
+        subtotal_amount_with_discount = Number(+subtotal_amount_with_discount_lesson) + Number(+subtotal_amount_with_discount_event);
+        
         $("#stotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount).toFixed(2));
-
+        //subtotal_amount_with_discount_lesson = Number(+stotal_amount_with_discount_lesson) + Number(+total_amount_discount);
+        
         //subtotal_amount_no_discount=parseFloat($("#ssubtotal_amount_no_discount").text());
         subtotal_amount_no_discount = $("#ssubtotal_amount_no_discount").text();
 
         total_amount = (+subtotal_amount_no_discount) + (+subtotal_amount_with_discount);
-
+        
         tax_amount = Number($("#tax_amount").val());
 
         total_amount = (Number(total_amount) + (tax_amount));
 
         $("#stotal_amount").text(total_amount);
-        console.log(tax_amount);
+        //console.log(tax_amount);
 
         var extra = Number(document.getElementById("sextra_expenses").value);
         var grand_total = (+total_amount) + (+extra);
