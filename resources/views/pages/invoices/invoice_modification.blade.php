@@ -212,7 +212,7 @@
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                         </tr> -->
                                     @endif
-                                    @if ($invoice->invoice_type == 1)
+                                    @if ($invoice->invoice_type == 2)
                                     <tr>
                                         <td colspan="2" style="text-align:right">Extra charges</td>
                                         <td></td>
@@ -1370,7 +1370,7 @@
         var grand_total = (+total_amount) + (+extra);
 
         console.log(grand_total);
-        //$("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
+        $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
 
         $("#grand_total_cap").html(parseFloat(grand_total).toFixed(2));
         //$("#tax_amount_cap").html(parseFloat(tax_amount).toFixed(2));
