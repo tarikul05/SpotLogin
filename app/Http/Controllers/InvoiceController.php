@@ -298,7 +298,7 @@ class InvoiceController extends Controller
             $updateInvoice['total_amount']  = $p_total_amount = trim($data['p_total_amount']);
             $v_total_amount_discount = $p_amt1;
             $updateInvoice['total_amount_discount']  = $v_total_amount_discount;
-            $updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
+            //$updateInvoice['tax_amount'] = $p_tax_amount = trim($data['p_tax_amount']);
             $updateInvoice['modified_by'] = $user->id;
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);

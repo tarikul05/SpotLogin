@@ -19,7 +19,7 @@
 						<label id="page_header" name="page_header">{{ __('Invoice Detail')}}</label>
 					</div>
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
+				<div class="col-sm-6 col-xs-12 btn-area" style="text-align: right;">
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             
                             @if($invoice->invoice_status ==10)
@@ -134,23 +134,22 @@
                                                     
                                                 @endphp
                                             @endforeach
-                                            <tr>
+                                            <!-- <tr>
                                                 <td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>
-                                            </tr>
+                                            </tr> -->
                                             
                                             
                                             @if ($event_type == 10)
                                             <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
                                             
                                             <tr>
-                                                <td colspan="1" style="text-align:right">Sub-total Lessons</td>
+                                                <td colspan="2" style="text-align:right">Sub-total Lessons</td>
                                                 <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
-                                                <td style="text-align:right">
-                                                    <p>{{ number_format($sub_total_lesson,'2') }}</p>
+                                                <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="1" style="text-align:right">Commission(%) on Lessons:</td>
+                                                <td colspan="2" style="text-align:right">Commission(%) on Lessons:</td>
                                                 <td style="text-align:right">
                                                     
                                                 </td>
@@ -159,7 +158,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="1" style="text-align:right">Commission Amount:</td>
+                                                <td colspan="2" style="text-align:right">Commission Amount:</td>
                                                 <td style="text-align:right">
                                                     
                                                 </td>
@@ -174,7 +173,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="1" style="text-align:right">Total Lesson:</td>
+                                                <td colspan="2" style="text-align:right">Total Lesson:</td>
                                                 <td style="text-align:right">
                                                     
                                                 </td>
@@ -182,9 +181,9 @@
                                                     <?php
                                                     $total_lesson = $sub_total_lesson-$disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
                                                     ?>
-                                                    <p id="stotal_amount_with_discount_lesson" 
+                                                    <span id="stotal_amount_with_discount_lesson" 
                                                     class="form-control-static numeric"
-                                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</p> 
+                                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</> 
                                                     
                                                 </td>
                                             </tr>
@@ -192,10 +191,10 @@
                                                 <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
                                             </div> -->
                                             @else
-                                                <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</>
+                                                <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
                                             
                                                 <tr>
-                                                    <td colspan="1" style="text-align:right">Sub-total </td>
+                                                    <td colspan="2" style="text-align:right">Sub-total </td>
                                                     <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                 </tr>
@@ -207,18 +206,18 @@
                                    
                                 <tbody> 
                                     @if ($invoice->total_amount_discount != 0)
-                                        <tr>
+                                        <!-- <tr>
                                             <td colspan="2" style="text-align:right">Commission</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
-                                        </tr>
+                                        </tr> -->
                                     @endif
                                     @if ($invoice->invoice_type == 1)
                                     <tr>
                                         <td colspan="2" style="text-align:right">Extra charges</td>
                                         <td></td>
                                         <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="">
+                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
                                         </td>
                                     </tr>
                                     @endif
@@ -287,9 +286,9 @@
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
-                                <div class="col-sm-1">
+                                <!-- <div class="col-sm-1">
                                     <p id="stotal_amount_with_discount" class="form-control-static numeric" style="text-align:right;"><?php echo $invoice->total_amount_with_discount ? number_format($invoice->total_amount_with_discount,'2') :'0.00'; ?></p>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="form-group row">
                                 <label id="sextra_expenses_cap" name="sextra_expenses_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Charges and Additional Expenses:</label>
@@ -298,9 +297,9 @@
                                         <label class="currency_display"><?php echo $invoice->invoice_currency ? $invoice->invoice_currency :''; ?></label>
                                     </p>
                                 </div>
-                                <div class="col-sm-1">
+                                <!-- <div class="col-sm-1">
                                     <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder=""> 
-                                </div>
+                                </div> -->
                             </div>
                             <div id="tax_amount_div" name="tax_amount_div" class="form-group" style="display: none;">
                                 <label id="tax_cap" name="tax_cap" class="col-lg-3 col-sm-3 text-right" style="text-align:right;">Tax:</label>
@@ -1211,14 +1210,14 @@
 
         var p_total_amount =  $("#grand_total_amount").text();
         var total_amount_with_discount = $("#stotal_amount_with_discount").text();
-        var p_tax_amount = $("#tax_amount").val();
+        //var p_tax_amount = $("#tax_amount").val();
 
         var data = 'type=update_invoice_discount&p_invoice_id=' + p_invoice_id;
         data += '&p_disc1=' + p_disc1;
         data += '&p_amt1=' + p_amt1;
         data += '&total_amount_with_discount=' + total_amount_with_discount + '&p_extra_expenses=' + p_extra_expenses;
         data += '&p_total_amount=' + p_total_amount;
-        data += '&p_tax_amount=' + p_tax_amount;
+        //data += '&p_tax_amount=' + p_tax_amount;
         // console.log(data);
         // return false;
         $.ajax({
@@ -1305,84 +1304,77 @@
         var disc1_amt = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
 
         subtotal_amount_all = $("#ssubtotal_amount_all").text();
-        disc1 = $("#sdiscount_percent_1").val();
-        // disc2 = $("#sdiscount_percent_2").val();
-        // disc3 = $("#sdiscount_percent_3").val();
-        // disc4 = $("#sdiscount_percent_4").val();
-        // disc5 = $("#sdiscount_percent_5").val();
-        // disc6 = $("#sdiscount_percent_6").val();
-
-
-        disc1_amt = $("#samount_discount_1").val();
-        // disc2_amt = $("#samount_discount_2").val();
-        // disc3_amt = $("#samount_discount_3").val();
-        // disc4_amt = $("#samount_discount_4").val();
-        // disc5_amt = $("#samount_discount_5").val();
-        // disc6_amt = $("#samount_discount_6").val();
-
+        if ($('#sdiscount_percent_1').length > 0) {
+            disc1 = $("#sdiscount_percent_1").val();
+        }
+        if ($('#samount_discount_1').length > 0) {
+            disc1_amt = $("#samount_discount_1").val();
+        }
         
         disc1_amt = ((type == 'discount')?Number((subtotal_amount_all * disc1) / 100):Number(disc1_amt));
         disc1 = ((type == 'amount')?Number((disc1_amt * 100) / subtotal_amount_all):Number(disc1));
 
         if(type == 'discount'){
-
-            $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
-            // $("#samount_discount_2").val(parseFloat(disc2_amt).toFixed(2));
-            // $("#samount_discount_3").val(parseFloat(disc3_amt).toFixed(2));
-            // $("#samount_discount_4").val(parseFloat(disc4_amt).toFixed(2));
-            // $("#samount_discount_5").val(parseFloat(disc5_amt).toFixed(2));
-            // $("#samount_discount_6").val(parseFloat(disc6_amt).toFixed(2));
-        
+            if ($('#samount_discount_1').length > 0) {
+                $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
+            }
         } else {
-
-            $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
-            // $("#sdiscount_percent_2").val(parseFloat(disc2).toFixed(2));
-            // $("#sdiscount_percent_3").val(parseFloat(disc3).toFixed(2));
-            // $("#sdiscount_percent_4").val(parseFloat(disc4).toFixed(2));
-            // $("#sdiscount_percent_5").val(parseFloat(disc5).toFixed(2));
-            // $("#sdiscount_percent_6").val(parseFloat(disc6).toFixed(2));
-
+            if ($('#sdiscount_percent_1').length > 0) {
+                $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
+            }
         }
         
 
         total_amount_discount = Number(disc1_amt);
-        $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
+        if ($('#stotal_amount_discount').length > 0) {
+            $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
+        }
 
         var subtotal_amount_with_discount = 0.0;
         var subtotal_amount_with_discount_lesson = 0.0;
         var subtotal_amount_with_discount_event = 0.0;
-        //subtotal_amount_with_discount=parseFloat($("#ssubtotal_amount_with_discount").text());
-        subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
+        
+        if ($('#ssubtotal_amount_with_discount_lesson').length > 0) {
+            subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
+        } 
         subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
-        $("#stotal_amount_with_discount_lesson").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
-        subtotal_amount_with_discount_event = Number($("#stotal_amount_with_discount_event").text());
-        console.log(subtotal_amount_with_discount_event);
+        if ($('#stotal_amount_with_discount_lesson').length > 0) {
+            $("#stotal_amount_with_discount_lesson").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
+        } 
+        if ($('#stotal_amount_with_discount_event').length > 0) {
+            subtotal_amount_with_discount_event = Number($("#stotal_amount_with_discount_event").text());
+        } 
+        //console.log(subtotal_amount_with_discount_event);
         subtotal_amount_with_discount = Number(+subtotal_amount_with_discount_lesson) + Number(+subtotal_amount_with_discount_event);
         
-        $("#stotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount).toFixed(2));
+        if ($('#stotal_amount_with_discount').length > 0) {
+            $("#stotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount).toFixed(2));
+        } 
         //subtotal_amount_with_discount_lesson = Number(+stotal_amount_with_discount_lesson) + Number(+total_amount_discount);
         
         //subtotal_amount_no_discount=parseFloat($("#ssubtotal_amount_no_discount").text());
-        subtotal_amount_no_discount = $("#ssubtotal_amount_no_discount").text();
+        subtotal_amount_no_discount = 0;
 
         total_amount = (+subtotal_amount_no_discount) + (+subtotal_amount_with_discount);
         
-        tax_amount = Number($("#tax_amount").val());
+        //tax_amount = Number($("#tax_amount").val());
 
-        total_amount = (Number(total_amount) + (tax_amount));
+        //total_amount = (Number(total_amount) + (tax_amount));
 
-        $("#stotal_amount").text(total_amount);
+        //$("#stotal_amount").text(total_amount);
         //console.log(tax_amount);
-
-        var extra = Number(document.getElementById("sextra_expenses").value);
+        var extra = 0;
+        if ($('#sextra_expenses').length > 0) {
+            extra = Number(document.getElementById("sextra_expenses").value);
+        } 
         var grand_total = (+total_amount) + (+extra);
 
         console.log(grand_total);
-        $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
+        //$("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
 
         $("#grand_total_cap").html(parseFloat(grand_total).toFixed(2));
-        $("#tax_amount_cap").html(parseFloat(tax_amount).toFixed(2));
-        $("#extra_expenses_cap").html(parseFloat(extra).toFixed(2));
+        //$("#tax_amount_cap").html(parseFloat(tax_amount).toFixed(2));
+        //$("#extra_expenses_cap").html(parseFloat(extra).toFixed(2));
 
     }
 </script>
