@@ -1228,13 +1228,29 @@ class InvoiceController extends Controller
         }
 
         // $invoiceCurrency = InvoiceItem::active()->where('invoice_id',$invoice->id)->get()->pluck('price_currency')->join(',');
-        $invoice->invoice_items = InvoiceItem::active()->where('invoice_id', $invoice->id)->get();
+        $invoice_items = DB::table('invoice_items')
+        ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
+        ->where('invoice_items.invoice_id', $invoice->id)
+        //->where('invoice_items.invoice_id', $invoice->id)
+        ->orderBy('events.event_type','ASC')
+        ->orderBy('invoice_items.item_date','ASC')->get();
+
+        $items = array();
+        foreach($invoice_items as $key=>$d){
+            //print_r($d->event_type);
+            if(!isset($items[$d->event_type])){
+                $items[$d->event_type] = array();
+            }
+            $items[$d->event_type][] = $d;
+        }
+        $invoice->invoice_items = $items;
         // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
 
         // if ($invoice->amount_discount_1  > 0) {
         //     $invoice->disc_text = '1, disc1, disc1_amt, 0';
         //     # code...
         // }
+        //dd($invoice->invoice_items);
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.invoice_modification', [
