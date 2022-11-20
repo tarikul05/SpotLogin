@@ -240,7 +240,7 @@
                             <input type="hidden" id="payment_status" name="payment_status" value="{{$invoice->payment_status}}">
                             <input id="p_school_id" name="p_school_id" style="display: none;" value="{{$invoice->school_id}}">
         
-                            @if($invoice->invoice_type ==1)
+                            @if($invoice->invoice_type ==2)
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->client_id}}">
                             @else
                                 <input type="hidden" id="person_id" name="person_id" value="{{$invoice->seller_id}}">
