@@ -205,11 +205,12 @@
                                 </tbody>  
                                    
                                 <tbody> 
-                                    @if ($invoice->total_amount_discount != 0)
+                                    @if ($invoice->invoice_type == 2 && $invoice->total_amount_discount != 0)
                                         <tr>
                                             <td colspan="2" style="text-align:right">Commission</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
+                                            <input type="hidden" class="form-control numeric_amount" id="total_commission" name="total_commission" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly="">
                                         </tr>
                                     @endif
                                     @if ($invoice->invoice_type == 2)
@@ -1203,8 +1204,12 @@
         }
 
         var p_disc1 = $("#sdiscount_percent_1").val();
+        if ($('#total_commission').length > 0) {
+            var p_amt1 = $("#total_commission").val();
+        } else{
+            var p_amt1 = $("#samount_discount_1").val();
+        }
         
-        var p_amt1 = $("#samount_discount_1").val();
         var p_extra_expenses = $("#sextra_expenses").val();
 
 
@@ -1299,7 +1304,7 @@
     }
 
     function CalculateDiscount(type) {
-        var subtotal_amount_all = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+        var subtotal_amount_all = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
         var disc1 = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
         var disc1_amt = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
 
@@ -1336,8 +1341,8 @@
         
         if ($('#ssubtotal_amount_with_discount_lesson').length > 0) {
             subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
+            subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
         } 
-        subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
         if ($('#stotal_amount_with_discount_lesson').length > 0) {
             $("#stotal_amount_with_discount_lesson").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
         } 
@@ -1357,19 +1362,24 @@
 
         total_amount = (+subtotal_amount_no_discount) + (+subtotal_amount_with_discount);
         
-        //tax_amount = Number($("#tax_amount").val());
+        if ($('#total_commission').length > 0) {
+            total_commission = Number($("#total_commission").val());
 
-        //total_amount = (Number(total_amount) + (tax_amount));
+            total_amount = (Number(total_amount) - (total_commission));
 
+        }
+        
+        
         //$("#stotal_amount").text(total_amount);
-        //console.log(tax_amount);
+        //console.log(total_amount);
+        
         var extra = 0;
         if ($('#sextra_expenses').length > 0) {
             extra = Number(document.getElementById("sextra_expenses").value);
         } 
         var grand_total = (+total_amount) + (+extra);
 
-        console.log(grand_total);
+        //console.log(grand_total);
         $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
 
         $("#grand_total_cap").html(parseFloat(grand_total).toFixed(2));
