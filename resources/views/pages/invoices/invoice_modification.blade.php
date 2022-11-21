@@ -206,11 +206,11 @@
                                    
                                 <tbody> 
                                     @if ($invoice->total_amount_discount != 0)
-                                        <!-- <tr>
+                                        <tr>
                                             <td colspan="2" style="text-align:right">Commission</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
-                                        </tr> -->
+                                        </tr>
                                     @endif
                                     @if ($invoice->invoice_type == 2)
                                     <tr>
