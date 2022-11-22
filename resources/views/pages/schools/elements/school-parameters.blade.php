@@ -68,7 +68,7 @@
 														</div>
 														<div class="form-check">
 															<label class="form-check-label" for="radio{{$count}}">
-																<input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
+																<input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
 															</label>
 														</div>
 													</div>
@@ -81,7 +81,7 @@
 														</div>
 														<div class="form-check">
 															<label class="form-check-label" for="sradio{{$count}}">
-																<input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
+																<input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
 															</label>
 														</div>
 														<div class="form-check">
@@ -101,7 +101,7 @@
 														</div>
 														<div class="form-check">
 															<label class="form-check-label" for="tradio{{$count}}">
-																<input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="1" <?php if($cat->t_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price
+																<input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="1" <?php if($cat->t_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
 															</label>
 														</div>
 													</div>
@@ -267,7 +267,7 @@ $(document).ready(function(){
 								</div>
 								<div class="form-check">
 									<label class="form-check-label" for="radio`+lst_id+`">
-										<input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price
+										<input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price (per hour)
 									</label>
 								</div>
 							</div>
@@ -280,7 +280,7 @@ $(document).ready(function(){
 								</div>
 								<div class="form-check">
 									<label class="form-check-label" for="sradio`+lst_id+`">
-										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price
+										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price (per hour)
 									</label>
 								</div>
 								<div class="form-check">
@@ -300,7 +300,7 @@ $(document).ready(function(){
 								</div>
 								<div class="form-check">
 									<label class="form-check-label" for="tradio`+lst_id+`">
-										<input type="radio" class="form-check-input" id="tradio`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="1">Fixed price
+										<input type="radio" class="form-check-input" id="tradio`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="1">Fixed price (per hour)
 									</label>
 								</div>
 							</div>
@@ -557,6 +557,12 @@ $(document).ready(function(){
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
+
+    $(document).on('click', "input[name$=\'[s_std_pay_type]\'][value='2']", function(event) {
+        if ($(this).prop("checked")) {
+            $(this).closest('.pack_invoice_area').find("input[name$=\'[s_thr_pay_type]\'][value='1']").prop('checked', true)('checked')
+        }
+    });
 })
 
 	$('#add_more_event_category_div').on('click', '.invcat_name', function() {
