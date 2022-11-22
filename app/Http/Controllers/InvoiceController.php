@@ -230,15 +230,33 @@ class InvoiceController extends Controller
             }
             
             $p_auto_id = trim($data['p_auto_id']);
-
             $invoiceData = Invoice::where('id', $p_auto_id)->update($updateInvoice);
             if($invoiceData){
-                $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
+                
+                $invoice_data = Invoice::with(['school' => function ($q) {
                     $q->select('id','tax_number');
                 }])->where('id', $p_auto_id)->first();
+
+                $invoice_data = Invoice::with(['school' => function ($q) {
+                    $q->select('id','tax_number');
+                }])->where('id', $p_auto_id)->first();
+                
+                $invoice_items = DB::table('invoice_items')
+                                ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
+                                ->where('invoice_items.invoice_id', $p_auto_id)
+                                ->orderBy('events.event_type','ASC')
+                                ->orderBy('invoice_items.item_date','ASC')->get();              
+                $items = [];
+                foreach($invoice_items as $key=>$d){
+                    if(!isset($items[$d->event_type])){
+                        $items[$d->event_type] = array();
+                    }
+                    $items[$d->event_type][] = $d;
+                }
+                $invoice_items = $items;
                 $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
                 $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name]);
                 $pdf->set_option('isHtml5ParserEnabled', true);
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
@@ -1617,12 +1635,26 @@ class InvoiceController extends Controller
             $reqData = $request->all();
             $type = $request->type ? $request->type : $type;
             $invoice_id = $reqData['invoice_id'];
-            $invoice_data = Invoice::with(['invoice_items','school' => function ($q) {
-                $q->select('id','tax_number');
-            }])->where('id', $invoice_id)->first();
+            $invoice_data = Invoice::with(['school' => function ($q) {
+                                $q->select('id','tax_number');
+                            }])->where('id', $invoice_id)->first();
+                            
+            $invoice_items = DB::table('invoice_items')
+                            ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
+                            ->where('invoice_items.invoice_id', $invoice_id)
+                            ->orderBy('events.event_type','ASC')
+                            ->orderBy('invoice_items.item_date','ASC')->get();              
+            $items = [];
+            foreach($invoice_items as $key=>$d){
+                if(!isset($items[$d->event_type])){
+                    $items[$d->event_type] = array();
+                }
+                $items[$d->event_type][] = $d;
+            }
+            $invoice_items = $items;
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data, 'invoice_name' => $invoice_name]);
+            $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name]);
             $pdf->set_option('isHtml5ParserEnabled', true);
             $pdf->set_option('isRemoteEnabled', true);
             $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
