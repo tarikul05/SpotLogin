@@ -558,11 +558,22 @@ $(document).ready(function(){
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
 
+//if student package select it will automatic select fix price for teacher
     $(document).on('click', "input[name$=\'[s_std_pay_type]\'][value='2']", function(event) {
         if ($(this).prop("checked")) {
-            $(this).closest('.pack_invoice_area').find("input[name$=\'[s_thr_pay_type]\'][value='1']").prop('checked', true)('checked')
+            $(this).closest('.pack_invoice_area').find("input[name$=\'[s_thr_pay_type]\'][value='1']").prop('checked', true)
         }
     });
+
+    //if student package selected, teacher can't be move on hourly rate
+    $(document).on('click', "input[name$=\'[s_thr_pay_type]\'][value='0']", function(event) {
+        var dd = $(this).closest('.pack_invoice_area').find("input[name$=\'[s_std_pay_type]\'][value='2']").prop('checked')
+        if (dd) {
+            event.preventDefault();
+        }
+    });
+
+
 })
 
 	$('#add_more_event_category_div').on('click', '.invcat_name', function() {
