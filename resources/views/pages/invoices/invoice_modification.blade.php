@@ -149,7 +149,11 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                @if ($invoice->invoice_type == 2)
+                                                <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
+                                                @else
                                                 <td colspan="2" style="text-align:right">Commission(%) on Lessons:</td>
+                                                @endif
                                                 <td style="text-align:right">
                                                     
                                                 </td>
@@ -158,7 +162,11 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                @if ($invoice->invoice_type == 2)
+                                                <td colspan="2" style="text-align:right">Discount Amount:</td>
+                                                @else
                                                 <td colspan="2" style="text-align:right">Commission Amount:</td>
+                                                @endif
                                                 <td style="text-align:right">
                                                     
                                                 </td>
@@ -194,7 +202,7 @@
                                                 <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
                                             
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Sub-total </td>
+                                                    <td colspan="2" style="text-align:right">Total events: </td>
                                                     <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                 </tr>
@@ -207,7 +215,7 @@
                                 <tbody> 
                                     @if ($invoice->invoice_type == 2 && $invoice->total_amount_discount != 0)
                                         <tr>
-                                            <td colspan="2" style="text-align:right">Commission</td>
+                                            <td colspan="2" style="text-align:right">Discount</td>
                                             <td></td>
                                             <td style="text-align:right">- {{number_format($invoice->total_amount_discount,'2')}}</td>
                                             <input type="hidden" class="form-control numeric_amount" id="total_commission" name="total_commission" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly="">
