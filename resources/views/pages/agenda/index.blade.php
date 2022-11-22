@@ -3437,48 +3437,98 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     if(s_thr_pay_type == 0){
 		// $('#hourly').show();
         $('#price_per_student').hide();
-	}else if(s_thr_pay_type == 1 && s_std_pay_type == 1 ){
+	}else if(s_thr_pay_type == 1 || s_std_pay_type == 1 ){
         $('#hourly').hide();
 		$('#price_per_student').show();
-        var formData = $('#edit_lesson').serializeArray();
-        var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-        formData.push({
-            "name": "_token",
-            "value": csrfToken,
-        });
+        getLatestPrice();
+        // var formData = $('#edit_lesson').serializeArray();
+        // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+        // formData.push({
+        //     "name": "_token",
+        //     "value": csrfToken,
+        // });
 
-        formData.push({
-            "name": "event_category_id",
-            "value": categoryId,
-        });
-        formData.push({
-            "name": "teacher_select",
-            "value": teacherSelect,
-        });
+        // formData.push({
+        //     "name": "event_category_id",
+        //     "value": categoryId,
+        // });
+        // formData.push({
+        //     "name": "teacher_select",
+        //     "value": teacherSelect,
+        // });
         
-        if (categoryId > 0 && teacherSelect > 0) {
-            $.ajax({
-                url: BASE_URL + '/check-lesson-fixed-price',
-                async: false, 
-                data: formData,
-                type: 'POST',
-                dataType: 'json',
-                success: function(response){
-                    if(response.status == 1){
-                        if (response.data) {
-                            $("#sprice_amount_buy").val(response.data.price_buy)
-                            $("#sprice_amount_sell").val(response.data.price_sell)
-                        }
+        // if (categoryId > 0 && teacherSelect > 0) {
+        //     $.ajax({
+        //         url: BASE_URL + '/check-lesson-fixed-price',
+        //         async: false, 
+        //         data: formData,
+        //         type: 'POST',
+        //         dataType: 'json',
+        //         success: function(response){
+        //             if(response.status == 1){
+        //                 if (response.data) {
+        //                     $("#sprice_amount_buy").val(response.data.price_buy)
+        //                     $("#sprice_amount_sell").val(response.data.price_sell)
+        //                 }
                         
-                        // var errMssg = '';   
-                    }
-                }
-            })
-        }
+        //                 // var errMssg = '';   
+        //             }
+        //         }
+        //     })
+        // }
 
             
 	}
 });
+$("#student").on('change', function(event) {
+    getLatestPrice()
+});
+
+function getLatestPrice() {
+    var agendaSelect = +$("#agenda_select").val();
+    var categoryId = +$("#category_select").val();
+    var teacherSelect = +$("#teacher_select").val();
+    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
+    var formData = $('#edit_lesson').serializeArray();
+    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+    formData.push({
+        "name": "_token",
+        "value": csrfToken,
+    });
+
+    formData.push({
+        "name": "event_category_id",
+        "value": categoryId,
+    });
+    formData.push({
+        "name": "teacher_select",
+        "value": teacherSelect,
+    });
+    formData.push({
+        "name": "no_of_students",
+        "value": stdSelected,
+    });
+    
+    if (categoryId > 0 && teacherSelect > 0) {
+        $.ajax({
+            url: BASE_URL + '/check-lesson-fixed-price',
+            async: false, 
+            data: formData,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response){
+                if(response.status == 1){
+                    if (response.data) {
+                        $("#sprice_amount_buy").val(response.data.price_buy)
+                        $("#sprice_amount_sell").val(response.data.price_sell)
+                    }
+                }
+            }
+        })
+    }
+    
+}
 
 $("body").on('click', '#student_empty', function(event) {
     if ($("#student_empty").prop('checked')) {
