@@ -202,7 +202,7 @@
                                                 <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
                                             
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Sub-total </td>
+                                                    <td colspan="2" style="text-align:right">Total events: </td>
                                                     <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                 </tr>
