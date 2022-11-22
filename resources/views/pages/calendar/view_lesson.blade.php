@@ -158,9 +158,6 @@
 																<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
 																</th>
-																<th width="10%" style="text-align:right">
-																<label>{{ __('Extra charges') }}</label>
-																</th>
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
@@ -171,7 +168,6 @@
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
 																<td>{{ $student->buy_price }}</td>
 																<td style="text-align:center">{{ $student->sell_price }}</td>
-																<td style="text-align:center">{{ $lessonData->extra_charges }}</td>
 															</tr>
 															@endforeach
 														</tbody>
