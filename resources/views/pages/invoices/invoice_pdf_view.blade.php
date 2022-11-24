@@ -375,7 +375,17 @@
 
                     <?php if($invoice_data->total_amount_discount != 0){ ?>
                     <tr class="extra_col">
-                        <td colspan="2" class="text"><b>Discount</b></td>
+                        <td colspan="2" class="text">
+                            <?php 
+                                if($invoice_data->invoice_type == 1){
+                                    echo '<b>Commission</b>';
+                                }else if($invoice_data->invoice_type == 2){
+                                    echo '<b>Discount amount</b>';
+                                }else{
+                                    echo '<b>Discount amount</b>';
+                                }
+                            ?>
+                        </td>
                         <td colspan="2" class="price">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
                     </tr>
                     <?php } ?>
