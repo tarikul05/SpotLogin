@@ -337,7 +337,9 @@ class LessonsController extends Controller
 
                 $lessonData = $request->all();
                 // dd($lessonData);
-            
+                
+                $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
+                $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));

@@ -251,12 +251,14 @@ $(document).ready(function(){
 			<div class="col-md-8 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-3">
-						<input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
-					</div>
-					<div class="col-sm-3">
-						<input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
-					</div>
-					<div class="col-sm-6">
+                        <div>
+						  <input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
+					    </div>
+					   <div>
+						  <input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					   </div>
+                    </div>   
+					<div class="col-sm-8">
 						<div class="pack_invoice_area student form-group row">
 							<div class="col-md-6">
 								<label class="titl">Teachers</label>
