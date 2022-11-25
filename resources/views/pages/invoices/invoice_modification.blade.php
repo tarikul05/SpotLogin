@@ -136,67 +136,71 @@
                                             <!-- <tr>
                                                 <td colspan="1" rowspan="7" style="vertical-align:bottom;"></td>
                                             </tr> -->
-                                            
+                                            <label style="display:none;" 
+                                                id="ssubtotal_amount_all">
+                                                <?php echo !empty($sub_total_lesson) ? number_format($sub_total_lesson,'2') :'0.00'; ?></label>
+                                                        
                                             
                                             @if ($event_type == 10)
-                                            <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
-                                            
-                                            <tr>
-                                                <td colspan="2" style="text-align:right">Sub-Total Lessons</td>
-                                                <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
-                                                <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                @if ($invoice->invoice_type == 1)
-                                                <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
-                                                @else
-                                                <td colspan="2" style="text-align:right">Commission(%) on Lessons:</td>
-                                                @endif
-                                                <td style="text-align:right">
-                                                    
-                                                </td>
-                                                <td style="text-align:right">
+                                                <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
+                                                
+                                                <tr>
+                                                    <td colspan="2" style="text-align:right">Sub-Total Lessons</td>
+                                                    <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
+                                                    <td style="text-align:right">
+                                                        {{ number_format($sub_total_lesson,'2') }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    @if ($invoice->invoice_type == 1)
+                                                    <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
+                                                    @else
+                                                    <td colspan="2" style="text-align:right">Commission(%) on Lessons:</td>
+                                                    @endif
+                                                    <td style="text-align:right">
+                                                        
+                                                    </td>
+                                                    <td style="text-align:right">
+                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    @if ($invoice->invoice_type == 1)
+                                                    <td colspan="2" style="text-align:right">Discount Amount:</td>
+                                                    @else
+                                                    <td colspan="2" style="text-align:right">Commission Amount:</td>
+                                                    @endif
+                                                    <td style="text-align:right">
+                                                        
+                                                    </td>
+                                                    <td style="text-align:right">
+                                                        <?php
+                                                        $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;            
+                                                        ?>
+                                                        <!-- <p id="samount_discount_1" class="form-control-static numeric"
+                                                                                                style="text-align:right;">0.00</p> -->
+                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder=""> 
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:right">Total Lesson:</td>
+                                                    <td style="text-align:right">
+                                                        
+                                                    </td>
+                                                    <td style="text-align:right">
+                                                        <?php
+                                                        $total_lesson = $sub_total_lesson-$disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
+                                                        ?>
+                                                        <span id="stotal_amount_with_discount_lesson" 
+                                                        class="form-control-static numeric"
+                                                        style="text-align:right;">{{number_format($total_lesson,'2')}}</> 
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <!-- <div class="input-group"><span class="input-group-addon">%</span>
                                                     <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                @if ($invoice->invoice_type == 1)
-                                                <td colspan="2" style="text-align:right">Discount Amount:</td>
-                                                @else
-                                                <td colspan="2" style="text-align:right">Commission Amount:</td>
-                                                @endif
-                                                <td style="text-align:right">
-                                                    
-                                                </td>
-                                                <td style="text-align:right">
-                                                    <?php
-                                                    $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;            
-                                                    ?>
-                                                    <!-- <p id="samount_discount_1" class="form-control-static numeric"
-                                                                                            style="text-align:right;">0.00</p> -->
-                                                    <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder=""> 
-                                                    
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="text-align:right">Total Lesson:</td>
-                                                <td style="text-align:right">
-                                                    
-                                                </td>
-                                                <td style="text-align:right">
-                                                    <?php
-                                                    $total_lesson = $sub_total_lesson-$disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
-                                                    ?>
-                                                    <span id="stotal_amount_with_discount_lesson" 
-                                                    class="form-control-static numeric"
-                                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</> 
-                                                    
-                                                </td>
-                                            </tr>
-                                            <!-- <div class="input-group"><span class="input-group-addon">%</span>
-                                                <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
-                                            </div> -->
+                                                </div> -->
                                             @else
                                                 <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
                                             
@@ -724,7 +728,7 @@
                                 </div>
                                 <div class="col-sm-1">
                                     <p class="form-control-static numeric" style="text-align:right;">
-                                        <label id="ssubtotal_amount_all"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
+                                        <label id="ssubtotal_amount_all1"><?php echo $invoice->subtotal_amount_all ? number_format($invoice->subtotal_amount_all,'2') :'0.00'; ?></label>
                                     </p>
                                 </div>
                             </div>
@@ -1315,38 +1319,39 @@
         var disc1 = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
         var disc1_amt = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
 
-        subtotal_amount_all = $("#ssubtotal_amount_all").text();
-        if ($('#sdiscount_percent_1').length > 0) {
-            disc1 = $("#sdiscount_percent_1").val();
-        }
-        if ($('#samount_discount_1').length > 0) {
-            disc1_amt = $("#samount_discount_1").val();
-        }
         
-        disc1_amt = ((type == 'discount')?Number((subtotal_amount_all * disc1) / 100):Number(disc1_amt));
-        disc1 = ((type == 'amount')?Number((disc1_amt * 100) / subtotal_amount_all):Number(disc1));
-
-        if(type == 'discount'){
-            if ($('#samount_discount_1').length > 0) {
-                $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
-            }
-        } else {
-            if ($('#sdiscount_percent_1').length > 0) {
-                $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
-            }
-        }
-        
-
-        total_amount_discount = Number(disc1_amt);
-        if ($('#stotal_amount_discount').length > 0) {
-            $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
-        }
 
         var subtotal_amount_with_discount = 0.0;
         var subtotal_amount_with_discount_lesson = 0.0;
         var subtotal_amount_with_discount_event = 0.0;
         
         if ($('#ssubtotal_amount_with_discount_lesson').length > 0) {
+            subtotal_amount_all = $("#ssubtotal_amount_with_discount_lesson").text();
+            if ($('#sdiscount_percent_1').length > 0) {
+                disc1 = $("#sdiscount_percent_1").val();
+            }
+            if ($('#samount_discount_1').length > 0) {
+                disc1_amt = $("#samount_discount_1").val();
+            }
+            
+            disc1_amt = ((type == 'discount')?Number((subtotal_amount_all * disc1) / 100):Number(disc1_amt));
+            disc1 = ((type == 'amount')?Number((disc1_amt * 100) / subtotal_amount_all):Number(disc1));
+
+            if(type == 'discount'){
+                if ($('#samount_discount_1').length > 0) {
+                    $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
+                }
+            } else {
+                if ($('#sdiscount_percent_1').length > 0) {
+                    $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
+                }
+            }
+            
+
+            total_amount_discount = Number(disc1_amt);
+            if ($('#stotal_amount_discount').length > 0) {
+                $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
+            }
             subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
             subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
         } 
