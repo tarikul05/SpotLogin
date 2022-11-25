@@ -118,9 +118,9 @@ class Event extends BaseModel
      /**
      * Get the eventCategory for event.
      */
-    public function eventCategory()
+    public function eventcategory()
     {
-        return $this->belongsTo(EventCategory::class);
+        return $this->belongsTo(EventCategory::class,'event_category');
     }
 
     /**
@@ -670,18 +670,22 @@ class Event extends BaseModel
       $buyPrice = $sellPrice = 0;
       if ($evtCategory->invoiced_type == 'S') {
         if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
-          $buyPrice = $priceFixed->price_buy;
-          $sellPrice = $priceFixed->price_sell;
+          $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
+          $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
         }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 0) ) {
-          $buyPrice = $priceFixed->price_buy;
+          $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
           $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
         }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
           $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
-          $sellPrice = $priceFixed->price_sell;
+          $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
         }else{
           $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
           $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
         }
+        if ($evtCategory->s_std_pay_type == 2) {
+          $sellPrice = 0;
+        }
+        
       }else if ($evtCategory->invoiced_type == 'T') {
         if ($evtCategory->t_std_pay_type == 1) {
           $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
