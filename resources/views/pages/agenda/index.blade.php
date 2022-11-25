@@ -3424,7 +3424,10 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     // console.log(teacherSelect, categoryId)
     if (agendaSelect != 1 ) { return }
     if (datainvoiced == 'S') {
-        $("#std-check-div").css('display', 'block');
+        if (s_std_pay_type == 2) {
+            $("#std-check-div").css('display', 'block');
+        }
+        
         $("#teacher_type_billing").show();
         $("#student_sis_paying").val(s_std_pay_type);
         $("#sis_paying").val(s_thr_pay_type);
