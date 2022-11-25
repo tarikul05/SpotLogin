@@ -1129,6 +1129,8 @@ class LessonsController extends Controller
                 }
                 if ($evCategory->s_std_pay_type == 0) {
                     $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+                }elseif ($evCategory->s_std_pay_type == 2) {
+                    $sellPrice = 0;
                 }
 
                 return [

@@ -682,6 +682,10 @@ class Event extends BaseModel
           $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
           $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
         }
+        if ($evtCategory->s_std_pay_type == 2) {
+          $sellPrice = 0;
+        }
+        
       }else if ($evtCategory->invoiced_type == 'T') {
         if ($evtCategory->t_std_pay_type == 1) {
           $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
