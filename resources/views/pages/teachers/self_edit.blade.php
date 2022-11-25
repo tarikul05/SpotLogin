@@ -298,7 +298,7 @@
 								<td></td>
 								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td><label></label></td>
-								<td align="right" colspan="1"></td>
+								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
 									<?php 
