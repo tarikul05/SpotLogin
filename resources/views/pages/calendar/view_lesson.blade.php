@@ -9,6 +9,7 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
 @endphp
 @section('content')
   <div class="content">
@@ -150,9 +151,7 @@
 																<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left"></th>
-																@if( ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') ||
-																($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))  )
-
+																@if($showPrice)
 																	<th width="10%" style="text-align:left;">
 																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
@@ -170,9 +169,7 @@
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
-																@if( ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') ||
-																($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))  )
-
+																@if($showPrice)
 																	<td>{{ $student->buy_price }}</td>
 																	<td style="text-align:center">{{ $student->sell_price }}</td>
 																@endif
