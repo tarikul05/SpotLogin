@@ -167,6 +167,7 @@ class LessonsController extends Controller
         }
         $eventId = $request->route('event'); 
         $eventData = Event::active()->where(['id'=>$eventId, 'event_type' => 100])->first();
+        // dd($eventData);
         $relationData = EventDetails::active()->where(['event_id'=>$eventId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -337,7 +338,9 @@ class LessonsController extends Controller
 
                 $lessonData = $request->all();
                 // dd($lessonData);
-            
+                
+                $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
+                $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -451,7 +454,7 @@ class LessonsController extends Controller
 
         $lessonlId = $request->route('lesson'); 
         $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
-        // dd($lessonData);
+        // dd($lessonData->eventcategory);
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -1109,20 +1112,41 @@ class LessonsController extends Controller
     {   
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            // $stu_num = explode("_", $lessonData['sevent_price']);    
-            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'lesson_price_student'=>'price_fix'])->first();
-            if (!empty($lessonPriceTeacher)) {
+
+            try {
+                $priceKey = isset($lessonData['no_of_students']) && !empty($lessonData['no_of_students']) ? ( $lessonData['no_of_students'] > 10 ? 'price_su' : 'price_'.$lessonData['no_of_students'] ) : '' ;
+                $evCategory = EventCategory::find($lessonData['event_category_id']);
+                $buyPrice = $sellPrice = 0;
+                if ($evCategory->s_thr_pay_type == 1 || $evCategory->s_std_pay_type == 1) {
+                    $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'lesson_price_student'=>'price_fix'])->first();
+                    $buyPrice = isset($lessonPriceTeacher->price_buy)? $lessonPriceTeacher->price_buy : 0;
+                    $sellPrice = isset($lessonPriceTeacher->price_sell)? $lessonPriceTeacher->price_sell : 0;
+                }
+
+                $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'lesson_price_student'=>$priceKey])->first();
+
+                if ($evCategory->s_thr_pay_type == 0) {
+                    $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
+                }
+                if ($evCategory->s_std_pay_type == 0) {
+                    $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
+                }elseif ($evCategory->s_std_pay_type == 2) {
+                    $sellPrice = 0;
+                }
+
                 return [
                     'status' => 1,
-                    'data' => $lessonPriceTeacher,
+                    'data' => ['price_buy'=> $buyPrice, 'price_sell'=>$sellPrice],
                     'message' =>  __('Successfully get price for this teacher')
                 ];
-            }else{
-                return [
+                
+            } catch (Exception $e) {
+               return [
                     'status' => 0,
                     'message' =>  __('No price for this teacher')
-                ];
+                ]; 
             }
+
         }
 
     }

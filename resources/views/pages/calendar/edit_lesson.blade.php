@@ -22,6 +22,7 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
 @endphp
 @section('content')
   <div class="content">
@@ -282,12 +283,14 @@
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
-																<th width="15%" style="text-align:right;">
-																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
-																</th>
-																<th width="15%" style="text-align:right">
-																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
-																</th>
+																@if($showPrice)
+																	<th width="15%" style="text-align:right;">
+																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
+																	</th>
+																	<th width="15%" style="text-align:right">
+																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
+																	</th>
+																@endif
 															</tr>
 															
 															@foreach($studentOffList as $student)
@@ -306,8 +309,10 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
-																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
+																@if($showPrice)
+																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
+																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
+																@endif
 															</tr>
 															@endforeach
 														</tbody>
@@ -774,7 +779,9 @@ function confirm_event(){
 		var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
 		
 		if (datainvoiced == 'S') {
-			$("#std-check-div").css('display', 'block');
+			if (s_std_pay_type == 2) {
+	            $("#std-check-div").css('display', 'block');
+	        }
 			$("#teacher_type_billing").show();
 			$("#student_sis_paying").val(s_std_pay_type);
 			$("#sis_paying").val(s_thr_pay_type);

@@ -493,7 +493,7 @@
 									$tacherPrice = $category->s_thr_pay_type;
 									$studentPrice = $category->s_std_pay_type; 
 
-									if ( ($tacherPrice == 1) && ($studentPrice ==1) ) { // fix and fix price
+									if ( ($tacherPrice == 1) && (in_array($studentPrice, [1,2])) ) { // fix and fix price
 										if ($lessionPrice->divider != -1) continue;
 									}elseif (($tacherPrice == 0) && ($studentPrice == 0)) { // hourly and hourly
 										 if ($lessionPrice->divider == -1) continue;
@@ -531,7 +531,7 @@
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
 										style="text-align:right" 
 										class="form-control numeric float 
-										<?= ( ($studentPrice == 1) && ($lessionPrice->divider != -1) ) || (($studentPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
+										<?= ( ($studentPrice == 1) && ($lessionPrice->divider != -1) ) || (($studentPrice == 0) && ($lessionPrice->divider == -1)) ||  ($studentPrice == 2) ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>

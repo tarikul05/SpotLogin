@@ -599,7 +599,9 @@ $("body").on('change', '#category_select', function(event) {
 	var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
 	
 	if (datainvoiced == 'S') {
-		$("#std-check-div").css('display', 'block');
+		if (s_std_pay_type == 2) {
+            $("#std-check-div").css('display', 'block');
+        }
 		$("#teacher_type_billing").show();
 		$("#student_sis_paying").val(s_std_pay_type);
 		$("#sis_paying").val(s_thr_pay_type);
