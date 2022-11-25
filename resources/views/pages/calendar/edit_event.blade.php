@@ -16,6 +16,8 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
+
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
   <div class="content">
@@ -165,54 +167,56 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency">
-												@foreach($currency as $key => $curr)
-													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
-												@endforeach
-											</select>
+								@if($priceShow)
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" id="sprice_currency" name="sprice_currency">
+													@foreach($currency as $key => $curr)
+														<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+													@endforeach
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
-									<div class="col-sm-4">
-										<div class="input-group" id="sprice_amount_buy_div"> 
-											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
-											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
-											<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
+										<div class="col-sm-4">
+											<div class="input-group" id="sprice_amount_buy_div"> 
+												<span class="input-group-addon">
+													<i class="fa fa-calendar1"></i>
+												</span>
+												<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{!empty($eventData->price_amount_buy) ? old('sprice_amount_buy', $eventData->price_amount_buy) : old('sprice_amount_buy')}}" autocomplete="off">
+												<input type="hidden" name="attendBuyPrice" value="{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : ''; }}">
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
-									<div class="col-sm-4">
-										<div class="input-group" id="sprice_amount_sell_div"> 
-											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
-											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
+										<div class="col-sm-4">
+											<div class="input-group" id="sprice_amount_sell_div"> 
+												<span class="input-group-addon">
+													<i class="fa fa-calendar1"></i>
+												</span>
+												<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+												<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
-									<div class="col-sm-4">
-										<div class="input-group" id="extra_charges_div"> 
-											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
-											</span>
-											<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) }}">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
+										<div class="col-sm-4">
+											<div class="input-group" id="extra_charges_div"> 
+												<span class="input-group-addon">
+													<i class="fa fa-calendar1"></i>
+												</span>
+												<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
+												<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) }}">
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
@@ -233,15 +237,17 @@
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
-																<th width="15%" style="text-align:right;">
-																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
-																</th>
-																<th width="15%" style="text-align:right">
-																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
-																</th>
-																<th width="15%" style="text-align:right">
-																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Extra charges') }}</label>
-																</th>
+																@if($priceShow)
+																	<th width="15%" style="text-align:right;">
+																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
+																	</th>
+																	<th width="15%" style="text-align:right">
+																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
+																	</th>
+																	<th width="15%" style="text-align:right">
+																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Extra charges') }}</label>
+																	</th>
+																@endif
 															</tr>
 															
 															@foreach($studentOffList as $student)
@@ -260,9 +266,12 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
-																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
-																<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
+
+																@if($priceShow)
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
+																@endif
 															</tr>
 															@endforeach
 														</tbody>

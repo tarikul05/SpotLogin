@@ -282,12 +282,15 @@
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
+																@if( ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') ||
+																($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))  )
 																<th width="15%" style="text-align:right;">
 																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																</th>
 																<th width="15%" style="text-align:right">
 																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																</th>
+																@endif
 															</tr>
 															
 															@foreach($studentOffList as $student)
@@ -306,8 +309,13 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
+																@if( ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') ||
+																($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))  )
+
 																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
 																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
+																
+																@endif
 															</tr>
 															@endforeach
 														</tbody>

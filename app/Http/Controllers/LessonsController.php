@@ -167,6 +167,7 @@ class LessonsController extends Controller
         }
         $eventId = $request->route('event'); 
         $eventData = Event::active()->where(['id'=>$eventId, 'event_type' => 100])->first();
+        // dd($eventData);
         $relationData = EventDetails::active()->where(['event_id'=>$eventId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -453,7 +454,7 @@ class LessonsController extends Controller
 
         $lessonlId = $request->route('lesson'); 
         $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
-        // dd($lessonData);
+        // dd($lessonData->eventcategory);
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();

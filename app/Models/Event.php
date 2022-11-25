@@ -118,9 +118,9 @@ class Event extends BaseModel
      /**
      * Get the eventCategory for event.
      */
-    public function eventCategory()
+    public function eventcategory()
     {
-        return $this->belongsTo(EventCategory::class);
+        return $this->belongsTo(EventCategory::class,'event_category');
     }
 
     /**
