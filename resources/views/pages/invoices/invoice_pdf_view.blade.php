@@ -253,7 +253,7 @@
     <main>
         <div class="info_area" style="clear: both">
             <div class="left_cont">
-                <p class="first_name">{{$invoice_data->seller_name}}fgfg</p>
+                <p class="first_name">{{$invoice_data->seller_name}}</p>
                 <p class="info_txt">{{$invoice_data->seller_place}}</p>
                 <p class="info_txt">{{$invoice_data->seller_street_number?$invoice_data->seller_street_number.',':''}} {{$invoice_data->seller_street}}</p>
                 <p class="info_txt">{{$invoice_data->seller_mobile?$invoice_data->seller_mobile.',':''}} {{$invoice_data->seller_phone}}</p>
@@ -290,12 +290,7 @@
                     <tbody>
                         <?php
                             foreach($invoice_item as $key => $item){ 
-                                $total_min += $item->unit;    
-                                // if($invoice_data->invoice_type = 1 || $invoice_data->invoice_type = 2 ){
-                                //     $sub_total += $item->price_unit;
-                                // }else{
-                                //     $sub_total += $item->item_total;
-                                // }
+                                $total_min += $item->unit;
                         ?>
                         <tr>
                             <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
@@ -303,7 +298,7 @@
                             <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
                             <td align="right">
                             <?php 
-                                if($invoice_data->invoice_type = 1 || $invoice_data->invoice_type = 2 ){
+                                if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
                                     echo number_format($item->price_unit, '2');
                                 }else{
                                     echo number_format($item->item_total, '2');
@@ -313,14 +308,14 @@
                         </tr>
                         <?php 
                             if($event_key == 10){
-                                if ($invoice_data->invoice_type == 2){
+                                if ($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2){
                                     $sub_total_lesson += $item->price;
                                 }else{
                                     $sub_total_lesson += $item->price_unit;
                                 }
                                 $sub_total_min_lesson = $sub_total_min_lesson + $item->unit;
                             }else{
-                                if($invoice_data->invoice_type == 2){
+                                if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2){
                                     $sub_total_event += $item->price;
                                 }else{
                                     $sub_total_event += $item->price_unit;
@@ -364,7 +359,7 @@
                                 </tr>
                             <?php } ?> 
                     </tbody>
-                <?php } ?>           
+                <?php } ?>        
                 <tfoot>
                 <?php if($invoice_data->extra_expenses > 0){ ?>
                     <tr class="extra_col">
@@ -378,11 +373,11 @@
                         <td colspan="2" class="text">
                             <?php 
                                 if($invoice_data->invoice_type == 1){
-                                    echo '<b>Commission</b>';
+                                    echo '<b>Discount amount</b>';
                                 }else if($invoice_data->invoice_type == 2){
-                                    echo '<b>Discount amount</b>';
+                                    echo '<b>Commission amount</b>';
                                 }else{
-                                    echo '<b>Discount amount</b>';
+                                    echo '<b>Commission amount</b>';
                                 }
                             ?>
                         </td>
