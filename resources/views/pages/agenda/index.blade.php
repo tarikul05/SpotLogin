@@ -39,7 +39,7 @@
                                 </label>
 							</div>
 					</div>
-                    
+                    <?php //echo '<pre>';print_r($AppUI);exit; ?>
 					<div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
@@ -3414,6 +3414,8 @@ $(document).ready(function() {
 });
 $("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
+    
+    
     var agendaSelect = +$("#agenda_select").val();
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
@@ -3421,7 +3423,11 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
-    // console.log(teacherSelect, categoryId)
+   
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacher = +"{{$AppUI->isTeacher()}}";
+
     if (agendaSelect != 1 ) { return }
     if (datainvoiced == 'S') {
         if (s_std_pay_type == 2) {
@@ -3496,6 +3502,16 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     }else if($('#student_sis_paying').val() == 1){
         $('#sprice_amount_sell').prop('disabled', false);  
     }
+
+    if(($('#sis_paying').val() == 0) && ($('#student_sis_paying').val() == 0)){
+        $("#price_per_student").hide();
+    }else if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+       $("#price_per_student").hide(); 
+    }else{
+        $("#price_per_student").show();
+    }
+
+
 });
 $("#student").on('change', function(event) {
     getLatestPrice()
@@ -3658,6 +3674,39 @@ $('#agenda_select').on('change', function() {
         $('#sprice_amount_sell').prop('disabled', false);  
     }
 
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacher = +"{{$AppUI->isTeacher()}}";
+    var datainvoiced = $("#category_select option:selected").data('invoice');
+    var event_invoice_type = $("#event_invoice_type option:selected").val();
+
+    if(this.value == 1){
+        if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+            $("#price_per_student").hide(); 
+        }else{
+            $("#price_per_student").show();
+        }
+    }else if(this.value == 2){
+        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+            $("#price_per_student").hide(); 
+        }else{
+            $("#price_per_student").show();
+        }
+    }
+});
+
+$('#event_invoice_type').on('change', function() {
+
+    var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacher = +"{{$AppUI->isTeacher()}}";
+    var event_invoice_type = $("#event_invoice_type option:selected").val();
+
+    if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+        $("#price_per_student").hide(); 
+    }else{
+        $("#price_per_student").show();
+    }
 });
 
 $( document ).ready(function() {
