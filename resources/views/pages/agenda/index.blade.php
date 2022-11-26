@@ -3426,6 +3426,8 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     if (datainvoiced == 'S') {
         if (s_std_pay_type == 2) {
             $("#std-check-div").css('display', 'block');
+        }else{
+            $("#std-check-div").css('display', 'none');
         }
         
         $("#teacher_type_billing").show();
