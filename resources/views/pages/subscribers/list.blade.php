@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="my-subscription dataTables_wrapper">
+<div class="my-subscription-billing dataTables_wrapper">
     <div class="container">
         <div class="title">
             <h3 class="h3">List of subscribers</h3>
         </div>
         <div class="row justify-content-center">
-            <table class="table my_subscription">
+            <table class="table my_subscription_billing">
                 <thead>
                     <tr>
                         <th>Name</th>
