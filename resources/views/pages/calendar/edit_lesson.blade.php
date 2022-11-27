@@ -781,6 +781,8 @@ function confirm_event(){
 		if (datainvoiced == 'S') {
 			if (s_std_pay_type == 2) {
 	            $("#std-check-div").css('display', 'block');
+	        }else{
+	            $("#std-check-div").css('display', 'none');
 	        }
 			$("#teacher_type_billing").show();
 			$("#student_sis_paying").val(s_std_pay_type);

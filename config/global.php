@@ -103,7 +103,7 @@
     'invoice_type' =>[
       0  => 'Manuel',
       1 =>'Student',
-      2  => 'Professor',
+      2  => 'Teacher',
       9  => 'School',
     ],
 
