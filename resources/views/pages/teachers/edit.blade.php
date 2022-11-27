@@ -485,7 +485,7 @@
 									}elseif ($lessionPrice->divider == 9999) {
 										$textForTypeBilling = 'Student more then 10';
 									}elseif ($lessionPrice->divider == -1) {
-										$textForTypeBilling = 'Fix price';
+										$textForTypeBilling = 'Fixed price';
 									}else{
 										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
 									}
