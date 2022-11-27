@@ -3506,9 +3506,9 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     if(($('#sis_paying').val() == 0) && ($('#student_sis_paying').val() == 0)){
         $("#price_per_student").hide();
     }else if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-       $("#price_per_student").hide(); 
+       $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 
 
@@ -3682,15 +3682,15 @@ $('#agenda_select').on('change', function() {
 
     if(this.value == 1){
         if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-            $("#price_per_student").hide(); 
+            $("#price_per_student").show(); 
         }else{
-            $("#price_per_student").show();
+            $("#price_per_student").hide();
         }
     }else if(this.value == 2){
         if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-            $("#price_per_student").hide(); 
+            $("#price_per_student").show(); 
         }else{
-            $("#price_per_student").show();
+            $("#price_per_student").hide();
         }
     }
 });
@@ -3703,9 +3703,9 @@ $('#event_invoice_type').on('change', function() {
     var event_invoice_type = $("#event_invoice_type option:selected").val();
 
     if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").hide(); 
+        $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 });
 
