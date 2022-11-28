@@ -2826,10 +2826,17 @@
         
     function getLocationIDs	(){
         var selected_ids = [];
+        var all_locations = [];
         $.each($("#event_location option:selected"), function(){            
             selected_ids.push($(this).val());
-        });		
-        //console.log('selected='+selected_ids.join("|"));
+        });
+        $.each($("#event_location option"), function(){
+            
+            all_locations.push($(this).val());
+        });
+        if (all_locations.length == selected_ids.length) {
+            selected_ids.push(0);
+        }
         return selected_ids.join("|");
     }	
 
