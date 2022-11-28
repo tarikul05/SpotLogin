@@ -321,6 +321,101 @@
 									</div>
 								</div> -->
 							</div>
+
+
+							<div class="clearfix"></div>
+							@if($school->country_code != 'CA' )
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Bank Name')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_name" name="bank_name" type="text"
+												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Address')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_address" name="bank_address" type="text"
+												value="{{!empty($teacher->bank_address) ? old('bank_address', $teacher->bank_address) : old('bank_address')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_zipcode" name="bank_zipcode" type="text"
+												value="{{!empty($teacher->bank_zipcode) ? old('bank_zipcode', $teacher->bank_zipcode) : old('bank_zipcode')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('City')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_place" name="bank_place" type="text"
+											value="{{!empty($teacher->bank_place) ? old('bank_place', $teacher->bank_place) : old('bank_place')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Country')}}:</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="bank_country_code" id="bank_country_code">
+													<option value="">Select</option>
+													@foreach($countries as $country)
+															<option value="{{ $country->code }}" {{!empty($teacher->bank_country_code) ? (old('country_code', $teacher->bank_country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_account" name="bank_account" type="text"
+												value="{{!empty($teacher->bank_account) ? old('bank_account', $teacher->bank_account) : old('bank_account')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('IBAN No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_iban" name="bank_iban" type="text"
+												value="{{!empty($teacher->bank_iban) ? old('bank_iban', $teacher->bank_iban) : old('bank_iban')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('SWIFT A/c No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_swift" name="bank_swift" type="text"
+												value="{{!empty($teacher->bank_swift) ? old('bank_swift', $teacher->bank_swift) : old('bank_swift')}}">
+										</div>
+									</div>
+								</div>
+							</div>
+							@else
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
+												<span class="etransfer_acc"></span>	
+										</div>
+									</div>
+								</div>	
+							</div>
+							@endif	
+
+
 							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
 								<div id="commentaire_div">
 									<div class="section_header_class">

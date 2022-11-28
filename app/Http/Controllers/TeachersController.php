@@ -208,6 +208,15 @@ class TeachersController extends Controller
                         'province_id' => $alldata['province_id'],
                         'phone' => $alldata['phone'],
                         'mobile' => $alldata['mobile'],
+                        'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
+                        'bank_address' => isset($alldata['bank_address']) && !empty($alldata['bank_address']) ? $alldata['bank_address'] : '',
+                        'bank_zipcode' => isset($alldata['bank_zipcode']) && !empty($alldata['bank_zipcode']) ? $alldata['bank_zipcode'] : '',
+                        'bank_place' => isset($alldata['bank_place']) && !empty($alldata['bank_place']) ? $alldata['bank_place'] : '',
+                        'bank_country_code' => isset($alldata['bank_country_code']) && !empty($alldata['bank_country_code']) ? $alldata['bank_country_code'] : '',
+                        'bank_account' => isset($alldata['bank_account']) && !empty($alldata['bank_account']) ? $alldata['bank_account'] : '',
+                        'bank_iban' => isset($alldata['bank_iban']) && !empty($alldata['bank_iban']) ? $alldata['bank_iban'] : '',
+                        'bank_swift' => isset($alldata['bank_swift']) && !empty($alldata['bank_swift']) ? $alldata['bank_swift'] : '',
+                        'etransfer_acc' => isset($alldata['etransfer_acc']) && !empty($alldata['etransfer_acc']) ? $alldata['etransfer_acc'] : ''
                     ];
                     $teacher = Teacher::create($teacherData);
                     // $schoolTeacherData =SchoolStudent::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
@@ -445,6 +454,15 @@ class TeachersController extends Controller
                 'province_id' => $alldata['province_id'],
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
+                'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
+                'bank_address' => isset($alldata['bank_address']) && !empty($alldata['bank_address']) ? $alldata['bank_address'] : '',
+                'bank_zipcode' => isset($alldata['bank_zipcode']) && !empty($alldata['bank_zipcode']) ? $alldata['bank_zipcode'] : '',
+                'bank_place' => isset($alldata['bank_place']) && !empty($alldata['bank_place']) ? $alldata['bank_place'] : '',
+                'bank_country_code' => isset($alldata['bank_country_code']) && !empty($alldata['bank_country_code']) ? $alldata['bank_country_code'] : '',
+                'bank_account' => isset($alldata['bank_account']) && !empty($alldata['bank_account']) ? $alldata['bank_account'] : '',
+                'bank_iban' => isset($alldata['bank_iban']) && !empty($alldata['bank_iban']) ? $alldata['bank_iban'] : '',
+                'bank_swift' => isset($alldata['bank_swift']) && !empty($alldata['bank_swift']) ? $alldata['bank_swift'] : '',
+                'etransfer_acc' => isset($alldata['etransfer_acc']) && !empty($alldata['etransfer_acc']) ? $alldata['etransfer_acc'] : ''
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
             $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
@@ -522,12 +540,13 @@ class TeachersController extends Controller
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
         $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
-
+        $school = School::find($schoolId);
 
         // dd($relationalData);
         return view('pages.teachers.self_edit')->with(compact('levels',
         'eventLastLevelId',
         'locations',
+        'school',
         'eventLastLocaId',
         'eventCat',
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
@@ -566,6 +585,15 @@ class TeachersController extends Controller
                 'country_code' => $alldata['country_code'],
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
+                'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
+                'bank_address' => isset($alldata['bank_address']) && !empty($alldata['bank_address']) ? $alldata['bank_address'] : '',
+                'bank_zipcode' => isset($alldata['bank_zipcode']) && !empty($alldata['bank_zipcode']) ? $alldata['bank_zipcode'] : '',
+                'bank_place' => isset($alldata['bank_place']) && !empty($alldata['bank_place']) ? $alldata['bank_place'] : '',
+                'bank_country_code' => isset($alldata['bank_country_code']) && !empty($alldata['bank_country_code']) ? $alldata['bank_country_code'] : '',
+                'bank_account' => isset($alldata['bank_account']) && !empty($alldata['bank_account']) ? $alldata['bank_account'] : '',
+                'bank_iban' => isset($alldata['bank_iban']) && !empty($alldata['bank_iban']) ? $alldata['bank_iban'] : '',
+                'bank_swift' => isset($alldata['bank_swift']) && !empty($alldata['bank_swift']) ? $alldata['bank_swift'] : '',
+                'etransfer_acc' => isset($alldata['etransfer_acc']) && !empty($alldata['etransfer_acc']) ? $alldata['etransfer_acc'] : ''
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
             // $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
