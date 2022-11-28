@@ -349,7 +349,7 @@
                                                                     </span>
                                                                 </div>
                                                             </div>	
-                                                            <div class="col-sm-4 offset-md-1 hide_on_off">
+                                                            <div class="col-sm-4 offset-md-1 lesson hide_on_off">
                                                                 <div class="input-group"> 
                                                                     <input id="start_time" name="start_time" type="text" class="form-control timepicker_start" value="{{old('start_time')}}">
                                                                     <span class="input-group-addon">
@@ -370,7 +370,7 @@
                                                                     </span>
                                                                 </div>
                                                             </div>	
-                                                            <div class="col-sm-4 offset-md-1 hide_on_off">
+                                                            <div class="col-sm-4 offset-md-1 lesson hide_on_off">
                                                                 <div class="input-group"> 
                                                                     <input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
                                                                     <span class="input-group-addon">
@@ -388,7 +388,7 @@
                                                             </div>
                                                         </div>		
                                                     </div>
-                                                    <div class="form-group row" id="all_day">
+                                                    <div class="form-group row lesson" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
                                                             <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">

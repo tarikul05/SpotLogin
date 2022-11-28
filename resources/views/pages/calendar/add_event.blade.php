@@ -106,15 +106,7 @@
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
-										<div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker" value="{{old('start_time')}}">
-												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
-												</span>
-											</div>
-										</div>	
+										</div>		
 									</div>
 								</div>
 								<div class="form-group row">
@@ -127,23 +119,7 @@
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
-										<div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
-												<input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
-												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
-												</span>
-											</div>
-										</div>	
-									</div>
-								</div>
-								<div class="form-group row">
-									<div id="all_day_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
-										<div class="col-sm-7">
-											<input id="all_day" name="fullday_flag" type="checkbox" value="Y">
-										</div>
+										</div>		
 									</div>
 								</div>
 								<div class="form-group row" id="hourly" style="display:none">
