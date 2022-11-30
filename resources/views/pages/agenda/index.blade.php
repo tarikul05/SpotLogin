@@ -3669,16 +3669,30 @@ $('#agenda_select').on('change', function() {
         $('body').find(".popover.show").removeClass("show")
     });
 
-    if($('#sis_paying').val() == 0){
-        $('#sprice_amount_buy').prop('disabled', true);   
-    }else if($('#sis_paying').val() == 1){
-        $('#sprice_amount_buy').prop('disabled', false);  
-    }
+    if(this.value == 1){
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', true);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
 
-    if($('#student_sis_paying').val() == 0){
-        $('#sprice_amount_sell').prop('disabled', true);   
-    }else if($('#student_sis_paying').val() == 1){
-        $('#sprice_amount_sell').prop('disabled', false);  
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', true);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
+    }else{
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', false);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
+
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', false);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
     }
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
