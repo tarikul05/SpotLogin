@@ -758,7 +758,7 @@
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
-        user_role = 'student';
+        //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
             menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
