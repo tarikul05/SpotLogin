@@ -1,5 +1,5 @@
 <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a href="#" class="navbar-brand">
                     <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
@@ -66,6 +66,9 @@
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
                             </div>
                         </div>
+                        @if($AppUI['person_type'] === 'SUPER_ADMIN')
+                            <a href="{{ route('subscriber_list') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-item nav-link">{{ __('Billing') }}</a>
+                        @endif
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
                             @unlessrole('student')
@@ -121,6 +124,7 @@
 
                                     @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin())
                                         <a href="{{ route('updateTeacher') }}" class="dropdown-item">{{ __('My Account') }}</a> 
+                                        <a href="{{ route('mySubscription') }}" class="dropdown-item">{{ __('My Subscription') }}</a> 
                                     @endif
 
                                     <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>

@@ -51,6 +51,16 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ## Contributing
 
+
+## Stripe payment 
+    - composer install
+    - php artisan vendor:publish --tag="cashier-migrations"
+    - php artisan migrate
+    - add stripe information in .env file
+    - Note: if Billable trit not found, close the editor and reopen the file.
+
+
+
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
 ## Code of Conduct

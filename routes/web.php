@@ -160,6 +160,23 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/add-event-level', 'EventLevelController@addLevel')->name('event_level.create');
   Route::delete('/remove-event-level/{key}', 'EventLevelController@removeLevel')->name('event_level.destroy');
 
+  // payment routes
+  Route::get('/subscriber-list', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscriber_list');
+
+  Route::get('/subscription/upgrade-plan', [App\Http\Controllers\SubscriptionController::class, 'upgradePlan'])->name('subscription.upgradePlan');
+  Route::get('/subscription/plan-list', [App\Http\Controllers\SubscriptionController::class, 'subscribePlanList'])->name('subscription.list');
+  Route::get('/subscribe/{plan_id}', [App\Http\Controllers\SubscriptionController::class, 'supscribePlan'])->name('subscribe.plan');
+  Route::post('/subscribe/store', [App\Http\Controllers\SubscriptionController::class, 'supscribePlanStore'])->name('subscribe.store');
+
+  Route::get('/subscription/upgrade-new-plan', [App\Http\Controllers\SubscriptionController::class, 'upgradeNewPlan'])->name('subscribe.upgradeNewPlan');
+  Route::post('/subscribe/upgrade-plan-store', [App\Http\Controllers\SubscriptionController::class, 'storeUpgradePlan'])->name('subscribe.storeUpgradePlan');
+
+  Route::get('single-invoice-payment/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'singlePayment'])->name('subscription.payment');
+  Route::post('single-subscription/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'storeSinglePayment'])->name('subscription.singleCharge');
+  
+  Route::get('/my-subscription', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription');
+
+
   Route::prefix('admin')->group(function() {
 
     Route::resource('roles', "RoleController");
@@ -310,7 +327,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
     Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
-
+  
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
