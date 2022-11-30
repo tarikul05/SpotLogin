@@ -649,6 +649,9 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $studentOffData['zone'],'UTC');
+                if($user->isStudent()){
+                    $studentOffData['fullday_flag'] ='Y';
+                }
                 $data = [
                     'title' => $studentOffData['title'],
                     'school_id' => $schoolId,
@@ -660,14 +663,23 @@ class LessonsController extends Controller
                 ];
 
                 $event = Event::create($data);
-                
-                foreach($studentOffData['student'] as $std){
+                if($user->isStudent()){
                     $dataDetails = [
                         'event_id'   => $event->id,
-                        'student_id' => $std,
+                        'student_id' => $user->id,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
+                
+                } else {
+                    foreach($studentOffData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $event->id,
+                            'student_id' => $std,
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
+                
                 DB::commit();
                 
                 if($studentOffData['save_btn_more'] == 1){
