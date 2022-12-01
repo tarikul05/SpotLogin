@@ -758,6 +758,11 @@
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
+        //user_role = 'student';
+        //console.log(value.value);
+        if (user_role == 'student'){
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+        }
         $("#event_types_all option").each(function(key,value)
         {
             //console.log(value.value);
@@ -3508,14 +3513,14 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         $('#sprice_amount_sell').prop('disabled', true);   
     }else if($('#student_sis_paying').val() == 1){
         $('#sprice_amount_sell').prop('disabled', false);  
+    }else if($('#student_sis_paying').val() == 2){
+        $('#sprice_amount_sell').prop('disabled', true);  
     }
 
-    if(($('#sis_paying').val() == 0) && ($('#student_sis_paying').val() == 0)){
-        $("#price_per_student").hide();
-    }else if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-       $("#price_per_student").hide(); 
+    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+       $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 
 
@@ -3629,7 +3634,7 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
-            // $('#category_select').trigger('change');
+            // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3669,16 +3674,30 @@ $('#agenda_select').on('change', function() {
         $('body').find(".popover.show").removeClass("show")
     });
 
-    if($('#sis_paying').val() == 0){
-        $('#sprice_amount_buy').prop('disabled', true);   
-    }else if($('#sis_paying').val() == 1){
-        $('#sprice_amount_buy').prop('disabled', false);  
-    }
+    if(this.value == 1){
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', true);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
 
-    if($('#student_sis_paying').val() == 0){
-        $('#sprice_amount_sell').prop('disabled', true);   
-    }else if($('#student_sis_paying').val() == 1){
-        $('#sprice_amount_sell').prop('disabled', false);  
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', true);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
+    }else{
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', false);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
+
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', false);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
     }
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
@@ -3689,16 +3708,17 @@ $('#agenda_select').on('change', function() {
 
     if(this.value == 1){
         if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-            $("#price_per_student").hide(); 
+            $("#price_per_student").show(); 
         }else{
-            $("#price_per_student").show();
+            $("#price_per_student").hide();
         }
     }else if(this.value == 2){
-        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-            $("#price_per_student").hide(); 
-        }else{
-            $("#price_per_student").show();
-        }
+        $('#event_invoice_type').trigger('change');
+        // if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+        //     $("#price_per_student").show(); 
+        // }else{
+        //     $("#price_per_student").hide();
+        // }
     }
 });
 
@@ -3710,9 +3730,9 @@ $('#event_invoice_type').on('change', function() {
     var event_invoice_type = $("#event_invoice_type option:selected").val();
 
     if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").hide(); 
+        $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 });
 
