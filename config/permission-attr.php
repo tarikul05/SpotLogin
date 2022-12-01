@@ -61,8 +61,10 @@ return [
         'students-update',
         // 'students-users-update',
         'students-delete',
+        // invoice
+        'invoice-list',
+        'invoice-edit',
 
-
-        ];
+];
 
 
