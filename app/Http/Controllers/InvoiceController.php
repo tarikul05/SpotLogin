@@ -37,6 +37,14 @@ class InvoiceController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->middleware('permission:invoice-list', ['only' => ['index','student_invoice_list','teacher_invoice_list','modificationInvoice']]);
+        $this->middleware('permission:invoice-edit', ['only' => ['updateInvoiceInfo','unlockInvoice','updatePaymentStatus','updateInvoiceDiscount','updatePaymentStatus','getStudentLessons','getTeacherLessons','manualInvoice','updatemanualInvoice','invoiceData','invoiceDataSave','invoiceDataUpdate','generateInvoicePDF','deleteInvoice','updateInvoice']]);
+        $this->middleware('permission:invoice-generate', ['only' => ['generateTeacherInvoice','generateStudentInvoice']]);
+        $this->middleware('permission:invoice-generate-teacher', ['only' => ['generateTeacherInvoice']]);
+        $this->middleware('permission:invoice-generate-student', ['only' => ['generateStudentInvoice']]);
+        
+
+
     }
 
     /**
