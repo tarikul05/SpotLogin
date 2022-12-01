@@ -63,7 +63,19 @@ return [
         'students-delete',
         // invoice
         'invoice-list',
+        'teacher-invoice-list',
+        'student-invoice-list',
+        'manual-invoice-list',
         'invoice-edit',
+        'teacher-invoice-edit',
+        'student-invoice-edit',
+        'manual-invoice-edit',
+        'event-lesson-list',
+        'teacher-lesson-list',
+        'student-lesson-list',
+        'invoice-generate',
+        'invoice-generate-teacher',
+        'invoice-generate-student'
 
 ];
 

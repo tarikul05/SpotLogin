@@ -38,8 +38,13 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
+				@canany([
+					'event-lesson-list',
+					'student-lesson-list',
+					'invoice-generate',
+					'student-invoice-generate'])
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
-				
+				@endcanany
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
@@ -466,53 +471,61 @@
 				</div>
 				</form>
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-						<input type="hidden" name="selected_month" id="selected_month" value="">
-						<input type="hidden" name="selected_year" id="selected_year" value="">
-						<input type="hidden" name="person_id" id="person_id" value="{{!empty($student->id) ? old('person_id', $student->id) : old('person_id')}}"> 
-						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-						
-						
-						<div class="alert alert-warning">
-							{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
-						</div>
-						<div class="row">
-							<div class="col-md-8">
-								<div class="form-group row below_space">
-									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
-									<div class="col-sm-2">
-										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-									</div>
-									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-									</div>
-									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
-										<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
-									</div>
-									<div class="col-sm-1">
-										<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+					@canany([
+					'event-lesson-list',
+					'student-lesson-list',
+					'invoice-generate',
+					'student-invoice-generate'])
+						<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+							<input type="hidden" name="selected_month" id="selected_month" value="">
+							<input type="hidden" name="selected_year" id="selected_year" value="">
+							<input type="hidden" name="person_id" id="person_id" value="{{!empty($student->id) ? old('person_id', $student->id) : old('person_id')}}"> 
+							<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
+							
+							
+							<div class="alert alert-warning">
+								{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
+							</div>
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group row below_space">
+										<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
+										<div class="col-sm-2">
+											<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+										</div>
+										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+											<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+										</div>
+										<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
+											<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
+											<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
+										</div>
+										<div class="col-sm-1">
+											<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-						</div>
-						<div class="table-responsive">
-							<table class="table lessons-list" id="lesson_table">
-								
-							</table>
-						</div>
-						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
-								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
-						</div>
-						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						</div> -->
-					</form>
-
+							<div class="section_header_class">
+								<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
+							</div>
+							<div class="table-responsive">
+								<table class="table lessons-list" id="lesson_table">
+									
+								</table>
+							</div>
+							<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
+									<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+									@canany(['invoice-generate',
+										'student-invoice-generate'])
+										<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+									@endcanany
+								</div>
+							<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+								<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+							</div> -->
+						</form>
+					@endcanany
 
 					<!-- START discount_div -->
 					<div style="display:none;" id="discount_div" name="discount_div">

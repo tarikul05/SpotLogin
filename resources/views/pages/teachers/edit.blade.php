@@ -53,9 +53,15 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					{{ __('Lesson') }}
-				</button>
+				@canany([
+					'event-lesson-list',
+					'teacher-lesson-list',
+					'invoice-generate',
+					'teacher-invoice-generate'])
+					<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+						{{ __('Lesson') }}
+					</button>
+				@endcanany
 				@can('teachers-users-update')
 					@if($teacher->user)
 					<!-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
@@ -441,111 +447,123 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-					
-					<input type="hidden" name="selected_month" id="selected_month" value="">
-					<input type="hidden" name="selected_year" id="selected_year" value="">
-					<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
-					<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-					
-					<div class="row">
-						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
-							
-							<div class="form-group row">
-								<div class="col-md-8">
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
-										<div class="col-sm-2">
-											 
-										</div>
-										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-											<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
-										</div>
-										<div class="col-sm-1" style="margin-left: 10px;">
-											<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+				@canany([
+					'event-lesson-list',
+					'teacher-lesson-list',
+					'invoice-generate',
+					'teacher-invoice-generate'])
+					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+						
+						<input type="hidden" name="selected_month" id="selected_month" value="">
+						<input type="hidden" name="selected_year" id="selected_year" value="">
+						<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
+						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
+						
+						<div class="row">
+							@canany(['invoice-generate',
+                  'teacher-invoice-generate'])
+							<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
+								
+								<div class="form-group row">
+									<div class="col-md-8">
+										<div class="form-group row">
+											<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
+											<div class="col-sm-2">
+												
+											</div>
+											<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+												<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
+											</div>
+											<div class="col-sm-1" style="margin-left: 10px;">
+												<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
-								<div class="col-sm-2">
-									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-								</div>
-								<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-								</div>
-								<div class="col-sm-1" style="margin-left: 10px;">
-									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+							@endcanany
+							<div class="col-md-8">
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
+									<div class="col-sm-2">
+										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+									</div>
+									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+									</div>
+									<div class="col-sm-1" style="margin-left: 10px;">
+										<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-					</div>
-					<div class="table-responsive">
-						<table class="table lessons-list" id="lesson_table">
-							<tbody>
-								<tr class="course_week_header">
-									<td colspan="1">{{ __('Week 20') }}</td>
-									<td colspan="1"></td>
-									<td colspan="1">{{ __('Date') }}</td>
-									<td colspan="1">{{ __('Time') }}</td>
-									<td colspan="1">{{ __('Duration') }}</td>
-									<td colspan="1">{{ __('Type') }}</td>
-									<td colspan="1">{{ __('Coach') }}</td>
-									<td colspan="1">{{ __('Lesson') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-								</tr>
-								<tr>
-									<td style="display:none;">30533</td>
-									<td>-</td>
-									<td></td>
-									<td width="10%">18/05/2022</td>
-									<td>14:30</td>
-									<td>30 minutes </td>
-									<td> (Soccer-School)</td>
-									<td>teacher all</td>
-									<td>Group lessons for 3 students</td>
-									<td></td>
-									<td>
-										<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-											<i class="fa fa-pencil"></i>{{__('Validate')}}
-										</a>
-									</td>
-									<td style="text-align:right"></td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Week')}} </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Total Monthly')}}</td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
-					</div>
-				</form>
+						<div class="section_header_class">
+							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
+						</div>
+						<div class="table-responsive">
+							<table class="table lessons-list" id="lesson_table">
+								<tbody>
+									<tr class="course_week_header">
+										<td colspan="1">{{ __('Week 20') }}</td>
+										<td colspan="1"></td>
+										<td colspan="1">{{ __('Date') }}</td>
+										<td colspan="1">{{ __('Time') }}</td>
+										<td colspan="1">{{ __('Duration') }}</td>
+										<td colspan="1">{{ __('Type') }}</td>
+										<td colspan="1">{{ __('Coach') }}</td>
+										<td colspan="1">{{ __('Lesson') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
+									</tr>
+									<tr>
+										<td style="display:none;">30533</td>
+										<td>-</td>
+										<td></td>
+										<td width="10%">18/05/2022</td>
+										<td>14:30</td>
+										<td>30 minutes </td>
+										<td> (Soccer-School)</td>
+										<td>teacher all</td>
+										<td>Group lessons for 3 students</td>
+										<td></td>
+										<td>
+											<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
+												<i class="fa fa-pencil"></i>{{__('Validate')}}
+											</a>
+										</td>
+										<td style="text-align:right"></td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Sub-total Week')}} </td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Total Monthly')}}</td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+							@canany(['invoice-generate',
+								'teacher-invoice-generate'])
+								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+							@endcanany
+						</div>
+					</form>
+				@endcanany
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
