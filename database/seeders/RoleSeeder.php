@@ -24,5 +24,6 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'teachers_minimum']);
         Role::create(['name' => 'student']);
         Role::create(['name' => 'parents']);
+        Role::create(['name' => 'read_only']);
     }
 }
