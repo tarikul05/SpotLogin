@@ -307,6 +307,7 @@ class LessonsController extends Controller
         }
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->get();
         $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
+
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -509,6 +510,9 @@ class LessonsController extends Controller
 
                 $teacher_id = $lessonData['teacher_select'];
                 $studentCount = !empty($lessonData['student']) ? count($lessonData['student']) : 0 ;
+
+                $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
+                $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
                 $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
