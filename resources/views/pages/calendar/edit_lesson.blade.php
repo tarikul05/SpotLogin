@@ -796,7 +796,7 @@ function confirm_event(){
 		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
 		return false;
 	})
-
+	$("#category_select").change();
 	$("body").on('change', '#category_select', function(event) {
 		var datainvoiced = $("#category_select option:selected").data('invoice');
 		var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
