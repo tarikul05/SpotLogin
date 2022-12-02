@@ -3463,44 +3463,6 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 	}else if(s_thr_pay_type == 1 || s_std_pay_type == 1 ){
         $('#hourly').hide();
 		$('#price_per_student').show();
-        getLatestPrice();
-        // var formData = $('#edit_lesson').serializeArray();
-        // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-        // formData.push({
-        //     "name": "_token",
-        //     "value": csrfToken,
-        // });
-
-        // formData.push({
-        //     "name": "event_category_id",
-        //     "value": categoryId,
-        // });
-        // formData.push({
-        //     "name": "teacher_select",
-        //     "value": teacherSelect,
-        // });
-        
-        // if (categoryId > 0 && teacherSelect > 0) {
-        //     $.ajax({
-        //         url: BASE_URL + '/check-lesson-fixed-price',
-        //         async: false, 
-        //         data: formData,
-        //         type: 'POST',
-        //         dataType: 'json',
-        //         success: function(response){
-        //             if(response.status == 1){
-        //                 if (response.data) {
-        //                     $("#sprice_amount_buy").val(response.data.price_buy)
-        //                     $("#sprice_amount_sell").val(response.data.price_sell)
-        //                 }
-                        
-        //                 // var errMssg = '';   
-        //             }
-        //         }
-        //     })
-        // }
-
-            
 	}
 
     if($('#sis_paying').val() == 0){
@@ -3522,6 +3484,9 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     }else{
         $("#price_per_student").hide();
     }
+
+
+    getLatestPrice();
 
 
 });
