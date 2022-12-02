@@ -605,25 +605,6 @@ $('#add_lesson').on('submit', function(e) {
 		$('#end_date').removeClass('error');
 	}
 
-	if(bill_type == 1){
-		$.ajax({
-			url: BASE_URL + '/check-lesson-price',
-			async: false, 
-			data: formData,
-			type: 'POST',
-			dataType: 'json',
-			success: function(response){
-				if(response.status == 1){
-					var errMssg = '';	
-				}else{
-					var errMssg = 'error';
-					$('#modal_lesson_price').modal('show');
-					e.preventDefault();
-				}
-			}
-		})
-	}
-
 	if(errMssg == ""){
 		return true;
 	}else{
@@ -688,27 +669,60 @@ $("body").on('change', '#category_select', function(event) {
 	}else if(s_thr_pay_type == 1){
 		$('#hourly').hide();
 		$('#price_per_student').show();
-		var formData = $('#edit_lesson').serializeArray();
-			var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-			formData.push({
-				"name": "_token",
-				"value": csrfToken,
-			});
-
-			$.ajax({
-				url: BASE_URL + '/check-lesson-fixed-price',
-				async: false, 
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){
-					if(response.status == 1){
-						var errMssg = '';	
-					}
-				}
-			})
 	}
+
+	getLatestPrice();
 });
+
+$("#student, #teacher_select").on('change', function(event) {
+    getLatestPrice()
+});
+
+	function getLatestPrice() {
+	    var agendaSelect = +$("#agenda_select").val();
+	    var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
+	    var formData = $('#from').serializeArray();
+	    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	    formData.push({
+	        "name": "_token",
+	        "value": csrfToken,
+	    });
+
+	    formData.push({
+	        "name": "event_category_id",
+	        "value": categoryId,
+	    });
+	    formData.push({
+	        "name": "teacher_select",
+	        "value": teacherSelect,
+	    });
+	    formData.push({
+	        "name": "no_of_students",
+	        "value": stdSelected,
+	    });
+	    
+	    if (categoryId > 0 && teacherSelect > 0) {
+	        $.ajax({
+	            url: BASE_URL + '/check-lesson-fixed-price',
+	            async: false, 
+	            data: formData,
+	            type: 'POST',
+	            dataType: 'json',
+	            success: function(response){
+	                if(response.status == 1){
+	                    if (response.data) {
+	                        $("#sprice_amount_buy").val(response.data.price_buy)
+	                        $("#sprice_amount_sell").val(response.data.price_sell)
+	                    }
+	                }
+	            }
+	        })
+	    }
+	    
+	}
 
 $("body").on('click', '#student_empty', function(event) {
 	if ($("#student_empty").prop('checked')) {
@@ -721,6 +735,9 @@ $("body").on('click', '#student_empty', function(event) {
 })
 
 $( document ).ready(function() {
+	
+	$("#category_select").trigger('change');
+
     $(function() {
         $("#save_btn_more").click(function(){
            $("#save_btn_value"). val(2);
