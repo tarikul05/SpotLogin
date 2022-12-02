@@ -3484,8 +3484,6 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     }else{
         $("#price_per_student").hide();
     }
-
-
     getLatestPrice();
 
 
@@ -3499,7 +3497,12 @@ function getLatestPrice() {
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
-
+    if (agendaSelect != 1) {
+        $("#sprice_amount_buy").val(0)
+        $("#sprice_amount_sell").val(0)
+        console.log(" duktecew naki ?")
+        return 
+    } 
     var formData = $('#edit_lesson').serializeArray();
     var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
     formData.push({
@@ -3692,6 +3695,8 @@ $('#agenda_select').on('change', function() {
         //     $("#price_per_student").hide();
         // }
     }
+    
+    getLatestPrice();
 });
 
 $('#event_invoice_type').on('change', function() {
