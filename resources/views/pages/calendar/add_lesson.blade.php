@@ -646,7 +646,7 @@ $("body").on('change', '#category_select', function(event) {
 		$("#sis_paying").val(s_thr_pay_type);
 		$("#student_sis_paying").val(t_std_pay_type);
 		$("#std-check-div").css('display', 'none');
-		$("#teacher_type_billing").show();
+		$("#teacher_type_billing").hide();
 		$("#student_empty").prop('checked', false);
 
 		if(s_thr_pay_type == 0){
@@ -670,6 +670,16 @@ $("body").on('change', '#category_select', function(event) {
 		$('#hourly').hide();
 		$('#price_per_student').show();
 	}
+
+	var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacher = +"{{$AppUI->isTeacher()}}";
+
+    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+        $("#price_per_student").show(); 
+    }else{
+        $("#price_per_student").hide();
+    }
 
 	getLatestPrice();
 });

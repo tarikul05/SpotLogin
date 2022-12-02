@@ -421,7 +421,7 @@ $( document ).ready(function() {
 		}
 
     }else{
-        $("#teacher_type_billing").show();
+        $("#teacher_type_billing").hide();
         $("#student_sis_paying").val(t_std_pay_type);
 		if(s_thr_pay_type == 0){
 			$('#sprice_amount_buy').prop('disabled', true);   
@@ -860,6 +860,17 @@ function confirm_event(){
 			$('#price_per_student').show();
 		}
 		
+
+		var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+	    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+	    var isTeacher = +"{{$AppUI->isTeacher()}}";
+
+	    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+	        $("#price_per_student").show(); 
+	    }else{
+	        $("#price_per_student").hide();
+	    }
+
         getLatestPrice();
 	});
 
