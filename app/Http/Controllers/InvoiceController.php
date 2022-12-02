@@ -37,13 +37,13 @@ class InvoiceController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware('permission:invoice-list', ['only' => ['index','student_invoice_list','teacher_invoice_list','getStudentLessons','getTeacherLessons']]);
-        $this->middleware('permission:teacher-invoice-list', ['only' => ['index','teacher_invoice_list','getTeacherLessons']]);
-        $this->middleware('permission:student-invoice-list', ['only' => ['index','student_invoice_list','getStudentLessons']]);
-        $this->middleware('permission:invoice-edit|teacher-invoice-edit|student-invoice-edit', ['only' => ['updateInvoiceInfo','unlockInvoice','updatePaymentStatus','modificationInvoice','updateInvoiceDiscount','updatePaymentStatus','manualInvoice','updatemanualInvoice','invoiceData','invoiceDataSave','invoiceDataUpdate','generateInvoicePDF','deleteInvoice','updateInvoice']]);
-        $this->middleware('permission:invoice-generate', ['only' => ['generateTeacherInvoice','generateStudentInvoice']]);
-        $this->middleware('permission:invoice-generate-teacher', ['only' => ['generateTeacherInvoice']]);
-        $this->middleware('permission:invoice-generate-student', ['only' => ['generateStudentInvoice']]);
+        // $this->middleware('permission:invoice-list', ['only' => ['index','student_invoice_list','teacher_invoice_list','getStudentLessons','getTeacherLessons']]);
+        // $this->middleware('permission:teacher-invoice-list', ['only' => ['index','teacher_invoice_list','getTeacherLessons']]);
+        // $this->middleware('permission:student-invoice-list', ['only' => ['index','student_invoice_list','getStudentLessons']]);
+        // $this->middleware('permission:invoice-edit|teacher-invoice-edit|student-invoice-edit', ['only' => ['updateInvoiceInfo','unlockInvoice','updatePaymentStatus','modificationInvoice','updateInvoiceDiscount','updatePaymentStatus','manualInvoice','updatemanualInvoice','invoiceData','invoiceDataSave','invoiceDataUpdate','generateInvoicePDF','deleteInvoice','updateInvoice']]);
+        // $this->middleware('permission:invoice-generate', ['only' => ['generateTeacherInvoice','generateStudentInvoice']]);
+        // $this->middleware('permission:invoice-generate-teacher', ['only' => ['generateTeacherInvoice']]);
+        // $this->middleware('permission:invoice-generate-student', ['only' => ['generateStudentInvoice']]);
         
 
 

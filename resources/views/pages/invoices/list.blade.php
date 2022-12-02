@@ -105,17 +105,62 @@
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
-                            <td class="text-center">
-                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                <span class="small txt-grey pull-left">
-                                    <span class="change_button">{{ __('Change')}}</span>
-                                </span>
-                            </td>
+                            @if($invoice->invoice_type ==1)
+                            @canany(['invoice-edit',
+                                'student-invoice-edit',
+                                'invoice-generate',
+                                'student-invoice-generate'])
+                                <td class="text-center">
+                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                    <span class="small txt-grey pull-left">
+                                        <span class="change_button">{{ __('Change')}}</span>
+                                    </span>
+                                </td>
+                            @endcanany
+                            @elseif($invoice->invoice_type ==2)
+                            @canany(['invoice-edit',
+                                'teacher-invoice-edit',
+                                'invoice-generate',
+                                'teacher-invoice-generate'])
+                                <td class="text-center">
+                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                    <span class="small txt-grey pull-left">
+                                        <span class="change_button">{{ __('Change')}}</span>
+                                    </span>
+                                </td>
+                            @endcanany
+                            @elseif($invoice->invoice_type ==0)
+                            @canany(['invoice-edit',
+                                'manual-invoice-edit'])
+                                <td class="text-center">
+                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                    <span class="small txt-grey pull-left">
+                                        <span class="change_button">{{ __('Change')}}</span>
+                                    </span>
+                                </td>
+                            @endcanany
+                            @else
+                            @canany(['invoice-edit',
+                                'teacher-invoice-edit',
+                                'student-invoice-edit',
+                                'manual-invoice-edit',
+                                'invoice-generate',
+                                'teacher-invoice-generate',
+                                'student-invoice-generate'])
+                                <td class="text-center">
+                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                    <span class="small txt-grey pull-left">
+                                        <span class="change_button">{{ __('Change')}}</span>
+                                    </span>
+                                </td>
+                            @endcanany
+                            @endif
+                            
                         @else
                             <td></td>
                         @endif
                         
-                        <td>
+                        <td>                           
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-ellipsis-h txt-grey"></i>
@@ -131,15 +176,69 @@
                                             {{ __('PDF')}}
                                         </a>
                                     @else
-                                        <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                            <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
-                                            {{ __('Edit')}}
-                                        </a>
-                                    @endif
+                                        @if($invoice->invoice_type ==1)
 
-                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
-                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                                        @canany(['invoice-edit',
+                                        'student-invoice-edit',
+                                        'invoice-generate',
+                                        'student-invoice-generate'])
+                                            <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                                <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                                {{ __('Edit')}}
+                                            </a>
+                                        @endcanany
+
+                                        @elseif($invoice->invoice_type ==2)
+
+                                        @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'invoice-generate',
+                                        'teacher-invoice-generate'])
+                                            <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                                <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                                {{ __('Edit')}}
+                                            </a>
+                                        @endcanany
+
+                                        @elseif($invoice->invoice_type ==0)
+
+                                            @canany(['invoice-edit',
+                                            'manual-invoice-edit'])
+                                                <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                                    <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                                    {{ __('Edit')}}
+                                                </a>
+                                            @endcanany
+
+                                        @else
+
+                                        @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit',
+                                        'manual-invoice-edit',
+                                        'invoice-generate',
+                                        'teacher-invoice-generate',
+                                        'student-invoice-generate'])
+                                            <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                                <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                                {{ __('Edit')}}
+                                            </a>
+                                        @endcanany
+
+                                        @endif
+                                        
                                     @endif
+                                    @canany(['invoice-edit',
+                                            'teacher-invoice-edit',
+                                            'student-invoice-edit',
+                                            'manual-invoice-edit',
+                                            'invoice-generate',
+                                            'teacher-invoice-generate',
+                                            'student-invoice-generate'])
+                                        @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
+                                            <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                                        @endif
+                                    @endcanany
                                 </div>
                             </div>  
                         </td>
