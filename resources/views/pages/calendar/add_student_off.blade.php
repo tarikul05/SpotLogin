@@ -49,18 +49,20 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv student_list">
-											<select class="form-control" id="student" name="student[]" multiple="multiple">
-												@foreach($students as $key => $student)
-													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
-												@endforeach
-											</select>
+								@if(!$AppUI->isStudent())
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv student_list">
+												<select class="form-control" id="student" name="student[]" multiple="multiple">
+													@foreach($students as $key => $student)
+														<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+													@endforeach
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
@@ -88,14 +90,17 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
-									<div id="all_day_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
-										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
+								@if(!$AppUI->isStudent())
+									<div class="form-group row">
+										<div id="all_day_div111" class="row">
+											<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
+											<div class="col-sm-7">
+												<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
+
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>

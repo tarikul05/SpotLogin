@@ -227,7 +227,7 @@
 									</div>
 								</div>
 
-								<div id="price_per_student" style="display:none;">
+								<div id="price_per_student">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
@@ -406,14 +406,39 @@ $( document ).ready(function() {
         $("#student_sis_paying").val(s_std_pay_type);
         $("#sis_paying").val(s_thr_pay_type);
         $("#teacher_type_billing").show();
+		if(s_thr_pay_type == 0){
+			$('#sprice_amount_buy').prop('disabled', true);   
+		}else if(s_thr_pay_type == 1){
+			$('#sprice_amount_buy').prop('disabled', false);  
+		}
+		if(s_std_pay_type == 0){
+			$('#sprice_amount_sell').prop('disabled', true);   
+		}else if(s_std_pay_type == 1){
+			$('#sprice_amount_sell').prop('disabled', false);  
+		}else if(s_std_pay_type == 2){
+			$('#sprice_amount_sell').prop('disabled', true);  
+		}
+
     }else{
-        $("#teacher_type_billing").hide();
+        $("#teacher_type_billing").show();
         $("#student_sis_paying").val(t_std_pay_type);
+		if(s_thr_pay_type == 0){
+			$('#sprice_amount_buy').prop('disabled', true);   
+		}else if(s_thr_pay_type == 1){
+			$('#sprice_amount_buy').prop('disabled', false);  
+		}
+		if(t_std_pay_type == 0){
+			$('#sprice_amount_sell').prop('disabled', true);   
+		}else if(t_std_pay_type == 1){
+			$('#sprice_amount_sell').prop('disabled', false);  
+		}else if(t_std_pay_type == 2){
+			$('#sprice_amount_sell').prop('disabled', true);  
+		}
     }
 	
 	if(s_thr_pay_type == 0){
 		$('#hourly').show();
-        $('#price_per_student').hide();
+        $('#price_per_student').show();
 	}else if(s_thr_pay_type == 1 && s_std_pay_type == 1){
         $('#hourly').hide();
 		$('#price_per_student').show();
@@ -554,7 +579,7 @@ $( document ).ready(function() {
 
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
-	$('#price_per_student').hide();
+	$('#price_per_student').show();
 	if(this.value == 0){
 		$('#hourly').show();
 	}else if(this.value == 1){
@@ -787,15 +812,44 @@ function confirm_event(){
 			$("#teacher_type_billing").show();
 			$("#student_sis_paying").val(s_std_pay_type);
 			$("#sis_paying").val(s_thr_pay_type);
+
+			if(s_thr_pay_type == 0){
+				$('#sprice_amount_buy').prop('disabled', true);   
+			}else if(s_thr_pay_type == 1){
+				$('#sprice_amount_buy').prop('disabled', false);  
+			}
+			if(s_std_pay_type == 0){
+				$('#sprice_amount_sell').prop('disabled', true);   
+			}else if(s_std_pay_type == 1){
+				$('#sprice_amount_sell').prop('disabled', false);  
+			}else if(s_std_pay_type == 2){
+				$('#sprice_amount_sell').prop('disabled', true);  
+			}
+			
 		}else{
+			$("#sis_paying").val(s_thr_pay_type);
 			$("#student_sis_paying").val(t_std_pay_type);
 			$("#std-check-div").css('display', 'none');
-			$("#teacher_type_billing").hide();
-			$("#student_empty").prop('checked', false)
+			$("#teacher_type_billing").show();
+			$("#student_empty").prop('checked', false);
+
+			if(s_thr_pay_type == 0){
+				$('#sprice_amount_buy').prop('disabled', true);   
+			}else if(s_thr_pay_type == 1){
+				$('#sprice_amount_buy').prop('disabled', false);  
+			}
+
+			if(t_std_pay_type == 0){
+				$('#sprice_amount_sell').prop('disabled', true);   
+			}else if(t_std_pay_type == 1){
+				$('#sprice_amount_sell').prop('disabled', false);  
+			}else if(t_std_pay_type == 2){
+				$('#sprice_amount_sell').prop('disabled', true);  
+			}
 		}
 		if(s_thr_pay_type == 0){
-			$('#hourly').show();
-			$('#price_per_student').hide();
+			$('#hourly').hide();
+			$('#price_per_student').show();
 		}else if(s_thr_pay_type == 1){
 			$('#hourly').hide();
 			$('#price_per_student').show();
