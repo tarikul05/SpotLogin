@@ -449,7 +449,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
@@ -3617,6 +3617,8 @@ $('#agenda_select').on('change', function() {
             $('.show_coach_off.hide_on_off').show();
              // $("#std-check-div").css('display', 'block');
             $('#category_select').trigger('change');
+            $(".lesson-text").show()
+            $(".event-text").hide()
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3634,6 +3636,8 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
+            $(".lesson-text").hide()
+            $(".event-text").show()
             // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
