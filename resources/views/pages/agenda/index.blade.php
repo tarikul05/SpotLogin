@@ -3272,25 +3272,25 @@ $('#add_lesson').on('submit', function(e) {
         if(type==1){
             var bill_type = $('#sis_paying').val();
             
-            if(bill_type == 1){
-                $.ajax({
-                    url: BASE_URL + '/check-lesson-price',
-                    async: false, 
-                    data: formData,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.status == 1){
-                            var errMssg = '';	
-                        }else{
-                            var errMssg = 'error';
-                            $('#modal_lesson_price').modal('show');
-                            $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
-                            e.preventDefault();
-                        }
-                    }
-                })
-            }
+            // if(bill_type == 1){
+            //     $.ajax({
+            //         url: BASE_URL + '/check-lesson-price',
+            //         async: false, 
+            //         data: formData,
+            //         type: 'POST',
+            //         dataType: 'json',
+            //         success: function(response){
+            //             if(response.status == 1){
+            //                 var errMssg = '';	
+            //             }else{
+            //                 var errMssg = 'error';
+            //                 $('#modal_lesson_price').modal('show');
+            //                 $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
+            //                 e.preventDefault();
+            //             }
+            //         }
+            //     })
+            // }
         }
         
         if(professor == ''){
