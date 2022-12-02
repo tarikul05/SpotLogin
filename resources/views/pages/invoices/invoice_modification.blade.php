@@ -23,28 +23,40 @@
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             
                             @if($invoice->invoice_status ==10)
-                                @if($invoice->payment_status ==0)
-                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as Paid')}}
-                                    </a>
-                                @else
-                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as UnPaid')}}
-                                    </a>
-                                @endif
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+
+                                @canany(['invoice-edit',
+                                    'teacher-invoice-edit',
+                                    'student-invoice-edit'])
+                                    @if($invoice->payment_status ==0)
+                                        <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                            {{__('Flag as Paid')}}
+                                        </a>
+                                    @else
+                                        <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                            {{__('Flag as UnPaid')}}
+                                        </a>
+                                    @endif
+                                    <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                                @endcanany
                                 <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                     <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
                             
                             @else
-                                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                    <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
-                                </a> 
+                                @canany(['invoice-edit',
+                                    'teacher-invoice-edit',
+                                    'student-invoice-edit'])
+                                    <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
+                                    </a> 
+                                @endcanany
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
-                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
-                                <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                                
+                                @canany(['invoice-edit',
+                                    'teacher-invoice-edit',
+                                    'student-invoice-edit'])
+                                    <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                                    <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
+                                @endcanany
                             @endif
                             
 
@@ -56,8 +68,12 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
-				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
-			</div>
+                @canany(['invoice-edit',
+                'teacher-invoice-edit',
+                'student-invoice-edit'])
+                    <button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
+                @endcanany
+            </div>
 		</nav>
 		<!-- Tabs navs -->
 		<!-- Tabs content -->
@@ -151,6 +167,9 @@
                                                         {{ number_format($sub_total_lesson,'2') }}
                                                     </td>
                                                 </tr>
+                                                @canany(['invoice-edit',
+                                                    'teacher-invoice-edit',
+                                                    'student-invoice-edit'])
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
@@ -164,6 +183,7 @@
                                                         <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
                                                     </td>
                                                 </tr>
+                                                @endcanany
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount Amount:</td>
@@ -225,13 +245,17 @@
                                         </tr>
                                     @endif
                                     @if ($invoice->invoice_type == 1)
-                                    <tr>
-                                        <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
-                                        <td></td>
-                                        <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
-                                        </td>
-                                    </tr>
+                                    @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit'])
+                                        <tr>
+                                            <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
+                                            <td></td>
+                                            <td style="text-align:right">
+                                                <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
+                                            </td>
+                                        </tr>
+                                    @endcanany
                                     @endif
                                     @php
                                         $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount ;
