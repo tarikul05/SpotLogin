@@ -3690,6 +3690,9 @@ $('#agenda_select').on('change', function() {
         }else if($('#student_sis_paying').val() == 1){
             $('#sprice_amount_sell').prop('disabled', false);  
         }
+    }if(this.value == 2){
+        $('#sprice_amount_buy').prop('disabled', false); 
+        $('#sprice_amount_sell').prop('disabled', false);   
     }else{
         if($('#sis_paying').val() == 0){
             $('#sprice_amount_buy').prop('disabled', false);   
