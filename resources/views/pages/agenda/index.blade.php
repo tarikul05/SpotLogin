@@ -1308,7 +1308,6 @@
                     document.getElementById("event_location_all_flag").value='1';
                 }
                 else {
-
                     console.log('location onDeSelectAll triggered!');
                     document.getElementById("event_location_id").value='';
                     document.getElementById("event_location_all_flag").value='0';
@@ -2832,17 +2831,17 @@
         
     function getLocationIDs	(){
         var selected_ids = [];
-        ///var all_locations = [];
+        var all_locations = [];
         $.each($("#event_location option:selected"), function(){            
             selected_ids.push($(this).val());
         });
-        // $.each($("#event_location option"), function(){
+        $.each($("#event_location option"), function(){
             
-        //     all_locations.push($(this).val());
-        // });
-        // if (all_locations.length == selected_ids.length) {
-        //     selected_ids.push(0);
-        // }
+            all_locations.push($(this).val());
+        });
+        if (all_locations.length == selected_ids.length) {
+            selected_ids.push(0);
+        }
         return selected_ids.join("|");
     }	
 
