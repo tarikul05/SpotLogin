@@ -394,6 +394,7 @@ $('#student').on('change', function(event) {
 })
 
 $( document ).ready(function() {
+
 	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // document.getElementById("zone").value = zone;
 	var zone = document.getElementById("zone").value;
@@ -796,8 +797,12 @@ function confirm_event(){
 		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
 		return false;
 	})
-	$("#category_select").change();
 	$("body").on('change', '#category_select', function(event) {
+
+    	var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
 		var datainvoiced = $("#category_select option:selected").data('invoice');
 		var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
 		var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
@@ -853,27 +858,61 @@ function confirm_event(){
 		}else if(s_thr_pay_type == 1){
 			$('#hourly').hide();
 			$('#price_per_student').show();
-			var formData = $('#edit_lesson').serializeArray();
-			var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-			formData.push({
-				"name": "_token",
-				"value": csrfToken,
-			});
-
-			$.ajax({
-				url: BASE_URL + '/check-lesson-fixed-price',
-				async: false, 
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){
-					if(response.status == 1){
-						var errMssg = '';	
-					}
-				}
-			})
 		}
+		
+        getLatestPrice();
 	});
+
+$("#student, #teacher_select").on('change', function(event) {
+    getLatestPrice()
+});
+
+	function getLatestPrice() {
+	    var agendaSelect = +$("#agenda_select").val();
+	    var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
+	    var formData = $('#from').serializeArray();
+	    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	    formData.push({
+	        "name": "_token",
+	        "value": csrfToken,
+	    });
+
+	    formData.push({
+	        "name": "event_category_id",
+	        "value": categoryId,
+	    });
+	    formData.push({
+	        "name": "teacher_select",
+	        "value": teacherSelect,
+	    });
+	    formData.push({
+	        "name": "no_of_students",
+	        "value": stdSelected,
+	    });
+	    
+	    if (categoryId > 0 && teacherSelect > 0) {
+	        $.ajax({
+	            url: BASE_URL + '/check-lesson-fixed-price',
+	            async: false, 
+	            data: formData,
+	            type: 'POST',
+	            dataType: 'json',
+	            success: function(response){
+	                if(response.status == 1){
+	                    if (response.data) {
+	                        $("#sprice_amount_buy").val(response.data.price_buy)
+	                        $("#sprice_amount_sell").val(response.data.price_sell)
+	                    }
+	                }
+	            }
+	        })
+	    }
+	    
+	}
+
 	
 	$("body").on('click', '#student_empty', function(event) {
 		if ($("#student_empty").prop('checked')) {
@@ -885,6 +924,8 @@ function confirm_event(){
 	})
 
 	$( document ).ready(function() {
+		$("#category_select").trigger('change');
+
 		$(function() {
 			$("#save_btn_more").click(function(){
 			$("#save_btn_value"). val(1);
