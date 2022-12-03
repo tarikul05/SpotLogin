@@ -354,11 +354,14 @@
                                 <label id="row_hdr_status" name="row_hdr_status" for="invoice_status" class="col-lg-3 col-sm-3 text-right">Status</label>
                                 <div class="col-lg-2 col-sm-2 text-left">
                                     <label id="invoice_status_text">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
+
+                                    @if(!$AppUI->isStudent())
                                     <div> 
                                         <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: none;">
                                             <span id="unlock_btn_cap">Unlock</span>
                                         </a>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             <!-- invoice date -->
