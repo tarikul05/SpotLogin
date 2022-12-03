@@ -56,7 +56,7 @@
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif
                         @endcan
-                        @if(count(!$AppUI->isStudent()))
+                        @if(!$AppUI->isStudent())
                         <div class="nav-item dropdown">
                              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                             <div class="dropdown-menu header">

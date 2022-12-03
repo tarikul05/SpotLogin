@@ -493,7 +493,7 @@ class InvoiceController extends Controller
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
         $query = new Invoice;
         $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type);
-        
+        //dd($allEvents->toSql());
         //dd($allEvents);
         $allStudentEvents = [];
         foreach ($allEvents as $key => $value) {
@@ -1696,37 +1696,70 @@ class InvoiceController extends Controller
             $dataParam = $request->all();
             $id = trim($dataParam['p_invoice_id']);
             $invoiceData = Invoice::find($id);
-            $invoiceDelete = Invoice::find($id)->delete();
             
-            if ($invoiceDelete == 1) {
+            
+            if ($invoiceData) {
                 if ($invoiceData->invoice_type ==2) {
-                    $invoiceItems= InvoiceItem::active()
-                        ->where('invoice_id', $id);
+                    $invoiceItems= InvoiceItem::where('invoice_id', $invoiceData->id)->get();
                     foreach ($invoiceItems as $key => $invoiceData) {
-                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $detail_id =  explode(',',$invoiceData->event_detail_id);
                         $eventUpdate = [
                             'buy_invoice_id' => null,
                             'is_buy_invoiced' => 0
                         ];
+                        if (empty($invoiceData->event_detail_id)) {
+                            
+                            $event_id =  $invoiceData->event_id;
+                            $eventData = EventDetails::where('event_id', $event_id)
+                            ->update($eventUpdate);
+                        } else {
+                            $detail_id =  explode(',',$invoiceData->event_detail_id);
+                        
+                            $eventData = EventDetails::whereIn('id', $detail_id)
+                            ->update($eventUpdate);
+                        }
                         $eventData = EventDetails::whereIn('id', $detail_id)
                         ->update($eventUpdate);
+                        $invoiceData->delete();
                     }
-                    $invoiceItems->delete();
+                    //$invoiceItems->delete();
                 }
                 if ($invoiceData->invoice_type ==1) {
-                    $invoiceItems= InvoiceItem::active()
-                        ->where('invoice_id', $id);
+                    
+                    $invoiceItems= InvoiceItem::where('invoice_id', $invoiceData->id)->get();
+                      
                     foreach ($invoiceItems as $key => $invoiceData) {
-                        $detail_id =  explode(',',$invoiceData->detail_id);
+                        $event_id =  $invoiceData->event_id;
+                        
+                        
                         $eventUpdate = [
                             'sell_invoice_id' => null,
                             'is_sell_invoiced' => 0
                         ];
-                        $eventData = EventDetails::whereIn('id', $detail_id)
-                        ->update($eventUpdate);
+                        
+
+                        
+                        if (empty($invoiceData->event_detail_id)) {
+                            
+                            $event_id =  $invoiceData->event_id;
+                            $eventData = EventDetails::where('event_id', $event_id)
+                            ->update($eventUpdate);
+                            
+                        } else {
+                            $detail_id =  explode(',',$invoiceData->event_detail_id);
+                        
+                            $eventUpdate = [
+                                'sell_invoice_id' => null,
+                                'is_sell_invoiced' => 0
+                            ];
+                            $eventData = EventDetails::whereIn('id', $detail_id)
+                            ->update($eventUpdate);
+                        }
+                        $invoiceData->delete();
+                        
                     }
-                    $invoiceItems->delete();
                 }
+                $invoiceDelete = Invoice::find($id)->delete();
                 
                 
                 $result = array(
