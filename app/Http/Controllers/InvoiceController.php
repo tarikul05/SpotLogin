@@ -684,7 +684,7 @@ class InvoiceController extends Controller
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
             $dateS = $p_billing_period_start_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_start_date)));
             $dateEnd = $p_billing_period_end_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_end_date)));
-
+            $p_event_ids=trim($data['p_event_ids']);
             
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
             $school = School::active()->find($schoolId);
@@ -702,9 +702,8 @@ class InvoiceController extends Controller
             $invoiceData = Invoice::create($invoiceData);
             
             $query = new Invoice;
-            $teacherEvents = $query->generateTeacherEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
+            $teacherEvents = $query->generateTeacherEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date,$p_event_ids);
             
-            //dd($teacherEvents->toSql());
             $dataFetched = $teacherEvents->get();
             $subtotal_amount_all = 0;
             $subtotal_amount_with_discount = 0;
@@ -982,7 +981,7 @@ class InvoiceController extends Controller
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
 
             $query = new Invoice;
-            $studentEvents = $query->generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd);
+            $studentEvents = $query->generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd,$p_event_ids);
             
             //$studentEvents->groupBy('events.id');
             

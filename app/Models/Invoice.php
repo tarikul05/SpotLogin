@@ -519,7 +519,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function generateTeacherEvent($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
+    public function generateTeacherEvent($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date,$p_event_ids)
     {
 
         $teacherEvents = DB::table('events')
@@ -566,6 +566,11 @@ class Invoice extends BaseModel
                         'events.school_id' => $p_school_id,
                     ]
                 );
+            if (!empty($p_event_ids)) {
+                $p_event_ids = substr($p_event_ids, 0, -1);
+                $p_event_ids = explode(',',$p_event_ids);
+                $teacherEvents->whereIn('events.id',$p_event_ids);
+            }
             //$teacherEvents->whereNotIn('events.event_type', [100]);
             //$teacherEvents->where('event_details.participation_id', '>', 198);
             $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
@@ -607,7 +612,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd)
+    public function generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd,$p_event_ids)
     {
         $studentEvents = DB::table('events')
                 ->select(

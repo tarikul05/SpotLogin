@@ -3615,7 +3615,7 @@ $('#agenda_select').on('change', function() {
             }
             $('#all_day').hide();
             $('.hide_on_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
@@ -3631,7 +3631,7 @@ $('#agenda_select').on('change', function() {
             $('#all_day').hide();
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
