@@ -1011,7 +1011,7 @@
     // });
     $('#issue_inv_btn').click(function (e) {
         Generate_View_PDF('issue_pdf');
-        setTimeout(location.reload(), 1000);
+        setTimeout(location.reload(), 2000);
     });
 
     function Generate_View_PDF(p_type) {
