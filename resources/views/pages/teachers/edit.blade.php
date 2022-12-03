@@ -958,10 +958,24 @@ $(document).ready(function(){
 		populate_teacher_lesson(); //refresh lesson details for billing	
 	});
 
+	function GetCheckBoxSelectedValues(p_chkbox) {
+		var selected_events = '';
+		var cboxes = document.getElementsByName(p_chkbox);
+		var len = cboxes.length;
 
+		$("input[name='" + p_chkbox + "']:checked").each(function(i) {
+			selected_events += $(this).val() + ',';
+		});
+		return selected_events;
+	}
 	$('#btn_convert_invoice').click(function(e) {
 		$(this).attr("disabled", "disabled");
-	    var p_person_id = document.getElementById("person_id").value;
+		var p_event_ids = GetCheckBoxSelectedValues('event_check');
+		if (p_event_ids == '') {
+			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
+			return false;
+		}
+	  var p_person_id = document.getElementById("person_id").value;
 		let school_id = document.getElementById("school_id").value;
 
 	    var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
@@ -972,12 +986,12 @@ $(document).ready(function(){
 	    var p_month = document.getElementById("smonth").value;
 	    var p_year = document.getElementById("syear").value;
 
-		var p_billing_period_start_date = $("#billing_period_start_date").val();
-        var p_billing_period_end_date = $("#billing_period_end_date").val();
+			var p_billing_period_start_date = $("#billing_period_start_date").val();
+			var p_billing_period_end_date = $("#billing_period_end_date").val();
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date;
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids;
 	    
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
@@ -1225,12 +1239,12 @@ function populate_teacher_lesson() {
 				}
 				resultHtml += '<tr>';
 				resultHtml += '<td style="display:none;">' + value.detail_id + '</td>';
-				// if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
-				// 		selected_items += 1;
-				// 		resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
-				// } else {
-				// 		resultHtml += "<td>-</td>";
-				// }
+				if ((value.is_buy_invoiced == 0) && (value.ready_flag == 1)) {
+						selected_items += 1;
+						resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+				} else {
+						resultHtml += "<td>-</td>";
+				}
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				resultHtml += '<td>' + value.time_start + '</td>';
 				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
