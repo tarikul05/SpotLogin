@@ -582,7 +582,7 @@ class InvoiceController extends Controller
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
             $query = new Invoice;
-            $studentEvents = $query->getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
+            $studentEvents = $query->getStudentEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             if (!empty($p_pending_only)) {
                 $studentEvents->where(
                     function ($query) {

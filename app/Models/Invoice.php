@@ -304,12 +304,12 @@ class Invoice extends BaseModel
     }
 
     /**
-     * getStudentEventList for invoicing
+     * getStudentEventLessonList for invoicing
      * 
      * @param array $params
      * @return $query
      */
-    public function getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
+    public function getStudentEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
     {
         $studentEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -382,7 +382,7 @@ class Invoice extends BaseModel
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
             $studentEvents->whereRaw($qq);
 
 
@@ -391,6 +391,7 @@ class Invoice extends BaseModel
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             $studentEvents->distinct('event_details.id');
+            $studentEvents->orderBy('events.date_start', 'desc');
             //dd($studentEvents->toSql());
 
             return $studentEvents;
@@ -493,7 +494,7 @@ class Invoice extends BaseModel
             $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
             $teacherEvents->whereNull('event_details.buy_invoice_id');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
             $teacherEvents->whereRaw($qq);
 
             // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
