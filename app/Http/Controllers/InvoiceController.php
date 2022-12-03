@@ -62,11 +62,16 @@ class InvoiceController extends Controller
         if ($user_role != 'superadmin') {
             if ($user_role == 'teacher') {
                 $invoices->where('category_invoiced_type', $user->person_id);
-                 $invoices->where('seller_id', $user->id);
+                $invoices->where('seller_id', $user->id);
+            }elseif ($user_role == 'student') {
+                $invoices->where('category_invoiced_type', $invoice_type);
+                $invoices->where('client_id', $user->id);
+                $invoices->where('invoice_status', 10);
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
         }
+
         $invoices->orderBy('id', 'desc');
         $invoices = $invoices->get();
         return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
@@ -582,7 +587,7 @@ class InvoiceController extends Controller
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
             $query = new Invoice;
-            $studentEvents = $query->getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
+            $studentEvents = $query->getStudentEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             if (!empty($p_pending_only)) {
                 $studentEvents->where(
                     function ($query) {
