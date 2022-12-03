@@ -567,7 +567,7 @@ class Invoice extends BaseModel
                     ]
                 );
             //$teacherEvents->whereNotIn('events.event_type', [100]);
-            $teacherEvents->where('event_details.participation_id', '>', 198);
+            //$teacherEvents->where('event_details.participation_id', '>', 198);
             $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
             $teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
             $teacherEvents->whereNull('events.deleted_at');
