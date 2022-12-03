@@ -750,6 +750,9 @@ button#save_btn_more i {
     grid-gap: 15px;
     z-index: 22;
 }
+.pull-right.btn-group.cal_top{
+    margin-top: 5px;
+}
 @media only screen and (max-width: 768px) {
     .language_page label,
     .email_template_page label,
