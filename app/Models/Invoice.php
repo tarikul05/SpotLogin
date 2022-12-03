@@ -206,6 +206,8 @@ class Invoice extends BaseModel
         
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
+        $studentEvents->whereNull('events.deleted_at');
+        $studentEvents->whereNull('event_details.deleted_at');
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $studentEvents->where('events.date_start', '>=', $dateS);
