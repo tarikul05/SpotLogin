@@ -56,17 +56,21 @@
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif
                         @endcan
-                        @if(!$AppUI->isStudent())
                         <div class="nav-item dropdown">
                              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                             <div class="dropdown-menu header">
+
+                            @if(!$AppUI->isStudent())
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                            @else
+                                <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
+                            @endcan
                             </div>
                         </div>
-                        @endcan
+                        
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
                             @unlessrole('student')

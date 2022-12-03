@@ -23,6 +23,8 @@
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             
                             @if($invoice->invoice_status ==10)
+
+                            @if(!$AppUI->isStudent())
                                 @if($invoice->payment_status ==0)
                                     <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
                                         {{__('Flag as Paid')}}
@@ -33,6 +35,7 @@
                                     </a>
                                 @endif
                                 <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                            @endif
                                 <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                     <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
@@ -44,7 +47,6 @@
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
                                 <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
                                 <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                                
                             @endif
                             
 

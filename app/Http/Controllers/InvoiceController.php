@@ -62,11 +62,16 @@ class InvoiceController extends Controller
         if ($user_role != 'superadmin') {
             if ($user_role == 'teacher') {
                 $invoices->where('category_invoiced_type', $user->person_id);
-                 $invoices->where('seller_id', $user->id);
+                $invoices->where('seller_id', $user->id);
+            }elseif ($user_role == 'student') {
+                $invoices->where('category_invoiced_type', $invoice_type);
+                $invoices->where('client_id', $user->id);
+                $invoices->where('invoice_status', 10);
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
         }
+
         $invoices->orderBy('id', 'desc');
         $invoices = $invoices->get();
         return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
