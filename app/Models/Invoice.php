@@ -568,8 +568,10 @@ class Invoice extends BaseModel
                 );
             //$teacherEvents->whereNotIn('events.event_type', [100]);
             //$teacherEvents->where('event_details.participation_id', '>', 198);
-            $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
-            $teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
+            $teacherEvents->whereRaw($qq);
+           // $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
+            //$teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
             $teacherEvents->whereNull('events.deleted_at');
             $teacherEvents->whereNull('event_details.deleted_at');
             //dd($dateS);
@@ -653,8 +655,10 @@ class Invoice extends BaseModel
                 $studentEvents->whereIn('events.id',$p_event_ids);
             }
            // $studentEvents->where('event_details.participation_id', '>', 198);
-            $studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->where('events.date_end', '<=', $dateEnd);
+            //$studentEvents->where('events.date_start', '>=', $dateS);
+            //$studentEvents->where('events.date_end', '<=', $dateEnd);
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateEnd))) . " 23:59:59'";
+            $studentEvents->whereRaw($qq);
             //dd($dateS);
             if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
