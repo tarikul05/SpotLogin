@@ -1062,7 +1062,7 @@
     $('#delete_btn_inv').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
         DeleteInvoice();
-        window.history.back();
+        //window.history.back();
         return false;
     });
 
