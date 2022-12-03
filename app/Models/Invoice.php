@@ -652,7 +652,7 @@ class Invoice extends BaseModel
                 $p_event_ids = explode(',',$p_event_ids);
                 $studentEvents->whereIn('events.id',$p_event_ids);
             }
-            $studentEvents->where('event_details.participation_id', '>', 198);
+           // $studentEvents->where('event_details.participation_id', '>', 198);
             $studentEvents->where('events.date_start', '>=', $dateS);
             $studentEvents->where('events.date_end', '<=', $dateEnd);
             //dd($dateS);
