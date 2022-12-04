@@ -587,6 +587,15 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'long', $timeZone,'UTC',);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'long',$timeZone,'UTC');
+                
             $p_pending_only=trim($data['p_pending_only']);
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
@@ -603,11 +612,7 @@ class InvoiceController extends Controller
             //dd($studentEvents->toSql());
             $dataFetched = $studentEvents->get();
 
-            $school = School::active()->find($p_school_id);
-            $timeZone = 'UTC';
-            if (!empty($school->timezone)) {
-                $timeZone = $school->timezone;
-            }
+            
             foreach ($dataFetched as $key => $value) {
 	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
                 $old_date_timestamp = strtotime($value->date_start);
@@ -654,6 +659,14 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'long', $timeZone,'UTC',);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'long',$timeZone,'UTC');
+             
             
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
             $query = new Invoice;
@@ -662,12 +675,6 @@ class InvoiceController extends Controller
             //dd($studentEvents->toSql());
             $dataFetched = $teacherEvents->get();
             //dd($data);
-
-            $school = School::active()->find($p_school_id);
-            $timeZone = 'UTC';
-            if (!empty($school->timezone)) {
-                $timeZone = $school->timezone;
-            }
             foreach ($dataFetched as $key => $value) {
 	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
                 $old_date_timestamp = strtotime($value->date_start);
@@ -709,6 +716,14 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'long', $timeZone,'UTC',);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'long',$timeZone,'UTC');
+             
             $dateS = $p_billing_period_start_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_start_date)));
             $dateEnd = $p_billing_period_end_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_end_date)));
             $p_event_ids=trim($data['p_event_ids']);
@@ -985,6 +1000,14 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $data['p_billing_period_start_date'] = trim($data['p_from_date']);
             $data['p_billing_period_end_date'] = trim($data['p_to_date']);
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $data['p_billing_period_start_date'] = $this->formatDateTimeZone($data['p_billing_period_start_date'], 'long', $timeZone,'UTC',);
+            $data['p_billing_period_end_date'] = $this->formatDateTimeZone($data['p_billing_period_end_date'], 'long',$timeZone,'UTC');
+             
             $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_start_date'])));
             $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_end_date'])));
 

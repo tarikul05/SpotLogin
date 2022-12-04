@@ -75,7 +75,7 @@
                                     
                                     @php 
                                         
-                                        
+                                        $zone = $timeZone;
                                         $sub_total_lesson = 0;
                                         $sub_total_min_lesson = 0;
                                         $total_lesson = 0;
@@ -84,6 +84,10 @@
                                         $total_event = 0;
                                         $total_min = 0;
                                         $total = 0;
+                                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
+                                        $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
+                                        
                                     @endphp
                                 
                                     <tbody>
@@ -100,7 +104,7 @@
                                             
                                             @foreach($group as $key => $item)
                                                 @php
-                                                $zone = $timeZone;
+                                                
                                                 $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
 
                                                 @endphp
