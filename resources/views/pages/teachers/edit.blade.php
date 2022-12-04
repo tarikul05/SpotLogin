@@ -1251,8 +1251,10 @@ function populate_teacher_lesson() {
 				// 		resultHtml += "</td>";
 				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
-				resultHtml += '<td>' + value.time_start + '</td>';
-				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
+				resultHtml += '<td></td>';
+				resultHtml += '<td></td>';
+				//resultHtml += '<td>' + value.time_start + '</td>';
+				//resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 				if (value.event_type == 100) {
 					resultHtml += '<td>Event</td>';
 				} else {
