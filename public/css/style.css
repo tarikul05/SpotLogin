@@ -538,6 +538,9 @@ input.error {
     grid-gap: 15px;
     z-index: 9;
 }
+#edit_event .btn_area {
+  top: 145px;
+}
 a#delete_btn {
     display: none !important;
 }
