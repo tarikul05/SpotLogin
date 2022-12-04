@@ -1216,8 +1216,8 @@ function populate_teacher_lesson() {
 
 				// week summary
 				if ((prev_week != '') && (prev_week != value.week_name)) {
-					resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-					resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+					resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+					resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
 					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
 					//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
 					resultHtml += '</tr>'
@@ -1228,12 +1228,12 @@ function populate_teacher_lesson() {
 				if (prev_week != value.week_name) {
 					//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</td></tr></b>';
 					resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
-					//resultHtml += '<b><td colspan="1">Date</td>';
+					//resultHtml += '<b><td colspan="1"></td>';
 					resultHtml += '<b><td colspan="1"></td>';
 					resultHtml += '<b><td colspan="1"></td>';
 					resultHtml += '<b><td colspan="1"></td>';
 					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="2"></td>';
 					resultHtml += '<td colspan="2" style="text-align:right">' + '' + '</td>';
 					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
 				}
@@ -1245,6 +1245,11 @@ function populate_teacher_lesson() {
 				} else {
 						resultHtml += "<td>-</td>";
 				}
+				// if (value.ready_flag == 1) {
+				// 	resultHtml += "<td>";
+				// 		resultHtml += "<i class='fa fa-lock'></i> ";
+				// 		resultHtml += "</td>";
+				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				resultHtml += '<td>' + value.time_start + '</td>';
 				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
@@ -1254,30 +1259,30 @@ function populate_teacher_lesson() {
 					resultHtml += '<td>Lesson</td>';
 				}
 				
-				resultHtml += '<td>' + value.student_name + '</td>';
+				resultHtml += '<td colspan="2">' + value.student_name + '</td>';
 				//resultHtml += '<td>' + value.title + '</td>';
-				resultHtml += '<td>' + value.price_name + '</td>';
+				resultHtml += '<td colspan="2">' + value.price_name + '</td>';
 
 				// all_ready = 0 means not ready to generate invoice
 				if (value.ready_flag == "0") {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
 					if (value.event_type == 100) {
-						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='1'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					} else {
-						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='1'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="1">' + value.price_currency + ' ' + value.buy_total + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 					total_buy += value.buy_total + value.costs_1;
 					week_total_buy += value.buy_total + value.costs_1;
 				}
 				if (value.extra_charges != 0) {
-					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.costs_1 + '</td>';
 				} else {
 					//resultHtml += '<td style="text-align:right"></td>';
-					resultHtml+='<td style="text-align:right" colspan="3"></td>';
+					resultHtml+='<td style="text-align:right" colspan="2"></td>';
 				}
 
 				resultHtml += '</tr>';
@@ -1299,8 +1304,8 @@ function populate_teacher_lesson() {
 
 		// summary for last week of course records
 		if ((week_total_buy > 0) || (week_total_sell > 0)) {
-			resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-			resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+			resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
 			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
 			resultHtml += '</tr>'
 			week_total_buy = 0;
@@ -1308,10 +1313,10 @@ function populate_teacher_lesson() {
 		}
 
 		// display grand total
-		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
 		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>'; 
-		resultHtml+='<td style="text-align:right" colspan="3"></td>';    
+		resultHtml+='<td style="text-align:right" colspan="1"></td>';    
 		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 		resultHtml += '</tr>'
 
@@ -1339,17 +1344,17 @@ function populate_teacher_lesson() {
 		total_buy = total_buy - total_disc;
 		//console.log(total_buy);
 		if (total_disc > 0) {
-			resultHtml += '<tr><td colspan="4">';
+			resultHtml += '<tr><td colspan="6">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
-			resultHtml += '<td colspan="2"><strong>Total Commission</strong></td>';
+			resultHtml += '<td colspan="3"><strong>Total Commission</strong></td>';
 			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
 		}
 
 		// display grand total
-		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-		resultHtml += '<td colspan="2">Total</td>';
-		resultHtml += '<td style="text-align:right" colspan="2">' + total_buy.toFixed(2) + '</td>';
-		resultHtml+='<td style="text-align:right" colspan="3"></td>';   
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+		resultHtml += '<td colspan="3">Total</td>';
+		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
+		resultHtml+='<td style="text-align:right" colspan="2"></td>';   
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
 		resultHtml += '</tr>'
 

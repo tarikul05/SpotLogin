@@ -166,6 +166,9 @@ button#add_more_expense_btn {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.glyphicon-lock:before {
+    content: "\e033";
+}
 .glyphicon-plus:before {
     content: "\2b";
 }

@@ -1051,12 +1051,14 @@ button.btn.btn-sm.btn-warning {
 }
 table#lesson_table {
     border: 1px solid #ddd;
+    table-layout: fixed;
 }
 table#lesson_table > tbody > tr > td {
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd;
+    word-wrap: break-word;
 }
 .section_header_class label {
     color: #152245;
