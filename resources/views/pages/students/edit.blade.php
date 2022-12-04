@@ -1166,6 +1166,10 @@ $('#save_btn').click(function (e) {
 								resultHtml += "<td>";
 									resultHtml += "<i class='fa fa-lock'></i> ";
 									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc

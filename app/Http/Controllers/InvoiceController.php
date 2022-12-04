@@ -52,6 +52,10 @@ class InvoiceController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $timeZone = 'UTC';
+        if (!empty($school->timezone)) {
+            $timeZone = $school->timezone;
+        }
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
 
@@ -74,7 +78,7 @@ class InvoiceController extends Controller
 
         $invoices->orderBy('id', 'desc');
         $invoices = $invoices->get();
-        return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
+        return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
 
@@ -597,13 +601,24 @@ class InvoiceController extends Controller
                 );
             }
             //dd($studentEvents->toSql());
-            $data = $studentEvents->get();
-            //dd($data);
+            $dataFetched = $studentEvents->get();
+
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            foreach ($dataFetched as $key => $value) {
+	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $old_date_timestamp = strtotime($value->date_start);
+                $value->date_start = date('d/m/Y', $old_date_timestamp);  
+                $value->time_start = date('H:i', $old_date_timestamp);
+            }
 
             $result = array(
                 'status' => true,
                 'message' => __('We got a list of invoice'),
-                'data' => $data,
+                'data' => $dataFetched,
                 //'no_of_teachers' =>$no_of_teachers
             );
 
@@ -645,13 +660,25 @@ class InvoiceController extends Controller
             $teacherEvents = $query->getTeacherEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
                 
             //dd($studentEvents->toSql());
-            $data = $teacherEvents->get();
+            $dataFetched = $teacherEvents->get();
             //dd($data);
+
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            foreach ($dataFetched as $key => $value) {
+	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $old_date_timestamp = strtotime($value->date_start);
+                $value->date_start = date('d/m/Y', $old_date_timestamp);  
+                $value->time_start = date('H:i', $old_date_timestamp);  
+            }
 
             $result = array(
                 'status' => true,
                 'message' => __('We got a list of invoice'),
-                'data' => $data,
+                'data' => $dataFetched,
                 //'no_of_teachers' =>$no_of_teachers
             );
             return response()->json($result);
