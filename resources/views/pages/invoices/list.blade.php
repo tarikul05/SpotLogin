@@ -64,7 +64,7 @@
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
                             }
                         }
-                        $zone = $timezone;
+                        $zone = $timeZone;
                         $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
 
                     @endphp

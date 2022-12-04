@@ -99,6 +99,11 @@
                                             <tbody>
                                             
                                             @foreach($group as $key => $item)
+                                                @php
+                                                $zone = $timeZone;
+                                                $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
+
+                                                @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                     <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>

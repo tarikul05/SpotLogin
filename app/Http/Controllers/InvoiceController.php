@@ -1257,6 +1257,10 @@ class InvoiceController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $timeZone = 'UTC';
+        if (!empty($school->timezone)) {
+            $timeZone = $school->timezone;
+        }
         $invoice = Invoice::active()->find($invoice);
         if (empty($invoice)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -1305,7 +1309,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
+        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
     }
 
     /**
