@@ -176,14 +176,14 @@
 										</div>
 									</div>		
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row lesson hide_on_off" id="teacher_type_billing">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
