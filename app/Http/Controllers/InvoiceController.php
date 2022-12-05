@@ -1457,6 +1457,14 @@ class InvoiceController extends Controller
             
             $dataParam = $request->all();
 
+            $school = School::active()->find($schoolId);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dataParam['p_date_invoice'], 'long', $timeZone,'UTC',);
+            
+
             $data = [
                 'school_id' => $schoolId,
                 'invoice_type' => $dataParam['p_invoice_type'],
@@ -1506,6 +1514,8 @@ class InvoiceController extends Controller
             
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
+            
                     $itemData = [
                         'invoice_id'   => $Invoice->id,
                         'school_id' => $schoolId,
@@ -1578,6 +1588,13 @@ class InvoiceController extends Controller
             
             $dataParam = $request->all();
             $id = $dataParam['p_auto_id'];
+            $school = School::active()->find($schoolId);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dataParam['p_date_invoice'], 'long', $timeZone,'UTC',);
+            
 
             $data = [
                 'school_id' => $schoolId,
@@ -1631,6 +1648,8 @@ class InvoiceController extends Controller
 
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
+            
                     $itemData = [
                         'invoice_id' => $id,
                         'school_id' => $schoolId,
@@ -1834,34 +1853,4 @@ class InvoiceController extends Controller
     }
 
 
-     /**
-     *  AJAX update Invoice
-     *
-     * @return json
-     * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-10-22
-     */
-    public function updateInvoice(Request $request, Invoice $invoice)
-    {
-        $result = array(
-            'status' => 'failed',
-            'message' => __('failed to delete'),
-        );
-        try {
-            $dataParam = $request->all();
-            $id = trim($dataParam['p_invoice_id']);
-            $invoiceData = Invoice::find($id)->delete();
-            if ($invoiceData == 1) {
-                $result = array(
-                    "status"     => 'success',
-                    'message' => __('Confirmed'),
-                );
-            }
-            return response()->json($result);
-        } catch (Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
-        }
-    }
 }
