@@ -313,8 +313,9 @@ class InvoiceController extends Controller
         //     'invoice_status' =>1,
         //     'message' => __('failed to send email'),
         // );
-        // return response()->json($result);
+        //return response()->json($result);
         try {
+            
             $data = $request->all();
             $user = $request->user();
             $p_invoice_id = trim($data['p_invoice_id']);
@@ -329,7 +330,9 @@ class InvoiceController extends Controller
             $updateInvoice['modified_by'] = $user->id;
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
-            if($invoiceData){
+            // print_r($invoiceData);
+            // exit();
+            if($invoiceData==1){
                 $result = array(
                     'status' => 'success',
                     'message' => __('We got a list of invoice')
@@ -339,7 +342,8 @@ class InvoiceController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
+            $result['message'] = $e->getMessage();
+            //$result['message'] = __('Internal server error');
             return response()->json($result);
         }
     }
