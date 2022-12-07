@@ -93,18 +93,15 @@ class InvoiceController extends Controller
         }
 
         if($user->hasAnyPermission([
-        'student-invoice-list',
-        'student-invoice-edit'])){
+        'student-invoice-list'])){
             $invoices->where('invoice_type', 1); // student_invoice_list
         }
         if($user->hasAnyPermission([ 
-        'teacher-invoice-list',
-        'teacher-invoice-edit'])){
+        'teacher-invoice-list'])){
             $invoices->where('invoice_type', 2); // teacher invoice 
         }
         if($user->hasAnyPermission([
-        'manual-invoice-list',
-        'manual-invoice-edit'])){
+        'manual-invoice-list'])){
             $invoices->where('invoice_type', 0); // manual invoice
         }
         $invoices->orderBy('id', 'desc');
