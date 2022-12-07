@@ -56,12 +56,15 @@
                         <td>{{ $event->teacher_full_name; }}</td>
                         <td>{{ $event->invoice_items; }}</td>
                         <td align="center">
-                            <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
-                            href="{{ auth()->user()->isSuperAdmin() ? 
-                                    route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
-                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3" 
-                            class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
-                            {{ __('View items to be invoiced') }}</a>
+                            @canany(['invoice-generate',
+                                    'teacher-invoice-generate'])
+                                <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
+                                href="{{ auth()->user()->isSuperAdmin() ? 
+                                        route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
+                                        route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3" 
+                                class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
+                                {{ __('View items to be invoiced') }}</a>
+                            @endcanany
                         </td>
                     </tr>
                 @endforeach
