@@ -67,6 +67,20 @@ class InvoiceController extends Controller
 
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 
+        // @canany(['invoice-list', 
+        //                 'teacher-invoice-list', 
+        //                 'student-invoice-list',
+        //                 'manual-invoice-list',
+        //                 'invoice-edit',
+        //                 'teacher-invoice-edit',
+        //                 'student-invoice-edit',
+        //                 'manual-invoice-edit',
+        //                 'event-lesson-list',
+        //                 'teacher-lesson-list',
+        //                 'student-lesson-list',
+        //                 'invoice-generate',
+        //                 'teacher-invoice-generate',
+        //                 'student-invoice-generate'])
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
         if ($user_role != 'superadmin') {
@@ -76,6 +90,22 @@ class InvoiceController extends Controller
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
+        }
+
+        if($user->hasAnyPermission([
+        'student-invoice-list',
+        'student-invoice-edit'])){
+            $invoices->where('invoice_type', 1); // student_invoice_list
+        }
+        if($user->hasAnyPermission([ 
+        'teacher-invoice-list',
+        'teacher-invoice-edit'])){
+            $invoices->where('invoice_type', 2); // teacher invoice 
+        }
+        if($user->hasAnyPermission([
+        'manual-invoice-list',
+        'manual-invoice-edit'])){
+            $invoices->where('invoice_type', 0); // manual invoice
         }
         $invoices->orderBy('id', 'desc');
         $invoices = $invoices->get();
