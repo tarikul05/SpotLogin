@@ -114,7 +114,10 @@ p {
     margin-left: 0;
 }
 #main-content {
-    margin-top: 80px;
+    margin-top: 97px;
+}
+div#ex1-content {
+    padding-bottom: 50px;
 }
 
 .navbar {
@@ -159,7 +162,7 @@ header.panel-heading {
     margin: 40px 0;
     padding-top: 1px;
     padding-bottom: 5px;
-    top: 60px;
+    top: 67px;
     position: sticky;
     z-index: 9;
     background: #fff;
@@ -1048,12 +1051,14 @@ button.btn.btn-sm.btn-warning {
 }
 table#lesson_table {
     border: 1px solid #ddd;
+    table-layout: fixed;
 }
 table#lesson_table > tbody > tr > td {
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd;
+    word-wrap: break-word;
 }
 .section_header_class label {
     color: #152245;
@@ -1190,6 +1195,16 @@ select#student_sis_paying {
 }
 .ty_bill label.invoice_type_label {
     padding-left: 5px;
+}
+.dropdown-menu form {
+    margin-bottom: 0px;
+    padding-bottom: 3.5px;
+}
+label#currency_alert_text {
+    padding-left: 10px;
+}
+#default_currency_lbl {
+    padding-right: 10px;
 }
 @media only screen and (max-width: 991px) {
     h1 {

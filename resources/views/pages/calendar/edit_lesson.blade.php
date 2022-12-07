@@ -176,14 +176,14 @@
 										</div>
 									</div>		
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row lesson hide_on_off" id="teacher_type_billing">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
@@ -394,6 +394,7 @@ $('#student').on('change', function(event) {
 })
 
 $( document ).ready(function() {
+
 	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // document.getElementById("zone").value = zone;
 	var zone = document.getElementById("zone").value;
@@ -420,7 +421,7 @@ $( document ).ready(function() {
 		}
 
     }else{
-        $("#teacher_type_billing").show();
+        $("#teacher_type_billing").hide();
         $("#student_sis_paying").val(t_std_pay_type);
 		if(s_thr_pay_type == 0){
 			$('#sprice_amount_buy').prop('disabled', true);   
@@ -796,19 +797,23 @@ function confirm_event(){
 		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
 		return false;
 	})
-
 	$("body").on('change', '#category_select', function(event) {
+
+    	var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
 		var datainvoiced = $("#category_select option:selected").data('invoice');
 		var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
 		var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
 		var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
 		
 		if (datainvoiced == 'S') {
-			if (s_std_pay_type == 2) {
-	            $("#std-check-div").css('display', 'block');
-	        }else{
+			// if (s_std_pay_type == 2) {
+	  //           $("#std-check-div").css('display', 'block');
+	  //       }else{
 	            $("#std-check-div").css('display', 'none');
-	        }
+	        // }
 			$("#teacher_type_billing").show();
 			$("#student_sis_paying").val(s_std_pay_type);
 			$("#sis_paying").val(s_thr_pay_type);
@@ -853,27 +858,72 @@ function confirm_event(){
 		}else if(s_thr_pay_type == 1){
 			$('#hourly').hide();
 			$('#price_per_student').show();
-			var formData = $('#edit_lesson').serializeArray();
-			var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-			formData.push({
-				"name": "_token",
-				"value": csrfToken,
-			});
-
-			$.ajax({
-				url: BASE_URL + '/check-lesson-fixed-price',
-				async: false, 
-				data: formData,
-				type: 'POST',
-				dataType: 'json',
-				success: function(response){
-					if(response.status == 1){
-						var errMssg = '';	
-					}
-				}
-			})
 		}
+		
+
+		var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+	    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+	    var isTeacher = +"{{$AppUI->isTeacher()}}";
+
+	    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+	        $("#price_per_student").show(); 
+	    }else{
+	        $("#price_per_student").hide();
+	    }
+
+        getLatestPrice();
 	});
+
+$("#student, #teacher_select").on('change', function(event) {
+    getLatestPrice()
+});
+
+	function getLatestPrice() {
+	    var agendaSelect = +$("#agenda_select").val();
+	    var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
+	    var formData = $('#from').serializeArray();
+	    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	    formData.push({
+	        "name": "_token",
+	        "value": csrfToken,
+	    });
+
+	    formData.push({
+	        "name": "event_category_id",
+	        "value": categoryId,
+	    });
+	    formData.push({
+	        "name": "teacher_select",
+	        "value": teacherSelect,
+	    });
+	    formData.push({
+	        "name": "no_of_students",
+	        "value": stdSelected,
+	    });
+	    
+	    if (categoryId > 0 && teacherSelect > 0) {
+	        $.ajax({
+	            url: BASE_URL + '/check-lesson-fixed-price',
+	            async: false, 
+	            data: formData,
+	            type: 'POST',
+	            dataType: 'json',
+	            success: function(response){
+	                if(response.status == 1){
+	                    if (response.data) {
+	                        $("#sprice_amount_buy").val(response.data.price_buy)
+	                        $("#sprice_amount_sell").val(response.data.price_sell)
+	                    }
+	                }
+	            }
+	        })
+	    }
+	    
+	}
+
 	
 	$("body").on('click', '#student_empty', function(event) {
 		if ($("#student_empty").prop('checked')) {
@@ -885,6 +935,8 @@ function confirm_event(){
 	})
 
 	$( document ).ready(function() {
+		$("#category_select").trigger('change');
+
 		$(function() {
 			$("#save_btn_more").click(function(){
 			$("#save_btn_value"). val(1);

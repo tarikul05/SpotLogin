@@ -56,6 +56,7 @@
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif
                         @endcan
+                           
                         @canany(['invoice-list', 
                         'teacher-invoice-list', 
                         'student-invoice-list',
@@ -74,37 +75,44 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                                 <!-- comented for 1st release -->
                                 <div class="dropdown-menu header">
-                                    @canany(['invoice-list', 
-                                    'teacher-invoice-list', 
-                                    'student-invoice-list',
-                                    'manual-invoice-list',
-                                    'invoice-edit',
-                                    'teacher-invoice-edit',
-                                    'student-invoice-edit'])
-                                    <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
-                                    @endcanany
-                                    @canany(['event-lesson-list',
-                                    'student-lesson-list',
-                                    'invoice-generate',
-                                    'student-invoice-generate'])
-                                        <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
-                                    @endcanany
-                                    @canany([
-                                    'event-lesson-list',
-                                    'teacher-lesson-list',
-                                    'invoice-generate',
-                                    'teacher-invoice-generate'])
-                                        <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
-                                    @endcanany
-                                    @canany(['manual-invoice-edit'])
-                                        <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
-                                    @endcanany
+                                    @if(!$AppUI->isStudent())
+                                    
+                                        @canany(['invoice-list', 
+                                        'teacher-invoice-list', 
+                                        'student-invoice-list',
+                                        'manual-invoice-list',
+                                        'invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit'])
+                                        <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
+                                        @endcanany
+                                        @canany(['event-lesson-list',
+                                        'student-lesson-list',
+                                        'invoice-generate',
+                                        'student-invoice-generate'])
+                                            <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
+                                        @endcanany
+                                        @canany([
+                                        'event-lesson-list',
+                                        'teacher-lesson-list',
+                                        'invoice-generate',
+                                        'teacher-invoice-generate'])
+                                            <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
+                                        @endcanany
+                                        @canany(['manual-invoice-edit'])
+                                            <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                                        @endcanany
+                                    @else
+                                        <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
+                                    @endcan
                                 </div>
                             </div>
                         @endcanany
+                        
                         @if($AppUI['person_type'] === 'SUPER_ADMIN')
                             <a href="{{ route('subscriber_list') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-item nav-link">{{ __('Billing') }}</a>
                         @endif
+
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
                             @unlessrole('student')

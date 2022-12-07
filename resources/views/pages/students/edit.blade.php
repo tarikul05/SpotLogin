@@ -1154,8 +1154,8 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
 		
@@ -1174,15 +1174,21 @@ $('#save_btn').click(function (e) {
 							}
 
 							//below locked and invoiced
-							resultHtml += "<td>";
+							
 							if (value.ready_flag == 1) {
-									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
 									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
 							//}
-							resultHtml += "</td>";
+							
 							//above locked and invoiced
 
 							resultHtml += '<td width="10%">' + value.date_start + '</td>';
@@ -1217,9 +1223,9 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
 								

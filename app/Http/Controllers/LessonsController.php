@@ -78,8 +78,10 @@ class LessonsController extends Controller
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']);
                 $end_date = str_replace('/', '-', $eventData['end_date']);
+                // dd($start_date, $end_date);
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
-                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $end_date = date('Y-m-d',strtotime($end_date)).' 23:59:59';
+
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $eventData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
                 $stu_num = count($eventData['student']);
@@ -103,7 +105,7 @@ class LessonsController extends Controller
                     'price_amount_buy' => isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : null,
                     'price_amount_sell' => isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null,
                     'extra_charges' => isset($eventData['extra_charges']) ? $eventData['extra_charges']: null,
-                    'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
+                    'fullday_flag' => 'Y',
                     'description' => $eventData['description'],
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
@@ -212,7 +214,7 @@ class LessonsController extends Controller
                 $start_date = str_replace('/', '-', $eventData['start_date']);
                 $end_date = str_replace('/', '-', $eventData['end_date']);
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
-                $end_date = date('Y-m-d H:i:s',strtotime($end_date));
+                $end_date = date('Y-m-d',strtotime($end_date)).' 23:59:59';
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $eventData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $eventData['zone'],'UTC');
                 $stu_num = count($eventData['student']);
@@ -227,7 +229,7 @@ class LessonsController extends Controller
                     'price_amount_buy' => isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : null,
                     'price_amount_sell' => isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null,
                     'extra_charges' => isset($eventData['extra_charges']) ? $eventData['extra_charges']: null,
-                    'fullday_flag' => !empty($eventData['fullday_flag']) ? $eventData['fullday_flag'] : null,
+                    'fullday_flag' => 'Y',
                     'description' => $eventData['description'],
                     'location_id' => isset($eventData['location']) ? $eventData['location'] : null,
                     'teacher_id' => $eventData['teacher_select'],
