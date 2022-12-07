@@ -23,6 +23,8 @@
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             
                             @if($invoice->invoice_status ==10)
+
+                            @if(!$AppUI->isStudent())
                                 @if($invoice->payment_status ==0)
                                     <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
                                         {{__('Flag as Paid')}}
@@ -33,6 +35,7 @@
                                     </a>
                                 @endif
                                 <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                            @endif
                                 <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                     <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
@@ -44,7 +47,6 @@
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
                                 <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
                                 <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                                
                             @endif
                             
 
@@ -73,7 +75,7 @@
                                     
                                     @php 
                                         
-                                        
+                                        $zone = $timeZone;
                                         $sub_total_lesson = 0;
                                         $sub_total_min_lesson = 0;
                                         $total_lesson = 0;
@@ -82,6 +84,10 @@
                                         $total_event = 0;
                                         $total_min = 0;
                                         $total = 0;
+                                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
+                                        $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
+                                        
                                     @endphp
                                 
                                     <tbody>
@@ -97,6 +103,11 @@
                                             <tbody>
                                             
                                             @foreach($group as $key => $item)
+                                                @php
+                                                
+                                                $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
+
+                                                @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                     <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>
@@ -352,11 +363,14 @@
                                 <label id="row_hdr_status" name="row_hdr_status" for="invoice_status" class="col-lg-3 col-sm-3 text-right">Status</label>
                                 <div class="col-lg-2 col-sm-2 text-left">
                                     <label id="invoice_status_text">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
+
+                                    @if(!$AppUI->isStudent())
                                     <div> 
                                         <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: none;">
                                             <span id="unlock_btn_cap">Unlock</span>
                                         </a>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             <!-- invoice date -->
@@ -1004,12 +1018,39 @@
     //     */
     //     Generate_View_PDF('preview');
     // });
+    function executeAsynchronously(functions, timeout) {
+        for(var i = 0; i < functions.length; i++) {
+            setTimeout(functions[i], timeout);
+            if (i==functions.length-1) {
+                setTimeout(function () {
+                //successModalCall('Invoice Updated successfully!');
+                    
+                    location.reload()
+                }, 1000);
+            }
+        }
+    }
     $('#issue_inv_btn').click(function (e) {
-        Generate_View_PDF('issue_pdf');
-        location.reload();
+        var x = document.getElementsByClassName("tab-pane active");
+        //if (x[0].id == "pane_main") {
+
+        // } else if (x[0].id == "tab_2") {
+          //  step1().then(step2).then(step3);  
+          executeAsynchronously(
+    [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount, Generate_View_PDF], 10);
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        // Generate_View_PDF('issue_pdf');
+        //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    
+        
     });
 
-    function Generate_View_PDF(p_type) {
+    function Generate_View_PDF(p_type='issue_pdf') {
         if (p_type =='preview') {
             console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
             window.open('{!! $invoice->invoice_filename !!}', '_blank');
@@ -1062,7 +1103,7 @@
     $('#delete_btn_inv').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
         DeleteInvoice();
-        window.history.back();
+        //window.history.back();
         return false;
     });
 
@@ -1197,12 +1238,14 @@
 
         // } else if (x[0].id == "tab_2") {
             
-        if (x[0].id == "tab_3") {
-            UpdateInvoiceInfo();
-        } else {
-            //console.log('sss');
-            UpdateInvoiceSummaryAmount();
-        }
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        executeAsynchronously(
+        [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount], 10);
     });
 
     function UpdateInvoiceSummaryAmount() {
@@ -1245,17 +1288,19 @@
             async: false,
             success: function (result) {
                 var status = result.status;
-                if (status == 'success') {
+                // console.log(result);
+                // return true;
+                //if (status == 'success') {
                     successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    //return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
-                }
-                else {
-                    errorModalCall(GetAppMessage('error_message_text'));
+                //}
+                //else {
+                //    errorModalCall(GetAppMessage('error_message_text'));
 
-                }
+                //}
             }, //success
             error: function (ts) { 
                 errorModalCall(GetAppMessage('error_message_text'));
@@ -1281,7 +1326,7 @@
         }
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-        // console.log(form_data);
+        
         // return false;
         $.ajax({
             url: BASE_URL+'/update_invoice_info',
@@ -1293,12 +1338,13 @@
             cache: false,
             processData: false,
             success: function (result) {
+                //console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    //successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {

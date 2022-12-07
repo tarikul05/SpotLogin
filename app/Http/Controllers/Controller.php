@@ -315,12 +315,14 @@ class Controller extends BaseController
         if (!$to){
             $to = $this->get_local_time();
         }
-        $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
-        $carbon->setTimezone($to)->format('Y-m-d H:i:s');
+        
         if ($type == 'short')
         {
             $carbon = Carbon::createFromFormat('Y-m-d', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
             $carbon->setTimezone($to)->format('Y-m-d');
+        } else {
+            $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
+            $carbon->setTimezone($to)->format('Y-m-d H:i:s');
         }
         return $carbon->toDateTimeString();
     }

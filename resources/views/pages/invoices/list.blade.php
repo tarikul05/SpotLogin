@@ -64,6 +64,9 @@
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
                             }
                         }
+                        $zone = $timeZone;
+                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+
                     @endphp
                 
                     <tr>
@@ -105,12 +108,15 @@
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
+
+                            @if(!$AppUI->isStudent())
                             <td class="text-center">
                                 <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
                                 <span class="small txt-grey pull-left">
                                     <span class="change_button">{{ __('Change')}}</span>
                                 </span>
                             </td>
+                            @endif
                         @else
                             <td></td>
                         @endif

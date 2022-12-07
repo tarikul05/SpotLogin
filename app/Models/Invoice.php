@@ -206,6 +206,8 @@ class Invoice extends BaseModel
         
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
+        $studentEvents->whereNull('events.deleted_at');
+        $studentEvents->whereNull('event_details.deleted_at');
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $studentEvents->where('events.date_start', '>=', $dateS);
@@ -275,6 +277,8 @@ class Invoice extends BaseModel
         $teacherEvents->where('event_details.visibility_id', '>', 0);
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
         $teacherEvents->whereNull('event_details.buy_invoice_id');
+        $teacherEvents->whereNull('events.deleted_at');
+        $teacherEvents->whereNull('event_details.deleted_at');
 
 
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
@@ -302,12 +306,12 @@ class Invoice extends BaseModel
     }
 
     /**
-     * getStudentEventList for invoicing
+     * getStudentEventLessonList for invoicing
      * 
      * @param array $params
      * @return $query
      */
-    public function getStudentEventList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
+    public function getStudentEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
     {
         $studentEvents = DB::table('events')
                 ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -344,7 +348,7 @@ class Invoice extends BaseModel
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
                 ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('events.date_start as date_start')
                 ->selectRaw('week(events.date_start,5) week_no')
                 ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
                 //->selectRaw('count(events.id) as invoice_items')
@@ -380,7 +384,7 @@ class Invoice extends BaseModel
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
             $studentEvents->whereRaw($qq);
 
 
@@ -389,6 +393,7 @@ class Invoice extends BaseModel
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             $studentEvents->distinct('event_details.id');
+            $studentEvents->orderBy('events.date_start', 'desc');
             //dd($studentEvents->toSql());
 
             return $studentEvents;
@@ -449,7 +454,8 @@ class Invoice extends BaseModel
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
                 ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                //->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('events.date_start as date_start')
                 ->selectRaw('week(events.date_start,5) week_no')
                 ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
                 //->selectRaw('count(events.id) as invoice_items')
@@ -491,7 +497,7 @@ class Invoice extends BaseModel
             $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
             $teacherEvents->whereNull('event_details.buy_invoice_id');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . "'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
             $teacherEvents->whereRaw($qq);
 
             // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
@@ -514,7 +520,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function generateTeacherEvent($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date)
+    public function generateTeacherEvent($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date,$p_event_ids)
     {
 
         $teacherEvents = DB::table('events')
@@ -561,10 +567,17 @@ class Invoice extends BaseModel
                         'events.school_id' => $p_school_id,
                     ]
                 );
+            if (!empty($p_event_ids)) {
+                $p_event_ids = substr($p_event_ids, 0, -1);
+                $p_event_ids = explode(',',$p_event_ids);
+                $teacherEvents->whereIn('events.id',$p_event_ids);
+            }
             //$teacherEvents->whereNotIn('events.event_type', [100]);
-            $teacherEvents->where('event_details.participation_id', '>', 198);
-            $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
-            $teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
+            //$teacherEvents->where('event_details.participation_id', '>', 198);
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
+            $teacherEvents->whereRaw($qq);
+           // $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
+            //$teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
             $teacherEvents->whereNull('events.deleted_at');
             $teacherEvents->whereNull('event_details.deleted_at');
             //dd($dateS);
@@ -600,7 +613,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd)
+    public function generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd,$p_event_ids)
     {
         $studentEvents = DB::table('events')
                 ->select(
@@ -647,9 +660,11 @@ class Invoice extends BaseModel
                 $p_event_ids = explode(',',$p_event_ids);
                 $studentEvents->whereIn('events.id',$p_event_ids);
             }
-            $studentEvents->where('event_details.participation_id', '>', 198);
-            $studentEvents->where('events.date_start', '>=', $dateS);
-            $studentEvents->where('events.date_end', '<=', $dateEnd);
+           // $studentEvents->where('event_details.participation_id', '>', 198);
+            //$studentEvents->where('events.date_start', '>=', $dateS);
+            //$studentEvents->where('events.date_end', '<=', $dateEnd);
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateEnd))) . " 23:59:59'";
+            $studentEvents->whereRaw($qq);
             //dd($dateS);
             if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
