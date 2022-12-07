@@ -61,6 +61,8 @@ class TeachersController extends Controller
     {
 
         $user = Auth::user();
+        // dd($user->isSchoolAdmin());
+        dd($user->getAllPermissions()->toArray());
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
 
         $school = School::active()->find($schoolId);

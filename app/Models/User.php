@@ -181,6 +181,15 @@ class User extends Authenticatable
     }
 
      /**
+     * Check user has read only
+     * @return boolean
+     */
+    public function isReadOnly()
+    {
+        return $this->hasAnyRole(['read_only']);
+    }
+
+     /**
      * Get the personable for the user.
      */
     public function personable()

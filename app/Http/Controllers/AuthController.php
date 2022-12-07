@@ -22,6 +22,7 @@ use App\Mail\SportloginEmail;
 use URL;
 use Spatie\Permission\Models\Role;
 use Cookie;
+use DateTime;
 use Illuminate\Support\Str;
 
 
@@ -394,8 +395,13 @@ class AuthController extends Controller
             return redirect(RouteServiceProvider::HOME);
 
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
+            $read_only_role = $this->user_read_only($user);
             $tRoleType = $user->schools()[0]->pivot->role_type;
-            $user->syncRoles([$tRoleType]);
+            if($read_only_role){
+                $user->syncRoles([$read_only_role]);
+            }else{
+                $user->syncRoles([$tRoleType]);   
+            }
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect(RouteServiceProvider::HOME);
@@ -420,6 +426,19 @@ class AuthController extends Controller
             'pageInfo'=>['siteTitle'=>'']
         ]);
 
+    }
+
+    public function user_read_only( $user ){
+        $read_only_role = false;
+        $today_date = new DateTime();
+        $today_time = $today_date->getTimestamp();
+        if( !empty($user->trial_ends_at) && !empty($user->stripe_id)){
+            $expired_date = strtotime($user->trial_ends_at);
+            if($today_time >= $expired_date){
+                $read_only_role = 'read_only';
+            }
+        }
+        return $read_only_role;
     }
 
    
