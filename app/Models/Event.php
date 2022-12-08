@@ -702,5 +702,51 @@ class Event extends BaseModel
       return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
     }
 
+    public function validate($lockStatus=1,$data=[])
+    {
+      // dd($lockStatus, $data);
+
+        try {
+            $event_id = $data['event_id'];
+            $eventUpdate = [
+                'is_locked' => $lockStatus
+            ];
+            
+            $eventData = Event::where('id', $event_id)->update($eventUpdate);
+
+
+            $eventDetail = [
+                'is_locked' => $lockStatus,
+            ];
+            
+            $eventdetails = EventDetails::where('event_id', $event_id)->get();
+            if (!empty($eventdetails)) {
+                foreach ($eventdetails as $key => $eventdetail) {
+                    $eventDetailPresent = [
+                        'is_locked' => $lockStatus,
+                        'participation_id' => 200,
+                    ];
+                    
+                    $eventDetailAbsent = [
+                        'is_locked' => $lockStatus,
+                        // 'participation_id' => 199,
+                    ];
+                    if ($eventdetail->participation_id !== 199) {
+                        $eventdetail = $eventdetail->update($eventDetailPresent);
+                    } else {
+                        $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    }
+                    
+                }
+                return true;
+            }
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return false;
+        }
+    }
+
     
 }
