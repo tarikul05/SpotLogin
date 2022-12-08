@@ -1005,7 +1005,7 @@ class LessonsController extends Controller
         }
         $coachoffId = $request->route('id'); 
         $coachoffData = DB::table('events')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$coachoffId, 'event_type' => 50,'events.is_active' => 1])->first();
-        return view('pages.calendar.view_coach_off')->with(compact('coachoffData','schoolId'));
+        return view('pages.calendar.view_coach_off')->with(compact('coachoffData','coachoffId','schoolId'));
     }
 
     public function StudentAttendAction(Request $request, $schoolId = null)
