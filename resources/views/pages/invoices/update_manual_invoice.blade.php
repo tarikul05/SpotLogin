@@ -107,6 +107,7 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" value="<?= $invoiceData['client_name'];?>" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
+                                                        <option value="{{ $school->school_name }} (SCHOOL)" data-type="school" id="{{ $school->id }}" <="" option=""></option>
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
 												    @endforeach
@@ -893,10 +894,15 @@ function get_client_seller_info(obj){
 			}
 
 			if (obj.id == "client_list_id") {
+                if (value.firstname != null){
+                    var fname = value.firstname;
+                }else{ 
+                    var fname = value.school_name
+                }
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
 				
-				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_firstname").value=fname;
 				document.getElementById("client_lastname").value=value.lastname;
 				
 				document.getElementById("client_street_number").value=value.street_number;

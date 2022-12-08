@@ -1394,7 +1394,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::active()->get();
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
                     ->join('students','school_student.student_id','=','students.id')
@@ -1409,7 +1409,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.update_manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','currency','schoolId','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
+        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
     }
 
     /**
@@ -1480,6 +1480,8 @@ class InvoiceController extends Controller
                 'invoice_type' => $dataParam['p_invoice_type'],
                 'invoice_name' => $dataParam['p_invoice_name'],
                 'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_starts' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_ends' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'client_id' => $dataParam['p_client_id'],
                 'client_name' => $dataParam['p_client_name'],
                 'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
@@ -1531,6 +1533,8 @@ class InvoiceController extends Controller
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'price_unit' => $dataParam['item_total'][$i],
+                        'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
@@ -1611,6 +1615,8 @@ class InvoiceController extends Controller
                 'invoice_type' => $dataParam['p_invoice_type'],
                 'invoice_name' => $dataParam['p_invoice_name'],
                 'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_starts' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_ends' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'client_id' => $dataParam['p_client_id'],
                 'client_name' => $dataParam['p_client_name'],
                 'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
@@ -1665,6 +1671,8 @@ class InvoiceController extends Controller
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'price_unit' => $dataParam['item_total'][$i],
+                        'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
