@@ -75,7 +75,7 @@
                                     
                                     @php 
                                         
-                                        
+                                        $zone = $timeZone;
                                         $sub_total_lesson = 0;
                                         $sub_total_min_lesson = 0;
                                         $total_lesson = 0;
@@ -84,6 +84,10 @@
                                         $total_event = 0;
                                         $total_min = 0;
                                         $total = 0;
+                                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
+                                        $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
+                                        
                                     @endphp
                                 
                                     <tbody>
@@ -99,6 +103,11 @@
                                             <tbody>
                                             
                                             @foreach($group as $key => $item)
+                                                @php
+                                                
+                                                $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
+
+                                                @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                     <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>
@@ -1009,14 +1018,39 @@
     //     */
     //     Generate_View_PDF('preview');
     // });
+    function executeAsynchronously(functions, timeout) {
+        for(var i = 0; i < functions.length; i++) {
+            setTimeout(functions[i], timeout);
+            if (i==functions.length-1) {
+                setTimeout(function () {
+                //successModalCall('Invoice Updated successfully!');
+                    
+                    location.reload()
+                }, 1000);
+            }
+        }
+    }
     $('#issue_inv_btn').click(function (e) {
-        Generate_View_PDF('issue_pdf');
-        setTimeout(function () {
-            location.reload()
-        }, 1000);
+        var x = document.getElementsByClassName("tab-pane active");
+        //if (x[0].id == "pane_main") {
+
+        // } else if (x[0].id == "tab_2") {
+          //  step1().then(step2).then(step3);  
+          executeAsynchronously(
+    [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount, Generate_View_PDF], 10);
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        // Generate_View_PDF('issue_pdf');
+        //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    
+        
     });
 
-    function Generate_View_PDF(p_type) {
+    function Generate_View_PDF(p_type='issue_pdf') {
         if (p_type =='preview') {
             console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
             window.open('{!! $invoice->invoice_filename !!}', '_blank');
@@ -1204,12 +1238,14 @@
 
         // } else if (x[0].id == "tab_2") {
             
-        if (x[0].id == "tab_3") {
-            UpdateInvoiceInfo();
-        } else {
-            //console.log('sss');
-            UpdateInvoiceSummaryAmount();
-        }
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        executeAsynchronously(
+        [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount], 10);
     });
 
     function UpdateInvoiceSummaryAmount() {
@@ -1252,17 +1288,19 @@
             async: false,
             success: function (result) {
                 var status = result.status;
-                if (status == 'success') {
+                // console.log(result);
+                // return true;
+                //if (status == 'success') {
                     successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    //return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
-                }
-                else {
-                    errorModalCall(GetAppMessage('error_message_text'));
+                //}
+                //else {
+                //    errorModalCall(GetAppMessage('error_message_text'));
 
-                }
+                //}
             }, //success
             error: function (ts) { 
                 errorModalCall(GetAppMessage('error_message_text'));
@@ -1288,7 +1326,7 @@
         }
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-        // console.log(form_data);
+        
         // return false;
         $.ajax({
             url: BASE_URL+'/update_invoice_info',
@@ -1300,12 +1338,13 @@
             cache: false,
             processData: false,
             success: function (result) {
+                //console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    //successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {

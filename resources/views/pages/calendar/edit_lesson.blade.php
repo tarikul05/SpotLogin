@@ -176,14 +176,14 @@
 										</div>
 									</div>		
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group row lesson hide_on_off" id="teacher_type_billing">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
@@ -325,7 +325,7 @@
 							</div>
 
 							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
-								<button type="button" class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
+								<input type="submit" class="btn btn-sm btn-info button_lock_and_save"  style="position:absolute;top:10px;right:10px;" name="validate" value="Validate">
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -729,47 +729,6 @@ $('#edit_lesson').on('submit', function() {
 	}
 
 });
-
-
-$("#button_lock_and_save").on('click', function(event) {
-	event.preventDefault();
-	confirm_event();
-});
-function confirm_event(){
-	var redirect_url = $('#redirect_url').val();
-	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
-	var status = '';
-	$.ajax({
-		url: BASE_URL + '/confirm_event',
-		data: data,
-		type: 'POST',
-		dataType: 'json',
-		beforeSend: function( xhr ) {
-			$("#pageloader").show();
-		},
-		success: function (result) {
-			status = result.status;
-			if (status == 'success') {
-				successModalCall('{{ __("Event has been validated ")}}');
-				if (redirect_url !='') {
-					window.location.href = redirect_url;
-				} else {
-					window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}';
-				}
-			}
-			else {
-				errorModalCall('{{ __("Event validation error ")}}');
-			}
-		},   //success
-		complete: function( xhr ) {
-			$("#pageloader").hide();
-		},
-		error: function (ts) { 
-			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
-		}
-	}); //ajax-type            
-
-}
 
 	function delete_event(event_id){
         var data='type=delete_events'+'&event_id='+event_id;

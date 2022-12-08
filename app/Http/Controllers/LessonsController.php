@@ -169,6 +169,9 @@ class LessonsController extends Controller
         }
         $eventId = $request->route('event'); 
         $eventData = Event::active()->where(['id'=>$eventId, 'event_type' => 100])->first();
+        if ($eventData->is_locked) {
+            return Redirect::to($schoolId.'/view-event/'.$eventId);
+        }
         // dd($eventData);
         $relationData = EventDetails::active()->where(['event_id'=>$eventId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
@@ -256,8 +259,12 @@ class LessonsController extends Controller
 
                 DB::commit();
                  
-                 // return back()->withInput($request->all())->with('success', __('Successfully Registered'));
+                if(isset($eventData['validate']) && !empty($eventData['validate'])){
+                    Event::validate(1,['event_id'=>$eventId]);
+                    return Redirect::to($schoolId.'/view-event/'.$eventId);
+                }else{
                  return back()->with('success', __('Successfully Registered'));
+                }
                 
             }  
         }catch (Exception $e) {
@@ -457,6 +464,9 @@ class LessonsController extends Controller
 
         $lessonlId = $request->route('lesson'); 
         $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
+        if ($lessonData->is_locked) {
+            return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
+        }
         // dd($lessonData->eventcategory);
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
@@ -501,6 +511,7 @@ class LessonsController extends Controller
 
                 $lessonlId = $request->route('lesson');
                 $lessonData = $request->all();
+                // dd($lessonData); 
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -573,6 +584,9 @@ class LessonsController extends Controller
             
                 if($lessonData['save_btn_more'] == 1){
                     return Redirect::to($schoolId.'/add-lesson?id='.$lessonlId);
+                }else if(isset($lessonData['validate']) && !empty($lessonData['validate'])){
+                    Event::validate(1,['event_id'=>$lessonlId]);
+                    return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
                 }else{
                     return back()->with('success', __('Successfully Registered'));
                 } 

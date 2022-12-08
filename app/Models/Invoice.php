@@ -348,7 +348,7 @@ class Invoice extends BaseModel
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
                 ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('events.date_start as date_start')
                 ->selectRaw('week(events.date_start,5) week_no')
                 ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
                 //->selectRaw('count(events.id) as invoice_items')
@@ -384,7 +384,14 @@ class Invoice extends BaseModel
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            //echo $p_billing_period_end_date.' 23:59:59';
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
 
@@ -454,7 +461,8 @@ class Invoice extends BaseModel
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("30/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as Lastday')
                 ->selectRaw('DATE_FORMAT(events.date_start,"%H:%i") time_start')
-                ->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                //->selectRaw('DATE_FORMAT(events.date_start,"%d/%m/%Y") date_start')
+                ->selectRaw('events.date_start as date_start')
                 ->selectRaw('week(events.date_start,5) week_no')
                 ->selectRaw('concat("Semaine ",week(events.date_start,5)) as week_name')
                 //->selectRaw('count(events.id) as invoice_items')
@@ -496,7 +504,15 @@ class Invoice extends BaseModel
             $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
             $teacherEvents->whereNull('event_details.buy_invoice_id');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            //echo $p_billing_period_end_date.' 23:59:59';
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
 
             // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
@@ -573,7 +589,15 @@ class Invoice extends BaseModel
             }
             //$teacherEvents->whereNotIn('events.event_type', [100]);
             //$teacherEvents->where('event_details.participation_id', '>', 198);
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_end_date))) . " 23:59:59'";
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            //echo $p_billing_period_end_date.' 23:59:59';
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
            // $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
             //$teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
@@ -659,11 +683,20 @@ class Invoice extends BaseModel
                 $p_event_ids = explode(',',$p_event_ids);
                 $studentEvents->whereIn('events.id',$p_event_ids);
             }
+            $school = School::active()->find($schoolId);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            //echo $p_billing_period_end_date.' 23:59:59';
+            $dateEnd = $this->formatDateTimeZone($dateEnd.' 23:59:59', 'long',$timeZone,'UTC');
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
+            $studentEvents->whereRaw($qq);
+
            // $studentEvents->where('event_details.participation_id', '>', 198);
             //$studentEvents->where('events.date_start', '>=', $dateS);
             //$studentEvents->where('events.date_end', '<=', $dateEnd);
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateEnd))) . " 23:59:59'";
-            $studentEvents->whereRaw($qq);
+            
             //dd($dateS);
             if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {

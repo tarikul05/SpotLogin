@@ -52,6 +52,10 @@ class InvoiceController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $timeZone = 'UTC';
+        if (!empty($school->timezone)) {
+            $timeZone = $school->timezone;
+        }
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
 
@@ -74,7 +78,7 @@ class InvoiceController extends Controller
 
         $invoices->orderBy('id', 'desc');
         $invoices = $invoices->get();
-        return view('pages.invoices.list', compact('school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
+        return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
 
@@ -309,8 +313,9 @@ class InvoiceController extends Controller
         //     'invoice_status' =>1,
         //     'message' => __('failed to send email'),
         // );
-        // return response()->json($result);
+        //return response()->json($result);
         try {
+            
             $data = $request->all();
             $user = $request->user();
             $p_invoice_id = trim($data['p_invoice_id']);
@@ -325,7 +330,9 @@ class InvoiceController extends Controller
             $updateInvoice['modified_by'] = $user->id;
             
             $invoiceData = Invoice::where('id', $p_invoice_id)->update($updateInvoice);
-            if($invoiceData){
+            // print_r($invoiceData);
+            // exit();
+            if($invoiceData==1){
                 $result = array(
                     'status' => 'success',
                     'message' => __('We got a list of invoice')
@@ -335,7 +342,8 @@ class InvoiceController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
+            $result['message'] = $e->getMessage();
+            //$result['message'] = __('Internal server error');
             return response()->json($result);
         }
     }
@@ -583,6 +591,15 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'short', $timeZone,'UTC',1);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'short',$timeZone,'UTC',1);
+             
             $p_pending_only=trim($data['p_pending_only']);
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
@@ -597,13 +614,20 @@ class InvoiceController extends Controller
                 );
             }
             //dd($studentEvents->toSql());
-            $data = $studentEvents->get();
-            //dd($data);
+            $dataFetched = $studentEvents->get();
+
+            
+            foreach ($dataFetched as $key => $value) {
+	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $old_date_timestamp = strtotime($value->date_start);
+                $value->date_start = date('d/m/Y', $old_date_timestamp);  
+                $value->time_start = date('H:i', $old_date_timestamp);
+            }
 
             $result = array(
                 'status' => true,
                 'message' => __('We got a list of invoice'),
-                'data' => $data,
+                'data' => $dataFetched,
                 //'no_of_teachers' =>$no_of_teachers
             );
 
@@ -639,23 +663,39 @@ class InvoiceController extends Controller
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
 
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'short', $timeZone,'UTC',1);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'short',$timeZone,'UTC',1);
+             
             
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
             $query = new Invoice;
             $teacherEvents = $query->getTeacherEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
                 
             //dd($studentEvents->toSql());
-            $data = $teacherEvents->get();
+            $dataFetched = $teacherEvents->get();
             //dd($data);
+            foreach ($dataFetched as $key => $value) {
+                $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $old_date_timestamp = strtotime($value->date_start);
+                $value->date_start = date('d/m/Y', $old_date_timestamp);  
+                $value->time_start = date('H:i', $old_date_timestamp);  
+            }
 
             $result = array(
                 'status' => true,
                 'message' => __('We got a list of invoice'),
-                'data' => $data,
+                'data' => $dataFetched,
                 //'no_of_teachers' =>$no_of_teachers
             );
             return response()->json($result);
         } catch (Exception $e) {
+            echo $e->getMessage();
             //return error message
             $result['message'] = __('Internal server error');
             return response()->json($result);
@@ -682,6 +722,14 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'short', $timeZone,'UTC',1);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'short',$timeZone,'UTC',1);
+             
             $dateS = $p_billing_period_start_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_start_date)));
             $dateEnd = $p_billing_period_end_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_end_date)));
             $p_event_ids=trim($data['p_event_ids']);
@@ -958,6 +1006,14 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $data['p_billing_period_start_date'] = trim($data['p_from_date']);
             $data['p_billing_period_end_date'] = trim($data['p_to_date']);
+            $school = School::active()->find($p_school_id);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $data['p_billing_period_start_date'] = $this->formatDateTimeZone($data['p_billing_period_start_date'], 'long', $timeZone,'UTC',1);
+            $data['p_billing_period_end_date'] = $this->formatDateTimeZone($data['p_billing_period_end_date'], 'long',$timeZone,'UTC',1);
+             
             $dateS = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_start_date'])));
             $dateEnd = date('Y-m-d', strtotime(str_replace('.', '-', $data['p_billing_period_end_date'])));
 
@@ -1230,6 +1286,10 @@ class InvoiceController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+        $timeZone = 'UTC';
+        if (!empty($school->timezone)) {
+            $timeZone = $school->timezone;
+        }
         $invoice = Invoice::active()->find($invoice);
         if (empty($invoice)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -1278,7 +1338,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
+        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
     }
 
     /**
@@ -1301,7 +1361,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::active()->get();
         
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
@@ -1312,7 +1372,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers','currency'));
+        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency'));
     }
 
     /**
@@ -1334,7 +1394,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::active()->get();
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
                     ->join('students','school_student.student_id','=','students.id')
@@ -1349,7 +1409,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.update_manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','currency','schoolId','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
+        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
     }
 
     /**
@@ -1374,6 +1434,10 @@ class InvoiceController extends Controller
                     ->get();
         }elseif($type == 'teacher'){
             $userData = DB::table('teachers')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }elseif($type == 'school'){
+            $userData = DB::table('schools')
                     ->where(['id' => $id, 'is_active' => 1])
                     ->get();
         }    
@@ -1403,11 +1467,21 @@ class InvoiceController extends Controller
             
             $dataParam = $request->all();
 
+            $school = School::active()->find($schoolId);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dataParam['p_date_invoice'], 'long', $timeZone,'UTC',);
+            
+
             $data = [
                 'school_id' => $schoolId,
                 'invoice_type' => $dataParam['p_invoice_type'],
                 'invoice_name' => $dataParam['p_invoice_name'],
                 'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_starts' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_ends' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'client_id' => $dataParam['p_client_id'],
                 'client_name' => $dataParam['p_client_name'],
                 'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
@@ -1452,11 +1526,15 @@ class InvoiceController extends Controller
             
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
+            
                     $itemData = [
                         'invoice_id'   => $Invoice->id,
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'price_unit' => $dataParam['item_total'][$i],
+                        'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
@@ -1524,12 +1602,21 @@ class InvoiceController extends Controller
             
             $dataParam = $request->all();
             $id = $dataParam['p_auto_id'];
+            $school = School::active()->find($schoolId);
+            $timeZone = 'UTC';
+            if (!empty($school->timezone)) {
+                $timeZone = $school->timezone;
+            }
+            $dataParam['p_date_invoice'] = $this->formatDateTimeZone($dataParam['p_date_invoice'], 'long', $timeZone,'UTC',);
+            
 
             $data = [
                 'school_id' => $schoolId,
                 'invoice_type' => $dataParam['p_invoice_type'],
                 'invoice_name' => $dataParam['p_invoice_name'],
                 'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_starts' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'period_ends' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'client_id' => $dataParam['p_client_id'],
                 'client_name' => $dataParam['p_client_name'],
                 'client_firstname' => isset($dataParam['p_client_firstname']) ? $dataParam['p_client_firstname'] : null,
@@ -1577,11 +1664,15 @@ class InvoiceController extends Controller
 
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
+                    $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
+            
                     $itemData = [
                         'invoice_id' => $id,
                         'school_id' => $schoolId,
                         'caption' => $dataParam['item_caption'][$i],
                         'total_item' => $dataParam['item_total'][$i],
+                        'price_unit' => $dataParam['item_total'][$i],
+                        'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
                         'price_currency' => $dataParam['p_price_currency']
                     ];
@@ -1780,34 +1871,4 @@ class InvoiceController extends Controller
     }
 
 
-     /**
-     *  AJAX update Invoice
-     *
-     * @return json
-     * @author Mamun <lemonpstu09@gmail.com>
-     * @version 0.1 written in 2022-10-22
-     */
-    public function updateInvoice(Request $request, Invoice $invoice)
-    {
-        $result = array(
-            'status' => 'failed',
-            'message' => __('failed to delete'),
-        );
-        try {
-            $dataParam = $request->all();
-            $id = trim($dataParam['p_invoice_id']);
-            $invoiceData = Invoice::find($id)->delete();
-            if ($invoiceData == 1) {
-                $result = array(
-                    "status"     => 'success',
-                    'message' => __('Confirmed'),
-                );
-            }
-            return response()->json($result);
-        } catch (Exception $e) {
-            //return error message
-            $result['message'] = __('Internal server error');
-            return response()->json($result);
-        }
-    }
 }

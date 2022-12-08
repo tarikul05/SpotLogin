@@ -671,7 +671,7 @@ class AgendaController extends Controller
                     }
                 }
                 if ($user_role == 'teacher'){
-                    if (($user->id == $fetch->teacher_id)){
+                    if (($user->person_id == $fetch->teacher_id)){
                         $action_type='edit';
                         if ($fetch->event_type==10) { //lesson
                             $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;

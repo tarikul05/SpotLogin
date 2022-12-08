@@ -23,17 +23,13 @@
 				</div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                     <div class="btn-group save-button pull-right"> 
+                    @if($invoiceData['invoice_status'] != 10)
                         <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                         <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
                         </a> 
-                        <a id="print_preview_btn" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
-                        <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
+                    @endif    
                         <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
-                        <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoiceData['id']}},{{$invoiceData['invoice_type']}},{{$invoiceData['school_id']}})">Send by email</button>
-                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
-                            </a> 
-                    </div>
+                       </div>
                 </div>
 			</div>
 		</header>
@@ -111,6 +107,7 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" value="<?= $invoiceData['client_name'];?>" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
+                                                        <option value="{{ $school->school_name }} (SCHOOL)" data-type="school" id="{{ $school->id }}" <="" option=""></option>
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
 												    @endforeach
@@ -836,7 +833,6 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
     var current_date = ((''+day).length<2 ? '0' : '') + day+ '.' +((''+month).length<2 ? '0' : '') + month + '.'+ now.getFullYear();
     $("#date_invoice").val( current_date );
 
-    document.getElementById("issue_inv_btn").style.display = "none";
     document.getElementById("print_preview_btn").style.display = "none";
     document.getElementById("delete_btn_inv").style.display = "none";
     document.getElementById("download_pdf_btn_a").style.display = "none";
@@ -898,10 +894,15 @@ function get_client_seller_info(obj){
 			}
 
 			if (obj.id == "client_list_id") {
+                if (value.firstname != null){
+                    var fname = value.firstname;
+                }else{ 
+                    var fname = value.school_name
+                }
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
 				
-				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_firstname").value=fname;
 				document.getElementById("client_lastname").value=value.lastname;
 				
 				document.getElementById("client_street_number").value=value.street_number;
