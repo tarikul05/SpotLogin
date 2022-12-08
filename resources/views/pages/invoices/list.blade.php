@@ -56,7 +56,15 @@
                         $edit_view_url = '';
                         //invoice_type = 0 means manual invoice
                         if ($invoice->invoice_type == 0) {
-                            $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            if ($invoice->invoice_status == 10) {
+                                if(!empty($schoolId)){ 
+                                    $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
+                                } else {
+                                    $edit_view_url = route('modificationInvoice',[$invoice->id]);
+                                }
+                            }else{
+                                $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            }
                         } else {
                             if(!empty($schoolId)){ 
                                 $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);

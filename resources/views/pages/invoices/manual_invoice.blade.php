@@ -23,14 +23,7 @@
 				</div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                     <div class="btn-group save-button pull-right"> 
-                        <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                        <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
-                        </a> 
-                        <a id="print_preview_btn" style="display: block;" name="print_preview_btn" class="btn btn-sm btn-default" target="_blank">Print Preview</a> 
-                        <a id="delete_btn" style="display: block!important;" name="delete_btn" class="btn btn-sm btn-danger" href="">Delete</a>
-                        <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
-                        <button id="approved_btn" style="display: none;" target="" href="" class="btn btn-sm btn-primary">Send by email</button> 
-                        <a id="download_pdf_btn" name="download_pdf_btn" style="display: none;" target="" href="" class="btn btn-sm btn-default">Download PDF</a> 
+                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
                     </div>
                 </div>
 			</div>
@@ -103,6 +96,7 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
+                                                        <option value="{{ $school->school_name }} (SCHOOL)" data-type="school" id="{{ $school->id }}" <="" option=""></option>
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
 												    @endforeach
@@ -798,10 +792,17 @@ function get_client_seller_info(obj){
 			}
 
 			if (obj.id == "client_list_id") {
+
+                if (value.firstname != null){
+                    var fname = value.firstname;
+                }else{ 
+                    var fname = value.school_name
+                }
+
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
 				
-				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_firstname").value= fname;
 				document.getElementById("client_lastname").value=value.lastname;
 				
 				document.getElementById("client_street_number").value=value.street_number;
@@ -874,7 +875,7 @@ function get_client_seller_info(obj){
 		});
 	},   // sucess
 	error: function(ts) { 
-		errorModalCall(GetAppMessage('error_message_text'));
+		//errorModalCall(GetAppMessage('error_message_text'));
 
 		}
 	}); 
@@ -1109,7 +1110,7 @@ function AddEditInvoice(){
                 }
             },   // success
             error: function(ts) { 
-                errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
+                //errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
 
             }                
             
@@ -1135,7 +1136,6 @@ $(document).on('keyup','.tax_amount',function(){
 })
 
 $(document).on('change','#client_firstname',function(){
-
     if(!$("#invoice_name").val() && $(this).val()){
         var now = new Date();
         var month = now.getMonth()+1;
@@ -1149,16 +1149,13 @@ $(document).on('change','#client_firstname',function(){
 })
 
 $(document).on('change','#client_list_id',function(){
-
     if(!$("#invoice_name").val() && $("#client_firstname").val()){
         var now = new Date();
         var month = now.getMonth()+1;
         var day = now.getDate();
         var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
-        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-        
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
         var invoice_name = 'INV/'+$("#client_firstname").val()+'/'+current_date;
-
         $("#invoice_name").val(invoice_name);
     }
 
