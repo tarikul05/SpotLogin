@@ -1361,7 +1361,7 @@ class InvoiceController extends Controller
         $genders = config('global.gender');
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::active()->get();
         
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
@@ -1372,7 +1372,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','schoolId','countries', 'provinces','students','teachers','currency'));
+        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency'));
     }
 
     /**
@@ -1434,6 +1434,10 @@ class InvoiceController extends Controller
                     ->get();
         }elseif($type == 'teacher'){
             $userData = DB::table('teachers')
+                    ->where(['id' => $id, 'is_active' => 1])
+                    ->get();
+        }elseif($type == 'school'){
+            $userData = DB::table('schools')
                     ->where(['id' => $id, 'is_active' => 1])
                     ->get();
         }    
