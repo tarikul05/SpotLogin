@@ -597,8 +597,8 @@ class InvoiceController extends Controller
             if (!empty($school->timezone)) {
                 $timeZone = $school->timezone;
             }
-            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'long', $timeZone,'UTC');
-            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'short', $timeZone,'UTC');
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'short',$timeZone,'UTC');
              
             $p_pending_only=trim($data['p_pending_only']);
 
@@ -669,8 +669,8 @@ class InvoiceController extends Controller
                 $timeZone = $school->timezone;
             }
             
-            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'long', $timeZone,'UTC',);
-            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date, 'short', $timeZone,'UTC',);
+            $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date, 'short',$timeZone,'UTC');
              
             
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
