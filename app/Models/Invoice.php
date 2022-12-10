@@ -432,7 +432,6 @@ class Invoice extends BaseModel
                     'event_details.sell_price as sell_price',
                     'events.price_amount_buy as price_amount_buy',
                     //'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
                     'events.title as title',
                     'events.event_type as event_type',
                     'events.event_category as category_id',
@@ -447,10 +446,12 @@ class Invoice extends BaseModel
                     //'event_details.costs_1 as costs_1',
                     'event_details.costs_2 as costs_2'
                 )
+                ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
-                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
+                ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_total")
+                ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_price")
+                ->selectRaw("ifnull(SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS costs_1")
                 
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
@@ -655,12 +656,11 @@ class Invoice extends BaseModel
                     'events.event_price as event_price',
                     'events.date_start as date_start',
 
-                    'event_categories.title as category_name',
-                    
-                    
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total'
+                    'event_categories.title as category_name'
                 )
+                ->selectRaw("ifnull(event_details.buy_total,0) AS buy_total")
+                ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                
                 ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(event_details.costs_2,0) AS costs_2")
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
