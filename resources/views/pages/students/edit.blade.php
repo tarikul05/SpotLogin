@@ -669,8 +669,6 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
-	
-$("#country_code, #billing_country_code").trigger('change')
 
 $('#country_code').change(function(){
 	var country = $(this).val();
@@ -681,7 +679,6 @@ $('#country_code').change(function(){
 	}
 })
 
-
 $('#billing_country_code').change(function(){
 	var country = $(this).val();
 	if(country == 'CA'){
@@ -691,6 +688,7 @@ $('#billing_country_code').change(function(){
 	}
 })
 
+$("#country_code, #billing_country_code").trigger('change')
 
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
