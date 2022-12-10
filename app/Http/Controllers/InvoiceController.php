@@ -618,7 +618,10 @@ class InvoiceController extends Controller
 
             
             foreach ($dataFetched as $key => $value) {
-	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+	            $dateStart = $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = Carbon::parse($dateStart);
+                $value->week_no = (int) $dateStart->format('W');
+                
                 $old_date_timestamp = strtotime($value->date_start);
                 $value->date_start = date('d/m/Y', $old_date_timestamp);  
                 $value->time_start = date('H:i', $old_date_timestamp);
@@ -681,7 +684,9 @@ class InvoiceController extends Controller
             $dataFetched = $teacherEvents->get();
             //dd($data);
             foreach ($dataFetched as $key => $value) {
-                $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = Carbon::parse($dateStart);
+                $value->week_no = (int) $dateStart->format('W');
                 $old_date_timestamp = strtotime($value->date_start);
                 $value->date_start = date('d/m/Y', $old_date_timestamp);  
                 $value->time_start = date('H:i', $old_date_timestamp);  
