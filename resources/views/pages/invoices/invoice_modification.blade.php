@@ -24,11 +24,10 @@
                             
                             @if($invoice->invoice_status ==10)
 
-
                                 @if(!$AppUI->isStudent())
                                     @canany(['invoice-edit',
-                                    'teacher-invoice-edit',
-                                    'student-invoice-edit'])
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit'])
                                         @if($invoice->payment_status ==0)
                                             <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
                                                 {{__('Flag as Paid')}}
@@ -44,7 +43,6 @@
                                 <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                     <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
-                            
                             @else
                                 @canany(['invoice-edit',
                                     'teacher-invoice-edit',

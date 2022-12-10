@@ -168,6 +168,7 @@
                                         </td>
                                     @endcanany
                                 @endif
+
                             @endif
                         @else
                             <td></td>

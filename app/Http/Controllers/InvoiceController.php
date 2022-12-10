@@ -99,7 +99,7 @@ class InvoiceController extends Controller
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
         }
-
+        
         if($user->hasAnyPermission([
         'student-invoice-list'])){
             $invoices->where('invoice_type', 1); // student_invoice_list

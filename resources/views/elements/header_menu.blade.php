@@ -56,6 +56,7 @@
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif
                         @endcan
+
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                             <div class="dropdown-menu header">
@@ -114,6 +115,7 @@
                         @if($AppUI['person_type'] === 'SUPER_ADMIN')
                             <a href="{{ route('subscriber_list') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-item nav-link">{{ __('Billing') }}</a>
                         @endif
+
                         <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
                         @unlessrole('superadmin')
                             @unlessrole('student')
