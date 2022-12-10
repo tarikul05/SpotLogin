@@ -323,8 +323,6 @@ class Invoice extends BaseModel
                     'events.id as event_id',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price',
                     'events.title as title',
                     'events.event_type as event_type',
                     'events.event_category as category_id',
@@ -335,10 +333,13 @@ class Invoice extends BaseModel
                     'event_details.participation_id as participation_id',
                     'event_details.is_buy_invoiced as is_buy_invoiced',
                     'event_details.is_sell_invoiced as is_sell_invoiced',
-                    'events.extra_charges as extra_charges',
-                    'event_details.costs_2 as costs_2',
                     'teachers.id as teacher_id'
                 )
+                ->selectRaw("ifnull(event_details.costs_2,0) AS costs_2")
+                ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
+                ->selectRaw("ifnull(event_details.buy_price,0) AS buy_price")
+                ->selectRaw("ifnull(event_details.sell_price,0) AS sell_price")
+                ->selectRaw("ifnull(events.no_of_students,0) AS count_name")
                 ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
@@ -390,8 +391,10 @@ class Invoice extends BaseModel
                 $timeZone = $school->timezone;
             }
             //echo $p_billing_period_end_date.' 23:59:59';
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
+
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
 
@@ -431,7 +434,6 @@ class Invoice extends BaseModel
                     'event_details.sell_price as sell_price',
                     'events.price_amount_buy as price_amount_buy',
                     //'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
                     'events.title as title',
                     'events.event_type as event_type',
                     'events.event_category as category_id',
@@ -446,10 +448,12 @@ class Invoice extends BaseModel
                     //'event_details.costs_1 as costs_1',
                     'event_details.costs_2 as costs_2'
                 )
+                ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
-                ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
-                ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
+                ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_total")
+                ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_price")
+                ->selectRaw("ifnull(SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS costs_1")
                 
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
@@ -511,8 +515,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
 
             // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
@@ -596,8 +601,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
            // $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
             //$teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
@@ -647,9 +653,6 @@ class Invoice extends BaseModel
                     
                     'events.duration_minutes as duration_minutes',
                     'events.title as title',
-                    'event_details.costs_1 as costs_1',
-                    'event_details.costs_2 as costs_2', 
-                    'events.extra_charges as extra_charges',
                     'event_details.participation_id as participation_id',
 
                     'event_details.id as detail_id',
@@ -657,14 +660,18 @@ class Invoice extends BaseModel
                     'events.event_price as event_price',
                     'events.date_start as date_start',
 
-                    'event_categories.title as category_name',
-                    
-                    
-                    'event_details.buy_total as buy_total',
-                    'event_details.sell_total as sell_total',
-                    'event_details.buy_price as buy_price',
-                    'event_details.sell_price as sell_price'
+                    'event_categories.title as category_name'
                 )
+                ->selectRaw("ifnull(event_details.buy_total,0) AS buy_total")
+                ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                
+                ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
+                ->selectRaw("ifnull(event_details.costs_2,0) AS costs_2")
+                ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
+                
+                ->selectRaw("ifnull(event_details.buy_price,0) AS buy_price")
+                ->selectRaw("ifnull(event_details.sell_price,0) AS sell_price")
+                
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
@@ -690,7 +697,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $dateEnd = $this->formatDateTimeZone($dateEnd.' 23:59:59', 'long',$timeZone,'UTC');
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
+            $dateS = $this->formatDateTimeZone($dateS.' 00:00:00', 'long',$timeZone,'UTC');
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
             $studentEvents->whereRaw($qq);
 
            // $studentEvents->where('event_details.participation_id', '>', 198);

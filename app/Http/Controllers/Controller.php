@@ -319,6 +319,7 @@ class Controller extends BaseController
         if ($type == 'short')
         {
             $date = str_replace('/', '-', $date);
+            $date = str_replace('.', '-', $date);
             $date =  date('Y-m-d', strtotime($date));
             
             $carbon = Carbon::createFromFormat('Y-m-d', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
@@ -343,6 +344,7 @@ class Controller extends BaseController
             // }
 
             $date = str_replace('/', '-', $date);
+            $date = str_replace('.', '-', $date);
             $date =  date('Y-m-d H:i:s', strtotime($date));
             
             $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting

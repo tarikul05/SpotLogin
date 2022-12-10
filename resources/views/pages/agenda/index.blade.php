@@ -1759,6 +1759,8 @@
         // } 
         
         $('#calendar').fullCalendar({
+            eventLimit: 3, // If you set a number it will hide the itens
+            eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
 			slotDuration: '00:15:00',
