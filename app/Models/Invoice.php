@@ -391,8 +391,10 @@ class Invoice extends BaseModel
                 $timeZone = $school->timezone;
             }
             //echo $p_billing_period_end_date.' 23:59:59';
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
+
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $studentEvents->whereRaw($qq);
 
 
@@ -513,8 +515,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
 
             // $qq = "DATE_FORMAT(STR_TO_DATE(events.date_start,'%Y-%m-%d'),'%d/%m/%Y') BETWEEN '" . $p_billing_period_start_date . "' AND '" . $p_billing_period_end_date . "'";
@@ -598,8 +601,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $p_billing_period_end_date = $this->formatDateTimeZone($p_billing_period_end_date.' 23:59:59', 'long',$timeZone,'UTC');
+            $p_billing_period_start_date = $this->formatDateTimeZone($p_billing_period_start_date.' 00:00:00', 'long',$timeZone,'UTC');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_start_date))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $p_billing_period_end_date))) ."'";
             $teacherEvents->whereRaw($qq);
            // $teacherEvents->where('events.date_start', '>=', $p_billing_period_start_date);
             //$teacherEvents->where('events.date_end', '<=', $p_billing_period_end_date);
@@ -693,7 +697,9 @@ class Invoice extends BaseModel
             }
             //echo $p_billing_period_end_date.' 23:59:59';
             $dateEnd = $this->formatDateTimeZone($dateEnd.' 23:59:59', 'long',$timeZone,'UTC');
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
+            $dateS = $this->formatDateTimeZone($dateS.' 00:00:00', 'long',$timeZone,'UTC');
+
+            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
             $studentEvents->whereRaw($qq);
 
            // $studentEvents->where('event_details.participation_id', '>', 198);
