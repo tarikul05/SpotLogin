@@ -2,6 +2,11 @@
 
 @section('head_links')
   <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
+  <style type="text/css">
+    .text-end{
+      margin-right: 20px;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -55,7 +60,15 @@
                     <input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
                   </div> 
                   <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}: </label>
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Username')}}  </label>
+                    <div class="col-sm-6">
+                      <div class="form-group-data">
+                        <input type="text" class="form-control" disabled="disabled" value="{{!empty($AppUI['username']) ? $AppUI['username'] : ''}}">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Name of User')}}  </label>
                     <div class="col-sm-6">
                       <div class="form-group-data">
                         <input type="text" class="form-control" id="firstname" name="firstname" value="{{!empty($AppUI['firstname']) ? old('firstname', $AppUI['firstname']) : old('firstname')}}">
@@ -64,7 +77,7 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}: </label>
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Email')}}  </label>
                     <div class="col-sm-6 form-group-data">
                       <input type="text" readonly class="form-control" id="email" name="email" value="{{!empty($AppUI['email']) ? old('email', $AppUI['email']) : old('email')}}">
                     </div>

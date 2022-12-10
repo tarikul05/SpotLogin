@@ -319,6 +319,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="country_code" name="country_code">
+												<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
 												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 											@endforeach
@@ -383,6 +384,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 									<select class="form-control" id="billing_country_code" name="billing_country_code">
+										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 										@endforeach
@@ -680,10 +682,27 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
 		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
 	}
+})
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
+})
+
+$("#country_code, #billing_country_code").trigger('change')
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -1154,8 +1173,8 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
 		
@@ -1174,15 +1193,21 @@ $('#save_btn').click(function (e) {
 							}
 
 							//below locked and invoiced
-							resultHtml += "<td>";
+							
 							if (value.ready_flag == 1) {
-									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
 									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
 							//}
-							resultHtml += "</td>";
+							
 							//above locked and invoiced
 
 							resultHtml += '<td width="10%">' + value.date_start + '</td>';
@@ -1197,7 +1222,13 @@ $('#save_btn').click(function (e) {
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
 							} else {
-								resultHtml += '<td>Lesson</td>';
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
 							}
 
 							//resultHtml += '<td>' + value.title + '</td>';
@@ -1217,9 +1248,9 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
 								
@@ -1496,15 +1527,7 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-	$('#country_code').change(function(){
-		var country = $(this).val();
 
-		if(country == 'CA'){
-			$('#province_id_div').show();
-		}else{
-			$('#province_id_div').hide();
-		}
-	})
 </script>
 @if(!empty(Session::get('vtab')))
 

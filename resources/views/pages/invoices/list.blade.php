@@ -56,7 +56,15 @@
                         $edit_view_url = '';
                         //invoice_type = 0 means manual invoice
                         if ($invoice->invoice_type == 0) {
-                            $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            if ($invoice->invoice_status == 10) {
+                                if(!empty($schoolId)){ 
+                                    $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
+                                } else {
+                                    $edit_view_url = route('modificationInvoice',[$invoice->id]);
+                                }
+                            }else{
+                                $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            }
                         } else {
                             if(!empty($schoolId)){ 
                                 $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
@@ -64,6 +72,9 @@
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
                             }
                         }
+                        $zone = $timeZone;
+                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+
                     @endphp
                 
                     <tr>
@@ -105,57 +116,59 @@
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
-                            @if($invoice->invoice_type ==1)
-                            @canany(['invoice-edit',
-                                'student-invoice-edit',
-                                'invoice-generate',
-                                'student-invoice-generate'])
-                                <td class="text-center">
-                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                    <span class="small txt-grey pull-left">
-                                        <span class="change_button">{{ __('Change')}}</span>
-                                    </span>
-                                </td>
-                            @endcanany
-                            @elseif($invoice->invoice_type ==2)
-                            @canany(['invoice-edit',
-                                'teacher-invoice-edit',
-                                'invoice-generate',
-                                'teacher-invoice-generate'])
-                                <td class="text-center">
-                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                    <span class="small txt-grey pull-left">
-                                        <span class="change_button">{{ __('Change')}}</span>
-                                    </span>
-                                </td>
-                            @endcanany
-                            @elseif($invoice->invoice_type ==0)
-                            @canany(['invoice-edit',
-                                'manual-invoice-edit'])
-                                <td class="text-center">
-                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                    <span class="small txt-grey pull-left">
-                                        <span class="change_button">{{ __('Change')}}</span>
-                                    </span>
-                                </td>
-                            @endcanany
-                            @else
-                            @canany(['invoice-edit',
-                                'teacher-invoice-edit',
-                                'student-invoice-edit',
-                                'manual-invoice-edit',
-                                'invoice-generate',
-                                'teacher-invoice-generate',
-                                'student-invoice-generate'])
-                                <td class="text-center">
-                                    <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
-                                    <span class="small txt-grey pull-left">
-                                        <span class="change_button">{{ __('Change')}}</span>
-                                    </span>
-                                </td>
-                            @endcanany
+
+                            @if(!$AppUI->isStudent())
+                                @if($invoice->invoice_type ==1)
+                                    @canany(['invoice-edit',
+                                        'student-invoice-edit',
+                                        'invoice-generate',
+                                        'student-invoice-generate'])
+                                        <td class="text-center">
+                                            <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                            <span class="small txt-grey pull-left">
+                                                <span class="change_button">{{ __('Change')}}</span>
+                                            </span>
+                                        </td>
+                                    @endcanany
+                                @elseif($invoice->invoice_type ==2)
+                                    @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'invoice-generate',
+                                        'teacher-invoice-generate'])
+                                        <td class="text-center">
+                                            <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                            <span class="small txt-grey pull-left">
+                                                <span class="change_button">{{ __('Change')}}</span>
+                                            </span>
+                                        </td>
+                                    @endcanany
+                                @elseif($invoice->invoice_type ==0)
+                                    @canany(['invoice-edit',
+                                        'manual-invoice-edit'])
+                                        <td class="text-center">
+                                            <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                            <span class="small txt-grey pull-left">
+                                                <span class="change_button">{{ __('Change')}}</span>
+                                            </span>
+                                        </td>
+                                    @endcanany
+                                @else
+                                    @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit',
+                                        'manual-invoice-edit',
+                                        'invoice-generate',
+                                        'teacher-invoice-generate',
+                                        'student-invoice-generate'])
+                                        <td class="text-center">
+                                            <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                            <span class="small txt-grey pull-left">
+                                                <span class="change_button">{{ __('Change')}}</span>
+                                            </span>
+                                        </td>
+                                    @endcanany
+                                @endif
                             @endif
-                            
                         @else
                             <td></td>
                         @endif
@@ -212,18 +225,18 @@
 
                                         @else
 
-                                        @canany(['invoice-edit',
-                                        'teacher-invoice-edit',
-                                        'student-invoice-edit',
-                                        'manual-invoice-edit',
-                                        'invoice-generate',
-                                        'teacher-invoice-generate',
-                                        'student-invoice-generate'])
-                                            <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                                <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
-                                                {{ __('Edit')}}
-                                            </a>
-                                        @endcanany
+                                            @canany(['invoice-edit',
+                                            'teacher-invoice-edit',
+                                            'student-invoice-edit',
+                                            'manual-invoice-edit',
+                                            'invoice-generate',
+                                            'teacher-invoice-generate',
+                                            'student-invoice-generate'])
+                                                <a class="dropdown-item" href="{{ $edit_view_url }}">
+                                                    <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                                    {{ __('Edit')}}
+                                                </a>
+                                            @endcanany
 
                                         @endif
                                         

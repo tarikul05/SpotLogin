@@ -166,6 +166,9 @@ button#add_more_expense_btn {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.glyphicon-lock:before {
+    content: "\e033";
+}
 .glyphicon-plus:before {
     content: "\2b";
 }
@@ -518,6 +521,9 @@ input.error {
     background-color: #ff8000;
     border-color: #ff8000;
     color: #fff;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
 }
 .teacher_save {
     position: absolute;
@@ -530,6 +536,10 @@ input.error {
     right: 7%;
     display: flex;
     grid-gap: 15px;
+    z-index: 9;
+}
+#edit_event .btn_area {
+  top: 145px;
 }
 a#delete_btn {
     display: none !important;
@@ -741,7 +751,7 @@ button#save_btn_more i {
     padding-right: 10px;
 }
 #edit_lesson .btn_area {
-   position: absolute;
+    position: absolute;
     top: 130px;
     right: 7%;
     display: flex;
@@ -749,6 +759,9 @@ button#save_btn_more i {
     z-index: 99;
     grid-gap: 15px;
     z-index: 22;
+}
+.pull-right.btn-group.cal_top {
+    margin-top: 5px;
 }
 @media only screen and (max-width: 768px) {
     .language_page label,
@@ -876,10 +889,10 @@ button#save_btn_more i {
     .btn_area {
         z-index: 9;
     }
-    #edit_lesson .btn_area{
+    #edit_lesson .btn_area {
         top: 140px;
     }
-    #edit_lesson .btn.btn-theme-outline{
+    #edit_lesson .btn.btn-theme-outline {
         display: none;
     }
     #all_day_div111 label {
