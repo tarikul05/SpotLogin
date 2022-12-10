@@ -437,7 +437,7 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 
 <p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
-<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
+
 </td>
 </tr>
 </tbody>
@@ -835,7 +835,6 @@ Une fois votre page activ&eacute;e, veuillez renseigner vos informations scolair
 
 <p>To create an account or connect your existing account, please click <strong><a href="[~~URL~~]">HERE</a></strong></p>
 
-<p>[~~HOSTNAME~~][~~USER_NAME~~]/</p>
 </td>
 </tr>
 </tbody>
