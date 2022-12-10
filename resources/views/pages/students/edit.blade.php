@@ -314,6 +314,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="country_code" name="country_code">
+												<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
 												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 											@endforeach
@@ -378,6 +379,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 									<select class="form-control" id="billing_country_code" name="billing_country_code">
+										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 										@endforeach
@@ -667,10 +669,27 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
 		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
 	}
+})
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
+})
+
+$("#country_code, #billing_country_code").trigger('change')
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -1495,15 +1514,7 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-	$('#country_code').change(function(){
-		var country = $(this).val();
 
-		if(country == 'CA'){
-			$('#province_id_div').show();
-		}else{
-			$('#province_id_div').hide();
-		}
-	})
 </script>
 @if(!empty(Session::get('vtab')))
 
