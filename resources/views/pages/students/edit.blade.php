@@ -1209,7 +1209,7 @@ $('#save_btn').click(function (e) {
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
 							} else {
-								if (value.event_type > 1) {
+								if (value.count_name > 1) {
 									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
 								}
 								else{

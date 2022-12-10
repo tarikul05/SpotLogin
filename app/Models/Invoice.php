@@ -449,6 +449,7 @@ class Invoice extends BaseModel
                     'event_details.costs_2 as costs_2'
                 )
                 ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                ->selectRaw("ifnull(events.no_of_students,0) AS count_student")
                 
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_total")
