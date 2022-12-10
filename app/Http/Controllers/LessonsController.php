@@ -707,6 +707,8 @@ class LessonsController extends Controller
                         'status' => 1,
                         'message' =>  __('Successfully Registered')
                     ];
+                }else if($studentOffData['save_btn_more'] == 3){
+                    return Redirect::to('/agenda');
                 }else{
                     return [
                         'status' => 2,
@@ -796,7 +798,7 @@ class LessonsController extends Controller
                 }
                 
                 DB::commit();
-                return back()->with('success', __('Successfully Registered'));
+                return Redirect::to('/agenda')->with('success', __('Successfully Registered'));
             }  
         }catch (Exception $e) {
             DB::rollBack();

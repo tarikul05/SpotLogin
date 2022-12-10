@@ -35,6 +35,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="student_off" method="post" action="{{ route('studentOff.createAction',[$schoolId]) }}"  name="student_off" role="form">
 					@csrf
+					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="3">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -68,7 +69,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input id="start_date" required="true" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -82,7 +83,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
+												<input id="end_date" required="true" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
