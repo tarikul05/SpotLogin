@@ -301,7 +301,7 @@
                                 if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
                                     echo number_format($item->price_unit, '2');
                                 }else{
-                                    echo number_format($item->item_total, '2');
+                                    echo number_format($item->total_item, '2');
                                 }
                             ?>
                             </td>
@@ -311,14 +311,14 @@
                                 if ($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2){
                                     $sub_total_lesson += $item->price;
                                 }else{
-                                    $sub_total_lesson += $item->price_unit;
+                                    $sub_total_lesson += $item->total_item;
                                 }
                                 $sub_total_min_lesson = $sub_total_min_lesson + $item->unit;
                             }else{
                                 if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2){
                                     $sub_total_event += $item->price;
                                 }else{
-                                    $sub_total_event += $item->price_unit;
+                                    $sub_total_event += $item->total_item;
                                 }
                                 $sub_total_min_event = $sub_total_min_event + $item->unit;
                             }
@@ -357,7 +357,7 @@
                                     <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                 </tr>
-                            <?php } ?> 
+                            <?php } ?>
                     </tbody>
                 <?php } ?>        
                 <tfoot>
@@ -405,7 +405,7 @@
         <div class="title-top">{{ __('invoice_payment_title') }}</div>
         <div class="payment-info">
             <table class="table" style="border: 0;">
-                <?php if($invoice_data->seller_country_code === 'CA') {?>
+                <?php if($invoice_data->seller_country_code === 'CA' && $invoice_data->invoice_type != 0) {?>
                 <tr>
                     <td>
                         <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)) {?>
@@ -439,8 +439,34 @@
                 <?php } else { ?>
                     <tr>
                         <td>
-                            <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)) {?>
-                                <div class="payment_title">{{ __('invoice_payment_subtitle') }}</div>
+                            <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email) 
+                            || !empty($invoice_data->payment_bank_account_name) || !empty($invoice_data->payment_bank_name)
+                            || !empty($invoice_data->payment_bank_zipcode) || !empty($invoice_data->payment_bank_place)
+                            || $invoice_data->payment_bank_place || !empty($invoice_data->payment_bank_country_code) ) {?>
+                                <div class="payment_title">
+                                    For payment by 
+                                    <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)){ ?>
+                                        E-Transfer
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_account_name)){?>
+                                <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account_name }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_name)){?>
+                                <div class="txt"><b>Bank Name : </b>{{ $invoice_data->payment_bank_name }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_address)){?>
+                                <div class="txt"><b>Address : </b>{{ $invoice_data->payment_bank_address }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_zipcode)){?>
+                                <div class="txt"><b>Zipcode : </b>{{ $invoice_data->payment_bank_zipcode }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_place)){?>
+                                <div class="txt"><b>Place : <b>{{ $invoice_data->payment_bank_place }}</div>
+                            <?php } ?>
+                            <?php if(!empty($invoice_data->payment_bank_country_code)){?>
+                                <div class="txt"><b>Bank Country Code : <b>{{ $invoice_data->payment_bank_country_code }}</div>
                             <?php } ?>
                             <?php if(!empty($invoice_data->etransfer_acc)){ ?>
                                 <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
@@ -450,9 +476,7 @@
                             <?php } ?>
                         </td>
                         <td>
-                            <?php if(!empty($invoice_data->payment_bank_iban) || !empty($invoice_data->payment_bank_account) || !empty($invoice_data->payment_bank_swift)) {?>
-                                <div class="payment_title">{{ __('invoice_payment_subtitle_2') }}</div>
-                            <?php } ?>
+                            <div class="payment_title"></div>
                             <?php if(!empty($invoice_data->payment_bank_iban)){ ?>
                                 <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
                             <?php } ?>
