@@ -339,6 +339,7 @@ class Invoice extends BaseModel
                     'event_details.costs_2 as costs_2',
                     'teachers.id as teacher_id'
                 )
+                ->selectRaw("ifnull(events.no_of_students,0) AS count_name")
                 ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")

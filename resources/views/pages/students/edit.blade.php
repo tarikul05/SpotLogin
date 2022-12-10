@@ -1190,7 +1190,13 @@ $('#save_btn').click(function (e) {
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
 							} else {
-								resultHtml += '<td>Lesson</td>';
+								if (value.event_type > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
 							}
 
 							//resultHtml += '<td>' + value.title + '</td>';
