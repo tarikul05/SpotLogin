@@ -986,8 +986,9 @@ class AgendaController extends Controller
             $param = [];
             $param['p_from_date']= trim($data['p_from_date']);
             $param['p_to_date']= trim($data['p_to_date']);
-
-            //$param['school_id']= trim($data['p_event_school_id']);
+            $param['location_id']= trim($data['location_id']);
+            
+            $param['school_id']= trim($data['p_event_school_id']);
             //$param['event_type']= trim($data['p_event_type_id']);
             //$param['teacher_id']= trim($data['p_teacher_id']);
             //$param['student_id']= trim($data['p_student_id']);
