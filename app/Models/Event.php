@@ -217,8 +217,33 @@ class Event extends BaseModel
     public function multiValidate($params)
     {
         $query = $this->newQuery();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
         $request = request();
-        $authUser = $request->user();
+        $user = $request->user();
+        $user_role = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $user_role = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $user_role = 'teacher';
+        }
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $user_role = 'admin_teacher';
+        }
+        if ($user->isTeacherAll()) {
+            $user_role = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+            $user_role = 'teacher';
+        }
+        $params['user_role'] = $user_role;
+        $params['person_id'] = $user->person_id;
+        
+        
+        
+        
         
         $fromFilterDate = null;
         $toFilterDate = null;
@@ -243,7 +268,10 @@ class Event extends BaseModel
 
         
 
-
+        if ($user_role == 'student') {
+            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->select(['events.*']);
+        }
         $query->where('deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
@@ -256,7 +284,11 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        $query->whereIn($key, $value);
+                        $query->where(function ($query) use($key,$value) {
+                            $query->whereIn($key, $value)
+                                ->orWhereNull($key);
+                        });
+                        //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
                         $query->where($key, '=', $value);
@@ -269,6 +301,13 @@ class Event extends BaseModel
                 // }
                 
             }
+        }
+        $user_role = $params['user_role'];
+        if ($user_role == 'student') {
+            $query->where('event_details.student_id', $params['person_id']);
+        }
+        if ($user_role == 'teacher') {
+            $query->where('events.teacher_id', $params['person_id']);
         }
 
         try {
