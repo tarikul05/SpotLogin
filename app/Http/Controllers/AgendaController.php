@@ -265,7 +265,7 @@ class AgendaController extends Controller
             // $p_lang_id=$_SESSION['Language'];
 
 
-
+            $data['location_id'] = trim($data['location_id']);
             $data['school_id'] = trim($data['school_id']);
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
@@ -909,6 +909,8 @@ class AgendaController extends Controller
             $data['event_type']= trim($dataParam['p_event_type_id']);
            // $data['teacher_id']= trim($dataParam['p_teacher_id']);
             $data['student_id']= trim($dataParam['p_student_id']);
+
+            $param['location_id']= trim($data['location_id']);
             $p_user_id=Auth::user()->id;
             $data['is_locked']=0;
             if (isset($data['p_from_date'])) {

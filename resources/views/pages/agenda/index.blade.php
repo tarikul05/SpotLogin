@@ -1663,7 +1663,8 @@
     }
 
     function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
-        var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        var p_event_location_id=getLocationIDs();
+        var data='location_id='+p_event_location_id+'&type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -2899,8 +2900,10 @@
         target_start_date=document.getElementById("date_from").value,
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
+        var p_event_location_id=getLocationIDs();
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
+        
+        var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
         e.preventDefault();
