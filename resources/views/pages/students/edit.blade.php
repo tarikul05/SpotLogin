@@ -1151,7 +1151,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Date</td>';
 									resultHtml += '<b><td colspan="1">Time</td>';
 									resultHtml += '<b><td colspan="1">Duration</td>';
-									resultHtml += '<b><td colspan="1">Type</td>';
+									resultHtml += '<b><td colspan="1">Category</td>';
 									resultHtml += '<b><td colspan="1">Teacher</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
@@ -1204,10 +1204,20 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.time_start + '</td>';
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
-							resultHtml += '<td>' + value.category_name + '</td>';
-							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
+							} else {
+								resultHtml += '<td>' + value.category_name + '</td>';
+							}
+							
+							resultHtml += '<td>' + value.teacher_name + '</td>';
+							if (value.event_type == 100) {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Event</td>';
+								}
 							} else {
 								if (value.count_name > 1) {
 									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
@@ -1235,7 +1245,16 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+									if (value.event_type!=100 && value.cat_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else if (value.event_type!=10 && value.event_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else{
+										value.buy_price = value.buy_price;
+									}
+									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
 								}
 								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;

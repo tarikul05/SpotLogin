@@ -321,6 +321,8 @@ class Invoice extends BaseModel
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
                 ->select(
                     'events.id as event_id',
+                    'event_categories.invoiced_type as cat_invoice_type',
+                    'events.event_invoice_type as event_invoice_type',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'events.title as title',
