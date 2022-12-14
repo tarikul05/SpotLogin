@@ -849,7 +849,7 @@ class Event extends BaseModel
                 return true;
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             //return error message
             $result['message'] = __('Internal server error');
             return false;
