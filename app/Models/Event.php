@@ -345,6 +345,7 @@ class Event extends BaseModel
         if ($user_role == 'teacher') {
             $query->where('events.teacher_id', $params['person_id']);
         }
+        $query->whereIn('events.event_type', [10,100]);
 
         try {
 
