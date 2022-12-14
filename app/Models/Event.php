@@ -739,17 +739,17 @@ class Event extends BaseModel
             );
 
         if (isset($params['school_id']) && !empty($params['school_id'])) {
-            $teacherEvents->where('events.school_id', '=', $params['school_id']);
+            $query->where('events.school_id', '=', $params['school_id']);
         }
 
 
 
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
-            $studentEvents->where('event_details.student_id', $params['person_id']);
+            $query->where('event_details.student_id', $params['person_id']);
         }
         if ($user_role == 'teacher') {
-            $studentEvents->where('events.teacher_id', $params['person_id']);
+            $query->where('events.teacher_id', $params['person_id']);
         }
 
 
@@ -849,7 +849,7 @@ class Event extends BaseModel
                 return true;
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             //return error message
             $result['message'] = __('Internal server error');
             return false;
