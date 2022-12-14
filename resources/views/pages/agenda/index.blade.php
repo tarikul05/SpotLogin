@@ -448,7 +448,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row not_teacher">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
@@ -3191,8 +3191,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
-        console.log("tttt: ")
-	var event_source = $(this).attr('id');
+    var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
 		if(!el_duration.val()){el_duration.val('15');}
@@ -3506,7 +3505,6 @@ function getLatestPrice() {
     if (agendaSelect != 1) {
         $("#sprice_amount_buy").val(0)
         $("#sprice_amount_sell").val(0)
-        console.log(" duktecew naki ?")
         return 
     } 
     var formData = $('#edit_lesson').serializeArray();
@@ -3563,6 +3561,7 @@ $('#agenda_select').on('change', function() {
     $("#hourly").hide()
 
     if(this.value != ''){
+        $('.not_teacher').show();
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
         $.each($("#event_school option:selected"), function(){         
@@ -3594,6 +3593,12 @@ $('#agenda_select').on('change', function() {
             $(".lesson-text").show()
             $(".event-text").hide()
         }else if(this.value == 2){
+            var isTeacher = +"{{$AppUI->isTeacher()}}";
+            if(isTeacher){
+                $('.not_teacher').hide();
+            }else{
+                $('.not_teacher').show();
+            }
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
             }else{
@@ -3644,6 +3649,7 @@ $('#agenda_select').on('change', function() {
              $("#std-check-div").css('display', 'none');
             // $('#category_select').trigger('change');
         }
+        
 	}else{
         $('#agenda_form_area').hide();
     }
