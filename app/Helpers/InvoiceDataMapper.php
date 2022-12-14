@@ -93,8 +93,10 @@ class InvoiceDataMapper
             $invoiceData['payment_bank_address'] = $teacher->bank_address;
             $invoiceData['payment_bank_zipcode'] = $teacher->bank_zipcode;
             $invoiceData['payment_bank_place'] = $teacher->bank_place;
-            $invoiceData['payment_bank_country_code'] = $teacher->bank_country_code;
-
+            if (!empty($teacher->bank_country_code) && $teacher->bank_country_code != ' ') {
+                $invoiceData['payment_bank_country_code'] = $teacher->bank_country_code;
+            }
+            
         } else {
             $invoiceData['seller_id'] = $schoolId;
             $invoiceData['seller_name'] = $school->school_name;
@@ -119,7 +121,9 @@ class InvoiceDataMapper
             $invoiceData['payment_bank_address'] = $school->bank_address;
             $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
             $invoiceData['payment_bank_place'] = $school->bank_place;
-            $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
+            if (!empty($school->bank_country_code) && $school->bank_country_code != ' ') {
+                $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
+            }
         }
 
 
