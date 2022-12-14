@@ -1621,7 +1621,7 @@
         }
         var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
-        p_to_date=moment(curdate).format("YYYY-MM-DD");
+        p_to_date=document.getElementById("date_to").value;
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();

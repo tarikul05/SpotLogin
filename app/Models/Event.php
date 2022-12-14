@@ -175,7 +175,7 @@ class Event extends BaseModel
         } 
         
         if (isset($params['p_to_date'])) {
-            $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
+            $toFilterDate = str_replace('/', '-', $params['p_to_date']);
         }
 
         if ($user_role == 'student') {
@@ -294,7 +294,7 @@ class Event extends BaseModel
         } 
         
         if (isset($params['p_to_date'])) {
-            $toFilterDate = str_replace('/', '-', $params['p_to_date'])." 23:59";
+            $toFilterDate = str_replace('/', '-', $params['p_to_date']);
             
             if (!$fromFilterDate) {
                 $fromFilterDate = now();
@@ -417,7 +417,7 @@ class Event extends BaseModel
             
             $toFilterDate = $params['end_date'];
             if ($params['p_view'] =='CurrentListView') {
-                $toFilterDate = str_replace('/', '-', $params['end_date'])." 23:59";
+                $toFilterDate = str_replace('/', '-', $params['end_date']);
             }
           
             //   if (!$fromFilterDate) {
