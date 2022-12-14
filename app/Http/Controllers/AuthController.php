@@ -397,12 +397,11 @@ class AuthController extends Controller
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
             $read_only_role = $this->user_read_only($user);
             $tRoleType = $user->schools()[0]->pivot->role_type;
-            $user->syncRoles([$tRoleType,$read_only_role]);
-            // if($read_only_role){
-                
-            // }else{
-            //     $user->syncRoles([$tRoleType]);   
-            // }
+            if($read_only_role){
+                $user->syncRoles([$read_only_role]);
+            }else{
+                $user->syncRoles([$tRoleType]);   
+            }
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect(RouteServiceProvider::HOME);

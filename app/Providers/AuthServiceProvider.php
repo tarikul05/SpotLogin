@@ -38,36 +38,34 @@ class AuthServiceProvider extends ServiceProvider
     public function check_read_only($user,  $ability){
         // dd($user->isSchoolAdmin(), $user->isReadOnly());
         // dd($user->getPermissionsViaRoles()->toArray());
-        
-        $roles_all = $user->getPermissionsViaRoles()->toArray();
-        $role = Role::where('name','read_only')->first();
-        $role_read_only = $role->getAllPermissions()->toArray();
-        $com_role = [];
-        foreach($roles_all as $key => $value) {
-            $search_value = $value['id'];
-            $search_key   = 'id';
-            $rol = $this->search_array_val($search_key, $search_value, $role_read_only);
-            if($rol){
-                array_push($com_role, $rol);
+        // dd($com_role);
+        $today_date = new DateTime();
+        $today_time = $today_date->getTimestamp();
+        if( !empty($user->trial_ends_at) && !empty($user->stripe_id)){
+            $expired_date = strtotime($user->trial_ends_at);
+            if($today_time >= $expired_date){
+                $roles_all = $user->getPermissionsViaRoles()->toArray();
+                $role = Role::where('name','read_only')->first();
+                $role_read_only = $role->getAllPermissions()->toArray();
+                $com_role = [];
+                foreach($roles_all as $key => $value) {
+                    $search_value = $value['id'];
+                    $search_key   = 'id';
+                    $rol = $this->search_array_val($search_key, $search_value, $role_read_only);
+                    if($rol){
+                        array_push($com_role, $rol);
+                    }
+                }
+                $role_un = $this->remove_duplicate_role($com_role);
+                $has_value = array_search($ability, array_column($role_un, 'name'));
+                if($has_value){
+                    return $user->hasRole('read_only') ? true : null;
+                }else{
+                    return $user->hasRole('superadmin') ? true : null;
+                }
             }
         }
-        $role_un = $this->remove_duplicate_role($com_role);
-        $has_value = array_search($ability, array_column($role_un, 'name'));
-        if($has_value){
-            return $user->hasRole('read_only') ? true : null;
-        }else{
-            return $user->hasRole('superadmin') ? true : null;
-        }
-        // dd($com_role);
-        // $today_date = new DateTime();
-        // $today_time = $today_date->getTimestamp();
-        // if( !empty($user->trial_ends_at) && !empty($user->stripe_id)){
-        //     $expired_date = strtotime($user->trial_ends_at);
-        //     if($today_time >= $expired_date){
-        //         return $user->hasRole('read_only') ? true : null;
-        //     }
-        // }
-        // return $user->hasRole('superadmin') ? true : null;
+        return $user->hasRole('superadmin') ? true : null;
     }
 
     public function search_array_val($sKey, $id, $array) {
