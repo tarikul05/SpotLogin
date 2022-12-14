@@ -224,18 +224,18 @@ class Event extends BaseModel
         try {
 
             if ($fromFilterDate && $toFilterDate) {
-                
-                if ($fromFilterDate && $toFilterDate) {
-                    $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
-                        $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
-                            ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
-                            ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
-                                $sq->where('date_start', '<', $fromFilterDate)
-                                    ->where('date_end', '>', $toFilterDate);
-                            })
-                            ;
-                    });
+                $timeZone = 'UTC';
+                if (!empty($params['school_id'])) {
+                    $school = School::active()->find($params['school_id']);
+                    if (!empty($school->timezone)) {
+                        $timeZone = $school->timezone;
+                    }
                 }
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+
+                $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                $query->whereRaw($qq);
             }
         } catch (\Exception $e) {
             
@@ -349,18 +349,19 @@ class Event extends BaseModel
         try {
 
             if ($fromFilterDate && $toFilterDate) {
-                
-                if ($fromFilterDate && $toFilterDate) {
-                    $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
-                        $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
-                            ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
-                            ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
-                                $sq->where('date_start', '<', $fromFilterDate)
-                                    ->where('date_end', '>', $toFilterDate);
-                            })
-                            ;
-                    });
+                $timeZone = 'UTC';
+                if (!empty($params['school_id'])) {
+                    $school = School::active()->find($params['school_id']);
+                    if (!empty($school->timezone)) {
+                        $timeZone = $school->timezone;
+                    }
                 }
+                
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+
+                $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                $query->whereRaw($qq);
             }
         } catch (\Exception $e) {
             
@@ -501,15 +502,18 @@ class Event extends BaseModel
         
         try {
           if ($fromFilterDate && $toFilterDate) {
-              $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
-                  $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
-                      ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
-                      ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
-                          $sq->where('date_start', '<', $fromFilterDate)
-                              ->where('date_end', '>', $toFilterDate);
-                      })
-                      ;
-              });
+                $timeZone = 'UTC';
+                if (!empty($params['school_id'])) {
+                    $school = School::active()->find($params['school_id']);
+                    if (!empty($school->timezone)) {
+                        $timeZone = $school->timezone;
+                    }
+                }
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+
+                $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                $query->whereRaw($qq);
           }
         } catch (\Exception $e) {
           
@@ -668,15 +672,18 @@ class Event extends BaseModel
         }
         try {
           if ($fromFilterDate && $toFilterDate) {
-              $query->where(function ($q) use ($fromFilterDate, $toFilterDate) {
-                  $q->whereBetween('date_start', [$fromFilterDate, $toFilterDate])
-                      ->orWhereBetween('date_end', [$fromFilterDate, $toFilterDate])
-                      ->orWhere(function ($sq) use ($fromFilterDate, $toFilterDate) {
-                          $sq->where('date_start', '<', $fromFilterDate)
-                              ->where('date_end', '>', $toFilterDate);
-                      })
-                      ;
-              });
+                $timeZone = 'UTC';
+                if (!empty($params['school_id'])) {
+                    $school = School::active()->find($params['school_id']);
+                    if (!empty($school->timezone)) {
+                        $timeZone = $school->timezone;
+                    }
+                }
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+
+                $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                $query->whereRaw($qq);
           }
         } catch (\Exception $e) {
           
