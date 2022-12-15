@@ -116,7 +116,7 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split(',');
+    var p_event_id = p_event_id.split("|");
     
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
@@ -128,8 +128,7 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
                     <ul>`;
 
                     p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
-                        console.log(element+'hhh');
+                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
                     });
                     
                 modalHtml +=`</ul><div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`
@@ -154,7 +153,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split(',');
+    var p_event_id = p_event_id.split("|");
     //console.log(v_title); 
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
@@ -166,8 +165,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
                     <ul>`;
 
                     p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
-                        console.log(element+'hhh');
+                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
                     });
                     
                 modalHtml +=`</ul>

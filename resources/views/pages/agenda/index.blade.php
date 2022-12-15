@@ -2434,6 +2434,8 @@
                         let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let cours_id = JSON.parse(json_events)[key].id; 
+                        
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
                             cours_name = '';
@@ -2449,7 +2451,7 @@
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         } 
                         else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            selected_non_validate_ids.push(cours_id+' Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         
@@ -2459,7 +2461,9 @@
                 });
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                //selected_non_validate_ids.join(",  ");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
@@ -2710,7 +2714,9 @@
 
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                //selected_non_validate_ids.join("|");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
