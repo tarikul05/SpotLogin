@@ -100,7 +100,6 @@ class Invoice extends BaseModel
         'invoice_currency ',
         'tax_desc',
         'tax_perc',
-
         'tax_amount',
         'etransfer_acc',
         'cheque_payee',
@@ -108,13 +107,12 @@ class Invoice extends BaseModel
         'seller_province_id',
         'bank_province_id',
         'e_transfer_email',
+        'payment_phone',
         'name_for_checks',
         'category_invoiced_type',
         'created_at',
         'modified_at',
         'deleted_at',
-
-
         'approved_flag',
         'is_active',
         'created_by',
