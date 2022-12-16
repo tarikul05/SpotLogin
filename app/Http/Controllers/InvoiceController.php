@@ -1323,13 +1323,13 @@ class InvoiceController extends Controller
         ->orderBy('invoice_items.item_date','ASC')->get();
 
         $items = array();
-        foreach($invoice_items as $key=>$d){
-            //print_r($d->event_type);
+        $invoice_items->each(function($d) use(&$items){
             if(!isset($items[$d->event_type])){
                 $items[$d->event_type] = array();
             }
             $items[$d->event_type][] = $d;
-        }
+        });
+
         $invoice->invoice_items = $items;
         // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
 
@@ -1581,9 +1581,7 @@ class InvoiceController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
-
-        return $result;        
+        }         
     }
 
     /**
@@ -1719,9 +1717,7 @@ class InvoiceController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
-
-        return $result;        
+        }       
     }
 
     /**
