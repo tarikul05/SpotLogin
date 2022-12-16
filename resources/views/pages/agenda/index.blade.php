@@ -448,7 +448,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row not_teacher">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
@@ -1621,7 +1621,7 @@
         }
         var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
-        p_to_date=moment(curdate).format("YYYY-MM-DD");
+        p_to_date=document.getElementById("date_to").value;
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
@@ -2434,6 +2434,8 @@
                         let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let cours_id = JSON.parse(json_events)[key].id; 
+                        
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
                             cours_name = '';
@@ -2449,7 +2451,7 @@
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         } 
                         else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            selected_non_validate_ids.push(cours_id+' Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         
@@ -2459,7 +2461,9 @@
                 });
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                //selected_non_validate_ids.join(",  ");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
@@ -2710,7 +2714,9 @@
 
                 selected_ids.join("|");
                 selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                //selected_non_validate_ids.join("|");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
@@ -3191,8 +3197,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
-        console.log("tttt: ")
-	var event_source = $(this).attr('id');
+    var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
 		if(!el_duration.val()){el_duration.val('15');}
@@ -3506,7 +3511,6 @@ function getLatestPrice() {
     if (agendaSelect != 1) {
         $("#sprice_amount_buy").val(0)
         $("#sprice_amount_sell").val(0)
-        console.log(" duktecew naki ?")
         return 
     } 
     var formData = $('#edit_lesson').serializeArray();
@@ -3563,6 +3567,7 @@ $('#agenda_select').on('change', function() {
     $("#hourly").hide()
 
     if(this.value != ''){
+        $('.not_teacher').show();
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
         $.each($("#event_school option:selected"), function(){         
@@ -3594,6 +3599,12 @@ $('#agenda_select').on('change', function() {
             $(".lesson-text").show()
             $(".event-text").hide()
         }else if(this.value == 2){
+            var isTeacher = +"{{$AppUI->isTeacher()}}";
+            if(isTeacher){
+                $('.not_teacher').hide();
+            }else{
+                $('.not_teacher').show();
+            }
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
             }else{
@@ -3644,6 +3655,7 @@ $('#agenda_select').on('change', function() {
              $("#std-check-div").css('display', 'none');
             // $('#category_select').trigger('change');
         }
+        
 	}else{
         $('#agenda_form_area').hide();
     }

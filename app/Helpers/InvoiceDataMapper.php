@@ -86,15 +86,17 @@ class InvoiceDataMapper
             $invoiceData['seller_lastname'] = $teacher->lastname;
             $invoiceData['seller_firstname'] = $teacher->firstname;
             
-            $invoiceData['payment_bank_iban'] = $teacher->bank_iban;
-            $invoiceData['payment_bank_account'] = $teacher->bank_account;
-            $invoiceData['payment_bank_swift'] = $teacher->bank_swift;
-            $invoiceData['payment_bank_name'] = $teacher->bank_name;
-            $invoiceData['payment_bank_address'] = $teacher->bank_address;
-            $invoiceData['payment_bank_zipcode'] = $teacher->bank_zipcode;
-            $invoiceData['payment_bank_place'] = $teacher->bank_place;
-            $invoiceData['payment_bank_country_code'] = $teacher->bank_country_code;
-
+            $invoiceData['payment_bank_iban'] = !empty($teacher->bank_iban) ? $teacher->bank_iban : null;
+            $invoiceData['payment_bank_account'] = !empty($teacher->bank_account) ? $teacher->bank_account : null;
+            $invoiceData['payment_bank_swift'] = !empty($teacher->bank_swift) ? $teacher->bank_swift : null;
+            $invoiceData['payment_bank_name'] = !empty($teacher->bank_name) ? $teacher->bank_name : null;
+            $invoiceData['payment_bank_address'] = !empty($teacher->bank_address) ? $teacher->bank_address : null;
+            $invoiceData['payment_bank_zipcode'] = !empty($teacher->bank_zipcode) ? $teacher->bank_zipcode : null;
+            $invoiceData['payment_bank_place'] = !empty($teacher->bank_place) ? $teacher->bank_place : null;
+            if (!empty($teacher->bank_country_code) && $teacher->bank_country_code != ' ') {
+                $invoiceData['payment_bank_country_code'] = !empty($teacher->bank_country_code) ? $teacher->bank_country_code : null;
+            }
+            
         } else {
             $invoiceData['seller_id'] = $schoolId;
             $invoiceData['seller_name'] = $school->school_name;
@@ -110,16 +112,17 @@ class InvoiceDataMapper
             $invoiceData['seller_gender_id'] = $school->contact_gender_id;
             $invoiceData['seller_lastname'] = $school->contact_lastname;
             $invoiceData['seller_firstname'] = $school->contact_firstname;
-            $invoiceData['payment_bank_iban'] = $school->bank_iban;
-        
-            $invoiceData['payment_bank_account_name'] = $school->bank_account_holder;
-            $invoiceData['payment_bank_account'] = $school->bank_account;
-            $invoiceData['payment_bank_swift'] = $school->bank_swift;
-            $invoiceData['payment_bank_name'] = $school->bank_name;
-            $invoiceData['payment_bank_address'] = $school->bank_address;
-            $invoiceData['payment_bank_zipcode'] = $school->bank_zipcode;
-            $invoiceData['payment_bank_place'] = $school->bank_place;
-            $invoiceData['payment_bank_country_code'] = $school->bank_country_code;
+            $invoiceData['payment_bank_iban'] = !empty($school->bank_iban) ? $school->bank_iban : null;        
+            $invoiceData['payment_bank_account_name'] = !empty($school->bank_account_holder) ? $school->bank_account_holder : null;
+            $invoiceData['payment_bank_account'] = !empty($school->bank_account) ? $school->bank_account : null;
+            $invoiceData['payment_bank_swift'] = !empty($school->bank_swift) ? $school->bank_swift : null;
+            $invoiceData['payment_bank_name'] = !empty($school->bank_name) ? $school->bank_name : null;
+            $invoiceData['payment_bank_address'] = !empty($school->bank_address) ? $school->bank_address : null;
+            $invoiceData['payment_bank_zipcode'] = !empty($school->bank_zipcode) ? $school->bank_zipcode : null;
+            $invoiceData['payment_bank_place'] =  !empty($school->bank_place) ? $school->bank_place : null;
+            if (!empty($school->bank_country_code) && $school->bank_country_code != ' ') {
+                $invoiceData['payment_bank_country_code'] = !empty($school->bank_country_code) ? $school->bank_country_code : null;
+            }
         }
 
 

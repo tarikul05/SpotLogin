@@ -1231,7 +1231,7 @@ function populate_teacher_lesson() {
 					//resultHtml += '<b><td colspan="1"></td>';
 					resultHtml += '<b><td colspan="1">Date</td>';
 					//resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="2">Type</td>';
+					resultHtml += '<b><td colspan="1">Category</td>';
 					resultHtml += '<b><td colspan="2">Students</td>';
 					resultHtml += '<td colspan="2">' + 'Lesson' + '</td>';
 					resultHtml += '<td colspan="2" style="text-align:right">' + 'Price' + '</td>';
@@ -1251,12 +1251,16 @@ function populate_teacher_lesson() {
 				// 		resultHtml += "</td>";
 				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
+				if (value.event_type == 100) {
+					resultHtml += '<td colspan="2">Event</td>';
+				} else {
+					resultHtml += '<td colspan="2">' + value.category_name + '</td>';
+				}
 				//resultHtml += '<td></td>';
 				//resultHtml += '<td></td>';
 				//resultHtml += '<td>' + value.time_start + '</td>';
 				//resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
-				resultHtml += '<td colspan="2">' + value.category_name + '</td>';
-							
+						
 				// if (value.event_type == 100) {
 				// 	resultHtml += '<td>' + value.price_name + '</td>';
 				// } else {
@@ -1266,7 +1270,13 @@ function populate_teacher_lesson() {
 				resultHtml += '<td colspan="2">' + value.student_name + '</td>';
 				//resultHtml += '<td>' + value.title + '</td>';
 				if (value.event_type == 100) {
-					resultHtml += '<td colspan="2">Event</td>';
+					if (value.count_student > 1) {
+						resultHtml += '<td colspan="2">Group Event for '+value.count_student+' Student(s)</td>';
+					}
+					else{
+						resultHtml += '<td colspan="2">Private Event</td>';
+					}
+					
 				} else {
 					if (value.count_student > 1) {
 						resultHtml += '<td colspan="2">Group Lessons for '+value.count_student+' Student(s)</td>';

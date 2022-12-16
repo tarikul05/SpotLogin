@@ -180,6 +180,7 @@
 											</div>
 										</div>
 									</div>
+									<?php if(!$AppUI->isTeacher()){ ?>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
@@ -192,6 +193,7 @@
 											</div>
 										</div>
 									</div>
+									<?php } ?>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
 										<div class="col-sm-4">

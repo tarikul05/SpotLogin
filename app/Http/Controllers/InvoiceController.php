@@ -1524,6 +1524,8 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'e_transfer_email' => $dataParam['p_e_transfer_email'],
+                'payment_phone' => $dataParam['p_payment_phone'],
                 'invoice_creation_type' => 'Y'
             ];
 
@@ -1657,6 +1659,8 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'e_transfer_email' => $dataParam['p_e_transfer_email'],
+                'payment_phone' => $dataParam['p_payment_phone'],
                 'invoice_creation_type' => 'Y'
             ];
 
