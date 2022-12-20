@@ -30,22 +30,22 @@ class AuthServiceProvider extends ServiceProvider
         // Implicitly grant "superadmin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
+            if($user->hasRole('superadmin')){
+                return true;
+            }
             return $this->check_read_only($user, $ability);
-            // return $user->hasRole('superadmin') ? true : null;
         });
     }
-
+    
     public function check_read_only($user,  $ability){
-        // dd($user->isSchoolAdmin(), $user->isReadOnly());
-        // dd($user->getPermissionsViaRoles()->toArray());
-        // dd($com_role);
         $today_date = new DateTime();
         $today_time = $today_date->getTimestamp();
         if( !empty($user->trial_ends_at) && !empty($user->stripe_id)){
             $expired_date = strtotime($user->trial_ends_at);
             if($today_time >= $expired_date){
                 $roles_all = $user->getPermissionsViaRoles()->toArray();
-                $role = Role::where('name','read_only')->first();
+                $get_read_only = $this->getHasLoginType($user);
+                $role = Role::where('name',$get_read_only)->first();
                 $role_read_only = $role->getAllPermissions()->toArray();
                 $com_role = [];
                 foreach($roles_all as $key => $value) {
@@ -57,17 +57,14 @@ class AuthServiceProvider extends ServiceProvider
                     }
                 }
                 $role_un = $this->remove_duplicate_role($com_role);
-                $has_value = array_search($ability, array_column($role_un, 'name'));
-                if($has_value){
-                    return $user->hasRole('read_only') ? true : null;
-                }else{
-                    return $user->hasRole('superadmin') ? true : null;
-                }
+                return array_search($ability, array_column($role_un, 'name'));
             }
         }
-        return $user->hasRole('superadmin') ? true : null;
     }
 
+    /*
+    * role att search on all role
+    */
     public function search_array_val($sKey, $id, $array) {
         foreach ($array as $key => $val) {
             if ($val[$sKey] == $id) {
@@ -76,11 +73,26 @@ class AuthServiceProvider extends ServiceProvider
         }
         return false;
     }
-
+    /*
+    * check duplicate
+    */
     public function remove_duplicate_role($input)
     {
         $serialized = array_map('serialize', $input);
         $unique = array_unique($serialized);
         return array_intersect_key($input, $unique);
+    }
+
+    /*
+    * Return read only based on user login
+    */
+    public function getHasLoginType($user){
+        if($user->isTeacherAdmin()){
+            return 'single_coach_read_only';
+        }else if($user->isTeacherAll() || $user->isTeacherMedium() || $user->isTeacherMinimum()){
+            return 'teacher_read_only';
+        }else{
+            return 'read_only';
+        }
     }
 }
