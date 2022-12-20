@@ -60,7 +60,9 @@
                              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                             <!-- comented for 1st release -->
                             <div class="dropdown-menu header">
-                                <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
+                                @can('invoice-list')
+                                    <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
+                                @endcan
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
                                 <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
