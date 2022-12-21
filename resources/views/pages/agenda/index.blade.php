@@ -2451,7 +2451,7 @@
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         } 
                         else{
-                            selected_non_validate_ids.push(cours_id+' Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         
