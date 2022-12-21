@@ -2189,15 +2189,15 @@
                 document.getElementById("btn_validate_events").style.display = "none";
                 
                 var user_role=document.getElementById("user_role").value;
-                
+                let selected_non_validate_ids = document.getElementById("get_non_validate_event_id").value;
+                        
                 if (foundRecords == 1)
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
-                        let selected_validate_ids = document.getElementById("get_validate_event_id").value;
-                        if (selected_validate_ids.length ==0) {
+                        if (selected_non_validate_ids.length ==0) {
                             document.getElementById("btn_validate_events").style.display = "none";
                         }else {
                             document.getElementById("btn_validate_events").style.display = "block";
@@ -2212,8 +2212,14 @@
                         document.getElementById("btn_delete_events").style.display = "none"; 
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
-                        document.getElementById("btn_delete_events").style.display = "block";
-                        document.getElementById("btn_validate_events").style.display = "block";
+                        if (selected_non_validate_ids.length ==0) {
+                            document.getElementById("btn_delete_events").style.display = "none";
+                            document.getElementById("btn_validate_events").style.display = "none";
+                        }else {
+                            document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_validate_events").style.display = "block";
+                        }
+                        
                     }
                     if (lockRecords == 0)
                     {
@@ -2447,11 +2453,11 @@
                             teacher_name = '';
                         } 
                         var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
+                        if (JSON.parse(json_events)[key].is_locked ==1) {
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         } 
                         else{
-                            selected_non_validate_ids.push(cours_id+' Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                         }   
                         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         
@@ -2460,16 +2466,20 @@
                     
                 });
                 selected_ids.join("|");
-                selected_validate_ids.join("|");
+                
                 //selected_non_validate_ids.join(",  ");
                 selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
                 
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
@@ -2605,7 +2615,7 @@
                             teacher_name = '';
                         } 
                         var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
+                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked ==1) {
                             selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                         } 
                         else{
@@ -2713,16 +2723,20 @@
                 $('#agenda_list').html(resultHtmlHeader_cc);
 
                 selected_ids.join("|");
-                selected_validate_ids.join("|");
+                
                 //selected_non_validate_ids.join("|");
                 selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
                 
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;

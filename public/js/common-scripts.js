@@ -116,8 +116,9 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split("|");
-    
+    if (p_event_id.length!=0) {
+        p_event_id = p_event_id.split("|");
+    }
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
@@ -126,11 +127,11 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
                 <div class="modal-body text-center p-4">                    
                     <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
                     <ul>`;
-
-                    p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
-                    });
-                    
+                    if (p_event_id.length!=0) {
+                        p_event_id.forEach((element) => {
+                            modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
+                        });
+                    }
                 modalHtml +=`</ul><div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`
                 modalHtml +=`
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
@@ -153,8 +154,9 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split("|");
-    //console.log(v_title); 
+    if (p_event_id.length!=0) {
+        p_event_id = p_event_id.split("|");
+    }
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
@@ -163,11 +165,11 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
                 <div class="modal-body text-center p-4">                    
                     <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
                     <ul>`;
-
-                    p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
-                    });
-                    
+                    if (p_event_id.length!=0) {
+                        p_event_id.forEach((element) => {
+                            modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
+                        });
+                    }
                 modalHtml +=`</ul>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
                     <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
