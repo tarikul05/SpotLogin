@@ -910,7 +910,7 @@ class AgendaController extends Controller
            // $data['teacher_id']= trim($dataParam['p_teacher_id']);
             $data['student_id']= trim($dataParam['p_student_id']);
 
-            $param['location_id']= trim($data['location_id']);
+            $data['location_id']= trim($dataParam['location_id']);
             $p_user_id=Auth::user()->id;
             $data['is_locked']=0;
             if (isset($data['p_from_date'])) {
