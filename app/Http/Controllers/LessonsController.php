@@ -380,7 +380,12 @@ class LessonsController extends Controller
                 $studentCount = !empty($lessonData['student']) ? count($lessonData['student']) : 0 ;
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
-                $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
+                if(!empty($studentCount)){
+                    $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
+                }else{
+                    $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60));
+                }
+                
                 $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
                 if($lessonData['sis_paying'] == 1 && $lessonData['student_sis_paying'] == 1 ){
@@ -394,7 +399,7 @@ class LessonsController extends Controller
                 if ($lessonData['student_sis_paying'] == 1) {
                     $attendSellPrice = ($eventPrice['price_sell']*($lessonData['duration']/60));
                 }
-// dd($eventPrice,$attendBuyPrice,$attendSellPrice);
+
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,
@@ -430,6 +435,17 @@ class LessonsController extends Controller
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
                     }
+                }else{
+                    $dataDetails = [
+                        'event_id'   => $event->id,
+                        'teacher_id' => $lessonData['teacher_select'],
+                        'buy_total' => $attendBuyPrice,
+                        'sell_total' => $attendSellPrice,
+                        'buy_price' => $attendBuyPrice,
+                        'sell_price' => $attendSellPrice,
+                        'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null
+                    ];
+                    $eventDetails = EventDetails::create($dataDetails);
                 }
                     
                 DB::commit();
@@ -544,7 +560,11 @@ class LessonsController extends Controller
                 $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
-                $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
+                if(!empty($studentCount)){
+                    $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
+                }else{
+                    $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60));
+                }
                 $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
                 if($lessonData['sis_paying'] == 1 && $lessonData['student_sis_paying'] == 1 ){
@@ -595,6 +615,18 @@ class LessonsController extends Controller
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
                     }
+                }else{
+                    $dataDetails = [
+                            'event_id' => $lessonlId,
+                            'teacher_id' => !empty($lessonData['teacher_select']) ? $lessonData['teacher_select'] : null,
+                            'buy_total' => $attendBuyPrice,
+                            'sell_total' => $attendSellPrice,
+                            'buy_price' => $attendBuyPrice,
+                            'sell_price' => $attendSellPrice,
+                            'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
+                            'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
             
