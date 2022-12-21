@@ -363,7 +363,6 @@ class LessonsController extends Controller
                 }
 
                 $lessonData = $request->all();
-                // dd($lessonData);
                 
                 $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
                 $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
@@ -373,7 +372,7 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
-                $stu_num = explode("_", $lessonData['sevent_price']);
+                $stu_num = !empty($lessonData['sevent_price']) ? explode("_", $lessonData['sevent_price']) : 0;
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
                 $teacher_id = $lessonData['teacher_select'];
@@ -550,7 +549,7 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $lessonData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $lessonData['zone'],'UTC');
-                $stu_num = explode("_", $lessonData['sevent_price']);
+                $stu_num = !empty($lessonData['sevent_price']) ? explode("_", $lessonData['sevent_price']) : 0;
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
                 $teacher_id = $lessonData['teacher_select'];
@@ -624,7 +623,6 @@ class LessonsController extends Controller
                             'buy_price' => $attendBuyPrice,
                             'sell_price' => $attendSellPrice,
                             'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
-                            'participation_id' => !empty($lessonData['attnValue'][$std]) ? $lessonData['attnValue'][$std] : 0,
                         ];
                         $eventDetails = EventDetails::create($dataDetails);
                 }
