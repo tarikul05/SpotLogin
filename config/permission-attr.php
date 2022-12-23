@@ -64,7 +64,17 @@ return [
         // invoice
         'invoice-list',
         'invoice-edit',
-
+        'teacher-invoice-list',
+        'student-invoice-list',
+        'manual-invoice-list',
+        'teacher-invoice-edit',
+        'student-invoice-edit',
+        'invoice-generate',
+        'student-invoice-generate',
+        'teacher-invoice-generate',
+        'event-lesson-list',
+        'teacher-lesson-list',
+        'manual-invoice-edit',
 ];
 
 
