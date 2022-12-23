@@ -395,9 +395,9 @@ class AuthController extends Controller
             return redirect(RouteServiceProvider::HOME);
 
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
-            // $read_only_role = $this->user_read_only($user);
             $tRoleType = $user->schools()[0]->pivot->role_type;
-            $user->syncRoles([$tRoleType]);  
+            // $read_only_role = $this->user_read_only($user);
+            $user->syncRoles([$tRoleType]); 
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect(RouteServiceProvider::HOME);
@@ -425,16 +425,22 @@ class AuthController extends Controller
     }
 
     public function user_read_only( $user ){
-        $read_only_role = false;
         $today_date = new DateTime();
         $today_time = $today_date->getTimestamp();
         if( !empty($user->trial_ends_at) && !empty($user->stripe_id)){
             $expired_date = strtotime($user->trial_ends_at);
             if($today_time >= $expired_date){
-                $read_only_role = 'read_only';
+                if($user->isTeacherAdmin()){
+                    return 'single_coach_read_only';
+                }else if($user->isTeacherAll() || $user->isTeacherMedium() || $user->isTeacherMinimum()){
+                    return 'teacher_read_only';
+                }else if($user->isSchoolAdmin()){
+                    return 'read_only';
+                }else{
+                    return '';
+                }
             }
         }
-        return $read_only_role;
     }
 
    
