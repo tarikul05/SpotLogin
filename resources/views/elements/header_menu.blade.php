@@ -60,17 +60,7 @@
                             @canany(['invoice-list', 
                             'teacher-invoice-list', 
                             'student-invoice-list',
-                            'manual-invoice-list',
-                            'invoice-edit',
-                            'teacher-invoice-edit',
-                            'student-invoice-edit',
-                            'manual-invoice-edit',
-                            'event-lesson-list',
-                            'teacher-lesson-list',
-                            'student-lesson-list',
-                            'invoice-generate',
-                            'teacher-invoice-generate',
-                            'student-invoice-generate'])
+                            'manual-invoice-list'])
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
                                     <!-- comented for 1st release -->
@@ -78,27 +68,20 @@
                                         @can(['invoice-list'])
                                         <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('Invoice\'s List') }}</a>
                                         @endcan
-                                        @canany(['event-lesson-list',
-                                        'student-lesson-list',
-                                        'invoice-generate',
-                                        'student-invoice-generate'])
+                                        @can(['student-invoice-generate'])
                                             <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __('Student\'s Invoice') }}</a>
-                                        @endcanany
-                                        @canany([
-                                        'event-lesson-list',
-                                        'teacher-lesson-list',
-                                        'invoice-generate',
-                                        'teacher-invoice-generate'])
+                                        @endcan
+                                        @can(['teacher-invoice-generate'])
                                             <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Professor's Invoice") }}</a>
-                                        @endcanany
-                                        @canany(['manual-invoice-edit'])
+                                        @endcan
+                                        @can(['manual-invoice-list'])
                                             <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
-                                        @endcanany
+                                        @endcan
                                     </div>
                                 </div>
                             @endcanany
                         @else
-                            <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
+                            <a href="{{ $urlInvoice }}" class="nav-item nav-link">{{ __('My Invoice') }}</a>
                         @endcan
                         @if($AppUI['person_type'] === 'SUPER_ADMIN')
                             <a href="{{ route('subscriber_list') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" class="nav-item nav-link">{{ __('Billing') }}</a>
