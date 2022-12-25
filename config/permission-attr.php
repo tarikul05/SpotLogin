@@ -67,9 +67,6 @@ return [
         'student-invoice-list',
         'manual-invoice-list',
         'invoice-edit',
-        'teacher-invoice-list',
-        'student-invoice-list',
-        'manual-invoice-list',
         'teacher-invoice-edit',
         'student-invoice-edit',
         'invoice-generate',
@@ -78,6 +75,9 @@ return [
         'event-lesson-list',
         'teacher-lesson-list',
         'manual-invoice-edit',
+        'update-payment-status',
+        'pay-reminder-email-fetch',
+        'pay-reminder-email'
 ];
 
 
