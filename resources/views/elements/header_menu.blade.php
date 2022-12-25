@@ -56,6 +56,7 @@
                                <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
                             @endif
                         @endcan
+                        
                         @if(!$AppUI->isStudent())
                             @canany(['invoice-list', 
                             'teacher-invoice-list', 

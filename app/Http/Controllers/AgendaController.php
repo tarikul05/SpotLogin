@@ -580,16 +580,16 @@ class AgendaController extends Controller
                 }
                 
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                 } else {
-                    $e['tooltip']=$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                 }
 
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
-                        $e['title_extend']= '<br/>'.$e['title'].' <br/> Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
-                        $e['title_extend']= '<br/>'.$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                     $e['title'] = '';
                 }
@@ -671,7 +671,7 @@ class AgendaController extends Controller
                     }
                 }
                 if ($user_role == 'teacher'){
-                    if (($user->id == $fetch->teacher_id)){
+                    if (($user->person_id == $fetch->teacher_id)){
                         $action_type='edit';
                         if ($fetch->event_type==10) { //lesson
                             $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;

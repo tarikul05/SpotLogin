@@ -23,28 +23,41 @@
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
                             
                             @if($invoice->invoice_status ==10)
-                                @if($invoice->payment_status ==0)
-                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as Paid')}}
-                                    </a>
-                                @else
-                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as UnPaid')}}
-                                    </a>
+
+                                @if(!$AppUI->isStudent())
+                                    @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit'])
+                                        @if($invoice->payment_status ==0)
+                                            <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
+                                                {{__('Flag as Paid')}}
+                                            </a>
+                                        @else
+                                            <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                                                {{__('Flag as UnPaid')}}
+                                            </a>
+                                        @endif
+                                        <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                                    @endcanany
                                 @endif
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
                                 <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
                                     <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
                                 </a>
-                            
                             @else
-                                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                    <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
-                                </a> 
+                                @canany(['invoice-edit',
+                                    'teacher-invoice-edit',
+                                    'student-invoice-edit'])
+                                    <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                                        <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
+                                    </a> 
+                                @endcanany
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
-                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
-                                <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
-                                
+                                @canany(['invoice-edit',
+                                    'teacher-invoice-edit',
+                                    'student-invoice-edit'])
+                                    <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                                    <a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>
+                                @endcanany
                             @endif
                             
 
@@ -56,8 +69,12 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
-				<button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
-			</div>
+                @canany(['invoice-edit',
+                'teacher-invoice-edit',
+                'student-invoice-edit'])
+                    <button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
+                @endcanany
+            </div>
 		</nav>
 		<!-- Tabs navs -->
 		<!-- Tabs content -->
@@ -73,7 +90,7 @@
                                     
                                     @php 
                                         
-                                        
+                                        $zone = $timeZone;
                                         $sub_total_lesson = 0;
                                         $sub_total_min_lesson = 0;
                                         $total_lesson = 0;
@@ -82,6 +99,10 @@
                                         $total_event = 0;
                                         $total_min = 0;
                                         $total = 0;
+                                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
+                                        $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
+                                        
                                     @endphp
                                 
                                     <tbody>
@@ -97,6 +118,11 @@
                                             <tbody>
                                             
                                             @foreach($group as $key => $item)
+                                                @php
+                                                
+                                                $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
+
+                                                @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                     <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>
@@ -151,6 +177,9 @@
                                                         {{ number_format($sub_total_lesson,'2') }}
                                                     </td>
                                                 </tr>
+                                                @canany(['invoice-edit',
+                                                    'teacher-invoice-edit',
+                                                    'student-invoice-edit'])
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
@@ -164,6 +193,7 @@
                                                         <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
                                                     </td>
                                                 </tr>
+                                                @endcanany
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount Amount:</td>
@@ -225,13 +255,17 @@
                                         </tr>
                                     @endif
                                     @if ($invoice->invoice_type == 1)
-                                    <tr>
-                                        <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
-                                        <td></td>
-                                        <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
-                                        </td>
-                                    </tr>
+                                    @canany(['invoice-edit',
+                                        'teacher-invoice-edit',
+                                        'student-invoice-edit'])
+                                        <tr>
+                                            <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
+                                            <td></td>
+                                            <td style="text-align:right">
+                                                <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
+                                            </td>
+                                        </tr>
+                                    @endcanany
                                     @endif
                                     @php
                                         $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount ;
@@ -352,11 +386,14 @@
                                 <label id="row_hdr_status" name="row_hdr_status" for="invoice_status" class="col-lg-3 col-sm-3 text-right">Status</label>
                                 <div class="col-lg-2 col-sm-2 text-left">
                                     <label id="invoice_status_text">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
+
+                                    @if(!$AppUI->isStudent())
                                     <div> 
                                         <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: none;">
                                             <span id="unlock_btn_cap">Unlock</span>
                                         </a>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             <!-- invoice date -->
@@ -1004,12 +1041,39 @@
     //     */
     //     Generate_View_PDF('preview');
     // });
+    function executeAsynchronously(functions, timeout) {
+        for(var i = 0; i < functions.length; i++) {
+            setTimeout(functions[i], timeout);
+            if (i==functions.length-1) {
+                setTimeout(function () {
+                //successModalCall('Invoice Updated successfully!');
+                    
+                    location.reload()
+                }, 1000);
+            }
+        }
+    }
     $('#issue_inv_btn').click(function (e) {
-        Generate_View_PDF('issue_pdf');
-        location.reload();
+        var x = document.getElementsByClassName("tab-pane active");
+        //if (x[0].id == "pane_main") {
+
+        // } else if (x[0].id == "tab_2") {
+          //  step1().then(step2).then(step3);  
+          executeAsynchronously(
+    [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount, Generate_View_PDF], 10);
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        // Generate_View_PDF('issue_pdf');
+        //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    
+        
     });
 
-    function Generate_View_PDF(p_type) {
+    function Generate_View_PDF(p_type='issue_pdf') {
         if (p_type =='preview') {
             console.log('{{ $invoice->invoice_filename ? $invoice->invoice_filename : "" }}');
             window.open('{!! $invoice->invoice_filename !!}', '_blank');
@@ -1062,7 +1126,7 @@
     $('#delete_btn_inv').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
         DeleteInvoice();
-        window.history.back();
+        //window.history.back();
         return false;
     });
 
@@ -1197,12 +1261,14 @@
 
         // } else if (x[0].id == "tab_2") {
             
-        if (x[0].id == "tab_3") {
-            UpdateInvoiceInfo();
-        } else {
-            //console.log('sss');
-            UpdateInvoiceSummaryAmount();
-        }
+        // if (x[0].id == "tab_3") {
+        //     UpdateInvoiceInfo();
+        // } else {
+        //     //console.log('sss');
+        //     UpdateInvoiceSummaryAmount();
+        // }
+        executeAsynchronously(
+        [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount], 10);
     });
 
     function UpdateInvoiceSummaryAmount() {
@@ -1245,17 +1311,19 @@
             async: false,
             success: function (result) {
                 var status = result.status;
-                if (status == 'success') {
+                // console.log(result);
+                // return true;
+                //if (status == 'success') {
                     successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    //return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
-                }
-                else {
-                    errorModalCall(GetAppMessage('error_message_text'));
+                //}
+                //else {
+                //    errorModalCall(GetAppMessage('error_message_text'));
 
-                }
+                //}
             }, //success
             error: function (ts) { 
                 errorModalCall(GetAppMessage('error_message_text'));
@@ -1281,7 +1349,7 @@
         }
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
-        // console.log(form_data);
+        
         // return false;
         $.ajax({
             url: BASE_URL+'/update_invoice_info',
@@ -1293,12 +1361,13 @@
             cache: false,
             processData: false,
             success: function (result) {
+                //console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    //successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
-        
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    return true;
+                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {

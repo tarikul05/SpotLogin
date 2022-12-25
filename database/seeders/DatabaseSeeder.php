@@ -25,6 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailTemplateTableSeeder::class);
         $this->call(ProvincesTableSeeder::class);
         //$this->call(EventCategorySeeder::class);
-        $this->call(EventCategoriesTableSeeder::class);
+        // $this->call(EventCategoriesTableSeeder::class);
     }
 }

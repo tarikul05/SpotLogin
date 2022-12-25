@@ -38,8 +38,13 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
+				@canany([
+					'event-lesson-list',
+					'student-lesson-list',
+					'invoice-generate',
+					'student-invoice-generate'])
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
-				
+				@endcanany
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
 		</nav>
@@ -314,6 +319,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="country_code" name="country_code">
+												<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
 												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 											@endforeach
@@ -378,6 +384,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 									<select class="form-control" id="billing_country_code" name="billing_country_code">
+										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 										@endforeach
@@ -466,53 +473,61 @@
 				</div>
 				</form>
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-						<input type="hidden" name="selected_month" id="selected_month" value="">
-						<input type="hidden" name="selected_year" id="selected_year" value="">
-						<input type="hidden" name="person_id" id="person_id" value="{{!empty($student->id) ? old('person_id', $student->id) : old('person_id')}}"> 
-						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-						
-						
-						<div class="alert alert-warning">
-							{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
-						</div>
-						<div class="row">
-							<div class="col-md-8">
-								<div class="form-group row below_space">
-									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
-									<div class="col-sm-2">
-										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-									</div>
-									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-									</div>
-									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
-										<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
-									</div>
-									<div class="col-sm-1">
-										<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+					@canany([
+					'event-lesson-list',
+					'student-lesson-list',
+					'invoice-generate',
+					'student-invoice-generate'])
+						<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+							<input type="hidden" name="selected_month" id="selected_month" value="">
+							<input type="hidden" name="selected_year" id="selected_year" value="">
+							<input type="hidden" name="person_id" id="person_id" value="{{!empty($student->id) ? old('person_id', $student->id) : old('person_id')}}"> 
+							<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
+							
+							
+							<div class="alert alert-warning">
+								{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
+							</div>
+							<div class="row">
+								<div class="col-md-8">
+									<div class="form-group row below_space">
+										<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
+										<div class="col-sm-2">
+											<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+										</div>
+										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+											<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+										</div>
+										<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
+											<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
+											<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
+										</div>
+										<div class="col-sm-1">
+											<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-						</div>
-						<div class="table-responsive">
-							<table class="table lessons-list" id="lesson_table">
-								
-							</table>
-						</div>
-						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
-								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
-						</div>
-						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						</div> -->
-					</form>
-
+							<div class="section_header_class">
+								<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
+							</div>
+							<div class="table-responsive">
+								<table class="table lessons-list" id="lesson_table">
+									
+								</table>
+							</div>
+							<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
+									<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+									@canany(['invoice-generate',
+										'student-invoice-generate'])
+										<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+									@endcanany
+								</div>
+							<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+								<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+							</div> -->
+						</form>
+					@endcanany
 
 					<!-- START discount_div -->
 					<div style="display:none;" id="discount_div" name="discount_div">
@@ -667,10 +682,27 @@
 @section('footer_js')
 <script type="text/javascript">
 $(document).ready(function(){
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
+
+$('#country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
 		$('#province_id_div').show();
+	}else{
+		$('#province_id_div').hide();
 	}
+})
+
+$('#billing_country_code').change(function(){
+	var country = $(this).val();
+	if(country == 'CA'){
+		$('#billing_province_id_div').show();
+	}else{
+		$('#billing_province_id_div').hide();
+	}
+})
+
+$("#country_code, #billing_country_code").trigger('change')
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -1141,8 +1173,8 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
 		
@@ -1161,15 +1193,21 @@ $('#save_btn').click(function (e) {
 							}
 
 							//below locked and invoiced
-							resultHtml += "<td>";
+							
 							if (value.ready_flag == 1) {
-									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
 									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
 							//}
-							resultHtml += "</td>";
+							
 							//above locked and invoiced
 
 							resultHtml += '<td width="10%">' + value.date_start + '</td>';
@@ -1184,7 +1222,13 @@ $('#save_btn').click(function (e) {
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
 							} else {
-								resultHtml += '<td>Lesson</td>';
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
 							}
 
 							//resultHtml += '<td>' + value.title + '</td>';
@@ -1204,9 +1248,9 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
 								
@@ -1483,15 +1527,7 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-	$('#country_code').change(function(){
-		var country = $(this).val();
 
-		if(country == 'CA'){
-			$('#province_id_div').show();
-		}else{
-			$('#province_id_div').hide();
-		}
-	})
 </script>
 @if(!empty(Session::get('vtab')))
 

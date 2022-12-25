@@ -314,6 +314,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 										<select class="form-control" id="country_code" name="country_code">
+											<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
 												<option value="{{ $country->code }}">{{ $country->name }}</option>
 											@endforeach
@@ -378,6 +379,7 @@
 								<div class="col-sm-7">
 									<div class="selectdiv">
 									<select class="form-control" id="billing_country_code" name="billing_country_code">
+											<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}">{{ $country->name }}</option>
 										@endforeach
@@ -485,14 +487,14 @@
 <script type="text/javascript">
 $(function() {
 
-	var b_country = $('#billing_country_code option:selected').val();
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
-	}
-	if(b_country == 'CA'){
-		$('#billing_province_id_div').show();
-	}
+	// var b_country = $('#billing_country_code option:selected').val();
+	// var country_code = $('#country_code option:selected').val();
+	// if(country_code == 'CA'){
+	// 	$('#province_id_div').show();
+	// }
+	// if(b_country == 'CA'){
+	// 	$('#billing_province_id_div').show();
+	// }
 	
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -562,6 +564,8 @@ $(function() {
 		}	            
 	});  
 
+	
+$("#country_code, #billing_country_code").trigger('change')
 
 });
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });

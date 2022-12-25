@@ -53,9 +53,15 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-					{{ __('Lesson') }}
-				</button>
+				@canany([
+					'event-lesson-list',
+					'teacher-lesson-list',
+					'invoice-generate',
+					'teacher-invoice-generate'])
+					<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+						{{ __('Lesson') }}
+					</button>
+				@endcanany
 				@can('teachers-users-update')
 					@if($teacher->user)
 					<!-- <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
@@ -441,111 +447,123 @@
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-					
-					<input type="hidden" name="selected_month" id="selected_month" value="">
-					<input type="hidden" name="selected_year" id="selected_year" value="">
-					<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
-					<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-					
-					<div class="row">
-						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
-							
-							<div class="form-group row">
-								<div class="col-md-8">
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
-										<div class="col-sm-2">
-											 
-										</div>
-										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-											<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
-										</div>
-										<div class="col-sm-1" style="margin-left: 10px;">
-											<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+				@canany([
+					'event-lesson-list',
+					'teacher-lesson-list',
+					'invoice-generate',
+					'teacher-invoice-generate'])
+					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
+						
+						<input type="hidden" name="selected_month" id="selected_month" value="">
+						<input type="hidden" name="selected_year" id="selected_year" value="">
+						<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
+						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
+						
+						<div class="row">
+							@canany(['invoice-generate',
+                  'teacher-invoice-generate'])
+							<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
+								
+								<div class="form-group row">
+									<div class="col-md-8">
+										<div class="form-group row">
+											<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
+											<div class="col-sm-2">
+												
+											</div>
+											<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+												<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
+											</div>
+											<div class="col-sm-1" style="margin-left: 10px;">
+												<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-8">
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
-								<div class="col-sm-2">
-									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
-								</div>
-								<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
-								</div>
-								<div class="col-sm-1" style="margin-left: 10px;">
-									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+							@endcanany
+							<div class="col-md-8">
+								<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
+									<div class="col-sm-2">
+										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+									</div>
+									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
+										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+									</div>
+									<div class="col-sm-1" style="margin-left: 10px;">
+										<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="section_header_class">
-						<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
-					</div>
-					<div class="table-responsive">
-						<table class="table lessons-list" id="lesson_table">
-							<tbody>
-								<tr class="course_week_header">
-									<td colspan="1">{{ __('Week 20') }}</td>
-									<td colspan="1"></td>
-									<td colspan="1">{{ __('Date') }}</td>
-									<td colspan="1">{{ __('Time') }}</td>
-									<td colspan="1">{{ __('Duration') }}</td>
-									<td colspan="1">{{ __('Type') }}</td>
-									<td colspan="1">{{ __('Coach') }}</td>
-									<td colspan="1">{{ __('Lesson') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-									<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-								</tr>
-								<tr>
-									<td style="display:none;">30533</td>
-									<td>-</td>
-									<td></td>
-									<td width="10%">18/05/2022</td>
-									<td>14:30</td>
-									<td>30 minutes </td>
-									<td> (Soccer-School)</td>
-									<td>teacher all</td>
-									<td>Group lessons for 3 students</td>
-									<td></td>
-									<td>
-										<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-											<i class="fa fa-pencil"></i>{{__('Validate')}}
-										</a>
-									</td>
-									<td style="text-align:right"></td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Week')}} </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-								<tr style="font-weight: bold;">
-									<td colspan="6"></td>
-									<td colspan="2">{{ __('Total Monthly')}}</td>
-									<td style="text-align:right">75.00</td>
-									<td style="text-align:right">75.00</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-						<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-						<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
-					</div>
-				</form>
+						<div class="section_header_class">
+							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
+						</div>
+						<div class="table-responsive">
+							<table class="table lessons-list" id="lesson_table">
+								<tbody>
+									<tr class="course_week_header">
+										<td colspan="1">{{ __('Week 20') }}</td>
+										<td colspan="1"></td>
+										<td colspan="1">{{ __('Date') }}</td>
+										<td colspan="1">{{ __('Time') }}</td>
+										<td colspan="1">{{ __('Duration') }}</td>
+										<td colspan="1">{{ __('Type') }}</td>
+										<td colspan="1">{{ __('Coach') }}</td>
+										<td colspan="1">{{ __('Lesson') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
+										<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
+									</tr>
+									<tr>
+										<td style="display:none;">30533</td>
+										<td>-</td>
+										<td></td>
+										<td width="10%">18/05/2022</td>
+										<td>14:30</td>
+										<td>30 minutes </td>
+										<td> (Soccer-School)</td>
+										<td>teacher all</td>
+										<td>Group lessons for 3 students</td>
+										<td></td>
+										<td>
+											<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
+												<i class="fa fa-pencil"></i>{{__('Validate')}}
+											</a>
+										</td>
+										<td style="text-align:right"></td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Sub-total Week')}} </td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+									<tr style="font-weight: bold;">
+										<td colspan="6"></td>
+										<td colspan="2">{{ __('Total Monthly')}}</td>
+										<td style="text-align:right">75.00</td>
+										<td style="text-align:right">75.00</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+							@canany(['invoice-generate',
+								'teacher-invoice-generate'])
+								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+							@endcanany
+						</div>
+					</form>
+				@endcanany
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
@@ -958,10 +976,24 @@ $(document).ready(function(){
 		populate_teacher_lesson(); //refresh lesson details for billing	
 	});
 
+	function GetCheckBoxSelectedValues(p_chkbox) {
+		var selected_events = '';
+		var cboxes = document.getElementsByName(p_chkbox);
+		var len = cboxes.length;
 
+		$("input[name='" + p_chkbox + "']:checked").each(function(i) {
+			selected_events += $(this).val() + ',';
+		});
+		return selected_events;
+	}
 	$('#btn_convert_invoice').click(function(e) {
 		$(this).attr("disabled", "disabled");
-	    var p_person_id = document.getElementById("person_id").value;
+		var p_event_ids = GetCheckBoxSelectedValues('event_check');
+		if (p_event_ids == '') {
+			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
+			return false;
+		}
+	  var p_person_id = document.getElementById("person_id").value;
 		let school_id = document.getElementById("school_id").value;
 
 	    var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
@@ -972,12 +1004,12 @@ $(document).ready(function(){
 	    var p_month = document.getElementById("smonth").value;
 	    var p_year = document.getElementById("syear").value;
 
-		var p_billing_period_start_date = $("#billing_period_start_date").val();
-        var p_billing_period_end_date = $("#billing_period_end_date").val();
+			var p_billing_period_start_date = $("#billing_period_start_date").val();
+			var p_billing_period_end_date = $("#billing_period_end_date").val();
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date;
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids;
 	    
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
@@ -1202,8 +1234,8 @@ function populate_teacher_lesson() {
 
 				// week summary
 				if ((prev_week != '') && (prev_week != value.week_name)) {
-					resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-					resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+					resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+					resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
 					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
 					//resultHtml+='<td style="text-align:right">'+week_total_sell.toFixed(2)+'</td>';
 					resultHtml += '</tr>'
@@ -1214,56 +1246,76 @@ function populate_teacher_lesson() {
 				if (prev_week != value.week_name) {
 					//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</td></tr></b>';
 					resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
-					//resultHtml += '<b><td colspan="1">Date</td>';
-					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<b><td colspan="1"></td>';
-					resultHtml += '<td colspan="2" style="text-align:right">' + '' + '</td>';
-					resultHtml += '<td style="text-align:right" colspan="3">Extra Charges</td></tr></b>';;
+					//resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="1">Date</td>';
+					//resultHtml += '<b><td colspan="1"></td>';
+					resultHtml += '<b><td colspan="2">Type</td>';
+					resultHtml += '<b><td colspan="2">Students</td>';
+					resultHtml += '<td colspan="2">' + 'Lesson' + '</td>';
+					resultHtml += '<td colspan="2" style="text-align:right">' + 'Price' + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">Extra Charges</td></tr></b>';;
 				}
 				resultHtml += '<tr>';
 				resultHtml += '<td style="display:none;">' + value.detail_id + '</td>';
-				// if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
-				// 		selected_items += 1;
-				// 		resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
-				// } else {
-				// 		resultHtml += "<td>-</td>";
+				if ((value.is_buy_invoiced == 0) && (value.ready_flag == 1)) {
+						selected_items += 1;
+						resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+				} else {
+						resultHtml += "<td>-</td>";
+				}
+				// if (value.ready_flag == 1) {
+				// 	resultHtml += "<td>";
+				// 		resultHtml += "<i class='fa fa-lock'></i> ";
+				// 		resultHtml += "</td>";
 				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
-				resultHtml += '<td>' + value.time_start + '</td>';
-				resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
-				if (value.event_type == 100) {
-					resultHtml += '<td>Event</td>';
-				} else {
-					resultHtml += '<td>Lesson</td>';
-				}
+				//resultHtml += '<td></td>';
+				//resultHtml += '<td></td>';
+				//resultHtml += '<td>' + value.time_start + '</td>';
+				//resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
+				resultHtml += '<td colspan="2">' + value.category_name + '</td>';
+							
+				// if (value.event_type == 100) {
+				// 	resultHtml += '<td>' + value.price_name + '</td>';
+				// } else {
+				// 	resultHtml += '<td>' + value.price_name + '</td>';
+				// }
 				
-				resultHtml += '<td>' + value.student_name + '</td>';
+				resultHtml += '<td colspan="2">' + value.student_name + '</td>';
 				//resultHtml += '<td>' + value.title + '</td>';
-				resultHtml += '<td>' + value.price_name + '</td>';
+				if (value.event_type == 100) {
+					resultHtml += '<td colspan="2">Event</td>';
+				} else {
+					if (value.count_student > 1) {
+						resultHtml += '<td colspan="2">Group Lessons for '+value.count_student+' Student(s)</td>';
+					}
+					else{
+						resultHtml += '<td colspan="2">Private Lesson</td>';
+					}
+
+				}
+				//resultHtml += '<td colspan="2">' + value.price_name + '</td>';
 
 				// all_ready = 0 means not ready to generate invoice
 				if (value.ready_flag == "0") {
 					all_ready = 0;
 					//resultHtml+="<td></td>";
 					if (value.event_type == 100) {
-						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					} else {
-						resultHtml += "<td colspan='2'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
+						resultHtml += "<td colspan='2' style='text-align:right'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>Validate</a>";
 					}
 				} else {
-					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.price_currency + ' ' + value.buy_total.toFixed(2) + '</td>';
 					//resultHtml+='<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 					total_buy += value.buy_total + value.costs_1;
 					week_total_buy += value.buy_total + value.costs_1;
 				}
 				if (value.extra_charges != 0) {
-					resultHtml += '<td style="text-align:right" colspan="3">' + value.costs_1 + '</td>';
+					resultHtml += '<td style="text-align:right" colspan="2">' + value.costs_1.toFixed(2) + '</td>';
 				} else {
 					//resultHtml += '<td style="text-align:right"></td>';
-					resultHtml+='<td style="text-align:right" colspan="3"></td>';
+					resultHtml+='<td style="text-align:right" colspan="2"></td>';
 				}
 
 				resultHtml += '</tr>';
@@ -1285,19 +1337,20 @@ function populate_teacher_lesson() {
 
 		// summary for last week of course records
 		if ((week_total_buy > 0) || (week_total_sell > 0)) {
-			resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-			resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+			resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
 			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+			resultHtml+='<td style="text-align:right" colspan="2"></td>';   
 			resultHtml += '</tr>'
 			week_total_buy = 0;
 			week_total_sell = 0;
 		}
 
 		// display grand total
-		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
 		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>'; 
-		resultHtml+='<td style="text-align:right" colspan="3"></td>';    
+		resultHtml+='<td style="text-align:right" colspan="1"></td>';    
 		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 		resultHtml += '</tr>'
 
@@ -1325,17 +1378,17 @@ function populate_teacher_lesson() {
 		total_buy = total_buy - total_disc;
 		//console.log(total_buy);
 		if (total_disc > 0) {
-			resultHtml += '<tr><td colspan="4">';
+			resultHtml += '<tr><td colspan="6">';
 			//resultHtml+='<td colspan="2">Montant total de la réduction:';
-			resultHtml += '<td colspan="2"><strong>Total Commission</strong></td>';
+			resultHtml += '<td colspan="3"><strong>Total Commission</strong></td>';
 			resultHtml += '<td style="text-align:right" colspan="2">-' + total_disc.toFixed(2) + '</tr>';
 		}
 
 		// display grand total
-		resultHtml += '<tr style="font-weight: bold;"><td colspan="4">';
-		resultHtml += '<td colspan="2">Total</td>';
-		resultHtml += '<td style="text-align:right" colspan="2">' + total_buy.toFixed(2) + '</td>';
-		resultHtml+='<td style="text-align:right" colspan="3"></td>';   
+		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+		resultHtml += '<td colspan="3">Total</td>';
+		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
+		resultHtml+='<td style="text-align:right" colspan="2"></td>';   
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
 		resultHtml += '</tr>'
 

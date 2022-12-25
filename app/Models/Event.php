@@ -678,6 +678,9 @@ class Event extends BaseModel
         }elseif (($evtCategory->s_thr_pay_type == 0) && ($evtCategory->s_std_pay_type == 1) ) {
           $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
           $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
+        }elseif (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 2) ) {
+          $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
+          $sellPrice = 0;
         }else{
           $buyPrice = isset($prices->price_buy)? $prices->price_buy : 0;
           $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
@@ -697,6 +700,52 @@ class Event extends BaseModel
       // dd($buyPrice, $sellPrice);
 
       return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
+    }
+
+    public function validate($lockStatus=1,$data=[])
+    {
+      // dd($lockStatus, $data);
+
+        try {
+            $event_id = $data['event_id'];
+            $eventUpdate = [
+                'is_locked' => $lockStatus
+            ];
+            
+            $eventData = Event::where('id', $event_id)->update($eventUpdate);
+
+
+            $eventDetail = [
+                'is_locked' => $lockStatus,
+            ];
+            
+            $eventdetails = EventDetails::where('event_id', $event_id)->get();
+            if (!empty($eventdetails)) {
+                foreach ($eventdetails as $key => $eventdetail) {
+                    $eventDetailPresent = [
+                        'is_locked' => $lockStatus,
+                        'participation_id' => 200,
+                    ];
+                    
+                    $eventDetailAbsent = [
+                        'is_locked' => $lockStatus,
+                        // 'participation_id' => 199,
+                    ];
+                    if ($eventdetail->participation_id !== 199) {
+                        $eventdetail = $eventdetail->update($eventDetailPresent);
+                    } else {
+                        $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    }
+                    
+                }
+                return true;
+            }
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return false;
+        }
     }
 
     

@@ -205,7 +205,7 @@ class StudentsController extends Controller
                         $student->schools()->attach($schoolId,$schoolStudent);
                         $msg = 'Successfully Registered';
                     } else {
-                        return redirect()->back()->withInput($request->all())->with('error', __('This teacher already exist with your school'));
+                        return redirect()->back()->withInput($request->all())->with('error', __('This Student already exist with your school'));
                     }
                     
                 }else{ // studne and school_student data not exist

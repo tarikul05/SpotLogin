@@ -63,6 +63,9 @@ return [
         'students-delete',
         // invoice
         'invoice-list',
+        'teacher-invoice-list',
+        'student-invoice-list',
+        'manual-invoice-list',
         'invoice-edit',
         'teacher-invoice-list',
         'student-invoice-list',

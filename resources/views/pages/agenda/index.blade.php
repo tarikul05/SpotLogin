@@ -388,12 +388,12 @@
                                                             </div>
                                                         </div>		
                                                     </div>
-                                                    <div class="form-group row lesson" id="all_day">
+                                                    <!-- <div class="form-group row lesson" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
                                                             <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="form-group row lesson hide_on_off" id="teacher_type_billing">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
                                                         <div class="col-sm-7">
@@ -449,7 +449,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
@@ -758,6 +758,11 @@
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
+        //user_role = 'student';
+        //console.log(value.value);
+        if (user_role == 'student'){
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+        }
         $("#event_types_all option").each(function(key,value)
         {
             //console.log(value.value);
@@ -1754,6 +1759,8 @@
         // } 
         
         $('#calendar').fullCalendar({
+            eventLimit: 3, // If you set a number it will hide the itens
+            eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
 			slotDuration: '00:15:00',
@@ -3267,25 +3274,25 @@ $('#add_lesson').on('submit', function(e) {
         if(type==1){
             var bill_type = $('#sis_paying').val();
             
-            if(bill_type == 1){
-                $.ajax({
-                    url: BASE_URL + '/check-lesson-price',
-                    async: false, 
-                    data: formData,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.status == 1){
-                            var errMssg = '';	
-                        }else{
-                            var errMssg = 'error';
-                            $('#modal_lesson_price').modal('show');
-                            $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
-                            e.preventDefault();
-                        }
-                    }
-                })
-            }
+            // if(bill_type == 1){
+            //     $.ajax({
+            //         url: BASE_URL + '/check-lesson-price',
+            //         async: false, 
+            //         data: formData,
+            //         type: 'POST',
+            //         dataType: 'json',
+            //         success: function(response){
+            //             if(response.status == 1){
+            //                 var errMssg = '';	
+            //             }else{
+            //                 var errMssg = 'error';
+            //                 $('#modal_lesson_price').modal('show');
+            //                 $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
+            //                 e.preventDefault();
+            //             }
+            //         }
+            //     })
+            // }
         }
         
         if(professor == ''){
@@ -3437,11 +3444,11 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 
     if (agendaSelect != 1 ) { return }
     if (datainvoiced == 'S') {
-        if (s_std_pay_type == 2) {
-            $("#std-check-div").css('display', 'block');
-        }else{
+        // if (s_std_pay_type == 2) {
+        //     $("#std-check-div").css('display', 'block');
+        // }else{
             $("#std-check-div").css('display', 'none');
-        }
+        // }
         
         $("#teacher_type_billing").show();
         $("#student_sis_paying").val(s_std_pay_type);
@@ -3458,44 +3465,6 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 	}else if(s_thr_pay_type == 1 || s_std_pay_type == 1 ){
         $('#hourly').hide();
 		$('#price_per_student').show();
-        getLatestPrice();
-        // var formData = $('#edit_lesson').serializeArray();
-        // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-        // formData.push({
-        //     "name": "_token",
-        //     "value": csrfToken,
-        // });
-
-        // formData.push({
-        //     "name": "event_category_id",
-        //     "value": categoryId,
-        // });
-        // formData.push({
-        //     "name": "teacher_select",
-        //     "value": teacherSelect,
-        // });
-        
-        // if (categoryId > 0 && teacherSelect > 0) {
-        //     $.ajax({
-        //         url: BASE_URL + '/check-lesson-fixed-price',
-        //         async: false, 
-        //         data: formData,
-        //         type: 'POST',
-        //         dataType: 'json',
-        //         success: function(response){
-        //             if(response.status == 1){
-        //                 if (response.data) {
-        //                     $("#sprice_amount_buy").val(response.data.price_buy)
-        //                     $("#sprice_amount_sell").val(response.data.price_sell)
-        //                 }
-                        
-        //                 // var errMssg = '';   
-        //             }
-        //         }
-        //     })
-        // }
-
-            
 	}
 
     if($('#sis_paying').val() == 0){
@@ -3508,15 +3477,16 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         $('#sprice_amount_sell').prop('disabled', true);   
     }else if($('#student_sis_paying').val() == 1){
         $('#sprice_amount_sell').prop('disabled', false);  
+    }else if($('#student_sis_paying').val() == 2){
+        $('#sprice_amount_sell').prop('disabled', true);  
     }
 
-    if(($('#sis_paying').val() == 0) && ($('#student_sis_paying').val() == 0)){
-        $("#price_per_student").hide();
-    }else if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-       $("#price_per_student").hide(); 
+    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+       $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
+    getLatestPrice();
 
 
 });
@@ -3529,7 +3499,12 @@ function getLatestPrice() {
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
-
+    if (agendaSelect != 1) {
+        $("#sprice_amount_buy").val(0)
+        $("#sprice_amount_sell").val(0)
+        console.log(" duktecew naki ?")
+        return 
+    } 
     var formData = $('#edit_lesson').serializeArray();
     var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
     formData.push({
@@ -3612,6 +3587,8 @@ $('#agenda_select').on('change', function() {
             $('.show_coach_off.hide_on_off').show();
              // $("#std-check-div").css('display', 'block');
             $('#category_select').trigger('change');
+            $(".lesson-text").show()
+            $(".event-text").hide()
         }else if(this.value == 2){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
@@ -3629,7 +3606,9 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
-            // $('#category_select').trigger('change');
+            $(".lesson-text").hide()
+            $(".event-text").show()
+            // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3638,7 +3617,7 @@ $('#agenda_select').on('change', function() {
             }
             $('#all_day').hide();
             $('.hide_on_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
@@ -3654,7 +3633,7 @@ $('#agenda_select').on('change', function() {
             $('#all_day').hide();
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
@@ -3669,16 +3648,33 @@ $('#agenda_select').on('change', function() {
         $('body').find(".popover.show").removeClass("show")
     });
 
-    if($('#sis_paying').val() == 0){
-        $('#sprice_amount_buy').prop('disabled', true);   
-    }else if($('#sis_paying').val() == 1){
-        $('#sprice_amount_buy').prop('disabled', false);  
-    }
+    if(this.value == 1){
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', true);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
 
-    if($('#student_sis_paying').val() == 0){
-        $('#sprice_amount_sell').prop('disabled', true);   
-    }else if($('#student_sis_paying').val() == 1){
-        $('#sprice_amount_sell').prop('disabled', false);  
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', true);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
+    }if(this.value == 2){
+        $('#sprice_amount_buy').prop('disabled', false); 
+        $('#sprice_amount_sell').prop('disabled', false);   
+    }else{
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', false);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
+
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', false);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
     }
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
@@ -3689,17 +3685,20 @@ $('#agenda_select').on('change', function() {
 
     if(this.value == 1){
         if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-            $("#price_per_student").hide(); 
+            $("#price_per_student").show(); 
         }else{
-            $("#price_per_student").show();
+            $("#price_per_student").hide();
         }
     }else if(this.value == 2){
-        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-            $("#price_per_student").hide(); 
-        }else{
-            $("#price_per_student").show();
-        }
+        $('#event_invoice_type').trigger('change');
+        // if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+        //     $("#price_per_student").show(); 
+        // }else{
+        //     $("#price_per_student").hide();
+        // }
     }
+    
+    getLatestPrice();
 });
 
 $('#event_invoice_type').on('change', function() {
@@ -3710,9 +3709,9 @@ $('#event_invoice_type').on('change', function() {
     var event_invoice_type = $("#event_invoice_type option:selected").val();
 
     if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").hide(); 
+        $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 });
 
