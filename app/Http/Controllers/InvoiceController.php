@@ -618,7 +618,10 @@ class InvoiceController extends Controller
 
             
             foreach ($dataFetched as $key => $value) {
-	            $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+	            $dateStart = $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = Carbon::parse($dateStart);
+                $value->week_no = (int) $dateStart->format('W');
+                
                 $old_date_timestamp = strtotime($value->date_start);
                 $value->date_start = date('d/m/Y', $old_date_timestamp);  
                 $value->time_start = date('H:i', $old_date_timestamp);
@@ -681,7 +684,9 @@ class InvoiceController extends Controller
             $dataFetched = $teacherEvents->get();
             //dd($data);
             foreach ($dataFetched as $key => $value) {
-                $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = $value->date_start = $this->formatDateTimeZone($value->date_start, 'long','UTC',$timeZone);
+                $dateStart = Carbon::parse($dateStart);
+                $value->week_no = (int) $dateStart->format('W');
                 $old_date_timestamp = strtotime($value->date_start);
                 $value->date_start = date('d/m/Y', $old_date_timestamp);  
                 $value->time_start = date('H:i', $old_date_timestamp);  
@@ -1318,13 +1323,13 @@ class InvoiceController extends Controller
         ->orderBy('invoice_items.item_date','ASC')->get();
 
         $items = array();
-        foreach($invoice_items as $key=>$d){
-            //print_r($d->event_type);
+        $invoice_items->each(function($d) use(&$items){
             if(!isset($items[$d->event_type])){
                 $items[$d->event_type] = array();
             }
             $items[$d->event_type][] = $d;
-        }
+        });
+
         $invoice->invoice_items = $items;
         // $result_data->invoice_price = $invoiceCurrency.''.round($result_data->total_amount,2);
 
@@ -1519,6 +1524,8 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'e_transfer_email' => $dataParam['p_e_transfer_email'],
+                'payment_phone' => $dataParam['p_payment_phone'],
                 'invoice_creation_type' => 'Y'
             ];
 
@@ -1576,9 +1583,7 @@ class InvoiceController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
-
-        return $result;        
+        }         
     }
 
     /**
@@ -1654,6 +1659,8 @@ class InvoiceController extends Controller
                 'seller_province_id' => $dataParam['p_seller_province_id'],
                 'bank_province_id' => $dataParam['p_bank_province_id'],
                 'total_amount' => $dataParam['p_total_amount'],
+                'e_transfer_email' => $dataParam['p_e_transfer_email'],
+                'payment_phone' => $dataParam['p_payment_phone'],
                 'invoice_creation_type' => 'Y'
             ];
 
@@ -1714,9 +1721,7 @@ class InvoiceController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
-
-        return $result;        
+        }       
     }
 
     /**

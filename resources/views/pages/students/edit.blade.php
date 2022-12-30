@@ -1112,6 +1112,7 @@ $('#save_btn').click(function (e) {
 		var week_caption = 'Weekly';
 		var month_caption = 'Monthly';
 		var sub_total_caption = 'Sub Total';
+		var isTeacher = +"{{$AppUI->isTeacher()}}";
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
@@ -1135,8 +1136,10 @@ $('#save_btn').click(function (e) {
 									if (no_of_teachers == 1){
 											resultHtml += '<td style="text-align:right"></td>';
 									}else {
-											resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-									}
+											if (!isTeacher) {
+												resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+											}
+										}
 		
 									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 									resultHtml += '</tr>'
@@ -1151,7 +1154,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Date</td>';
 									resultHtml += '<b><td colspan="1">Time</td>';
 									resultHtml += '<b><td colspan="1">Duration</td>';
-									resultHtml += '<b><td colspan="1">Type</td>';
+									resultHtml += '<b><td colspan="1">Category</td>';
 									resultHtml += '<b><td colspan="1">Teacher</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
@@ -1160,7 +1163,9 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										if (!isTeacher) {
+											resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										}
 										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
@@ -1204,12 +1209,22 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.time_start + '</td>';
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
-							resultHtml += '<td>' + value.category_name + '</td>';
-							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								resultHtml += '<td>Event</td>';
 							} else {
-								if (value.event_type > 1) {
+								resultHtml += '<td>' + value.category_name + '</td>';
+							}
+							
+							resultHtml += '<td>' + value.teacher_name + '</td>';
+							if (value.event_type == 100) {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								if (value.count_name > 1) {
 									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
 								}
 								else{
@@ -1224,7 +1239,10 @@ $('#save_btn').click(function (e) {
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
 							if (value.ready_flag == 0) {
 								all_ready = 0;
-								resultHtml += "<td></td>";
+								if (!isTeacher) {
+									resultHtml += "<td></td>";
+								}
+								
 								if (value.event_type == 100) {
 									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 								} else {
@@ -1235,7 +1253,19 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
+									if (value.event_type!=100 && value.cat_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else if (value.event_type!=10 && value.event_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else{
+										value.buy_price = value.buy_price;
+									}
+									if (!isTeacher) {
 										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+								
+									}
 								}
 								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;
@@ -1289,7 +1319,10 @@ $('#save_btn').click(function (e) {
 						if (no_of_teachers == 1){
 							resultHtml += '<td style="text-align:right"></td>';
 						}else {
-							resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+							if (!isTeacher) {
+								resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+						
+							}
 						}
 
 						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
@@ -1305,7 +1338,9 @@ $('#save_btn').click(function (e) {
 				if (no_of_teachers == 1){
 				resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1455,7 +1490,9 @@ $('#save_btn').click(function (e) {
 				if (no_of_teachers == 1){
 					resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';

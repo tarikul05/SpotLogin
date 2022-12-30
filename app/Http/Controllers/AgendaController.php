@@ -265,7 +265,7 @@ class AgendaController extends Controller
             // $p_lang_id=$_SESSION['Language'];
 
 
-
+            $data['location_id'] = trim($data['location_id']);
             $data['school_id'] = trim($data['school_id']);
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
@@ -909,6 +909,8 @@ class AgendaController extends Controller
             $data['event_type']= trim($dataParam['p_event_type_id']);
            // $data['teacher_id']= trim($dataParam['p_teacher_id']);
             $data['student_id']= trim($dataParam['p_student_id']);
+
+            $data['location_id']= trim($dataParam['location_id']);
             $p_user_id=Auth::user()->id;
             $data['is_locked']=0;
             if (isset($data['p_from_date'])) {
@@ -986,8 +988,9 @@ class AgendaController extends Controller
             $param = [];
             $param['p_from_date']= trim($data['p_from_date']);
             $param['p_to_date']= trim($data['p_to_date']);
-
-            //$param['school_id']= trim($data['p_event_school_id']);
+            $param['location_id']= trim($data['location_id']);
+            
+            $param['school_id']= trim($data['p_event_school_id']);
             //$param['event_type']= trim($data['p_event_type_id']);
             //$param['teacher_id']= trim($data['p_teacher_id']);
             //$param['student_id']= trim($data['p_student_id']);
@@ -1007,7 +1010,7 @@ class AgendaController extends Controller
                     $eventUpdate = [
                         'is_locked' => 1
                     ];
-                    $eventData = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
+                    $eventDataUpdated = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
 
 
                     $eventDetailPresent = [
@@ -1027,18 +1030,16 @@ class AgendaController extends Controller
                                 $eventdetail = $eventdetail->update($eventDetailAbsent);
                             }
                         }
-                    }  
+                    }
 
+                    if ($p_event_auto_id->event_type == 10) {
+                        Event::updateLatestPrice($p_event_auto_id->id);
+                    }
                 }
 
-
-                // $eventDetail = [
-                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
-                // ];
-                // $eventdetail = $eventdetail->update($eventDetail);
             }
             //dd($eventData);
-            if ($eventData)
+            if ($eventDataUpdated)
             {
                 $result = array(
                     "status"     => 'success',

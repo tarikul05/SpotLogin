@@ -364,9 +364,14 @@
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30"> </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label id="label_payment_phone" name="payment_phone" for="payment_phone" class="col-lg-3 col-sm-3 text-left">Phone</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150"> </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row" id="payment_bank_info_canada" style="display: none;">
+                                <div class="row" id="payment_bank_info_canada">
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
@@ -374,7 +379,7 @@
                                                 <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" style="display: none;">
                                         <div class="form-group row">
                                             <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
                                             <div class="col-sm-7">
@@ -1015,6 +1020,7 @@ function AddEditInvoice(){
 
     var p_e_transfer_email = $("#e_transfer_email").val();
     var p_name_for_checks = $("#name_for_checks").val();
+    var p_payment_phone = $("#payment_phone").val();
 
     var tax_name = $("input[name='tax_name[]']").map(function(){return $(this).val();}).get();
     var tax_percentage = $("input[name='tax_percentage[]']").map(function(){return $(this).val();}).get();
@@ -1095,6 +1101,7 @@ function AddEditInvoice(){
                 expense_name:expense_name ,
                 expense_amount:expense_amount,
                 p_e_transfer_email:p_e_transfer_email,
+                p_payment_phone:p_payment_phone,
                 p_name_for_checks:p_name_for_checks, 
                 p_total_amount:p_total_amount
             },

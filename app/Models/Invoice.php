@@ -100,7 +100,6 @@ class Invoice extends BaseModel
         'invoice_currency ',
         'tax_desc',
         'tax_perc',
-
         'tax_amount',
         'etransfer_acc',
         'cheque_payee',
@@ -108,13 +107,12 @@ class Invoice extends BaseModel
         'seller_province_id',
         'bank_province_id',
         'e_transfer_email',
+        'payment_phone',
         'name_for_checks',
         'category_invoiced_type',
         'created_at',
         'modified_at',
         'deleted_at',
-
-
         'approved_flag',
         'is_active',
         'created_by',
@@ -321,6 +319,8 @@ class Invoice extends BaseModel
                 ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
                 ->select(
                     'events.id as event_id',
+                    'event_categories.invoiced_type as cat_invoice_type',
+                    'events.event_invoice_type as event_invoice_type',
                     'event_details.buy_total as buy_total',
                     'event_details.sell_total as sell_total',
                     'events.title as title',
@@ -449,6 +449,7 @@ class Invoice extends BaseModel
                     'event_details.costs_2 as costs_2'
                 )
                 ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
+                ->selectRaw("ifnull(events.no_of_students,0) AS count_student")
                 
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_total")
