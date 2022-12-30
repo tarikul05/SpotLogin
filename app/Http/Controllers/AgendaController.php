@@ -1010,7 +1010,7 @@ class AgendaController extends Controller
                     $eventUpdate = [
                         'is_locked' => 1
                     ];
-                    $eventData = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
+                    $eventDataUpdated = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
 
 
                     $eventDetailPresent = [
@@ -1030,18 +1030,16 @@ class AgendaController extends Controller
                                 $eventdetail = $eventdetail->update($eventDetailAbsent);
                             }
                         }
-                    }  
+                    }
 
+                    if ($p_event_auto_id->event_type == 10) {
+                        Event::updateLatestPrice($p_event_auto_id->id);
+                    }
                 }
 
-
-                // $eventDetail = [
-                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
-                // ];
-                // $eventdetail = $eventdetail->update($eventDetail);
             }
             //dd($eventData);
-            if ($eventData)
+            if ($eventDataUpdated)
             {
                 $result = array(
                     "status"     => 'success',

@@ -818,6 +818,53 @@ class Event extends BaseModel
       return ['price_buy'=>$buyPrice ,'price_sell'=>$sellPrice];
     }
 
+    // update latest price with param event_id
+    public function updateLatestPrice($event_id)
+    {
+        $eventData = Event::find($event_id);
+        $studentCount = $eventData->no_of_students;
+        // dd($eventData);
+        $eventPrice = self::priceCalculations(['event_category_id'=> $eventData->event_category,'teacher_id'=>$eventData->teacher_id,'student_count'=>$eventData->no_of_students]);
+
+        if(!empty($studentCount)){
+            $buyPriceCal = ($eventPrice['price_buy']*($eventData['duration']/60))/$studentCount;
+        }else{
+            $buyPriceCal = ($eventPrice['price_buy']*($eventData['duration']/60));
+        }
+        $sellPriceCal = ($eventPrice['price_sell']*($eventData['duration']/60));
+
+        if($eventData['sis_paying'] == 1 && $eventData['student_sis_paying'] == 1 ){
+           $attendBuyPrice = ($eventData['sprice_amount_buy']*($eventData['duration']/60))/$studentCount;
+           $attendSellPrice = $eventData['sprice_amount_sell'];
+        }else{
+            $attendBuyPrice = $buyPriceCal;
+            $attendSellPrice = $sellPriceCal;
+        }
+        if ($eventData['student_sis_paying'] == 1) {
+            $attendSellPrice = ($eventPrice['price_sell']*($eventData['duration']/60));
+        }
+
+        $data = [
+                'price_amount_buy' => $eventData['sprice_amount_buy'],
+                'price_amount_sell' => $eventData['sprice_amount_sell'],
+                'no_of_students' => $studentCount,
+            ];
+
+        $event = Event::where('id', $event_id)->update($data);
+        $eventDetais = EventDetails::where('event_id',$event_id)->get();
+
+        foreach($eventDetais as $evDtail){
+            $dataDetails = [
+                'buy_total' => $attendBuyPrice,
+                'sell_total' => $attendSellPrice,
+                'buy_price' => $attendBuyPrice,
+                'sell_price' => $attendSellPrice,
+            ];
+            $eventDetails = EventDetails::where('id', $evDtail->id)->update($dataDetails);
+        }
+        
+    }
+
     public function validate($lockStatus=1,$data=[])
     {
       // dd($lockStatus, $data);
