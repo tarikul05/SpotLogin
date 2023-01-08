@@ -573,11 +573,12 @@ class AgendaController extends Controller
                 $e['title']= $e['event_type_name'].' '.$student_name;
                 $e['tooltip']=$e['event_type_name'].' <br /> Students: '.$student_name;
             }else{ // lession and event type
-                if (empty($e['title'])) {
-                    $e['title']= $e['event_type_name'].' '.$first_student_name;
-                }else{
-                    $e['title']= $event_types[$e['event_type']].' '.$e['title'];
-                }
+                // if (empty($e['title'])) {
+                //     $e['title']= $e['event_type_name'].' '.$first_student_name;
+                // }else{
+                //     $e['title']= $event_types[$e['event_type']].' '.$e['title'];
+                // }
+                $e['title']= $event_types[$e['event_type']].' '.$e['title'];
                 
                 if ($user->isTeacherAdmin()) {
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
