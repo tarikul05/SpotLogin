@@ -143,7 +143,12 @@ class StudentsController extends Controller
         DB::beginTransaction();
         try{
             // dd($alldata);
-            $student = Student::where(['email'=> $alldata['email']])->first();
+            if (!empty($alldata['email'])) {
+                $student = Student::where(['email'=> $alldata['email']])->first();
+            }else {
+                $student = false;
+            }
+            
             $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
 
             $authUser = $request->user();
