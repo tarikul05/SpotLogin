@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
+                        <!-- <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a> -->
                         @unlessrole('superadmin')
                             @unlessrole('student')
                                 @if(count($AppUI->schools()) > 1)
