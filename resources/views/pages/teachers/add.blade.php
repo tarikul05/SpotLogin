@@ -157,7 +157,9 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
+										<b>
+										<input id="authorisation_admin" name="role_type" type="radio" value="teacher_school_admin"> Admin<br>
+										<input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
 										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium"> Medium<br>
 										<input checked="true" id="authorisation_min" name="role_type" type="radio" value="teachers_minimum"> Minimum<br></b>
 									</div>
