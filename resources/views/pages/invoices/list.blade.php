@@ -96,7 +96,7 @@
                         if($invoice->invoice_type ==1){
                             $invoice_name .= '-'.$invoice->client_name;
                         } else {
-                            $invoice_name .= '-'.$invoice->seller_name;
+                            $invoice_name .= '-'.$invoice->client_name;
                         }
                         @endphp
                         <td>{{ $invoice_name}}</td>

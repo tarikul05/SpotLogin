@@ -21,7 +21,7 @@ trait UserRoleTrait
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
             if ($user->isTeacherAdmin()) {
                 $user_role = 'coach_user';

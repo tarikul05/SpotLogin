@@ -9,7 +9,7 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
-	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
+	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
 @endphp
 @section('content')
   <div class="content">

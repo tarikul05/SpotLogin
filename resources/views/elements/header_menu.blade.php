@@ -36,7 +36,7 @@
                             <?php endif; ?>
                         @endcan
 
-                        @hasanyrole('teachers_admin|teachers_all|teachers_medium|teachers_minimum')
+                        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
                             <a href="{{ route('updateTeacher') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
                         @else
                             @can('teachers-list')
@@ -44,11 +44,11 @@
                                    <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
                                 @endif
                             @endcan
-                        @endhasanyrole
+                        @endif
 
-                        @hasanyrole('student')
+                        @if($AppUI->isStudent())
                             <a href="{{ route('updateStudent') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
-                        @endhasanyrole
+                        @endif
                         
 
                         @can('students-list')
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         
-                        <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a>
+                        <!-- <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" class="nav-item nav-link">{{ __('Dashboard') }}</a> -->
                         @unlessrole('superadmin')
                             @unlessrole('student')
                                 @if(count($AppUI->schools()) > 1)
@@ -124,7 +124,7 @@
                                     @endcan
 
 
-                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin())
+                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin())
                                         <a href="{{ route('updateTeacher') }}" class="dropdown-item">{{ __('My Account') }}</a> 
                                     @endif
 

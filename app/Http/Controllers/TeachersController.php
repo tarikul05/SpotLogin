@@ -390,7 +390,7 @@ class TeachersController extends Controller
             }
         }
 
-        if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
+        if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
             $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();

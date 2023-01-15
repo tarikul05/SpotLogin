@@ -83,7 +83,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
@@ -98,7 +98,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -190,7 +190,9 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{ ($relationalData->role_type == 'teachers_all') ? 'checked' : '' }}> ALL<br>
+										<b>
+										<input id="authorisation_admin" name="role_type" type="radio" value="teacher_school_admin" {{ ($relationalData->role_type == 'teacher_school_admin') ? 'checked' : '' }}> Admin<br>
+										<input id="authorisation_all" name="role_type" type="radio" value="teachers_all" {{ ($relationalData->role_type == 'teachers_all') ? 'checked' : '' }}> ALL<br>
 										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium" {{($relationalData->role_type == 'teachers_medium') ? 'checked' : '' }}> Medium<br>
 										<input id="authorisation_min" name="role_type" type="radio" value="teachers_minimum" {{($relationalData->role_type == 'teachers_minimum') ? 'checked' : '' }}> Minimum<br></b>
 									</div>
@@ -416,7 +418,7 @@
 							@endif	
 
 
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -432,7 +434,7 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
 						</div>
 					</fieldset>
 					@can('teachers-update')

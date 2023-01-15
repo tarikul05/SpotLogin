@@ -50,20 +50,6 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-										<div class="col-sm-7">
-											<div class="selectdiv">
-												<select class="form-control" name="is_active" id="is_active">
-													<option value="">Select</option>
-													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -221,23 +207,6 @@
 								</div>
 							</div>
 							
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
-								<div id="commentaire_div">
-									<div class="section_header_class">
-										<label id="private_comment_caption">{{__('Private comment') }}</label>
-									</div>
-									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group row">
-												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-												<div class="col-sm-7">
-													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>

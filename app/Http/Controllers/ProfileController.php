@@ -47,7 +47,7 @@ class ProfileController extends Controller
             'email' => $data['email'],
         ];
         if ($authUser->person_type == 'App\Models\Teacher') {
-            if ($authUser->isSchoolAdmin() || $authUser->isTeacherAdmin()) {
+            if ($authUser->isSchoolAdmin() || $authUser->isTeacherSchoolAdmin() || $authUser->isTeacherAdmin() ) {
                 School::where('id', $authUser->selectedSchoolId())->update($userData);
             }
             Teacher::where('id', $authUser->person_id)->update($userData);

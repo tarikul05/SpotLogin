@@ -61,7 +61,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
 										<div class="col-sm-7">
@@ -74,7 +74,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -251,7 +251,7 @@
 									@endif
 								</div>
 							</div>
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -267,7 +267,7 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
 						</div>
 					</fieldset>
 				</div>
