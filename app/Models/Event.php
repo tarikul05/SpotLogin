@@ -147,22 +147,7 @@ class Event extends BaseModel
         }
         $request = request();
         $user = $request->user();
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
-            $user_role = 'teacher';
-        }
+        $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
         
@@ -258,22 +243,7 @@ class Event extends BaseModel
         }
         $request = request();
         $user = $request->user();
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
-            $user_role = 'teacher';
-        }
+        $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
         
@@ -559,22 +529,7 @@ class Event extends BaseModel
         }
         $request = request();
         $user = $request->user();
-        $user_role = 'superadmin';
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-        }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-            $user_role = 'admin_teacher';
-        }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
-            $user_role = 'teacher';
-        }
+        $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
         
@@ -909,6 +864,30 @@ class Event extends BaseModel
             $result['message'] = __('Internal server error');
             return false;
         }
+    }
+
+
+    public function checkUserRoesforQuery($user)
+    {
+        $userRole = 'superadmin';
+        if ($user->person_type == 'App\Models\Student') {
+            $userRole = 'student';
+        }
+        if ($user->person_type == 'App\Models\Teacher') {
+            $userRole = 'teacher';
+        }
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+            $userRole = 'admin_teacher';
+        }
+        if ($user->isTeacherAll()) {
+            $userRole = 'teacher_all';
+        }
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $userRole =='teacher' ) { 
+            $userRole = 'teacher';
+        }
+
+        return $userRole;
+        
     }
 
     
