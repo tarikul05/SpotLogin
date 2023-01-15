@@ -416,7 +416,7 @@
 							@endif	
 
 
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -432,7 +432,7 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
 						</div>
 					</fieldset>
 					@can('teachers-update')
