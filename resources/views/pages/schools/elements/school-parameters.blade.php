@@ -46,7 +46,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+                                    @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                                     <div class="col-md-8 col-6">
                                         <div class="form-group row invoice_part">
                                             <div class="col-sm-3">
@@ -247,7 +247,7 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</div>
-			@if($AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+			@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 			<div class="col-md-8 col-6">
 				<div class="form-group row invoice_part">
 					<div class="col-sm-3">

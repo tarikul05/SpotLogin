@@ -136,7 +136,7 @@ class User extends Authenticatable
     public function isTeacher()
     {
 
-        return $this->hasAnyRole(['teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
+        return $this->hasAnyRole(['teacher_school_admin','teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
     }
 
     /**
