@@ -876,7 +876,7 @@ class Event extends BaseModel
         if ($user->person_type == 'App\Models\Teacher') {
             $userRole = 'teacher';
         }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $userRole = 'admin_teacher';
         }
         if ($user->isTeacherAll()) {
