@@ -124,7 +124,7 @@
                                     @endcan
 
 
-                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin())
+                                    @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin())
                                         <a href="{{ route('updateTeacher') }}" class="dropdown-item">{{ __('My Account') }}</a> 
                                     @endif
 
