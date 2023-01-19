@@ -827,7 +827,7 @@ class LessonsController extends Controller
                     'school_id' => $schoolId,
                     'event_type' => 51,
                     'date_start' => $start_date,
-                    'date_end' =>$end_date,
+                    'date_end' => $end_date,
                     'fullday_flag' => isset($studentOffData['fullday_flag']) ? $studentOffData['fullday_flag'] : 'Y',
                     'description' => $studentOffData['description']
                 ];
@@ -835,12 +835,21 @@ class LessonsController extends Controller
                 $event = Event::where('id', $studoffId)->update($data);
                 EventDetails::where('event_id',$studoffId)->forceDelete();
                 
-                foreach($studentOffData['student'] as $std){
+                if($user->isStudent()){
                     $dataDetails = [
                         'event_id'   => $studoffId,
-                        'student_id' => $std,
+                        'student_id' => $user->id,
                     ];
-                    $eventDetails = EventDetails::create($dataDetails);;
+                    $eventDetails = EventDetails::create($dataDetails);
+                
+                } else {
+                    foreach($studentOffData['student'] as $std){
+                        $dataDetails = [
+                            'event_id'   => $studoffId,
+                            'student_id' => $std,
+                        ];
+                        $eventDetails = EventDetails::create($dataDetails);
+                    }
                 }
                 
                 DB::commit();
