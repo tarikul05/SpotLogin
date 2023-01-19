@@ -27,9 +27,9 @@ trait UserRoleTrait
                 $user_role = 'coach_user';
             }
         }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
+        // if ($user->isTeacherAll()) {
+        //     $user_role = 'teacher_all';
+        // }
         if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
             $user_role = 'teacher';
         }
