@@ -443,9 +443,9 @@ class AgendaController extends Controller
         if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
         }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
+        // if ($user->isTeacherAll()) {
+        //     $user_role = 'teacher_all';
+        // }
         if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
             $user_role = 'teacher';
         }
