@@ -55,6 +55,7 @@
 										</div>
 									</div>
 								</div>
+								@if(!$AppUI->isStudent())
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
@@ -67,6 +68,7 @@
 										</div>
 									</div>
 								</div>
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
