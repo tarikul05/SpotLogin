@@ -433,12 +433,13 @@ class Event extends BaseModel
                 
             }
         }
+        
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id']);
         }
         if ($user_role == 'teacher') {
-            $query->where('events.school_id', $params['school_id']);
+            $query->where('events.teacher_id', $params['person_id']);
         }
 
         if (!empty($sortingParams)) { 
