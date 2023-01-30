@@ -37,7 +37,7 @@
                     <th>{{ __('#') }}</th>
                     <th>{{ __('Date') }}</th>
                     <th>{{ __('Type') }}</th>
-                    <th>{{ __('Event') }}</th>
+                    <th>{{ __('Invoice Name') }}</th>
                     <th>{{ __('Amount') }}</th>
                     <th>{{ __('Status') }}</th>
                     <th></th>

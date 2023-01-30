@@ -58,7 +58,7 @@
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Type') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Category') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($lessonData->title) ? $lessonData->title : ''; }}
 									</div>
