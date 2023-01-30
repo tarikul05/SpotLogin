@@ -60,16 +60,16 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
 
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
-
+// dd($invoice_type);
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
         if ($user_role != 'superadmin') {
             if ($user_role == 'teacher') {
-                $invoices->where('category_invoiced_type', $user->person_id);
-                $invoices->where('seller_id', $user->id);
+                $invoices->where('category_invoiced_type', $invoice_type);
+                $invoices->where('seller_id', $user->person_id);
             }elseif ($user_role == 'student') {
                 $invoices->where('category_invoiced_type', $invoice_type);
-                $invoices->where('client_id', $user->id);
+                $invoices->where('client_id', $user->person_id);
                 $invoices->where('invoice_status', 10);
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);
