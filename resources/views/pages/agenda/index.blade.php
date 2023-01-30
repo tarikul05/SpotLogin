@@ -449,7 +449,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row not_teacher">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(class/hour)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
