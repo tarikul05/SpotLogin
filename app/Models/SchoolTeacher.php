@@ -86,7 +86,7 @@ class SchoolTeacher extends BaseModel
      */
     public function scopeOnlyTeacher($query)
     {
-        $query->wherein('role_type',['teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
+        $query->wherein('role_type',['teacher_school_admin','teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
     }
 
     /**
