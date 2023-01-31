@@ -286,7 +286,7 @@ class Event extends BaseModel
                     if (isset($value) && strpos($value, '|') !== false){
                         $value = explode('|', $value);
                     }
-                    if ($key=='teacher_id') {
+                    if ($key =='user_role') {
                         //dd($value);
                     }
                     if (is_array($value)) {
@@ -312,7 +312,7 @@ class Event extends BaseModel
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id']);
         }
-        if ($user_role == 'teacher') {
+        if ($user_role == 'teacher_all') {
             $query->where('events.teacher_id', $params['person_id']);
         }
         $query->whereIn('events.event_type', [10,100]);
