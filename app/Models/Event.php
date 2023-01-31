@@ -438,7 +438,7 @@ class Event extends BaseModel
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id']);
         }
-        if ($user_role == 'teacher') {
+        if ($user_role == 'teacher_minimum') {
             $query->where('events.teacher_id', $params['person_id']);
         }
 

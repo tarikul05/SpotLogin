@@ -446,8 +446,12 @@ class AgendaController extends Controller
         // if ($user->isTeacherAll()) {
         //     $user_role = 'teacher_all';
         // }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+        if ($user->isTeacherMedium() || $user_role =='teacher' ) { 
             $user_role = 'teacher';
+        }
+
+        if ($user->isTeacherMinimum()) { 
+            $user_role = 'teacher_minimum';
         }
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
 
