@@ -518,6 +518,7 @@ class AgendaController extends Controller
             }
             $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
+            $e['event_teacher_id'] = (is_null($fetch->teacher_id) ? 0 : $fetch->teacher_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
 
             $e['event_category_name'] ='';
@@ -1001,7 +1002,6 @@ class AgendaController extends Controller
             //$param['student_id']= trim($data['p_student_id']);
             //$p_user_id=Auth::user()->id;
 
-
             if (isset($param['p_from_date'])) {
                 //$query = new Event;
 
@@ -1009,6 +1009,8 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
+
+                //print_r($eventData);
 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
