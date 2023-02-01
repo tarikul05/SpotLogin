@@ -504,7 +504,7 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
-
+                $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_location'] = $fetch->location_id;
@@ -585,6 +585,15 @@ class AgendaController extends Controller
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                 } else {
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                }
+
+                // For add invopice type with tooltip
+                if ($fetch->event_type==100) { //if event
+                    $invoType =  ($fetch->event_invoice_type == 'S') ? 'School' : 'Teacher';
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
+                }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
+
                 }
 
                 if ($fetch->duration_minutes > 60) {
