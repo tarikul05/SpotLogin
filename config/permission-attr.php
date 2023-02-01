@@ -67,8 +67,7 @@ return [
         'self-edit-events',
         'others-edit-events',
         'self-delete-event',
-        'other-delete-event'
-
+        'other-delete-event',
 
         ];
 
