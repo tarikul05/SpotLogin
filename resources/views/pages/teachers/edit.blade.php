@@ -1255,7 +1255,7 @@ function populate_teacher_lesson() {
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				if (value.event_type == 100) {
 					
-					if (value.title != '') {
+					if (value.title != '' && value.title != null) {
 							resultHtml += '<td colspan="2">Event : '+value.title+'</td>';
 						}else{
 							resultHtml += '<td colspan="2">Event</td>';
