@@ -2450,7 +2450,7 @@
                         let cours_id = JSON.parse(json_events)[key].id; 
                         let teacher_id = JSON.parse(json_events)[key].teacher_id;
 
-                        let user_id = <?php $AppUI->person_id; ?> 
+                        let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
                         
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
@@ -2465,16 +2465,16 @@
 
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
-                            if(user_id == teacher_id){
+                            if(loggedin_teacher_id == teacher_id){
                                 selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }	  
                         } 
                         else{
-                            if(user_id == teacher_id){
+                            if(loggedin_teacher_id == teacher_id){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
                         }   
-                        if(user_id == teacher_id){
+                        if(loggedin_teacher_id == teacher_id){
                             selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
                         }
                         
