@@ -2450,7 +2450,7 @@
                         let cours_id = JSON.parse(json_events)[key].id; 
                         let teacher_id = JSON.parse(json_events)[key].teacher_id;
 
-                        let user_id = <?php print_r($AppUI->person_id); ?> 
+                        let user_id = <?php $AppUI->person_id; ?> 
                         
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
