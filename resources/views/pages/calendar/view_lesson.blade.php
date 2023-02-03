@@ -48,17 +48,16 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
-						@if($lessonData->is_locked ==1)
+						@if(($AppUI->person_id == $lessonData->teacher_id) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
 								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
-								
 							</div>
 						@endif
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Type') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Category') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($lessonData->title) ? $lessonData->title : ''; }}
 									</div>

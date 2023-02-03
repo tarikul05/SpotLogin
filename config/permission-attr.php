@@ -63,6 +63,12 @@ return [
         'students-delete',
 
 
+        // event permission
+        'self-edit-events',
+        'others-edit-events',
+        'self-delete-event',
+        'other-delete-event',
+
         ];
 
 

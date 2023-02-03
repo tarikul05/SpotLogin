@@ -449,6 +449,7 @@ class AgendaController extends Controller
         if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
             $user_role = 'teacher';
         }
+
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
 
         $data['user_role'] = $user_role;
@@ -503,7 +504,7 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
-
+                $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_location'] = $fetch->location_id;
@@ -514,6 +515,7 @@ class AgendaController extends Controller
             }
             $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
+            $e['event_teacher_id'] = (is_null($fetch->teacher_id) ? 0 : $fetch->teacher_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
 
             $e['event_category_name'] ='';
@@ -584,6 +586,15 @@ class AgendaController extends Controller
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                 } else {
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                }
+
+                // For add invopice type with tooltip
+                if ($fetch->event_type==100) { //if event
+                    $invoType =  ($fetch->event_invoice_type == 'S') ? 'School' : 'Teacher';
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
+                }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
+
                 }
 
                 if ($fetch->duration_minutes > 60) {
@@ -671,65 +682,87 @@ class AgendaController extends Controller
                         $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
                     }
                 }
-                if ($user_role == 'teacher'){
+                if ( ($user_role == 'teacher') || ($user_role == 'teacher_minimum') ){
                     if (($user->person_id == $fetch->teacher_id)){
-                        $action_type='edit';
-                        if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==100) { //event
-                            $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==50) { //coach time off
-                            $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==51) { //student time off
-                            $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                            }
                         }
                     }else{
-                        $action_type='view';
-                        if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==100) { //event
-                            $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==50) { //coach time off
-                            $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==51) { //student time off
-                            $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                            }
+                        }else{
+                            $action_type='view';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
+                            }
                         }
                     }
                 }
                 /* only own vacation entry can be edited by user - Teacher */
                 if ($fetch->event_type == 50) {
                     if ( ($user->id == $fetch->created_by) || ($user->id == $fetch->teacher_id) || ($user->id == $fetch->teacher_id )) {
-                        $action_type='edit';
-
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-
+                        }    
                     } else {
-                        $action_type='view';
-
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                        }else{  
+                            $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
-
-
+                        }    
                     }
                 }
                 /* only own vacation entry can be edited by user - Student */
                 if ($fetch->event_type == 51) {
                     if (($user->id == $fetch->created_by) || ($user->id == $fetch->student_id) || ($user->id == $fetch->student_id )) {
-                        $action_type='edit';
-
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
-
+                        }    
                     } else {
-                        $action_type='view';
-
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                        }else{ 
+                            $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
-
-
+                        }    
                     }
 
                 }
@@ -997,7 +1030,6 @@ class AgendaController extends Controller
             //$param['student_id']= trim($data['p_student_id']);
             //$p_user_id=Auth::user()->id;
 
-
             if (isset($param['p_from_date'])) {
                 //$query = new Event;
 
@@ -1005,6 +1037,8 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
+
+                //print_r($eventData);
 
                 foreach ($eventData as $key => $p_event_auto_id) {
 

@@ -1211,7 +1211,7 @@ $('#save_btn').click(function (e) {
 							}
 							if (value.event_type == 100) {
 								if (value.title != '') {
-									resultHtml += '<td>'+value.title+'</td>';
+									resultHtml += '<td>Event : '+value.title+'</td>';
 								}else{
 									resultHtml += '<td>Event</td>';
 								}

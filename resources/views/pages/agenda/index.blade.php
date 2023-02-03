@@ -259,7 +259,7 @@
                                             <div class="row">
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="category_select" name="category_select">
@@ -449,7 +449,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row not_teacher">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(per class)</span><span class="event-text">(per event)</span> :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(class/hour)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
@@ -553,10 +553,11 @@
                         <div class="modal-body text-center p-4">                    
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
+
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
-
                             </button>
+
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_confirm_unlock_text">Unlock<span>
                             </button> -->
@@ -2081,6 +2082,8 @@
             },           
 
             eventClick: function(event, jsEvent, view) {
+                let loggedId = <?= $AppUI->person_id ?>;
+                let evnUsrId = event.teacher_id;
                 if (event.url) {
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
@@ -2091,7 +2094,11 @@
                         if (event.can_lock == 'Y') {
                             const type_removed = [50, 51];
                             if(type_removed.includes(event.event_type) != true){ 
-                                $('#btn_confirm').show();
+                                if(loggedId == evnUsrId){
+                                    $('#btn_confirm').show();
+                                }else{
+                                    $('#btn_confirm').hide();
+                                }
                                 //$('#btn_confirm_unlock').hide();
                                 
                             } else {
@@ -2441,6 +2448,9 @@
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let cours_id = JSON.parse(json_events)[key].id; 
+                        let teacher_id = JSON.parse(json_events)[key].teacher_id;
+
+                        let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
                         
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
@@ -2452,14 +2462,21 @@
                         if (teacher_name == null) {
                             teacher_name = '';
                         } 
+
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
-                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }	  
                         } 
                         else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
                         }   
-                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        if(loggedin_teacher_id == teacher_id){
+                            selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                        }
                         
                         
                     }
