@@ -553,10 +553,11 @@
                         <div class="modal-body text-center p-4">                    
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
+
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
-
                             </button>
+
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_confirm_unlock_text">Unlock<span>
                             </button> -->
@@ -2081,6 +2082,8 @@
             },           
 
             eventClick: function(event, jsEvent, view) {
+                let loggedId = <?= $AppUI->person_id ?>;
+                let evnUsrId = event.teacher_id;
                 if (event.url) {
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
@@ -2091,7 +2094,11 @@
                         if (event.can_lock == 'Y') {
                             const type_removed = [50, 51];
                             if(type_removed.includes(event.event_type) != true){ 
-                                $('#btn_confirm').show();
+                                if(loggedId == evnUsrId){
+                                    $('#btn_confirm').show();
+                                }else{
+                                    $('#btn_confirm').hide();
+                                }
                                 //$('#btn_confirm_unlock').hide();
                                 
                             } else {
