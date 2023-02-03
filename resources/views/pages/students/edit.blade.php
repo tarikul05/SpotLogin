@@ -1210,7 +1210,7 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
 							if (value.event_type == 100) {
-								if (value.title != '') {
+								if (value.title != '' && value.title != null) {
 									resultHtml += '<td>Event : '+value.title+'</td>';
 								}else{
 									resultHtml += '<td>Event</td>';
