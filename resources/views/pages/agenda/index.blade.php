@@ -2622,6 +2622,9 @@
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                        let teacher_id = JSON.parse(json_events)[key].teacher_id;
+                        let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
+
                         if (cours_name == null) {
                             cours_name = '';
                         }  
@@ -2633,12 +2636,18 @@
                         } 
                         var curdate=new Date();
                         if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked ==1) {
-                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                            }
                         } 
                         else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
                         }   
-                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        if(loggedin_teacher_id == teacher_id){
+                            selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        }
                          
                     }
 

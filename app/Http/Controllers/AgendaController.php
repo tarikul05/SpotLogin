@@ -1032,7 +1032,7 @@ class AgendaController extends Controller
                 ];
                 $eventData = $event->multiValidate($param)->get();
 
-                //print_r($eventData);
+                //print_r($eventData); exit;
 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
