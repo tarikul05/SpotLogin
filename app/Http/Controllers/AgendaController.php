@@ -617,9 +617,9 @@ class AgendaController extends Controller
             $e['content'] = ($e['cours_name']);
 
             if($fetch->event_type == 10){
-               $e['einvoice_type'] = $eventCategory->invoiced_type;
+               $e['invoice_type'] = $eventCategory->invoiced_type;
             }elseif($fetch->event_type == 100){   
-               $e['einvoice_type'] = $fetch->event_invoice_type;
+               $e['invoice_type'] = $fetch->event_invoice_type;
             }
 
             $e['teacher_id'] = $fetch->teacher_id;
