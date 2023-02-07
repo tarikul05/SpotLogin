@@ -2217,12 +2217,21 @@
                     if (user_role == 'student') {
                         document.getElementById("btn_validate_events").style.display = "none"; 
                         document.getElementById("btn_delete_events").style.display = "none"; 
+                    }else if (user_role == 'admin_teacher') {
+                        if (selected_non_validate_ids.length == 0) {
+                            document.getElementById("btn_validate_events").style.display = "none"; 
+                            document.getElementById("btn_delete_events").style.display = "none"; 
+                        }else{
+                            document.getElementById("btn_validate_events").style.display = "block"; 
+                            document.getElementById("btn_delete_events").style.display = "block"; 
+                        }
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
                         if (selected_non_validate_ids.length ==0) {
                             document.getElementById("btn_delete_events").style.display = "none";
                             document.getElementById("btn_validate_events").style.display = "none";
                         }else {
+                            console.log('nonvalidate')
                             document.getElementById("btn_delete_events").style.display = "block";
                             document.getElementById("btn_validate_events").style.display = "block";
                         }
@@ -2449,6 +2458,7 @@
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let cours_id = JSON.parse(json_events)[key].id; 
                         let teacher_id = JSON.parse(json_events)[key].teacher_id;
+                        let invoice_type = JSON.parse(json_events)[key].invoice_type;
 
                         let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
                         
@@ -2462,21 +2472,34 @@
                         if (teacher_name == null) {
                             teacher_name = '';
                         } 
+                                
 
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
-                            if(loggedin_teacher_id == teacher_id){
-                                selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
-                            }	  
+                            if((invoice_type == 'S') && (user_role == 'admin_teacher')){
+                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                            if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
+                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }  
                         } 
                         else{
-                            if(loggedin_teacher_id == teacher_id){
+                            if((invoice_type == 'S') && (user_role == 'admin_teacher')){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
-                        }   
-                        if(loggedin_teacher_id == teacher_id){
-                            selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                            if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                            
                         }
+
+                        // if((invoice_type == 'S') && ((user_role == 'schooladmin') || (user_role == 'admin_teacher'))){
+                        //     selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                        // }else if(invoice_type == 'T'){  
+                        //     if(loggedin_teacher_id == teacher_id){
+                        //         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                        //     }
+                        // }
                         
                         
                     }

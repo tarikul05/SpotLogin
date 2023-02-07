@@ -278,7 +278,7 @@ class Event extends BaseModel
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
-        $query->where('deleted_at', null);
+        $query->where('events.deleted_at', null);
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
@@ -313,20 +313,21 @@ class Event extends BaseModel
             $query->where('event_details.student_id', $params['person_id']);
         }
 
-        if ($user_role == 'teacher_admin') {
-            // $query->where('events.event_invoice_type', 'S');
-            $query->where(function($query){
+        if ($user_role == 'admin_teacher') {
+            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id')
+                    ->where(function($query){
                             $query->where('events.event_invoice_type', 'S')
-                                  ->orWhere('events.event_category.invoiced_type', 'S');
+                                  ->orWhere('event_categories.invoiced_type', 'S');
 
                         });
         }
 
         if ($user_role == 'teacher_all' || $user_role == 'teacher') {
             $query->where('events.teacher_id', $params['person_id']);
-            $query->where(function($query){
+            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id')
+                    ->where(function($query){
                             $query->where('events.event_invoice_type', 'T')
-                                  ->orWhere('events.event_category.invoiced_type', 'T');
+                                  ->orWhere('event_categories.invoiced_type', 'T');
 
                         });
         }
