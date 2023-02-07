@@ -312,8 +312,23 @@ class Event extends BaseModel
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id']);
         }
+
+        if ($user_role == 'teacher_admin') {
+            // $query->where('events.event_invoice_type', 'S');
+            $query->where(function($query) use ($search){
+                            $query->where('events.event_invoice_type', 'S')
+                                  ->orWhere('events.event_category.invoiced_type', 'S');
+
+                        });
+        }
+
         if ($user_role == 'teacher_all' || $user_role == 'teacher') {
             $query->where('events.teacher_id', $params['person_id']);
+            $query->where(function($query) use ($search){
+                            $query->where('events.event_invoice_type', 'T')
+                                  ->orWhere('events.event_category.invoiced_type', 'T');
+
+                        });
         }
         $query->whereIn('events.event_type', [10,100]);
 
