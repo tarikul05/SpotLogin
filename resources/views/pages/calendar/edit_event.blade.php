@@ -310,7 +310,6 @@
 							@endcan
 						@else
 							@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
-							<?php echo 'teachet_own'; ?>
 								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 							@else
 							@can('self-delete-event')
