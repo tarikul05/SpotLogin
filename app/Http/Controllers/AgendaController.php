@@ -1042,7 +1042,7 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
-
+// dd($eventData);
                 foreach ($eventData as $key => $p_event_auto_id) {
 
                     $eventUpdate = [

@@ -278,7 +278,10 @@ class Event extends BaseModel
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
-        $query->where('events.deleted_at', null);
+        $query->select(['events.*'])
+            ->where('events.deleted_at', null)
+            ->where('events.is_locked', 0);
+
         foreach ($params as $key => $value) { 
             if (!empty($value)) {
                 
@@ -297,7 +300,7 @@ class Event extends BaseModel
                         //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
                     }  else { 
-                        $query->where($key, '=', $value);
+                        $query->where("events.$key", '=', $value);
                     } 
                     
                     // $query->where($key, 'LIKE', "%{$value}%");
@@ -313,9 +316,9 @@ class Event extends BaseModel
             $query->where('event_details.student_id', $params['person_id']);
         }
 
+            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id');
         if ($user_role == 'admin_teacher') {
-            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id')
-                    ->where(function($query){
+                    $query->where(function($query){
                             $query->where('events.event_invoice_type', 'S')
                                   ->orWhere('event_categories.invoiced_type', 'S');
 
