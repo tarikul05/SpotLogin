@@ -111,7 +111,7 @@ class AgendaController extends Controller
             $user_role = 'teacher';
         }
         $coach_user ='';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin() || $user->isTeacherSchoolAdmin()) {
             $user_role = 'admin_teacher';
             if ($user->isTeacherAdmin()) {
                 $coach_user = 'coach_user';
@@ -128,7 +128,6 @@ class AgendaController extends Controller
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
         
-
         //dd($eventData);
         $events = array();
        
@@ -1042,7 +1041,7 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
-// dd($eventData);
+ 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
                     $eventUpdate = [
