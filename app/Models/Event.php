@@ -316,7 +316,7 @@ class Event extends BaseModel
             $query->where('event_details.student_id', $params['person_id']);
         }
 
-            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id');
+        $query->join('event_categories', 'events.event_category', '=', 'event_categories.id');
         if ($user_role == 'admin_teacher') {
                     $query->where(function($query){
                             $query->where('events.event_invoice_type', 'S')
@@ -327,8 +327,7 @@ class Event extends BaseModel
 
         if ($user_role == 'teacher_all' || $user_role == 'teacher') {
             $query->where('events.teacher_id', $params['person_id']);
-            $query->join('event_categories', 'events.event_category', '=', 'event_categories.id')
-                    ->where(function($query){
+            $query->where(function($query){
                             $query->where('events.event_invoice_type', 'T')
                                   ->orWhere('event_categories.invoiced_type', 'T');
 
