@@ -304,15 +304,19 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-							@if($AppUI->person_id == $eventData->teacher_id)
-								@can('self-delete-event')
-									<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
-								@endcan
+						@if($AppUI->person_id == $eventData->teacher_id)
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
+						@else
+							@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 							@else
-								@can('other-delete-event')
-									<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
-								@endcan
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
 							@endif
+						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
 				</form>

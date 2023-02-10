@@ -257,7 +257,11 @@ class Invoice extends BaseModel
                     'events.is_active' => 1
                 ]
             );
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+        if ($user->isTeacherSchoolAdmin()) {
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = 'T'";
+            $teacherEvents->whereRaw($qq);
+            $teacherEvents->where('events.teacher_id', $user->person_id);
+        }else if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $teacherEvents->whereRaw($qq);
             //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -272,6 +276,12 @@ class Invoice extends BaseModel
             $teacherEvents->where('events.teacher_id', $user->person_id);
         } else {
         }
+        if ($user->isTeacherSchoolAdmin()) {
+            $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = 'T'";
+            $teacherEvents->whereRaw($qq);
+            $teacherEvents->where('events.teacher_id', $user->person_id);
+        }
+
         $teacherEvents->where('event_details.visibility_id', '>', 0);
         $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
         $teacherEvents->whereNull('event_details.buy_invoice_id');
@@ -483,7 +493,11 @@ class Invoice extends BaseModel
             
 
             // dd($user);
-            if ($user_role == 'admin_teacher') {
+            if ($user->isTeacherSchoolAdmin()) {
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = 'T'";
+                $teacherEvents->whereRaw($qq);
+                $teacherEvents->where('events.teacher_id', $user->person_id);
+            }else if ($user_role == 'admin_teacher') {
                 
                 $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $teacherEvents->whereRaw($qq);
