@@ -446,8 +446,12 @@ class AgendaController extends Controller
         // if ($user->isTeacherAll()) {
         //     $user_role = 'teacher_all';
         // }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+         if ($user->isTeacherMedium() || $user_role =='teacher' ) { 
             $user_role = 'teacher';
+        }
+
+        if ($user->isTeacherMinimum()) { 
+            $user_role = 'teacher_minimum';
         }
 
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
@@ -460,8 +464,6 @@ class AgendaController extends Controller
         $eventData = $event->filter($data);
         //dd($eventData->count());
         $eventData = $eventData->get();
-
-
 
         $events = array();
         foreach ($eventData as $key => $fetch) {
@@ -594,7 +596,6 @@ class AgendaController extends Controller
                     $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
                 }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
                     $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
-
                 }
 
                 if ($fetch->duration_minutes > 60) {
@@ -615,6 +616,11 @@ class AgendaController extends Controller
 
             $e['content'] = ($e['cours_name']);
 
+            if($fetch->event_type == 10){
+               $e['invoice_type'] = $eventCategory->invoiced_type;
+            }elseif($fetch->event_type == 100){   
+               $e['invoice_type'] = $fetch->event_invoice_type;
+            }
 
             $e['teacher_id'] = $fetch->teacher_id;
             $e['duration_minutes'] = $fetch->duration_minutes;
@@ -771,7 +777,6 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
 
             $e['action_type'] = $action_type;
-            
             
             array_push($events, $e);
         }
@@ -1037,9 +1042,7 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
-
-                //print_r($eventData);
-
+// dd($eventData);
                 foreach ($eventData as $key => $p_event_auto_id) {
 
                     $eventUpdate = [
