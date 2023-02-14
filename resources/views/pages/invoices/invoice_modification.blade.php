@@ -8,6 +8,10 @@
 <!-- color wheel -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
+<?php 
+    $invoiceIssued = ($invoice->invoice_status ==10);
+
+ ?>
 
 @section('content')
 <div class="content">
@@ -172,7 +176,7 @@
                                                         
                                                     </td>
                                                     <td style="text-align:right">
-                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder=""> 
+                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -190,7 +194,7 @@
                                                         ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
-                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder=""> 
+                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
                                                         
                                                     </td>
                                                 </tr>
@@ -240,7 +244,7 @@
                                         <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
                                         <td></td>
                                         <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;">
+                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>
                                         </td>
                                     </tr>
                                     @endif
