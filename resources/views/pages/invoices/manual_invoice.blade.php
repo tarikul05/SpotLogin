@@ -184,20 +184,27 @@
                             <!-- client info END -->
                             <!-- Seller info -->
                             <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Basic data Seller (creditor of invoice)') }}:</label>
+								<label class="invoice_subtitle">{{__('Account') }}:</label>
 							</div>
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->
                                 <div id="table_seller">
+                                    <?php //echo '<pre>';print_r($AppUI);exit;  
+                                        if($AppUI->isTeacherSchoolAdmin()){ ?>
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
                                             <div class="input-group"> 
                                             <span class="input-group-addon">
                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                             </span>
-                                            <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="on"> </div>
+                                            <input id="seller_list_id" class="form-control" list="creator_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="off"> </div>
+                                            <datalist id="creator_seller_datalist">
+                                                    <option value="The school account" data-type="school" id="{{ $school->id }}" <="" option=""></option>
+                                                    <option value="My account" data-type="teacher" id="{{ $AppUI->person_id }}" <="" option=""></option>
+                                            </datalist>
                                         </div>
                                     </div>
+                                    <?php } ?>
                                     <div class="row" id="table_seller_detail">
                                         <div class="col-md-6">
                                             <div class="form-group row" style="display: none;">
@@ -764,11 +771,103 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 
  });
 
+$( document ).ready(function() {
+    var userType = '<?= $AppUI->roleType(); ?>' ;
+   
+    if(userType == 'school_admin' || userType == 'teacher_admin'){
+        var p_code=<?= $AppUI->school_id; ?> ;;
+	    var p_type='school';
+    }else{
+        var p_code=<?= $AppUI->person_id; ?> ;
+	    var p_type='teacher';
+    }
+
+    $.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$.ajax({
+	url: BASE_URL + '/invoice_data',
+	data: 'p_type='+p_type+'&p_code='+p_code,
+	type: 'POST',                     
+	dataType: 'json',
+	async: false,
+	success: function(data) {
+		var resultHtml ='';
+		$.each(data, function(key,value){
+
+            if (p_type == 'teacher') {
+				document.getElementById("invoice_type").value=0;
+			}else if (p_type == 'school') {
+				document.getElementById("invoice_type").value=0;
+			}
+		
+			document.getElementById("seller_id").value=p_code;
+			
+            if (p_type == 'school') {
+                document.getElementById("seller_name").value=value.school_name;
+                document.getElementById("seller_firstname").value=value.school_name;
+                document.getElementById("seller_lastname").value=value.school_name;
+            }else{
+                document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
+                document.getElementById("seller_firstname").value=value.firstname;
+                document.getElementById("seller_lastname").value=value.lastname;
+            }
+			
+	
+			document.getElementById("seller_street_number").value=value.street_number
+			document.getElementById("seller_street").value=value.street;
+			document.getElementById("seller_street2").value=value.street2;
+			document.getElementById("seller_country_id").value=value.country_code;
+			if(value.country_code == 'CA'){
+				PopulateProvince(value.country_code,'seller');
+			}
+			if(value.province_id > 0){
+				$("#seller_province_id").val(value.province_id);
+			}
+			document.getElementById("seller_zip_code").value=value.zip_code;
+			document.getElementById("seller_place").value=value.place;
+			
+			document.getElementById("seller_email").value=value.email;
+			
+			document.getElementById("payment_bank_account_name").value=value.bank_account;
+			
+			document.getElementById("payment_bank_name").value=value.bank_name;
+			document.getElementById("payment_bank_address").value=value.bank_address;
+			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
+			document.getElementById("payment_bank_place").value=value.bank_place;
+			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+			
+			if(value.bank_country_id == 'CA'){
+				PopulateProvince(value.bank_country_id == 'CA','bank');
+			}
+			if (value.bank_province_id > 0){
+				$("#bank_province_id").val(value.bank_province_id );
+			} 
+			
+			document.getElementById("payment_bank_iban").value=value.bank_iban;
+			document.getElementById("payment_bank_account").value=value.bank_account;
+			document.getElementById("payment_bank_swift").value=value.bank_swift;
+
+			document.getElementById("seller_phone").value=value.phone;
+			document.getElementById("seller_mobile").value=value.mobile;
+		
+
+		});
+	},   // sucess
+	error: function(ts) { 
+		//errorModalCall(GetAppMessage('error_message_text'));
+
+		}
+	}); 
+});
+
 
 function get_client_seller_info(obj){
-    
-	var opt = $("option[value='"+obj.value+"']");
-	if (opt.attr('id') == undefined) return false;
+    var opt = $("option[value='"+obj.value+"']");
+   if (opt.attr('id') == undefined) return false;
     var p_code=opt.attr('id');
 	var p_type=opt.attr('data-type');
 
@@ -833,10 +932,15 @@ function get_client_seller_info(obj){
 		
 			document.getElementById("seller_id").value=p_code;
 			
-			document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
-
-			document.getElementById("seller_firstname").value=value.firstname;
-			document.getElementById("seller_lastname").value=value.lastname;
+			if (p_type == 'school') {
+                document.getElementById("seller_name").value=value.school_name;
+                document.getElementById("seller_firstname").value=value.school_name;
+                document.getElementById("seller_lastname").value=value.school_name;
+            }else{
+                document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
+                document.getElementById("seller_firstname").value=value.firstname;
+                document.getElementById("seller_lastname").value=value.lastname;
+            }
 			
 	
 			document.getElementById("seller_street_number").value=value.street_number
