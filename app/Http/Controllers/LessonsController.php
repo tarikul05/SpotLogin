@@ -734,7 +734,7 @@ class LessonsController extends Controller
                 if($user->isStudent()){
                     $dataDetails = [
                         'event_id'   => $event->id,
-                        'student_id' => $user->id,
+                        'student_id' => $user->person_id,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 
@@ -840,7 +840,7 @@ class LessonsController extends Controller
                 if($user->isStudent()){
                     $dataDetails = [
                         'event_id'   => $studoffId,
-                        'student_id' => $user->id,
+                        'student_id' => $user->person_id,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 

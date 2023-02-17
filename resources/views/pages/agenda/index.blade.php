@@ -39,8 +39,7 @@
                                 </label>
 							</div>
 					</div>
-                    <?php //echo '<pre>';print_r($AppUI);exit; ?>
-					<div class="col-sm-8 col-xs-12 btn-area">
+                   <div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
@@ -2231,7 +2230,6 @@
                             document.getElementById("btn_delete_events").style.display = "none";
                             document.getElementById("btn_validate_events").style.display = "none";
                         }else {
-                            console.log('nonvalidate')
                             document.getElementById("btn_delete_events").style.display = "block";
                             document.getElementById("btn_validate_events").style.display = "block";
                         }
