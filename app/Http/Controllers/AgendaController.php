@@ -563,20 +563,22 @@ class AgendaController extends Controller
 			$format_title = '';
 
             if (in_array($fetch->event_type, [50,51])) { // coach off an student off
-                $evntTypeNm = empty($e['title']) ? $e['event_type_name'] : $e['title'];
+                $evntTypeNm = empty($e['title']) ? $e['event_type_name'] : $e['event_type_name'].'<br/>'.$e['title'];
+                $evntTypetitle = empty($e['title']) ? '' : $e['title'].'<br/>';
+
                 if ($fetch->event_type==50) { //coach time off
                     if ($user->isTeacherAdmin()) {
                         $e['tooltip']=$evntTypeNm;
-                        $e['title'] = $evntTypeNm;
+                        $e['title'] = $e['event_type_name'];
                     } else {
                         $e['tooltip']=$evntTypeNm.' <br /> Teacher: '.$e['teacher_name'];
-                        $e['title']=$evntTypeNm.' '.$e['teacher_name'];
+                        $e['title']=$e['event_type_name'].' '.$e['teacher_name'];
                     }
-                    $e['title_for_modal']=' Teacher: '.$e['teacher_name'];
+                    $e['title_for_modal']=$evntTypetitle.' Teacher: '.$e['teacher_name'];
                 }elseif ($fetch->event_type==51) { //student time off
-                    $e['title']= $evntTypeNm.' '.$student_name;
+                    $e['title']= $e['event_type_name'].' '.$student_name;
                     $e['tooltip']=$evntTypeNm.' <br /> Students: '.$student_name;
-                    $e['title_for_modal']=' Students: '.$student_name;
+                    $e['title_for_modal']=$evntTypetitle.' Students: '.$student_name;
                 }
                 
             }else{ // lession and event type
