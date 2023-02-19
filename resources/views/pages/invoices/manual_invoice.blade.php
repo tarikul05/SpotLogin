@@ -822,7 +822,7 @@ $( document ).ready(function() {
 			document.getElementById("seller_street2").value=value.street2;
 			document.getElementById("seller_country_id").value=value.country_code;
 			if(value.country_code == 'CA'){
-				PopulateProvince(value.country_code,'seller');
+				// PopulateProvince(value.country_code,'seller');
 			}
 			if(value.province_id > 0){
 				$("#seller_province_id").val(value.province_id);
@@ -841,7 +841,7 @@ $( document ).ready(function() {
 			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
 			
 			if(value.bank_country_id == 'CA'){
-				PopulateProvince(value.bank_country_id == 'CA','bank');
+				// PopulateProvince(value.bank_country_id == 'CA','bank');
 			}
 			if (value.bank_province_id > 0){
 				$("#bank_province_id").val(value.bank_province_id );
@@ -948,7 +948,7 @@ function get_client_seller_info(obj){
 			document.getElementById("seller_street2").value=value.street2;
 			document.getElementById("seller_country_id").value=value.country_code;
 			if(value.country_code == 'CA'){
-				PopulateProvince(value.country_code,'seller');
+				// PopulateProvince(value.country_code,'seller');
 			}
 			if(value.province_id > 0){
 				$("#seller_province_id").val(value.province_id);
@@ -967,7 +967,7 @@ function get_client_seller_info(obj){
 			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
 			
 			if(value.bank_country_id == 'CA'){
-				PopulateProvince(value.bank_country_id == 'CA','bank');
+				// PopulateProvince(value.bank_country_id == 'CA','bank');
 			}
 			if (value.bank_province_id > 0){
 				$("#bank_province_id").val(value.bank_province_id );
