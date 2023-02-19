@@ -612,7 +612,7 @@ $('#edit_event').on('submit', function() {
 		console.log(p_event_type_id);
 		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
 		e.preventDefault();
-		confirmDeleteModalCall('','Do you want to delete event',"delete_event("+p_event_type_id+");",false);
+		confirmDeleteModalCall('','Do you want to delete this event',"delete_event("+p_event_type_id+");",false);
 		return false;
 	})
 </script>
