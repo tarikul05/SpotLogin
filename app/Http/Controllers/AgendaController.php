@@ -860,8 +860,12 @@ class AgendaController extends Controller
 
         $user = Auth::user();
         $schoolId = $data['school_id'];
-
-        $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+        
+        if ($user->isTeacherMediumMinimum()) {
+            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->get();
+        }else{
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+        }
 
         return $eventCategory =json_encode($eventCat);
 

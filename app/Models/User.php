@@ -183,6 +183,16 @@ class User extends Authenticatable
      * Check user has Teachers authority
      * @return boolean
      */
+    public function isTeacherMediumMinimum()
+    {
+
+        return ($this->isTeacherMedium() || $this->isTeacherMinimum());
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
     public function isStudent()
     {
 
