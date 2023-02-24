@@ -565,7 +565,7 @@ class AgendaController extends Controller
             if (in_array($fetch->event_type, [50,51])) { // coach off an student off
                 $evntTypeNm = empty($e['title']) ? $e['event_type_name'] : $e['event_type_name'].'<br/>'.$e['title'];
                 $evntTypetitle = empty($e['title']) ? '' : $e['title'].'<br/>';
-
+                $e['backgroundColor'] = '#d4daf0';
                 if ($fetch->event_type==50) { //coach time off
                     if ($user->isTeacherAdmin()) {
                         $e['tooltip']=$evntTypeNm;
