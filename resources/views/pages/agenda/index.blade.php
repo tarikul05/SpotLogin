@@ -242,7 +242,9 @@
                                             <select class="form-control" id="agenda_select">
                                                 <option value="1">Lesson</option>
                                                 <option value="2">Event</option>
+                                                @if(!$AppUI->isTeacherMediumMinimum())
                                                 <option value="3">Student Off</option>
+                                                @endif
                                                 <option value="4">Coach off</option>
                                             </select>
                                         </div>

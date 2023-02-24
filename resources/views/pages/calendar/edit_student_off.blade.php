@@ -14,6 +14,7 @@
 	$zone = $timezone;
 	$start_date = Helper::formatDateTimeZone($studentOffData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($studentOffData->date_end, 'long','UTC', $zone);
+	
 @endphp
 @section('content')
   <div class="content">
@@ -122,7 +123,7 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin() || $AppUI->id == $studentOffData->created_by )
+						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin() || $AppUI->id == $studentOffData->created_by || $AppUI->person_id == $studentOffData->details[0]->student_id )
 							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>

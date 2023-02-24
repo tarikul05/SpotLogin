@@ -184,7 +184,7 @@
                             <!-- client info END -->
                             <!-- Seller info -->
                             <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Account') }}:</label>
+								<label class="invoice_subtitle">{{__('Account Invoicing') }}:</label>
 							</div>
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->

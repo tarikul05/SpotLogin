@@ -916,13 +916,13 @@ class Event extends BaseModel
         if ($user->person_type == 'App\Models\Teacher') {
             $userRole = 'teacher';
         }
-        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin()  || $user->isTeacherAdmin()) {
             $userRole = 'admin_teacher';
         }
         if ($user->isTeacherAll()) {
             $userRole = 'teacher_all';
         }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $userRole =='teacher' ) { 
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $userRole =='teacher'|| $user->isTeacherSchoolAdmin()) { 
             $userRole = 'teacher';
         }
 

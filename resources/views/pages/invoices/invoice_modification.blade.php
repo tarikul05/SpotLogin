@@ -1097,7 +1097,7 @@
             },   //success
             error: function (ts) {
                 //modal.style.display = "none";
-                errorModalCall(GetAppMessage('error_message_text'));
+                // errorModalCall(GetAppMessage('error_message_text'));
 
             }
         }); //ajax-type        
