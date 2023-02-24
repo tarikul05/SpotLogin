@@ -2085,6 +2085,7 @@
             eventClick: function(event, jsEvent, view) {
                 let loggedId = <?= $AppUI->person_id ?>;
                 let evnUsrId = event.teacher_id;
+                
                 if (event.url) {
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
@@ -2097,12 +2098,14 @@
                             if(type_removed.includes(event.event_type) != true){ 
                                 if(loggedId == evnUsrId){
                                     $('#btn_confirm').show();
+                                }else if(user_role == 'admin_teacher'){
+                                    $('#btn_confirm').show(); 
                                 }else{
                                     $('#btn_confirm').hide();
                                 }
                                 //$('#btn_confirm_unlock').hide();
                                 
-                            } else {
+                            }else {
                                 $('#btn_confirm').hide(); 
                                 //$('#btn_confirm_unlock').show();
                             }
