@@ -27,16 +27,14 @@ trait UserRoleTrait
                 $user_role = 'coach_user';
             }
         }
-        // if ($user->isTeacherAll()) {
-        //     $user_role = 'teacher_all';
-        // }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
+
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user->isTeacherAll() || $user_role == 'teacher') {
             $user_role = 'teacher';
         }
         //get invoice type
         if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
             $invoice_type = 'S';
-        } else if ((!empty($school) && $school->school_type == 'C') || $user_role == 'teacher_all') {
+        } else if ((!empty($school) && $school->school_type == 'C')) {
             $invoice_type = 'T';
         } else if ($user_role == 'teacher') {
             $invoice_type = 'T';
