@@ -533,9 +533,10 @@ class InvoiceController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-06-02
      */
-    public function teacher_invoice_list(Request $request, $schoolId = null)
+    public function teacher_invoice_list(Request $request, $schoolId = null, $type = null)
     {
         $user = $request->user();
+        // dd($type);
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
         $school = School::active()->find($schoolId);
         if (empty($school)) {
@@ -547,6 +548,9 @@ class InvoiceController extends Controller
 
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
         $query = new Invoice;
+        if ($user->isTeacherSchoolAdmin()) {
+            $invoice_type = ($type == 'school') ? 'S' : 'T'; 
+        }
         $allEvents = $query->getTeacherInvoiceList($user,$schoolId,$user_role,$invoice_type);
         
         
@@ -562,7 +566,7 @@ class InvoiceController extends Controller
             }
             $allTeacherEvents[] = $value;
         }
-        return view('pages.invoices.teacher_list', compact('allTeacherEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.teacher_list', compact('allTeacherEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all', 'type'));
     }
 
 

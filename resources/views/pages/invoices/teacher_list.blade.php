@@ -12,6 +12,13 @@
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
                     <label id="page_header_id" name="page_header_id">{{ __('Invoice Teachers') }}</label></div>
+                    @if($AppUI->isTeacherSchoolAdmin())
+                        @if($type == 'school')
+                            <Button class="btn btn-primary" onclick="goLink('')">Teacher Invoiced</Button>
+                        @else
+                            <Button class="btn btn-primary" onclick="goLink('school')">School Invoiced</Button>
+                        @endif
+                    @endif
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                 <div class="pull-right">
@@ -106,5 +113,8 @@
         $("#example_filter").hide();
         
     } );
+    function goLink(text) {
+        window.location.href = BASE_URL + '/admin/{{$schoolId}}/teacher-invoices/'+text
+    }
 </script>
 @endsection

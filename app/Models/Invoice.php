@@ -257,7 +257,7 @@ class Invoice extends BaseModel
                     'events.is_active' => 1
                 ]
             );
-        if ($user->isTeacherSchoolAdmin() || $user_role == 'teacher') {
+        if (($user->isTeacherSchoolAdmin() && $invoice_type == 'T'  )|| $user_role == 'teacher') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = 'T'";
             $teacherEvents->whereRaw($qq);
             $teacherEvents->where('events.teacher_id', $user->person_id);
