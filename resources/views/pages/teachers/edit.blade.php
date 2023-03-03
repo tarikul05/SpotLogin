@@ -977,7 +977,7 @@ $(document).ready(function(){
 			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
 			return false;
 		}
-	  var p_person_id = document.getElementById("person_id").value;
+	  	var p_person_id = document.getElementById("person_id").value;
 		let school_id = document.getElementById("school_id").value;
 
 	    var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
@@ -988,12 +988,13 @@ $(document).ready(function(){
 	    var p_month = document.getElementById("smonth").value;
 	    var p_year = document.getElementById("syear").value;
 
-			var p_billing_period_start_date = $("#billing_period_start_date").val();
-			var p_billing_period_end_date = $("#billing_period_end_date").val();
+		var p_billing_period_start_date = $("#billing_period_start_date").val();
+		var p_billing_period_end_date = $("#billing_period_end_date").val();
+		var inv_type=getUrlVarsO()["inv_type"]
 
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
-	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids;
+	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type;
 	    
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
@@ -1162,6 +1163,7 @@ function getUrlVarsO()
 	return vars;
 }  //getUrlVarsO
 
+
 function populate_teacher_lesson() {
 	var record_found = 0,
 	all_ready = 1,
@@ -1195,6 +1197,8 @@ function populate_teacher_lesson() {
 	var invoice_already_generated = 0,
 		person_type = 'teacher_lessons';
 
+	var inv_type=getUrlVarsO()["inv_type"]
+
 	var disc1_amt = 0;
 	let selected_items = 0;
 	var resultHtml = '',
@@ -1202,7 +1206,7 @@ function populate_teacher_lesson() {
 		resultHtmlFooter = '',
 		resultHtmlDetails = '';
 	//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-	data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date;
+	data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date=' + p_billing_period_start_date + '&p_billing_period_end_date=' + p_billing_period_end_date +'&inv_type=' + inv_type  ;
 
 	$.ajax({
 		url: BASE_URL + '/get_teacher_lessons',
