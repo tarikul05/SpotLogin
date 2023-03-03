@@ -14,9 +14,9 @@
                     <label id="page_header_id" name="page_header_id">{{ __('Invoice Teachers') }}</label></div>
                     @if($AppUI->isTeacherSchoolAdmin())
                         @if($type == 'school')
-                            <Button class="btn btn-primary" onclick="goLink('')">Teacher Invoiced</Button>
+                            <Button class="btn btn-primary btn-sm" onclick="goLink('')">Move to Teacher Invoiced</Button>
                         @else
-                            <Button class="btn btn-primary" onclick="goLink('school')">School Invoiced</Button>
+                            <Button class="btn btn-primary btn-sm" onclick="goLink('school')">Move to School Invoiced</Button>
                         @endif
                     @endif
             </div>
@@ -66,7 +66,7 @@
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
                             href="{{ auth()->user()->isSuperAdmin() ? 
                                     route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
-                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3" 
+                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
