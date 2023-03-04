@@ -884,7 +884,10 @@ $("#student, #teacher_select").on('change', function(event) {
 	                if(response.status == 1){
 	                    if (response.data) {
 	                        $("#sprice_amount_buy").val(response.data.price_buy)
+	                        @if(isset($lessonData->eventcategory->t_std_pay_type) && $lessonData->eventcategory->t_std_pay_type == 1)
+	                        @else
 	                        $("#sprice_amount_sell").val(response.data.price_sell)
+	                        @endif
 	                    }
 	                }
 	            }
