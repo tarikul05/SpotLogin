@@ -401,6 +401,10 @@ class LessonsController extends Controller
                     $attendSellPrice = ($eventPrice['price_sell']*($lessonData['duration']/60));
                 }
 
+                if (isset($eventCategory->t_std_pay_type) && $eventCategory->t_std_pay_type == 1) {
+                     $attendSellPrice = $lessonData['sprice_amount_sell']*($lessonData['duration']/60);
+                }
+
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,
@@ -577,6 +581,9 @@ class LessonsController extends Controller
                 }
                 if ($lessonData['student_sis_paying'] == 1) {
                     $attendSellPrice = ($eventPrice['price_sell']*($lessonData['duration']/60));
+                }
+                if (isset($eventCategory->t_std_pay_type) && $eventCategory->t_std_pay_type == 1) {
+                     $attendSellPrice = $lessonData['sprice_amount_sell']*($lessonData['duration']/60);
                 }
 
                 $data = [
@@ -1207,8 +1214,11 @@ class LessonsController extends Controller
             try {
                 $priceKey = isset($lessonData['no_of_students']) && !empty($lessonData['no_of_students']) ? ( $lessonData['no_of_students'] > 10 ? 'price_su' : 'price_'.$lessonData['no_of_students'] ) : '' ;
                 $evCategory = EventCategory::find($lessonData['event_category_id']);
+                if ($evCategory->t_std_pay_type == 1) {
+                    $priceKey = 'price_fix';
+                }
                 $buyPrice = $sellPrice = 0;
-                if ($evCategory->s_thr_pay_type == 1 || $evCategory->s_std_pay_type == 1) {
+                if ($evCategory->s_thr_pay_type == 1 || $evCategory->s_std_pay_type == 1 ) {
                     $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'lesson_price_student'=>'price_fix'])->first();
                     $buyPrice = isset($lessonPriceTeacher->price_buy)? $lessonPriceTeacher->price_buy : 0;
                     $sellPrice = isset($lessonPriceTeacher->price_sell)? $lessonPriceTeacher->price_sell : 0;
