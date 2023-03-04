@@ -27,8 +27,9 @@
                         <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                         <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
                         </a> 
-                    @endif    
+
                         <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
+                    @endif    
                        </div>
                 </div>
 			</div>
@@ -1223,10 +1224,15 @@ function UpodateInvStatusIssue(p_invoice) {
         type: 'POST',
         dataType: 'json',
         //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+         },
         success: function (result) {
             var status = result.status;
 
             if (status == 'success') {
+
+                window.location.href = BASE_URL + '/admin/{{$schoolId}}/modification-invoice/'+p_invoice
                 $("#invoice_status_id").text('Emise');
                 //document.getElementById("invoice_status").text='Emise';
                 document.getElementById("invoice_status_id").value = '10';

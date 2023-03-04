@@ -12,6 +12,13 @@
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
                     <label id="page_header_id" name="page_header_id">{{ __('Invoice Teachers') }}</label></div>
+                    @if($AppUI->isTeacherSchoolAdmin())
+                        @if($type == 'school')
+                            <Button class="btn btn-primary btn-sm" onclick="goLink('')">Move to Teacher Invoiced</Button>
+                        @else
+                            <Button class="btn btn-primary btn-sm" onclick="goLink('school')">Move to School Invoiced</Button>
+                        @endif
+                    @endif
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                 <div class="pull-right">
@@ -59,7 +66,7 @@
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
                             href="{{ auth()->user()->isSuperAdmin() ? 
                                     route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
-                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3" 
+                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
@@ -106,5 +113,8 @@
         $("#example_filter").hide();
         
     } );
+    function goLink(text) {
+        window.location.href = BASE_URL + '/admin/{{$schoolId}}/teacher-invoices/'+text
+    }
 </script>
 @endsection

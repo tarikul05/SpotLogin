@@ -767,13 +767,6 @@
         }
         $("#event_types_all option").each(function(key,value)
         {
-            //console.log(value.value);
-            if ( (value.value == 51) && (user_role == 'student') ){
-                // menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
-                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
-            }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
@@ -782,37 +775,7 @@
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
-            if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
-                // if (value.id != 10) {
-                //     menuHtml+='<li><a  href="../admin/'+{{$schoolId}}+'/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 10) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 50) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 51) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 100) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-                
-            }
-            else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                // if (value.value == 50) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 100) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-            }
+            
             
              
             // Add $(this).val() to your list
@@ -2098,7 +2061,7 @@
                             if(type_removed.includes(event.event_type) != true){ 
                                 if(loggedId == evnUsrId){
                                     $('#btn_confirm').show();
-                                }else if(user_role == 'admin_teacher'){
+                                }else if(user_role == 'admin_teacher' || user_role == 'school_admin_teacher'){
                                     $('#btn_confirm').show(); 
                                 }else{
                                     $('#btn_confirm').hide();
@@ -2221,7 +2184,7 @@
                     if (user_role == 'student') {
                         document.getElementById("btn_validate_events").style.display = "none"; 
                         document.getElementById("btn_delete_events").style.display = "none"; 
-                    }else if (user_role == 'admin_teacher') {
+                    }else if (user_role == 'admin_teacher' || user_role == 'school_admin_teacher') {
                         if (selected_non_validate_ids.length == 0) {
                             document.getElementById("btn_validate_events").style.display = "none"; 
                             document.getElementById("btn_delete_events").style.display = "none"; 
@@ -2479,7 +2442,7 @@
 
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
-                            if((invoice_type == 'S') && (user_role == 'admin_teacher')){
+                            if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == 'school_admin_teacher')){
                                     selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){

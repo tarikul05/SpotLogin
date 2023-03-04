@@ -533,9 +533,10 @@ class InvoiceController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-06-02
      */
-    public function teacher_invoice_list(Request $request, $schoolId = null)
+    public function teacher_invoice_list(Request $request, $schoolId = null, $type = null)
     {
         $user = $request->user();
+        // dd($type);
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
         $school = School::active()->find($schoolId);
         if (empty($school)) {
@@ -547,6 +548,9 @@ class InvoiceController extends Controller
 
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
         $query = new Invoice;
+        if ($user->isTeacherSchoolAdmin()) {
+            $invoice_type = ($type == 'school') ? 'S' : 'T'; 
+        }
         $allEvents = $query->getTeacherInvoiceList($user,$schoolId,$user_role,$invoice_type);
         
         
@@ -562,7 +566,7 @@ class InvoiceController extends Controller
             }
             $allTeacherEvents[] = $value;
         }
-        return view('pages.invoices.teacher_list', compact('allTeacherEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.teacher_list', compact('allTeacherEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all', 'type'));
     }
 
 
@@ -665,6 +669,7 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $inv_type = trim($data['inv_type']);
 
             $school = School::active()->find($p_school_id);
             $timeZone = 'UTC';
@@ -677,6 +682,10 @@ class InvoiceController extends Controller
              
             
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+            if ($user->isTeacherSchoolAdmin()) {
+                $invoice_type = ($inv_type == 'school') ? 'S' : 'T'; 
+            }
+
             $query = new Invoice;
             $teacherEvents = $query->getTeacherEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
                 
@@ -727,6 +736,8 @@ class InvoiceController extends Controller
             $schoolId = $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $inv_type = trim($data['inv_type']);
+
             $school = School::active()->find($p_school_id);
             $timeZone = 'UTC';
             if (!empty($school->timezone)) {
@@ -746,6 +757,9 @@ class InvoiceController extends Controller
             }
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
+            if ($user->isTeacherSchoolAdmin()) {
+                $invoice_type = ($inv_type == 'school') ? 'S' : 'T'; 
+            }
             
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user,2);
