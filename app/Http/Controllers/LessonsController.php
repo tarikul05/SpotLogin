@@ -276,7 +276,7 @@ class LessonsController extends Controller
                 DB::commit();
                  
                 if(isset($eventData['validate']) && !empty($eventData['validate'])){
-                    Event::validate(1,['event_id'=>$eventId]);
+                    Event::validate(['event_id'=>$eventId],1);
                     return Redirect::to($schoolId.'/view-event/'.$eventId);
                 }else{
                  return back()->with('success', __('Successfully Registered'));
@@ -504,7 +504,7 @@ class LessonsController extends Controller
         if ($lessonData->is_locked) {
             return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
         }
-        // dd($lessonData->eventcategory);
+        // dd($lessonData);
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
         $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
         $locations = Location::active()->where('school_id',$schoolId)->get();
@@ -548,7 +548,7 @@ class LessonsController extends Controller
 
                 $lessonlId = $request->route('lesson');
                 $lessonData = $request->all();
-                // dd($lessonData); 
+                // dd($lessonData['validate']); 
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -640,7 +640,7 @@ class LessonsController extends Controller
                 if($lessonData['save_btn_more'] == 1){
                     return Redirect::to($schoolId.'/add-lesson?id='.$lessonlId);
                 }else if(isset($lessonData['validate']) && !empty($lessonData['validate'])){
-                    Event::validate(1,['event_id'=>$lessonlId]);
+                    Event::validate(['event_id'=>$lessonlId],1);
                     return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
                 }else{
                     return back()->with('success', __('Successfully Registered'));

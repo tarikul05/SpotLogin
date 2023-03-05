@@ -159,73 +159,82 @@ class AgendaController extends Controller
         try {
             $data = $request->all();
 
+            $locStatus = isset($data['unlock']) ? 0 : 1 ;
+
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            $eventUpdate = [
-                'is_locked' => 1
-            ];
-            if (isset($data['unlock'])) {
-                $eventUpdate = [
-                    'is_locked' => 0
-                ];
-            }
-            $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
-
-
-            $eventDetail = [
-                'is_locked' => 1,
-            ];
-            if (isset($data['unlock'])) {
-                $eventDetail = [
-                    'is_locked' => 0
-                ];
-            }
-            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
-            if (!empty($eventdetails)) {
-                foreach ($eventdetails as $key => $eventdetail) {
-                    $eventDetailPresent = [
-                        'is_locked' => 1,
-                        'participation_id' => 200,
-                    ];
-                    if (isset($data['unlock'])) {
-                        $eventDetailPresent = [
-                            'is_locked' => 0,
-                            'participation_id' => 200,
-                        ];
-                    }
-                    $eventDetailAbsent = [
-                        'is_locked' => 1,
-                        // 'participation_id' => 199,
-                    ];
-                    if (isset($data['unlock'])) {
-                        $eventDetailAbsent = [
-                            'is_locked' => 0,
-                            'participation_id' => 200,
-                        ];
-                    }
-
-                    
-                    if ($eventdetail->participation_id !== 199) {
-                        $eventdetail = $eventdetail->update($eventDetailPresent);
-                    } else {
-                        $eventdetail = $eventdetail->update($eventDetailAbsent);
-                    }
-
-
-                    if ($eventdetail)
-                    {
-                        $result = array(
-                            "status"     => 'success',
-                            'message' => __('Confirmed'),
-                        );
-                    }
-                }
-            }else {
+            $dta =  Event::validate(['event_id'=>$p_event_auto_id],$locStatus);
+            if ($dta) {
                 $result = array(
                     "status"     => 'success',
-                    'message' => __('Confirmed without student'),
+                    'message' => __('Confirmed'),
                 );
             }
+            // $eventUpdate = [
+            //     'is_locked' => 1
+            // ];
+            // if (isset($data['unlock'])) {
+            //     $eventUpdate = [
+            //         'is_locked' => 0
+            //     ];
+            // }
+            // $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
+
+
+            // $eventDetail = [
+            //     'is_locked' => 1,
+            // ];
+            // if (isset($data['unlock'])) {
+            //     $eventDetail = [
+            //         'is_locked' => 0
+            //     ];
+            // }
+            // $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
+            // if (!empty($eventdetails)) {
+            //     foreach ($eventdetails as $key => $eventdetail) {
+            //         $eventDetailPresent = [
+            //             'is_locked' => 1,
+            //             'participation_id' => 200,
+            //         ];
+            //         if (isset($data['unlock'])) {
+            //             $eventDetailPresent = [
+            //                 'is_locked' => 0,
+            //                 'participation_id' => 200,
+            //             ];
+            //         }
+            //         $eventDetailAbsent = [
+            //             'is_locked' => 1,
+            //             // 'participation_id' => 199,
+            //         ];
+            //         if (isset($data['unlock'])) {
+            //             $eventDetailAbsent = [
+            //                 'is_locked' => 0,
+            //                 'participation_id' => 200,
+            //             ];
+            //         }
+
+                    
+            //         if ($eventdetail->participation_id !== 199) {
+            //             $eventdetail = $eventdetail->update($eventDetailPresent);
+            //         } else {
+            //             $eventdetail = $eventdetail->update($eventDetailAbsent);
+            //         }
+
+
+            //         if ($eventdetail)
+            //         {
+            //             $result = array(
+            //                 "status"     => 'success',
+            //                 'message' => __('Confirmed'),
+            //             );
+            //         }
+            //     }
+            // }else {
+            //     $result = array(
+            //         "status"     => 'success',
+            //         'message' => __('Confirmed without student'),
+            //     );
+            // }
 
             return response()->json($result);
 
@@ -1055,45 +1064,46 @@ class AgendaController extends Controller
  
                 foreach ($eventData as $key => $p_event_auto_id) {
 
-                    $eventUpdate = [
-                        'is_locked' => 1
-                    ];
-                    $eventDataUpdated = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
+                    // $eventUpdate = [
+                    //     'is_locked' => 1
+                    // ];
+                    // $eventDataUpdated = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
 
 
-                    $eventDetailPresent = [
-                        'is_locked' => 1,
-                        'participation_id' => 200,
-                    ];
-                    $eventDetailAbsent = [
-                        'is_locked' => 1
-                        //'participation_id' => 199,
-                    ];
-                    $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
-                    if (!empty($eventdetails)) {
-                        foreach ($eventdetails as $key => $eventdetail) {
-                            if ($eventdetail->participation_id != 199) {
-                                $eventdetail = $eventdetail->update($eventDetailPresent);
-                            } else {
-                                $eventdetail = $eventdetail->update($eventDetailAbsent);
-                            }
-                        }
-                    }
+                    // $eventDetailPresent = [
+                    //     'is_locked' => 1,
+                    //     'participation_id' => 200,
+                    // ];
+                    // $eventDetailAbsent = [
+                    //     'is_locked' => 1
+                    //     //'participation_id' => 199,
+                    // ];
+                    // $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
+                    // if (!empty($eventdetails)) {
+                    //     foreach ($eventdetails as $key => $eventdetail) {
+                    //         if ($eventdetail->participation_id != 199) {
+                    //             $eventdetail = $eventdetail->update($eventDetailPresent);
+                    //         } else {
+                    //             $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    //         }
+                    //     }
+                    // }
 
                     if ($p_event_auto_id->event_type == 10) {
-                        Event::updateLatestPrice($p_event_auto_id->id);
+                        // Event::updateLatestPrice($p_event_auto_id->id);
+                        Event::validate(['event_id'=>$p_event_auto_id->id]);
                     }
                 }
 
             }
             //dd($eventData);
-            if ($eventDataUpdated)
-            {
+            // if ($eventDataUpdated)
+            // {
                 $result = array(
                     "status"     => 'success',
                     'message' => __('Confirmed'),
                 );
-            }
+            // }
 
             return response()->json($result);
 
