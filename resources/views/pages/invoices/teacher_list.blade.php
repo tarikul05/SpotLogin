@@ -11,7 +11,11 @@
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
+                    @if($type == 'school')
+                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</label>
+                    @else
                     <label id="page_header_id" name="page_header_id">{{ __('Invoicing for myself') }}</label>
+                    @endif
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
@@ -107,5 +111,8 @@
         $("#example_filter").hide();
         
     } );
+    function goLink(text) {
+        window.location.href = BASE_URL + '/admin/{{$schoolId}}/teacher-invoices/'+text
+    }
 </script>
 @endsection
