@@ -74,6 +74,15 @@
                             @endcan
                             </div>
                         </div>
+                        @if($AppUI->isTeacherSchoolAdmin())
+                        <div class="nav-item dropdown">
+                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('School Invoicing') }}</a>
+                            <div class="dropdown-menu header">
+                                <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item">{{ __("Student's Invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item">{{ __("Teacher's Invoice") }}</a>
+                            </div>
+                        </div>
+                        @endif
                         
                         @unlessrole('superadmin')
                             @unlessrole('student')

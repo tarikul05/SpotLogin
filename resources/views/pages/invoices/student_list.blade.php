@@ -11,19 +11,9 @@
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
-                    @if($type == 'school')
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</label>
-                    @else
                     <label id="page_header_id" name="page_header_id">{{ __('Invoicing for myself') }}</label>
-                    @endif
                 </div>
-                @if($AppUI->isTeacherSchoolAdmin())
-                    @if($type == 'school')
-                        <Button class="btn btn-primary btn-sm" onclick="goLink('')">Move to Teacher Invoiced</Button>
-                    @else
-                        <Button class="btn btn-primary btn-sm" onclick="goLink('school')">Move to School Invoiced</Button>
-                    @endif
-                @endif
+                
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                 <div class="pull-right">
@@ -122,9 +112,5 @@
 
     } );
 
-
-    function goLink(text) {
-        window.location.href = BASE_URL + '/admin/{{$schoolId}}/student-invoices/'+text
-    }
 </script>
 @endsection
