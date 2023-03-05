@@ -490,7 +490,7 @@ class InvoiceController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-05-28
      */
-    public function student_invoice_list(Request $request, $schoolId = null)
+    public function student_invoice_list(Request $request, $schoolId = null, $type = null)
     {
         $user = $request->user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -504,6 +504,9 @@ class InvoiceController extends Controller
         
         
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
+        if ($user->isTeacherSchoolAdmin()) {
+            $invoice_type = ($type == 'school') ? 'S' : 'T'; 
+        }
         $query = new Invoice;
         $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type);
         //dd($allEvents->toSql());
@@ -522,7 +525,7 @@ class InvoiceController extends Controller
             }
             $allStudentEvents[] = $value;
         }
-        return view('pages.invoices.student_list', compact('allStudentEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all'));
+        return view('pages.invoices.student_list', compact('allStudentEvents', 'schoolId', 'invoice_type_all', 'payment_status_all', 'invoice_status_all','type'));
     }
 
 
@@ -595,6 +598,7 @@ class InvoiceController extends Controller
             $p_school_id = trim($data['school_id']);
             $p_billing_period_start_date = trim($data['p_billing_period_start_date']);
             $p_billing_period_end_date = trim($data['p_billing_period_end_date']);
+            $inv_type = trim($data['inv_type']);
 
             $school = School::active()->find($p_school_id);
             $timeZone = 'UTC';
@@ -607,6 +611,10 @@ class InvoiceController extends Controller
             $p_pending_only=trim($data['p_pending_only']);
 
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user);
+            if ($user->isTeacherSchoolAdmin()) {
+                $invoice_type = ($inv_type == 'school') ? 'S' : 'T'; 
+            }
+// dd($inv_type);
             $query = new Invoice;
             $studentEvents = $query->getStudentEventLessonList($user,$p_person_id,$p_school_id,$user_role,$invoice_type,$p_billing_period_start_date,$p_billing_period_end_date);
             if (!empty($p_pending_only)) {
@@ -1038,6 +1046,7 @@ class InvoiceController extends Controller
 
             $p_invoice_id=trim($data['p_invoice_id']);
             $p_event_ids=trim($data['p_event_ids']);
+            $inv_type = trim($data['inv_type']);
             
             
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -1046,6 +1055,9 @@ class InvoiceController extends Controller
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
             list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
+            if ($user->isTeacherSchoolAdmin()) {
+                $invoice_type = ($inv_type == 'school') ? 'S' : 'T'; 
+            }
 
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user);

@@ -803,8 +803,9 @@ $("#country_code, #billing_country_code").trigger('change')
 		
 		var p_invoice_id = '';
 		var auto_id = 0;
+		var inv_type=getUrlVarsO()["inv_type"]
 		
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -1113,10 +1114,11 @@ $('#save_btn').click(function (e) {
 		var month_caption = 'Monthly';
 		var sub_total_caption = 'Sub Total';
 		var isTeacher = +"{{$AppUI->isTeacher()}}";
+		var inv_type=getUrlVarsO()["inv_type"]
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only;
+		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
 		console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',

@@ -361,7 +361,11 @@ class Invoice extends BaseModel
             
 
             // dd($user);
-            if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            if ($user->isTeacherSchoolAdmin() && $invoice_type == 'T' ) {
+                $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
+                $studentEvents->whereRaw($qq);
+                $studentEvents->where('events.teacher_id', $user->person_id);
+            }else if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
                 $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq);
                 //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
