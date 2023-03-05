@@ -60,6 +60,8 @@ return [
         'students-create',
         'students-update',
         // 'students-users-update',
+        'students-sent-mail',
+        'students-activate',
         'students-delete',
 
 
