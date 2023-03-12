@@ -20,6 +20,13 @@
                 </div>
             </div>
         </div>
+        @if(!$AppUI->isStudent())
+            <div>
+                <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
+                <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
+                <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
+            </div>
+        @endif
     </header>
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
@@ -319,6 +326,11 @@
 
 
     });
+
+    function addFilter(text) {
+
+        $('#search_text').val(text).change()
+    }
 
 
     function UpdatePaymentStatus(p_auto_id) {
