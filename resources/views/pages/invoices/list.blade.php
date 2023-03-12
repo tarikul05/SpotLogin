@@ -24,7 +24,7 @@
             <div>
                 <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
                 <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
-                <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-info btn-sm">Manuel(M)</button>
+                <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
             </div>
         @endif
     </header>
