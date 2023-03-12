@@ -2414,7 +2414,7 @@
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
+                const type_removed = [50, 51, 100];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
                         let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
