@@ -44,7 +44,7 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $schoolId = null)
+    public function index(Request $request, $schoolId = null,$type = null)
     {
         $user = $request->user();
         $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -64,7 +64,10 @@ class InvoiceController extends Controller
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
         if ($user_role != 'superadmin') {
-            if ($user_role == 'teacher') {
+            if ($user->isTeacherSchoolAdmin()) {
+                $invoice_type = ($type == 'school') ? 'S' : 'T'; 
+                $invoices->where('category_invoiced_type', $invoice_type);
+            }else if ($user_role == 'teacher') {
                 $invoices->where('category_invoiced_type', $invoice_type);
                 $invoices->where('seller_id', $user->person_id);
             }elseif ($user_role == 'student') {
@@ -74,6 +77,8 @@ class InvoiceController extends Controller
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
+
+            
         }
 
         $invoices->orderBy('id', 'desc');
