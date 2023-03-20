@@ -51,20 +51,8 @@ class AgendaController extends Controller
         // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
-        // if ($user->person_type == 'App\Models\Student') {
-        //     $user_role = 'student';
-        //     $schools = $user->schools();
-        // }
-        // if ($user->person_type == 'App\Models\Teacher') {
-        //     $user_role = 'teacher';
-        //     $schools = $user->schools();
-        //     if ($user->isSchoolAdmin()  || $user->isTeacherAdmin()) {
-        //         $user_role = 'admin_teacher';
-        //     }
-        //     if ($user->isTeacherSchoolAdmin()) {
-        //         $user_role = 'school_admin_teacher';
-        //     }
-        // }
+        $schools = $user->schools();
+        
 
 
         $alllanguages = Language::orderBy('sort_order')->get();
