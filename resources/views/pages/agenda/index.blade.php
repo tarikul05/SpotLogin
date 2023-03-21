@@ -2449,7 +2449,7 @@
                                     selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }  
                         } 
-                        else{
+                        else if(end<moment(curdate).format("DD/MM/YYYY")){
                             if((invoice_type == 'S') && (user_role == 'admin_teacher')){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
