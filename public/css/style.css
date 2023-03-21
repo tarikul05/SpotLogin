@@ -1164,4 +1164,10 @@ a.btn.btn-theme-success.add_teacher_btn {
 		margin-right: 10px;
 	}
 
+	.student_save {
+		top: 88px;
+		height: 48px;
+		position: fixed;
+	}
+
 }
