@@ -405,6 +405,10 @@ class LessonsController extends Controller
                      $attendSellPrice = $lessonData['sprice_amount_sell']*($lessonData['duration']/60);
                 }
 
+                // fix 2 decimal value
+                $attendSellPrice = round($attendSellPrice,2);
+                $attendBuyPrice = round($attendBuyPrice,2);
+
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,
@@ -586,6 +590,11 @@ class LessonsController extends Controller
                      $attendSellPrice = $lessonData['sprice_amount_sell']*($lessonData['duration']/60);
                 }
 
+                // fix 2 decimal value
+                $attendSellPrice = round($attendSellPrice,2);
+                $attendBuyPrice = round($attendBuyPrice,2);
+
+// dd($attendSellPrice, $attendBuyPrice);
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,

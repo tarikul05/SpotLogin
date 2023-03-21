@@ -2061,7 +2061,7 @@
                             if(type_removed.includes(event.event_type) != true){ 
                                 if(loggedId == evnUsrId){
                                     $('#btn_confirm').show();
-                                }else if(user_role == 'admin_teacher' || user_role == 'school_admin_teacher'){
+                                }else if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') && invoice_type == 'S'){
                                     $('#btn_confirm').show(); 
                                 }else{
                                     $('#btn_confirm').hide();
@@ -2449,7 +2449,7 @@
                                     selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }  
                         } 
-                        else{
+                        else if(end<moment(curdate).format("DD/MM/YYYY")){
                             if((invoice_type == 'S') && (user_role == 'admin_teacher')){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
@@ -2599,7 +2599,7 @@
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
+                const type_removed = [50, 51, 100];
                 let resultHtml_cc ='';
                 $('#agenda_list').html(resultHtml_cc);
                 //$("#agenda_table tr:gt(0)").remove();
