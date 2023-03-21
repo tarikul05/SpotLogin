@@ -2053,7 +2053,7 @@
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
                     document.getElementById('confirm_event_id').value=event.id;
-                    
+                    console.log("omg",event)
                     if (event.action_type == 'edit') {
                         $('#event_btn_edit_text').text("{{__('Edit')}}");
                         if (event.can_lock == 'Y') {
@@ -2061,7 +2061,7 @@
                             if(type_removed.includes(event.event_type) != true){ 
                                 if(loggedId == evnUsrId){
                                     $('#btn_confirm').show();
-                                }else if(user_role == 'admin_teacher' || user_role == 'school_admin_teacher'){
+                                }else if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') && invoice_type == 'S'){
                                     $('#btn_confirm').show(); 
                                 }else{
                                     $('#btn_confirm').hide();
@@ -2599,7 +2599,7 @@
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
+                const type_removed = [50, 51, 100];
                 let resultHtml_cc ='';
                 $('#agenda_list').html(resultHtml_cc);
                 //$("#agenda_table tr:gt(0)").remove();
