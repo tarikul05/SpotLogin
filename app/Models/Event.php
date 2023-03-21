@@ -852,6 +852,9 @@ class Event extends BaseModel
         $event = Event::where('id', $event_id)->update($data);
         $eventDetais = EventDetails::where('event_id',$event_id)->get();
 
+        $attendSellPrice = round($attendSellPrice,2);
+        $attendBuyPrice = round($attendBuyPrice,2);
+        
         foreach($eventDetais as $evDtail){
             $dataDetails = [
                 'buy_total' => $attendBuyPrice,

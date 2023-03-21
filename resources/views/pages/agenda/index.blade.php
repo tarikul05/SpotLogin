@@ -2053,7 +2053,7 @@
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
                     document.getElementById('confirm_event_id').value=event.id;
-                    console.log("omg",event)
+                    
                     if (event.action_type == 'edit') {
                         $('#event_btn_edit_text').text("{{__('Edit')}}");
                         if (event.can_lock == 'Y') {
