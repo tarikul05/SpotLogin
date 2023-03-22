@@ -94,7 +94,7 @@
                         <!-- <td style="display: none">{{ $invoice->id; }}</td>
                         <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
                         <td class="txt-grey text-center">{{ $i }} </td>
-                        <th>{{ __('#') }}</th>
+                        <th>&nbsp;</th>
                         <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
                         @php
                         if($invoice->invoice_type ==0){
