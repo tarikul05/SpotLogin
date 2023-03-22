@@ -1177,4 +1177,10 @@ a.btn.btn-theme-success.add_teacher_btn {
 		z-index: 9;
 	}
 
+	.invoice_save_btn {
+		position: fixed !important;
+		top: 76px;
+		right: 4%;
+	}
+
 }
