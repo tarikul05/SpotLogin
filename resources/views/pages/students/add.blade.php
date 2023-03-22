@@ -462,7 +462,7 @@
 					</div>
 				</div>
 		</div>
-		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save student_save_ext"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 		</form>
 	{{-- @endif --}} 
 	</div>
