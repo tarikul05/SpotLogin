@@ -405,7 +405,7 @@
         <div class="title-top">{{ __('invoice_payment_title') }}</div>
         <div class="payment-info">
             <table class="table" style="border: 0;">
-                <?php if($invoice_data->seller_country_code === 'CA' && $invoice_data->invoice_type != 0) {?>
+                <?php // if($invoice_data->seller_country_code === 'CA' && $invoice_data->invoice_type != 0) { ?>
                 <tr>
                     <td>
                         <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)) {?>
@@ -436,7 +436,7 @@
                         <?php } ?>
                     </td>
                 </tr>
-                <?php } else { ?>
+                <?php // } else { ?>
                     <tr>
                         <td>
                             <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email) 
@@ -488,7 +488,7 @@
                             <?php } ?>
                         </td>
                     </tr>
-                <?php } ?>
+                <?php // } ?>
             </table>
         </div>
     </footer>

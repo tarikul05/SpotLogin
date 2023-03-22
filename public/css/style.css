@@ -1166,10 +1166,23 @@ a.btn.btn-theme-success.add_teacher_btn {
 		margin-right: 10px;
 	}
 
-	.student_save {
+	.student_save_ext {
 		top: 88px;
 		height: 48px;
 		position: fixed;
+	}
+
+	.teacher_save {
+		position: fixed;
+		top: 130px;
+		right: 4%;
+		z-index: 9;
+	}
+
+	.invoice_save_btn {
+		position: fixed !important;
+		top: 76px;
+		right: 4%;
 	}
 
 }
