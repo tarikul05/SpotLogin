@@ -3,6 +3,11 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
@@ -39,9 +44,10 @@
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th style="display: none">{{ __('#') }}</th>
-                    <th style="display: none">{{ __('#') }}</th>
+                    <!-- <th style="display: none">{{ __('#') }}</th>
+                    <th style="display: none">{{ __('#') }}</th> -->
                     <th>{{ __('#') }}</th>
+                    <th>&nbsp;</th>
                     <th>{{ __('Date') }}</th>
                     <th>{{ __('Type') }}</th>
                     <th>{{ __('Invoice Name') }}</th>
@@ -85,9 +91,10 @@
                     @endphp
                 
                     <tr>
-                        <td style="display: none">{{ $invoice->id; }}</td>
-                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td>
+                        <!-- <td style="display: none">{{ $invoice->id; }}</td>
+                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
                         <td class="txt-grey text-center">{{ $i }} </td>
+                        <th>{{ __('#') }}</th>
                         <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
                         @php
                         if($invoice->invoice_type ==0){
@@ -228,7 +235,7 @@
         
 
         var table = $('#example').DataTable({
-            //"responsive": true,
+            "responsive": true,
             //"searching": true,
             //"bProcessing": true,
             "bDestroy": true, 
