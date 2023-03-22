@@ -7,21 +7,21 @@
 
 @section('content')
   <div class="container-fluid">
-    <header class="panel-heading" style="border: none;">
+    <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
                     <label id="page_header_id" name="page_header_id">{{ __('List of invoice(s)')}}</label>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
-                <div class="pull-right">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
+                <div class="invoce_search_box">
                     <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
                 </div>
             </div>
         </div>
         @if(!$AppUI->isStudent())
-            <div>
+            <div class="invoice_list_button">
                 <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
                 <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
                 <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
