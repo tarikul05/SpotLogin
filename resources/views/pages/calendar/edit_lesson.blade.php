@@ -455,8 +455,10 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = new Date("{{$date_start}}").toLocaleTimeString()
-	var end_time = new Date("{{$date_end}}").toLocaleTimeString()
+	var start_time = moment("{{$date_start}}").format("hh:mm")
+	var end_time = moment("{{$date_end}}").format("hh:mm")
+
+			console.log("what the time end_time: "+ moment("{{$date_end}}").format("hh:mm") )
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
@@ -484,6 +486,7 @@ $( document ).ready(function() {
 		dropdown: true,
 		scrollbar: true,
 		change:function(time){
+			console.log("what the time: "+time)
 			CalcDuration();
 		}
 	});
