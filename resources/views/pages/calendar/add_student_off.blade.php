@@ -203,6 +203,15 @@ $('#student_off').on('submit', function() {
 			$('#modal_add_teacher').modal('show');
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}	            
-});  
+}); 
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#student_off .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#student_off .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

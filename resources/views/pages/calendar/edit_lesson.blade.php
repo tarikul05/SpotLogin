@@ -918,5 +918,14 @@ $("#student, #teacher_select").on('change', function(event) {
 			});
 		});
 	});
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#edit_lesson .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#edit_lesson .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection`
