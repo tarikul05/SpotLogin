@@ -168,7 +168,11 @@ class Invoice extends BaseModel
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
             ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
+            ->leftJoin('users', function($join) 
+             {
+                $join->on('users.person_id', '=', 'event_details.student_id')
+                    ->where('users.person_type', '=' , 'App\Models\Student');
+             })
             ->select(
                 'events.id as event_id',
                 'event_details.student_id as person_id',
@@ -239,7 +243,11 @@ class Invoice extends BaseModel
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-            ->leftJoin('users', 'users.person_id', '=', 'event_details.teacher_id')
+            ->leftJoin('users', function($join) 
+             {
+                $join->on('users.person_id', '=', 'event_details.teacher_id')
+                    ->where('users.person_type', '=' , 'App\Models\Teacher');
+             })
             ->select(
                 'event_details.id as detail_id',
                 'events.id as event_id',
