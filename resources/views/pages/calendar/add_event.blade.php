@@ -346,5 +346,14 @@ $('#add_event').on('submit', function() {
 
 });
 
+
+$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#add_event .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#add_event .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

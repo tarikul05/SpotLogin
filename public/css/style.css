@@ -605,7 +605,7 @@ input.error {
 
 .btn_area {
 	position: absolute;
-	top: 130px;
+	top: 95px;
 	right: 7%;
 	display: flex;
 	grid-gap: 15px;
@@ -613,7 +613,7 @@ input.error {
 }
 
 #edit_event .btn_area {
-	top: 145px;
+	top: 95px;
 }
 
 a#delete_btn {
@@ -870,7 +870,7 @@ button#save_btn_more i {
 
 #edit_lesson .btn_area {
 	position: absolute;
-	top: 130px;
+	top: 118px;
 	right: 7%;
 	display: flex;
 	grid-gap: 15px;
@@ -1099,6 +1099,10 @@ a.btn.btn-theme-success.add_teacher_btn {
 }
 
 @media only screen and (max-width: 768px) {
+	#main-content {
+		margin-top: 75px;
+	}
+
 	#example_filter label {
 		width: 100%;
 	}
@@ -1181,6 +1185,26 @@ a.btn.btn-theme-success.add_teacher_btn {
 		position: fixed !important;
 		top: 76px;
 		right: 4%;
+	}
+
+	#edit_lesson .btn_area,
+	#add_lesson .btn_area {
+		top: 132px;
+		right: auto;
+	}
+
+	#edit_event .btn_area,
+	#student_off .btn_area,
+	#coach_off .btn_area,
+	#add_event .btn_area {
+		top: 112px;
+		right: auto;
+	}
+
+	.btn_area_fixed {
+		position: fixed !important;
+		top: 106px !important;
+		right: auto !important
 	}
 
 }

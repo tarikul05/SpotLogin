@@ -215,5 +215,14 @@ function delete_event(event_id){
 		confirmDeleteModalCall('','Do you want to delete this event',"delete_event("+p_event_type_id+");",false);
 		return false;
 	})
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+			$("#coach_off .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#coach_off .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection
