@@ -758,5 +758,14 @@ $( document ).ready(function() {
         });
     });
 });
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#add_lesson .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#add_lesson .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection
