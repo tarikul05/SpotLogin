@@ -1463,7 +1463,7 @@ $(document).ready(function(){
 function get_province_lists(country_code, set_province){
 	$.ajax({
 		url: BASE_URL + '/get_province_by_country',
-		data: 'country_name=' + country_code + "&set_province="+set_province,
+		data: 'country_name=' + country_code + "&set_province_id="+set_province,
 		type: 'POST',
 		dataType: 'json',
 		async: false,

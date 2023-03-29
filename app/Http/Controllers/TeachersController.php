@@ -1142,7 +1142,7 @@ class TeachersController extends Controller
         if(count($province_by_country) > 0){
             $html = '';
             foreach ($province_by_country as $province) {
-                if( $province->id == $all_data['set_province']){
+                if( $province->id == $all_data['set_province_id']){
                     $select = 'selected';
                 }else{
                     $select = '';
