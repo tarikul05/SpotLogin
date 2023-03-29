@@ -253,7 +253,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" id="country_code" name="country_code">
+											<select class="form-control select_two_defult_class" id="country_code" name="country_code">
 												@foreach($countries as $country)
 								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 								                @endforeach
@@ -261,15 +261,15 @@
 											</div>
 										</div>
 									</div>
-									<div id="province_id_div" class="form-group row" style="display:none">
+									<div id="province_id_div" class="form-group row">
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" id="province_id" name="province_id">
-													<option value="">Select Province</option>
+												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
+													<!-- <option value="">Select Province</option>
 													@foreach($provinces as $province)
 														<option value="{{ $province['id'] }}" {{!empty($teacher->province_id) ? (old('province_id', $teacher->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
-													@endforeach
+													@endforeach -->
 												</select>
 											</div>
 										</div>
@@ -810,10 +810,10 @@
 	var saction = getUrlVarsO()["action"];
 $(document).ready(function(){
 
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
-	}
+	// var country_code = $('#country_code option:selected').val();
+	// if(country_code == 'CA'){
+	// 	$('#province_id_div').show();
+	// }
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -915,18 +915,6 @@ $(document).ready(function(){
 	// 	});
 	
 	// });    //contact us button click 
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	$('#changer_btn').click(function(e) {
@@ -1461,13 +1449,31 @@ function populate_teacher_lesson() {
 // 		}	            
 // });  
 $('#country_code').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#province_id_div').show();
-	}else{
-		$('#province_id_div').hide();
-	}
+	var country_code = $(this).val();
+	var set_province = '<?= $teacher->province_id ?>';
+	get_province_lists(country_code, set_province);
 })
+
+$(document).ready(function(){
+	var country_code = $('#country_code option:selected').val();
+	var set_province = '<?= $teacher->province_id ?>';
+	get_province_lists(country_code, set_province);
+})
+
+function get_province_lists(country_code, set_province){
+	$.ajax({
+		url: BASE_URL + '/get_province_by_country',
+		data: 'country_name=' + country_code + "&set_province="+set_province,
+		type: 'POST',
+		dataType: 'json',
+		async: false,
+		success: function(response) {
+			$('#province_id').html(response.html);
+		},
+		error: function(e) {
+			//error
+		}
+	});
+}
 </script>
 @endsection
