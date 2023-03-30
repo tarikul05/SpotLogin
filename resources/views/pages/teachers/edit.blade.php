@@ -261,7 +261,7 @@
 											</div>
 										</div>
 									</div>
-									<div id="province_id_div" class="form-group row">
+									<div id="province_id_div" class="form-group row" style="display:none;">
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
@@ -1468,7 +1468,21 @@ function get_province_lists(country_code, set_province){
 		dataType: 'json',
 		async: false,
 		success: function(response) {
-			$('#province_id').html(response.html);
+				if(response.data.length > 0){
+					var html = '';
+					$.each(response.data, function(i, item) {
+						if(item.id == set_province){
+							var select = 'selected';
+						}else{
+							var select = '';
+						}
+						html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+					});
+					$('#province_id').html(html);
+					$('#province_id_div').show();
+			}else{
+				$('#province_id_div').hide();
+			}
 		},
 		error: function(e) {
 			//error

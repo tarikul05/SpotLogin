@@ -208,7 +208,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
+											<select class="form-control select_two_defult_class" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
 												@foreach($countries as $country)
 								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}">{{ $country->name }}</option>
 								                @endforeach
@@ -221,11 +221,11 @@
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" id="province_id" name="province_id">
-													<option value="">Select Province</option>
+												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
+													<!-- <option value="">Select Province</option>
 													@foreach($provinces as $province)
 														<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-													@endforeach
+													@endforeach -->
 												</select>
 											</div>
 										</div>
@@ -381,10 +381,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
-	}
+	// var country_code = $('#country_code option:selected').val();
+	// if(country_code == 'CA'){
+	// 	$('#province_id_div').show();
+	// }
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -469,14 +469,40 @@ $('#save_btn').click(function (e) {
 		}	            
 });  
 
-$('#country_code').change(function(){
-	var country = $(this).val();
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		get_province_lists(country_code);
+	})
 
-	if(country == 'CA'){
-		$('#province_id_div').show();
-	}else{
-		$('#province_id_div').hide();
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		get_province_lists(country_code);
+	})
+
+	function get_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
 	}
-})
+
 </script>
 @endsection

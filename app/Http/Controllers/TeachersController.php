@@ -1126,33 +1126,6 @@ class TeachersController extends Controller
             // return redirect()->back()->with('error', __($errMsg));
         }
         return redirect()->back()->with('error', __('Internal server error'));
-        
-        
-    }
-
-    /*
-    * get Province by country code
-    */
-    public function getProvinceByCountry(Request $request){
-        $all_data = $request->all();
-        $province_by_country = Province::where([
-                            ['country_code','=',$all_data['country_name']],
-                            ['is_active','=',1]
-                        ])->get();
-        if(count($province_by_country) > 0){
-            $html = '';
-            foreach ($province_by_country as $province) {
-                if( $province->id == $all_data['set_province_id']){
-                    $select = 'selected';
-                }else{
-                    $select = '';
-                }
-                $html .= '<option '.$select.' value="'.$province->id.'">'.$province->province_name.'</option>';
-            }
-        }else{
-            $html = '<option value="">Select Province</option>';
-        }
-        return response()->json(['html' => $html]);
     }
 
 }
