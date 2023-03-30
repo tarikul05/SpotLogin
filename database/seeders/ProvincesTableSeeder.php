@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class ProvincesTableSeeder extends Seeder
 {
@@ -16,7 +17,10 @@ class ProvincesTableSeeder extends Seeder
     {
         
 
-        \DB::table('provinces')->delete();
+        // \DB::table('provinces')->delete();
+        Schema::disableForeignKeyConstraints();
+        \DB::table('provinces')->truncate();
+        Schema::enableForeignKeyConstraints();
         
         \DB::table('provinces')->insert(array (
             0 => 
