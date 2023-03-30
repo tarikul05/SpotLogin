@@ -210,7 +210,7 @@
 											<div class="selectdiv">
 											<select class="form-control select_two_defult_class" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}">{{ $country->name }}</option>
+								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}"> {{ $country->name }} ({{ $country->code }})</option>
 								                @endforeach
 											</select>
 											</div>
