@@ -495,6 +495,7 @@ $('#save_btn').click(function (e) {
 						$('#province_id').html(html);
 						$('#province_id_div').show();
 				}else{
+					$('#province_id').html('');
 					$('#province_id_div').hide();
 				}
 			},
