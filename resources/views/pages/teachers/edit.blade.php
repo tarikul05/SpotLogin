@@ -1481,6 +1481,7 @@ function get_province_lists(country_code, set_province){
 					$('#province_id').html(html);
 					$('#province_id_div').show();
 			}else{
+				$('#province_id').html('');
 				$('#province_id_div').hide();
 			}
 		},
