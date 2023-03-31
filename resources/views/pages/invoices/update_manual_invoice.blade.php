@@ -163,23 +163,19 @@
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_country_id" name="client_country_id">
+                                                        <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}" <?php if($invoiceData['client_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['client_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="client_province_id_div" <?php if($invoiceData['client_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                            <div class="form-group row" id="client_province_id_div" style="display:none;">
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_province_id" name="client_province_id"> 
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $province)
-                                                                <option value="{{ $province['id'] }}" {{ $invoiceData['client_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id"> 
                                                         </select>
                                                     </div>
                                                 </div>
@@ -259,23 +255,19 @@
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_country_id" name="seller_country_id">
+                                                        <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}" <?php if($invoiceData['seller_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['seller_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="seller_province_id_div" <?php if($invoiceData['seller_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                            <div class="form-group row" id="seller_province_id_div"  style="display:none;">
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_province_id" name="seller_province_id">
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['seller_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="seller_province_id" name="seller_province_id">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -350,23 +342,19 @@
                                             <label id="pays_caption" name="pays_caption" for="payment_bank_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
+                                                    <select class="form-control select_two_defult_class" id="payment_bank_country_id" name="payment_bank_country_id">
                                                         @foreach($countries as $country)
-                                                            <option value="{{ $country->code }}" <?php if($invoiceData['payment_bank_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                            <option value="{{ $country->code }}" <?php if($invoiceData['payment_bank_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row" id="bank_province_id_div"  <?php if($invoiceData['payment_bank_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                        <div class="form-group row" id="bank_province_id_div" style="display:none;">
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="bank_province_id" name="bank_province_id">
-                                                        <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['bank_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                    <select class="form-control select_two_defult_class" id="bank_province_id" name="bank_province_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -607,36 +595,6 @@
 
 @section('footer_js')
 <script type="text/javascript">
-
-$('#seller_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#seller_province_id_div').show();
-	}else{
-		$('#seller_province_id_div').hide();
-	}
-})
-
-$('#payment_bank_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#bank_province_id_div').show();
-	}else{
-		$('#bank_province_id_div').hide();
-	}
-})
-
-$('#client_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#client_province_id_div').show();
-	}else{
-		$('#client_province_id_div').hide();
-	}
-})
 
 $(document).on('click','#add_more_tax_btn',function(){
 
@@ -1407,6 +1365,151 @@ $('#download_pdf_btn_a').click(function (e) {
 
 
     });
+
+</script>
+
+<script type="text/javascript">
+	/*
+	* manual client province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var clinet_country_code = $('#client_country_id option:selected').val();
+        console.log(clinet_country_code, 'country_codecountry_codecountry_code');
+        var set_clientprovince = '<?= $invoiceData['client_province_id'] ?>';
+		get_client_province_lists(clinet_country_code, set_clientprovince);
+	});
+
+	$('#client_country_id').change(function(){
+		var clinet_country_code = $(this).val();
+        var set_clientprovince = '<?= $invoiceData['client_province_id'] ?>';
+		get_client_province_lists(clinet_country_code, set_clientprovince);
+	})
+
+	function get_client_province_lists(country_code, set_province = null){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#client_province_id').html(html);
+						$('#client_province_id_div').show();
+				}else{
+					$('#client_province_id').html('');
+					$('#client_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Seller province list
+	* function @billing province
+	*/
+	$('#seller_country_id').change(function(){
+		var seller_country_code = $(this).val();
+        var set_sellerprovince = '<?= $invoiceData['seller_province_id'] ?>';
+		get_seller_province_lists(seller_country_code, set_sellerprovince);
+	})
+
+	$(document).ready(function(){
+		var seller_country_code = $('#seller_country_id option:selected').val();
+        var set_sellerprovince = '<?= $invoiceData['seller_province_id'] ?>';
+		get_seller_province_lists(seller_country_code, set_sellerprovince);
+	});
+
+	function get_seller_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#seller_province_id').html(html);
+						$('#seller_province_id_div').show();
+				}else{
+					$('#seller_province_id').html('');
+					$('#seller_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+    /*
+	* bank payment province list
+	* function @billing province
+	*/
+	$('#payment_bank_country_id').change(function(){
+		var bank_country_code = $(this).val();
+        var set_bankprovince = '<?= $invoiceData['bank_province_id'] ?>';
+		get_bankpayment_province_lists(bank_country_code, set_bankprovince);
+	})
+
+	$(document).ready(function(){
+		var bank_country_code = $('#payment_bank_country_id option:selected').val();
+        var set_bankprovince = '<?= $invoiceData['bank_province_id'] ?>';
+		get_bankpayment_province_lists(bank_country_code, set_bankprovince);
+	});
+
+	function get_bankpayment_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#bank_province_id').html(html);
+						$('#bank_province_id_div').show();
+				}else{
+					$('#bank_province_id').html('');
+					$('#bank_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
 
 </script>
 @endsection
