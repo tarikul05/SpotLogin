@@ -702,6 +702,7 @@
 						$('#province_id').html(html);
 						$('#province_id_div').show();
 				}else{
+					$('#province_id').html('');
 					$('#province_id_div').hide();
 				}
 			},
@@ -748,6 +749,7 @@
 						$('#billing_province_id').html(html);
 						$('#billing_province_id_div').show();
 				}else{
+					$('#billing_province_id').html('');
 					$('#billing_province_id_div').hide();
 				}
 			},
