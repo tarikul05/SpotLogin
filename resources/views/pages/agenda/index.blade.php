@@ -2048,6 +2048,7 @@
             eventClick: function(event, jsEvent, view) {
                 let loggedId = <?= $AppUI->person_id ?>;
                 let evnUsrId = event.teacher_id;
+                let invoice_type = event.invoice_type
                 
                 if (event.url) {
                     SetEventCookies();
