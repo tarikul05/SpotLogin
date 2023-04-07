@@ -313,10 +313,10 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="country_code" name="country_code">
-												<option value="">{{ 'Select Country' }}</option>
+										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
+											<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
-												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}({{ $country->code }})</option>
 											@endforeach
 										</select>
 									</div>
@@ -326,7 +326,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="province_id" name="province_id">
+										<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 											<option value="">Select Province</option>
 											@foreach($provinces as $province)
 												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
@@ -378,24 +378,20 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-									<select class="form-control" id="billing_country_code" name="billing_country_code">
+									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
 										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
-											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
 									</select>
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="billing_province_id" name="billing_province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == $province['id'] ? 'selected' : '') : (old('billing_province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="billing_province_id" name="billing_province_id">
 										</select>
 									</div>
 								</div>
@@ -667,26 +663,107 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
+	/*
+	* student province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	});
+
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	})
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#billing_country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var billing_country_code = $('#billing_country_code option:selected').val();
+		var billing_province_id = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(billing_country_code, billing_province_id);
+	});
+
+	function get_billing_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#billing_province_id').html(html);
+						$('#billing_province_id_div').show();
+				}else{
+					$('#billing_province_id').html('');
+					$('#billing_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+</script>
+
+<script type="text/javascript">
+	
 $(document).ready(function(){
-
-$('#country_code').change(function(){
-	var country = $(this).val();
-	if(country == 'CA'){
-		$('#province_id_div').show();
-	}else{
-		$('#province_id_div').hide();
-	}
-})
-
-$('#billing_country_code').change(function(){
-	var country = $(this).val();
-	if(country == 'CA'){
-		$('#billing_province_id_div').show();
-	}else{
-		$('#billing_province_id_div').hide();
-	}
-})
 
 $("#country_code, #billing_country_code").trigger('change')
 
@@ -1576,5 +1653,6 @@ $(function() {
 	}
 });
 </script>
+
 @endif
 @endsection

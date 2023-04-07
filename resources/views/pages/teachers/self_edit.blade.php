@@ -196,11 +196,20 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" id="country_code" name="country_code">
+											<select class="form-control select_two_defult_class" id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
-								                @endforeach
+														<option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
+												@endforeach
 											</select>
+											</div>
+										</div>
+									</div>
+									<div id="province_id_div" class="form-group row" style="display:none">
+										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
+												</select>
 											</div>
 										</div>
 									</div>
@@ -483,17 +492,67 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(document).ready(function(){
-	$("#birth_date").datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $teacher->province_id ?>';
+		
+		get_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $teacher->province_id ?>';
+		console.log(set_province,'set_provinceset_province');
+		get_province_lists(country_code, set_province);
 	});
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	$(document).ready(function(){
+		$("#birth_date").datetimepicker({
+					format: "dd/mm/yyyy",
+					autoclose: true,
+					todayBtn: true,
+			minuteStep: 10,
+			minView: 3,
+			maxView: 3,
+			viewSelect: 3,
+			todayBtn:false,
+		});
 	var x = document.getElementsByClassName("tab-pane active");
 	//var update_btn = document.getElementById("update_btn");
 	console.log(x[0].id);

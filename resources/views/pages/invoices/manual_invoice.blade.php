@@ -151,9 +151,9 @@
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_country_id" name="client_country_id">
+                                                        <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -163,11 +163,7 @@
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_province_id" name="client_province_id"> 
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $province)
-                                                                <option value="{{ $province['id'] }}" {{ old('client_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id"> 
                                                         </select>
                                                     </div>
                                                 </div>
@@ -254,9 +250,9 @@
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_country_id" name="seller_country_id">
+                                                        <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -266,11 +262,7 @@
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_province_id" name="seller_province_id">
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('seller_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="seller_province_id" name="seller_province_id">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -340,9 +332,9 @@
                                             <label id="pays_caption" name="pays_caption" for="payment_bank_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
+                                                    <select class="form-control select_two_defult_class" id="payment_bank_country_id" name="payment_bank_country_id">
                                                         @foreach($countries as $country)
-                                                            <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                            <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -352,11 +344,7 @@
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="bank_province_id" name="bank_province_id">
-                                                        <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('bank_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                    <select class="form-control select_two_defult_class" id="bank_province_id" name="bank_province_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -535,37 +523,8 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
-
-$('#seller_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#seller_province_id_div').show();
-	}else{
-		$('#seller_province_id_div').hide();
-	}
-})
-
-$('#payment_bank_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#bank_province_id_div').show();
-	}else{
-		$('#bank_province_id_div').hide();
-	}
-})
-
-$('#client_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#client_province_id_div').show();
-	}else{
-		$('#client_province_id_div').hide();
-	}
-})
 
 $(document).on('click','#add_more_tax_btn',function(){
 
@@ -1272,6 +1231,130 @@ $(document).on('change','#client_list_id',function(){
 
 })
 
+
+</script>
+<script type="text/javascript">
+	/*
+	* manual client province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#client_country_id option:selected').val();
+        console.log(country_code,'clientclientclient');
+		get_client_province_lists(country_code);
+	});
+
+	$('#client_country_id').change(function(){
+		var country_code = $(this).val();
+		get_client_province_lists(country_code);
+	})
+
+	function get_client_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#client_province_id').html(html);
+						$('#client_province_id_div').show();
+				}else{
+					$('#client_province_id').html('');
+					$('#client_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Seller province list
+	* function @billing province
+	*/
+	$('#seller_country_id').change(function(){
+		var country_code = $(this).val();
+		get_seller_province_lists(country_code);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#seller_country_id option:selected').val();
+        console.log(country_code,'country_codecountry_code');
+		get_seller_province_lists(country_code);
+	});
+
+	function get_seller_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#seller_province_id').html(html);
+						$('#seller_province_id_div').show();
+				}else{
+					$('#seller_province_id').html('');
+					$('#seller_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+    /*
+	* bank payment province list
+	* function @billing province
+	*/
+	$('#payment_bank_country_id').change(function(){
+		var country_code = $(this).val();
+		get_bankpayment_province_lists(country_code);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#payment_bank_country_id option:selected').val();
+		get_bankpayment_province_lists(country_code);
+	});
+
+	function get_bankpayment_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#bank_province_id').html(html);
+						$('#bank_province_id_div').show();
+				}else{
+					$('#bank_province_id').html('');
+					$('#bank_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
 
 </script>
 @endsection

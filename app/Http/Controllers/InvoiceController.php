@@ -1492,6 +1492,7 @@ class InvoiceController extends Controller
 
     public function invoiceDataSave(Request $request, $schoolId = null)
     {   
+       
         DB::beginTransaction();
         try{
             $user = Auth::user();
@@ -1551,9 +1552,9 @@ class InvoiceController extends Controller
                 'payment_bank_account' => $dataParam['p_payment_bank_account'],
                 'payment_bank_swift' => $dataParam['p_payment_bank_swift'],
                 'invoice_currency' => $dataParam['p_price_currency'],
-                'client_province_id' => $dataParam['p_client_province_id'],
-                'seller_province_id' => $dataParam['p_seller_province_id'],
-                'bank_province_id' => $dataParam['p_bank_province_id'],
+                'client_province_id' => isset($dataParam['p_client_province_id']) ? $dataParam['p_client_province_id'] : null,
+                'seller_province_id' => isset($dataParam['p_seller_province_id']) ? $dataParam['p_seller_province_id'] : null,
+                'bank_province_id' => isset($dataParam['p_bank_province_id']) ? $dataParam['p_bank_province_id'] : null,
                 'total_amount' => $dataParam['p_total_amount'],
                 'e_transfer_email' => $dataParam['p_e_transfer_email'],
                 'payment_phone' => $dataParam['p_payment_phone'],
@@ -1686,9 +1687,9 @@ class InvoiceController extends Controller
                 'payment_bank_account' => $dataParam['p_payment_bank_account'],
                 'payment_bank_swift' => $dataParam['p_payment_bank_swift'],
                 'invoice_currency' => $dataParam['p_price_currency'],
-                'client_province_id' => $dataParam['p_client_province_id'],
-                'seller_province_id' => $dataParam['p_seller_province_id'],
-                'bank_province_id' => $dataParam['p_bank_province_id'],
+                'client_province_id' => isset($dataParam['p_client_province_id']) ? $dataParam['p_client_province_id'] : null,
+                'seller_province_id' => isset($dataParam['p_seller_province_id']) ? $dataParam['p_seller_province_id'] : null,
+                'bank_province_id' => isset($dataParam['p_bank_province_id']) ? $dataParam['p_bank_province_id'] : null,
                 'total_amount' => $dataParam['p_total_amount'],
                 'e_transfer_email' => $dataParam['p_e_transfer_email'],
                 'payment_phone' => $dataParam['p_payment_phone'],
