@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Currency extends BaseModel
 {
-    use SoftDeletes;
+    use  SoftDeletes;
     protected $table = 'currencies';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
@@ -61,6 +61,19 @@ class Currency extends BaseModel
     public function scopeByCountry($query, $code)
     {
         return $query->where('country_code', $code);
+    }
+
+    public function getCurrencyByCountry($code,$isArry=false)
+    {
+        $currency = self::active()->where('country_code', $code)->get();
+        
+        if (count($currency) == 0) {
+            $currency = self::active()->where('country_code', 'US')->get();
+        }
+        if (!$isArry) {
+            $currency = $currency[0];
+        }
+        return $currency;
     }
 
 }
