@@ -205,7 +205,7 @@ class TeachersController extends Controller
                         'zip_code' => $alldata['zip_code'],
                         'place' => $alldata['place'],
                         'country_code' => $alldata['country_code'],
-                        'province_id' => $alldata['province_id'],
+                        'province_id' => isset($alldata['province_id']) ? $alldata['province_id']:null,
                         'phone' => $alldata['phone'],
                         'mobile' => $alldata['mobile'],
                         'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
@@ -451,7 +451,7 @@ class TeachersController extends Controller
                 'zip_code' => $alldata['zip_code'],
                 'place' => $alldata['place'],
                 'country_code' => $alldata['country_code'],
-                'province_id' => $alldata['province_id'],
+                'province_id' => isset($alldata['province_id']) ? $alldata['province_id']:null,
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
                 'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
@@ -565,6 +565,7 @@ class TeachersController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
+        // dd($alldata);
 
         $teacher = Teacher::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
@@ -584,6 +585,7 @@ class TeachersController extends Controller
                 'zip_code' => $alldata['zip_code'],
                 'place' => $alldata['place'],
                 'country_code' => $alldata['country_code'],
+                'province_id' => isset($alldata['province_id']) ? $alldata['province_id']:null,
                 'phone' => $alldata['phone'],
                 'mobile' => $alldata['mobile'],
                 'bank_name' => isset($alldata['bank_name']) && !empty($alldata['bank_name']) ? $alldata['bank_name'] : '',
@@ -1127,8 +1129,6 @@ class TeachersController extends Controller
             // return redirect()->back()->with('error', __($errMsg));
         }
         return redirect()->back()->with('error', __('Internal server error'));
-        
-        
     }
 
 }

@@ -53,7 +53,7 @@ class LessonsController extends Controller
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
 
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::getCurrencyByCountry($school->country_code,true);
 
         return view('pages.calendar.add_event')->with(compact('schoolId','eventCategory','locations','professors','students','lessonPrice','currency'));
     }
@@ -167,6 +167,7 @@ class LessonsController extends Controller
      */
     public function editEvent(Request $request, $schoolId = null)
     {
+
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
         $school = School::active()->find($schoolId);
@@ -186,7 +187,7 @@ class LessonsController extends Controller
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
         $lessonPrice = LessonPrice::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::getCurrencyByCountry($school->country_code,true);
         $reqData = $request->all();
         $redirect_url = '';
         if (!empty($reqData['redirect_url'])) {
@@ -341,7 +342,7 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::getCurrencyByCountry($school->country_code,true);
 
         return view('pages.calendar.add_lesson')->with(compact('lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency','studentOffList'));
     }
@@ -517,7 +518,7 @@ class LessonsController extends Controller
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->Join('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
        
         $lessonPrice = LessonPrice::active()->get();
-        $currency = Currency::active()->ByCountry($school->country_code)->get();
+        $currency = Currency::getCurrencyByCountry($school->country_code,true);
 
         // $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData->event_category,'lesson_price_id'=>$lessonData->no_of_students,'teacher_id'=>$lessonData->teacher_id])->first();
 

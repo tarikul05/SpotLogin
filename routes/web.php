@@ -108,11 +108,10 @@ Route::post('delete_invoice', [App\Http\Controllers\InvoiceController::class, 'd
 
 Route::post('unlock_invoice', [App\Http\Controllers\InvoiceController::class, 'unlockInvoice'])->name('invoice.unlock')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-
-
+//
+Route::post('/get_province_by_country', [App\Http\Controllers\ProvincesController::class, 'getProvinceByCountry'])->name('get_province_by_country')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 // Route::get('/permission-check', [App\Http\Controllers\AuthController::class, 'permission_check'])->name('check.permission');
-
 
 Route::get('parameters', 'ParametersController@index')->name('parameters');
 

@@ -46,7 +46,6 @@ class AgendaController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        // $currency = Currency::active()->ByCountry($school->country_code)->get();
         $currency = [];
         // end the part
         $user_role = 'superadmin';
@@ -885,7 +884,7 @@ class AgendaController extends Controller
         $schoolId = $data['school_id'];
         $school = School::active()->find($schoolId);
         if (!empty($school->country_code)) {
-            $currency = Currency::active()->ByCountry($school->country_code)->get();
+            $currency = Currency::getCurrencyByCountry($school->country_code,true);
         }else{
             $currency = Currency::active()->get();
         }
