@@ -30,11 +30,26 @@ class AuthServiceProvider extends ServiceProvider
         // Implicitly grant "superadmin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
+            
             if($user->hasRole('superadmin')){
                 return true;
             }
-            return $this->check_read_only($user, $ability);
+            // $ddd = $this->check_read_only($user, $ability);
+            // print_r($ddd);
+            // die('okkk');
+            return $this->check_read_only($user, $ability) ? $this->check_read_only($user, $ability) : false;
         });
+
+        // Gate::after(function ($user, $ability) {
+            
+        //     if($user->hasRole('superadmin')){
+        //         return true;
+        //     }
+        //     // $ddd = $this->check_read_only($user, $ability);
+        //     // print_r($ddd);
+        //     // die('okkk');
+        //     return $this->check_read_only($user, $ability) ? $this->check_read_only($user, $ability) : false;
+        // });
     }
     
     public function check_read_only($user,  $ability){
@@ -57,6 +72,9 @@ class AuthServiceProvider extends ServiceProvider
                     }
                 }
                 $role_un = $this->remove_duplicate_role($com_role);
+                // dd($role_un, $ability);
+                // $has_check = array_search($ability, array_column($role_un, 'name'));
+                
                 return array_search($ability, array_column($role_un, 'name'));
             }
         }
