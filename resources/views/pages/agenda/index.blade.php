@@ -2450,8 +2450,9 @@
                                     selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }  
                         } 
-                        else if(end<moment(curdate).format("DD/MM/YYYY")){
-                            if((invoice_type == 'S') && (user_role == 'admin_teacher')){
+                        else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
+
+                            if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
