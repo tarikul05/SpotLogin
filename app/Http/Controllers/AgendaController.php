@@ -50,9 +50,10 @@ class AgendaController extends Controller
         // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
-        $schools = $user->schools();
-        
 
+        if($user->person_id !=0 && $user->person_type !='SUPER_ADMIN'){
+            $schools = $user->schools();
+        }
 
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::orderBy('id')->get();
