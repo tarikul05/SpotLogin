@@ -334,7 +334,7 @@
                                         <div class="form-group row">
                                             <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
                                             <div class="col-sm-7">
-                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" placeholder="E-transfer e-mail" value="<?= $invoiceData['e_transfer_email'];?>" maxlength="100"> </div>
+                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" placeholder="E-transfer e-mail" value="<?= $invoiceData['e_transfer_email'] ? $invoiceData['e_transfer_email']: $school->etransfer_acc;?>" maxlength="100"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
