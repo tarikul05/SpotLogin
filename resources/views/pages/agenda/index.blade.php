@@ -39,8 +39,7 @@
                                 </label>
 							</div>
 					</div>
-                    <?php //echo '<pre>';print_r($AppUI);exit; ?>
-					<div class="col-sm-8 col-xs-12 btn-area">
+                   <div class="col-sm-8 col-xs-12 btn-area">
                         <div class="pull-right btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
@@ -243,7 +242,9 @@
                                             <select class="form-control" id="agenda_select">
                                                 <option value="1">Lesson</option>
                                                 <option value="2">Event</option>
+                                                @if(!$AppUI->isTeacherMediumMinimum())
                                                 <option value="3">Student Off</option>
+                                                @endif
                                                 <option value="4">Coach off</option>
                                             </select>
                                         </div>
@@ -259,7 +260,7 @@
                                             <div class="row">
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="category_select" name="category_select">
@@ -388,12 +389,12 @@
                                                             </div>
                                                         </div>		
                                                     </div>
-                                                    <div class="form-group row lesson" id="all_day">
+                                                    <!-- <div class="form-group row lesson" id="all_day">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
                                                         <div class="col-sm-7">
                                                             <input id="all_day_input" name="fullday_flag" type="checkbox" value="Y">
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="form-group row lesson hide_on_off" id="teacher_type_billing">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
                                                         <div class="col-sm-7">
@@ -448,8 +449,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+                                                        <div class="form-group row not_teacher">
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(class/hour)</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
@@ -553,10 +554,11 @@
                         <div class="modal-body text-center p-4">                    
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
+
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                             <span id="event_btn_confirm_text">Validate<span>
-
                             </button>
+
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_confirm_unlock_text">Unlock<span>
                             </button> -->
@@ -758,15 +760,13 @@
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
         var menuHtml='';
+        //user_role = 'student';
+        //console.log(value.value);
+        if (user_role == 'student'){
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+        }
         $("#event_types_all option").each(function(key,value)
         {
-            //console.log(value.value);
-            if ( (value.value == 51) && (user_role == 'student') ){
-                // menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
-                // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
-                // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
-                // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
-            }
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
@@ -775,37 +775,7 @@
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
             }        
-            if ( (user_role == 'schooladmin') || (user_role == 'superadmin') || (user_role == 'webmaster') || (user_auth == "ALL") ) {
-                // if (value.id != 10) {
-                //     menuHtml+='<li><a  href="../admin/'+{{$schoolId}}+'/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 10) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-lesson"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 50) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 51) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/student-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 100) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-                
-            }
-            else if ( (user_role == 'teacher') && ((user_auth == "MED") || (user_auth == "MIN")) && ((value.value == 100) || (value.value == 50)) ) {
-                // if (value.value == 50) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/coach-off"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-
-                // if (value.value == 100) {
-                //     menuHtml+='<li><a  href="../{{$schoolId}}/add-event"><i class="glyphicon glyphicon-plus"></i>Add '+value.text+'</a></li>';
-                // }
-            }
+            
             
              
             // Add $(this).val() to your list
@@ -1616,7 +1586,7 @@
         }
         var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
-        p_to_date=moment(curdate).format("YYYY-MM-DD");
+        p_to_date=document.getElementById("date_to").value;
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
@@ -1632,7 +1602,8 @@
     })
 
     function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id,p_event_id){
-        var data='p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id+'&p_event_id='+p_event_id;
+        var p_event_location_id=getLocationIDs();
+        var data='location_id='+p_event_location_id+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id+'&p_event_id='+p_event_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -1657,7 +1628,8 @@
     }
 
     function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
-        var data='type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        var p_event_location_id=getLocationIDs();
+        var data='location_id='+p_event_location_id+'&type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
         
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -1754,6 +1726,8 @@
         // } 
         
         $('#calendar').fullCalendar({
+            eventLimit: 3, // If you set a number it will hide the itens
+            eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
             timeFormat: 'HH(:mm)',   
             axisFormat: 'HH(:mm)',            
 			slotDuration: '00:15:00',
@@ -2072,6 +2046,10 @@
             },           
 
             eventClick: function(event, jsEvent, view) {
+                let loggedId = <?= $AppUI->person_id ?>;
+                let evnUsrId = event.teacher_id;
+                let invoice_type = event.invoice_type
+                
                 if (event.url) {
                     SetEventCookies();
                     document.getElementById('edit_view_url').value=event.url;
@@ -2082,10 +2060,16 @@
                         if (event.can_lock == 'Y') {
                             const type_removed = [50, 51];
                             if(type_removed.includes(event.event_type) != true){ 
-                                $('#btn_confirm').show();
+                                if(loggedId == evnUsrId){
+                                    $('#btn_confirm').show();
+                                }else if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') && invoice_type == 'S'){
+                                    $('#btn_confirm').show(); 
+                                }else{
+                                    $('#btn_confirm').hide();
+                                }
                                 //$('#btn_confirm_unlock').hide();
                                 
-                            } else {
+                            }else {
                                 $('#btn_confirm').hide(); 
                                 //$('#btn_confirm_unlock').show();
                             }
@@ -2180,15 +2164,15 @@
                 document.getElementById("btn_validate_events").style.display = "none";
                 
                 var user_role=document.getElementById("user_role").value;
-                
+                let selected_non_validate_ids = document.getElementById("get_non_validate_event_id").value;
+                        
                 if (foundRecords == 1)
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_copy_events").style.display = "none";        
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
-                        let selected_validate_ids = document.getElementById("get_validate_event_id").value;
-                        if (selected_validate_ids.length ==0) {
+                        if (selected_non_validate_ids.length ==0) {
                             document.getElementById("btn_validate_events").style.display = "none";
                         }else {
                             document.getElementById("btn_validate_events").style.display = "block";
@@ -2201,10 +2185,24 @@
                     if (user_role == 'student') {
                         document.getElementById("btn_validate_events").style.display = "none"; 
                         document.getElementById("btn_delete_events").style.display = "none"; 
+                    }else if (user_role == 'admin_teacher' || user_role == 'school_admin_teacher') {
+                        if (selected_non_validate_ids.length == 0) {
+                            document.getElementById("btn_validate_events").style.display = "none"; 
+                            document.getElementById("btn_delete_events").style.display = "none"; 
+                        }else{
+                            document.getElementById("btn_validate_events").style.display = "block"; 
+                            document.getElementById("btn_delete_events").style.display = "block"; 
+                        }
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
-                        document.getElementById("btn_delete_events").style.display = "block";
-                        document.getElementById("btn_validate_events").style.display = "block";
+                        if (selected_non_validate_ids.length ==0) {
+                            document.getElementById("btn_delete_events").style.display = "none";
+                            document.getElementById("btn_validate_events").style.display = "none";
+                        }else {
+                            document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_validate_events").style.display = "block";
+                        }
+                        
                     }
                     if (lockRecords == 0)
                     {
@@ -2417,7 +2415,7 @@
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
+                const type_removed = [50, 51, 100];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
                         let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
@@ -2425,6 +2423,12 @@
                         let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let cours_id = JSON.parse(json_events)[key].id; 
+                        let teacher_id = JSON.parse(json_events)[key].teacher_id;
+                        let invoice_type = JSON.parse(json_events)[key].invoice_type;
+
+                        let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
+                        
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
                         if (cours_name == null) {
                             cours_name = '';
@@ -2435,28 +2439,55 @@
                         if (teacher_name == null) {
                             teacher_name = '';
                         } 
+                                
+
                         var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
-                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        if (JSON.parse(json_events)[key].is_locked ==1) {
+                            if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == 'school_admin_teacher')){
+                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                            if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
+                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }  
                         } 
-                        else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
-                        }   
-                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
+
+                            if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                            if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                            
+                        }
+
+                        // if((invoice_type == 'S') && ((user_role == 'schooladmin') || (user_role == 'admin_teacher'))){
+                        //     selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                        // }else if(invoice_type == 'T'){  
+                        //     if(loggedin_teacher_id == teacher_id){
+                        //         selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
+                        //     }
+                        // }
                         
                         
                     }
                     
                 });
                 selected_ids.join("|");
-                selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                
+                //selected_non_validate_ids.join(",  ");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
@@ -2570,7 +2601,7 @@
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
-                const type_removed = [50, 51];
+                const type_removed = [50, 51, 100];
                 let resultHtml_cc ='';
                 $('#agenda_list').html(resultHtml_cc);
                 //$("#agenda_table tr:gt(0)").remove();
@@ -2582,6 +2613,9 @@
                         let teacher_name =JSON.parse(json_events)[key].cours_name; 
                         let cours_name = JSON.parse(json_events)[key].duration_minutes; 
                         let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                        let teacher_id = JSON.parse(json_events)[key].teacher_id;
+                        let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
+
                         if (cours_name == null) {
                             cours_name = '';
                         }  
@@ -2592,13 +2626,19 @@
                             teacher_name = '';
                         } 
                         var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked !=1) {
-                            selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked ==1) {
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
+                            }
                         } 
                         else{
-                            selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            if(loggedin_teacher_id == teacher_id){
+                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
                         }   
-                        selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        if(loggedin_teacher_id == teacher_id){
+                            selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
+                        }
                          
                     }
 
@@ -2700,14 +2740,20 @@
                 $('#agenda_list').html(resultHtmlHeader_cc);
 
                 selected_ids.join("|");
-                selected_validate_ids.join("|");
-                selected_non_validate_ids.join("|");
+                
+                //selected_non_validate_ids.join("|");
+                selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                } else {
+                    selected_validate_ids.join("|");
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
@@ -2891,8 +2937,10 @@
         target_start_date=document.getElementById("date_from").value,
         target_end_date=document.getElementById("date_to").value,
         view_mode = document.getElementById("view_mode").value;
+        var p_event_location_id=getLocationIDs();
         
-        var data='view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
+        
+        var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
         e.preventDefault();
@@ -3180,8 +3228,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 	$('#start_time, #end_time, #duration').on('change.datetimepicker', function(e){  
-        console.log("tttt: ")
-	var event_source = $(this).attr('id');
+    var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
 		if(!el_duration.val()){el_duration.val('15');}
@@ -3267,25 +3314,25 @@ $('#add_lesson').on('submit', function(e) {
         if(type==1){
             var bill_type = $('#sis_paying').val();
             
-            if(bill_type == 1){
-                $.ajax({
-                    url: BASE_URL + '/check-lesson-price',
-                    async: false, 
-                    data: formData,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.status == 1){
-                            var errMssg = '';	
-                        }else{
-                            var errMssg = 'error';
-                            $('#modal_lesson_price').modal('show');
-                            $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
-                            e.preventDefault();
-                        }
-                    }
-                })
-            }
+            // if(bill_type == 1){
+            //     $.ajax({
+            //         url: BASE_URL + '/check-lesson-price',
+            //         async: false, 
+            //         data: formData,
+            //         type: 'POST',
+            //         dataType: 'json',
+            //         success: function(response){
+            //             if(response.status == 1){
+            //                 var errMssg = '';	
+            //             }else{
+            //                 var errMssg = 'error';
+            //                 $('#modal_lesson_price').modal('show');
+            //                 $("#modal_alert_body").text("Price setup is not available for this event category and coach. please check and update.");
+            //                 e.preventDefault();
+            //             }
+            //         }
+            //     })
+            // }
         }
         
         if(professor == ''){
@@ -3441,7 +3488,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
             $("#std-check-div").css('display', 'block');
         }else{
             $("#std-check-div").css('display', 'none');
-        }
+         }
         
         $("#teacher_type_billing").show();
         $("#student_sis_paying").val(s_std_pay_type);
@@ -3458,44 +3505,6 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 	}else if(s_thr_pay_type == 1 || s_std_pay_type == 1 ){
         $('#hourly').hide();
 		$('#price_per_student').show();
-        getLatestPrice();
-        // var formData = $('#edit_lesson').serializeArray();
-        // var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-        // formData.push({
-        //     "name": "_token",
-        //     "value": csrfToken,
-        // });
-
-        // formData.push({
-        //     "name": "event_category_id",
-        //     "value": categoryId,
-        // });
-        // formData.push({
-        //     "name": "teacher_select",
-        //     "value": teacherSelect,
-        // });
-        
-        // if (categoryId > 0 && teacherSelect > 0) {
-        //     $.ajax({
-        //         url: BASE_URL + '/check-lesson-fixed-price',
-        //         async: false, 
-        //         data: formData,
-        //         type: 'POST',
-        //         dataType: 'json',
-        //         success: function(response){
-        //             if(response.status == 1){
-        //                 if (response.data) {
-        //                     $("#sprice_amount_buy").val(response.data.price_buy)
-        //                     $("#sprice_amount_sell").val(response.data.price_sell)
-        //                 }
-                        
-        //                 // var errMssg = '';   
-        //             }
-        //         }
-        //     })
-        // }
-
-            
 	}
 
     if($('#sis_paying').val() == 0){
@@ -3508,15 +3517,16 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         $('#sprice_amount_sell').prop('disabled', true);   
     }else if($('#student_sis_paying').val() == 1){
         $('#sprice_amount_sell').prop('disabled', false);  
+    }else if($('#student_sis_paying').val() == 2){
+        $('#sprice_amount_sell').prop('disabled', true);  
     }
 
-    if(($('#sis_paying').val() == 0) && ($('#student_sis_paying').val() == 0)){
-        $("#price_per_student").hide();
-    }else if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-       $("#price_per_student").hide(); 
+    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+       $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
+    getLatestPrice();
 
 
 });
@@ -3529,7 +3539,11 @@ function getLatestPrice() {
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
-
+    if (agendaSelect != 1) {
+        $("#sprice_amount_buy").val(0)
+        $("#sprice_amount_sell").val(0)
+        return 
+    } 
     var formData = $('#edit_lesson').serializeArray();
     var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
     formData.push({
@@ -3584,6 +3598,7 @@ $('#agenda_select').on('change', function() {
     $("#hourly").hide()
 
     if(this.value != ''){
+        $('.not_teacher').show();
 		$('#agenda_form_area').show();
         var selected_school_ids = [];
         $.each($("#event_school option:selected"), function(){         
@@ -3612,7 +3627,15 @@ $('#agenda_select').on('change', function() {
             $('.show_coach_off.hide_on_off').show();
              // $("#std-check-div").css('display', 'block');
             $('#category_select').trigger('change');
+            $(".lesson-text").show()
+            $(".event-text").hide()
         }else if(this.value == 2){
+            var isTeacher = +"{{$AppUI->isTeacher()}}";
+            if(isTeacher){
+                $('.not_teacher').hide();
+            }else{
+                $('.not_teacher').show();
+            }
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'add-event';
             }else{
@@ -3629,7 +3652,9 @@ $('#agenda_select').on('change', function() {
             $('.hide_coach_off').show();
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
-            // $('#category_select').trigger('change');
+            $(".lesson-text").hide()
+            $(".event-text").show()
+            // $('#event_invoice_type').trigger('change');
         }else if(this.value == 3){
             if (selected_school_ids.length == 1) {
                 var page_action = BASE_URL+'/'+selected_school_ids+'/'+'student-off';
@@ -3638,7 +3663,7 @@ $('#agenda_select').on('change', function() {
             }
             $('#all_day').hide();
             $('.hide_on_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.hide_coach_off').show();
@@ -3654,13 +3679,14 @@ $('#agenda_select').on('change', function() {
             $('#all_day').hide();
             $('.hide_on_off').hide();
             $('.hide_coach_off').hide();
-            //$('#price_per_student').hide();
+            $('#price_per_student').hide();
             $( "#end_date" ).attr("disabled", false );
             $("form.form-horizontal").attr("action", page_action);
             $('.show_coach_off.hide_on_off').show();
              $("#std-check-div").css('display', 'none');
             // $('#category_select').trigger('change');
         }
+        
 	}else{
         $('#agenda_form_area').hide();
     }
@@ -3669,16 +3695,33 @@ $('#agenda_select').on('change', function() {
         $('body').find(".popover.show").removeClass("show")
     });
 
-    if($('#sis_paying').val() == 0){
-        $('#sprice_amount_buy').prop('disabled', true);   
-    }else if($('#sis_paying').val() == 1){
-        $('#sprice_amount_buy').prop('disabled', false);  
-    }
+    if(this.value == 1){
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', true);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
 
-    if($('#student_sis_paying').val() == 0){
-        $('#sprice_amount_sell').prop('disabled', true);   
-    }else if($('#student_sis_paying').val() == 1){
-        $('#sprice_amount_sell').prop('disabled', false);  
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', true);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
+    }if(this.value == 2){
+        $('#sprice_amount_buy').prop('disabled', false); 
+        $('#sprice_amount_sell').prop('disabled', false);   
+    }else{
+        if($('#sis_paying').val() == 0){
+            $('#sprice_amount_buy').prop('disabled', false);   
+        }else if($('#sis_paying').val() == 1){
+            $('#sprice_amount_buy').prop('disabled', false);  
+        }
+
+        if($('#student_sis_paying').val() == 0){
+            $('#sprice_amount_sell').prop('disabled', false);   
+        }else if($('#student_sis_paying').val() == 1){
+            $('#sprice_amount_sell').prop('disabled', false);  
+        }
     }
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
@@ -3689,17 +3732,20 @@ $('#agenda_select').on('change', function() {
 
     if(this.value == 1){
         if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-            $("#price_per_student").hide(); 
+            $("#price_per_student").show(); 
         }else{
-            $("#price_per_student").show();
+            $("#price_per_student").hide();
         }
     }else if(this.value == 2){
-        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-            $("#price_per_student").hide(); 
-        }else{
-            $("#price_per_student").show();
-        }
+        $('#event_invoice_type').trigger('change');
+        // if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+        //     $("#price_per_student").show(); 
+        // }else{
+        //     $("#price_per_student").hide();
+        // }
     }
+    
+    getLatestPrice();
 });
 
 $('#event_invoice_type').on('change', function() {
@@ -3710,9 +3756,9 @@ $('#event_invoice_type').on('change', function() {
     var event_invoice_type = $("#event_invoice_type option:selected").val();
 
     if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").hide(); 
+        $("#price_per_student").show(); 
     }else{
-        $("#price_per_student").show();
+        $("#price_per_student").hide();
     }
 });
 

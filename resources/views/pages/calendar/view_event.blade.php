@@ -9,7 +9,7 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
-	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
   <div class="content">
@@ -47,13 +47,13 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Event information') }}</label>
 						</div>
-						@if($eventData->is_locked ==1)
-						<div class="alert alert-warning">
-							<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
-							<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
-							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
-				
-						</div>
+						@if((($AppUI->person_id == $eventData->teacher_id) || (($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
+							<div class="alert alert-warning">
+								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
+					
+							</div>
 						@endif
 						<div class="row">
 							<div class="col-md-7 offset-md-2">

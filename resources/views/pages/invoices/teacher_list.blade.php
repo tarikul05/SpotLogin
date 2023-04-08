@@ -7,14 +7,19 @@
 
 @section('content')
   <div class="container-fluid">
-    <header class="panel-heading" style="border: none;">
+    <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoice assistants') }}</label></div>
+                    @if($type == 'school')
+                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</label>
+                    @else
+                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for myself') }}</label>
+                    @endif
+                </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
-                <div class="pull-right">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
+                <div class="invoce_search_box">
                     <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
                </div>
             </div>
@@ -29,7 +34,7 @@
             <thead>
                 <tr>
                     <th>{{ __('#') }}</th>
-                    <th>{{ __('invoice_column_date') }}</th>
+                    <th>{{ __('Image') }}</th>
                     <th>{{ __('Name of the Teacher') }}</th>
                     <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
@@ -59,7 +64,7 @@
                             <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
                             href="{{ auth()->user()->isSuperAdmin() ? 
                                     route('adminEditTeacher',['school'=> $schoolId,'teacher'=> $event->person_id]) : 
-                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3" 
+                                    route('editTeacher',['teacher' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
@@ -106,5 +111,8 @@
         $("#example_filter").hide();
         
     } );
+    function goLink(text) {
+        window.location.href = BASE_URL + '/admin/{{$schoolId}}/teacher-invoices/'+text
+    }
 </script>
 @endsection

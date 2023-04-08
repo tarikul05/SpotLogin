@@ -23,14 +23,7 @@
 				</div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                     <div class="btn-group save-button pull-right"> 
-                        <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                        <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
-                        </a> 
-                        <a id="print_preview_btn" style="display: block;" name="print_preview_btn" class="btn btn-sm btn-default" target="_blank">Print Preview</a> 
-                        <a id="delete_btn" style="display: block!important;" name="delete_btn" class="btn btn-sm btn-danger" href="">Delete</a>
-                        <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
-                        <button id="approved_btn" style="display: none;" target="" href="" class="btn btn-sm btn-primary">Send by email</button> 
-                        <a id="download_pdf_btn" name="download_pdf_btn" style="display: none;" target="" href="" class="btn btn-sm btn-default">Download PDF</a> 
+                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">Save</button> 
                     </div>
                 </div>
 			</div>
@@ -103,6 +96,7 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
+                                                        <option value="{{ $school->school_name }} (SCHOOL)" data-type="school" id="{{ $school->id }}" <="" option=""></option>
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
 												    @endforeach
@@ -157,9 +151,9 @@
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_country_id" name="client_country_id">
+                                                        <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -169,11 +163,7 @@
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_province_id" name="client_province_id"> 
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $province)
-                                                                <option value="{{ $province['id'] }}" {{ old('client_province_id') == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id"> 
                                                         </select>
                                                     </div>
                                                 </div>
@@ -190,20 +180,27 @@
                             <!-- client info END -->
                             <!-- Seller info -->
                             <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Basic data Seller (creditor of invoice)') }}:</label>
+								<label class="invoice_subtitle">{{__('Account Invoicing') }}:</label>
 							</div>
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->
                                 <div id="table_seller">
+                                    <?php //echo '<pre>';print_r($AppUI);exit;  
+                                        if($AppUI->isTeacherSchoolAdmin()){ ?>
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
                                             <div class="input-group"> 
                                             <span class="input-group-addon">
                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                             </span>
-                                            <input id="seller_list_id" class="form-control" list="client_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="on"> </div>
+                                            <input id="seller_list_id" class="form-control" list="creator_seller_datalist" name="seller_list_id" onchange="get_client_seller_info(this)" autocomplete="off"> </div>
+                                            <datalist id="creator_seller_datalist">
+                                                    <option value="The school account" data-type="school" id="{{ $school->id }}" <="" option=""></option>
+                                                    <option value="My account" data-type="teacher" id="{{ $AppUI->person_id }}" <="" option=""></option>
+                                            </datalist>
                                         </div>
                                     </div>
+                                    <?php } ?>
                                     <div class="row" id="table_seller_detail">
                                         <div class="col-md-6">
                                             <div class="form-group row" style="display: none;">
@@ -253,9 +250,9 @@
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_country_id" name="seller_country_id">
+                                                        <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -265,11 +262,7 @@
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_province_id" name="seller_province_id">
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('seller_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="seller_province_id" name="seller_province_id">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -339,9 +332,9 @@
                                             <label id="pays_caption" name="pays_caption" for="payment_bank_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
+                                                    <select class="form-control select_two_defult_class" id="payment_bank_country_id" name="payment_bank_country_id">
                                                         @foreach($countries as $country)
-                                                            <option value="{{ $country->code }}">{{ $country->name }}</option>
+                                                            <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -351,11 +344,7 @@
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="bank_province_id" name="bank_province_id">
-                                                        <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ old('bank_province_id') ==  $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                    <select class="form-control select_two_defult_class" id="bank_province_id" name="bank_province_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -370,9 +359,14 @@
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30"> </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label id="label_payment_phone" name="payment_phone" for="payment_phone" class="col-lg-3 col-sm-3 text-left">Phone</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150"> </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row" id="payment_bank_info_canada" style="display: none;">
+                                <div class="row" id="payment_bank_info_canada">
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
@@ -380,7 +374,7 @@
                                                 <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" style="display: none;">
                                         <div class="form-group row">
                                             <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
                                             <div class="col-sm-7">
@@ -529,37 +523,8 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
-
-$('#seller_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#seller_province_id_div').show();
-	}else{
-		$('#seller_province_id_div').hide();
-	}
-})
-
-$('#payment_bank_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#bank_province_id_div').show();
-	}else{
-		$('#bank_province_id_div').hide();
-	}
-})
-
-$('#client_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#client_province_id_div').show();
-	}else{
-		$('#client_province_id_div').hide();
-	}
-})
 
 $(document).on('click','#add_more_tax_btn',function(){
 
@@ -765,11 +730,103 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 
  });
 
+$( document ).ready(function() {
+    var userType = '<?= $AppUI->roleType(); ?>' ;
+   
+    if(userType == 'school_admin' || userType == 'teacher_admin'){
+        var p_code=<?= $AppUI->school_id; ?> ;;
+	    var p_type='school';
+    }else{
+        var p_code=<?= $AppUI->person_id; ?> ;
+	    var p_type='teacher';
+    }
+
+    $.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$.ajax({
+	url: BASE_URL + '/invoice_data',
+	data: 'p_type='+p_type+'&p_code='+p_code,
+	type: 'POST',                     
+	dataType: 'json',
+	async: false,
+	success: function(data) {
+		var resultHtml ='';
+		$.each(data, function(key,value){
+
+            if (p_type == 'teacher') {
+				document.getElementById("invoice_type").value=0;
+			}else if (p_type == 'school') {
+				document.getElementById("invoice_type").value=0;
+			}
+		
+			document.getElementById("seller_id").value=p_code;
+			
+            if (p_type == 'school') {
+                document.getElementById("seller_name").value=value.school_name;
+                document.getElementById("seller_firstname").value=value.school_name;
+                document.getElementById("seller_lastname").value=value.school_name;
+            }else{
+                document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
+                document.getElementById("seller_firstname").value=value.firstname;
+                document.getElementById("seller_lastname").value=value.lastname;
+            }
+			
+	
+			document.getElementById("seller_street_number").value=value.street_number
+			document.getElementById("seller_street").value=value.street;
+			document.getElementById("seller_street2").value=value.street2;
+			document.getElementById("seller_country_id").value=value.country_code;
+			if(value.country_code == 'CA'){
+				// PopulateProvince(value.country_code,'seller');
+			}
+			if(value.province_id > 0){
+				$("#seller_province_id").val(value.province_id);
+			}
+			document.getElementById("seller_zip_code").value=value.zip_code;
+			document.getElementById("seller_place").value=value.place;
+			
+			document.getElementById("seller_email").value=value.email;
+			
+			document.getElementById("payment_bank_account_name").value=value.bank_account;
+			
+			document.getElementById("payment_bank_name").value=value.bank_name;
+			document.getElementById("payment_bank_address").value=value.bank_address;
+			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
+			document.getElementById("payment_bank_place").value=value.bank_place;
+			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+			
+			if(value.bank_country_id == 'CA'){
+				// PopulateProvince(value.bank_country_id == 'CA','bank');
+			}
+			if (value.bank_province_id > 0){
+				$("#bank_province_id").val(value.bank_province_id );
+			} 
+			
+			document.getElementById("payment_bank_iban").value=value.bank_iban;
+			document.getElementById("payment_bank_account").value=value.bank_account;
+			document.getElementById("payment_bank_swift").value=value.bank_swift;
+
+			document.getElementById("seller_phone").value=value.phone;
+			document.getElementById("seller_mobile").value=value.mobile;
+		
+
+		});
+	},   // sucess
+	error: function(ts) { 
+		//errorModalCall(GetAppMessage('error_message_text'));
+
+		}
+	}); 
+});
+
 
 function get_client_seller_info(obj){
-    
-	var opt = $("option[value='"+obj.value+"']");
-	if (opt.attr('id') == undefined) return false;
+    var opt = $("option[value='"+obj.value+"']");
+   if (opt.attr('id') == undefined) return false;
     var p_code=opt.attr('id');
 	var p_type=opt.attr('data-type');
 
@@ -798,10 +855,17 @@ function get_client_seller_info(obj){
 			}
 
 			if (obj.id == "client_list_id") {
+
+                if (value.firstname != null){
+                    var fname = value.firstname;
+                }else{ 
+                    var fname = value.school_name
+                }
+
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
 				
-				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_firstname").value= fname;
 				document.getElementById("client_lastname").value=value.lastname;
 				
 				document.getElementById("client_street_number").value=value.street_number;
@@ -827,10 +891,15 @@ function get_client_seller_info(obj){
 		
 			document.getElementById("seller_id").value=p_code;
 			
-			document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
-
-			document.getElementById("seller_firstname").value=value.firstname;
-			document.getElementById("seller_lastname").value=value.lastname;
+			if (p_type == 'school') {
+                document.getElementById("seller_name").value=value.school_name;
+                document.getElementById("seller_firstname").value=value.school_name;
+                document.getElementById("seller_lastname").value=value.school_name;
+            }else{
+                document.getElementById("seller_name").value=value.firstname +' '+ value.lastname;
+                document.getElementById("seller_firstname").value=value.firstname;
+                document.getElementById("seller_lastname").value=value.lastname;
+            }
 			
 	
 			document.getElementById("seller_street_number").value=value.street_number
@@ -838,7 +907,7 @@ function get_client_seller_info(obj){
 			document.getElementById("seller_street2").value=value.street2;
 			document.getElementById("seller_country_id").value=value.country_code;
 			if(value.country_code == 'CA'){
-				PopulateProvince(value.country_code,'seller');
+				// PopulateProvince(value.country_code,'seller');
 			}
 			if(value.province_id > 0){
 				$("#seller_province_id").val(value.province_id);
@@ -857,7 +926,7 @@ function get_client_seller_info(obj){
 			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
 			
 			if(value.bank_country_id == 'CA'){
-				PopulateProvince(value.bank_country_id == 'CA','bank');
+				// PopulateProvince(value.bank_country_id == 'CA','bank');
 			}
 			if (value.bank_province_id > 0){
 				$("#bank_province_id").val(value.bank_province_id );
@@ -874,7 +943,7 @@ function get_client_seller_info(obj){
 		});
 	},   // sucess
 	error: function(ts) { 
-		errorModalCall(GetAppMessage('error_message_text'));
+		//errorModalCall(GetAppMessage('error_message_text'));
 
 		}
 	}); 
@@ -1014,6 +1083,7 @@ function AddEditInvoice(){
 
     var p_e_transfer_email = $("#e_transfer_email").val();
     var p_name_for_checks = $("#name_for_checks").val();
+    var p_payment_phone = $("#payment_phone").val();
 
     var tax_name = $("input[name='tax_name[]']").map(function(){return $(this).val();}).get();
     var tax_percentage = $("input[name='tax_percentage[]']").map(function(){return $(this).val();}).get();
@@ -1094,6 +1164,7 @@ function AddEditInvoice(){
                 expense_name:expense_name ,
                 expense_amount:expense_amount,
                 p_e_transfer_email:p_e_transfer_email,
+                p_payment_phone:p_payment_phone,
                 p_name_for_checks:p_name_for_checks, 
                 p_total_amount:p_total_amount
             },
@@ -1109,7 +1180,7 @@ function AddEditInvoice(){
                 }
             },   // success
             error: function(ts) { 
-                errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
+                //errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
 
             }                
             
@@ -1135,7 +1206,6 @@ $(document).on('keyup','.tax_amount',function(){
 })
 
 $(document).on('change','#client_firstname',function(){
-
     if(!$("#invoice_name").val() && $(this).val()){
         var now = new Date();
         var month = now.getMonth()+1;
@@ -1149,21 +1219,142 @@ $(document).on('change','#client_firstname',function(){
 })
 
 $(document).on('change','#client_list_id',function(){
-
     if(!$("#invoice_name").val() && $("#client_firstname").val()){
         var now = new Date();
         var month = now.getMonth()+1;
         var day = now.getDate();
         var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
-        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-        
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
         var invoice_name = 'INV/'+$("#client_firstname").val()+'/'+current_date;
-
         $("#invoice_name").val(invoice_name);
     }
 
 })
 
+
+</script>
+<script type="text/javascript">
+	/*
+	* manual client province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#client_country_id option:selected').val();
+        console.log(country_code,'clientclientclient');
+		get_client_province_lists(country_code);
+	});
+
+	$('#client_country_id').change(function(){
+		var country_code = $(this).val();
+		get_client_province_lists(country_code);
+	})
+
+	function get_client_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#client_province_id').html(html);
+						$('#client_province_id_div').show();
+				}else{
+					$('#client_province_id').html('');
+					$('#client_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Seller province list
+	* function @billing province
+	*/
+	$('#seller_country_id').change(function(){
+		var country_code = $(this).val();
+		get_seller_province_lists(country_code);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#seller_country_id option:selected').val();
+        console.log(country_code,'country_codecountry_code');
+		get_seller_province_lists(country_code);
+	});
+
+	function get_seller_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#seller_province_id').html(html);
+						$('#seller_province_id_div').show();
+				}else{
+					$('#seller_province_id').html('');
+					$('#seller_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+    /*
+	* bank payment province list
+	* function @billing province
+	*/
+	$('#payment_bank_country_id').change(function(){
+		var country_code = $(this).val();
+		get_bankpayment_province_lists(country_code);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#payment_bank_country_id option:selected').val();
+		get_bankpayment_province_lists(country_code);
+	});
+
+	function get_bankpayment_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#bank_province_id').html(html);
+						$('#bank_province_id_div').show();
+				}else{
+					$('#bank_province_id').html('');
+					$('#bank_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
 
 </script>
 @endsection

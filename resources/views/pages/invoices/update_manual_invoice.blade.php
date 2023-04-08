@@ -23,17 +23,14 @@
 				</div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
                     <div class="btn-group save-button pull-right"> 
+                    @if($invoiceData['invoice_status'] != 10)
                         <a id="issue_inv_btn" style="display: block;" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
                         <i class="fa fa-cog" aria-hidden="true"></i> Issue invoice
                         </a> 
-                        <a id="print_preview_btn" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">Print Preview</a>
-                        <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">Delete</a>
+
                         <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary">Save</button> 
-                        <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoiceData['id']}},{{$invoiceData['invoice_type']}},{{$invoiceData['school_id']}})">Send by email</button>
-                            <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoiceData['invoice_filename']?$invoiceData['invoice_filename'] : route('generateInvoicePDF',['invoice_id'=> $invoiceData['id']]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                <lebel name="download_pdf_btn" id="download_pdf_btn">Download PDF</lebel>
-                            </a> 
-                    </div>
+                    @endif    
+                       </div>
                 </div>
 			</div>
 		</header>
@@ -111,6 +108,7 @@
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
                                                 <input id="client_list_id" class="form-control" list="client_seller_datalist" name="client_list_id" value="<?= $invoiceData['client_name'];?>" onchange="get_client_seller_info(this)" autocomplete="on">
                                                 <datalist id="client_seller_datalist">
+                                                        <option value="{{ $school->school_name }} (SCHOOL)" data-type="school" id="{{ $school->id }}" <="" option=""></option>
                                                     @foreach($students as $key => $student)
 													    <option value="{{ $student->firstname }} {{ $student->lastname }} (STUDENT)" data-type="student" id="{{ $student->student_id }}" <="" option=""></option>
 												    @endforeach
@@ -165,23 +163,19 @@
                                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_country_id" name="client_country_id">
+                                                        <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}" <?php if($invoiceData['client_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['client_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="client_province_id_div" <?php if($invoiceData['client_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                            <div class="form-group row" id="client_province_id_div" style="display:none;">
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="client_province_id" name="client_province_id"> 
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $province)
-                                                                <option value="{{ $province['id'] }}" {{ $invoiceData['client_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id"> 
                                                         </select>
                                                     </div>
                                                 </div>
@@ -261,23 +255,19 @@
                                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_country_id" name="seller_country_id">
+                                                        <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
                                                             @foreach($countries as $country)
-                                                                <option value="{{ $country->code }}" <?php if($invoiceData['seller_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                                <option value="{{ $country->code }}" <?php if($invoiceData['seller_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="seller_province_id_div" <?php if($invoiceData['seller_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                            <div class="form-group row" id="seller_province_id_div"  style="display:none;">
                                                 <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control" id="seller_province_id" name="seller_province_id">
-                                                            <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['seller_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                        <select class="form-control select_two_defult_class" id="seller_province_id" name="seller_province_id">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -341,29 +331,30 @@
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_account" name="payment_bank_account" value="<?= $invoiceData['payment_bank_account'];?>" placeholder="" maxlength="30"> </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
+                                            <div class="col-sm-7">
+                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" placeholder="E-transfer e-mail" value="<?= $invoiceData['e_transfer_email'] ? $invoiceData['e_transfer_email']: $school->etransfer_acc;?>" maxlength="100"> </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="pays_caption" name="pays_caption" for="payment_bank_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="payment_bank_country_id" name="payment_bank_country_id">
+                                                    <select class="form-control select_two_defult_class" id="payment_bank_country_id" name="payment_bank_country_id">
                                                         @foreach($countries as $country)
-                                                            <option value="{{ $country->code }}" <?php if($invoiceData['payment_bank_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }}</option>
+                                                            <option value="{{ $country->code }}" <?php if($invoiceData['payment_bank_country_code'] == $country->code){echo 'selected'; } ?>>{{ $country->name }} ({{ $country->code }})</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row" id="bank_province_id_div"  <?php if($invoiceData['payment_bank_country_code'] != 'CA'){ ?> style="display:none;" <?php } ?>>
+                                        <div class="form-group row" id="bank_province_id_div" style="display:none;">
                                             <label id="province_caption" for="bank_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                             <div class="col-sm-7">
                                                 <div class="selectdiv">
-                                                    <select class="form-control" id="bank_province_id" name="bank_province_id">
-                                                        <option value="">Select Province</option>
-                                                            @foreach($provinces as $key => $province)
-                                                                <option value="{{  $province['id'] }}" {{ $invoiceData['bank_province_id'] == $province['id'] ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-                                                            @endforeach
+                                                    <select class="form-control select_two_defult_class" id="bank_province_id" name="bank_province_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -378,17 +369,18 @@
                                             <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="<?= $invoiceData['payment_bank_swift'];?>" placeholder="" maxlength="30"> </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row" id="payment_bank_info_canada" style="display: none;">
-                                    <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-3 col-sm-3 text-left">E-transfer e-mail</label>
+                                            <label id="label_payment_phone" name="payment_phone" for="payment_phone" class="col-lg-3 col-sm-3 text-left">Phone</label>
                                             <div class="col-sm-7">
-                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
+                                                <input type="text" class="form-control" id="payment_phone" name="payment_phone" placeholder="" value="<?= $invoiceData['payment_phone'];?>" maxlength="150"> </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row" id="payment_bank_info_canada">
                                     <div class="col-md-6">
+               
+                                    </div>
+                                    <div class="col-md-6" style="display: none;">
                                         <div class="form-group row">
                                             <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
                                             <div class="col-sm-7">
@@ -604,36 +596,6 @@
 @section('footer_js')
 <script type="text/javascript">
 
-$('#seller_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#seller_province_id_div').show();
-	}else{
-		$('#seller_province_id_div').hide();
-	}
-})
-
-$('#payment_bank_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#bank_province_id_div').show();
-	}else{
-		$('#bank_province_id_div').hide();
-	}
-})
-
-$('#client_country_id').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#client_province_id_div').show();
-	}else{
-		$('#client_province_id_div').hide();
-	}
-})
-
 $(document).on('click','#add_more_tax_btn',function(){
 
     var resultHtml = `<div class="add_more_tax_row row">
@@ -836,7 +798,6 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
     var current_date = ((''+day).length<2 ? '0' : '') + day+ '.' +((''+month).length<2 ? '0' : '') + month + '.'+ now.getFullYear();
     $("#date_invoice").val( current_date );
 
-    document.getElementById("issue_inv_btn").style.display = "none";
     document.getElementById("print_preview_btn").style.display = "none";
     document.getElementById("delete_btn_inv").style.display = "none";
     document.getElementById("download_pdf_btn_a").style.display = "none";
@@ -898,10 +859,15 @@ function get_client_seller_info(obj){
 			}
 
 			if (obj.id == "client_list_id") {
+                if (value.firstname != null){
+                    var fname = value.firstname;
+                }else{ 
+                    var fname = value.school_name
+                }
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
 				
-				document.getElementById("client_firstname").value=value.firstname;
+				document.getElementById("client_firstname").value=fname;
 				document.getElementById("client_lastname").value=value.lastname;
 				
 				document.getElementById("client_street_number").value=value.street_number;
@@ -1037,7 +1003,7 @@ function AddEditInvoice(){
 
     var p_e_transfer_email = $("#e_transfer_email").val();
     var p_name_for_checks = $("#name_for_checks").val();
-
+    var p_payment_phone = $("#payment_phone").val();
 
     var item_date = $("input[name='date[]']").map(function(){return $(this).val();}).get();
     var item_caption = $("input[name='caption[]']").map(function(){return $(this).val();}).get();
@@ -1121,6 +1087,7 @@ function AddEditInvoice(){
                 expense_name:expense_name ,
                 expense_amount:expense_amount,
                 p_e_transfer_email:p_e_transfer_email,
+                p_payment_phone:p_payment_phone,
                 p_name_for_checks:p_name_for_checks, 
                 p_total_amount:p_total_amount
             },
@@ -1215,10 +1182,15 @@ function UpodateInvStatusIssue(p_invoice) {
         type: 'POST',
         dataType: 'json',
         //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+         },
         success: function (result) {
             var status = result.status;
 
             if (status == 'success') {
+
+                window.location.href = BASE_URL + '/admin/{{$schoolId}}/modification-invoice/'+p_invoice
                 $("#invoice_status_id").text('Emise');
                 //document.getElementById("invoice_status").text='Emise';
                 document.getElementById("invoice_status_id").value = '10';
@@ -1393,6 +1365,151 @@ $('#download_pdf_btn_a').click(function (e) {
 
 
     });
+
+</script>
+
+<script type="text/javascript">
+	/*
+	* manual client province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var clinet_country_code = $('#client_country_id option:selected').val();
+        console.log(clinet_country_code, 'country_codecountry_codecountry_code');
+        var set_clientprovince = '<?= $invoiceData['client_province_id'] ?>';
+		get_client_province_lists(clinet_country_code, set_clientprovince);
+	});
+
+	$('#client_country_id').change(function(){
+		var clinet_country_code = $(this).val();
+        var set_clientprovince = '<?= $invoiceData['client_province_id'] ?>';
+		get_client_province_lists(clinet_country_code, set_clientprovince);
+	})
+
+	function get_client_province_lists(country_code, set_province = null){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#client_province_id').html(html);
+						$('#client_province_id_div').show();
+				}else{
+					$('#client_province_id').html('');
+					$('#client_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Seller province list
+	* function @billing province
+	*/
+	$('#seller_country_id').change(function(){
+		var seller_country_code = $(this).val();
+        var set_sellerprovince = '<?= $invoiceData['seller_province_id'] ?>';
+		get_seller_province_lists(seller_country_code, set_sellerprovince);
+	})
+
+	$(document).ready(function(){
+		var seller_country_code = $('#seller_country_id option:selected').val();
+        var set_sellerprovince = '<?= $invoiceData['seller_province_id'] ?>';
+		get_seller_province_lists(seller_country_code, set_sellerprovince);
+	});
+
+	function get_seller_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#seller_province_id').html(html);
+						$('#seller_province_id_div').show();
+				}else{
+					$('#seller_province_id').html('');
+					$('#seller_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+    /*
+	* bank payment province list
+	* function @billing province
+	*/
+	$('#payment_bank_country_id').change(function(){
+		var bank_country_code = $(this).val();
+        var set_bankprovince = '<?= $invoiceData['bank_province_id'] ?>';
+		get_bankpayment_province_lists(bank_country_code, set_bankprovince);
+	})
+
+	$(document).ready(function(){
+		var bank_country_code = $('#payment_bank_country_id option:selected').val();
+        var set_bankprovince = '<?= $invoiceData['bank_province_id'] ?>';
+		get_bankpayment_province_lists(bank_country_code, set_bankprovince);
+	});
+
+	function get_bankpayment_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+                            if(item.id == set_province){
+                                var select = 'selected';
+                            }else{
+                                var select = '';
+                            }
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#bank_province_id').html(html);
+						$('#bank_province_id_div').show();
+				}else{
+					$('#bank_province_id').html('');
+					$('#bank_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
 
 </script>
 @endsection

@@ -55,7 +55,7 @@
                           @endif
                         </form>
                     @else
-                        <span>{{ __('Yes') }}</span>
+                         <span class="">{{$teacher->user->username}}</span>
                     @endif
                 </td>
                 <td>{{ !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>

@@ -54,7 +54,12 @@
                 <div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="password" id="password_label_id">{{__('Password') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="add_password" name="password" placeholder="password" type="password" autocomplete="on">
+										<div class="input-group">
+											<input class="form-control require" id="add_password" name="password" placeholder="password" type="password" autocomplete="on">
+											<span class="input-group-addon" id="showpass" style="cursor: pointer;">
+												<i class="fa fa-eye"></i>
+											</span>
+										</div>
 										<small id="" class="password_hint">
                         <strong>Password Must:</strong></br>
                         > Be more than 7 Characters</br>
@@ -140,6 +145,15 @@ $(document).ready(function(){
 		} else {
 			e.preventDefault(e); 
 		}
+	});
+	$("#showpass").click(function(event) {
+		var attrTpe = $("#add_password").attr('type')
+		if (attrTpe == 'text') {
+			$("#add_password").attr('type', 'password');
+		}else{
+			$("#add_password").attr('type', 'text');
+		}
+		
 	});
 });
 

@@ -530,7 +530,7 @@ class SchoolsController extends Controller
 
                 if (isset($data['category']) && !empty($data['category'])) {
                     foreach($data['category'] as $cat){
-                        $invoicedType = ($user->isTeacherAdmin() || $user->isSchoolAdmin()) ? $cat['invoice'] : 'T';
+                        $invoicedType = ($user->isTeacherAdmin() || $user->isTeacherSchoolAdmin() || $user->isSchoolAdmin() ) ? $cat['invoice'] : 'T';
                         $s_thr_pay_type = !empty($cat['s_thr_pay_type']) ? $cat['s_thr_pay_type'] : 0;
                         $s_std_pay_type = !empty($cat['s_std_pay_type']) ? $cat['s_std_pay_type'] : 0;
                         $t_std_pay_type = !empty($cat['t_std_pay_type']) ? $cat['t_std_pay_type'] : 0;

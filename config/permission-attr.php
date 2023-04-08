@@ -60,11 +60,17 @@ return [
         'students-create',
         'students-update',
         // 'students-users-update',
+        'students-sent-mail',
+        'students-activate',
         'students-delete',
-        // invoice
-        'invoice-list',
-        'invoice-edit',
 
-];
+
+        // event permission
+        'self-edit-events',
+        'others-edit-events',
+        'self-delete-event',
+        'other-delete-event',
+
+        ];
 
 

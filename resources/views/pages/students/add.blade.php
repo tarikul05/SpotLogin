@@ -67,7 +67,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
 										<div class="col-sm-7">
@@ -79,7 +79,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -251,7 +251,7 @@
 									@endif
 								</div>
 							</div>
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -267,7 +267,7 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
 						</div>
 					</fieldset>
 				</div>
@@ -313,9 +313,10 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="country_code" name="country_code">
+										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
+											<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
-												<option value="{{ $country->code }}">{{ $country->name }}</option>
+												<option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
 											@endforeach
 										</select>
 									</div>
@@ -325,11 +326,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="province_id" name="province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 										</select>
 									</div>
 								</div>
@@ -377,9 +374,10 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-									<select class="form-control" id="billing_country_code" name="billing_country_code">
+									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
+											<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
-											<option value="{{ $country->code }}">{{ $country->name }}</option>
+											<option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
 									</select>
 									</div>
@@ -389,11 +387,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="billing_province_id" name="billing_province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{ old('billing_province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="billing_province_id" name="billing_province_id">
 										</select>
 									</div>
 								</div>
@@ -460,7 +454,7 @@
 					</div>
 				</div>
 		</div>
-		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save student_save_ext"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 		</form>
 	{{-- @endif --}} 
 	</div>
@@ -482,17 +476,101 @@
 
 
 @section('footer_js')
+
+<script type="text/javascript">
+	/*
+	* student province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		get_province_lists(country_code);
+	});
+
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		get_province_lists(country_code);
+	})
+
+	function get_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#billing_country_code').change(function(){
+		var country_code = $(this).val();
+		get_billing_province_lists(country_code);
+	})
+
+	$(document).ready(function(){
+		var billing_country_code = $('#billing_country_code option:selected').val();
+		get_billing_province_lists(billing_country_code);
+	});
+
+	function get_billing_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#billing_province_id').html(html);
+						$('#billing_province_id_div').show();
+				}else{
+					$('#billing_province_id').html('');
+					$('#billing_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+</script>
+
 <script type="text/javascript">
 $(function() {
 
-	var b_country = $('#billing_country_code option:selected').val();
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
-	}
-	if(b_country == 'CA'){
-		$('#billing_province_id_div').show();
-	}
+	// var b_country = $('#billing_country_code option:selected').val();
+	// var country_code = $('#country_code option:selected').val();
+	// if(country_code == 'CA'){
+	// 	$('#province_id_div').show();
+	// }
+	// if(b_country == 'CA'){
+	// 	$('#billing_province_id_div').show();
+	// }
 	
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -562,6 +640,8 @@ $(function() {
 		}	            
 	});  
 
+	
+$("#country_code, #billing_country_code").trigger('change')
 
 });
 $(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
@@ -584,26 +664,5 @@ $('.box_img i.fa.fa-close').click(function (e) {
 	$('#profile_image i.fa.fa-close').hide();
 })
 
-
-$('#country_code').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#province_id_div').show();
-	}else{
-		$('#province_id_div').hide();
-	}
-})
-
-
-$('#billing_country_code').change(function(){
-	var country = $(this).val();
-
-	if(country == 'CA'){
-		$('#billing_province_id_div').show();
-	}else{
-		$('#billing_province_id_div').hide();
-	}
-})
 </script>
 @endsection

@@ -61,7 +61,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
 										<div class="col-sm-7">
@@ -74,7 +74,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -251,7 +251,7 @@
 									@endif
 								</div>
 							</div>
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -267,7 +267,7 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
 						</div>
 					</fieldset>
 				</div>
@@ -313,9 +313,10 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="country_code" name="country_code">
+										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
+											<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
-												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}({{ $country->code }})</option>
 											@endforeach
 										</select>
 									</div>
@@ -325,7 +326,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="province_id" name="province_id">
+										<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 											<option value="">Select Province</option>
 											@foreach($provinces as $province)
 												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
@@ -377,23 +378,20 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-									<select class="form-control" id="billing_country_code" name="billing_country_code">
+									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
+										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
-											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
 									</select>
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="billing_province_id" name="billing_province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == $province['id'] ? 'selected' : '') : (old('billing_province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="billing_province_id" name="billing_province_id">
 										</select>
 									</div>
 								</div>
@@ -665,12 +663,110 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
-$(document).ready(function(){
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
+	/*
+	* student province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	});
+
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	})
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
 	}
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#billing_country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var billing_country_code = $('#billing_country_code option:selected').val();
+		var billing_province_id = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(billing_country_code, billing_province_id);
+	});
+
+	function get_billing_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#billing_province_id').html(html);
+						$('#billing_province_id_div').show();
+				}else{
+					$('#billing_province_id').html('');
+					$('#billing_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+</script>
+
+<script type="text/javascript">
+	
+$(document).ready(function(){
+
+$("#country_code, #billing_country_code").trigger('change')
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -784,8 +880,9 @@ $(document).ready(function(){
 		
 		var p_invoice_id = '';
 		var auto_id = 0;
+		var inv_type=getUrlVarsO()["inv_type"]
 		
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids;
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -1093,10 +1190,12 @@ $('#save_btn').click(function (e) {
 		var week_caption = 'Weekly';
 		var month_caption = 'Monthly';
 		var sub_total_caption = 'Sub Total';
+		var isTeacher = +"{{$AppUI->isTeacher()}}";
+		var inv_type=getUrlVarsO()["inv_type"]
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only;
+		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
 		console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',
@@ -1116,8 +1215,10 @@ $('#save_btn').click(function (e) {
 									if (no_of_teachers == 1){
 											resultHtml += '<td style="text-align:right"></td>';
 									}else {
-											resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-									}
+											if (!isTeacher) {
+												resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+											}
+										}
 		
 									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 									resultHtml += '</tr>'
@@ -1132,7 +1233,7 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Date</td>';
 									resultHtml += '<b><td colspan="1">Time</td>';
 									resultHtml += '<b><td colspan="1">Duration</td>';
-									resultHtml += '<b><td colspan="1">Type</td>';
+									resultHtml += '<b><td colspan="1">Category</td>';
 									resultHtml += '<b><td colspan="1">Teacher</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
@@ -1141,8 +1242,10 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+										if (!isTeacher) {
+											resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										}
+										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
 		
@@ -1161,15 +1264,21 @@ $('#save_btn').click(function (e) {
 							}
 
 							//below locked and invoiced
-							resultHtml += "<td>";
+							
 							if (value.ready_flag == 1) {
-									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
 									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
 							//}
-							resultHtml += "</td>";
+							
 							//above locked and invoiced
 
 							resultHtml += '<td width="10%">' + value.date_start + '</td>';
@@ -1179,12 +1288,32 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.time_start + '</td>';
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
-							resultHtml += '<td>' + value.category_name + '</td>';
+							if (value.event_type == 100) {
+								if (value.title != '' && value.title != null) {
+									resultHtml += '<td>Event : '+value.title+'</td>';
+								}else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								resultHtml += '<td>' + value.category_name + '</td>';
+							}
+							
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
-								resultHtml += '<td>Event</td>';
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Event</td>';
+								}
 							} else {
-								resultHtml += '<td>Lesson</td>';
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
 							}
 
 							//resultHtml += '<td>' + value.title + '</td>';
@@ -1193,7 +1322,10 @@ $('#save_btn').click(function (e) {
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
 							if (value.ready_flag == 0) {
 								all_ready = 0;
-								resultHtml += "<td></td>";
+								if (!isTeacher) {
+									resultHtml += "<td></td>";
+								}
+								
 								if (value.event_type == 100) {
 									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 								} else {
@@ -1204,9 +1336,21 @@ $('#save_btn').click(function (e) {
 								if (no_of_teachers == 1){
 										resultHtml += '<td style="text-align:right"></td>';
 								}else {
-										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price + '</td>';
+									if (value.event_type!=100 && value.cat_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else if (value.event_type!=10 && value.event_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else{
+										value.buy_price = value.buy_price;
+									}
+									if (!isTeacher) {
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+								
+									}
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price + '</td>';
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
 								
@@ -1258,7 +1402,10 @@ $('#save_btn').click(function (e) {
 						if (no_of_teachers == 1){
 							resultHtml += '<td style="text-align:right"></td>';
 						}else {
-							resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+							if (!isTeacher) {
+								resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+						
+							}
 						}
 
 						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
@@ -1274,7 +1421,9 @@ $('#save_btn').click(function (e) {
 				if (no_of_teachers == 1){
 				resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1424,7 +1573,9 @@ $('#save_btn').click(function (e) {
 				if (no_of_teachers == 1){
 					resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1483,15 +1634,7 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-	$('#country_code').change(function(){
-		var country = $(this).val();
 
-		if(country == 'CA'){
-			$('#province_id_div').show();
-		}else{
-			$('#province_id_div').hide();
-		}
-	})
 </script>
 @if(!empty(Session::get('vtab')))
 
@@ -1510,5 +1653,6 @@ $(function() {
 	}
 });
 </script>
+
 @endif
 @endsection

@@ -46,26 +46,14 @@ class AgendaController extends Controller
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
         $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
-        // $currency = Currency::active()->ByCountry($school->country_code)->get();
         $currency = [];
         // end the part
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
-        if ($user->person_type == 'App\Models\Student') {
-            $user_role = 'student';
-            $schools = $user->schools();
-        }
-        if ($user->person_type == 'App\Models\Teacher') {
-            $user_role = 'teacher';
-            $schools = $user->schools();
-            if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
-                $user_role = 'admin_teacher';
-            }
-            // if ($user->isTeacherAdmin()) {
-            //     $user_role = 'admin_teacher_coach';
-            // }
-        }
 
+        if($user->person_id !=0 && $user->person_type !='SUPER_ADMIN'){
+            $schools = $user->schools();
+        }
 
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::orderBy('id')->get();
@@ -111,10 +99,13 @@ class AgendaController extends Controller
             $user_role = 'teacher';
         }
         $coach_user ='';
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherAdmin() || $user->isTeacherSchoolAdmin()) {
             $user_role = 'admin_teacher';
             if ($user->isTeacherAdmin()) {
                 $coach_user = 'coach_user';
+            }
+            if ($user->isTeacherSchoolAdmin()) {
+                $user_role = 'school_admin_teacher';
             }
         }
         if ($user->isTeacherAll()) {
@@ -128,7 +119,6 @@ class AgendaController extends Controller
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
         
-
         //dd($eventData);
         $events = array();
        
@@ -157,73 +147,82 @@ class AgendaController extends Controller
         try {
             $data = $request->all();
 
+            $locStatus = isset($data['unlock']) ? 0 : 1 ;
+
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            $eventUpdate = [
-                'is_locked' => 1
-            ];
-            if (isset($data['unlock'])) {
-                $eventUpdate = [
-                    'is_locked' => 0
-                ];
-            }
-            $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
-
-
-            $eventDetail = [
-                'is_locked' => 1,
-            ];
-            if (isset($data['unlock'])) {
-                $eventDetail = [
-                    'is_locked' => 0
-                ];
-            }
-            $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
-            if (!empty($eventdetails)) {
-                foreach ($eventdetails as $key => $eventdetail) {
-                    $eventDetailPresent = [
-                        'is_locked' => 1,
-                        'participation_id' => 200,
-                    ];
-                    if (isset($data['unlock'])) {
-                        $eventDetailPresent = [
-                            'is_locked' => 0,
-                            'participation_id' => 200,
-                        ];
-                    }
-                    $eventDetailAbsent = [
-                        'is_locked' => 1,
-                        // 'participation_id' => 199,
-                    ];
-                    if (isset($data['unlock'])) {
-                        $eventDetailAbsent = [
-                            'is_locked' => 0,
-                            'participation_id' => 200,
-                        ];
-                    }
-
-                    
-                    if ($eventdetail->participation_id !== 199) {
-                        $eventdetail = $eventdetail->update($eventDetailPresent);
-                    } else {
-                        $eventdetail = $eventdetail->update($eventDetailAbsent);
-                    }
-
-
-                    if ($eventdetail)
-                    {
-                        $result = array(
-                            "status"     => 'success',
-                            'message' => __('Confirmed'),
-                        );
-                    }
-                }
-            }else {
+            $dta =  Event::validate(['event_id'=>$p_event_auto_id],$locStatus);
+            if ($dta) {
                 $result = array(
                     "status"     => 'success',
-                    'message' => __('Confirmed without student'),
+                    'message' => __('Confirmed'),
                 );
             }
+            // $eventUpdate = [
+            //     'is_locked' => 1
+            // ];
+            // if (isset($data['unlock'])) {
+            //     $eventUpdate = [
+            //         'is_locked' => 0
+            //     ];
+            // }
+            // $eventData = Event::where('id', $p_event_auto_id)->update($eventUpdate);
+
+
+            // $eventDetail = [
+            //     'is_locked' => 1,
+            // ];
+            // if (isset($data['unlock'])) {
+            //     $eventDetail = [
+            //         'is_locked' => 0
+            //     ];
+            // }
+            // $eventdetails = EventDetails::where('event_id', $p_event_auto_id)->get();
+            // if (!empty($eventdetails)) {
+            //     foreach ($eventdetails as $key => $eventdetail) {
+            //         $eventDetailPresent = [
+            //             'is_locked' => 1,
+            //             'participation_id' => 200,
+            //         ];
+            //         if (isset($data['unlock'])) {
+            //             $eventDetailPresent = [
+            //                 'is_locked' => 0,
+            //                 'participation_id' => 200,
+            //             ];
+            //         }
+            //         $eventDetailAbsent = [
+            //             'is_locked' => 1,
+            //             // 'participation_id' => 199,
+            //         ];
+            //         if (isset($data['unlock'])) {
+            //             $eventDetailAbsent = [
+            //                 'is_locked' => 0,
+            //                 'participation_id' => 200,
+            //             ];
+            //         }
+
+                    
+            //         if ($eventdetail->participation_id !== 199) {
+            //             $eventdetail = $eventdetail->update($eventDetailPresent);
+            //         } else {
+            //             $eventdetail = $eventdetail->update($eventDetailAbsent);
+            //         }
+
+
+            //         if ($eventdetail)
+            //         {
+            //             $result = array(
+            //                 "status"     => 'success',
+            //                 'message' => __('Confirmed'),
+            //             );
+            //         }
+            //     }
+            // }else {
+            //     $result = array(
+            //         "status"     => 'success',
+            //         'message' => __('Confirmed without student'),
+            //     );
+            // }
 
             return response()->json($result);
 
@@ -265,7 +264,7 @@ class AgendaController extends Controller
             // $p_lang_id=$_SESSION['Language'];
 
 
-
+            $data['location_id'] = trim($data['location_id']);
             $data['school_id'] = trim($data['school_id']);
             $data['event_type']= trim($data['event_type']);
             $data['teacher_id']= trim($data['teacher_id']);
@@ -440,15 +439,20 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
         }
-        if ($user->isTeacherAll()) {
-            $user_role = 'teacher_all';
-        }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+        // if ($user->isTeacherAll()) {
+        //     $user_role = 'teacher_all';
+        // }
+         if ($user->isTeacherMedium() || $user_role =='teacher' ) { 
             $user_role = 'teacher';
         }
+
+        if ($user->isTeacherMinimum()) { 
+            $user_role = 'teacher_minimum';
+        }
+
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
 
         $data['user_role'] = $user_role;
@@ -459,8 +463,6 @@ class AgendaController extends Controller
         $eventData = $event->filter($data);
         //dd($eventData->count());
         $eventData = $eventData->get();
-
-
 
         $events = array();
         foreach ($eventData as $key => $fetch) {
@@ -503,7 +505,7 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
-
+                $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
             }
             $e['event_type'] = $fetch->event_type;
             $e['event_location'] = $fetch->location_id;
@@ -514,6 +516,7 @@ class AgendaController extends Controller
             }
             $e['event_type_name'] = $event_type_name;
             $e['event_school_id'] = (is_null($fetch->school_id) ? 0 : $fetch->school_id) ;
+            $e['event_teacher_id'] = (is_null($fetch->teacher_id) ? 0 : $fetch->teacher_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
 
             $e['event_category_name'] ='';
@@ -559,50 +562,68 @@ class AgendaController extends Controller
 
 			$format_title = '';
 
-
-            if ($fetch->event_type==50) { //coach time off
-                $format_title = $e['event_type_name']; 
-                if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'];
-                    $e['title'] = $e['event_type_name'];
-                } else {
-                    $e['tooltip']=$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'];
-                    $e['title']=$e['event_type_name'].' '.$e['teacher_name'];
-                }
-            }elseif ($fetch->event_type==51) { //student time off
-                $e['title']= $e['event_type_name'].' '.$student_name;
-                $e['tooltip']=$e['event_type_name'].' <br /> Students: '.$student_name;
-            }else{ // lession and event type
-                if (empty($e['title'])) {
-                    $e['title']= $e['event_type_name'].' '.$first_student_name;
-                }else{
-                    $e['title']= $event_types[$e['event_type']].' '.$e['title'];
+            if (in_array($fetch->event_type, [50,51])) { // coach off an student off
+                $evntTypeNm = empty($e['title']) ? $e['event_type_name'] : $e['event_type_name'].'<br/>'.$e['title'];
+                $evntTypetitle = empty($e['title']) ? '' : $e['title'].'<br/>';
+                $e['backgroundColor'] = '#d4daf0';
+                if ($fetch->event_type==50) { //coach time off
+                    if ($user->isTeacherAdmin()) {
+                        $e['tooltip']=$evntTypeNm;
+                        $e['title'] = $e['event_type_name'];
+                    } else {
+                        $e['tooltip']=$evntTypeNm.' <br /> Teacher: '.$e['teacher_name'];
+                        $e['title']=$e['event_type_name'].' '.$e['teacher_name'];
+                    }
+                    $e['title_for_modal']=$evntTypetitle.' Teacher: '.$e['teacher_name'];
+                }elseif ($fetch->event_type==51) { //student time off
+                    $e['title']= $e['event_type_name'].' '.$student_name;
+                    $e['tooltip']=$evntTypeNm.' <br /> Students: '.$student_name;
+                    $e['title_for_modal']=$evntTypetitle.' Students: '.$student_name;
                 }
                 
+            }else{ // lession and event type
+                
+                $e['title']= $event_types[$e['event_type']].' '.$e['title'];
+                
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                 } else {
-                    $e['tooltip']=$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                }
+
+                // For add invopice type with tooltip
+                if ($fetch->event_type==100) { //if event
+                    $invoType =  ($fetch->event_invoice_type == 'S') ? 'School' : 'Teacher';
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
+                }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
+                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
                 }
 
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
-                        $e['title_extend']= '<br/>'.$e['title'].' <br/> Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
-                        $e['title_extend']= '<br/>'.$e['title'].' <br/>  Students: '.$student_name.' <br/> '.$e['event_type_name'].' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                     $e['title'] = '';
                 }
                 elseif($fetch->duration_minutes > 44){
                     $e['title']= $e['title'].' '.$student_name;
                 }
+
+                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
             }
 
-            $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+            
             
 
             $e['content'] = ($e['cours_name']);
 
+            if($fetch->event_type == 10){
+               $e['invoice_type'] = $eventCategory->invoiced_type;
+            }elseif($fetch->event_type == 100){   
+               $e['invoice_type'] = $fetch->event_invoice_type;
+            }
 
             $e['teacher_id'] = $fetch->teacher_id;
             $e['duration_minutes'] = $fetch->duration_minutes;
@@ -670,65 +691,87 @@ class AgendaController extends Controller
                         $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
                     }
                 }
-                if ($user_role == 'teacher'){
-                    if (($user->id == $fetch->teacher_id)){
-                        $action_type='edit';
-                        if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==100) { //event
-                            $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==50) { //coach time off
-                            $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==51) { //student time off
-                            $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                if ( ($user_role == 'teacher') || ($user_role == 'teacher_minimum') ){
+                    if (($user->person_id == $fetch->teacher_id)){
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                            }
                         }
                     }else{
-                        $action_type='view';
-                        if ($fetch->event_type==10) { //lesson
-                            $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==100) { //event
-                            $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==50) { //coach time off
-                            $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
-                        }
-                        if ($fetch->event_type==51) { //student time off
-                            $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/edit-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/edit-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                            }
+                        }else{
+                            $action_type='view';
+                            if ($fetch->event_type==10) { //lesson
+                                $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==100) { //event
+                                $page_name='/'.$fetch->school_id.'/view-event/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==50) { //coach time off
+                                $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
+                            }
+                            if ($fetch->event_type==51) { //student time off
+                                $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
+                            }
                         }
                     }
                 }
                 /* only own vacation entry can be edited by user - Teacher */
                 if ($fetch->event_type == 50) {
                     if ( ($user->id == $fetch->created_by) || ($user->id == $fetch->teacher_id) || ($user->id == $fetch->teacher_id )) {
-                        $action_type='edit';
-
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-
+                        }    
                     } else {
-                        $action_type='view';
-
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
+                        }else{  
+                            $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
-
-
+                        }    
                     }
                 }
                 /* only own vacation entry can be edited by user - Student */
                 if ($fetch->event_type == 51) {
                     if (($user->id == $fetch->created_by) || ($user->id == $fetch->student_id) || ($user->id == $fetch->student_id )) {
-                        $action_type='edit';
-
+                        if($user->can('self-edit-events')){
+                            $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
-
+                        }    
                     } else {
-                        $action_type='view';
-
+                        if($user->can('others-edit-events')){
+                            $action_type='edit';
+                            $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
+                        }else{ 
+                            $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
-
-
+                        }    
                     }
 
                 }
@@ -737,7 +780,6 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
 
             $e['action_type'] = $action_type;
-            
             
             array_push($events, $e);
         }
@@ -818,8 +860,12 @@ class AgendaController extends Controller
 
         $user = Auth::user();
         $schoolId = $data['school_id'];
-
-        $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+        
+        if ($user->isTeacherMediumMinimum()) {
+            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->get();
+        }else{
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+        }
 
         return $eventCategory =json_encode($eventCat);
 
@@ -839,7 +885,7 @@ class AgendaController extends Controller
         $schoolId = $data['school_id'];
         $school = School::active()->find($schoolId);
         if (!empty($school->country_code)) {
-            $currency = Currency::active()->ByCountry($school->country_code)->get();
+            $currency = Currency::getCurrencyByCountry($school->country_code,true);
         }else{
             $currency = Currency::active()->get();
         }
@@ -869,7 +915,7 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        if ($user->isSchoolAdmin() || $user->isTeacherAdmin()) {
+        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
         }
         if ($user->isTeacherAll()) {
@@ -909,6 +955,8 @@ class AgendaController extends Controller
             $data['event_type']= trim($dataParam['p_event_type_id']);
            // $data['teacher_id']= trim($dataParam['p_teacher_id']);
             $data['student_id']= trim($dataParam['p_student_id']);
+
+            $data['location_id']= trim($dataParam['location_id']);
             $p_user_id=Auth::user()->id;
             $data['is_locked']=0;
             if (isset($data['p_from_date'])) {
@@ -986,13 +1034,13 @@ class AgendaController extends Controller
             $param = [];
             $param['p_from_date']= trim($data['p_from_date']);
             $param['p_to_date']= trim($data['p_to_date']);
-
-            //$param['school_id']= trim($data['p_event_school_id']);
+            $param['location_id']= trim($data['location_id']);
+            
+            $param['school_id']= trim($data['p_event_school_id']);
             //$param['event_type']= trim($data['p_event_type_id']);
             //$param['teacher_id']= trim($data['p_teacher_id']);
             //$param['student_id']= trim($data['p_student_id']);
             //$p_user_id=Auth::user()->id;
-
 
             if (isset($param['p_from_date'])) {
                 //$query = new Event;
@@ -1001,50 +1049,49 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
-
+ 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
-                    $eventUpdate = [
-                        'is_locked' => 1
-                    ];
-                    $eventData = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
+                    // $eventUpdate = [
+                    //     'is_locked' => 1
+                    // ];
+                    // $eventDataUpdated = Event::where('id', $p_event_auto_id->id)->update($eventUpdate);
 
 
-                    $eventDetailPresent = [
-                        'is_locked' => 1,
-                        'participation_id' => 200,
-                    ];
-                    $eventDetailAbsent = [
-                        'is_locked' => 1
-                        //'participation_id' => 199,
-                    ];
-                    $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
-                    if (!empty($eventdetails)) {
-                        foreach ($eventdetails as $key => $eventdetail) {
-                            if ($eventdetail->participation_id != 199) {
-                                $eventdetail = $eventdetail->update($eventDetailPresent);
-                            } else {
-                                $eventdetail = $eventdetail->update($eventDetailAbsent);
-                            }
-                        }
-                    }  
+                    // $eventDetailPresent = [
+                    //     'is_locked' => 1,
+                    //     'participation_id' => 200,
+                    // ];
+                    // $eventDetailAbsent = [
+                    //     'is_locked' => 1
+                    //     //'participation_id' => 199,
+                    // ];
+                    // $eventdetails = EventDetails::where('event_id', $p_event_auto_id->id)->get();
+                    // if (!empty($eventdetails)) {
+                    //     foreach ($eventdetails as $key => $eventdetail) {
+                    //         if ($eventdetail->participation_id != 199) {
+                    //             $eventdetail = $eventdetail->update($eventDetailPresent);
+                    //         } else {
+                    //             $eventdetail = $eventdetail->update($eventDetailAbsent);
+                    //         }
+                    //     }
+                    // }
 
+                    if ($p_event_auto_id->event_type == 10) {
+                        // Event::updateLatestPrice($p_event_auto_id->id);
+                        Event::validate(['event_id'=>$p_event_auto_id->id]);
+                    }
                 }
 
-
-                // $eventDetail = [
-                //     'participation_id' => ($eventdetail->participation_id == 0 || $eventdetail->participation_id == 100) ? 200 : $eventdetail->participation_id
-                // ];
-                // $eventdetail = $eventdetail->update($eventDetail);
             }
             //dd($eventData);
-            if ($eventData)
-            {
+            // if ($eventDataUpdated)
+            // {
                 $result = array(
                     "status"     => 'success',
                     'message' => __('Confirmed'),
                 );
-            }
+            // }
 
             return response()->json($result);
 

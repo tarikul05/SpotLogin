@@ -17,7 +17,7 @@
 	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 
-	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
   <div class="content">
@@ -180,6 +180,7 @@
 											</div>
 										</div>
 									</div>
+									<?php if(!$AppUI->isTeacher()){ ?>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
@@ -192,6 +193,7 @@
 											</div>
 										</div>
 									</div>
+									<?php } ?>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
 										<div class="col-sm-4">
@@ -283,7 +285,7 @@
 								</div>
 							</div>
 							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
-								<button type="button" class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
+								<input type="submit" class="btn btn-sm btn-info button_lock_and_save"  style="position:absolute;top:10px;right:10px;" name="validate" value="Validate">
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -302,8 +304,18 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
-							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+						@if($AppUI->person_id == $eventData->teacher_id)
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
+						@else
+							@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@else
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
+							@endif
 						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
@@ -357,8 +369,8 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = new Date("{{$date_start}}").toLocaleTimeString()
-	var end_time = new Date("{{$date_end}}").toLocaleTimeString()
+	var start_time = moment("{{$date_start}}").format("hh:mm")
+	var end_time = moment("{{$date_end}}").format("hh:mm")
 
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
@@ -538,45 +550,45 @@ $('#edit_event').on('submit', function() {
 	}
 
 });
-$("#button_lock_and_save").on('click', function(event) {
-	event.preventDefault();
-	confirm_event();
-});
-function confirm_event(){
-	var redirect_url = $('#redirect_url').val();
-	var data = 'school_id={{ $schoolId }}&p_event_auto_id={{ $eventId }}';
-	var status = '';
-	$.ajax({
-		url: BASE_URL + '/confirm_event',
-		data: data,
-		type: 'POST',
-		dataType: 'json',
-		beforeSend: function( xhr ) {
-			$("#pageloader").show();
-		},
-		success: function (result) {
-			status = result.status;
-			if (status == 'success') {
-				successModalCall('{{ __("Event has been validated ")}}');
-				if (redirect_url !='') {
-					window.location.href = redirect_url;
-				} else {
-					window.location.href = '/{{$schoolId}}/view-event/{{$eventId}}'
-				}
-			}
-			else {
-				errorModalCall('{{ __("Event validation error ")}}');
-			}
-		},   //success
-		complete: function( xhr ) {
-			$("#pageloader").hide();
-		},
-		error: function (ts) { 
-			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
-		}
-	}); //ajax-type            
+// $("#button_lock_and_save").on('click', function(event) {
+// 	event.preventDefault();
+// 	confirm_event();
+// });
+// function confirm_event(){
+// 	var redirect_url = $('#redirect_url').val();
+// 	var data = 'school_id={{ $schoolId }}&p_event_auto_id={{ $eventId }}';
+// 	var status = '';
+// 	$.ajax({
+// 		url: BASE_URL + '/confirm_event',
+// 		data: data,
+// 		type: 'POST',
+// 		dataType: 'json',
+// 		beforeSend: function( xhr ) {
+// 			$("#pageloader").show();
+// 		},
+// 		success: function (result) {
+// 			status = result.status;
+// 			if (status == 'success') {
+// 				successModalCall('{{ __("Event has been validated ")}}');
+// 				if (redirect_url !='') {
+// 					window.location.href = redirect_url;
+// 				} else {
+// 					window.location.href = '/{{$schoolId}}/view-event/{{$eventId}}'
+// 				}
+// 			}
+// 			else {
+// 				errorModalCall('{{ __("Event validation error ")}}');
+// 			}
+// 		},   //success
+// 		complete: function( xhr ) {
+// 			$("#pageloader").hide();
+// 		},
+// 		error: function (ts) { 
+// 			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+// 		}
+// 	}); //ajax-type            
 
-}
+// }
 	function delete_event(event_id){
         var data='type=delete_events'+'&event_id='+event_id;
 		$.ajax({type: "POST",
@@ -600,8 +612,17 @@ function confirm_event(){
 		console.log(p_event_type_id);
 		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
 		e.preventDefault();
-		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		confirmDeleteModalCall('','Do you want to delete this event',"delete_event("+p_event_type_id+");",false);
 		return false;
 	})
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#edit_event .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#edit_event .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

@@ -143,7 +143,12 @@ class StudentsController extends Controller
         DB::beginTransaction();
         try{
             // dd($alldata);
-            $student = Student::where(['email'=> $alldata['email']])->first();
+            if (!empty($alldata['email'])) {
+                $student = Student::where(['email'=> $alldata['email']])->first();
+            }else {
+                $student = false;
+            }
+            
             $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
 
             $authUser = $request->user();
@@ -160,14 +165,14 @@ class StudentsController extends Controller
                     'zip_code' => $alldata['zip_code'],
                     'place' => $alldata['place'],
                     'country_code' => $alldata['country_code'],
-                    'province_id' => $alldata['province_id'],
+                    'province_id' => isset($alldata['province_id']) ? $alldata['province_id'] : null,
                     'billing_street' => $alldata['billing_street'],
                     // 'billing_street2' => $alldata['billing_street2'],
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
                     'billing_country_code' => $alldata['billing_country_code'],
-                    'billing_province_id' => $alldata['billing_province_id'],
+                    'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id']: null,
                     // 'phone' => $alldata['phone'],
                     'father_phone' => isset($alldata['father_phone']) ? $alldata['father_phone'] : '',
                     'father_email' => isset($alldata['father_email']) ? $alldata['father_email'] : '',
@@ -205,7 +210,7 @@ class StudentsController extends Controller
                         $student->schools()->attach($schoolId,$schoolStudent);
                         $msg = 'Successfully Registered';
                     } else {
-                        return redirect()->back()->withInput($request->all())->with('error', __('This teacher already exist with your school'));
+                        return redirect()->back()->withInput($request->all())->with('error', __('This Student already exist with your school'));
                     }
                     
                 }else{ // studne and school_student data not exist
@@ -322,14 +327,14 @@ class StudentsController extends Controller
                     'zip_code' => $alldata['zip_code'],
                     'place' => $alldata['place'],
                     'country_code' => $alldata['country_code'],
-                    'province_id' => $alldata['province_id'],
+                    'province_id' => isset($alldata['province_id']) ? $alldata['province_id']: null,
                     'billing_street' => $alldata['billing_street'],
                     // 'billing_street2' => $alldata['billing_street2'],
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
                     'billing_country_code' => $alldata['billing_country_code'],
-                    'billing_province_id' => $alldata['billing_province_id'],
+                    'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id']: null,
                     'father_phone' => $alldata['father_phone'],
                     'father_email' => $alldata['father_email'],
                     'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0 ,
@@ -829,14 +834,14 @@ class StudentsController extends Controller
                     'zip_code' => $alldata['zip_code'],
                     'place' => $alldata['place'],
                     'country_code' => $alldata['country_code'],
-                    'province_id' => $alldata['province_id'],
+                    'province_id' => isset($alldata['province_id']) ? $alldata['province_id'] : null,
                     'billing_street' => $alldata['billing_street'],
                     // 'billing_street2' => $alldata['billing_street2'],
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
                     'billing_country_code' => $alldata['billing_country_code'],
-                    'billing_province_id' => $alldata['billing_province_id'],
+                    'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id'] : null,
                     'father_phone' => $alldata['father_phone'],
                     'father_email' => $alldata['father_email'],
                     'father_notify' => isset($alldata['father_notify']) && !empty($alldata['father_notify']) ? 1 : 0 ,

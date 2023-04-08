@@ -180,5 +180,14 @@ $('#save_btn').click(function (e) {
 			return false;
 		}	            
 });  
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+			$("#coach_off .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#coach_off .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

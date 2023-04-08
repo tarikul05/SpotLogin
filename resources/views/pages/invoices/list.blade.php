@@ -3,23 +3,35 @@
 @section('head_links')
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
+    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 @endsection
 
 @section('content')
   <div class="container-fluid">
-    <header class="panel-heading" style="border: none;">
+    <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
                     <label id="page_header_id" name="page_header_id">{{ __('List of invoice(s)')}}</label>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
-                <div class="pull-right">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
+                <div class="invoce_search_box">
                     <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
                 </div>
             </div>
         </div>
+        @if(!$AppUI->isStudent())
+            <div class="invoice_list_button">
+                <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
+                <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
+                <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
+            </div>
+        @endif
     </header>
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
@@ -32,12 +44,13 @@
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th style="display: none">{{ __('#') }}</th>
-                    <th style="display: none">{{ __('#') }}</th>
+                    <!-- <th style="display: none">{{ __('#') }}</th>
+                    <th style="display: none">{{ __('#') }}</th> -->
                     <th>{{ __('#') }}</th>
+                    <th>&nbsp;</th>
                     <th>{{ __('Date') }}</th>
                     <th>{{ __('Type') }}</th>
-                    <th>{{ __('Event') }}</th>
+                    <th>{{ __('Invoice Name') }}</th>
                     <th>{{ __('Amount') }}</th>
                     <th>{{ __('Status') }}</th>
                     <th></th>
@@ -56,7 +69,15 @@
                         $edit_view_url = '';
                         //invoice_type = 0 means manual invoice
                         if ($invoice->invoice_type == 0) {
-                            $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            if ($invoice->invoice_status == 10) {
+                                if(!empty($schoolId)){ 
+                                    $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
+                                } else {
+                                    $edit_view_url = route('modificationInvoice',[$invoice->id]);
+                                }
+                            }else{
+                                $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                            }
                         } else {
                             if(!empty($schoolId)){ 
                                 $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
@@ -64,12 +85,16 @@
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
                             }
                         }
+                        $zone = $timeZone;
+                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+
                     @endphp
                 
                     <tr>
-                        <td style="display: none">{{ $invoice->id; }}</td>
-                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td>
+                        <!-- <td style="display: none">{{ $invoice->id; }}</td>
+                        <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
                         <td class="txt-grey text-center">{{ $i }} </td>
+                        <th>&nbsp;</th>
                         <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
                         @php
                         if($invoice->invoice_type ==0){
@@ -85,7 +110,7 @@
                         if($invoice->invoice_type ==1){
                             $invoice_name .= '-'.$invoice->client_name;
                         } else {
-                            $invoice_name .= '-'.$invoice->seller_name;
+                            $invoice_name .= '-'.$invoice->client_name;
                         }
                         @endphp
                         <td>{{ $invoice_name}}</td>
@@ -105,12 +130,15 @@
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
+
+                            @if(!$AppUI->isStudent())
                             <td class="text-center">
                                 <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
                                 <span class="small txt-grey pull-left">
                                     <span class="change_button">{{ __('Change')}}</span>
                                 </span>
                             </td>
+                            @endif
                         @else
                             <td></td>
                         @endif
@@ -207,7 +235,7 @@
         
 
         var table = $('#example').DataTable({
-            //"responsive": true,
+            "responsive": true,
             //"searching": true,
             //"bProcessing": true,
             "bDestroy": true, 
@@ -305,6 +333,11 @@
 
 
     });
+
+    function addFilter(text) {
+
+        $('#search_text').val(text).change()
+    }
 
 
     function UpdatePaymentStatus(p_auto_id) {
