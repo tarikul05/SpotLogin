@@ -82,11 +82,12 @@
                                             <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
                                         </td>
                                         <td>
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150" value="<?= $invoiceData['invoice_name'];?> "> </td>
-                                        <td width="20%" align="center">
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150" value="<?= $invoiceData['invoice_name'];?> "> 
+                                        </td>
+                                        <td class="manual_lbl_date_invoice" align="center">
                                             <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
                                         </td>
-                                        <td width="20%">
+                                        <td class="manual_lbl_date_invoice_date">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
                                                 <input id="date_invoice" value="<?= $invoiceData['date_invoice'];?>" name="date_invoice" type="text" class="form-control datetimepicker"> 
@@ -400,10 +401,10 @@
                                     <thead>
                                         <tr>
                                             <th style="display: none;" width="0%">#</th>
-                                            <th width="12%">
+                                            <th class="manual_inv_date">
                                                 <label id="row_hdr_date" name="row_hdr_date" class="gilroy-semibold light-blue-txt">Date</label>
                                             </th>
-                                            <th width="50%">
+                                            <th class="manual_inv_txt" width="35%">
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
                                             </th>
                                             <th width="10%" style="text-align:right">

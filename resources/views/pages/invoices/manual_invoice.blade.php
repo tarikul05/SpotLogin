@@ -416,13 +416,13 @@
                                     <tbody>
                                         <tr id="tr_row_id" class="detail_row">
                                             <td style="display: none;">1</td>
-                                            <td>
+                                            <td class="manual_inv_date">
                                                 <div class="input-group datetimepicker" id="date_div">
                                                     <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="manual_inv_txt">
                                                 <input type="text" id="caption" name="caption[]" placeholder="" class="form-control">
                                             </td>
                                             <td class="row_item_value">

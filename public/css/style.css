@@ -1072,9 +1072,9 @@ button#save_btn_more i {
 		flex-direction: column;
 	}
 
-	.datetimepicker-days {
+	/* .datetimepicker-days {
 		display: none !important;
-	}
+	} */
 
 	span.no_select {
 		margin-top: 15px;
@@ -1115,9 +1115,41 @@ a.btn.btn-theme-success.add_teacher_btn {
 	display: none;
 }
 
+.manual_inv_date {
+	width: 15%;
+}
+
+.manual_inv_txt {
+	width: 50%;
+}
+
+.lbl_date_invoice {
+	width: 20%;
+}
+
+.lbl_date_invoice_date {
+	width: 20%;
+}
+
 @media only screen and (max-width: 768px) {
 	.sp_only {
 		display: block;
+	}
+
+	.manual_inv_date {
+		width: 60%;
+	}
+
+	.manual_inv_txt {
+		width: 20%;
+	}
+
+	.manual_lbl_date_invoice {
+		width: 20%;
+	}
+
+	.manual_lbl_date_invoice_date {
+		width: 40%;
 	}
 
 	#main-content {
