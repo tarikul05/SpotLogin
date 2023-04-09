@@ -537,7 +537,7 @@
     <div class="modal-dialog mt-5" role="document">
         <div class="modal-content">
             <div class="modal-header text-center border-0">
-                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+                <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
             </div>
             <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                 <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
