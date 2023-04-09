@@ -1111,7 +1111,15 @@ a.btn.btn-theme-success.add_teacher_btn {
 	line-height: 38px;
 }
 
+.sp_only {
+	display: none;
+}
+
 @media only screen and (max-width: 768px) {
+	.sp_only {
+		display: block;
+	}
+
 	#main-content {
 		margin-top: 75px;
 	}
