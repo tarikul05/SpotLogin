@@ -382,7 +382,7 @@
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date of invoice</label>
                                 <div class="col-sm-2">
                                     <div class="input-group" id="date_invoice1">
-                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? $invoice->date_invoice :''}}"> 
+                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_invoice))) :''}}"> 
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
