@@ -1131,13 +1131,39 @@ a.btn.btn-theme-success.add_teacher_btn {
 	width: 20%;
 }
 
+#manual_invoice_page .input-group-addon {
+	display: block;
+}
+
+.m_invoice_info .row_hdr_invoice_name {
+	display: inline-block;
+	width: 100%;
+}
+
+.m_invoice_info .invoice_name {
+	width: 30%;
+}
+
+.m_invoice_info .lbl_date_invoice {
+	display: inline-block;
+	width: 100%;
+}
+
+.m_invoice_info .date_invoice_div {
+	width: 30%;
+}
+
 @media only screen and (max-width: 768px) {
 	.sp_only {
 		display: block;
 	}
 
+	#manual_invoice_page .input-group-addon {
+		display: none;
+	}
+
 	.manual_inv_date {
-		width: 60%;
+		width: 30%;
 	}
 
 	.manual_inv_txt {
@@ -1150,6 +1176,22 @@ a.btn.btn-theme-success.add_teacher_btn {
 
 	.manual_lbl_date_invoice_date {
 		width: 40%;
+	}
+
+	.m_invoice_info .row_hdr_invoice_name {
+		display: none;
+	}
+
+	.m_invoice_info .invoice_name {
+		width: 50%;
+	}
+
+	.m_invoice_info .lbl_date_invoice {
+		display: none;
+	}
+
+	.m_invoice_info .date_invoice_div {
+		width: 50%;
 	}
 
 	#main-content {

@@ -50,7 +50,7 @@
                         <label style="display:none;" id="bank_caption" name="bank_caption">Bank</label>
                         <label style="display:none;" id="holder_cap" name="holder_cap">Account Holder</label>
                         <fieldset>
-                            <table id="table_header" width="100%" border="1" style="background:lightblue;">
+                            <table id="table_header" class="m_invoice_info" width="100%" border="1" style="background:lightblue;">
                                 <tbody>
                                     <tr>
                                         <td colspan="2" align="center">
@@ -66,18 +66,19 @@
                                             </span> </td>
                                     </tr>
                                     <tr>
-                                        <td width="15%">
+                                        <td class="row_hdr_invoice_name">
                                             <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
                                         </td>
-                                        <td>
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150"> </td>
-                                        <td width="20%" align="center">
+                                        <td class="invoice_name">
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="Invoice Name" tabindex="0" maxlength="150"> 
+                                        </td>
+                                        <td class="lbl_date_invoice" align="center">
                                             <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
                                         </td>
-                                        <td width="20%">
+                                        <td class="date_invoice_div">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
-                                                <input id="date_invoice" name="date_invoice" type="text" class="form-control datetimepicker"> 
+                                                <input id="date_invoice" name="date_invoice" type="text" placeholder="Date of invoice" class="form-control datetimepicker"> 
                                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                             </div>
                                         </td>
@@ -394,10 +395,10 @@
                                     <thead>
                                         <tr>
                                             <th style="display: none;" width="0%">#</th>
-                                            <th width="12%">
+                                            <th class="manual_inv_date">
                                                 <label id="row_hdr_date" name="row_hdr_date" class="gilroy-semibold light-blue-txt">Date</label>
                                             </th>
-                                            <th width="50%">
+                                            <th width="manual_inv_txt">
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
                                             </th>
                                             <th width="10%" style="text-align:right">
@@ -416,13 +417,13 @@
                                     <tbody>
                                         <tr id="tr_row_id" class="detail_row">
                                             <td style="display: none;">1</td>
-                                            <td class="manual_inv_date">
+                                            <td>
                                                 <div class="input-group datetimepicker" id="date_div">
                                                     <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
                                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
                                                 </div>
                                             </td>
-                                            <td class="manual_inv_txt">
+                                            <td>
                                                 <input type="text" id="caption" name="caption[]" placeholder="" class="form-control">
                                             </td>
                                             <td class="row_item_value">
@@ -820,9 +821,17 @@ $( document ).ready(function() {
 		//errorModalCall(GetAppMessage('error_message_text'));
 
 		}
-	}); 
+	});
 });
 
+$( document ).ready(function() {
+    $width = $( window ).width();
+    if($width <= 767){
+        $('.invoice_name').attr('colspan',3);
+    }else{
+        $('invoice_name').removeAttr('colspan');
+    }
+});
 
 function get_client_seller_info(obj){
     var opt = $("option[value='"+obj.value+"']");
