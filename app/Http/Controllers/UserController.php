@@ -75,7 +75,7 @@ class UserController extends Controller
                 'timezone'=>$data['timezone']
             ];
             if (!empty($data['country_code'])) {
-                $currencyExists = Currency::getCurrencyByCountry($school->country_code);
+                $currencyExists = Currency::getCurrencyByCountry($data['country_code']);
                 if ($currencyExists) {
                     $schoolData['default_currency_code'] = $currencyExists->currency_code;
                 }
