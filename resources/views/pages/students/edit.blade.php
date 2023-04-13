@@ -208,7 +208,7 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group"> 
-												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="{{!empty($relationalData->level_date_arp) ? old('level_date_arp', $relationalData->level_date_arp) : old('level_date_arp')}}">
+												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="<?= !empty($relationalData->level_date_arp) ? old('level_date_arp', date('Y-m-d', strtotime(str_replace('.', '-', $relationalData->level_date_arp)))) : old('level_date_arp') ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -241,7 +241,7 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="date_last_level_usp_div"> 
-												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="{{!empty($relationalData->level_date_usp) ? old('level_date_usp', $relationalData->level_date_usp) : old('level_date_usp')}}">
+												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="<?= !empty($relationalData->level_date_usp) ? old('level_date_usp', date('Y-m-d', strtotime(str_replace('.', '-', $relationalData->level_date_usp)))) : old('level_date_usp') ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -778,7 +778,7 @@ $("#country_code, #billing_country_code").trigger('change')
 		todayBtn:false,
 	});
 	$("#level_date_arp").datetimepicker({
-		format: "dd/mm/yyyy",
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
@@ -788,7 +788,7 @@ $("#country_code, #billing_country_code").trigger('change')
 		todayBtn:false,
 	});
 	$("#level_date_usp").datetimepicker({
-		format: "dd/mm/yyyy",
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
@@ -799,7 +799,7 @@ $("#country_code, #billing_country_code").trigger('change')
 	});
 	$("#billing_period_start_date").datetimepicker({
 		// locale: 'fr',
-		format: "dd/mm/yyyy",
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,

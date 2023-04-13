@@ -573,9 +573,9 @@ $(function() {
 	// }
 	
 	$("#birth_date").datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
+		format: "dd/mm/yyyy",
+		autoclose: true,
+		todayBtn: true,
 		minuteStep: 10,
 		minView: 3,
 		maxView: 3,
@@ -583,9 +583,9 @@ $(function() {
 		todayBtn:false,
 	});
 	$("#level_date_arp").datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
+		format: "yyyy-mm-dd",
+		autoclose: true,
+		todayBtn: true,
 		minuteStep: 10,
 		minView: 3,
 		maxView: 3,
@@ -593,9 +593,9 @@ $(function() {
 		todayBtn:false,
 	});
 	$("#level_date_usp").datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
+		format: "yyyy-mm-dd",
+		autoclose: true,
+		todayBtn: true,
 		minuteStep: 10,
 		minView: 3,
 		maxView: 3,
