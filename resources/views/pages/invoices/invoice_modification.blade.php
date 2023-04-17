@@ -382,7 +382,7 @@
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date of invoice</label>
                                 <div class="col-sm-2">
                                     <div class="input-group" id="date_invoice1">
-                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? $invoice->date_invoice :''}}"> 
+                                        <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_invoice))) :''}}"> 
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -788,7 +788,7 @@
         <div class="modal-dialog mt-5" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+                    <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
                 </div>
                 <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                     <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->

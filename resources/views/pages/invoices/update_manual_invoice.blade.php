@@ -62,7 +62,7 @@
                         <label style="display:none;" id="bank_caption" name="bank_caption">Bank</label>
                         <label style="display:none;" id="holder_cap" name="holder_cap">Account Holder</label>
                         <fieldset>
-                            <table id="table_header" width="100%" border="1" style="background:lightblue;">
+                            <table id="table_header" class="m_invoice_info" width="100%" border="1" style="background:lightblue;">
                                 <tbody>
                                     <tr>
                                         <td colspan="2" align="center">
@@ -78,15 +78,16 @@
                                             </span> </td>
                                     </tr>
                                     <tr>
-                                        <td width="15%">
+                                        <td class="row_hdr_invoice_name">
                                             <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
                                         </td>
-                                        <td>
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150" value="<?= $invoiceData['invoice_name'];?> "> </td>
-                                        <td width="20%" align="center">
+                                        <td class="invoice_name">
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" tabindex="0" maxlength="150" value="<?= $invoiceData['invoice_name'];?> "> 
+                                        </td>
+                                        <td class="lbl_date_invoice" align="center">
                                             <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
                                         </td>
-                                        <td width="20%">
+                                        <td class="manual_lbl_date_invoice_date">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
                                                 <input id="date_invoice" value="<?= $invoiceData['date_invoice'];?>" name="date_invoice" type="text" class="form-control datetimepicker"> 
@@ -400,10 +401,10 @@
                                     <thead>
                                         <tr>
                                             <th style="display: none;" width="0%">#</th>
-                                            <th width="12%">
+                                            <th class="manual_inv_date">
                                                 <label id="row_hdr_date" name="row_hdr_date" class="gilroy-semibold light-blue-txt">Date</label>
                                             </th>
-                                            <th width="50%">
+                                            <th class="manual_inv_txt" width="35%">
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
                                             </th>
                                             <th width="10%" style="text-align:right">
@@ -537,7 +538,7 @@
     <div class="modal-dialog mt-5" role="document">
         <div class="modal-content">
             <div class="modal-header text-center border-0">
-                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+                <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
             </div>
             <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                 <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
@@ -1242,6 +1243,15 @@ $('#delete_btn_inv').click(function (e) {
     DeleteInvoice();
     window.history.back();
     return false;
+});
+
+$( document ).ready(function() {
+    $width = $( window ).width();
+    if($width <= 767){
+        $('.invoice_name').attr('colspan',3);
+    }else{
+        $('invoice_name').removeAttr('colspan');
+    }
 });
 
 function DeleteInvoice() {
