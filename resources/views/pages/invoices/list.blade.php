@@ -46,9 +46,10 @@
                 <tr>
                     <!-- <th style="display: none">{{ __('#') }}</th>
                     <th style="display: none">{{ __('#') }}</th> -->
-                    <th>{{ __('#') }}</th>
                     <th>&nbsp;</th>
+                    <th>{{ __('#') }}</th>
                     <th>{{ __('Date') }}</th>
+                    <th class="sp_only">{{ __('Client Name') }}</th>
                     <th>{{ __('Type') }}</th>
                     <th>{{ __('Invoice Name') }}</th>
                     <th>{{ __('Amount') }}</th>
@@ -93,9 +94,13 @@
                     <tr>
                         <!-- <td style="display: none">{{ $invoice->id; }}</td>
                         <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
-                        <td class="txt-grey text-center">{{ $i }} </td>
                         <th>&nbsp;</th>
-                        <td>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</td>
+                        <td class="txt-grey text-left">{{ $i }} </td>
+                        
+                        <td>
+                            {{ date('d M Y', strtotime($invoice->date_invoice)); }}
+                        </td>
+                        <td class="sp_only"><?= $invoice->client_name ?></td>
                         @php
                         if($invoice->invoice_type ==0){
                             @endphp
@@ -184,7 +189,7 @@
     <div class="modal-dialog mt-5" role="document">
         <div class="modal-content">
             <div class="modal-header text-center border-0">
-                <h4 class="light-blue-txt gilroy-bold">Send a reminder</h4>
+                <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
             </div>
             <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                 <div class="form-group col-md-12" id="father_email_div">
