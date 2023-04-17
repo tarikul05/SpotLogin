@@ -1593,9 +1593,6 @@ class InvoiceController extends Controller
                 }
             }
 
-            // print_r($total_expense_amount);
-            // die('okkkk');
-
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
                     $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
@@ -1608,8 +1605,7 @@ class InvoiceController extends Controller
                         'price_unit' => $dataParam['item_total'][$i],
                         'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
-                        'price_currency' => $dataParam['p_price_currency'],
-                        'event_extra_expenses'=> $total_expense_amount
+                        'price_currency' => $dataParam['p_price_currency']
                     ];
                     $InvoiceItem = InvoiceItem::create($itemData);
                 }
@@ -1618,7 +1614,8 @@ class InvoiceController extends Controller
             // update invoice tax info
             $taxData = [
                 'tax_perc' => $total_tax_perc,
-                'tax_amount' => $total_tax_amount
+                'tax_amount' => $total_tax_amount,
+                'extra_expenses'=> $total_expense_amount,
             ];
             Invoice::where('id', $Invoice->id)->update($taxData);
                 
@@ -1760,8 +1757,7 @@ class InvoiceController extends Controller
                         'price_unit' => $dataParam['item_total'][$i],
                         'price' => $dataParam['item_total'][$i],
                         'item_date' => date("Y-m-d H:i:s", strtotime($dataParam['item_date'][$i])),
-                        'price_currency' => $dataParam['p_price_currency'],
-                        'event_extra_expenses' => $total_expense_amount,
+                        'price_currency' => $dataParam['p_price_currency']
                     ];
                     $InvoiceItem = InvoiceItem::create($itemData);
                 }
@@ -1769,7 +1765,8 @@ class InvoiceController extends Controller
 
             $taxData = [
                 'tax_perc' => $total_tax_perc,
-                'tax_amount' => $total_tax_amount
+                'tax_amount' => $total_tax_amount,
+                'extra_expenses' => $total_expense_amount
             ];
 
             Invoice::where('id', $id)->update($taxData);
