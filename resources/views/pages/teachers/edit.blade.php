@@ -560,7 +560,7 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>{{__('Category Type')}}</th>
+								<th class="pc_only">{{__('Category Type')}}</th>
 								<th>{{__('Type of billing')}}</th>
 								<th class="buy"><span>{{__('Teacher price') }}</span></th>
 								<th class="sell"><span>{{__('Student price') }}</span></th>
@@ -570,7 +570,7 @@
 							@foreach($eventCategory as $key => $category)
 							<tr style="background:lightblue;">
 								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td class="pc_only" colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td>Total price/hour</td>
 								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
@@ -611,7 +611,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td>{{__('Lessons/Events..')}}</td>
+									<td class="pc_only">{{__('Lessons/Events..')}}</td>
 									<td>{{ __($textForTypeBilling) }}</td>
 									<td>
 										<input type="text" 

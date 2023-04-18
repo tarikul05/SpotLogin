@@ -316,7 +316,7 @@
 							@foreach($eventCategory as $key => $category)
 							<tr style="background:lightblue;">
 								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td class="pc_only" colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td><label></label></td>
 								<td align="right" colspan="1"></td>
 							</tr>
@@ -330,7 +330,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td>{{__('Lessons/Events..')}}</td>
+									<td class="pc_only">{{__('Lessons/Events..')}}</td>
 									@if($lessionPrice->divider == 1)
 										<td>{{ __('Private session') }}</td>
 									@else
