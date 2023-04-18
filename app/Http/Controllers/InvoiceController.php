@@ -1562,7 +1562,37 @@ class InvoiceController extends Controller
             ];
 
             $Invoice = Invoice::create($data);
-            
+            $total_tax_perc = 0;
+            $total_tax_amount = 0;
+            if (!empty($dataParam['tax_name'])) {
+                for($i=0; $i < count($dataParam['tax_name']);$i++){
+                    $taxData = [
+                        'invoice_id'   => $Invoice->id,
+                        'tax_name' => $dataParam['tax_name'][$i],
+                        'tax_percentage' => $dataParam['tax_percentage'][$i],
+                        'tax_number' => $dataParam['tax_number'][$i],
+                        'tax_amount' => $dataParam['tax_amount'][$i],
+                    ];
+                    $total_tax_perc +=$dataParam['tax_percentage'][$i];
+                    $total_tax_amount +=$dataParam['tax_amount'][$i];
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+            }
+
+
+            $total_expense_amount = 0;
+            if (!empty($dataParam['expense_name'])) {
+                for($i=0; $i < count($dataParam['expense_name']);$i++){
+                    $expenseData = [
+                        'invoice_id'   => $Invoice->id,
+                        'expense_name' => $dataParam['expense_name'][$i],
+                        'expense_amount' => $dataParam['expense_amount'][$i]
+                    ];
+                    $total_expense_amount += $dataParam['expense_amount'][$i];
+                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
+                }
+            }
+
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
                     $dataParam['item_date'][$i] = $this->formatDateTimeZone($dataParam['item_date'][$i], 'long', $timeZone,'UTC',);
@@ -1580,30 +1610,14 @@ class InvoiceController extends Controller
                     $InvoiceItem = InvoiceItem::create($itemData);
                 }
             }
-            
-            if (!empty($dataParam['tax_name'])) {
-                for($i=0; $i < count($dataParam['tax_name']);$i++){
-                    $taxData = [
-                        'invoice_id'   => $Invoice->id,
-                        'tax_name' => $dataParam['tax_name'][$i],
-                        'tax_percentage' => $dataParam['tax_percentage'][$i],
-                        'tax_number' => $dataParam['tax_number'][$i],
-                        'tax_amount' => $dataParam['tax_amount'][$i],
-                    ];
-                    $InvoiceTax = InvoicesTaxes::create($taxData);
-                }
-            }
 
-            if (!empty($dataParam['expense_name'])) {
-                for($i=0; $i < count($dataParam['expense_name']);$i++){
-                    $expenseData = [
-                        'invoice_id'   => $Invoice->id,
-                        'expense_name' => $dataParam['expense_name'][$i],
-                        'expense_amount' => $dataParam['expense_amount'][$i]
-                    ];
-                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
-                }
-            }
+            // update invoice tax info
+            $taxData = [
+                'tax_perc' => $total_tax_perc,
+                'tax_amount' => $total_tax_amount,
+                'extra_expenses'=> $total_expense_amount,
+            ];
+            Invoice::where('id', $Invoice->id)->update($taxData);
                 
             DB::commit();
 
@@ -1700,6 +1714,36 @@ class InvoiceController extends Controller
             InvoicesTaxes::where('invoice_id',$id)->forceDelete();
             InvoicesExpenses::where('invoice_id',$id)->forceDelete();
             InvoiceItem::where('invoice_id',$id)->forceDelete();
+            
+            $total_tax_perc = 0;
+            $total_tax_amount = 0;
+            if (!empty($dataParam['tax_name'])) {
+                for($i=0; $i < count($dataParam['tax_name']);$i++){
+                    $taxData = [
+                        'invoice_id'   => $id,
+                        'tax_name' => $dataParam['tax_name'][$i],
+                        'tax_percentage' => $dataParam['tax_percentage'][$i],
+                        'tax_number' => $dataParam['tax_number'][$i],
+                        'tax_amount' => $dataParam['tax_amount'][$i],
+                    ];
+                    $total_tax_perc += $dataParam['tax_percentage'][$i];
+                    $total_tax_amount += $dataParam['tax_amount'][$i];
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+            }            
+
+            $total_expense_amount = 0;
+            if (!empty($dataParam['expense_name'])) {
+                for($i=0; $i < count($dataParam['expense_name']);$i++){
+                    $expenseData = [
+                        'invoice_id'   => $id,
+                        'expense_name' => $dataParam['expense_name'][$i],
+                        'expense_amount' => $dataParam['expense_amount'][$i]
+                    ];
+                    $total_expense_amount += $dataParam['expense_amount'][$i];
+                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
+                }
+            }
 
             if (!empty($dataParam['item_total'])) {
                 for($i=0; $i < count($dataParam['item_total']); $i++){
@@ -1719,29 +1763,13 @@ class InvoiceController extends Controller
                 }
             }
 
-            if (!empty($dataParam['tax_name'])) {
-                for($i=0; $i < count($dataParam['tax_name']);$i++){
-                    $taxData = [
-                        'invoice_id'   => $id,
-                        'tax_name' => $dataParam['tax_name'][$i],
-                        'tax_percentage' => $dataParam['tax_percentage'][$i],
-                        'tax_number' => $dataParam['tax_number'][$i],
-                        'tax_amount' => $dataParam['tax_amount'][$i],
-                    ];
-                    $InvoiceTax = InvoicesTaxes::create($taxData);
-                }
-            }            
+            $taxData = [
+                'tax_perc' => $total_tax_perc,
+                'tax_amount' => $total_tax_amount,
+                'extra_expenses' => $total_expense_amount
+            ];
 
-            if (!empty($dataParam['expense_name'])) {
-                for($i=0; $i < count($dataParam['expense_name']);$i++){
-                    $expenseData = [
-                        'invoice_id'   => $id,
-                        'expense_name' => $dataParam['expense_name'][$i],
-                        'expense_amount' => $dataParam['expense_amount'][$i]
-                    ];
-                    $InvoiceExpense = InvoicesExpenses::create($expenseData);
-                }
-            }
+            Invoice::where('id', $id)->update($taxData);
                 
             DB::commit();
 
