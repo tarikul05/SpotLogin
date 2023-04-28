@@ -369,8 +369,8 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	var start_time = moment("{{$date_start}}").format("hh:mm")
-	var end_time = moment("{{$date_end}}").format("hh:mm")
+	var start_time = moment("{{$date_start}}").format("HH:mm")
+	var end_time = moment("{{$date_end}}").format("HH:mm")
 
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
