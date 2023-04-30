@@ -570,7 +570,8 @@
 							@foreach($eventCategory as $key => $category)
 							<tr style="background:lightblue;">
 								<td></td>
-								<td class="pc_only" colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td class="pc_only">&nbsp;</td>
 								<td>Total price/hour</td>
 								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
