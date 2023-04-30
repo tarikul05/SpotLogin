@@ -368,6 +368,13 @@
                     </tr>
                     <?php } ?>
 
+                    <?php if($invoice_data->tax_amount > 0){ ?>
+                    <tr class="extra_col">
+                        <td colspan="2" class="text"><b>{{ __('invoice_tax') }}</b></td>
+                        <td colspan="2" class="price">+ <b>{{ $invoice_data->tax_amount }}</b></td>
+                    </tr>
+                    <?php } ?>
+
                     <?php if($invoice_data->total_amount_discount != 0){ ?>
                     <tr class="extra_col">
                         <td colspan="2" class="text">
@@ -385,7 +392,7 @@
                     </tr>
                     <?php } ?>
 
-                    <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount; ?>
+                    <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount + $invoice_data->tax_amount ; ?>
                     <tr class="total_col">
                         <td align="center" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
