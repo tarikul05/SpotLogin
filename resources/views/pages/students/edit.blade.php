@@ -799,7 +799,7 @@ $("#country_code, #billing_country_code").trigger('change')
 	});
 	$("#billing_period_start_date").datetimepicker({
 		// locale: 'fr',
-		format: "yyyy-mm-dd",
+		format: "dd/mm/yyyy",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
