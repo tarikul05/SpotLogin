@@ -634,8 +634,8 @@ class AgendaController extends Controller
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
 
-
-            if (now()>$fetch->date_end) {
+            $now = Carbon::now($fetch->school->timezone);
+            if ($now > $fetch->date_start) {
                 $e['can_lock'] = 'Y';
             } else{
                 $e['can_lock'] = 'N';
