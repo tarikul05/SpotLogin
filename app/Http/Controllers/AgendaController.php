@@ -548,7 +548,7 @@ class AgendaController extends Controller
                         if ($i==count($eventDetailsStudentId)) {
                             $student_name .='';
                         } else {
-                            $student_name .=',';
+                            $student_name .=', ';
                         }
                     }else{
                         $first_student_name = $schoolStudent->nickname;
