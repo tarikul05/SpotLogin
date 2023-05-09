@@ -3037,27 +3037,13 @@
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);
 
-            if(cal_view_mode.name === "agendaWeek") {
+          /*  if(cal_view_mode.name === "agendaWeek") {
                 const scrollTime = moment().format("HH:mm");
                 console.log(scrollTime)
                 $(".fc-scroller").animate({
                     scrollTop: $('[data-time="18:00:00"]').position().top // Scroll to 01:00 pm
                 }, 1000);
-            }
-
-            /*
-            $(document).ready(function() {
-    const scrollTime = moment().format("HH:mm:ss");
-    console.log('current time', scrollTime);
-    const $scrollTo = $('[data-time="'+scrollTime+'"]');
-    console.log($scrollTo);
-    if ($scrollTo.length > 0) {
-        $(".fc-scroller").animate({
-            scrollTop: $scrollTo.offset().top
-        }, 1000);
-    }
-});
-*/
+            }*/
 			
 			if (cal_view_mode.name === undefined) {
                 document.cookie = "cal_view_mode="+"month"+";path=/";
