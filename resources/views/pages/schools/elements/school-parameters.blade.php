@@ -293,11 +293,13 @@ $(document).ready(function(){
 										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price (per hour)
 									</label>
 								</div>
+								@if($AppUI->isSchoolAdmin())
 								<div class="form-check">
 									<label class="form-check-label" for="sradio3`+lst_id+`">
 										<input type="radio" class="form-check-input" id="sradio3`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="2">Packaged
 									</label>
 								</div>
+								@endif
 							</div>
 						</div>
 						<div class="pack_invoice_area teacher form-group row" style="display:none">
