@@ -548,7 +548,7 @@ class AgendaController extends Controller
                         if ($i==count($eventDetailsStudentId)) {
                             $student_name .='';
                         } else {
-                            $student_name .=',';
+                            $student_name .=', ';
                         }
                     }else{
                         $first_student_name = $schoolStudent->nickname;
@@ -601,14 +601,16 @@ class AgendaController extends Controller
 
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
+             
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
+     
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
-                    $e['title'] = '';
+                    $e['title'] = $e['title'].' ('.$student_name. ')';
                 }
                 elseif($fetch->duration_minutes > 44){
-                    $e['title']= $e['title'].' '.$student_name;
+                    $e['title']= $e['title'].' ('.$student_name. ')';
                 }
 
                 $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
@@ -634,8 +636,8 @@ class AgendaController extends Controller
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
 
-
-            if (now()>$fetch->date_end) {
+            $now = Carbon::now($fetch->school->timezone);
+            if ($now > $fetch->date_start) {
                 $e['can_lock'] = 'Y';
             } else{
                 $e['can_lock'] = 'N';

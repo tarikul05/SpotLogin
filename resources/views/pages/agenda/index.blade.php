@@ -582,7 +582,6 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-
     // set default data
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
@@ -633,7 +632,7 @@
     } catch(err) {
         defview="agendaWeek";
     }
-    
+
 
     var dt = new Date();
     // set default data    
@@ -681,6 +680,8 @@
         document.getElementById("date_to").value = formatDate(CurrentListViewDate);
         
     }
+
+
     document.getElementById("view_mode").value='';
     
     if (getCookie("view_mode") != "list"){
@@ -2515,6 +2516,16 @@
                 $('#calendar').fullCalendar('refetchEvents');
                 $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
                 // $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
+
+                const scrollTime = moment().format("HH");
+                $scrollTo = $('[data-time="'+scrollTime+':00:00"]');
+                console.log('current hour', scrollTime)
+                if ($scrollTo.length > 0) {
+                    $(".fc-scroller").animate({
+                        scrollTop: $scrollTo.offset().top
+                    }, 700);
+                }
+
                 if (document.getElementById("view_mode").value == 'list'){
                     //remove 
                     
@@ -3024,6 +3035,14 @@
 			
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
 			console.log("cal_view_mode="+cal_view_mode.name);
+
+          /*  if(cal_view_mode.name === "agendaWeek") {
+                const scrollTime = moment().format("HH:mm");
+                console.log(scrollTime)
+                $(".fc-scroller").animate({
+                    scrollTop: $('[data-time="18:00:00"]').position().top // Scroll to 01:00 pm
+                }, 1000);
+            }*/
 			
 			if (cal_view_mode.name === undefined) {
                 document.cookie = "cal_view_mode="+"month"+";path=/";
