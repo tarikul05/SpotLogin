@@ -519,7 +519,7 @@ class AgendaController extends Controller
             $e['event_teacher_id'] = (is_null($fetch->teacher_id) ? 0 : $fetch->teacher_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
 
-            $e['event_category_name'] ='';
+           // $e['event_category_name'] ='';
             $e['cours_name'] = '';
             $e['text_for_search']='';
             $e['tooltip']='';
@@ -531,7 +531,7 @@ class AgendaController extends Controller
             }
 
 
-            $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
+            $e['cours_name'] = $e['event_type_name'].''; /*('.$e['event_category_name'].')*/
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
 
@@ -586,9 +586,9 @@ class AgendaController extends Controller
                 $e['title']= $event_types[$e['event_type']].' '.$e['title'];
                 
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                 } else {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                 }
 
                 // For add invopice type with tooltip
@@ -613,7 +613,7 @@ class AgendaController extends Controller
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
 
-                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
             }
 
             
