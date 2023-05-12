@@ -436,7 +436,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div id="price_per_student">
+                                                    <!--<div id="price_per_student">
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
                                                             <div class="col-sm-7">
@@ -482,7 +482,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                     
                                                 </div>
                                                 
