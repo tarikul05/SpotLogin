@@ -615,6 +615,12 @@
                                 <label class="section_header_class" id="lbl_seller_information">Payment Bank Information</label>
                                 <div id="canada_payment_div" style="display: block;">
                                     <div class="form-group row">
+                                        <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference:</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="etransfer_acc" name="etransfer_acc" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}"> 
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">To pay by e-transfer:</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" id="etransfer_acc" name="etransfer_acc" value="{{$invoice->etransfer_acc ? $invoice->etransfer_acc :''}}"> 

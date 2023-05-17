@@ -420,8 +420,8 @@ class LessonsController extends Controller
                     'date_end' => $end_date,
                     'duration_minutes' => $lessonData['duration'],
                     'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
-                    'price_amount_buy' => $lessonData['sprice_amount_buy'],
-                    'price_amount_sell' => $lessonData['sprice_amount_sell'],
+                    'price_amount_buy' => $attendBuyPrice, //$lessonData['sprice_amount_buy'],
+                    'price_amount_sell' => $attendSellPrice, //$lessonData['sprice_amount_sell'],
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => $studentCount,
                     'description' => $lessonData['description'],
@@ -563,13 +563,18 @@ class LessonsController extends Controller
                 $stu_num = !empty($lessonData['sevent_price']) ? explode("_", $lessonData['sevent_price']) : 0;
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
-                $teacher_id = $lessonData['teacher_select'];
+                $teacher_id = $user->isTeacher() ? $user->person_id : $lessonData['teacher_select'];
+                $lessonData['teacher_select'] = $teacher_id;
                 $studentCount = !empty($lessonData['student']) ? count($lessonData['student']) : 0 ;
 
-                $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
-                $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
+
 
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
+
+                $lessonData['sprice_amount_buy'] =  $eventPrice['price_buy']; //isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
+                $lessonData['sprice_amount_sell'] = $eventPrice['price_sell']; //isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
+
+
                 if(!empty($studentCount)){
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
                 }else{
@@ -596,6 +601,8 @@ class LessonsController extends Controller
                 $attendBuyPrice = round($attendBuyPrice,2);
 
 // dd($attendSellPrice, $attendBuyPrice);
+
+
                 $data = [
                     'title' => $lessonData['title'],
                     'school_id' => $schoolId,
@@ -606,8 +613,8 @@ class LessonsController extends Controller
                     'date_end' => $end_date,
                     'duration_minutes' => $lessonData['duration'],
                     'price_currency' => isset($lessonData['sprice_currency']) ? $lessonData['sprice_currency'] : null,
-                    'price_amount_buy' => $lessonData['sprice_amount_buy'],
-                    'price_amount_sell' => $lessonData['sprice_amount_sell'],
+                    'price_amount_buy' => $attendBuyPrice, //$lessonData['sprice_amount_buy'],
+                    'price_amount_sell' => $attendSellPrice, //$lessonData['sprice_amount_sell'],
                     'fullday_flag' => isset($lessonData['fullday_flag']) ? $lessonData['fullday_flag'] : null,
                     'no_of_students' => $studentCount,
                     'description' => $lessonData['description'],

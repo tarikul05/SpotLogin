@@ -8,6 +8,7 @@
 <link href="{{ asset('css/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
@@ -436,7 +437,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div id="price_per_student">
+                                                    <!--<div id="price_per_student">
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
                                                             <div class="col-sm-7">
@@ -482,7 +483,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                     
                                                 </div>
                                                 
@@ -764,14 +765,14 @@
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i> Add</a>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
@@ -1539,11 +1540,23 @@
         document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
         document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
 		
-		document.getElementById("copy_school_id").value =getSchoolIDs();
-        document.getElementById("copy_event_id").value =getEventIDs();
+		document.getElementById("copy_school_id").value = getSchoolIDs();
+        document.getElementById("copy_event_id").value = getEventIDs();
 		document.getElementById("copy_student_id").value = getStudentIDs();
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
-		
+
+        var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
+		console.log("current view for copy="+cal_view_mode_for_copy.name);
+        if(cal_view_mode_for_copy.name === "agendaWeek") {
+		    errorModalCall('Schedule of current week view is copied ! You can past it in other week.');
+        }
+        if(cal_view_mode_for_copy.name === "agendaDay") {
+		    errorModalCall('Schedule of current day view is copied ! You can past it in other day.');
+        }
+        if(cal_view_mode_for_copy.name === "month") {
+		    errorModalCall('Schedule of current month view is copied ! You can past it in other month.');
+        }
+
         return false;
     })
 
@@ -1588,12 +1601,19 @@
         var curdate=new Date();
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
+
+        const date = moment(p_to_date);
+        const newDate = date.subtract(1, 'days');
+        p_to_date = newDate.format('YYYY-MM-DD');
+        console.log('new date-1', p_to_date); // Day-1
+
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         var p_event_id=document.getElementById("get_event_id").value;
         var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
+
         
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
@@ -1725,6 +1745,8 @@
         // if (getCookie("date_from")){
         //     p_from_date = getCookie("date_from");
         // } 
+
+        var myTimezone = "{{ $myCurrentTimeZone }}";
         
         $('#calendar').fullCalendar({
             eventLimit: 3, // If you set a number it will hide the itens
@@ -1765,7 +1787,7 @@
             firstDay: '1',      //monday
             height: 'parent', // calendar content height excluding header
             contentHeight: v_calc_height, // calendar content height excluding header
-            timezone: currentTimezone, 
+            timezone: myTimezone, 
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
 			allDayDefault: true,
@@ -1773,6 +1795,7 @@
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
+            now: moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:ss'),
             // events: function (start, end, tz, callback) {
             //     callback(JSON.parse(json_events));
             // },
@@ -2422,15 +2445,15 @@
                         let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
                         let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
                         let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
-                        let teacher_name =JSON.parse(json_events)[key].cours_name; 
-                        let cours_name = JSON.parse(json_events)[key].duration_minutes; 
+                        let teacher_name =JSON.parse(json_events)[key].teacher_name; 
+                        let cours_name = JSON.parse(json_events)[key].cours_name; 
                         let cours_id = JSON.parse(json_events)[key].id; 
                         let teacher_id = JSON.parse(json_events)[key].teacher_id;
                         let invoice_type = JSON.parse(json_events)[key].invoice_type;
 
                         let loggedin_teacher_id = <?= $AppUI->person_id; ?> 
                         
-                        let duration_minutes = JSON.parse(json_events)[key].teacher_name; 
+                        let duration_minutes = JSON.parse(json_events)[key].duration_minutes; 
                         if (cours_name == null) {
                             cours_name = '';
                         }  
@@ -2454,10 +2477,10 @@
                         else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
 
                             if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
-                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                                selected_non_validate_ids.push('Start:'+start+'<br>End: '+end+'<br>'+JSON.parse(json_events)[key].title+'<br>'+cours_name+'<br>'+duration_minutes+' minutes with '+teacher_name);
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                                selected_non_validate_ids.push('Start: '+start+' End: '+end+'<br>'+JSON.parse(json_events)[key].title+'<br>'+cours_name+'<br>'+duration_minutes+' minutes with '+teacher_name);
                             }
                             
                         }
@@ -2578,7 +2601,7 @@
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
         
-        $('#calendar').fullCalendar('changeView', 'CurrentListView');
+
         var dt = new Date();
         let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
         document.getElementById("date_from").value = formatDate(dt);
@@ -2769,7 +2792,7 @@
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
                 
-                
+                $('#calendar').fullCalendar('changeView', 'CurrentListView');
                 //$('#calendar').fullCalendar('removeEvents', function () { return true; });
 
                 // var eventsToPut = []; 
