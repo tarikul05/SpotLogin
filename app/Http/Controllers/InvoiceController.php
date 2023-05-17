@@ -24,6 +24,7 @@ use Redirect;
 use DB;
 use Exception;
 use PDF;
+use DateTimeZone;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use App\Traits\UserRoleTrait;
@@ -1398,7 +1399,11 @@ class InvoiceController extends Controller
         $provinces = Province::active()->get()->toArray();
         $countries = Country::active()->get();
         $currency = Currency::active()->get();
-        
+        $school_currency = $school->default_currency_code;
+        $timezone = $school->timezone;
+        $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+        $isInEurope = in_array($timezone, $europeanTimezones);
+
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
                     ->join('students','school_student.student_id','=','students.id')
@@ -1408,7 +1413,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency'));
+        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency','school_currency', 'isInEurope'));
     }
 
     /**
@@ -1437,6 +1442,10 @@ class InvoiceController extends Controller
                     ->where(['school_id' => $schoolId, 'school_student.is_active' => 1])
                     ->get();
 
+        $timezone = $school->timezone;
+        $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+        $isInEurope = in_array($timezone, $europeanTimezones);
+
         $invoiceData = Invoice::active()->where(['id'=>$invoiceId])->first();
         $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();
         $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();  
@@ -1445,7 +1454,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.update_manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData'));
+        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData', 'isInEurope'));
     }
 
     /**

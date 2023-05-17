@@ -289,6 +289,7 @@
                             </div>
                             <!-- Seller info END -->
                             <!-- Payment Bank info for Seller -->
+                            @if ($isInEurope)
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Payment Bank Information') }}:</label>
 							</div>
@@ -384,6 +385,49 @@
                                     </div>
                                 </div>
                             </div>
+                            @else
+                            <div class="section_header_class">
+								<label class="invoice_subtitle">{{__('Payment Information') }}:</label>
+							</div>
+                            <div id="" open="">
+                                <div class="row" id="payment_bank_info">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100"> 
+                                            </div>
+                                        </div>          
+                                            <input type="hidden" class="form-control" id="payment_bank_name" name="payment_bank_name" value="" placeholder="" maxlength="100">
+                                            <input type="hidden" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100">                    
+                                            <input type="hidden" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8">                      
+                                            <input type="hidden" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150">                              
+                                            <input type="hidden" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30">                          
+                                            <input type="hidden" class="form-control" id="payment_bank_country_id" value="US" name="payment_bank_country_id">                  
+                                            <input type="hidden" class="form-control" id="bank_province_id" name="bank_province_id">                  
+                                            <input type="hidden" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50">                           
+                                            <input type="hidden" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30">                            
+                                            <input type="hidden" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150">
+                                    </div>                        
+                                </div>
+                                <div class="row" id="payment_bank_info_canada">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-12 col-sm-12 text-left">E-transfer e-mail</label>
+                                            <div class="col-sm-12">
+                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="" placeholder="E-transfer e-mail" maxlength="100"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="display: none;">
+                                        <div class="form-group row">
+                                            <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="name_for_checks" name="name_for_checks" value="" placeholder="Name for Checks" maxlength="100"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             <!-- Payment Bank info for Seller -->
                             <!-- Transaction Detail info -->
                             <div class="section_header_class">
@@ -406,7 +450,11 @@
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
                                                        @foreach($currency as $key => $curr)
+                                                       @if($curr->currency_code == $school_currency)
+                                                       <option value="{{$curr->currency_code}}" selected>{{$curr->currency_code}}</option>
+                                                        @else
                                                             <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -526,6 +574,8 @@
 @section('footer_js')
 
 <script type="text/javascript">
+
+var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
 
 $(document).on('click','#add_more_tax_btn',function(){
 
@@ -794,12 +844,14 @@ $( document ).ready(function() {
 			
 			document.getElementById("payment_bank_account_name").value=value.bank_account;
 			
-			document.getElementById("payment_bank_name").value=value.bank_name;
-			document.getElementById("payment_bank_address").value=value.bank_address;
-			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
-			document.getElementById("payment_bank_place").value=value.bank_place;
-			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
-			
+            if(isInEurope) {
+                document.getElementById("payment_bank_name").value=value.bank_name;
+                document.getElementById("payment_bank_address").value=value.bank_address;
+                document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
+                document.getElementById("payment_bank_place").value=value.bank_place;
+                document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+            }
+
 			if(value.bank_country_id == 'CA'){
 				// PopulateProvince(value.bank_country_id == 'CA','bank');
 			}
@@ -807,9 +859,11 @@ $( document ).ready(function() {
 				$("#bank_province_id").val(value.bank_province_id );
 			} 
 			
-			document.getElementById("payment_bank_iban").value=value.bank_iban;
-			document.getElementById("payment_bank_account").value=value.bank_account;
-			document.getElementById("payment_bank_swift").value=value.bank_swift;
+            if(isInEurope) {
+                document.getElementById("payment_bank_iban").value=value.bank_iban;
+                document.getElementById("payment_bank_account").value=value.bank_account;
+                document.getElementById("payment_bank_swift").value=value.bank_swift;
+            }
 
 			document.getElementById("seller_phone").value=value.phone;
 			document.getElementById("seller_mobile").value=value.mobile;
@@ -928,11 +982,13 @@ function get_client_seller_info(obj){
 			
 			document.getElementById("payment_bank_account_name").value=value.bank_account;
 			
-			document.getElementById("payment_bank_name").value=value.bank_name;
-			document.getElementById("payment_bank_address").value=value.bank_address;
-			document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
-			document.getElementById("payment_bank_place").value=value.bank_place;
-			document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+            if(isInEurope) {
+                document.getElementById("payment_bank_name").value=value.bank_name;
+                document.getElementById("payment_bank_address").value=value.bank_address;
+                document.getElementById("payment_bank_zipcode").value=value.bank_zipcode;
+                document.getElementById("payment_bank_place").value=value.bank_place;
+                document.getElementById("payment_bank_country_id").value=value.bank_country_id;
+            }
 			
 			if(value.bank_country_id == 'CA'){
 				// PopulateProvince(value.bank_country_id == 'CA','bank');
@@ -941,9 +997,11 @@ function get_client_seller_info(obj){
 				$("#bank_province_id").val(value.bank_province_id );
 			} 
 			
-			document.getElementById("payment_bank_iban").value=value.bank_iban;
-			document.getElementById("payment_bank_account").value=value.bank_account;
-			document.getElementById("payment_bank_swift").value=value.bank_swift;
+            if(isInEurope) {
+                document.getElementById("payment_bank_iban").value=value.bank_iban;
+                document.getElementById("payment_bank_account").value=value.bank_account;
+                document.getElementById("payment_bank_swift").value=value.bank_swift;
+            }
 
 			document.getElementById("seller_phone").value=value.phone;
 			document.getElementById("seller_mobile").value=value.mobile;
@@ -1006,7 +1064,6 @@ $('#save_btn').click(function (e) {
 });
 
 function AddEditInvoice(){
-         
     var p_auto_id= document.getElementById("auto_id").value;
     var p_invoice_id = document.getElementById("invoice_id").value;
     var p_date_invoice = document.getElementById("date_invoice").value;
@@ -1069,15 +1126,16 @@ function AddEditInvoice(){
     var p_seller_mobile = document.getElementById("seller_mobile").value;
     var p_seller_email = document.getElementById("seller_email").value;        
     var p_payment_bank_account_name = document.getElementById("payment_bank_account_name").value;
-    var p_payment_bank_name = document.getElementById("payment_bank_name").value;
-    var p_payment_bank_address = document.getElementById("payment_bank_address").value;
-    var p_payment_bank_country_id = document.getElementById("payment_bank_country_id").value;
-    var p_bank_province_id = document.getElementById("bank_province_id").value;
-    var p_payment_bank_zipcode = document.getElementById("payment_bank_zipcode").value;
-    var p_payment_bank_place = document.getElementById("payment_bank_place").value;
-    var p_payment_bank_iban = document.getElementById("payment_bank_iban").value;
-    var p_payment_bank_account = document.getElementById("payment_bank_account").value;
-    var p_payment_bank_swift = document.getElementById("payment_bank_swift").value;
+
+    var p_payment_bank_name = !isInEurope ? '' : document.getElementById("payment_bank_name").value;
+    var p_payment_bank_address = !isInEurope ? '' : document.getElementById("payment_bank_address").value;
+    var p_payment_bank_country_id = !isInEurope ? '' : document.getElementById("payment_bank_country_id").value;
+    var p_bank_province_id = !isInEurope ? '' : document.getElementById("bank_province_id").value;
+    var p_payment_bank_zipcode = !isInEurope ? '' : document.getElementById("payment_bank_zipcode").value;
+    var p_payment_bank_place = !isInEurope ? '' : document.getElementById("payment_bank_place").value;
+    var p_payment_bank_iban = !isInEurope ? '' : document.getElementById("payment_bank_iban").value;
+    var p_payment_bank_account = !isInEurope ? '' : document.getElementById("payment_bank_account").value;
+    var p_payment_bank_swift = !isInEurope ? '' : document.getElementById("payment_bank_swift").value;
     var p_total_amount = document.getElementById("grand_total").innerText;
     var p_detail_rows = '';
     

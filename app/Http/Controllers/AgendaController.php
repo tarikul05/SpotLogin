@@ -121,11 +121,13 @@ class AgendaController extends Controller
         
         //dd($eventData);
         $events = array();
+
+        $myCurrentTimeZone = $school->timezone;
        
         //dd($events);
-        $events =json_encode($events);
+        $events = json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
 
     }
 
