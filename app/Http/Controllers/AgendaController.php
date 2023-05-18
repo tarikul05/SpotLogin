@@ -123,7 +123,6 @@ class AgendaController extends Controller
         $events = array();
 
         $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
-        dd(date_default_timezone_get());
        
         //dd($events);
         $events = json_encode($events);
