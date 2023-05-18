@@ -460,6 +460,9 @@
                         <?php if(!empty($invoice_data->name_for_checks)){ ?>
                             <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
                         <?php } ?>
+                        <?php if(!empty($invoice_data->invoice_footer)){ ?>
+                            <div class="text"><b>Note:</b> {{ $invoice_data->invoice_footer }}</div>
+                        <?php } ?>
                         <?php if(!empty($invoice_data->cheque_payee)){ ?>
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>
