@@ -239,7 +239,7 @@
                                             <input type="hidden" class="form-control numeric_amount" id="total_commission" name="total_commission" value="{{$invoice->total_amount_discount ? number_format($invoice->total_amount_discount,'2') :0.00}}" placeholder="" readonly="">
                                         </tr>
                                     @endif
-                                    @if ($invoice->invoice_type == 1)
+                                    @if ($invoice->extra_expenses > 0)
                                     <tr>
                                         <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
                                         <td></td>
@@ -248,8 +248,17 @@
                                         </td>
                                     </tr>
                                     @endif
+                                    @if ($invoice->tax_amount > 0)
+                                    <tr>
+                                        <td colspan="2" style="text-align:right">Tax:</td>
+                                        <td></td>
+                                        <td style="text-align:right">
+                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{$invoice->tax_amount ? number_format($invoice->tax_amount,'2') :0}}" placeholder="" style="margin-left: 0px;" disabled='disabled'>
+                                        </td>
+                                    </tr>
+                                    @endif
                                     @php
-                                        $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount ;
+                                        $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount + $invoice->tax_amount;
                                     @endphp
                                     <tr>
                                         <td colspan="2" style="text-align:right">Total</td>
@@ -605,6 +614,12 @@
                             <div id="payment_detail_div">
                                 <label class="section_header_class" id="lbl_seller_information">Payment Bank Information</label>
                                 <div id="canada_payment_div" style="display: block;">
+                                    <div class="form-group row">
+                                        <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference:</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="etransfer_acc" name="etransfer_acc" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}"> 
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">To pay by e-transfer:</label>
                                         <div class="col-sm-6">
@@ -1436,10 +1451,14 @@
         //console.log(total_amount);
         
         var extra = 0;
+        var taxes = 0;
         if ($('#sextra_expenses').length > 0) {
             extra = Number(document.getElementById("sextra_expenses").value);
         } 
-        var grand_total = (+total_amount) + (+extra);
+        if ($('#taxes').length > 0) {
+            taxes = Number(document.getElementById("taxes").value);
+        } 
+        var grand_total = (+total_amount) + (+extra) + (+taxes);
 
         //console.log(grand_total);
         $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));

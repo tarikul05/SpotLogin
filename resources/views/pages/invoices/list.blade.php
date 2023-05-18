@@ -27,7 +27,9 @@
         </div>
         @if(!$AppUI->isStudent())
             <div class="invoice_list_button">
+                @if($AppUI->isSchoolAdmin())
                 <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
+                @endif
                 <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
                 <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
             </div>
@@ -124,24 +126,36 @@
                         @if ($invoice->payment_status == 0)
                             <td class="text-center">
                                 <div id="status_{{$invoice->id}}">
-                                    <span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
+                                    @if(!$AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner" aria-hidden="true"></i>
+                                        <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                    </span>
+                                @endif 
                                 </div>
                             </td>
                         @else
                             <td class="text-center">
                                 <div id="status_{{$invoice->id}}">
-                                    <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</scan>
+                                @if(!$AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner" aria-hidden="true"></i>
+                                        <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                    </span>
+                                @endif 
                                 </div>
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
-
                             @if(!$AppUI->isStudent())
                             <td class="text-center">
-                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" style="margin-right:5px; margin-top:3px;" onclick="UpdatePaymentStatus('{{$invoice->id}}')"></i>
+                                <!--<i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner fa-lg mr-1 light-blue-txt pull-left" aria-hidden="true"></i>
+                                <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                 <span class="small txt-grey pull-left">
-                                    <span class="change_button">{{ __('Change')}}</span>
-                                </span>
+                                      <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
+                                </span>-->
                             </td>
                             @endif
                         @else
@@ -309,6 +323,7 @@
 
     };
 
+
     $('#email_send').click(function (e) {
         var p_emails = '', p_attached_file = '';
         var p_inv_auto_id = $('#seleted_auto_id').val();
@@ -344,6 +359,64 @@
         $('#search_text').val(text).change()
     }
 
+
+    $('#payment_btn').click(function (e) {
+        
+        document.getElementById("loadercreditCardPayment").style.display = "none";
+        document.getElementById("loaderStatusPayment").style.display = "block";
+
+            var paymentStatusAll = @json($payment_status_all);
+            var p_invoice_id = $(this).data('invoice-id');
+            var payment_status = ''; /* 0=unpaid, 1=paid*/
+
+            if (p_invoice_id == '') {
+                errorModalCall('Invalid_invoice');
+                return false;
+            }
+
+            if ($(this).data('invoice-status') == '1') {
+                payment_status = '0';
+            } else {
+                payment_status = '1';
+            }
+            //alert('payment_status='+payment_status);
+            var status = '';
+            var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_invoice_id;
+            // console.log(data);
+            // return false;
+            $.ajax({
+                url: BASE_URL+'/update_payment_status',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                   
+                    status = result.status;
+                    if (status == 'success') {
+				        successModalCall('invoice payment paid');
+                        if (payment_status == '1') {
+                            document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-suces gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
+                        } else {
+                            document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-warn gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
+                        }
+                        setTimeout(function() {
+                            var redirectUrl = './invoices';
+                            window.location.href = redirectUrl;
+                        }, 1200);
+                        
+                    }
+                    else {
+                        errorModalCall('error_message_text');
+                    }
+                },   //success
+                error: function (ts) { 
+                    errorModalCall('error_message_text');
+
+                }
+            }); //ajax-type            
+
+    });    
 
     function UpdatePaymentStatus(p_auto_id) {
         var payment_status;

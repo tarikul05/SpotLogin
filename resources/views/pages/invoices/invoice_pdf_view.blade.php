@@ -240,7 +240,9 @@
     <header>
         <div class="logo_area">
             <div class="left_part">
-                <img class="img_logo" src="{{ public_path('img/invoice_logo.png') }}" alt="" style="height: 50px;">
+                <?php if ($invoice_data->logo !== null): ?>
+                <img class="img_logo" src="{{ public_path($invoice_data->logo) }}" alt="" style="height: 50px;">
+                <?php endif; ?>
             </div>
             <div class="right_part">
                 <div class="invoice_date">
@@ -368,6 +370,13 @@
                     </tr>
                     <?php } ?>
 
+                    <?php if($invoice_data->tax_amount > 0){ ?>
+                    <tr class="extra_col">
+                        <td colspan="2" class="text"><b>{{ __('invoice_tax') }}</b></td>
+                        <td colspan="2" class="price">+ <b>{{ $invoice_data->tax_amount }}</b></td>
+                    </tr>
+                    <?php } ?>
+
                     <?php if($invoice_data->total_amount_discount != 0){ ?>
                     <tr class="extra_col">
                         <td colspan="2" class="text">
@@ -385,7 +394,7 @@
                     </tr>
                     <?php } ?>
 
-                    <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount; ?>
+                    <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount + $invoice_data->tax_amount ; ?>
                     <tr class="total_col">
                         <td align="center" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
@@ -450,6 +459,9 @@
                         <?php } ?>
                         <?php if(!empty($invoice_data->name_for_checks)){ ?>
                             <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
+                        <?php } ?>
+                        <?php if(!empty($invoice_data->invoice_footer)){ ?>
+                            <div class="text"><b>Note:</b> {{ $invoice_data->invoice_footer }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->cheque_payee)){ ?>
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>

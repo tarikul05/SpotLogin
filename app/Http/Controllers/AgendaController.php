@@ -121,11 +121,13 @@ class AgendaController extends Controller
         
         //dd($eventData);
         $events = array();
+
+        $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
        
         //dd($events);
-        $events =json_encode($events);
+        $events = json_encode($events);
         //unset($event_types[10]);
-        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency'));
+        return view('pages.agenda.index')->with(compact('schools','school','schoolId','user_role','coach_user','students','teachers','locations','alllanguages','events','event_types','event_types_all','eventCategoryList','professors','studentsbySchool','lessonPrice','currency', 'myCurrentTimeZone'));
 
     }
 
@@ -519,7 +521,7 @@ class AgendaController extends Controller
             $e['event_teacher_id'] = (is_null($fetch->teacher_id) ? 0 : $fetch->teacher_id) ;
             $e['event_school_name'] = $fetch->school['school_name'];
 
-            $e['event_category_name'] ='';
+           // $e['event_category_name'] ='';
             $e['cours_name'] = '';
             $e['text_for_search']='';
             $e['tooltip']='';
@@ -531,7 +533,7 @@ class AgendaController extends Controller
             }
 
 
-            $e['cours_name'] = $e['event_type_name'].'('.$e['event_category_name'].')';
+            $e['cours_name'] = $e['event_type_name'].''; /*('.$e['event_category_name'].')*/
             $e['text_for_search']=strtolower($e['event_type_name'].$e['cours_name'].' '.$e['teacher_name'].' - '.$e['title']);
             //$e['tooltip']=$e['event_mode_desc'].$e['cours_name'].' Duration: '.$fetch->duration_minutes.' '.$e['teacher_name'].' - '.$e['title'];
 
@@ -548,7 +550,7 @@ class AgendaController extends Controller
                         if ($i==count($eventDetailsStudentId)) {
                             $student_name .='';
                         } else {
-                            $student_name .=',';
+                            $student_name .=', ';
                         }
                     }else{
                         $first_student_name = $schoolStudent->nickname;
@@ -586,9 +588,9 @@ class AgendaController extends Controller
                 $e['title']= $event_types[$e['event_type']].' '.$e['title'];
                 
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                 } else {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                 }
 
                 // For add invopice type with tooltip
@@ -601,17 +603,19 @@ class AgendaController extends Controller
 
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
+             
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
+     
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
-                    $e['title'] = '';
+                    $e['title'] = $e['title'].' ('.$student_name. ')';
                 }
                 elseif($fetch->duration_minutes > 44){
-                    $e['title']= $e['title'].' '.$student_name;
+                    $e['title']= $e['title'].' ('.$student_name. ')';
                 }
 
-                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
             }
 
             
@@ -634,8 +638,8 @@ class AgendaController extends Controller
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
 
-
-            if (now()>$fetch->date_end) {
+            $now = Carbon::now($fetch->school->timezone);
+            if ($now > $fetch->date_start) {
                 $e['can_lock'] = 'Y';
             } else{
                 $e['can_lock'] = 'N';
@@ -1049,7 +1053,6 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
- 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
                     // $eventUpdate = [
@@ -1075,11 +1078,17 @@ class AgendaController extends Controller
                     //             $eventdetail = $eventdetail->update($eventDetailAbsent);
                     //         }
                     //     }
-                    // }
+                    //}
+
+                    $school = School::active()->find($p_event_auto_id->school_id);
+                    $now = Carbon::now($school->timezone);
+                    $dateStart = Carbon::createFromFormat('Y-m-d H:i:s', $p_event_auto_id->date_start);
 
                     if ($p_event_auto_id->event_type == 10) {
-                        // Event::updateLatestPrice($p_event_auto_id->id);
-                        Event::validate(['event_id'=>$p_event_auto_id->id]);
+                        if ($now->greaterThan($dateStart)) {
+                            // Event::updateLatestPrice($p_event_auto_id->id);
+                            Event::validate(['event_id'=>$p_event_auto_id->id]);
+                        }
                     }
                 }
 

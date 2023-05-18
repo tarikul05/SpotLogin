@@ -165,7 +165,10 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
         <div class="modal-dialog mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
+                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
+                    <div class="alert alert-info">
+                    <p><i class="fa fa-info"></i> You can validate all events you see on the current view for the pasts events.</p>
+                    </div>
                     <ul>`;
                     if (p_event_id.length!=0) {
                         p_event_id.forEach((element) => {

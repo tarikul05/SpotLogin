@@ -297,6 +297,7 @@
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Payment Bank Information') }}:</label>
 							</div>
+                            @if ($isInEurope)
                             <div id="" open="">
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
@@ -390,6 +391,49 @@
                                     </div>
                                 </div>
                             </div>
+
+                            @else
+
+                            <div id="" open="">
+                                <div class="row" id="payment_bank_info">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="<?= $invoiceData['payment_bank_account_name'];?>" placeholder="" maxlength="100"> 
+                                            </div>
+                                        </div>          
+                                            <input type="hidden" class="form-control" id="payment_bank_name" name="payment_bank_name" value="<?= $invoiceData['payment_bank_name'];?>" placeholder="" maxlength="100">
+                                            <input type="hidden" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100">                    
+                                            <input type="hidden" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8">                      
+                                            <input type="hidden" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150">                              
+                                            <input type="hidden" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30">                          
+                                            <input type="hidden" class="form-control " id="payment_bank_country_id" value="US" name="payment_bank_country_id">                  
+                                            <input type="hidden" class="form-control" id="bank_province_id" name="bank_province_id">                  
+                                            <input type="hidden" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50">                           
+                                            <input type="hidden" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30">                            
+                                            <input type="hidden" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150">
+                                    </div>                        
+                                </div>
+                                <div class="row" id="payment_bank_info_canada">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label id="e_transfer_email_caption" for="e_transfer_email" class="col-lg-12 col-sm-12 text-left">E-transfer e-mail</label>
+                                            <div class="col-sm-12">
+                                                <input type="email" class="form-control" id="e_transfer_email" name="e_transfer_email" value="<?= $invoiceData['e_transfer_email'];?>" placeholder="E-transfer e-mail" maxlength="100"> </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" style="display: none;">
+                                        <div class="form-group row">
+                                            <label id="name_for_checks_caption" for="name_for_checks" class="col-lg-3 col-sm-3 text-left">Name for Checks</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="name_for_checks" name="name_for_checks" value="" placeholder="Name for Checks" maxlength="100"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
                             <!-- Payment Bank info for Seller -->
                             <!-- Transaction Detail info -->
                             <div class="section_header_class">
@@ -596,6 +640,8 @@
 
 @section('footer_js')
 <script type="text/javascript">
+
+var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
 
 $(document).on('click','#add_more_tax_btn',function(){
 
