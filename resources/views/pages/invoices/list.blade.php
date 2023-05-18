@@ -27,7 +27,9 @@
         </div>
         @if(!$AppUI->isStudent())
             <div class="invoice_list_button">
+                @if($AppUI->isSchoolAdmin())
                 <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
+                @endif
                 <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
                 <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
             </div>
