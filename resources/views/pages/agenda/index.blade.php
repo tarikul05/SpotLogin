@@ -2600,8 +2600,9 @@
         $('#q').append('third <br>');
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
-        
-
+        document.getElementById("agenda_list").style.display = "none";
+        console.log('go to current view')
+        $('#calendar').fullCalendar('changeView', 'CurrentListView');
         var dt = new Date();
         let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
         document.getElementById("date_from").value = formatDate(dt);
@@ -2792,7 +2793,7 @@
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
                 
-                $('#calendar').fullCalendar('changeView', 'CurrentListView');
+                
                 //$('#calendar').fullCalendar('removeEvents', function () { return true; });
 
                 // var eventsToPut = []; 

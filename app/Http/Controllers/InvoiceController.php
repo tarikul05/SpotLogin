@@ -1820,6 +1820,16 @@ class InvoiceController extends Controller
                 }
                 $items[$d->event_type][] = $d;
             }
+
+            //Add user photo as Logo to Invoice
+            if (!empty($request->user()->profileImage->path_name)) {
+                $path_name =  $request->user()->profileImage->path_name;
+                $file = str_replace(URL::to('').'/uploads/','',$path_name);
+                $invoice_data['logo'] = 'uploads/'.$file;
+            } else {
+                $invoice_data['logo'] = null;
+            }
+
             $invoice_items = $items;
             $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
             $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';

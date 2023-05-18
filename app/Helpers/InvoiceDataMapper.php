@@ -69,7 +69,7 @@ class InvoiceDataMapper
             $professors = SchoolTeacher::active()->where('school_id',$schoolId);
             $professors->where('teacher_id',$user->person_id);
             $professors = $professors->first();
-            $teacher = Teacher::find($professors->id);
+            $teacher = Teacher::find($professors->teacher_id);
 
             $invoiceData['seller_id'] = $teacher->id;
             $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
@@ -102,7 +102,7 @@ class InvoiceDataMapper
                 $professors = SchoolTeacher::active()->where('school_id',$schoolId);
                 $professors->where('teacher_id',$user->person_id);
                 $professors = $professors->first();
-                $teacher = Teacher::find($professors->id);
+                $teacher = Teacher::find($professors->teacher_id);
 
                 $invoiceData['seller_id'] = $teacher->id;
                 $invoiceData['seller_name'] = $teacher->firstname.' '.$teacher->lastname;
@@ -214,8 +214,8 @@ class InvoiceDataMapper
         $invoiceData['category_invoiced_type'] = $invoice_type;
         
         $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-        
 
+        
         return $invoiceData;
     }
 }

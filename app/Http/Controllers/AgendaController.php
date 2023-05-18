@@ -122,7 +122,8 @@ class AgendaController extends Controller
         //dd($eventData);
         $events = array();
 
-        $myCurrentTimeZone = $school->timezone;
+        $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
+        dd(date_default_timezone_get());
        
         //dd($events);
         $events = json_encode($events);
@@ -1053,7 +1054,6 @@ class AgendaController extends Controller
                     'is_locked' => 1
                 ];
                 $eventData = $event->multiValidate($param)->get();
- 
                 foreach ($eventData as $key => $p_event_auto_id) {
 
                     // $eventUpdate = [
@@ -1079,11 +1079,17 @@ class AgendaController extends Controller
                     //             $eventdetail = $eventdetail->update($eventDetailAbsent);
                     //         }
                     //     }
-                    // }
+                    //}
+
+                    $school = School::active()->find($p_event_auto_id->school_id);
+                    $now = Carbon::now($school->timezone);
+                    $dateStart = Carbon::createFromFormat('Y-m-d H:i:s', $p_event_auto_id->date_start);
 
                     if ($p_event_auto_id->event_type == 10) {
-                        // Event::updateLatestPrice($p_event_auto_id->id);
-                        Event::validate(['event_id'=>$p_event_auto_id->id]);
+                        if ($now->greaterThan($dateStart)) {
+                            // Event::updateLatestPrice($p_event_auto_id->id);
+                            Event::validate(['event_id'=>$p_event_auto_id->id]);
+                        }
                     }
                 }
 
