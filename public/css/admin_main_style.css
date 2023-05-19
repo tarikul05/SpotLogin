@@ -1478,3 +1478,5 @@ label#currency_alert_text {
         display: none;
     }
 }
+.modal-content {border: 0px solid rgba(0, 0, 0, 0.2); width: 100%;}
+.modal-body {width: 100%;}

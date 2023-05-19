@@ -607,7 +607,7 @@ class AgendaController extends Controller
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
      
-                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                     $e['title'] = $e['title'].' ('.$student_name. ')';
                 }
@@ -615,7 +615,7 @@ class AgendaController extends Controller
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
 
-                $e['title_for_modal']=' Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration :</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
             }
 
             
