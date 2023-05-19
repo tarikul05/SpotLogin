@@ -37,10 +37,10 @@
 							<div class="page_header_class">
                                 <label for="calendar" id="cal_title" style="display: block;">
                                     {{__('Agenda')}}: 
-                                </label>
+                                </label> <span style="font-size:12px;">[ {{ $myCurrentTimeZone }} ] <span id="currentTimer"></span></span>
 							</div>
 					</div>
-                   <div class="col-sm-8 col-xs-12 btn-area">
+                   <div class="col-sm-8 col-xs-12 btn-area pt-2">
                         <div class="pull-right btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
@@ -81,7 +81,7 @@
                             <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
                             <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
                             <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
-                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
+                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="width:305px;">
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
                                 @php 
@@ -224,7 +224,7 @@
 
 <!-- Modal for add event,lesson,student and coach off -->	
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
@@ -514,7 +514,7 @@
 
 <!-- success modal-->
 <div class="modal modal_parameter" id="add_lesson_success">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
                 <span aria-hidden="true">&times;</span>
@@ -532,7 +532,7 @@
 
 <!-- success modal-->
 <div class="modal modal_parameter" id="modal_lesson_price">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <p id="modal_alert_body"></p>
@@ -546,14 +546,14 @@
 
 <!-- Modal on event click -->	
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
         
             <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
                 <div class="modal-dialog EventModalClass" id="EventModalWin">
                     <div class="modal-content">
-                        <div class="modal-body text-center p-4">                    
-                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 18px; line-height: 2"><span id="event_modal_title">Title</span></h4>
+                        <div class="modal-body text-center">                    
+                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">Title</span></h4>
                             <p style="font-size: 20px;"></p>
 
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
@@ -722,6 +722,7 @@
 	  week: { dow: 1 } // Monday is the first day of the week
 	});
     RenderCalendar();
+
     $(document).ready(function(){
         if (user_role == "student") {
             document.getElementById('event_school').style.display="none";
@@ -1747,6 +1748,7 @@
         // } 
 
         var myTimezone = "{{ $myCurrentTimeZone }}";
+        afficherHeureActuelle(myTimezone);
         
         $('#calendar').fullCalendar({
             eventLimit: 3, // If you set a number it will hide the itens
@@ -1795,7 +1797,7 @@
 			forceEventDuration: true,
 			nextDayThreshold: '00:00',
             nowIndicator: true,
-            now: moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:ss'),
+            now: moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00'),
             // events: function (start, end, tz, callback) {
             //     callback(JSON.parse(json_events));
             // },
@@ -2113,14 +2115,46 @@
                         if (moment(event.end).isValid() == false){
                             etime=stime;
                         }
+
+                    var dayEvent = moment(event.start).format('DD/MM/YYYY');    
+                       
+                    var eventStart = moment.utc(event.start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+                    var eventEnd = moment.utc(event.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+                    var now = moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00');
+
+                    const eventStartTimeStamp = moment.utc(event.start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+                    const eventEndTimeStamp = moment.utc(event.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+                    const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+
+                    if (eventEnd.isBefore(now)) {
+                    var timeBetween = timeDifference(nowTimeStamp, eventEndTimeStamp);
+                    var phrase = "Completed since " + timeBetween;
+                    } 
+                    
+                    if (eventStart.isAfter(now)) {
+                    var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
+                    var phrase = "Incoming in " + timeBetween;
+                    } 
+                    
+                    if (eventStart.isBefore(now) && eventEnd.isAfter(now)) {
+                    var timeBetween = timeDifference(eventEndTimeStamp, nowTimeStamp);
+                    var phrase = "event in progress - ends in "+timeBetween+"";
+                    console.log(phrase);
+                    }
+
+                    if (eventEnd.isSame(now)) {
+                    var phrase = "ends soon - in few seconds";
+                    console.log(phrase);
+                    }
+
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').html(event.event_type_name+' <br/> '+event.title_for_modal); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><table class="table table-stripped table-hover"><tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
-                        $('#event_modal_title').html(event.event_type_name+'<br/> Time : '+stime+'-'+etime+'<br/> '+event.title_for_modal); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><table style="width:100%;" class="table table-stripped table-hover"><tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa fa-clock-o"></i> Time :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     
                     
@@ -2397,6 +2431,32 @@
     } //full calender - RenderCalendar
 
 
+    function timeDifference(date1,date2) {
+        var difference = date1 - date2
+
+        var daysDifference = Math.floor(difference/1000/60/60/24);
+        difference -= daysDifference*1000*60*60*24
+
+        var hoursDifference = Math.floor(difference/1000/60/60);
+        difference -= hoursDifference*1000*60*60
+
+        var minutesDifference = Math.floor(difference/1000/60);
+        difference -= minutesDifference*1000*60
+
+        var secondsDifference = Math.floor(difference/1000);
+        
+        if(daysDifference > 0) {
+            return daysDifference + (daysDifference === 1 ? ' day' : ' days');  
+        } else {
+            if(hoursDifference > 0) {
+                return hoursDifference + (hoursDifference === 1 ? ' hour ' : ' hours ') + minutesDifference + (minutesDifference === 1 ? ' minute' : ' minutes'); 
+            } else {
+                return minutesDifference + (minutesDifference > 1 ? ' minutes' : ' minute'); 
+            }
+        }
+    }
+
+
     function getFreshEvents(p_view=getCookie("cal_view_mode")){
         
         if (document.getElementById("view_mode").value == 'CurrentListView'){
@@ -2540,14 +2600,17 @@
                 $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
                 // $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
 
-                const scrollTime = moment().format("HH");
+                var myTimezone = "{{ $myCurrentTimeZone }}";
+                const scrollTime = moment().tz(myTimezone).format("HH");
                 $scrollTo = $('[data-time="'+scrollTime+':00:00"]');
                 console.log('current hour', scrollTime)
                 if ($scrollTo.length > 0) {
                     $(".fc-scroller").animate({
                         scrollTop: $scrollTo.offset().top
-                    }, 700);
+                    }, 1500);
                 }
+
+                
 
                 if (document.getElementById("view_mode").value == 'list'){
                     //remove 

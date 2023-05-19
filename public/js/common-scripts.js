@@ -30,7 +30,7 @@ function errorModalCall(title, desc = '') {
   $('#errorModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal fade" id="errorModal" name="errorModal">
-            <div class="modal-dialog mt-5">
+            <div class="modal-dialog modal-dialog-centered mt-5">
                 <div class="modal-content">
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
@@ -73,6 +73,19 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function afficherHeureActuelle(myTimezone) {
+    var maintenant = moment().tz(myTimezone);
+    var heure = maintenant.format('HH');
+    var minute = maintenant.format('mm');
+    var seconde = maintenant.format('ss');
+  
+    var heureActuelle = heure + ':' + minute; /*+ ':' + seconde;*/
+    $('#currentTimer').text(heureActuelle);
+  
+    setTimeout(function() {
+      afficherHeureActuelle(myTimezone);
+    }, 30000);
+  }
 
 function confirmModalCall(title,function_name){
     $('#confirmModal').remove();  
@@ -122,10 +135,10 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
+                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
                     <ul>`;
                     if (p_event_id.length!=0) {
                         p_event_id.forEach((element) => {
@@ -162,7 +175,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
