@@ -10,10 +10,10 @@
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
 </script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
@@ -28,6 +28,9 @@
 @endsection
 
 @section('content')
+<div id="loader-wrapper">
+    <div id="loader"></div>
+  </div>
 <div class="content agenda_page">
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
@@ -37,10 +40,10 @@
 							<div class="page_header_class">
                                 <label for="calendar" id="cal_title" style="display: block;">
                                     {{__('Agenda')}}: 
-                                </label> <span style="font-size:12px;">[ {{ $myCurrentTimeZone }} ] <span id="currentTimer"></span></span>
+                                </label> <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa fa-clock-o"></i> <span id="currentTimer"></span></span>
 							</div>
 					</div>
-                   <div class="col-sm-8 col-xs-12 btn-area pt-2">
+                   <div class="col-sm-5 col-xs-12 btn-area pt-2 align-items-end">
                         <div class="pull-right btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
@@ -81,7 +84,7 @@
                             <input type="hidden" name="event_teacher_all_flag" size="14px" id="event_teacher_all_flag" value="1">
                             <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
                             <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
-                            <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="width:305px;">
+                            
                             <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
                                 <!-- <div class="btn-group"> -->
                                 @php 
@@ -96,20 +99,53 @@
                                     <em class="glyphicon glyphicon-remove"></em>
                                     <span id ="btn_validate_events_cap">Copy my schedule</span>
                                 </a> -->
-                                <a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
-                                <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>
-                                <button style="display: none;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
-                                <button style="display: none;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
+                                <style>
+                                    .dropdown {
+                                      position: relative;
+                                      display: inline-block;
+                                    }
+                                    
+                                    .dropdown-content {
+                                      display: none;
+                                      position: absolute;
+                                      background-color: #f9f9f9;
+                                      min-width: 190px;
+                                      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                                      padding: 12px 16px;
+                                      z-index: 1;
+                                      font-size:13px;
+                                    }
+                                    
+                                    .dropdown:hover .dropdown-content {
+                                      display: block;
+                                    }
+                                    </style>
+                                    
+                                    <div class="dropdown" id="dropdownActions">
+                                      <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
+                                      <div class="dropdown-content">
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All Events</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All Events</span></a>
+                                      </div>
+                                    </div>
+                                <!--<a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
+                                <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>-->
+                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
+                                <button style="display: none; max-width:80px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
                                 @if(!$AppUI->isStudent())
                                     <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
                                         <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
                                         <span id ="btn_export_events_cap">Excel</span>
                                     </a>
                                 @endif
+                                <div id="addButton"></div>
                                 <!-- </div> -->
                             </div>
                         </div>
 					</div>    
+                    <div class="col-sm-3 p-2 col-xs-12 btn-area align-items-end text-center">
+                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:5px; max-width:97%;">
+                    </div>
 				</div>                 
 			</header>
             <div class="clearfix"></div>
@@ -583,7 +619,12 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-    // set default data
+
+window.addEventListener('load', function() {
+  var loader = document.getElementById('loader-wrapper');
+  loader.style.display = 'none';
+});
+
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
     var resultHtml_cc='';      //for populate list - agenda_table
@@ -608,8 +649,6 @@
     var user_role=document.getElementById("user_role").value;
     var coach_user=document.getElementById("coach_user").value;
     var user_auth='';
-
-
 
     var currentTimezone = document.getElementById("zone").value;
     var zone = document.getElementById("zone").value;
@@ -773,7 +812,7 @@
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a title="" id="add_lesson_btn" class="btn btn-theme-success dropdown-toggle" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i> Add</a>';
+                menuHtml+='<a href="#" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius:4px!important; max-width:80px; height:35px;"><i class="glyphicon glyphicon-plus"></i> Add</a>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
@@ -784,7 +823,7 @@
             // Add $(this).val() to your list
         });
         // menuHtml+='</ul>';
-        $('#button_menu_div').append(menuHtml); 
+        $('#addButton').append(menuHtml); 
         
 
 
@@ -2287,6 +2326,20 @@
                 foundRecords=0;
                 
                 CheckPermisson();
+
+                // Récupérer les éléments btn_validate_events et btn_delete_events
+                var btnValidateEvents = document.getElementById("btn_validate_events");
+                var btnDeleteEvents = document.getElementById("btn_delete_events");
+
+                // Récupérer l'élément dropdownActions
+                var dropdownActions = document.getElementById("dropdownActions");
+
+                // Vérifier si l'un des boutons est affiché
+                if (btnValidateEvents.style.display !== "none" || btnDeleteEvents.style.display !== "none") {
+                dropdownActions.style.display = "block"; // Afficher le dropdown
+                } else {
+                dropdownActions.style.display = "none"; // Masquer le dropdown
+                }
                 
                 $('#agenda_table tr').click(function(){
                     
