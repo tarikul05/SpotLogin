@@ -563,7 +563,7 @@ class AgendaController extends Controller
 
 
 			$format_title = '';
-
+            $e['title_event'] = $e['title'];
             if (in_array($fetch->event_type, [50,51])) { // coach off an student off
                 $evntTypeNm = empty($e['title']) ? $e['event_type_name'] : $e['event_type_name'].'<br/>'.$e['title'];
                 $evntTypetitle = empty($e['title']) ? '' : $e['title'].'<br/>';

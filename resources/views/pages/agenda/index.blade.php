@@ -314,7 +314,9 @@
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
                                                                     <option value="T">Teacher invoice</option>  
+                                                                    @if($AppUI->isSchoolAdmin())
                                                                     <option value="S">School invoice</option>
+                                                                    @endif
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -2186,14 +2188,18 @@ window.addEventListener('load', function() {
                     console.log(phrase);
                     }
 
+                    var titleEvent = ''
+                    if(event.title_event !== null && event.title_event !== "") {
+                        var titleEvent = '<tr><td>Title :</td><td class="light-blue-txt gilroy-bold"> ' + event.title_event + '</td></tr>';
+                    }
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><table class="table table-stripped table-hover"><tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
-                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><table style="width:100%;" class="table table-stripped table-hover"><tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa fa-clock-o"></i> Time :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table style="width:100%;" class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa fa-clock-o"></i> Time :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     
                     
