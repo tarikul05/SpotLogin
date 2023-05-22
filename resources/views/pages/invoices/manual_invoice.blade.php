@@ -935,6 +935,9 @@ function get_client_seller_info(obj){
 				document.getElementById("client_street").value=value.street;
 				document.getElementById("client_street2").value=value.street2;
 				document.getElementById("client_country_id").value=value.country_code
+
+                document.getElementById("select2-client_country_id-container").textContent = getCountryName(value.country_code) + ' (' + value.country_code + ')';
+
 				if(value.country_code == 'CA'){
 					 $('#client_province_id_div').show();
                      $('#seller_province_id_div').show();
@@ -1015,6 +1018,17 @@ function get_client_seller_info(obj){
 		}
 	}); 
 	
+}
+
+// Get country name from country code
+function getCountryName(countryCode) {
+    var listCountries = @json($countries) 
+  for (var i = 0; i < listCountries.length; i++) {
+    if (listCountries[i].code === countryCode) {
+      return listCountries[i].name;
+    }
+  }
+  return null; // Retourne null si aucun pays ne correspond au code
 }
 
 function PopulateProvince(country_code, type = null) {

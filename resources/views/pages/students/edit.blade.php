@@ -5,6 +5,8 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <script src="{{ asset('js/datetimepicker-lang/moment-with-locales.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- color wheel -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
@@ -1328,16 +1330,33 @@ $('#save_btn').click(function (e) {
 							// all_ready = 0 means not ready to generate invoice
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
 							if (value.ready_flag == 0) {
-								all_ready = 0;
+								//all_ready = 0;
 								if (!isTeacher) {
 									resultHtml += "<td></td>";
 								}
-								
+
+							var myTimezone = "{{ $school->timezone }}";
+							var TheDateStart = moment(value.date_start, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_start + ':00';
+							var TheDateEnd = moment(value.date_end, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_end + ':00';
+
+							var eventStart = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var eventEnd = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var now = moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00');
+							const eventStartTimeStamp = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const eventEndTimeStamp = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+	
+							if (eventStart.isBefore(now)) {
 								if (value.event_type == 100) {
 									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 								} else {
 									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 								}
+							} else {
+								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
+                    			var phrase = "Available in " + timeBetween;
+								resultHtml += '<td style="text-align:right; font-size:11px;">('+phrase+')</td>';
+							}
 								
 							} else {
 								if (no_of_teachers == 1){
@@ -1623,7 +1642,30 @@ $('#save_btn').click(function (e) {
 	}
 
 
-	
+	function timeDifference(date1,date2) {
+        var difference = date1 - date2
+
+        var daysDifference = Math.floor(difference/1000/60/60/24);
+        difference -= daysDifference*1000*60*60*24
+
+        var hoursDifference = Math.floor(difference/1000/60/60);
+        difference -= hoursDifference*1000*60*60
+
+        var minutesDifference = Math.floor(difference/1000/60);
+        difference -= minutesDifference*1000*60
+
+        var secondsDifference = Math.floor(difference/1000);
+        
+        if(daysDifference > 0) {
+            return daysDifference + (daysDifference === 1 ? ' day' : ' days');  
+        } else {
+            if(hoursDifference > 0) {
+                return hoursDifference + (hoursDifference === 1 ? ' hour ' : ' hours ') + minutesDifference + (minutesDifference === 1 ? ' minute' : ' minutes'); 
+            } else {
+                return minutesDifference + (minutesDifference > 1 ? ' minutes' : ' minute'); 
+            }
+        }
+    }
 
 
 	$('.box_img i.fa.fa-close').click(function (e) {

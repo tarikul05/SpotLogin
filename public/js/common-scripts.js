@@ -12,7 +12,7 @@ function successModalCall(title, desc = '') {
   $('#successModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal fade" id="successModal" name="successModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
                     <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
