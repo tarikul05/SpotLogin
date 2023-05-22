@@ -88,7 +88,8 @@
     'gender'=>[
       1 => 'Male',
       2 => 'Female',
-      3 => 'Not specified',
+      3 => 'Prefer not to respond',
+      4 => 'Non-binary',
     ],
     
     'token_validity' => 2, //days

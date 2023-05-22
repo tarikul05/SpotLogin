@@ -280,7 +280,8 @@ class StudentsController extends Controller
             if ($user->isSuperAdmin()) {
                 return redirect(route('adminStudents',$schoolId))->with('success', __('Student added successfully!'));
             }else{
-                return redirect(route('studentHome'))->with('success', __('Student added successfully!'));
+                //return redirect(route('studentHome'))->with('success', __('Student added successfully!'));
+                return redirect()->route('editStudent',['student' => $student->id])->with('success', __('Student added successfully!'));
             }
             
         }catch (Exception $e) {
