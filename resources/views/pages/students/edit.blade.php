@@ -156,10 +156,17 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div" > 
+											@if($student->birth_date !== "1970-01-01 00:00:00")
 											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : ''}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
+											@endif
+											@if($student->birth_date === "1970-01-01 00:00:00")
+											
+											<div class="pt-3 pb-3"><i class="fa fa-calendar"></i> not specified</div>
+											<input id="birth_date" name="birth_date" type="hidden">
+											@endif
 										</div>
 									</div>
 								</div>
