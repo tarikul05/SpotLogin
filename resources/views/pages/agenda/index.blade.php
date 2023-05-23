@@ -63,6 +63,7 @@
                             <input type="hidden" name="get_event_id" id="get_event_id" value="">
                             <input type="hidden" name="get_validate_event_id" id="get_validate_event_id" value="">                         
                             <input type="hidden" name="get_non_validate_event_id" id="get_non_validate_event_id" value="">                         
+                            <input type="hidden" name="get_non_validate_event_delete_id" id="get_non_validate_event_delete_id" value="">                         
                             <input type="hidden" name="copy_date_from" id="copy_date_from" value="">
                             <input type="hidden" name="copy_date_to" id="copy_date_to" value="">
                             <input type="hidden" name="copy_school_id" id="copy_school_id" value="">
@@ -588,7 +589,7 @@
         <div class="modal-content">
         
             <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
-                <div class="modal-dialog EventModalClass" id="EventModalWin">
+                <div class="EventModalClass" id="EventModalWin">
                     <div class="modal-content">
                         <div class="modal-body text-center">                    
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">Title</span></h4>
@@ -756,7 +757,8 @@ window.addEventListener('load', function() {
         format: "DD/MM/YYYY",
         autoclose: true,
         minView: 2,
-        pickTime: false
+        pickTime: false,
+        weekStart: 1 // Start with Monday
       
     });
     moment.locale(lang_id, {
@@ -971,8 +973,8 @@ window.addEventListener('load', function() {
        // CallListView();	  
         
 		// console.log('lllll----------------')
-          
-        getCurrentListFreshEvents();
+        //getCurrentListFreshEvents2();
+        $('#calendar').fullCalendar('changeView', 'timeGridThreeDay');
         // console.log('lllll----------------')
 	});
     
@@ -1621,7 +1623,7 @@ window.addEventListener('load', function() {
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
         
-        var p_event_id=document.getElementById("get_non_validate_event_id").value;
+        var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -1790,7 +1792,7 @@ window.addEventListener('load', function() {
 
         var myTimezone = "{{ $myCurrentTimeZone }}";
         afficherHeureActuelle(myTimezone);
-        
+        const scrollTimeInit = moment().tz(myTimezone).format("HH");
         $('#calendar').fullCalendar({
             eventLimit: 3, // If you set a number it will hide the itens
             eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
@@ -1799,9 +1801,9 @@ window.addEventListener('load', function() {
 			slotDuration: '00:15:00',
 			slotLabelFormat: 'H:mm',
             defaultView: defview,
-            // minTime: '05:00:00',
-            scrollTime: '05:00:00',
-            maxTime: '24:00:00',
+            minTime: '05:00:00',
+            maxTime: '23:59:00',
+            scrollTime: scrollTimeInit + ':00',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false, 
             editable: false,
@@ -1823,6 +1825,11 @@ window.addEventListener('load', function() {
                 },
                 day: {
                     columnFormat: 'ddd DD MMM'
+                },
+                timeGridThreeDay: {
+                    type: 'listWeek',
+                    duration: { days: 3 },
+                    buttonText: '3 day'
                 }
             }, 
             handleWindowResize: true,
@@ -2268,7 +2275,7 @@ window.addEventListener('load', function() {
                 
                 var user_role=document.getElementById("user_role").value;
                 let selected_non_validate_ids = document.getElementById("get_non_validate_event_id").value;
-                        
+                let selected_non_validate_delete_ids = document.getElementById("get_non_validate_event_delete_id").value; 
                 if (foundRecords == 1)
                 {
                     if (user_role == 'student') {
@@ -2294,6 +2301,9 @@ window.addEventListener('load', function() {
                             document.getElementById("btn_delete_events").style.display = "none"; 
                         }else{
                             document.getElementById("btn_validate_events").style.display = "block"; 
+                            document.getElementById("btn_delete_events").style.display = "block"; 
+                        }
+                        if (selected_non_validate_delete_ids.length > 0) {
                             document.getElementById("btn_delete_events").style.display = "block"; 
                         }
                     } else {
@@ -2558,10 +2568,11 @@ window.addEventListener('load', function() {
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
+                var selected_non_validate_delete_ids = [];
                 const type_removed = [50, 51, 100];
                 Object.keys(JSON.parse(json_events)).forEach(function(key) {
                     if(type_removed.includes(JSON.parse(json_events)[key].event_type) != true){ 
-                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY");
+                        let end = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let start = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY HH:mm");
                         let end_date = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY HH:mm");
                         let teacher_name =JSON.parse(json_events)[key].teacher_name; 
@@ -2587,23 +2598,31 @@ window.addEventListener('load', function() {
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
                             if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == 'school_admin_teacher')){
-                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                                    selected_validate_ids.push('<tr><td>Date</td><td><b>'+start+' to '+end_date+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                    selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                                    selected_validate_ids.push('<tr><td><b>Date</b></td><td><b>'+start+' to '+end_date+'</td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }  
                         } 
                         else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
 
                             if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
-                                selected_non_validate_ids.push('Start:'+start+'<br>End: '+end+'<br>'+JSON.parse(json_events)[key].title+'<br>'+cours_name+'<br>'+duration_minutes+' minutes with '+teacher_name);
+                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                selected_non_validate_ids.push('Start: '+start+' End: '+end+'<br>'+JSON.parse(json_events)[key].title+'<br>'+cours_name+'<br>'+duration_minutes+' minutes with '+teacher_name);
+                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             
                         }
 
+                        if (JSON.parse(json_events)[key].is_locked ==0) {
+                             if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
+                                selected_non_validate_delete_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                            }
+                            if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
+                                selected_non_validate_delete_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                            }  
+                        }
                         // if((invoice_type == 'S') && ((user_role == 'schooladmin') || (user_role == 'admin_teacher'))){
                         //     selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+'   minutes '+teacher_name);	
                         // }else if(invoice_type == 'T'){  
@@ -2620,6 +2639,7 @@ window.addEventListener('load', function() {
                 
                 //selected_non_validate_ids.join(",  ");
                 selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                selected_non_validate_delete_ids = selected_non_validate_delete_ids.map(e => JSON.stringify(e)).join("|");
                 
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
@@ -2634,7 +2654,7 @@ window.addEventListener('load', function() {
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
-                
+                document.getElementById("get_non_validate_event_delete_id").value = selected_non_validate_delete_ids;
                 
                 $('#calendar').fullCalendar('removeEvents', function () { return true; });
 
@@ -2659,7 +2679,7 @@ window.addEventListener('load', function() {
                 $('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
                 // $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
 
-                var myTimezone = "{{ $myCurrentTimeZone }}";
+               /* var myTimezone = "{{ $myCurrentTimeZone }}";
                 const scrollTime = moment().tz(myTimezone).format("HH");
                 $scrollTo = $('[data-time="'+scrollTime+':00:00"]');
                 console.log('current hour', scrollTime)
@@ -2668,7 +2688,7 @@ window.addEventListener('load', function() {
                         scrollTop: $scrollTo.offset().top
                     }, 1500);
                 }
-
+*/
                 
 
                 if (document.getElementById("view_mode").value == 'list'){
@@ -2723,6 +2743,7 @@ window.addEventListener('load', function() {
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
         document.getElementById("agenda_list").style.display = "none";
+        
         console.log('go to current view')
         $('#calendar').fullCalendar('changeView', 'CurrentListView');
         var dt = new Date();
@@ -2758,6 +2779,7 @@ window.addEventListener('load', function() {
                 var selected_ids = [];
                 var selected_validate_ids = [];
                 var selected_non_validate_ids = [];
+                var selected_non_validate_delete_ids = [];
                 const type_removed = [50, 51, 100];
                 let resultHtml_cc ='';
                 $('#agenda_list').html(resultHtml_cc);
@@ -2783,16 +2805,24 @@ window.addEventListener('load', function() {
                             teacher_name = '';
                         } 
                         var curdate=new Date();
-                        if (end<moment(curdate).format("DD/MM/YYYY") && JSON.parse(json_events)[key].is_locked ==1) {
+                        if (end<moment(curdate).format("DD/MM/YYYY HH:mm") && JSON.parse(json_events)[key].is_locked ==1) {
                             if(loggedin_teacher_id == teacher_id){
                                 selected_validate_ids.push('Start: '+start+' End: '+end_date+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	  
                             }
-                        } 
-                        else{
+                        }  
+                        if (start < moment(curdate).format("DD/MM/YYYY HH:mm") && JSON.parse(json_events)[key].is_locked ==0) {
                             if(loggedin_teacher_id == teacher_id){
                                 selected_non_validate_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                       
                             }
                         }   
+                        if (start>moment(curdate).format("DD/MM/YYYY HH:mm") && JSON.parse(json_events)[key].is_locked ==0) {
+                            if(loggedin_teacher_id == teacher_id){
+                               
+                                selected_non_validate_delete_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);
+                            }
+                        }   
+          
                         if(loggedin_teacher_id == teacher_id){
                             selected_ids.push('Start:'+start+' End:'+end+' '+JSON.parse(json_events)[key].title+' '+cours_name+' '+duration_minutes+' minutes '+teacher_name);	
                         }
@@ -2900,6 +2930,7 @@ window.addEventListener('load', function() {
                 
                 //selected_non_validate_ids.join("|");
                 selected_non_validate_ids = selected_non_validate_ids.map(e => JSON.stringify(e)).join("|");
+                selected_non_validate_delete_ids = selected_non_validate_delete_ids.map(e => JSON.stringify(e)).join("|");
                 
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
@@ -2914,8 +2945,9 @@ window.addEventListener('load', function() {
                 }
                 document.getElementById("get_validate_event_id").value = selected_validate_ids;
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
+                document.getElementById("get_non_validate_event_delete_id").value = selected_non_validate_delete_ids;
                 
-                
+                get_non_validate_event_delete_id
                 //$('#calendar').fullCalendar('removeEvents', function () { return true; });
 
                 // var eventsToPut = []; 

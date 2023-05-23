@@ -139,19 +139,17 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
-                    <ul>`;
+                    <br>
+                    <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button><br><br>`;
+                    if (showWarning)  modalHtml +=`<div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`;
                     if (p_event_id.length!=0) {
                         p_event_id.forEach((element) => {
-                            modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
+                            modalHtml += `<table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table>`;
                         });
                     }
-                    modalHtml +=`</ul>`
-                    if (showWarning)  modalHtml +=`<div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`
-
-                modalHtml +=`
-                    <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
-                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                </div>
+                    modalHtml +=`<br>`
+                modalHtml +=`</div>
             </div>
         </div>
     </div>`;
@@ -179,19 +177,19 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
-                    <div class="alert alert-info">
+                    <!--<div class="alert alert-info">
                     <p><i class="fa fa-info"></i> You can validate all events you see on the current view for the pasts events.</p>
-                    </div>
-                    <ul>`;
-                    if (p_event_id.length!=0) {
-                        p_event_id.forEach((element) => {
-                            modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element.replace(/['"]+/g, '')+`</p></li>`;
-                        });
-                    }
-                modalHtml +=`</ul>
+                    </div>-->
+                    <br>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
                     <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                </div>
+                    <br><br>`;
+                    if (p_event_id.length!=0) {
+                        p_event_id.forEach((element) => {
+                            modalHtml += `<table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table>`;
+                        });
+                    }
+                modalHtml +=`</div>
             </div>
         </div>
     </div>`;
