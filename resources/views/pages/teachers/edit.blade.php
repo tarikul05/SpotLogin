@@ -1440,7 +1440,7 @@ function populate_teacher_lesson() {
 // 				success: function(response){	
 // 					if(response.status == 1){
 // 						$('#modal_add_teacher').modal('show');
-// 						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+// 						$("#modal_alert_body").text('{{ __('Successfully registered') }}');
 // 					}
 // 				}
 // 			})

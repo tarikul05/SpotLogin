@@ -12,7 +12,7 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -59,6 +59,11 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
+
+						
+						<div class="card">
+							<div class="card-body bg-tertiary">
+
 						<div class="row">
 							<div class="col-md-6">
 								<!-- <div class="form-group row">
@@ -160,11 +165,20 @@
 									</div>
 								</div> -->
 							</div>
+						</div>
+
+							</div>
+						</div>
+
+						<div class="row">
+							
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
 								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -216,11 +230,17 @@
 									</div>
 								</div>
 							</div>
+
+								</div>
+							</div>
+
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact information') }}</label>
 								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -265,6 +285,9 @@
 								</div>
 							</div>
 
+								</div>
+							</div>
+
 
 							<div class="clearfix"></div>
 							@if($school->country_code != 'CA' )
@@ -272,6 +295,8 @@
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
 								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -341,10 +366,15 @@
 									</div>
 								</div>
 							</div>
+
+								</div>
+							</div>
 							@else
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -357,6 +387,10 @@
 									</div>
 								</div>	
 							</div>
+
+								</div>
+							</div>
+							
 							@endif	
 							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
@@ -384,7 +418,7 @@
 				<form class="form-horizontal" id="add_price" action="{{ route('selfUpdatePriceAction') }}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
-						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
+						<label id="teacher_personal_data_caption">{{__('Sections and prices') }}<!--{{__('Number of students') }}--></label>
 					</div>
 
 					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">

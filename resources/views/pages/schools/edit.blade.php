@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
-
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
@@ -23,7 +22,7 @@
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
 						<div class="float-end btn-group">
-							<button type="submit" class="btn bg-info text-white save_button float-end" id="update_btn">
+							<button type="submit" class="btn btn-sucess text-white save_button float-end" id="update_btn">
 								{{ __('Save')}}
 							</button>
 						</div>
@@ -70,6 +69,8 @@
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Personal data of the school')}}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									@if($AppUI->isSuperAdmin())
@@ -190,14 +191,18 @@
 								
 								</div>
 							</div>
+
+						</div>
+					</div>
+
 							<div class="clearfix"></div>
 							<div class="row">
 								<div class="col-xs-12">
 										<div class="form-group alert alert-info row">
 												<label for="default_currency_code" id="default_currency_lbl"
 														name="default_currency_lbl"
-														class="col-lg-3 col-sm-3 text-end">{{ __('Base currency')}}</label>
-												<div class="col-sm-2">
+														class="col-lg-3 col-sm-3 pt-3 text-end">{{ __('Base currency')}} :</label>
+												<div class="col-sm-2 pt-3">
 														<div class="selectdiv">
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
 															<option value="">Select</option>
@@ -211,7 +216,7 @@
 												</div>
 												<div class="col-sm-7">
 														<label id="currency_alert_text"
-																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}.</label>
+																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}. <br>{{ __('(Lessons already scheduled will be invoiced)')}}</label>
 												</div>
 										</div>
 								</div>
@@ -358,6 +363,8 @@
 							<div class="section_header_class">
 								<label id="address_caption">{{ __('Contact Person')}}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									@if($AppUI->isSuperAdmin())
@@ -410,10 +417,17 @@
 									</div>
 								</div>
 							</div>
+
+						</div>
+					</div>
+
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{ __('School Address')}}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -482,10 +496,17 @@
 									</div>										
 								</div>
 							</div>
+
+						</div>
+					</div>
+
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact Information')}}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -559,11 +580,17 @@
 								</div>
 							</div>
 							
+								</div>
+							</div>
+
 							<div class="clearfix"></div>
 							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -658,6 +685,9 @@
 								</div>	
 							</div>
 							@endif	
+							
+								</div>
+							</div>
 							
 							<div class="clearfix"></div>
 							
@@ -821,7 +851,7 @@
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body">
 					<p id="modal_alert_body"></p>

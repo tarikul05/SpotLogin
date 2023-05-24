@@ -9,7 +9,7 @@
 
         <p class="mb-0">{{ __('Welcome back!') }}</p>
       </div>
-      <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+      <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
 
           <div class="form-group">
@@ -127,8 +127,9 @@ $(document).ready(function() {
     },
 
     submitHandler: function(form) {
+      $("#loginModal").modal('hide');
       let loader = $('#pageloader');
-      loader.show("fast");
+      //loader.show("fast");
       if (FirstLoginAfterResetPass()) {
         loader.hide("fast");
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
@@ -179,8 +180,11 @@ $(document).ready(function() {
 
           } else {
 
-            errorModalCall("{{ __('Invalid username or password') }}");
-
+            setTimeout(() => {
+              loader.hide("fast");
+              errorModalCall("{{ __('Invalid username or password') }}");
+          }, "900")
+           
 
           }
 
@@ -190,7 +194,9 @@ $(document).ready(function() {
 
         },
         complete: function() {
+          setTimeout(() => {
             loader.hide("fast");
+          }, "1500")
         }
       });
       return false; // required to block normal submit since you used ajax

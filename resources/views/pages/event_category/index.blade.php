@@ -109,7 +109,7 @@
 
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body">
 					<p id="modal_alert_body"></p>
@@ -228,7 +228,9 @@
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Successfully Registered') }}');
-						window.location.reload();
+						setTimeout(() => {
+							window.location.reload();
+						}, "1200")
 					}
 				}
 			})

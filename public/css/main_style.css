@@ -373,7 +373,7 @@ small.password_hint {
     width: 100%;
     height: 100%;
     padding-top: 100px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     overflow: auto;
 }
 
@@ -383,6 +383,7 @@ small.password_hint {
     position: relative;
     top: 40%;
     left: 50%;
+    width: 10%;
     transform: translate(-50%, -45%);
 }
 /* Mamun 16 February,2022 pageloader design -------------------------------------------------- */

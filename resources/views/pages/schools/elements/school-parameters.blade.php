@@ -1,5 +1,6 @@
 <div class="row">
     <!-- Tabs navs -->
+	<div class="card-body">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab_inner_part1" type="button" role="tab" aria-controls="nav-tab_inner_part1" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
@@ -10,12 +11,15 @@
             <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
 
         @can('parameters-create-udpate')
-            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save Parameters</button>
+            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save settings</button>
         @endcan
         </div>
     </nav>
+	</div>
     <!-- Tabs navs -->
     <!-- Tabs content -->
+	<div class="card">
+		<div class="card-body bg-tertiary">
     <form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('event_location.create')}}">
         <div class="tab-content" id="tab_inner_part">
             <div id="tab_inner_part1" class="tab_inner tab-pane fade show active">
@@ -26,10 +30,14 @@
                             <label>{{ __('Category Name') }}</label>
                         </div>
                         <div class="col-md-2 col-6 inv_type">
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                             <label class="invoice_type_label">{{ __('Invoice Type') }}</label>
+							@endif
                         </div>
                         <div class="col-md-2 col-1 ty_bill">
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                             <label class="invoice_type_label">{{ __('Type of billing') }}</label>
+							@endif
                         </div>
                     </div>
 					<?php //echo '<pre>';print_r($eventCat); ?>
@@ -128,7 +136,7 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+                            <button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
                         @endcan
                         </div>
                     </div>
@@ -176,7 +184,7 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_location_btn" data-last_location_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
+                            <button id="add_more_location_btn" data-last_location_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
                         @endcan
                         </div>
                     </div>
@@ -223,15 +231,16 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_level_btn" type="button" data-last_level_id="{{$count}}"  class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
+                            <button id="add_more_level_btn" type="button" data-last_level_id="{{$count}}"  class="btn bg-info save_button text-white"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
                         @endcan
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </form>
+		</div>
+	</div>
     <!-- End Tabs content -->
 </div>
 
@@ -542,13 +551,15 @@ $(document).ready(function(){
 					console.log(response);
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						$("#modal_alert_body").text('{{ __('Successfully registered') }}');
 						//window.location.reload();
 						var url = window.location.href;
 						//const url = "http://testing.com/path?empty&value1=test&id=3";
 
-						url = addOrChangeParameters( url, {tab:'tab_5'} )
-						window.location.href = url;
+						setTimeout(() => {
+							url = addOrChangeParameters( url, {tab:'tab_5'} )
+							window.location.href = url;
+						}, "1000")
 					}
 				}
 			})
