@@ -13,7 +13,7 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -61,6 +61,8 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Student Personal Information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
 								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
@@ -278,12 +280,17 @@
 								</div>
 							@endif
 						</div>
+
+							</div>
+						</div>
 					</fieldset>
 				</div>
 				<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Address') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -346,9 +353,13 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Billing address - Same as above') }} <input onclick="bill_address_same_as_click()" type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -407,9 +418,13 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -468,6 +483,8 @@
 									</div>
 								</div>
 							</div>
+						</div>
+					</div>
 						</div>
 					</div>
 				</div>

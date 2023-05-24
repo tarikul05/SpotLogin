@@ -28,9 +28,6 @@
 @endsection
 
 @section('content')
-<div id="loader-wrapper">
-    <div id="loader"></div>
-  </div>
 <div class="content agenda_page">
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
@@ -622,10 +619,10 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-
+$("#pageloader").show();
 window.addEventListener('load', function() {
-  var loader = document.getElementById('loader-wrapper');
   loader.style.display = 'none';
+  $("#pageloader").hide();
 });
 
     var no_of_teachers = document.getElementById("max_teachers").value;

@@ -13,7 +13,7 @@
 @endphp
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -54,6 +54,8 @@
 								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
 							</div>
 						@endif
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
@@ -133,9 +135,16 @@
 									</div>
 								</div>
 							</div>
+						</div>
+							</div>
+						</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
+								
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
 									<div class="col-sm-12">
@@ -182,22 +191,34 @@
 									</div>
 								</div>
 							</div>
+							</div>
+
+								</div>
+							</div>
+
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
 									<div class="col-sm-7">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left">{{__('Description') }} :</label>
 										<div class="col-sm-7 descrip">
-											{{ !empty($lessonData->description) ? $lessonData->description : ''; }}
+											{{ !empty($lessonData->description) ? $lessonData->description : 'no description'; }}
 										</div>
 									</div>
 									</div>
 								</div>
 							</div>
 						</div>
+
+							</div>
+						</div>
+						
 					</fieldset>
 					<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>
 			</div>

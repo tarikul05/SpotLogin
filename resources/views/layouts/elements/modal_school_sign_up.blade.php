@@ -67,10 +67,14 @@
                         > A Number</br>
                         > A Special character</br>
                     </small>
-                  <div class="checkbox">
-                      <label><input type="checkbox" id="terms_condition" name="terms_condition" required>{{ __('I agree with the terms and conditions') }}</label>
+                    <br>
+                  <div class="checkbox text-center">
+                      <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree with the terms and conditions') }}</label>
                   </div>
-                  <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  <br>
+                  <div class="text-center">
+                    <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  </div>
               </form>
               
               <div style="text-align:center;margin-top:10px;">
