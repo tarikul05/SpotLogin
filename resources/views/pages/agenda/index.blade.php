@@ -619,10 +619,10 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-$("#pageloader").show();
+let loader = $('#pageloader');
+loader.fadeIn("fast");
 window.addEventListener('load', function() {
-  loader.style.display = 'none';
-  $("#pageloader").hide();
+  $("#pageloader").fadeOut('fast');
 });
 
     var no_of_teachers = document.getElementById("max_teachers").value;

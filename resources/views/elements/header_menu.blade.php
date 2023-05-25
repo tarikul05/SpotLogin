@@ -1,6 +1,6 @@
 <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
-            <div class="container-fluid">
+            <div class="container-fluid pl-4 pr-4">
                 <a href="#" class="navbar-brand">
                     <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
                 </a>
