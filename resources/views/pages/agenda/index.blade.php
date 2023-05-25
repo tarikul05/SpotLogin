@@ -619,14 +619,11 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-
-    let loader = $('#pageloader');
-    loader.fadeIn("fast");
-
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
     var resultHtml_cc='';      //for populate list - agenda_table
-    
+    var teachersList=[];
+    var isTeacherHasPrices = false
     var firstload = '0';    // check first time loading or not
     var prevdt='';          // for rendering for heading
     // var prev_text=document.getElementById("prev_text").value;
@@ -1362,6 +1359,7 @@
                 },
                 success: function(data) {
                     $("#pageloader").hide();
+                    teachersList = data
                     if (data.length >0) {
                         
                     }
@@ -3661,7 +3659,7 @@ $(document).ready(function() {
 $("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
     
-    
+
     var agendaSelect = +$("#agenda_select").val();
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
@@ -3669,6 +3667,25 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+
+    // Search Teacher ID
+    var selectedTeacher = teachersList.find(function(teacher) {
+    return teacher.id === teacherSelect;
+    });
+
+    if (selectedTeacher) {
+    console.log('Teacher ID:', selectedTeacher.id);
+    if(selectedTeacher.lesson_price_teachers.length > 0) {
+        isTeacherHasPrices = true
+    } else {
+        if(teacherSelect !== 0) {
+            isTeacherHasPrices = false
+            errorModalCall('This teacher has not yet saved any rates');
+        }
+    }
+    } else {
+    console.log('No teacher found with ID ', teacherSelect, '.');
+    }
    
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";

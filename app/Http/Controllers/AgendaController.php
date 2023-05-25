@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
 use App\Models\LessonPrice;
+use App\Models\LessonPriceTeacher;
 use App\Models\Currency;
 use App\Models\School;
 use Illuminate\Support\Facades\Auth;
@@ -925,14 +926,28 @@ class AgendaController extends Controller
         if ($user->isTeacherAll()) {
             $user_role = 'teacher_all';
         }
-        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId);
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
-           $professors->where('teacher_id',$user->person_id);
+        $professorsQuery = SchoolTeacher::active()->onlyTeacher()->where('school_id', $schoolId);
+
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') { 
+            $professorsQuery->where('teacher_id', $user->person_id);
         }
-        $professors = $professors->get();
-        //$students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        
+        $professors = $professorsQuery->get();
+        //$students = SchoolStudent::active()->where('school_id', $schoolId)->get();
         //$locations = Teacher::active()->where('school_id', $schoolId)->orderBy('id')->get();
-        return $professors =json_encode($professors);
+        
+        $mergedList = [];
+        
+        foreach ($professors as $professor) {
+            $lesson_price_teachers = LessonPriceTeacher::where('teacher_id', $professor->teacher_id)->get();
+            $professorData = $professor->toArray();
+            $professorData['lesson_price_teachers'] = $lesson_price_teachers->toArray();
+            $mergedList[] = $professorData;
+        }
+        
+        $mergedListJSON = json_encode($mergedList);
+        
+        return $mergedListJSON;
 
     }
 
