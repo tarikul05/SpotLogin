@@ -54,6 +54,12 @@
 <!-- js comes form inner page end -->
   <script type="text/javascript">
     $(document).ready(function() {
+  
+      let loader = $('#pageloader');
+      window.addEventListener('load', function() {
+        $("#pageloader").fadeOut('fast');
+      });
+
       $('.select_two_defult_class').select2();
     });
   </script>

@@ -184,20 +184,23 @@ $(document).ready(function() {
             setTimeout(() => {
               loader.fadeOut("fast");
               errorModalCall("{{ __('Invalid username or password') }}");
-          }, "900")
+            }, "900")
            
 
           }
 
         }, // sucess
         error: function(ts) {
-          errorModalCall("{{ __('Invalid username or password') }}");
+          setTimeout(() => {
+            loader.fadeOut("fast");
+            errorModalCall("{{ __('Invalid username or password') }}");
+          }, "900")
 
         },
         complete: function() {
-          setTimeout(() => {
+          /*setTimeout(() => {
             loader.fadeOut("fast");
-          }, "1000")
+          }, "1500");*/
         }
       });
       return false; // required to block normal submit since you used ajax

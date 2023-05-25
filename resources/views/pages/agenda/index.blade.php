@@ -619,11 +619,9 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 <script>
-let loader = $('#pageloader');
-loader.fadeIn("fast");
-window.addEventListener('load', function() {
-  $("#pageloader").fadeOut('fast');
-});
+
+    let loader = $('#pageloader');
+    loader.fadeIn("fast");
 
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
