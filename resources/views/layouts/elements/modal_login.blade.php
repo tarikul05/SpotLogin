@@ -39,6 +39,8 @@
 <script>
 $(document).ready(function() {
 
+  $("#pageloader").fadeOut();
+
   if(window.location.href.indexOf('#login') != -1) {
     $('#loginModal').modal('show');
   }
@@ -55,7 +57,6 @@ $(document).ready(function() {
       $('#show_hide_password i').addClass("fa-eye");
     }
   });
-
 
   
   function FirstLoginAfterResetPass() {
@@ -131,7 +132,7 @@ $(document).ready(function() {
       let loader = $('#pageloader');
       //loader.show("fast");
       if (FirstLoginAfterResetPass()) {
-        loader.hide("fast");
+        loader.fadeOut("fast");
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
@@ -160,7 +161,7 @@ $(document).ready(function() {
         //async: false,
         //encode: true,
         beforeSend: function (xhr) {
-          loader.show("fast");
+          loader.fadeIn("fast");
         },
         success: function(data) {
           
@@ -181,7 +182,7 @@ $(document).ready(function() {
           } else {
 
             setTimeout(() => {
-              loader.hide("fast");
+              loader.fadeOut("fast");
               errorModalCall("{{ __('Invalid username or password') }}");
           }, "900")
            
@@ -195,8 +196,8 @@ $(document).ready(function() {
         },
         complete: function() {
           setTimeout(() => {
-            loader.hide("fast");
-          }, "1500")
+            loader.fadeOut("fast");
+          }, "1000")
         }
       });
       return false; // required to block normal submit since you used ajax
