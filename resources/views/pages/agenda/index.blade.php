@@ -3670,7 +3670,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
 
     // Search Teacher ID
     var selectedTeacher = teachersList.find(function(teacher) {
-    return teacher.id === teacherSelect;
+    return teacher.teacher_id === teacherSelect;
     });
 
     console.log('teachers', teachersList)
