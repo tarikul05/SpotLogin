@@ -3673,6 +3673,8 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     return teacher.id === teacherSelect;
     });
 
+    console.log('teachers', teachersList)
+
     if (selectedTeacher) {
     console.log('Teacher ID:', selectedTeacher.id);
     if(selectedTeacher.lesson_price_teachers.length > 0) {
