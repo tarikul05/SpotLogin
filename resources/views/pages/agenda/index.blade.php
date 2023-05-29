@@ -33,15 +33,20 @@
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
-					<div class="col-sm-4 col-xs-12 header-area">
-							<div class="page_header_class">
-                                <label for="calendar" id="cal_title" style="display: block;">
-                                    {{__('Agenda')}}: 
-                                </label> <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa fa-clock-o"></i> <span id="currentTimer"></span></span>
+					<div class="col-lg-4 col-12 header-area">
+							<div class="page_header_class pt-1">
+                                <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
+                                  {{__('Agenda')}}:  
+                                </h1> 
+                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa fa-clock-o"></i> <span id="currentTimer"></span></span>
+                                <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
+                                    <i class="fa-solid fa-bell fa-bounce"></i>
+                                    Lesson in progress...
+                                </em>
 							</div>
 					</div>
-                   <div class="col-sm-5 col-xs-12 btn-area pt-2 align-items-end">
-                        <div class="pull-right btn-group cal_top">
+                   <div class="col-lg-5 col-12 btn-area pt-2 align-items-end">
+                        <div class="d-flex justify-content-end btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
                             <input type="hidden" name="edit_view_url" id="edit_view_url" value="">
@@ -83,8 +88,7 @@
                             <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
                             <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
                             
-                            <div id="button_menu_div" class="btn-group buttons pull-right" onclick="SetEventCookies()">
-                                <!-- <div class="btn-group"> -->
+                            <div id="button_menu_div" class="btn-group buttons" onclick="SetEventCookies()">
                                 @php 
                                 $icalPersonal = route('ical.personalEvents');
                                 if(!empty($schoolId)){ 
@@ -97,38 +101,20 @@
                                     <em class="glyphicon glyphicon-remove"></em>
                                     <span id ="btn_validate_events_cap">Copy my schedule</span>
                                 </a> -->
-                                <style>
-                                    .dropdown {
-                                      position: relative;
-                                      display: inline-block;
-                                    }
-                                    
-                                    .dropdown-content {
-                                      display: none;
-                                      position: absolute;
-                                      background-color: #f9f9f9;
-                                      min-width: 190px;
-                                      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                                      padding: 12px 16px;
-                                      z-index: 1;
-                                      font-size:13px;
-                                    }
-                                    
-                                    .dropdown:hover .dropdown-content {
-                                      display: block;
-                                    }
-                                    </style>
-                                    
+                               
+                               
+    
+
                                     <div class="dropdown" id="dropdownActions">
                                       <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
                                       <div class="dropdown-content">
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All Events</span></a>
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All Events</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-check"></i> <span id ="btn_validate_events_cap">Validate All Events</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">Delete All Events</span></a>
                                       </div>
                                     </div>
                                 <!--<a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>-->
-                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-plus"></em><span id ="btn_copy_events_cap">Copy</span></button>
+                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">Copy</span></button>
                                 <button style="display: none; max-width:80px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
                                 @if(!$AppUI->isStudent())
                                     <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
@@ -136,13 +122,11 @@
                                         <span id ="btn_export_events_cap">Excel</span>
                                     </a>
                                 @endif
-                                <div id="addButton"></div>
-                                <!-- </div> -->
                             </div>
                         </div>
 					</div>    
-                    <div class="col-sm-3 p-2 col-xs-12 btn-area align-items-end text-center">
-                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:5px; max-width:97%;">
+                    <div class="col-lg-3 col-12 btn-area align-items-end text-center">
+                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
                     </div>
 				</div>                 
 			</header>
@@ -792,6 +776,7 @@
 
         
         DisplayCalendarTitle();
+        
         document.getElementById("copy_school_id").value =getSchoolIDs();
         document.getElementById("copy_event_id").value =getEventIDs();
         document.getElementById("copy_student_id").value = getStudentIDs();
@@ -808,7 +793,7 @@
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml+='<a href="#" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius:4px!important; max-width:80px; height:35px;"><i class="glyphicon glyphicon-plus"></i> Add</a>';
+                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> Add</button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
@@ -819,7 +804,7 @@
             // Add $(this).val() to your list
         });
         // menuHtml+='</ul>';
-        $('#addButton').append(menuHtml); 
+        $('#button_menu_div').append(menuHtml); 
         
 
 
@@ -1802,15 +1787,30 @@
         // } 
 
         var myTimezone = "{{ $myCurrentTimeZone }}";
+
+        var timeFormat;
+
+        // Vérifier si le fuseau horaire est européen
+        var europeanTimezones = ['Europe/Paris', 'Europe/Berlin', 'Europe/London'];
+        var isEuropeanTimezone = europeanTimezones.includes(myTimezone);
+
+        // Définir le format d'affichage de l'heure en fonction du fuseau horaire
+        if (isEuropeanTimezone) {
+        timeFormat = 'HH:mm'; // Fuseau horaire européen
+        } else {
+        timeFormat = 'h:mm A'; // Format par défaut pour les fuseaux horaires non européens
+        }
+
+
         afficherHeureActuelle(myTimezone);
         const scrollTimeInit = moment().tz(myTimezone).format("HH");
         $('#calendar').fullCalendar({
             eventLimit: 3, // If you set a number it will hide the itens
             eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
-            timeFormat: 'HH(:mm)',   
-            axisFormat: 'HH(:mm)',            
+            timeFormat: timeFormat,   
+            axisFormat: timeFormat,            
 			slotDuration: '00:15:00',
-			slotLabelFormat: 'H:mm',
+			slotLabelFormat: timeFormat,
             defaultView: defview,
             minTime: '05:00:00',
             maxTime: '23:59:00',
@@ -2213,11 +2213,11 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 
-                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table style="width:100%;" class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa fa-calendar"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa fa-clock-o"></i> Time :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table style="width:100%;" class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa-solid fa-clock"></i> Timer :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>'); 
                     }
                     
                     
@@ -2671,7 +2671,15 @@
 
                 var eventsToPut = []; 
 
+                var myTimezoneDetect = "{{ $myCurrentTimeZone }}";
+                var nowDetect = moment().tz(myTimezoneDetect).format('YYYY-MM-DDTHH:mm:00');
+
                 $.each(JSON.parse(json_events), function(k, v)  {
+                    var eventStartDetect = moment.utc(v.start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezoneDetect);
+                    var eventEndDetect = moment.utc(v.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezoneDetect);
+                    if (eventStartDetect.isBefore(nowDetect) && eventEndDetect.isAfter(nowDetect)) {
+                        $('#eventInProgress').css('display','inline-block');
+                    }
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
