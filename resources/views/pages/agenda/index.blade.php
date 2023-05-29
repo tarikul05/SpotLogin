@@ -945,25 +945,43 @@
 	});
 
 	$('#btn_month').on('click', function() {
+        $("#btn_prev").prop("disabled", false);
+        $("#btn_next").prop("disabled", false);
+        $("#btn_today").prop("disabled", false);
         $('#calendar').fullCalendar('changeView', 'month');
         hideExtraRowInMonthView()
 	});
 
 	$('#btn_week').on('click', function() {
+        $("#btn_prev").prop("disabled", false);
+        $("#btn_next").prop("disabled", false);
+        $("#btn_today").prop("disabled", false);
         $('#calendar').fullCalendar('changeView', 'agendaWeek');
 	});
 
 	$('#btn_day').on('click', function() {
+        $("#btn_prev").prop("disabled", false);
+        $("#btn_next").prop("disabled", false);
+        $("#btn_today").prop("disabled", false);
         $('#calendar').fullCalendar('changeView', 'agendaDay');
 	});
     $('#btn_list').on('click', function() {
         //getFreshEvents('ListView');	  
-		$('#calendar').fullCalendar('changeView', 'listYear');	
+        $("#btn_prev").prop("disabled", false);
+        $("#btn_next").prop("disabled", false);
+        $("#btn_today").prop("disabled", false);
+		$('#calendar').fullCalendar('changeView', 'listMonth');	
 	});
     $('#btn_current_list').on('click', function() {
         //getFreshEvents('CurrentListView');
        // CallListView();	  
-        
+
+       $("#btn_prev").prop("disabled", true);
+       $("#btn_next").prop("disabled", true);
+       $("#btn_today").prop("disabled", true);
+
+       var aujourdHuiList = moment().startOf('day');
+       $('#calendar').fullCalendar('gotoDate', aujourdHuiList);
 		// console.log('lllll----------------')
         //getCurrentListFreshEvents2();
         $('#calendar').fullCalendar('changeView', 'timeGridThreeDay');
@@ -1821,7 +1839,7 @@
                 },
                 timeGridThreeDay: {
                     type: 'listWeek',
-                    duration: { days: 3 },
+                    duration: { days: 2 },
                     buttonText: '3 day'
                 }
             }, 
@@ -2984,17 +3002,21 @@
 
 
    
-
     function DisplayCalendarTitle() {
         var view = $('#calendar').fullCalendar('getView');
-        if (view.name=='CurrentListView') {
+        if (view.name=='timeGridThreeDay') {
             var dt = new Date();
-            var CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
+            var CurrentListViewDate = new Date(new Date().getTime()+(1*24*60*60*1000)) //2 days
             const options1 = {month: 'short',day: 'numeric' };
             const options = { day: 'numeric', year: 'numeric'};
-            view.title = moment(dt).format("MMM DD")+' - '+moment(CurrentListViewDate).format("DD,YYYY");
+            view.title = moment(dt).format("MMM DD")+' - '+moment(CurrentListViewDate).format("DD, YYYY");
             //$('#calendar').fullCalendar( 'renderEvent', JSON.parse(json_events) , 'stick');
             //$('#calendar').fullCalendar('rerenderEvents');
+
+
+            document.getElementById("date_from").value = formatDate(dt);
+            document.getElementById("date_to").value = formatDate(CurrentListViewDate);
+
         }
         $('#cal_title').text("{{__('Agenda')}} : "+view.title);            
     };
