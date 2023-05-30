@@ -60,6 +60,10 @@
         $("#pageloader").fadeOut('fast');
       });
 
+      setTimeout(() => {
+        $("#pageloader").fadeOut('fast');
+      }, 2500);
+
       $('.select_two_defult_class').select2();
     });
   </script>

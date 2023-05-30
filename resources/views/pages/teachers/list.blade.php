@@ -49,9 +49,9 @@
                           @method('post')
                           @csrf
                           @if(!$teacher->pivot->is_sent_invite)
-                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
+                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                           @else
-                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
+                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                           @endif
                         </form>
                     @else
