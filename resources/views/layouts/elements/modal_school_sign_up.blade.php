@@ -14,7 +14,7 @@
                   <div class="form-group custom-selection">
                       <select class="selectpicker" id="school_type" name="school_type" required>
                           <option value="COACH">{{ __('Single coach') }}</option>
-                          <option value="SCHOOL">{{ __('School') }}</option>
+                          <option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>
                       </select>
                   </div>
                   <div class="form-group">
