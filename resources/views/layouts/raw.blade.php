@@ -104,6 +104,15 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+      
+    let loader = $('#pageloader');
+    window.addEventListener('load', function() {
+      $("#pageloader").fadeOut('fast');
+    });
+
+    setTimeout(() => {
+        $("#pageloader").fadeOut('fast');
+      }, 2500);
 
     $("#setLan").change(function(event) {
       var lanCode = $(this).val();
