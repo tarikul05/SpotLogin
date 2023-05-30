@@ -255,6 +255,9 @@ class InvoiceController extends Controller
                 $invoice_data = Invoice::with(['school' => function ($q) {
                     $q->select('id','tax_number');
                 }])->where('id', $p_auto_id)->first();
+
+                $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice_data->id])->get();
+                $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=> $invoice_data->id])->get();  
                 
                 $invoice_items = DB::table('invoice_items')
                                 ->leftJoin('events', 'events.id', '=', 'invoice_items.event_id')
@@ -271,7 +274,7 @@ class InvoiceController extends Controller
                 $invoice_items = $items;
                 $date_from = strtolower(date('F.Y', strtotime($invoice_data->date_invoice)));
                 $invoice_name = 'invoice-'.$invoice_data->id.'-'.strtolower($invoice_data->client_firstname).'.'.strtolower($invoice_data->client_lastname).'.'.$date_from.'.pdf';
-                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name]);
+                $pdf = PDF::loadView('pages.invoices.invoice_pdf_view', ['invoice_data'=> $invoice_data,'invoice_items'=> $invoice_items, 'invoice_name' => $invoice_name, 'InvoicesTaxData' => $InvoicesTaxData, 'InvoicesExpData' => $InvoicesExpData, 'test' => 'yo le test']);
                 $pdf->set_option('isHtml5ParserEnabled', true);
                 $pdf->set_option('isRemoteEnabled', true);
                 $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);

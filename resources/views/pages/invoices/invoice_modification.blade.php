@@ -178,7 +178,7 @@
                                                         
                                                     </td>
                                                     <td style="text-align:right">
-                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
+                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align: right; padding-right: 5px;" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -196,7 +196,7 @@
                                                         ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
-                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" value="{{number_format($disc1_amt,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
+                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align: right; padding-right: 5px;" value="{{number_format($disc1_amt,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
                                                         
                                                     </td>
                                                 </tr>
@@ -242,30 +242,61 @@
                                         </tr>
                                     @endif
                                     @if ($invoice->extra_expenses > 0)
-                                    <tr>
+                                    <!--<tr>
                                         <td colspan="2" style="text-align:right">Charges and Additional Expenses:</td>
                                         <td></td>
-                                        <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') :0}}" placeholder="" style="margin-left: 0px;" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>
+                                        <td style="text-align:right; margin-right:0 padding-right:0;">
+                                            <input type="text" class="form-control numeric" id="sextra_expenses" name="sextra_expenses" value="{{$invoice->extra_expenses ? number_format($invoice->extra_expenses,'2') . '$' : '0$'}}" placeholder="" style="text-align: right; padding-right: 5px;" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>
+                                        </td>
+                                    </tr>-->
+
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2"></td>
+                                        <td class="text-left small">Charges and Additional Expenses</td>
+                                      
+                                    </tr>
+
+                                    @foreach(DB::table('invoices_expenses')->where('invoice_id', $invoice->id)->get() as $item)
+                                    <tr>
+                                        <td colspan="2" style="text-align:right">{{ $item->expense_name }}</td>
+                                        <td></td>
+                                        <td style="text-align:right; margin-right:0 padding-right:0;">
+                                            <input type="text" class="form-control numeric" id="taxes" name="sextra_expenses" value="{{ $item->expense_amount ? number_format($item->expense_amount, 1) . ' $' : '0 $' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
                                         </td>
                                     </tr>
+                                    @endforeach
+
+
                                     @endif
                                     @if ($invoice->tax_amount > 0)
+
+                                    @foreach(DB::table('invoices_taxes')->where('invoice_id', $invoice->id)->get() as $item)
                                     <tr>
+                                        <td colspan="2" style="text-align:right">{{ $item->tax_name }}</td>
+                                        <td>({{ $item->tax_percentage }}%)</td>
+                                        <td style="text-align:right; margin-right:0 padding-right:0;">
+                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{ $item->tax_amount ? number_format($item->tax_amount, 1) . ' $' : '0 $' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+
+
+                                    <!--<tr>
                                         <td colspan="2" style="text-align:right">Tax:</td>
                                         <td></td>
                                         <td style="text-align:right">
                                             <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{$invoice->tax_amount ? number_format($invoice->tax_amount,'2') :0}}" placeholder="" style="margin-left: 0px;" disabled='disabled'>
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                     @endif
                                     @php
                                         $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount + $invoice->tax_amount;
                                     @endphp
-                                    <tr>
-                                        <td colspan="2" style="text-align:right">Total</td>
+                                    <tr class="alert alert-info">
+                                        <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
-                                        <td style="text-align:right"><span id="grand_total_cap">{{ number_format($grand_total,'2') }}</span></td>
+                                        <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grand_total,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
                             </table>

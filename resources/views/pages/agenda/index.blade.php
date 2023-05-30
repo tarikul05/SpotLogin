@@ -2608,7 +2608,7 @@
 
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
-                            if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == 'school_admin_teacher')){
+                            if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == ('school_admin_teacher'))){
                                     selected_validate_ids.push('<tr><td>Date</td><td><b>'+start+' to '+end_date+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){

@@ -364,17 +364,25 @@
                 <?php } ?>        
                 <tfoot>
                 <?php if($invoice_data->extra_expenses > 0){ ?>
-                    <tr class="extra_col">
-                        <td colspan="2" class="text"><b>{{ __('invoice_extra_charges') }}</b></td>
-                        <td colspan="2" class="price">+ <b>{{ $invoice_data->extra_expenses }}</b></td>
-                    </tr>
+                    <?php
+                    foreach ($InvoicesExpData as $item) {
+                        echo '<tr class="extra_col">';
+                        echo '<td colspan="2" class="text"><b>' . $item['expense_name'] . '</b></td>';
+                        echo '<td colspan="2" class="price">+ <b>' . $item['expense_amount'] . '</b></td>';
+                        echo '</tr>';
+                    }
+                    ?>
                     <?php } ?>
 
                     <?php if($invoice_data->tax_amount > 0){ ?>
-                    <tr class="extra_col">
-                        <td colspan="2" class="text"><b>{{ __('invoice_tax') }}</b></td>
-                        <td colspan="2" class="price">+ <b>{{ $invoice_data->tax_amount }}</b></td>
-                    </tr>
+                        <?php
+                        foreach ($InvoicesTaxData as $item) {
+                            echo '<tr class="extra_col">';
+                            echo '<td colspan="2" class="text"><b>' . $item['tax_name'] . '</b></td>';
+                            echo '<td colspan="2" class="price">+ <b>' . $item['tax_amount'] . '</b></td>';
+                            echo '</tr>';
+                        }
+                        ?>
                     <?php } ?>
 
                     <?php if($invoice_data->total_amount_discount != 0){ ?>
@@ -390,7 +398,8 @@
                                 }
                             ?>
                         </td>
-                        <td colspan="2" class="price">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
+                        <td style="text-align:right"><span style="font-size:12px;">Discount on lesson <b>{{ $invoice_data->discount_percent_1 }}%</b></span></td>
+                        <td colspan="1" class="price">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
                     </tr>
                     <?php } ?>
 
