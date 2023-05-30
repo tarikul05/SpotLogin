@@ -35,6 +35,7 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form class="form-horizontal" id="student_off" method="post" action="{{ route('studentOff.createAction',[$schoolId]) }}"  name="student_off" role="form">
 					@csrf
+					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="3">
 					<fieldset>
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
@@ -49,24 +50,26 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-									<div class="col-sm-7">
-										<div class="selectdiv student_list">
-											<select class="form-control" id="student" name="student[]" multiple="multiple">
-												@foreach($students as $key => $student)
-													<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
-												@endforeach
-											</select>
+								@if(!$AppUI->isStudent())
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+										<div class="col-sm-7">
+											<div class="selectdiv student_list">
+												<select class="form-control" id="student" name="student[]" multiple="multiple">
+													@foreach($students as $key => $student)
+														<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+													@endforeach
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
-												<input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
+												<input id="start_date" required="true" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -80,7 +83,7 @@
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
-												<input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
+												<input id="end_date" required="true" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -88,14 +91,17 @@
 										</div>	
 									</div>
 								</div>
-								<div class="form-group row">
-									<div id="all_day_div111" class="row">
-										<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
-										<div class="col-sm-7">
-											<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
+								@if(!$AppUI->isStudent())
+									<div class="form-group row">
+										<div id="all_day_div111" class="row">
+											<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
+											<div class="col-sm-7">
+												<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
+											</div>
 										</div>
 									</div>
-								</div>
+								@endif
+
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
@@ -197,6 +203,15 @@ $('#student_off').on('submit', function() {
 			$('#modal_add_teacher').modal('show');
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
 		}	            
-});  
+}); 
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#student_off .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#student_off .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

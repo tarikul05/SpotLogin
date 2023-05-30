@@ -527,22 +527,39 @@ class SchoolsController extends Controller
                         }
                     }
                 }
-                if (isset($data['category']) && !empty($data['category'])) {
 
+                if (isset($data['category']) && !empty($data['category'])) {
                     foreach($data['category'] as $cat){
-                        $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
+                        $invoicedType = ($user->isTeacherAdmin() || $user->isTeacherSchoolAdmin() || $user->isSchoolAdmin() ) ? $cat['invoice'] : 'T';
+                        $s_thr_pay_type = !empty($cat['s_thr_pay_type']) ? $cat['s_thr_pay_type'] : 0;
+                        $s_std_pay_type = !empty($cat['s_std_pay_type']) ? $cat['s_std_pay_type'] : 0;
+                        $t_std_pay_type = !empty($cat['t_std_pay_type']) ? $cat['t_std_pay_type'] : 0;
+
+                        if ($invoicedType == 'T') {
+                            $s_thr_pay_type = $s_std_pay_type = 0;
+                        }else{
+                            $t_std_pay_type = 0;
+                        }
                         if(isset($cat['id']) && !empty($cat['id'])){
                             $answers = [
                                 'school_id' => $userSchoolId,
                                 'title' => $cat['name'],
-                                'invoiced_type' => $invoicedType
+                                'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0,
+                                's_thr_pay_type' => $s_thr_pay_type,
+                                's_std_pay_type' => $s_std_pay_type,
+                                't_std_pay_type' => $t_std_pay_type
                             ];
                             $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
                         }else{
                             $answers = [
                                 'school_id' => $userSchoolId,
                                 'title' => $cat['name'],
-                                'invoiced_type' => $invoicedType
+                                'invoiced_type' => $invoicedType,
+                                'package_invoice' => (($invoicedType =='S') && (!empty($cat['package_invoice']))) ? 1 : 0,
+                                's_thr_pay_type' => $s_thr_pay_type,
+                                's_std_pay_type' => $s_std_pay_type,
+                                't_std_pay_type' => $t_std_pay_type
                             ];
                             $eventCat = EventCategory::create($answers);
                         }

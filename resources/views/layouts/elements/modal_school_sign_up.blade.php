@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal fade login-signup-modal" id="schoolsignupModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="schoolsignupModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
           <div class="modal-header d-block text-center border-0">
               <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
@@ -14,7 +14,7 @@
                   <div class="form-group custom-selection">
                       <select class="selectpicker" id="school_type" name="school_type" required>
                           <option value="COACH">{{ __('Single coach') }}</option>
-                          <option value="SCHOOL">{{ __('School') }}</option>
+                          <option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>
                       </select>
                   </div>
                   <div class="form-group">
@@ -67,10 +67,14 @@
                         > A Number</br>
                         > A Special character</br>
                     </small>
-                  <div class="checkbox">
-                      <label><input type="checkbox" id="terms_condition" name="terms_condition" required>{{ __('I agree with the terms and conditions') }}</label>
+                    <br>
+                  <div class="checkbox text-center">
+                      <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree with the terms and conditions') }}</label>
                   </div>
-                  <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  <br>
+                  <div class="text-center">
+                    <button type="submit" id="signup_form_button" class="btn btn-lg btn-primary btn-block">{{ __('Create an account') }}</button>
+                  </div>
               </form>
               
               <div style="text-align:center;margin-top:10px;">

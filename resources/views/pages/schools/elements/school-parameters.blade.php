@@ -1,5 +1,6 @@
 <div class="row">
     <!-- Tabs navs -->
+	<div class="card-body">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab_inner_part1" type="button" role="tab" aria-controls="nav-tab_inner_part1" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
@@ -10,34 +11,42 @@
             <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
 
         @can('parameters-create-udpate')
-            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save Parameters</button>
+            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save settings</button>
         @endcan
         </div>
     </nav>
+	</div>
     <!-- Tabs navs -->
     <!-- Tabs content -->
+	<div class="card">
+		<div class="card-body bg-tertiary">
     <form role="form" id="location_form" class="form-horizontal" method="post" action="{{route('event_location.create')}}">
         <div class="tab-content" id="tab_inner_part">
             <div id="tab_inner_part1" class="tab_inner tab-pane fade show active">
                 <div class="tab-pane fade show active" id="tab_category" role="tabpanel" aria-labelledby="tab_category">
                     @csrf
                     <div class="section_header_class row">
-                        <div class="col-md-3 col-5">
+                        <div class="col-md-3 col-5 cat_name">
                             <label>{{ __('Category Name') }}</label>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-md-2 col-6 inv_type">
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                             <label class="invoice_type_label">{{ __('Invoice Type') }}</label>
+							@endif
                         </div>
-                        <div class="col-md-2 col-1">
-                            <label></label>
+                        <div class="col-md-2 col-1 ty_bill">
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+                            <label class="invoice_type_label">{{ __('Type of billing') }}</label>
+							@endif
                         </div>
                     </div>
+					<?php //echo '<pre>';print_r($eventCat); ?>
                     <div class="row">
-                        <div id="add_more_event_category_div" class="col-md-8">
+                        <div id="add_more_event_category_div" class="col-md-10">
                         @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
                             @foreach($eventCat as $cat)
                                 <div class="col-md-12 add_more_event_category_row row">
-                                    <div class="col-md-5 col-5">
+                                    <div class="col-md-3 col-5">
                                         <div class="form-group row">
                                             <div class="col-sm-11">
                                                 <input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
@@ -45,19 +54,75 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if(!$AppUI->isTeacher())
-                                    <div class="col-md-5 col-6">
+                                    @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+                                    <div class="col-md-8 col-6">
                                         <div class="form-group row invoice_part">
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+                                            <div class="col-sm-3">
+												<div>
+                                                	<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
+                                                </div>
+                                                @if(!$AppUI->isTeacherAdmin())
+												<div>
+													<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
+												</div>
+                                                @endif
                                             </div>
-                                            <div class="col-sm-6">
-                                                <input type="radio" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
-                                            </div>
+											<div class="col-sm-8">
+												<div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?> >
+                                                    @if(!$AppUI->isTeacherAdmin())
+													<div class="col-md-6">
+														<label class="titl">Teachers</label>
+														<div class="form-check">
+															<label class="form-check-label" for="radio2{{$count}}">
+																<input type="radio" class="form-check-input" id="radio2{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="0" <?php if($cat->s_thr_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="radio{{$count}}">
+																<input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
+															</label>
+														</div>
+													</div>
+                                                    @endif
+													<div class="col-md-6">
+														<label class="titl">Students</label>
+														<div class="form-check">
+															<label class="form-check-label" for="sradio2{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="0" <?php if($cat->s_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="sradio{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="sradio3{{$count}}">
+																<input type="radio" class="form-check-input" id="sradio3{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="2" <?php if($cat->s_std_pay_type == 2){ echo 'checked'; }  ?>>Packaged
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="pack_invoice_area teacher form-group row" <?php if($cat->invoiced_type == 'S'){ echo 'style="display:none"'; }  ?> >
+													<div class="col-md-6">
+														<label class="titl">Students</label>
+														<div class="form-check">
+															<label class="form-check-label" for="tradio2{{$count}}">
+																<input type="radio" class="form-check-input" id="tradio2{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="0" <?php if($cat->t_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
+															</label>
+														</div>
+														<div class="form-check">
+															<label class="form-check-label" for="tradio{{$count}}">
+																<input type="radio" class="form-check-input" id="tradio{{$count}}" name="category[{{$count}}][t_std_pay_type]" value="1" <?php if($cat->t_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price (per hour)
+															</label>
+														</div>
+													</div>
+												</div>
+											</div>
                                         </div>
                                     </div>
                                     @endif
-                                    <div class="col-md-2 col-1">
+                                    <div class="col-md-1 col-1">
                                         @can('parameters-delete')
                                         <div class="form-group row">
                                             <div class="col-sm-5">
@@ -71,7 +136,7 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
+                            <button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
                         @endcan
                         </div>
                     </div>
@@ -119,7 +184,7 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_location_btn" data-last_location_id="{{$count}}" type="button" class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
+                            <button id="add_more_location_btn" data-last_location_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
                         @endcan
                         </div>
                     </div>
@@ -166,15 +231,16 @@
                         </div>
                         <div class="col-md-2">
                         @can('parameters-create-udpate')
-                            <button id="add_more_level_btn" type="button" data-last_level_id="{{$count}}"  class="btn btn-success save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
+                            <button id="add_more_level_btn" type="button" data-last_level_id="{{$count}}"  class="btn bg-info save_button text-white"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
                         @endcan
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </form>
+		</div>
+	</div>
     <!-- End Tabs content -->
 </div>
 
@@ -187,26 +253,84 @@ $(document).ready(function(){
 		var incre = (parseInt(lst_id)+1);
 		$(this).attr('data-last_event_cat_id',incre);
 		var resultHtml = `<div class="col-md-12 add_more_event_category_row row">
-			<div class="col-md-5 col-5">
+			<div class="col-md-3 col-5">
 				<div class="form-group row">
 					<div class="col-sm-11">
 						<input class="form-control category_name" name="category[`+lst_id+`][name]" placeholder="Category Name" type="text">
 					</div>
 				</div>
 			</div>
-			@if(!$AppUI->isTeacher())
-			<div class="col-md-5 col-6">
+			@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+			<div class="col-md-8 col-6">
 				<div class="form-group row invoice_part">
-					<div class="col-sm-6">
-						<input name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
-					</div>
-					<div class="col-sm-6">
-						<input name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					<div class="col-sm-3">
+                        <div>
+						  <input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
+					    </div>
+                        @if(!$AppUI->isTeacherAdmin())
+					   <div>
+						  <input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
+					   </div>
+                       @endif
+                    </div>   
+					<div class="col-sm-8">
+						<div class="pack_invoice_area student form-group row">
+							@if(!$AppUI->isTeacherAdmin())
+                            <div class="col-md-6">
+								<label class="titl">Teachers</label>
+								<div class="form-check">
+									<label class="form-check-label" for="radio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="radio2`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="0">Hourly rate
+									</label>
+								</div>
+								<div class="form-check">
+									<label class="form-check-label" for="radio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price (per hour)
+									</label>
+								</div>
+							</div>
+                            @endif
+							<div class="col-md-6">
+								<label class="titl">Students</label>
+								<div class="form-check">
+									<label class="form-check-label" for="sradio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio2`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="0">Hourly rate
+									</label>
+								</div>
+								<div class="form-check">
+									<label class="form-check-label" for="sradio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price (per hour)
+									</label>
+								</div>
+								@if($AppUI->isSchoolAdmin())
+								<div class="form-check">
+									<label class="form-check-label" for="sradio3`+lst_id+`">
+										<input type="radio" class="form-check-input" id="sradio3`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="2">Packaged
+									</label>
+								</div>
+								@endif
+							</div>
+						</div>
+						<div class="pack_invoice_area teacher form-group row" style="display:none">
+							<div class="col-md-6">
+								<label class="titl">Students</label>
+								<div class="form-check">
+									<label class="form-check-label" for="tradio2`+lst_id+`">
+										<input type="radio" class="form-check-input" id="tradio2`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="0">Hourly rate
+									</label>
+								</div>
+								<div class="form-check">
+									<label class="form-check-label" for="tradio`+lst_id+`">
+										<input type="radio" class="form-check-input" id="tradio`+lst_id+`" name="category[`+lst_id+`][t_std_pay_type]" value="1">Fixed price (per hour)
+									</label>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			@endif
-			<div class="col-md-2 col-1">
+			<div class="col-md-1 col-1">
 				<div class="form-group row">
 					<div class="col-sm-5">
 						<button type="button" class="btn btn-theme-warn delete_event" data-r_id="`+lst_id+`"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -427,13 +551,15 @@ $(document).ready(function(){
 					console.log(response);
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						$("#modal_alert_body").text('{{ __('Successfully registered') }}');
 						//window.location.reload();
 						var url = window.location.href;
 						//const url = "http://testing.com/path?empty&value1=test&id=3";
 
-						url = addOrChangeParameters( url, {tab:'tab_5'} )
-						window.location.href = url;
+						setTimeout(() => {
+							url = addOrChangeParameters( url, {tab:'tab_5'} )
+							window.location.href = url;
+						}, "1000")
 					}
 				}
 			})
@@ -455,5 +581,34 @@ $(document).ready(function(){
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
 
+//if student package select it will automatic select fix price for teacher
+    $(document).on('click', "input[name$=\'[s_std_pay_type]\'][value='2']", function(event) {
+        if ($(this).prop("checked")) {
+            $(this).closest('.pack_invoice_area').find("input[name$=\'[s_thr_pay_type]\'][value='1']").prop('checked', true)
+        }
+    });
+
+    //if student package selected, teacher can't be move on hourly rate
+    $(document).on('click', "input[name$=\'[s_thr_pay_type]\'][value='0']", function(event) {
+        var dd = $(this).closest('.pack_invoice_area').find("input[name$=\'[s_std_pay_type]\'][value='2']").prop('checked')
+        if (dd) {
+            alert("If the student is packaged the teacher can not be paid hourly")
+            event.preventDefault();
+        }
+    });
+
+
 })
+
+	$('#add_more_event_category_div').on('click', '.invcat_name', function() {
+		var type = $(this).val();
+		if(type == 'T'){
+			$(this).closest(".invoice_part").find('.pack_invoice_area.student').hide();
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').show();	
+		}else if(type == 'S'){
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').hide();	
+			$(this).closest(".invoice_part").find('.pack_invoice_area.student').show();	
+		}
+	});
+
 </script>

@@ -93,7 +93,7 @@
 										<tr>
 											<th>{{ $value->currency_code }}</th>
 											<td>{{ $value->name }}</td>
-											<td data-code="{{$value->country_code}}">{{ $value->country->name }}</td>
+											<td data-code="{{$value->country_code}}">{{ isset($value->country->name) ?  $value->country->name: '' }}</td>
 											<td>{{ $value->sort_order }}</td>
 											<td data-active="{{ $value->is_active }}">
 												@if($value->is_active == 1)

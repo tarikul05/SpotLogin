@@ -105,7 +105,7 @@
 											@else
 												<td style="text-align:right">{{ $item->unit }} minutes</td>
 											@endif
-											<td style="text-align:right">{{ !empty($item->total_item) ? round($item->total_item,2) : ''; }}</td>
+											<td style="text-align:right">{{ !empty($item->total_item) ? number_format($item->total_item, '2') : ''; }}</td>
 										</tr>
 										@php 
 											$total_min = $total_min + $item->unit;
@@ -121,14 +121,14 @@
 									<tr>
 										<td colspan="1" style="text-align:right">{{ __('Sub-total') }} </td>
 										<td style="text-align:right">{{$total_min}} minutes</td>
-										<td style="text-align:right">{{$invoice->subtotal_amount_all}}</td>
+										<td style="text-align:right">{{number_format($invoice->subtotal_amount_all, '2')}}</td>
 									</tr>
 								@endif
 								@if ($invoice->total_amount_discount != 0) 
 									<tr>
 										<td colspan="1" style="text-align:right">{{ __('Discount on course') }} </td>
 										<td></td>
-										<td style="text-align:right">- {{$invoice->total_amount_discount}}</td>
+										<td style="text-align:right">- {{number_format($invoice->total_amount_discount, '2')}}</td>
 									</tr>
 								@endif
 
@@ -137,13 +137,13 @@
 								<tr>
 									<td colspan="1" style="text-align:right">{{ __('Extra charges') }}</td>
 									<td></td>
-									<td style="text-align:right">+ <span id="extra_expenses_cap">{{$invoice->extra_expenses}}</span></td>
+									<td style="text-align:right">+ <span id="extra_expenses_cap">{{number_format($invoice->extra_expenses, '2')}}</span></td>
 								</tr>
 								@if ($invoice->tax_amount != 0) 
 									<tr>
-										<td colspan="1" style="text-align:right">{{$invoice->{{$invoice->total_amount_discount}}}} </td>
+										<td colspan="1" style="text-align:right">{{$invoice->{{number_format($invoice->total_amount_discount, '2')}} </td>
 										<td></td>
-										<td style="text-align:right">{{$invoice->tax_amount}}</td>
+										<td style="text-align:right">{{number_format($invoice->tax_amount, '2')}}</td>
 									</tr>
 								@endif
 								@php
@@ -152,7 +152,7 @@
 								<tr>
 									<td colspan="1" style="text-align:right">{{ __('Total') }}</td>
 									<td></td>
-									<td style="text-align:right"><span id="grand_total_cap">{{$grand_total}}</span></td>
+									<td style="text-align:right"><span id="grand_total_cap">{{number_format($grand_total, '2')}}</span></td>
 								</tr>
 							</tbody>
 						</table>
@@ -186,7 +186,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_no_discount">{{$invoice->subtotal_amount_no_discount}}</label>
+									<label id="ssubtotal_amount_no_discount">{{number_format($invoice->subtotal_amount_no_discount, '2')}}</label>
 								</p>
 							</div>
 						</div>
@@ -199,7 +199,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_with_discount">{{ !empty($invoice->ssubtotal_amount_with_discount) ? $invoice->ssubtotal_amount_with_discount : ''; }}</label>
+									<label id="ssubtotal_amount_with_discount">{{ !empty($invoice->ssubtotal_amount_with_discount) ? number_format($invoice->ssubtotal_amount_with_discount, '2') : ''; }}</label>
 								</p>
 							</div>
 						</div>
@@ -212,7 +212,7 @@
 							</div>
 							<div class="col-sm-2">
 								<p class="form-control-static numeric">
-									<label id="ssubtotal_amount_all">{{$invoice->subtotal_amount_no_discount}}</label>
+									<label id="ssubtotal_amount_all">{{number_format($invoice->subtotal_amount_no_discount, '2')}}</label>
 								</p>
 							</div>
 						</div>
@@ -395,7 +395,7 @@
 
 			<!-- TAB 3-->
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-				<form class="form-horizontal" id="add_teacher" action="http://localhost:8000/edit-teacher/12" method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
+				<form class="form-horizontal" id="add_teacher" action="/edit-teacher/" method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
 					<input type="hidden" name="_token" value="sFD17gatUngGK5kuFWC2nZKEa1vtNtraV0nqnMvz">
 					<input type="hidden" id="school_id" name="school_id" value="1">
 					<input type="hidden" id="school_name" name="school_name" value="Tarikul Islam">

@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid students_list">
+  <div class="container-fluid body students_list">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -46,17 +46,19 @@
                 <td>
                     @if(!$student->user)
                         <span>{{ __('No') }}</span>
-                        <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$schoolId,'student'=>$student->id])}}">
-                          @method('post')
-                          @csrf
-                          @if(!$student->pivot->is_sent_invite)
-                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
-                          @else
-                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
-                          @endif
-                        </form>
+                        @can('students-sent-mail')
+                            <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$schoolId,'student'=>$student->id])}}">
+                              @method('post')
+                              @csrf
+                              @if(!$student->pivot->is_sent_invite)
+                                  <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                              @else
+                                  <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                              @endif
+                            </form>
+                        @endcan
                     @else
-                        <span>{{ __('Yes') }}</span>
+                         <span class="">{{$student->user->username}}</span>
                     @endif
                 </td>
                 <td>{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
@@ -79,6 +81,7 @@
                                     <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
                                 </form>
                                 @endcan
+                                @can('students-activate')
                                 <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
                                     @method('post')
                                     @csrf
@@ -89,6 +92,7 @@
                                         <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
                                     @endif
                                 </form>
+                                @endcan
                             </div>
                         </div>  
                     </td>

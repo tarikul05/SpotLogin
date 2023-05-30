@@ -9,10 +9,11 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
 @endphp
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -47,17 +48,18 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
-						@if($lessonData->is_locked ==1)
+						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
 								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
-								
 							</div>
 						@endif
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 							<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Type') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Category') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($lessonData->title) ? $lessonData->title : ''; }}
 									</div>
@@ -71,7 +73,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Assistant Type') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($eventCategory->title) ? $eventCategory->title : ''; }}
+										{{ !empty($lessonCategory->title) ? $lessonCategory->title : ''; }}
 									</div>
 								</div>
 	
@@ -133,9 +135,16 @@
 									</div>
 								</div>
 							</div>
+						</div>
+							</div>
+						</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
+								
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
 									<div class="col-sm-12">
@@ -150,17 +159,16 @@
 																<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left"></th>
-																<th width="10%" style="text-align:left;">
-																<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
-																<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
-																</th>
-																<th width="10%" style="text-align:center">
-																<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
-																<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
-																</th>
-																<th width="10%" style="text-align:right">
-																<label>{{ __('Extra charges') }}</label>
-																</th>
+																@if($showPrice)
+																	<th width="10%" style="text-align:left;">
+																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
+																	<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	</th>
+																	<th width="10%" style="text-align:center">
+																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
+																	<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	</th>
+																@endif
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
@@ -169,9 +177,10 @@
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
-																<td>{{ $student->buy_price }}</td>
-																<td style="text-align:center">{{ $student->sell_price }}</td>
-																<td style="text-align:center">{{ $lessonData->extra_charges }}</td>
+																@if($showPrice)
+																	<td>{{ $student->buy_price }}</td>
+																	<td style="text-align:center">{{ $student->sell_price }}</td>
+																@endif
 															</tr>
 															@endforeach
 														</tbody>
@@ -182,22 +191,34 @@
 									</div>
 								</div>
 							</div>
+							</div>
+
+								</div>
+							</div>
+
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
 									<div class="col-sm-7">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left">{{__('Description') }} :</label>
 										<div class="col-sm-7 descrip">
-											{{ !empty($lessonData->description) ? $lessonData->description : ''; }}
+											{{ !empty($lessonData->description) ? $lessonData->description : 'no description'; }}
 										</div>
 									</div>
 									</div>
 								</div>
 							</div>
 						</div>
+
+							</div>
+						</div>
+						
 					</fieldset>
 					<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>
 			</div>

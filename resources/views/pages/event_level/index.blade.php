@@ -198,7 +198,7 @@
 				success: function(response){	
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
-						$("#modal_alert_body").text('{{ __('Sauvegarde réussie') }}');
+						$("#modal_alert_body").text('{{ __('Successfully registered') }}');
 						window.location.reload();
 					}
 				}

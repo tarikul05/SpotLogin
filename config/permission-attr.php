@@ -60,8 +60,16 @@ return [
         'students-create',
         'students-update',
         // 'students-users-update',
+        'students-sent-mail',
+        'students-activate',
         'students-delete',
 
+
+        // event permission
+        'self-edit-events',
+        'others-edit-events',
+        'self-delete-event',
+        'other-delete-event',
 
         ];
 

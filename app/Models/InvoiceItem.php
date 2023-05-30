@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 
@@ -24,6 +26,7 @@ class InvoiceItem extends BaseModel
         'is_locked',
         'caption',
         'unit',
+        'item_date',
         'price_unit',
         'event_detail_id',
         'event_id',
@@ -53,9 +56,18 @@ class InvoiceItem extends BaseModel
     protected $casts = [
         'created_at' => 'date:Y/m/d H:i',
         'modified_at' => 'date:Y/m/d H:i',
+        'item_date' => 'date:Y/m/d H:i',
     ];
 
     protected $appends = [];
+
+    /**
+     * @return belongsTo
+     */
+    public function invoice_items(): BelongsTo
+    {
+        return $this->BelongsTo(Invoice::class, 'invoice_id');
+    }
 
 }
 

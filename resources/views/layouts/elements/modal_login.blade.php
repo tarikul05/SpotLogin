@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade login-signup-modal" id="loginModal" tabindex="-1" aria-hidden="true" aria-labelledby="loginModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header d-block text-center border-0">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
@@ -9,7 +9,7 @@
 
         <p class="mb-0">{{ __('Welcome back!') }}</p>
       </div>
-      <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
+      <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
 
           <div class="form-group">
@@ -39,6 +39,8 @@
 <script>
 $(document).ready(function() {
 
+  $("#pageloader").fadeOut();
+
   if(window.location.href.indexOf('#login') != -1) {
     $('#loginModal').modal('show');
   }
@@ -55,7 +57,6 @@ $(document).ready(function() {
       $('#show_hide_password i').addClass("fa-eye");
     }
   });
-
 
   
   function FirstLoginAfterResetPass() {
@@ -127,10 +128,11 @@ $(document).ready(function() {
     },
 
     submitHandler: function(form) {
+      $("#loginModal").modal('hide');
       let loader = $('#pageloader');
-      loader.show("fast");
+      //loader.show("fast");
       if (FirstLoginAfterResetPass()) {
-        loader.hide("fast");
+        loader.fadeOut("fast");
         document.getElementById("display_username").innerHTML = document.getElementById("login_username").value;
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
@@ -159,7 +161,7 @@ $(document).ready(function() {
         //async: false,
         //encode: true,
         beforeSend: function (xhr) {
-          loader.show("fast");
+          loader.fadeIn("fast");
         },
         success: function(data) {
           
@@ -179,18 +181,26 @@ $(document).ready(function() {
 
           } else {
 
-            errorModalCall("{{ __('Invalid username or password') }}");
-
+            setTimeout(() => {
+              loader.fadeOut("fast");
+              errorModalCall("{{ __('Invalid username or password') }}");
+            }, "900")
+           
 
           }
 
         }, // sucess
         error: function(ts) {
-          errorModalCall("{{ __('Invalid username or password') }}");
+          setTimeout(() => {
+            loader.fadeOut("fast");
+            errorModalCall("{{ __('Invalid username or password') }}");
+          }, "900")
 
         },
         complete: function() {
-            loader.hide("fast");
+          /*setTimeout(() => {
+            loader.fadeOut("fast");
+          }, "1500");*/
         }
       });
       return false; // required to block normal submit since you used ajax

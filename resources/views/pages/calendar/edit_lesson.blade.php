@@ -22,6 +22,8 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+	$current_time = Helper::formatDateTimeZone(now(), 'long','UTC', $zone);
+	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
 @endphp
 @section('content')
   <div class="content">
@@ -50,19 +52,20 @@
 				<form class="form-horizontal" id="edit_lesson" method="post" action="{{ route('lesson.editAction',['school'=> $schoolId,'lesson'=> $lessonlId]) }}"  name="edit_lesson" role="form">
 					@csrf
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
+					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
+							<label id="teacher_personal_data_caption">{{ __('Lesson information') }} </label>
 						</div>
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="category_select" name="category_select">
 												@foreach($eventCategory as $key => $eventcat)
-													<option data-invoice="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
+													<option data-invoice="{{ $eventcat->invoiced_type }}"  data-s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" data-s_std_pay_type="{{  $eventcat->s_std_pay_type }}" data-t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" {{!empty($lessonData->event_category) ? (old('category_select', $lessonData->event_category) == $eventcat->id ? 'selected' : '') : (old('category_select') == $eventcat->id ? 'selected' : '')}}>{{ $eventcat->title }}</option>
 												@endforeach
 											</select>
 										</div>
@@ -137,7 +140,7 @@
 										</div>	
 										<div class="col-sm-4 offset-md-1">
 											<div class="input-group"> 
-												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
+												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{date('H:i', strtotime($date_start))}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
 												</span>
@@ -174,45 +177,63 @@
 										</div>
 									</div>		
 								</div>
-								<div class="form-group row">
+								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
 										<label class="col-lg-3 col-sm-3 text-left" for="all_day" id="has_user_ac_label_id">{{__('All day') }} :</label>
 										<div class="col-sm-7">
 											<input id="all_day" name="fullday_flag" type="checkbox" value="Y" >
 										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Type of billing') }} :</label>
+								</div> -->
+								<div class="form-group row lesson hide_on_off" id="teacher_type_billing">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sis_paying" name="sis_paying">
-												<option value="0">Coming Soon</option>
-												<!-- <option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>No charge</option>
-												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Hourly rate</option>
-												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Price per student</option> -->
+												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Hourly rate</option>
+												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Price per student</option>
 											</select>
 										</div>
 									</div>
 								</div>
+								<div class="form-group row lesson hide_on_off">
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
+									<div class="col-sm-7">
+										<div class="selectdiv">
+											<select class="form-control" id="student_sis_paying" name="student_sis_paying">
+												<option value="0" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 0 ? 'selected' : '') : (old('student_attn') == 0 ? 'selected' : '')}}>Hourly rate</option>
+												<option value="1" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 1 ? 'selected' : '') : (old('student_attn') == 1 ? 'selected' : '')}}>Fixed price</option>
+												<option value="2" {{!empty($lessonData->is_paying) ? (old('student_attn', $lessonData->is_paying) == 2 ? 'selected' : '') : (old('student_attn') == 2 ? 'selected' : '')}}>Packaged</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								
 								<div class="form-group row" id="hourly" style="display:none">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
 												@foreach($lessonPrice as $key => $lessprice)
-													<option value="{{ $lessprice->lesson_price_student }}" {{!empty($lessonData->no_of_students) ? (old('sevent_price', 'price_'.$lessonData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>Group lessons for {{ $lessprice->divider }} students</option>
+													<option value="{{ $lessprice->lesson_price_student }}" {{!empty($lessonData->no_of_students) ? (old('sevent_price', 'price_'.$lessonData->no_of_students) == $lessprice->lesson_price_student ? 'selected' : '') : (old('sevent_price') == 'price_'.$lessprice->lesson_price_student ? 'selected' : '')}}>
+													@if($lessprice->lesson_price_student == 'price_1')
+														Private Group
+													@else
+														Group lessons for {{ $lessprice->divider }} students
+													@endif	
+													</option>
 												@endforeach
 											</select>
 										</div>
 									</div>
 								</div>
-								<div id="price_per_student" style="display:none;">
+
+								<div id="price_per_student">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
-											<select class="form-control" id="sprice_currency" name="sprice_currency" disabled="">
+											<select class="form-control" id="sprice_currency" name="sprice_currency" readonly>
 												@foreach($currency as $key => $curr)
 													<option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
 												@endforeach
@@ -221,26 +242,24 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData->price_amount_buy) && !empty($lessonData->price_amount_buy) ? $lessonData->price_amount_buy : 0 }}" autocomplete="off">
-											<input type="hidden" name="attendBuyPrice" value="{{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div"> 
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
-											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData->price_amount_sell) && !empty($lessonData->price_amount_sell) ? $lessonData->price_amount_sell : 0 }}" autocomplete="off">
-											<input type="hidden" name="attendSellPrice" value="{{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}">
+											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData['price_amount_sell']) && !empty($lessonData['price_amount_sell']) ? $lessonData['price_amount_sell'] : 0 }}" autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -265,12 +284,14 @@
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
-																<th width="15%" style="text-align:right;">
-																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
-																</th>
-																<th width="15%" style="text-align:right">
-																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
-																</th>
+																@if($showPrice)
+																	<th width="15%" style="text-align:right;">
+																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
+																	</th>
+																	<th width="15%" style="text-align:right">
+																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
+																	</th>
+																@endif
 															</tr>
 															
 															@foreach($studentOffList as $student)
@@ -289,8 +310,10 @@
 																	</div>
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
-																<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_buy) ? (($lessonPriceTeacher->price_buy)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0  }}</td>
-																<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($lessonPriceTeacher->price_sell) ? (($lessonPriceTeacher->price_sell)*($lessonData->no_of_students)*($lessonData->duration_minutes))/60 : 0 }}</td>
+																@if($showPrice)
+																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
+																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
+																@endif
 															</tr>
 															@endforeach
 														</tbody>
@@ -301,10 +324,11 @@
 									</div>
 								</div>
 							</div>
-
+							@if(strtotime($date_end) < strtotime($current_time))
 							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
-								<button type="button" class="btn btn-sm btn-info" style="position:absolute;top:10px;right:10px;" id="button_lock_and_save">Validate</button>
+								<input type="submit" class="btn btn-sm btn-info button_lock_and_save"  style="position:absolute;top:10px;right:10px;" name="validate" value="Validate">
 							</div>
+							@endif
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
@@ -322,8 +346,18 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
-							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+						@if($AppUI->person_id == $lessonData->teacher_id)
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
+						@else
+							@if(($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@else
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
+							@endcan
+							@endif
 						@endif
 						<button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
                         <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
@@ -362,34 +396,70 @@ $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
 	
-	//if ((action == "new") && (price == 1)){
-	if (price == 1){                   
-		if (cnt >= 10) {
-			document.getElementById("sevent_price").value='price_10';
-		}
-		else
-		{
-			document.getElementById("sevent_price").value='price_'+cnt;
-		}
+	if (cnt >= 10) {
+		document.getElementById("sevent_price").value='price_10';
+	}else{
+		document.getElementById("sevent_price").value='price_'+cnt;
+	}
 		
-	} 
+	 
 })
 
 $( document ).ready(function() {
+
 	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // document.getElementById("zone").value = zone;
 	var zone = document.getElementById("zone").value;
 	var value = $('#sis_paying').val();
-	$('#hourly').hide();
-	$('#price_per_student').hide();
-	if(value == 1){
+	var datainvoiced = $("#category_select option:selected").data('invoice');
+    var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+    var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+    var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+    if (datainvoiced == 'S') {
+        $("#student_sis_paying").val(s_std_pay_type);
+        $("#sis_paying").val(s_thr_pay_type);
+        $("#teacher_type_billing").show();
+		if(s_thr_pay_type == 0){
+			$('#sprice_amount_buy').prop('disabled', true);   
+		}else if(s_thr_pay_type == 1){
+			$('#sprice_amount_buy').prop('disabled', false);  
+		}
+		if(s_std_pay_type == 0){
+			$('#sprice_amount_sell').prop('disabled', true);   
+		}else if(s_std_pay_type == 1){
+			$('#sprice_amount_sell').prop('disabled', false);  
+		}else if(s_std_pay_type == 2){
+			$('#sprice_amount_sell').prop('disabled', true);  
+		}
+
+    }else{
+        $("#teacher_type_billing").hide();
+        $("#student_sis_paying").val(t_std_pay_type);
+		if(s_thr_pay_type == 0){
+			$('#sprice_amount_buy').prop('disabled', true);   
+		}else if(s_thr_pay_type == 1){
+			$('#sprice_amount_buy').prop('disabled', false);  
+		}
+		if(t_std_pay_type == 0){
+			$('#sprice_amount_sell').prop('disabled', true);   
+		}else if(t_std_pay_type == 1){
+			$('#sprice_amount_sell').prop('disabled', false);  
+		}else if(t_std_pay_type == 2){
+			$('#sprice_amount_sell').prop('disabled', true);  
+		}
+    }
+	
+	if(s_thr_pay_type == 0){
 		$('#hourly').show();
-	}else if(value == 2){
+        $('#price_per_student').show();
+	}else if(s_thr_pay_type == 1 && s_std_pay_type == 1){
+        $('#hourly').hide();
 		$('#price_per_student').show();
 	}
 
-	var start_time = new Date("{{$date_start}}").toLocaleTimeString()
-	var end_time = new Date("{{$date_end}}").toLocaleTimeString()
+	var start_time = moment("{{$date_start}}").format("HH:mm")
+	var end_time = moment("{{$date_end}}").format("HH:mm")
+
 	$('.timepicker1').timepicker({
 		timeFormat: 'HH:mm',
 		interval: 15,
@@ -523,10 +593,10 @@ $( document ).ready(function() {
 
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
-	$('#price_per_student').hide();
-	if(this.value == 1){
+	$('#price_per_student').show();
+	if(this.value == 0){
 		$('#hourly').show();
-	}else if(this.value == 2){
+	}else if(this.value == 1){
 		$('#price_per_student').show();
 	}
 });
@@ -673,42 +743,6 @@ $('#edit_lesson').on('submit', function() {
 
 });
 
-
-$("#button_lock_and_save").on('click', function(event) {
-	event.preventDefault();
-	confirm_event();
-});
-function confirm_event(){
-	var data = 'school_id={{ $lessonData->school_id }}&p_event_auto_id={{ $lessonData->id }}';
-	var status = '';
-	$.ajax({
-		url: BASE_URL + '/confirm_event',
-		data: data,
-		type: 'POST',
-		dataType: 'json',
-		beforeSend: function( xhr ) {
-			$("#pageloader").show();
-		},
-		success: function (result) {
-			status = result.status;
-			if (status == 'success') {
-				successModalCall('{{ __("Event has been validated ")}}');
-				window.location.href = '/{{$schoolId}}/view-lesson/{{$lessonlId}}'
-			}
-			else {
-				errorModalCall('{{ __("Event validation error ")}}');
-			}
-		},   //success
-		complete: function( xhr ) {
-			$("#pageloader").hide();
-		},
-		error: function (ts) { 
-			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
-		}
-	}); //ajax-type            
-
-}
-
 	function delete_event(event_id){
         var data='type=delete_events'+'&event_id='+event_id;
 		$.ajax({type: "POST",
@@ -732,19 +766,139 @@ function confirm_event(){
 		console.log(p_event_type_id);
 		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
 		e.preventDefault();
-		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		confirmDeleteModalCall('','Do you want to delete this event',"delete_event("+p_event_type_id+");",false);
 		return false;
 	})
-
 	$("body").on('change', '#category_select', function(event) {
+
+    	var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
 		var datainvoiced = $("#category_select option:selected").data('invoice');
+		var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
+		var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
+		var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
+		
 		if (datainvoiced == 'S') {
-			$("#std-check-div").css('display', 'block');
+			if (s_std_pay_type == 2) {
+	            $("#std-check-div").css('display', 'block');
+	        }else{
+	            $("#std-check-div").css('display', 'none');
+	        }
+			$("#teacher_type_billing").show();
+			$("#student_sis_paying").val(s_std_pay_type);
+			$("#sis_paying").val(s_thr_pay_type);
+
+			if(s_thr_pay_type == 0){
+				$('#sprice_amount_buy').prop('disabled', true);   
+			}else if(s_thr_pay_type == 1){
+				$('#sprice_amount_buy').prop('disabled', false);  
+			}
+			if(s_std_pay_type == 0){
+				$('#sprice_amount_sell').prop('disabled', true);   
+			}else if(s_std_pay_type == 1){
+				$('#sprice_amount_sell').prop('disabled', false);  
+			}else if(s_std_pay_type == 2){
+				$('#sprice_amount_sell').prop('disabled', true);  
+			}
+			
 		}else{
+			$("#sis_paying").val(s_thr_pay_type);
+			$("#student_sis_paying").val(t_std_pay_type);
 			$("#std-check-div").css('display', 'none');
-			$("#student_empty").prop('checked', false)
+			$("#teacher_type_billing").show();
+			$("#student_empty").prop('checked', false);
+
+			if(s_thr_pay_type == 0){
+				$('#sprice_amount_buy').prop('disabled', true);   
+			}else if(s_thr_pay_type == 1){
+				$('#sprice_amount_buy').prop('disabled', false);  
+			}
+
+			if(t_std_pay_type == 0){
+				$('#sprice_amount_sell').prop('disabled', true);   
+			}else if(t_std_pay_type == 1){
+				$('#sprice_amount_sell').prop('disabled', false);  
+			}else if(t_std_pay_type == 2){
+				$('#sprice_amount_sell').prop('disabled', true);  
+			}
 		}
+		if(s_thr_pay_type == 0){
+			$('#hourly').hide();
+			$('#price_per_student').show();
+		}else if(s_thr_pay_type == 1){
+			$('#hourly').hide();
+			$('#price_per_student').show();
+		}
+		
+
+		var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
+	    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+	    var isTeacher = +"{{$AppUI->isTeacher()}}";
+
+	    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
+	        $("#price_per_student").show(); 
+	    }else{
+	        $("#price_per_student").hide();
+	    }
+
+        getLatestPrice();
 	});
+
+$("#student, #teacher_select").on('change', function(event) {
+    getLatestPrice()
+});
+
+	function getLatestPrice() {
+	    var agendaSelect = +$("#agenda_select").val();
+	    var categoryId = +$("#category_select").val();
+	    var teacherSelect = +$("#teacher_select").val();
+	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
+
+	    var formData = $('#from').serializeArray();
+	    var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
+	    formData.push({
+	        "name": "_token",
+	        "value": csrfToken,
+	    });
+
+	    formData.push({
+	        "name": "event_category_id",
+	        "value": categoryId,
+	    });
+	    formData.push({
+	        "name": "teacher_select",
+	        "value": teacherSelect,
+	    });
+	    formData.push({
+	        "name": "no_of_students",
+	        "value": stdSelected,
+	    });
+	    
+	    if (categoryId > 0 && teacherSelect > 0) {
+	        $.ajax({
+	            url: BASE_URL + '/check-lesson-fixed-price',
+	            async: false, 
+	            data: formData,
+	            type: 'POST',
+	            dataType: 'json',
+	            success: function(response){
+	                if(response.status == 1){
+	                    if (response.data) {
+	                        $("#sprice_amount_buy").val(response.data.price_buy)
+	                        @if(isset($lessonData->eventcategory->t_std_pay_type) && $lessonData->eventcategory->t_std_pay_type == 1)
+	                        @else
+	                        $("#sprice_amount_sell").val(response.data.price_sell)
+	                        @endif
+	                    }
+	                }
+	            }
+	        })
+	    }
+	    
+	}
+
 	
 	$("body").on('click', '#student_empty', function(event) {
 		if ($("#student_empty").prop('checked')) {
@@ -756,6 +910,8 @@ function confirm_event(){
 	})
 
 	$( document ).ready(function() {
+		$("#category_select").trigger('change');
+
 		$(function() {
 			$("#save_btn_more").click(function(){
 			$("#save_btn_value"). val(1);
@@ -764,6 +920,15 @@ function confirm_event(){
 			$("#save_btn_value"). val(0);
 			});
 		});
+	});
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+				$("#edit_lesson .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#edit_lesson .btn_area").removeClass("btn_area_fixed");
+		}
 	});
 </script>
 @endsection`

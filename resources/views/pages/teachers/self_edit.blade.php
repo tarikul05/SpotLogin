@@ -12,7 +12,7 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -39,16 +39,9 @@
 					{{ __('Parameters')}}
 					</button>
 				@endcan
-				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
-					{{ __('Sections and prices')}}
-				</a>
-				<!-- comented for 1st release
 				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
-				</button> -->
-
-
-
+				</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -66,6 +59,11 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
+
+						
+						<div class="card">
+							<div class="card-body bg-tertiary">
+
 						<div class="row">
 							<div class="col-md-6">
 								<!-- <div class="form-group row">
@@ -167,10 +165,20 @@
 									</div>
 								</div> -->
 							</div>
+						</div>
+
+							</div>
+						</div>
+
+						<div class="row">
+							
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -203,20 +211,36 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" id="country_code" name="country_code">
+											<select class="form-control select_two_defult_class" id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
-								                @endforeach
+														<option value="{{ $country->code }}" {{!empty($teacher->country_code) ? (old('country_code', $teacher->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
+												@endforeach
 											</select>
+											</div>
+										</div>
+									</div>
+									<div id="province_id_div" class="form-group row" style="display:none">
+										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
+												</select>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+
+								</div>
+							</div>
+
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact information') }}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -260,6 +284,114 @@
 									</div>
 								</div>
 							</div>
+
+								</div>
+							</div>
+
+
+							<div class="clearfix"></div>
+							@if($school->country_code != 'CA' )
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
+								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Bank Name')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_name" name="bank_name" type="text"
+												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Address')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_address" name="bank_address" type="text"
+												value="{{!empty($teacher->bank_address) ? old('bank_address', $teacher->bank_address) : old('bank_address')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_zipcode" name="bank_zipcode" type="text"
+												value="{{!empty($teacher->bank_zipcode) ? old('bank_zipcode', $teacher->bank_zipcode) : old('bank_zipcode')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('City')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_place" name="bank_place" type="text"
+											value="{{!empty($teacher->bank_place) ? old('bank_place', $teacher->bank_place) : old('bank_place')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Country')}}:</label>
+										<div class="col-sm-7">
+											<div class="selectdiv">
+												<select class="form-control" name="bank_country_code" id="bank_country_code">
+													<option value="">Select</option>
+													@foreach($countries as $country)
+															<option value="{{ $country->code }}" {{!empty($teacher->bank_country_code) ? (old('country_code', $teacher->bank_country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+													@endforeach
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_account" name="bank_account" type="text"
+												value="{{!empty($teacher->bank_account) ? old('bank_account', $teacher->bank_account) : old('bank_account')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('IBAN No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_iban" name="bank_iban" type="text"
+												value="{{!empty($teacher->bank_iban) ? old('bank_iban', $teacher->bank_iban) : old('bank_iban')}}">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('SWIFT A/c No')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_swift" name="bank_swift" type="text"
+												value="{{!empty($teacher->bank_swift) ? old('bank_swift', $teacher->bank_swift) : old('bank_swift')}}">
+										</div>
+									</div>
+								</div>
+							</div>
+
+								</div>
+							</div>
+							@else
+							<div class="section_header_class">
+								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
+							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
+												<span class="etransfer_acc"></span>	
+										</div>
+									</div>
+								</div>	
+							</div>
+
+								</div>
+							</div>
+							
+							@endif	
 							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -286,7 +418,7 @@
 				<form class="form-horizontal" id="add_price" action="{{ route('selfUpdatePriceAction') }}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
-						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
+						<label id="teacher_personal_data_caption">{{__('Sections and prices') }}<!--{{__('Number of students') }}--></label>
 					</div>
 
 					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
@@ -294,9 +426,9 @@
 							<tr>
 								<th>#</th>
 								<th>{{__('Type of course')}}</th>
-								<th>{{__('Hourly rate applied')}}</th>
-								<!-- <th class="buy"><span>{{__('Buy') }}</span> {{__('The purchase price is the value offered to the teacher for the lesson Sell') }}</th> -->
-								<th class="sell"><span>{{__('Sell') }}</span> {{__('The sale price is the sale value to the students') }}</th>
+								<th>{{__('Type of billing')}}</th>
+								<!-- <th class="buy"><span>{{__('Teacher price') }}</span></th> -->
+								<th class="sell"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -304,10 +436,33 @@
 							<tr style="background:lightblue;">
 								<td></td>
 								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
-								<td><label></label></td>
-								<td align="right" colspan="1"></td>
+								<!-- <td><label></label></td> -->
+								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
+									<?php 
+									if ($lessionPrice->divider == 1) {
+										$textForTypeBilling = 'Private session';
+									}elseif ($lessionPrice->divider == 9999) {
+										$textForTypeBilling = 'Student more then 10';
+									}elseif ($lessionPrice->divider == -1) {
+										$textForTypeBilling = 'Fixed price';
+									}else{
+										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+									}
+									// 0 = hourly 1= fix
+									$studentPrice = $category->t_std_pay_type; 
+
+									if ( $studentPrice ==1) { // fix and fix price
+										if ($lessionPrice->divider != -1) continue;
+									}elseif ($studentPrice == 0) { // hourly and hourly
+										 if ($lessionPrice->divider == -1) continue;
+									}else{
+										
+
+									}
+
+								 ?>
 								<tr>
 									<td>{{$lessionPrice->divider}}
 										<input type="hidden"
@@ -318,11 +473,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
 									<td>{{__('Lessons/Events..')}}</td>
-									@if($lessionPrice->divider == 1)
-										<td>{{ __('Private session') }}</td>
-									@else
-										<td>{{ __('Group lessons for '.$lessionPrice->divider.' students') }}</td>
-									@endif
+									<td>{{ __($textForTypeBilling) }}</td>
 
 									<!-- <td>
 										<input type="text"
@@ -335,7 +486,8 @@
 										<input type="text"
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
+										style="text-align:right" 
+										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
 										>
 									</td>
 								</tr>
@@ -377,17 +529,67 @@
 
 @section('footer_js')
 <script type="text/javascript">
-$(document).ready(function(){
-	$("#birth_date").datetimepicker({
-        format: "dd/mm/yyyy",
-        autoclose: true,
-        todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $teacher->province_id ?>';
+		
+		get_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $teacher->province_id ?>';
+		console.log(set_province,'set_provinceset_province');
+		get_province_lists(country_code, set_province);
 	});
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	$(document).ready(function(){
+		$("#birth_date").datetimepicker({
+					format: "dd/mm/yyyy",
+					autoclose: true,
+					todayBtn: true,
+			minuteStep: 10,
+			minView: 3,
+			maxView: 3,
+			viewSelect: 3,
+			todayBtn:false,
+		});
 	var x = document.getElementsByClassName("tab-pane active");
 	//var update_btn = document.getElementById("update_btn");
 	console.log(x[0].id);

@@ -12,7 +12,7 @@ function successModalCall(title, desc = '') {
   $('#successModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal fade" id="successModal" name="successModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
                     <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
@@ -30,7 +30,7 @@ function errorModalCall(title, desc = '') {
   $('#errorModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal fade" id="errorModal" name="errorModal">
-            <div class="modal-dialog mt-5">
+            <div class="modal-dialog modal-dialog-centered mt-5">
                 <div class="modal-content">
                     <div class="modal-body text-center p-4">                    
                         <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
@@ -73,6 +73,19 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function afficherHeureActuelle(myTimezone) {
+    var maintenant = moment().tz(myTimezone);
+    var heure = maintenant.format('HH');
+    var minute = maintenant.format('mm');
+    var seconde = maintenant.format('ss');
+  
+    var heureActuelle = heure + ':' + minute; /*+ ':' + seconde;*/
+    $('#currentTimer').text(heureActuelle);
+  
+    setTimeout(function() {
+      afficherHeureActuelle(myTimezone);
+    }, 30000);
+  }
 
 function confirmModalCall(title,function_name){
     $('#confirmModal').remove();  
@@ -106,7 +119,7 @@ function confirmModalCall(title,function_name){
 
 
 
-function confirmDeleteModalCall(p_event_id,title,function_name){
+function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true){
     $('#confirmModal').remove();  
     var modalHtml='';
     
@@ -116,27 +129,27 @@ function confirmDeleteModalCall(p_event_id,title,function_name){
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split(',');
-    
+    if (p_event_id.length!=0) {
+        p_event_id = p_event_id.split("|");
+    }
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
-                    <ul>`;
-
-                    p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
-                        console.log(element+'hhh');
-                    });
-                    
-                modalHtml +=`</ul><div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`
-                modalHtml +=`
+                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
+                    <br>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
-                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                </div>
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button><br><br>`;
+                    if (showWarning)  modalHtml +=`<div class="alert alert-warning" role="alert">Only un-validated events/lessons will be deleted</div>`;
+                    if (p_event_id.length!=0) {
+                        p_event_id.forEach((element) => {
+                            modalHtml += `<table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table>`;
+                        });
+                    }
+                    modalHtml +=`<br>`
+                modalHtml +=`</div>
             </div>
         </div>
     </div>`;
@@ -154,26 +167,29 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
-    var p_event_id = p_event_id.split(',');
-    //console.log(v_title); 
+    if (p_event_id.length!=0) {
+        p_event_id = p_event_id.split("|");
+    }
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
-        <div class="modal-dialog mt-5">
+        <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
-                    <ul>`;
-
-                    p_event_id.forEach((element) => {
-                        modalHtml +=`<li class="light-blue-txt gilroy-bold"><p>`+element+`</p></li>`;
-                        console.log(element+'hhh');
-                    });
-                    
-                modalHtml +=`</ul>
+                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
+                    <!--<div class="alert alert-info">
+                    <p><i class="fa fa-info"></i> You can validate all events you see on the current view for the pasts events.</p>
+                    </div>-->
+                    <br>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
                     <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                </div>
+                    <br><br>`;
+                    if (p_event_id.length!=0) {
+                        p_event_id.forEach((element) => {
+                            modalHtml += `<table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table>`;
+                        });
+                    }
+                modalHtml +=`</div>
             </div>
         </div>
     </div>`;
@@ -203,7 +219,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
         find_flag = 1;
         console.log(value.father_email);
         if (value.class_name == 'student') {
-            if (value.father_email != '') {
+            if (value.father_email && value.father_email != '') {
                 //document.getElementById("father_email_chk").value = value.father_email;
                 document.getElementById("father_email_chk").checked = true;
                 $('#father_email_cap').html(value.father_email);
@@ -212,7 +228,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#father_email_div").hide();
             }
 
-            if (value.mother_email != '') {
+            if (value.mother_email && value.mother_email != '') {
                 //document.getElementById("mother_email_chk").value = value.mother_email;
                 document.getElementById("mother_email_chk").checked = true;
                 $('#mother_email_cap').html(value.mother_email);
@@ -221,7 +237,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#mother_email_div").hide();
             }
 
-            if (value.student_email != '') {
+            if (value.student_email  && value.student_email != '') {
                 //document.getElementById("student_email_chk").value = value.student_email;
                 document.getElementById("student_email_chk").checked = true;
                 $('#student_email_cap').html(value.student_email);
@@ -233,7 +249,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
 
             $("#student_email_div").hide();
             document.getElementById("student_email_chk").value = "";
-            if (value.primary_email != '') {
+            if (value.primary_email && value.primary_email != '') {
                 document.getElementById("father_email_chk").checked = true;
                 $('#father_email_cap').html(value.primary_email);
                 $("#father_email_div").show();
@@ -242,7 +258,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#father_email_div").hide();
             }
 
-            if (value.secondary_email != '') {
+            if (value.secondary_email && value.secondary_email != '') {
                 document.getElementById("mother_email_chk").checked = true;
                 $('#mother_email_cap').html(value.secondary_email);
                 $("#mother_email_div").show();

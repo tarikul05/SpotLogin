@@ -50,20 +50,6 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
-										<div class="col-sm-7">
-											<div class="selectdiv">
-												<select class="form-control" name="is_active" id="is_active">
-													<option value="">Select</option>
-													<option value="1" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 1 ? 'selected' : '') : (old('is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-													<option value="0" {{!empty($student->is_active) ? (old('is_active', $student->is_active) == 0 ? 'selected' : '') : (old('is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-												</select>
-											</div>
-										</div>
-									</div>
-								@endhasanyrole
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -221,23 +207,6 @@
 								</div>
 							</div>
 							
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
-								<div id="commentaire_div">
-									<div class="section_header_class">
-										<label id="private_comment_caption">{{__('Private comment') }}</label>
-									</div>
-									<div class="row">
-										<div class="col-md-6">
-											<div class="form-group row">
-												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
-												<div class="col-sm-7">
-													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							@endhasanyrole
 						</div>
 					</fieldset>
 				</div>
@@ -283,9 +252,9 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="country_code" name="country_code">
+										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
 											@foreach($countries as $country)
-												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 											@endforeach
 										</select>
 									</div>
@@ -295,11 +264,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="province_id" name="province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $key ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 										</select>
 									</div>
 								</div>
@@ -347,32 +312,19 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-									<select class="form-control" id="billing_country_code" name="billing_country_code">
+									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
 										@foreach($countries as $country)
-											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
 									</select>
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div" style="display:none">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="billing_province_id" name="billing_province_id">
-											<option value="">Select Province</option>
-											<option value="3" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '3' ? 'selected' : '') : (old('billing_province_id') == '3' ? 'selected' : '')}}>Alberta</option>
-											<option value="2" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '2' ? 'selected' : '') : (old('billing_province_id') == '2' ? 'selected' : '')}}>British Columbia</option>
-											<option value="5" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '5' ? 'selected' : '') : (old('billing_province_id') == '5' ? 'selected' : '')}}>Manitoba</option>
-											<option value="10" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '10' ? 'selected' : '') : (old('billing_province_id') == '10' ? 'selected' : '')}}>Newfoundland &amp; Labrador</option>
-											<option value="12" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '12' ? 'selected' : '') : (old('billing_province_id') == '12' ? 'selected' : '')}}>Northwest territory</option>
-											<option value="8" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '8' ? 'selected' : '') : (old('billing_province_id') == '8' ? 'selected' : '')}}>Nova Scotia</option>
-											<option value="11" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '11' ? 'selected' : '') : (old('billing_province_id') == '11' ? 'selected' : '')}}>Nunavut</option>
-											<option value="6" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '6' ? 'selected' : '') : (old('billing_province_id') == '6' ? 'selected' : '')}}>Ontario</option>
-											<option value="9" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '9' ? 'selected' : '') : (old('billing_province_id') == '9' ? 'selected' : '')}}>PEI</option>
-											<option value="7" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '7' ? 'selected' : '') : (old('billing_province_id') == '7' ? 'selected' : '')}}>Quebec</option>
-											<option value="4" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '4' ? 'selected' : '') : (old('billing_province_id') == '4' ? 'selected' : '')}}>Saskatchewan</option>
-											<option value="13" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == '13' ? 'selected' : '') : (old('billing_province_id') == '13' ? 'selected' : '')}}>Yukon</option>
+										<select class="form-control select_two_defult_class" id="billing_province_id" name="billing_province_id">
 										</select>
 									</div>
 								</div>
@@ -464,6 +416,104 @@
 
 
 @section('footer_js')
+
+<script type="text/javascript">
+	/*
+	* student province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	});
+
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	})
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#billing_country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var billing_country_code = $('#billing_country_code option:selected').val();
+		var billing_province_id = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(billing_country_code, billing_province_id);
+	});
+
+	function get_billing_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#billing_province_id').html(html);
+						$('#billing_province_id_div').show();
+				}else{
+					$('#billing_province_id').html('');
+					$('#billing_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+</script>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	var country_code = $('#country_code option:selected').val();

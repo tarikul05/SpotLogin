@@ -5,13 +5,15 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
 <script src="{{ asset('js/datetimepicker-lang/moment-with-locales.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- color wheel -->
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
@@ -35,10 +37,10 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
 				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
+				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
-				</a>
-				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button> -->
+				</a> -->
+				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
 				
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
@@ -47,7 +49,8 @@
 
 		<!-- Tabs content -->
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
-		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
+		<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
+					
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 		<input type="hidden" id="active_tab" name="active_tab" value="">
 						
@@ -58,9 +61,11 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Student Personal Information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="is_active" id="visibility_label_id">{{__('Status') }} :</label>
 										<div class="col-sm-7">
@@ -73,7 +78,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -155,10 +160,17 @@
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
 										<div class="input-group" id="birth_date_div" > 
+											@if($student->birth_date !== "1970-01-01 00:00:00")
 											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : ''}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
 											</span>
+											@endif
+											@if($student->birth_date === "1970-01-01 00:00:00")
+											
+											<div class="pt-3 pb-3"><i class="fa fa-calendar"></i> not specified</div>
+											<input id="birth_date" name="birth_date" type="hidden">
+											@endif
 										</div>
 									</div>
 								</div>
@@ -207,7 +219,7 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group"> 
-												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="{{!empty($relationalData->level_date_arp) ? old('level_date_arp', $relationalData->level_date_arp) : old('level_date_arp')}}">
+												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="<?= !empty($relationalData->level_date_arp) ? old('level_date_arp', date('Y-m-d', strtotime(str_replace('.', '-', $relationalData->level_date_arp)))) : old('level_date_arp') ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -240,7 +252,7 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
 											<div class="input-group" id="date_last_level_usp_div"> 
-												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="{{!empty($relationalData->level_date_usp) ? old('level_date_usp', $relationalData->level_date_usp) : old('level_date_usp')}}">
+												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="<?= !empty($relationalData->level_date_usp) ? old('level_date_usp', date('Y-m-d', strtotime(str_replace('.', '-', $relationalData->level_date_usp)))) : old('level_date_usp') ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
@@ -250,7 +262,7 @@
 									@endif
 								</div>
 							</div>
-							@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -266,7 +278,10 @@
 										</div>
 									</div>
 								</div>
-							@endhasanyrole
+							@endif
+						</div>
+
+							</div>
 						</div>
 					</fieldset>
 				</div>
@@ -274,6 +289,8 @@
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Address') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -312,9 +329,10 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="country_code" name="country_code">
+										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
+											<option value="">{{ 'Select Country' }}</option>
 											@foreach($countries as $country)
-												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+												<option value="{{ $country->code }}" {{!empty($student->country_code) ? (old('country_code', $student->country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}({{ $country->code }})</option>
 											@endforeach
 										</select>
 									</div>
@@ -324,7 +342,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="province_id" name="province_id">
+										<select class="form-control select_two_defult_class" id="province_id" name="province_id">
 											<option value="">Select Province</option>
 											@foreach($provinces as $province)
 												<option value="{{ $province['id'] }}" {{!empty($student->province_id) ? (old('province_id', $student->province_id) == $province['id'] ? 'selected' : '') : (old('province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
@@ -335,9 +353,13 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Billing address - Same as above') }} <input onclick="bill_address_same_as_click()" type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -376,32 +398,33 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="billing_country_code" id="pays_caption">{{__('Country') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-									<select class="form-control" id="billing_country_code" name="billing_country_code">
+									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
+										<option value="">{{ 'Select Country' }}</option>
 										@foreach($countries as $country)
-											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
+											<option value="{{ $country->code }}" {{!empty($student->billing_country_code) ? (old('billing_country_code', $student->billing_country_code) == $country->code ? 'selected' : '') : (old('billing_country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
 									</select>
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group row" id="billing_province_id_div">
 								<label class="col-lg-3 col-sm-3 text-left" for="province_id" id="pays_caption">{{__('Province') }} :</label>
 								<div class="col-sm-7">
 									<div class="selectdiv">
-										<select class="form-control" id="billing_province_id" name="billing_province_id">
-											<option value="">Select Province</option>
-											@foreach($provinces as $province)
-												<option value="{{ $province['id'] }}" {{!empty($student->billing_province_id) ? (old('billing_province_id', $student->billing_province_id) == $province['id'] ? 'selected' : '') : (old('billing_province_id') == $province['id'] ? 'selected' : '')}}>{{ $province['province_name'] }}</option>
-											@endforeach
+										<select class="form-control select_two_defult_class" id="billing_province_id" name="billing_province_id">
 										</select>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -462,6 +485,8 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 				</div>
 				</form>
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
@@ -478,15 +503,15 @@
 						<div class="row">
 							<div class="col-md-8">
 								<div class="form-group row below_space">
-									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Choice of period') }}:</label>
+									<label class="col-lg-2 col-sm-2 text-left"> {{ __('Period') }}:</label>
 									<div class="col-sm-2">
 										<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
 									</div>
-									<div class="col-sm-2 offset-md-1">
+									<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
 										<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
 									</div>
 									<div id="show_only_pend_div" class="col-lg-3 col-sm-3 text-left offset-md-1">
-										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked="">
+										<input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
 										<label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
 									</div>
 									<div class="col-sm-1">
@@ -500,63 +525,59 @@
 						</div>
 						<div class="table-responsive">
 							<table class="table lessons-list" id="lesson_table">
-								<!-- <tbody>
-									<tr class="course_week_header">
-										<td colspan="1">{{ __('Week 20') }}</td>
-										<td colspan="1"></td>
-										<td colspan="1">{{ __('Date') }}</td>
-										<td colspan="1">{{ __('Time') }}</td>
-										<td colspan="1">{{ __('Duration') }}</td>
-										<td colspan="1">{{ __('Type') }}</td>
-										<td colspan="1">{{ __('Coach') }}</td>
-										<td colspan="1">{{ __('Lesson') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Buy Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Sell Price') }}</td>
-										<td style="text-align:right" colspan="1">{{ __('Extra charges') }}</td>
-									</tr>
-									<tr>
-										<td style="display:none;">30533</td>
-										<td>-</td>
-										<td></td>
-										<td width="10%">18/05/2022</td>
-										<td>14:30</td>
-										<td>30 minutes </td>
-										<td> (Soccer-School)</td>
-										<td>teacher all</td>
-										<td>Group lessons for 3 students</td>
-										<td></td>
-										<td>
-											<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
-												<i class="fa fa-pencil"></i>{{__('Validate')}}
-											</a>
-										</td>
-										<td style="text-align:right"></td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Week')}} </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Sub-total Monthly')}}: </td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-									<tr style="font-weight: bold;">
-										<td colspan="6"></td>
-										<td colspan="2">{{ __('Total Monthly')}}</td>
-										<td style="text-align:right">75.00</td>
-										<td style="text-align:right">75.00</td>
-									</tr>
-								</tbody> -->
+								
 							</table>
 						</div>
-						<div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
-							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
+								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 						</div>
+						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
+							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
+						</div> -->
 					</form>
+
+
+					<!-- START discount_div -->
+					<div style="display:none;" id="discount_div" name="discount_div">
+							<div class="form-group">
+									<label id="disc_201_400_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 201-400:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_1" id="s_percent_1" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="5">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_401_600_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 401-600:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_2" id="s_percent_2" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_601_800_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 601-800:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_3" id="s_percent_3" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_801_1000_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 801-1000:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_4" id="s_percent_4" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_1001_1200_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 1001-1200:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_5" id="s_percent_5" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+							<div class="form-group">
+									<label id="disc_1200_plus_caption" class="col-lg-4 col-sm-4 text-left">Taux discount 1200 et plus:</label>
+									<div class="col-sm-8">
+											<input value="" name="s_percent_6" id="s_percent_6" style="width:100%" class="form-control numeric" type="text" data-force-required="true" data-isrequired="true" maxlength="2">
+									</div>
+							</div>
+					</div>
+					<!-- END discount_div -->
 				</div>
 				<!--Start of Tab 4 -->
 				<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
@@ -668,12 +689,110 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
-$(document).ready(function(){
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
+	/*
+	* student province list
+	* function @billing province
+	*/
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	});
+
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->province_id ?>';
+		get_province_lists(country_code, set_province);
+	})
+
+	function get_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
 	}
+
+	/*
+	* Billing province list
+	* function @billing province
+	*/
+	$('#billing_country_code').change(function(){
+		var country_code = $(this).val();
+		var set_province = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(country_code, set_province);
+	})
+
+	$(document).ready(function(){
+		var billing_country_code = $('#billing_country_code option:selected').val();
+		var billing_province_id = '<?= $student->billing_province_id ?>';
+		get_billing_province_lists(billing_country_code, billing_province_id);
+	});
+
+	function get_billing_province_lists(country_code, set_province){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							if(item.id == set_province){
+								var select = 'selected';
+							}else{
+								var select = '';
+							}
+							html += '<option ' + select + ' value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#billing_province_id').html(html);
+						$('#billing_province_id_div').show();
+				}else{
+					$('#billing_province_id').html('');
+					$('#billing_province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
+	}
+
+</script>
+
+<script type="text/javascript">
+	
+$(document).ready(function(){
+
+$("#country_code, #billing_country_code").trigger('change')
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -685,7 +804,7 @@ $(document).ready(function(){
 		todayBtn:false,
 	});
 	$("#level_date_arp").datetimepicker({
-		format: "dd/mm/yyyy",
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
@@ -695,7 +814,7 @@ $(document).ready(function(){
 		todayBtn:false,
 	});
 	$("#level_date_usp").datetimepicker({
-		format: "dd/mm/yyyy",
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
@@ -752,6 +871,82 @@ $(document).ready(function(){
 		height: 300
 		,extraPlugins: 'Cy-GistInsert'
 		,extraPlugins: 'AppFields'
+	});
+	function GetCheckBoxSelectedValues(p_chkbox) {
+		var selected_events = '';
+		var cboxes = document.getElementsByName(p_chkbox);
+		var len = cboxes.length;
+
+		$("input[name='" + p_chkbox + "']:checked").each(function(i) {
+			selected_events += $(this).val() + ',';
+		});
+		return selected_events;
+	}
+
+	$('#btn_convert_invoice').click(function(e) {
+		
+		$(this).attr("disabled", "disabled");
+		var p_event_ids = GetCheckBoxSelectedValues('event_check');
+		if (p_event_ids == '') {
+			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
+			return false;
+		}
+
+		var p_person_id = document.getElementById("person_id").value,
+			school_id = document.getElementById("school_id").value
+			//p_month = document.getElementById("smonth").value,
+			//p_year = document.getElementById("syear").value;
+
+		// var from_date = moment((p_year + '-' + p_month + '-01'), "YYYY-MM-DD").format("YYYY.MM.DD");
+		// var to_date = moment((p_year + '-' + p_month + '-01'), "YYYY-MM-DD").endOf('month').format("YYYY.MM.DD");
+		
+		var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		var to_date = moment(($("#billing_period_end_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
+		
+		
+		var p_invoice_id = '';
+		var auto_id = 0;
+		var inv_type=getUrlVarsO()["inv_type"]
+		
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type;
+
+		$.ajax({
+			url: BASE_URL + '/generate_student_invoice',
+			
+			//url: '../student/student_events_data.php',
+			data: data,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(result) {
+				if (result.status == 'success') {
+					auto_id = result.auto_id;
+					
+					successModalCall("{{ __('invoice generated')}}");
+
+					//location.reload(); //commented by soumen divert to invoice screen.     
+				} else {
+					errorModalCall(GetAppMessage('error_message_text'));
+					// alert(value.status);
+				}
+			}, // success
+			error: function(ts) {
+				errorModalCall(GetAppMessage('error_message_text'));
+				// alert(ts.responseText + ' Generate Invoice')
+			}
+		}); // Ajax
+
+		if (auto_id > 0) { 
+			//admin/1/modification-invoice/42
+			var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
+			setTimeout(function(){ 
+				window.location = BASE_URL+ url;  
+			}, 3000);
+			
+			return false;
+		}
+
+		return false;
 	});
 
 	$("#send_email_btn").click(function (e) {
@@ -870,13 +1065,15 @@ $(function() {
 	
 
 
-
+	populate_student_lesson(); // refresh lesson details for billing
 	$('#billing_period_search_btn').on('click', function() {   
 		// document.getElementById("smonth").value = data_month;
 		// document.getElementById("syear").value = data_year;
 		populate_student_lesson(); // refresh lesson details for billing
 
 	});
+
+	
 });
 
 
@@ -959,29 +1156,35 @@ $('#save_btn').click(function (e) {
 
 
 	function populate_student_lesson() {
-		//alert('populate_student_lesson method');
-		// var user_role = document.getElementById("user_role").value;
-		// //alert(user_role);
-		// //(user_role =='teacher') || 
+		//var CURRENT_URL = '{{ $CURRENT_URL ?? '' }}';
+		//console.log(CURRENT_URL);
+		//location.href = "/1/edit-lesson/30/?redirect_url="+CURRENT_URL;
+		let p_pending_only="1";
+		var pendChBox = document.getElementById("chk_show_only_pend");
+		
+		
+		if (pendChBox.checked == false) {
+			p_pending_only="0";
+		}
+		
 		// if ((user_role == 'student')) {
-		// 		return false;
+		// 	return false;
 		// }
 		var costs_1 = 0.00;
 		var record_found = 0,
-		all_ready = 1,
-		total_buy = 0,
-		total_sell = 0,
-		week_total_buy = 0,
-		week_total_sell = 0,
-		total_disc = 0.00,
-		prev_week = '',
-		data = '',
-		//p_person_id='832F4CB7-4596-4EFB-9C86-C6A702412E05',
-		p_person_id = document.getElementById("person_id").value,
-		school_id = document.getElementById("school_id").value,
-		p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
-		p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
-		//alert(p_year+'-'+p_month);
+			all_ready = 1,
+			total_buy = 0,
+			total_sell = 0,
+			week_total_buy = 0,
+			week_total_sell = 0,
+			total_disc = 0.00,
+			prev_week = '',
+			data = '',
+			
+			p_person_id = document.getElementById("person_id").value,
+			school_id = document.getElementById("school_id").value,
+			p_billing_period_start_date = document.getElementById("billing_period_start_date").value,
+			p_billing_period_end_date = document.getElementById("billing_period_end_date").value;
 
 		if ((p_billing_period_start_date == '') || (p_billing_period_end_date == '')) {
 				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">..</td></tr></tbody>';
@@ -1004,19 +1207,21 @@ $('#save_btn').click(function (e) {
 		var correct_btn_text = 'Validate';
 
 		var resultHtml = '',
-		resultHtmlHeader = '',
-		resultHtmlFooter = '',
-		resultHtmlDetails = '';
+			resultHtmlHeader = '',
+			resultHtmlFooter = '',
+			resultHtmlDetails = '';
 		var amount_for_disc=0.00;
 		var disc_caption = 'DESC';
 		var disc_caption_disp = '';
 		var week_caption = 'Weekly';
 		var month_caption = 'Monthly';
 		var sub_total_caption = 'Sub Total';
+		var isTeacher = +"{{$AppUI->isTeacher()}}";
+		var inv_type=getUrlVarsO()["inv_type"]
 
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
-		data = 'type=' + person_type + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date;
+		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
 		console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',
@@ -1036,8 +1241,10 @@ $('#save_btn').click(function (e) {
 									if (no_of_teachers == 1){
 											resultHtml += '<td style="text-align:right"></td>';
 									}else {
-											resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-									}
+											if (!isTeacher) {
+												resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+											}
+										}
 		
 									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 									resultHtml += '</tr>'
@@ -1052,8 +1259,8 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Date</td>';
 									resultHtml += '<b><td colspan="1">Time</td>';
 									resultHtml += '<b><td colspan="1">Duration</td>';
-									resultHtml += '<b><td colspan="1">Type</td>';
-									resultHtml += '<b><td colspan="1">Coach</td>';
+									resultHtml += '<b><td colspan="1">Category</td>';
+									resultHtml += '<b><td colspan="1">Teacher</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
 									
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
@@ -1061,8 +1268,10 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
 										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
 									} else {
-										resultHtml += '<b><td style="text-align:right" colspan="1">Buy Price</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Sell Price</td>';
+										if (!isTeacher) {
+											resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+										}
+										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
 									}
 		
 		
@@ -1081,15 +1290,21 @@ $('#save_btn').click(function (e) {
 							}
 
 							//below locked and invoiced
-							resultHtml += "<td>";
+							
 							if (value.ready_flag == 1) {
-									resultHtml += "<em class='glyphicon glyphicon-lock'></em> ";
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
 									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
 							//}
-							resultHtml += "</td>";
+							
 							//above locked and invoiced
 
 							resultHtml += '<td width="10%">' + value.date_start + '</td>';
@@ -1099,43 +1314,108 @@ $('#save_btn').click(function (e) {
 								resultHtml += '<td>' + value.time_start + '</td>';
 								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
 							}
-							resultHtml += '<td>' + value.title + '</td>';
+							if (value.event_type == 100) {
+								if (value.title != '' && value.title != null) {
+									resultHtml += '<td>Event : '+value.title+'</td>';
+								}else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								resultHtml += '<td>' + value.category_name + '</td>';
+							}
+							
 							resultHtml += '<td>' + value.teacher_name + '</td>';
-							resultHtml += '<td></td>';
+							if (value.event_type == 100) {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
+							}
+
+							//resultHtml += '<td>' + value.title + '</td>';
 
 							// all_ready = 0 means not ready to generate invoice
 							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
 							if (value.ready_flag == 0) {
-									all_ready = 0;
+								//all_ready = 0;
+								if (!isTeacher) {
 									resultHtml += "<td></td>";
-									resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								}
+
+							var myTimezone = "{{ $school->timezone }}";
+							var TheDateStart = moment(value.date_start, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_start + ':00';
+							var TheDateEnd = moment(value.date_end, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_end + ':00';
+
+							var eventStart = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var eventEnd = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var now = moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00');
+							const eventStartTimeStamp = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const eventEndTimeStamp = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+	
+							if (eventStart.isBefore(now)) {
+								if (value.event_type == 100) {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								} else {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								}
 							} else {
-									if (no_of_teachers == 1){
-											resultHtml += '<td style="text-align:right"></td>';
-									}else {
-											resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_total + '</td>';
+								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
+                    			var phrase = "Available in " + timeBetween;
+								resultHtml += '<td style="text-align:right; font-size:11px;">('+phrase+')</td>';
+							}
+								
+							} else {
+								if (no_of_teachers == 1){
+										resultHtml += '<td style="text-align:right"></td>';
+								}else {
+									if (value.event_type!=100 && value.cat_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else if (value.event_type!=10 && value.event_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else{
+										value.buy_price = value.buy_price;
 									}
-															
-									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
+									if (!isTeacher) {
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.buy_price.toFixed(2) + '</td>';
+								
+									}
+								}
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
+								total_buy += value.buy_price;
+								total_sell += value.sell_price + value.extra_charges;
+								
+								week_total_buy += value.buy_price;
+								week_total_sell += value.sell_price + value.extra_charges;
+								
+
+								if (value.event_type == 10) {
+									amount_for_disc=amount_for_disc+value.sell_price;
+								}
 							}
 
-							costs_1 = parseFloat(value.costs_1);
-							if (value.costs_1 != 0) {
+							costs_1 = value.extra_charges;
+							if (value.extra_charges != 0) {
 									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
 							} else {
 									resultHtml += '<td style="text-align:right"></td>';
 							}
 							resultHtml += '</tr>';
-							total_buy += parseFloat(value.buy_total);
-							total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
+							
 
-							if (value.event_type == 10) {
-								amount_for_disc=amount_for_disc+parseFloat(value.sell_total);
-							}
-
-							week_total_buy += parseFloat(value.buy_total);
-							week_total_sell += parseFloat(value.sell_total) + parseFloat(value.costs_1);
-
+							
 							prev_week = value.week_name;
 
 							if (person_type == 'student_lessons') {
@@ -1165,7 +1445,10 @@ $('#save_btn').click(function (e) {
 						if (no_of_teachers == 1){
 							resultHtml += '<td style="text-align:right"></td>';
 						}else {
-							resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+							if (!isTeacher) {
+								resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+						
+							}
 						}
 
 						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
@@ -1176,12 +1459,14 @@ $('#save_btn').click(function (e) {
 
 				// display grand total
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
+				resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
 
 				if (no_of_teachers == 1){
 				resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1326,12 +1611,14 @@ $('#save_btn').click(function (e) {
 
 				// display grand total
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
+				resultHtml += '<td colspan="2">Total</td>';
 				
 				if (no_of_teachers == 1){
 					resultHtml += '<td style="text-align:right"></td>';
 				}else {
-					resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					if (!isTeacher) {
+						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+					}
 				}
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
@@ -1372,7 +1659,30 @@ $('#save_btn').click(function (e) {
 	}
 
 
-	
+	function timeDifference(date1,date2) {
+        var difference = date1 - date2
+
+        var daysDifference = Math.floor(difference/1000/60/60/24);
+        difference -= daysDifference*1000*60*60*24
+
+        var hoursDifference = Math.floor(difference/1000/60/60);
+        difference -= hoursDifference*1000*60*60
+
+        var minutesDifference = Math.floor(difference/1000/60);
+        difference -= minutesDifference*1000*60
+
+        var secondsDifference = Math.floor(difference/1000);
+        
+        if(daysDifference > 0) {
+            return daysDifference + (daysDifference === 1 ? ' day' : ' days');  
+        } else {
+            if(hoursDifference > 0) {
+                return hoursDifference + (hoursDifference === 1 ? ' hour ' : ' hours ') + minutesDifference + (minutesDifference === 1 ? ' minute' : ' minutes'); 
+            } else {
+                return minutesDifference + (minutesDifference > 1 ? ' minutes' : ' minute'); 
+            }
+        }
+    }
 
 
 	$('.box_img i.fa.fa-close').click(function (e) {
@@ -1390,15 +1700,7 @@ $('#save_btn').click(function (e) {
 		let finalParams = Object.keys(newParams).map( (a) => a+"="+newParams[a] ).join("&");
 		return splitPath ? (splitPath[1] + "?" + finalParams) : (url + "?" + finalParams);
 	}
-	$('#country_code').change(function(){
-		var country = $(this).val();
 
-		if(country == 'CA'){
-			$('#province_id_div').show();
-		}else{
-			$('#province_id_div').hide();
-		}
-	})
 </script>
 @if(!empty(Session::get('vtab')))
 
@@ -1417,5 +1719,6 @@ $(function() {
 	}
 });
 </script>
+
 @endif
 @endsection

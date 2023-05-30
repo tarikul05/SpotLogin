@@ -52,7 +52,7 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-				<a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a>
+				<!-- <a class="nav-link"  type="button" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" >{{ __('Sections and prices') }}</a> -->
 				<!-- <button class="nav-link" id="nav-rate-tab" data-bs-toggle="tab" data-bs-target="#tab_rate" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Sections and prices') }}</button> -->
 			</div>
 		</nav>
@@ -71,7 +71,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-6">
-								@hasanyrole('teachers_admin|teachers_all|school_admin|superadmin')
+								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 										<div class="col-sm-7">
@@ -84,7 +84,7 @@
 											</div>
 										</div>
 									</div>
-								@endhasanyrole
+								@endif
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
@@ -157,7 +157,9 @@
 								<div class="form-group row" id="authorisation_div">
 										<label class="col-lg-3 col-sm-3 text-left"><span id="autorisation_caption">{{__('Authorization') }} :</span> </label>
 									<div class="col-sm-7">
-										<b><input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
+										<b>
+										<input id="authorisation_admin" name="role_type" type="radio" value="teacher_school_admin"> Admin<br>
+										<input id="authorisation_all" name="role_type" type="radio" value="teachers_all"> ALL<br>
 										<input id="authorisation_med" name="role_type" type="radio" value="teachers_medium"> Medium<br>
 										<input checked="true" id="authorisation_min" name="role_type" type="radio" value="teachers_minimum"> Minimum<br></b>
 									</div>
@@ -206,9 +208,9 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-											<select class="form-control" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
+											<select class="form-control select_two_defult_class" {{ $exTeacher ? 'disabled' : '' }} id="country_code" name="country_code">
 												@foreach($countries as $country)
-								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}">{{ $country->name }}</option>
+								                    <option {{ $exTeacher && ($exTeacher->country_code == $country->code) ? 'selected' : '' }} value="{{ $country->code }}"> {{ $country->name }} ({{ $country->code }})</option>
 								                @endforeach
 											</select>
 											</div>
@@ -219,11 +221,11 @@
 										<label id="province_caption" for="province_id" class="col-lg-3 col-sm-3 text-left">Province: </label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
-												<select class="form-control" id="province_id" name="province_id">
-													<option value="">Select Province</option>
+												<select class="form-control select_two_defult_class" id="province_id" name="province_id">
+													<!-- <option value="">Select Province</option>
 													@foreach($provinces as $province)
 														<option value="{{ $province['id'] }}" {{ old('province_id') == $key ? 'selected' : ''}}>{{ $province['province_name'] }}</option>
-													@endforeach
+													@endforeach -->
 												</select>
 											</div>
 										</div>
@@ -314,7 +316,7 @@
 							@foreach($eventCategory as $key => $category)
 							<tr style="background:lightblue;">
 								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+								<td class="pc_only" colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td><label></label></td>
 								<td align="right" colspan="1"></td>
 							</tr>
@@ -328,7 +330,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td>{{__('Lessons/Events..')}}</td>
+									<td class="pc_only">{{__('Lessons/Events..')}}</td>
 									@if($lessionPrice->divider == 1)
 										<td>{{ __('Private session') }}</td>
 									@else
@@ -379,10 +381,10 @@
 @section('footer_js')
 <script type="text/javascript">
 $(function() {
-	var country_code = $('#country_code option:selected').val();
-	if(country_code == 'CA'){
-		$('#province_id_div').show();
-	}
+	// var country_code = $('#country_code option:selected').val();
+	// if(country_code == 'CA'){
+	// 	$('#province_id_div').show();
+	// }
 	$("#birth_date").datetimepicker({
         format: "dd/mm/yyyy",
         autoclose: true,
@@ -467,14 +469,41 @@ $('#save_btn').click(function (e) {
 		}	            
 });  
 
-$('#country_code').change(function(){
-	var country = $(this).val();
+	$('#country_code').change(function(){
+		var country_code = $(this).val();
+		get_province_lists(country_code);
+	})
 
-	if(country == 'CA'){
-		$('#province_id_div').show();
-	}else{
-		$('#province_id_div').hide();
+	$(document).ready(function(){
+		var country_code = $('#country_code option:selected').val();
+		get_province_lists(country_code);
+	})
+
+	function get_province_lists(country_code){
+		$.ajax({
+			url: BASE_URL + '/get_province_by_country',
+			data: 'country_name=' + country_code,
+			type: 'POST',
+			dataType: 'json',
+			async: false,
+			success: function(response) {
+					if(response.data.length > 0){
+						var html = '';
+						$.each(response.data, function(i, item) {
+							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
+						});
+						$('#province_id').html(html);
+						$('#province_id_div').show();
+				}else{
+					$('#province_id').html('');
+					$('#province_id_div').hide();
+				}
+			},
+			error: function(e) {
+				//error
+			}
+		});
 	}
-})
+
 </script>
 @endsection

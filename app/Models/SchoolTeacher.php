@@ -86,7 +86,18 @@ class SchoolTeacher extends BaseModel
      */
     public function scopeOnlyTeacher($query)
     {
-        $query->wherein('role_type',['teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
+        $query->wherein('role_type',['teacher_school_admin','teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
+    }
+
+    /**
+     * Scope a query to only include Teachers users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeOnlySchoolAdminTeacher($query)
+    {
+        $query->wherein('role_type',['school_admin']);
     }
 
 }

@@ -120,7 +120,7 @@
 					</fieldset>
 					<div class="btn_area">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin())
+						@if($AppUI->isSuperAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isSchoolAdmin() || ($AppUI->id == $coachoffData->created_by) || ($AppUI->person_id == $coachoffData->teacher_id) )
 							<a class="btn btn-theme-warn" href="#" id="delete_btn"  style="display: block !important;">Delete</a>
 						@endif
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
@@ -212,8 +212,17 @@ function delete_event(event_id){
 		console.log(p_event_type_id);
 		//var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
 		e.preventDefault();
-		confirmDeleteModalCall(p_event_type_id,'Do you want to delete event',"delete_event("+p_event_type_id+");");
+		confirmDeleteModalCall('','Do you want to delete this event',"delete_event("+p_event_type_id+");",false);
 		return false;
 	})
+
+	$(window).scroll(function() {    
+		var scroll = $(window).scrollTop();
+		if (scroll >= 80) {
+			$("#coach_off .btn_area").addClass("btn_area_fixed");
+		} else {
+			$("#coach_off .btn_area").removeClass("btn_area_fixed");
+		}
+	});
 </script>
 @endsection

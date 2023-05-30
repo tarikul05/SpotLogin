@@ -23,6 +23,10 @@ class EventCategory extends BaseModel
       'school_id',
       'title',
       'invoiced_type',
+      'package_invoice',
+      's_std_pay_type', //0 = hrly, 1 = fixed, 2 = package
+      's_thr_pay_type', //0 = hrly, 1 = fixed
+      't_std_pay_type', //0 = hrly, 1 = fixed
       'file_id',
       'is_active',
       'created_by',

@@ -117,7 +117,10 @@ p {
     margin-left: 0;
 }
 #main-content {
-    margin-top: 80px;
+    margin-top: 97px;
+}
+div#ex1-content {
+    padding-bottom: 50px;
 }
 
 .navbar {
@@ -162,7 +165,7 @@ header.panel-heading {
     margin: 40px 0;
     padding-top: 1px;
     padding-bottom: 5px;
-    top: 60px;
+    top: 67px;
     position: sticky;
     z-index: 9;
     background: #fff;
@@ -181,7 +184,7 @@ header.panel-heading {
     font-family: "Gilroy-Medium";
     font-weight: normal;
     font-size: 14px;
-    line-height: 1.25;
+    line-height: 1.05;
     /*height:35px;*/
 }
 .btn-area .btn-group .btn,
@@ -590,25 +593,25 @@ section.why-sportlogin {
 
 /* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
 #pageloader {
-    display: none;
+    display: flex;
     position: fixed;
     left: 0;
     top: 0;
     z-index: 9999;
     width: 100%;
     height: 100%;
-    padding-top: 100px;
-    background-color: rgba(0, 0, 0, 0.8);
-    overflow: auto;
+    padding-top:100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: none;
 }
 
 #pageloader img {
     display: flex;
     flex-direction: row;
-    position: relative;
-    width: 10%;
+    position: fixed;
     top: 40%;
     left: 50%;
+    width: 10%;
     transform: translate(-50%, -45%);
 }
 /* Mamun 16 February,2022 pageloader design -------------------------------------------------- */
@@ -686,6 +689,18 @@ button#button_lock_and_save {
     color: #fff;
     background-color: #5bc0de;
     border-color: #46b8da;
+}
+.button_lock_and_save {
+    padding: 0.75rem;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 0.25;
+    height: 35px;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    text-decoration: none;
+    border-radius: 5px;
 }
 ul.dropdown-menu.show {
     max-width: 260px !important;
@@ -1039,12 +1054,14 @@ button.btn.btn-sm.btn-warning {
 }
 table#lesson_table {
     border: 1px solid #ddd;
+    table-layout: fixed;
 }
 table#lesson_table > tbody > tr > td {
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd;
+    word-wrap: break-word;
 }
 .section_header_class label {
     color: #152245;
@@ -1109,6 +1126,89 @@ label.profile_img_area {
     background-position: 7px 6px !important;
 }
 
+label.section_header_class {
+    color: #152245;
+    font-size: 20px;
+    font-family: "Gilroy-Bold";
+    margin: 0px 0 10px 0;
+    text-align: left;
+    font-weight: normal;
+}
+
+tr.header_tbl {
+    font-size: 18px;
+    font-family: "Gilroy-Bold";
+}
+
+#invoice-details-content .text-right {
+    text-align: right;
+}
+
+label#sdiscount_percent_1_cap,
+label#stotal_amount_discount_cap {
+    margin-right: 35px;
+}
+
+input#samount_discount_1,
+input#stotal_amount_discount {
+    margin-right: 30px;
+}
+
+input#sextra_expenses {
+    margin-left: 35px;
+}
+
+#invoice-details-content .form-group.row label {
+    margin-top: 0px;
+}
+
+#tab_3 .form-group.row label {
+    padding: 0 15px;
+}
+#invoice-details-content #tab_3 .form-control {
+    margin-left: 15px;
+}
+.pack_invoice_area {
+    margin-left: 20px;
+}
+input#package_invoice {
+    margin-top: 12px;
+}
+label.titl {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+select#sis_paying,
+select#student_sis_paying {
+    border: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    pointer-events: none;
+}
+.lesson .selectdiv:after,
+#ex1-content .selectdiv:after {
+    content: none;
+}
+.cat_name {
+    max-width: 255px;
+}
+.inv_type label {
+    padding-left: 24px;
+}
+.ty_bill label.invoice_type_label {
+    padding-left: 5px;
+}
+.dropdown-menu form {
+    margin-bottom: 0px;
+    padding-bottom: 3.5px;
+}
+label#currency_alert_text {
+    padding-left: 10px;
+}
+#default_currency_lbl {
+    padding-right: 10px;
+}
 @media only screen and (max-width: 991px) {
     h1 {
         font-size: 48px;
@@ -1387,26 +1487,34 @@ label.profile_img_area {
     .students_list div#example_filter input {
         max-width: 95%;
     }
-    a#btn_delete_events {
-        width: 30%;
-        max-width: 50px;
-        float: left;
-        height: 35px;
-        line-height: 0.5;
-        margin-top: 0px;
+    .pack_invoice_area {
+        margin-left: 0px;
     }
-    .navbar {
-        min-height: 44px;
-        margin-bottom: 10px;
+    input#package_invoice {
+        margin-top: 7px;
     }
-    a.navbar-brand {
+    .ty_bill label.invoice_type_label {
         display: none;
     }
-    #main-content {
-        margin-top: 65px;
-    }
-    .fc-ltr .fc-list-heading-alt{
-        float: left;
-        padding-left: 20%;
-    }
 }
+.modal-content {border: 0px solid rgba(0, 0, 0, 0.2); width: 100%;}
+.modal-body {width: 100%;}
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 190px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    z-index: 1;
+    font-size:13px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }

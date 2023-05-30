@@ -27,7 +27,7 @@
         <tbody>
             @foreach($teachers as $teacher)
             @php
-            if ($teacher->pivot->role_type == 'school_admin') continue;
+                if (($teacher->pivot->role_type == 'school_admin') && !$AppUI->isSuperAdmin()) continue;
             @endphp
             <tr>
                 <td>{{ $teacher->id; }} </td>
@@ -49,13 +49,13 @@
                           @method('post')
                           @csrf
                           @if(!$teacher->pivot->is_sent_invite)
-                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
+                              <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                           @else
-                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa fa-envelope txt-grey"> Send invite</i></button>
+                              <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                           @endif
                         </form>
                     @else
-                        <span>{{ __('Yes') }}</span>
+                         <span class="">{{$teacher->user->username}}</span>
                     @endif
                 </td>
                 <td>{{ !empty($teacher->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>

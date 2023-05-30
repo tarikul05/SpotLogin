@@ -170,6 +170,11 @@ class Controller extends BaseController
                     $data['url'] = route('add.verify.email',$data['token']); 
                 }
             }
+            if (isset($data["p_attachment"])) {
+                $data["p_attachment"] = trim($data["p_attachment"]);
+            }else {
+                $data["p_attachment"] = "";
+            }
             \Mail::to($data['email'])->send(new SportloginEmail($data));
             return true;
         } catch (\Exception $e) {
@@ -302,7 +307,7 @@ class Controller extends BaseController
      * @param null $type (long | short)
      * @return Carbon date
      */
-    public function formatDateTimeZone($date, $type = 'long', $from = null, $to = null)
+    public function formatDateTimeZone($date, $type = 'long', $from = null, $to = null,$onlyDate=0)
     {
         if (!$from)
             $from = 'UTC';
@@ -310,12 +315,40 @@ class Controller extends BaseController
         if (!$to){
             $to = $this->get_local_time();
         }
-        $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
-        $carbon->setTimezone($to)->format('Y-m-d H:i:s');
+        
         if ($type == 'short')
         {
+            $date = str_replace('/', '-', $date);
+            $date = str_replace('.', '-', $date);
+            $date =  date('Y-m-d', strtotime($date));
+            
             $carbon = Carbon::createFromFormat('Y-m-d', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
-            $carbon->setTimezone($to)->format('Y-m-d');
+            if ($onlyDate ==1) {
+                return $carbon->setTimezone($to)->format('Y-m-d');
+            }
+            else {
+                $carbon->setTimezone($to)->format('Y-m-d');
+            }
+            
+        } else {
+
+            // $teste= '23:59:59';
+
+
+            // if (Carbon::createFromFormat('H:i:s', $teste) != false) {
+            //     //echo $entrada = Carbon::createFromFormat('H:i:s', $teste);
+            //     $carbon = Carbon::createFromFormat('H:i:s', $teste, 'Asia/Dhaka'); // specify UTC otherwise defaults to locale time zone as per ini setting
+            //             $carbon->setTimezone('UTC')->format('H:i:s');
+            //             echo $carbon->toDateTimeString();
+            // exit();
+            // }
+
+            $date = str_replace('/', '-', $date);
+            $date = str_replace('.', '-', $date);
+            $date =  date('Y-m-d H:i:s', strtotime($date));
+            
+            $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $date, $from); // specify UTC otherwise defaults to locale time zone as per ini setting
+            $carbon->setTimezone($to)->format('Y-m-d H:i:s');
         }
         return $carbon->toDateTimeString();
     }

@@ -9,6 +9,7 @@
 	$zone = $timezone;
 	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
   <div class="content">
@@ -44,15 +45,15 @@
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
+							<label id="teacher_personal_data_caption">{{ __('Event information') }}</label>
 						</div>
-						@if($eventData->is_locked ==1)
-						<div class="alert alert-warning">
-							<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
-							<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
-							<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
-				
-						</div>
+						@if((($AppUI->person_id == $eventData->teacher_id) || (($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
+							<div class="alert alert-warning">
+								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
+					
+							</div>
 						@endif
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
@@ -60,12 +61,6 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($locations->title) ? $locations->title : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Assistant Type') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventCategory->title) ? $eventCategory->title : ''; }}
 									</div>
 								</div>
 								<div class="form-group row">
@@ -113,24 +108,26 @@
 										{{ !empty($eventData->fullday_flag) ? 'Yes' : 'Non(No)' }}
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Currency') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }}
+								@if($priceShow)
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left">{{__('Currency') }} :</label>
+										<div class="col-sm-7">
+											{{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }}
+										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per class)') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '' }}
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per event)') }} :</label>
+										<div class="col-sm-7">
+											{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '' }}
+										</div>
 									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Student price (per student)') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : '' }}
+									<div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left">{{__('Student price (per student)') }} :</label>
+										<div class="col-sm-7">
+											{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : '' }}
+										</div>
 									</div>
-								</div>
+								@endif
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
@@ -149,17 +146,19 @@
 																<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left"></th>
-																<th width="10%" style="text-align:left;">
-																<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Buy') }}</label>
-																<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
-																</th>
-																<th width="10%" style="text-align:center">
-																<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Sell') }}</label>
-																<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
-																</th>
-																<th width="10%" style="text-align:right">
-																<label>{{ __('Extra charges') }}</label>
-																</th>
+																@if($priceShow)
+																	<th width="10%" style="text-align:left;">
+																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
+																		<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	</th>
+																	<th width="10%" style="text-align:center">
+																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
+																		<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	</th>
+																	<th width="10%" style="text-align:right">
+																		<label>{{ __('Extra charges') }}</label>
+																	</th>
+																@endif
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
@@ -168,9 +167,11 @@
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
 																<td>Present</td>
-																<td>{{ $student->buy_price }}</td>
-																<td style="text-align:center">{{ $student->sell_price }}</td>
-																<td style="text-align:center">{{ $eventData->extra_charges }}</td>
+																@if($priceShow)
+																	<td>{{ $student->buy_price }}</td>
+																	<td style="text-align:center">{{ $student->sell_price }}</td>
+																	<td style="text-align:center">{{ $eventData->extra_charges }}</td>
+																@endif
 															</tr>
 															@endforeach
 														</tbody>

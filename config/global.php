@@ -88,7 +88,8 @@
     'gender'=>[
       1 => 'Male',
       2 => 'Female',
-      3 => 'Not specified',
+      3 => 'Prefer not to respond',
+      4 => 'Non-binary',
     ],
     
     'token_validity' => 2, //days
@@ -103,7 +104,7 @@
     'invoice_type' =>[
       0  => 'Manuel',
       1 =>'Student',
-      2  => 'Professor',
+      2  => 'Teacher',
       9  => 'School',
     ],
 
