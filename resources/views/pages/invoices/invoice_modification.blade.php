@@ -262,7 +262,7 @@
                                         <td colspan="2" style="text-align:right">{{ $item->expense_name }}</td>
                                         <td></td>
                                         <td style="text-align:right; margin-right:0 padding-right:0;">
-                                            <input type="text" class="form-control numeric" id="taxes" name="sextra_expenses" value="{{ $item->expense_amount ? number_format($item->expense_amount, 1) . ' $' : '0 $' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
+                                            <input type="text" class="form-control numeric" id="taxes" name="sextra_expenses" value="{{ $item->expense_amount ? number_format($item->expense_amount, 1) : '0' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
                                         </td>
                                     </tr>
                                     @endforeach
@@ -276,7 +276,7 @@
                                         <td colspan="2" style="text-align:right">{{ $item->tax_name }}</td>
                                         <td>({{ $item->tax_percentage }}%)</td>
                                         <td style="text-align:right; margin-right:0 padding-right:0;">
-                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{ $item->tax_amount ? number_format($item->tax_amount, 1) . ' $' : '0 $' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
+                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{ $item->tax_amount ? number_format($item->tax_amount, 1) : '0' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
                                         </td>
                                     </tr>
                                     @endforeach
