@@ -371,14 +371,26 @@
 							</div>
 							@else
 							<div class="section_header_class">
-								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
+								<label id="contact_info_caption">{{ __('Payment Information')}}</label>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
+
+									
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
+
+										<label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
+										<div class="col-sm-7">
+											<input class="form-control" id="bank_name" name="bank_name" type="text"
+												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+										</div>
+
+									</div>
+									<div class="form-group row">
+
+										<label class="col-lg-12 col-sm-12 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
