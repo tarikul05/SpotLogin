@@ -615,8 +615,11 @@ class AgendaController extends Controller
                 elseif($fetch->duration_minutes > 44){
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
-
-                $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration :</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
+                if($fetch->event_type != 100) {
+                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
+                } else {
+                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
+                }
             }
 
             

@@ -15,6 +15,7 @@ use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
+use DateTimeZone;
 use App\Models\Location;
 use App\Models\Level;
 use App\Models\Province;
@@ -412,7 +413,11 @@ class TeachersController extends Controller
         $genders = config('global.gender');
         // dd($relationalData);
 
-        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice','provinces','school'));
+        $timezone = $school->timezone;
+        $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+        $isInEurope = in_array($timezone, $europeanTimezones);
+
+        return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice','provinces','school', 'isInEurope'));
     }
 
     /**
@@ -543,6 +548,11 @@ class TeachersController extends Controller
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         $school = School::find($schoolId);
 
+        
+        $timezone = $school->timezone;
+        $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+        $isInEurope = in_array($timezone, $europeanTimezones);
+
         // dd($relationalData);
         return view('pages.teachers.self_edit')->with(compact('levels',
         'eventLastLevelId',
@@ -550,7 +560,7 @@ class TeachersController extends Controller
         'school',
         'eventLastLocaId',
         'eventCat',
-        'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice'));
+        'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope'));
     }
 
 

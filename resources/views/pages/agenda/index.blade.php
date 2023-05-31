@@ -2677,9 +2677,9 @@
                 $.each(JSON.parse(json_events), function(k, v)  {
                     var eventStartDetect = moment.utc(v.start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezoneDetect);
                     var eventEndDetect = moment.utc(v.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezoneDetect);
-                    if (eventStartDetect.isBefore(nowDetect) && eventEndDetect.isAfter(nowDetect)) {
+                    if (eventStartDetect.isBefore(nowDetect) && eventEndDetect.isAfter(nowDetect) && v.event_type == 10) {
                         $('#eventInProgress').css('display','inline-block');
-                    }
+                    } 
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });

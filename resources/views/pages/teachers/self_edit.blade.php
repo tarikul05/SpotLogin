@@ -290,7 +290,7 @@
 
 
 							<div class="clearfix"></div>
-							@if($school->country_code != 'CA' )
+							@if ($isInEurope)
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
 								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
@@ -451,7 +451,7 @@
 										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
 									}
 									// 0 = hourly 1= fix
-									$studentPrice = $category->t_std_pay_type; 
+									$studentPrice = $category->s_std_pay_type; 
 
 									if ( $studentPrice ==1) { // fix and fix price
 										if ($lessionPrice->divider != -1) continue;
@@ -459,7 +459,7 @@
 										 if ($lessionPrice->divider == -1) continue;
 									}else{
 										
-
+											
 									}
 
 								 ?>
@@ -472,7 +472,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td>{{__('Lessons/Events..')}}</td>
+									<td>{{__('Lessons/Events')}}</td>
 									<td>{{ __($textForTypeBilling) }}</td>
 
 									<!-- <td>
