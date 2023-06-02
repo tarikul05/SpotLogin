@@ -19,12 +19,12 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Teacher Information:') }} {{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }} {{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -81,6 +81,8 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
 								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
@@ -217,10 +219,16 @@
 									</div>
 								</div>
 							</div>
+						</div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -276,10 +284,14 @@
 									</div>
 								</div>
 							</div>
+								</div>
+							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact information') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -323,13 +335,16 @@
 									</div>
 								</div> -->
 							</div>
-
+								</div>
+							</div>
 
 							<div class="clearfix"></div>
 							@if($school->country_code != 'CA' )
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -399,10 +414,14 @@
 									</div>
 								</div>
 							</div>
+								</div>
+							</div>
 							@else
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -415,6 +434,8 @@
 									</div>
 								</div>	
 							</div>
+								</div>
+							</div>
 							@endif	
 
 
@@ -423,6 +444,8 @@
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
 									</div>
+									<div class="card">
+										<div class="card-body bg-tertiary">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group row">
@@ -433,12 +456,14 @@
 											</div>
 										</div>
 									</div>
+										</div>
+									</div>
 								</div>
 							@endif
 						</div>
 					</fieldset>
 					@can('teachers-update')
-						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+						<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 					@endcan
 				</form>
 			</div>

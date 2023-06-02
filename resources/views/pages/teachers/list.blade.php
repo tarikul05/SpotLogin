@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid">
+  <div class="container-fluid body">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>

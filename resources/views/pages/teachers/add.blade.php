@@ -11,16 +11,16 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Teacher Information:') }}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="float-end btn-group">
+					<div class="float-end btn-group pt-1">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
@@ -28,12 +28,15 @@
 			</div>          
 		</header>
 		<!-- Tabs navs -->
-		<div>
+		<div class="mb-3">
 			<!-- user email check start -->
 				<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',[$schoolId]) : route('teachers.create')}}" method="post" action="" role="form">
 					@csrf
 					<div class="form-group row">
-						<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Teachers Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i> : </label>
+						<div class="text-center">
+							<h6 class="text-left" for="email" id="email_caption"><small>{{__('Teachers Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Search for autopulate teacher information')}}"></i></small></h6>
+						</div>
+						<label class="col-lg-3 col-sm-3 text-left"></label>
 						<div class="col-sm-5 search_area">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -69,6 +72,8 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
 								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
@@ -171,11 +176,17 @@
 									</div>
 								</div>
 							</div>
-							<div class="clearfix"></div>
 
+						</div>
+							</div>
+							</div>
+							<div class="clearfix"></div>
+<div clas="row">
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -232,10 +243,14 @@
 									</div>
 								</div>
 							</div>
+								</div>
+							</div>
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact information') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -278,11 +293,15 @@
 									</div>
 								</div> -->
 							</div>
+								</div>
+							</div>
 
 							<div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
 								</div>
+								<div class="card">
+									<div class="card-body bg-tertiary">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group row">
@@ -291,6 +310,8 @@
 												<textarea class="form-control" cols="60" id="scomment" name="comment" rows="5"></textarea>
 											</div>
 										</div>
+									</div>
+								</div>
 									</div>
 								</div>
 							</div>
