@@ -65,7 +65,7 @@
                             @if(!$AppUI->isStudent())
                                 <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __("Invoice's List") }}</a>
                                 <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __("Student's Invoice") }}</a>
-                                @if($AppUI->isSchoolAdmin())
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                                     <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Teacher's Invoice") }}</a>
                                 @endif
                                 <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>

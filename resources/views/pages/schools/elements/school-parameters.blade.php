@@ -11,7 +11,7 @@
             <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
 
         @can('parameters-create-udpate')
-            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save settings</button>
+            <button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><i class="fa fa-save"></i> Save settings</button>
         @endcan
         </div>
     </nav>

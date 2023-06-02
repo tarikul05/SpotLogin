@@ -15,16 +15,16 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-12 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;"> 
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Teacher Information:') }}</label>
-					</div>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }} </label>
+					</div> 
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
+				<!--<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
-				</div>
+				</div>-->
 			</div>
 		</header>
 		<!-- Tabs navs -->
@@ -35,13 +35,17 @@
 					{{ __('Contact Information') }}
 				</button>
 				@can('parameters-list')
+				@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 					<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
 					{{ __('Parameters')}}
 					</button>
+					@endif
 				@endcan
+				@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Sections and prices')}}
 				</button>
+				@endif
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -54,6 +58,17 @@
 					@csrf
 					<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
+
+
+					@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+					<fieldset>
+						<div class="section_header_class">
+							<label id="teacher_personal_data_caption">{{ __('Recent information') }}</label>
+						</div>
+
+						<div class="alert alert-info"><i class="fa-solid fa-check"></i> PREMIUM Access activated</div>
+					</fieldset>
+					@endif
 
 					<fieldset>
 						<div class="section_header_class">
@@ -388,8 +403,8 @@
 										</div>
 
 									</div>
+									@if($teacher == 'CA')
 									<div class="form-group row">
-
 										<label class="col-lg-12 col-sm-12 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
 										<div class="col-sm-7">
 											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
@@ -397,6 +412,7 @@
 												<span class="etransfer_acc"></span>	
 										</div>
 									</div>
+									@endif
 								</div>	
 							</div>
 
@@ -422,7 +438,7 @@
 						</div>
 					</fieldset>
 					
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+					<button style="position: fixed; top:80px; right:85px; z-index:999;" type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save') }}</button>
 					
 				</form>
 			</div>
@@ -509,7 +525,7 @@
 						</table>
 
 					
-						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
+						<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save')}}</button>
 					
 				</form>
 			</div>
