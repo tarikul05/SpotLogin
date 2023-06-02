@@ -421,7 +421,7 @@
         </div>
     </main>
     <footer>
-        <div class="title-top">{{ __('invoice_payment_title') }}</div>
+        <div class="title-top">{{ __('Payment Preference') }}</div>
         <div class="payment-info">
             <table class="table" style="border: 0;">
                 <tr>
@@ -431,7 +431,6 @@
                         || !empty($invoice_data->payment_bank_zipcode) || !empty($invoice_data->payment_bank_place)
                         || $invoice_data->payment_bank_place || !empty($invoice_data->payment_bank_country_code) ) {?>
                             <div class="payment_title">
-                                For payment by 
                                 <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)){ ?>
                                     E-Transfer
                                 <?php } ?>
@@ -441,7 +440,7 @@
                             <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account_name }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_name)){?>
-                            <div class="txt"><b>Bank Name : </b>{{ $invoice_data->payment_bank_name }}</div>
+                            <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_address)){?>
                             <div class="txt"><b>Address : </b>{{ $invoice_data->payment_bank_address }}</div>

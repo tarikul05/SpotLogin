@@ -11,12 +11,13 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid">
+<div class="content">
+  <div class="container-fluid body">
     <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-6 col-xs-12 header-area">
+            <div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
                 <div class="page_header_class">
-                    <label id="page_header_id" name="page_header_id">{{ __('List of invoice(s)')}}</label>
+                    <label id="page_header_id" class="page_header" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('List of invoice(s)')}}</label>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
@@ -197,6 +198,7 @@
         </table>
     </div>
   </div>
+</div>
 
 <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
     aria-labelledby="email_list_modal" name="email_list_modal">

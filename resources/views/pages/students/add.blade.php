@@ -11,12 +11,12 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Student Information:') }}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Student Information:') }}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
@@ -27,12 +27,15 @@
 			</div>          
 		</header>
 		<!-- Tabs navs -->
-
+		<div class="mb-3">
 			<!-- user email check start -->
 			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
 				<div class="form-group row">
-					<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i> :</label>
+					<div class="text-center">
+						<h6 class="text-left" for="email" id="email_caption"><small>{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i></small></h6>
+					</div>
+					<label class="col-lg-3 col-sm-3 text-left"></label>
 					<div class="col-sm-5 search_area">
 						<div class="input-group">
 							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
@@ -44,6 +47,7 @@
 					</div>
 				</div>
 			</form>
+		</div>
 			<!-- // user email check end -->
 	{{-- @if($searchEmail) --}}
 		<nav>
@@ -65,6 +69,8 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Student Personal Information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
 								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
@@ -184,10 +190,16 @@
 									</div>
 								</div>
 							</div>
+						</div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Level') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -251,11 +263,15 @@
 									@endif
 								</div>
 							</div>
+								</div>
+							</div>
 							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
 									</div>
+									<div class="card">
+										<div class="card-body bg-tertiary">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group row">
@@ -266,8 +282,11 @@
 											</div>
 										</div>
 									</div>
+										</div>
+									</div>
 								</div>
 							@endif
+					
 						</div>
 					</fieldset>
 				</div>
@@ -275,6 +294,8 @@
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Address') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -333,9 +354,13 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Billing address - Same as above') }} <input type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -394,9 +419,13 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
+					<div class="card">
+						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
 							<div class="form-group row">
@@ -452,9 +481,11 @@
 							</div>
 						</div>
 					</div>
+						</div>
+					</div>
 				</div>
 		</div>
-		<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save student_save_ext"><i class="fa fa-save"></i>{{ __('Save') }}</button>
+		<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-theme-success student_save student_save_ext"><i class="fa fa-save"></i> {{ __('Save') }}</button>
 		</form>
 	{{-- @endif --}} 
 	</div>
