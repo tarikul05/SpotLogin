@@ -108,14 +108,11 @@
     let loader = $('#pageloader');
     window.addEventListener('load', function() {
       $("#pageloader").fadeOut('fast');
-      $("#allFilters").fadeIn('fast');
-      
     });
 
     setTimeout(() => {
         $("#pageloader").fadeOut('fast');
-        $("#allFilters").fadeIn('fast');
-      }, 1000);
+      }, 2500);
 
     $("#setLan").change(function(event) {
       var lanCode = $(this).val();

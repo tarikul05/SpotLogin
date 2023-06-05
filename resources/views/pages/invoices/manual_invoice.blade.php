@@ -446,7 +446,7 @@
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
                                             </th>
                                             <th width="10%" style="text-align:right">
-                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Currency</label>
+                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Amount</label>
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
                                                        @foreach($currency as $key => $curr)

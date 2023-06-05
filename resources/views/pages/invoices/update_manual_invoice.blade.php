@@ -452,17 +452,13 @@
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
                                             </th>
                                             <th width="10%" style="text-align:right">
-                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Currency</label>
+                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Amount</label>
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
                                                         @foreach($currency as $key => $curr)
-                                                        @if($curr->currency_code == $invoiceData['invoice_currency'])
-                                                        <option value="{{$curr->currency_code}}" selected>{{$curr->currency_code}}</option>
-                                                         @else
-                                                             <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
-                                                         @endif
-                                                         @endforeach
-                                                     </select>
+                                                            <option value="{{$curr->currency_code}}">{{$curr->currency_code}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </th>
                                             <th width="2%" align="center"></th>
