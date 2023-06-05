@@ -16,12 +16,12 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Student Information:') }} {{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Student Information:') }} {{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</label>
 					</div>
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
+				<div class="col-sm-6 col-xs-12 btn-area pt-1">
 					<div class="float-end btn-group">
 						@can('students-update')
 							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
@@ -195,10 +195,16 @@
 								</div>
 
 							</div>
+						</div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Level') }}</label>
 							</div>
+							<div class="card">
+								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -262,11 +268,15 @@
 									@endif
 								</div>
 							</div>
+								</div>
+							</div>
 							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
 								<div id="commentaire_div">
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
 									</div>
+									<div class="card">
+										<div class="card-body bg-tertiary">
 									<div class="row">
 										<div class="col-md-6">
 											<div class="form-group row">
@@ -277,11 +287,10 @@
 											</div>
 										</div>
 									</div>
+										</div>
+									</div>
 								</div>
 							@endif
-						</div>
-
-							</div>
 						</div>
 					</fieldset>
 				</div>

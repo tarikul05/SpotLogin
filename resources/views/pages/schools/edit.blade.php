@@ -15,15 +15,15 @@
 		
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
-					<div class="col-sm-6 col-xs-12 header-area">
+					<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 						<div class="page_header_class">
-							<label id="page_header" name="page_header">{{ __('School Key Information')}}</label>
+							<label id="page_header" name="page_header"><i class="fa-solid fa-school"></i> {{ __('School Key Information')}}</label>
 						</div>
 					</div>
 					<div class="col-sm-6 col-xs-12 btn-area">
-						<div class="float-end btn-group">
-							<button type="submit" class="btn btn-sucess text-white save_button float-end" id="update_btn">
-								{{ __('Save')}}
+						<div class="float-end btn-group pt-1">
+							<button type="submit" class="btn btn-theme-success" id="update_btn">
+								<i class="fa fa-save"></i> {{ __('Save')}}
 							</button>
 						</div>
 					</div>    
@@ -31,6 +31,7 @@
 			</header>
 			<!-- Tabs navs -->
 
+			
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
 					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">

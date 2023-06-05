@@ -1,6 +1,6 @@
 @if ($message = Session::get('success'))
 
-<div class="alert alert-dismissible alert-success alert-block">
+<div id="alert-container-success" class="alert alert-dismissible alert-success alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
     <strong>{{ $message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
 </div>
@@ -66,3 +66,12 @@
     </div>
     @endforeach
 @endif
+
+<script>
+    setTimeout(function() {
+        var alertContainer = document.getElementById('alert-container-success');
+        if (alertContainer) {
+            alertContainer.style.display = 'none';
+        }
+    }, 4500);
+</script>

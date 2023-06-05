@@ -13,16 +13,16 @@
 
 @section('content')
 <div class="content" id="manual_invoice_page">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{__('Manual Detail')}}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Detail')}}</label>
 					</div>
 				</div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 btn-area">
-                    <div class="btn-group save-button pull-right"> 
+                <div class="col-sm-6 col-xs-12 btn-area pt-1">
+                    <div class="float-end btn-group save-button "> 
                        <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">Save</button> 
                     </div>
                 </div>

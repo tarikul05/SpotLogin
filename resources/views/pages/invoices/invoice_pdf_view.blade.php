@@ -367,8 +367,8 @@
                     <?php
                     foreach ($InvoicesExpData as $item) {
                         echo '<tr class="extra_col">';
-                        echo '<td colspan="2" class="text"><b>' . $item['expense_name'] . '</b></td>';
-                        echo '<td colspan="2" class="price">+ <b>' . $item['expense_amount'] . '</b></td>';
+                        echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['expense_name'] . '</b></td>';
+                        echo '<td style="text-align:right" colspan="2" class="price">+ <b>' . $item['expense_amount'] . '</b></td>';
                         echo '</tr>';
                     }
                     ?>
@@ -378,8 +378,9 @@
                         <?php
                         foreach ($InvoicesTaxData as $item) {
                             echo '<tr class="extra_col">';
-                            echo '<td colspan="2" class="text"><b>' . $item['tax_name'] . '</b></td>';
-                            echo '<td colspan="2" class="price">+ <b>' . $item['tax_amount'] . '</b></td>';
+                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b></td>';
+                            echo '<td style="text-align:right" class="text">' . $item['tax_percentage'] . '%</td>';
+                            echo '<td style="text-align:right" colspan="1" class="price">+ <b>' . $item['tax_amount'] . '</b></td>';
                             echo '</tr>';
                         }
                         ?>
@@ -405,7 +406,7 @@
 
                     <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount + $invoice_data->tax_amount ; ?>
                     <tr class="total_col">
-                        <td align="center" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
+                        <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>
                     </tr>
                 </tfoot>
@@ -420,7 +421,7 @@
         </div>
     </main>
     <footer>
-        <div class="title-top">{{ __('invoice_payment_title') }}</div>
+        <div class="title-top">{{ __('Payment Preference') }}</div>
         <div class="payment-info">
             <table class="table" style="border: 0;">
                 <tr>
@@ -430,7 +431,6 @@
                         || !empty($invoice_data->payment_bank_zipcode) || !empty($invoice_data->payment_bank_place)
                         || $invoice_data->payment_bank_place || !empty($invoice_data->payment_bank_country_code) ) {?>
                             <div class="payment_title">
-                                For payment by 
                                 <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)){ ?>
                                     E-Transfer
                                 <?php } ?>
@@ -440,7 +440,7 @@
                             <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account_name }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_name)){?>
-                            <div class="txt"><b>Bank Name : </b>{{ $invoice_data->payment_bank_name }}</div>
+                            <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_address)){?>
                             <div class="txt"><b>Address : </b>{{ $invoice_data->payment_bank_address }}</div>
