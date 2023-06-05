@@ -58,10 +58,12 @@
       let loader = $('#pageloader');
       window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
+        $("#allFilters").fadeIn('fast');
       });
 
       setTimeout(() => {
         $("#pageloader").fadeOut('fast');
+        $("#allFilters").fadeIn('fast');
       }, 2500);
 
       $('.select_two_defult_class').select2();
