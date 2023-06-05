@@ -86,9 +86,6 @@ body {
     background-color: #0075bf;
     border-radius: 3px;
 }
-.sp {
-    display: none;
-}
 .row {
     --bs-gutter-x: 0rem;
 }
@@ -1250,12 +1247,6 @@ label#currency_alert_text {
 }
 
 @media only screen and (max-width: 768px) {
-    .sp {
-        display: block;
-    }
-    .pc {
-        display: none !important;
-    }
     .m-4 {
         margin: 0.5rem !important;
     }
@@ -1388,8 +1379,6 @@ label#currency_alert_text {
     }
     header.panel-heading {
         margin: 40px 0 10px !important;
-        top: 44px;
-        padding-top: 5px;
     }
     .student_save {
         top: 0px;
@@ -1450,39 +1439,31 @@ label#currency_alert_text {
         max-width: 40%;
         float: left;
     }
-    a#btn_validate_events {
-        max-width: 50px;
+    a#btn_delete_events {
+        width: 30%;
         float: left;
-        height: 35px;
-        line-height: 0.5;
-        margin-top: 0px;
     }
     button#btn_copy_events {
         float: left;
-        width: 30%;
-        line-height: 5px;
-        padding-top: 11px;
-        margin-top: 0px;
-        height: 37px;
+        width: 38%;
     }
     a#add_lesson_btn {
         width: 28%;
-        margin-top: 0px;
     }
     .students_list div#example_length {
-        width: 28%;
+        width: 26%;
         float: left;
         margin-right: 4%;
     }
     .students_list div#example_filter {
-        width: 66%;
+        width: 68%;
         padding: 0;
         margin: 0;
         margin-bottom: 30px;
     }
     .students_list div#example_filter label,
     .students_list #example_filter a {
-        margin-top: 0px;
+        margin-top: 0;
     }
     .students_list div#example_filter input {
         max-width: 95%;

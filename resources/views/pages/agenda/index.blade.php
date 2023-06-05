@@ -1862,8 +1862,7 @@
             // },
             //events: JSON.parse(json_events),
             //allDaySlot: true,
-            longPressDelay: 100,
-            selectLongPressDelay:200,
+
             loading: function(bool) {
 				$('#loading').toggle(bool)
                 if (bool) {
