@@ -945,7 +945,7 @@ button#save_btn_more i {
 	}
 
 	.header-area {
-		margin-bottom: 25px;
+		margin-bottom: 15px;
 	}
 
 	.pull-right.btn-group.cal_top {
@@ -1164,6 +1164,11 @@ a.btn.btn-theme-success.add_teacher_btn {
 }
 
 @media only screen and (max-width: 768px) {
+	.header-area {
+		padding-top:15px;
+		padding-bottom:0;
+		margin-bottom:0;
+	}
 	.pc_only {
 		display: none;
 	}

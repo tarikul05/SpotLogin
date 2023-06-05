@@ -32,7 +32,7 @@
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
 			<header class="panel-heading" style="border: none;">
-				<div class="row panel-row" style="margin:0;">
+				<div class="row panel-row pt-2" style="margin:0;">
 					<div class="col-lg-4 col-12 header-area">
 							<div class="page_header_class pt-1">
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
@@ -155,7 +155,7 @@
                                         <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">Current List</button> 
                                     </div>   
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3" id="allFilters" style="display:none;">
                                     <div id="event_school_div" name="event_school_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
@@ -1173,7 +1173,7 @@
                     $("#pageloader").show();
                 },
                 success: function(data) {
-                    $("#pageloader").hide();
+                  //  $("#pageloader").hide();
                     if (data.length >0) {
                         var resultHtml ="";
                         var i='0';
@@ -1187,7 +1187,7 @@
                     
                 },   //success
                 complete: function( xhr ) {
-                    $("#pageloader").hide();
+                  //  $("#pageloader").hide();
                 }, 
                 error: function(ts) { 
                     // alert(ts.responseText) 
@@ -1213,10 +1213,10 @@
                 dataType: 'json',
                 async: false,
                 beforeSend: function( xhr ) {
-                    $("#pageloader").show();
+                   // $("#pageloader").show();
                 },
                 success: function(data) {
-                    $("#pageloader").hide();
+                  //  $("#pageloader").hide();
                     if (data.length >0) {
                         var resultHtml ="";
                         var i='0';
@@ -1256,10 +1256,10 @@
                 dataType: 'json',
                 async: false,
                 beforeSend: function( xhr ) {
-                    $("#pageloader").show();
+                  //  $("#pageloader").show();
                 },
                 success: function(data) {
-                    $("#pageloader").hide();
+                   // $("#pageloader").hide();
                     if (data.length >0) {
                         
                     }
@@ -1276,7 +1276,7 @@
                     
                 },   //success
                 complete: function( xhr ) {
-                    $("#pageloader").hide();
+                   // $("#pageloader").hide();
                 }, 
                 error: function(ts) { 
                     // alert(ts.responseText) 
@@ -1358,10 +1358,10 @@
                 dataType: 'json',
                 async: false,
                 beforeSend: function( xhr ) {
-                    $("#pageloader").show();
+                   // $("#pageloader").show();
                 },
                 success: function(data) {
-                    $("#pageloader").hide();
+                   // $("#pageloader").hide();
                     teachersList = data
                     if (data.length >0) {
                         
@@ -1385,7 +1385,7 @@
                     
                 },   //success
                 complete: function( xhr ) {
-                    $("#pageloader").hide();
+                   // $("#pageloader").hide();
                 }, 
                 error: function(ts) { 
                     // alert(ts.responseText) 
@@ -1462,10 +1462,10 @@
                 dataType: 'json',
                 async: false,
                 beforeSend: function( xhr ) {
-                    $("#pageloader").show();
+                  //  $("#pageloader").show();
                 },
                 success: function(data) {
-                    $("#pageloader").hide();
+                  //  $("#pageloader").hide();
                     if (data.length >0) {
                         
                     }
@@ -1480,7 +1480,7 @@
                     
                 },   //success
                 complete: function( xhr ) {
-                    $("#pageloader").hide();
+                   // $("#pageloader").hide();
                 }, 
                 error: function(ts) { 
                     // alert(ts.responseText) 
@@ -1862,6 +1862,8 @@
             // },
             //events: JSON.parse(json_events),
             //allDaySlot: true,
+            longPressDelay: 100,
+            selectLongPressDelay:200,
             loading: function(bool) {
 				$('#loading').toggle(bool)
                 if (bool) {

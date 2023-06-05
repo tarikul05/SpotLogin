@@ -97,7 +97,7 @@ class Invoice extends BaseModel
         'invoice_creation_type',
         'language_code',
         'billing_method',
-        'invoice_currency ',
+        'invoice_currency',
         'tax_desc',
         'tax_perc',
         'tax_amount',
