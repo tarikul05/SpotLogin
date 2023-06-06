@@ -22,24 +22,26 @@
 @endphp
 @section('content')
   <div class="content">
-	<div class="container-fluid">
+	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
 				</div>    
 			</div>          
-		</header>
+	
 		<!-- Tabs navs -->
 
-		<nav>
+		<nav style="margin-bottom:0; padding-bottom:0;">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
+
+	</header>
 
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
@@ -51,6 +53,8 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
@@ -304,8 +308,10 @@
 								</div>
 							</div>
 						</div>
+						</div>
+					</div>
 					</fieldset>
-					<div class="btn_area">
+					<div class="btn_area page_header_class" style="position: fixed; top:101px; z-index:9999; right:0; padding-right:85px;">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
 						@if($AppUI->person_id == $eventData->teacher_id)
 							@can('self-delete-event')
@@ -456,7 +462,7 @@ $('.student_attn').change(function (e) {
 
 // save functionality
 $('#mark_present_btn').click(function (e) {
-	if (confirm("Mark all student as present ?")) {
+	//if (confirm("Mark all student as present ?")) {
 		var data = [];
 		$('.student_attn').val('200');
 		$('.student_attn').each(function(){ 
@@ -486,7 +492,7 @@ $('#mark_present_btn').click(function (e) {
 				$("#pageloader").hide();
 			}
 		})
-	}
+	//}
 			            
 });
 

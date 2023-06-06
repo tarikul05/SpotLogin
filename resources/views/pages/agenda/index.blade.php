@@ -38,7 +38,7 @@
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
                                   {{__('Agenda')}}:  
                                 </h1> 
-                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa fa-clock-o"></i> <span id="currentTimer"></span></span>
+                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
                                     <i class="fa-solid fa-bell fa-bounce"></i>
                                     Lesson in progress...
@@ -457,10 +457,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!--<div id="price_per_student">
+                                                    
+                                                    <div id="priceEventOptions">
+                                                    <div id="price_per_student">
+                                                        <div class="row">
+                                                            <hr class="col-lg-12 col-sm-12 text-left" style="font-size:10px; color:#EEE;">
+                                                        </div>
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
-                                                            <div class="col-sm-7">
+                                                            <div class="col-sm-6">
                                                                 <div class="selectdiv">
                                                                     <select class="form-control" id="sprice_currency" name="sprice_currency">
                                                                         @foreach($currency as $key => $curr)
@@ -471,11 +476,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row not_teacher">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(class/hour)</span><span class="event-text">(per event)</span> :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">({{__('class/hour') }})</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
                                                                 </div>
@@ -483,10 +488,10 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="sprice_amount_sell_div"> 
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
                                                                 </div>
@@ -494,16 +499,21 @@
                                                         </div>
                                                         <div class="form-group row event">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges') }}{{ __('(per student)')}} : </label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="extra_charges_div"> 
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>-->
+                                                        <div class="row">
+                                                            <hr class="col-lg-12 col-sm-12 text-left" style="font-size:10px; color:#EEE;">
+                                                        </div>
+                                                    </div>
+                                                    </div>
+
                                                     
                                                 </div>
                                                 
@@ -2327,6 +2337,9 @@
                             document.getElementById("btn_delete_events").style.display = "block";
                             document.getElementById("btn_validate_events").style.display = "block";
                         }
+                        if (selected_non_validate_delete_ids.length > 0) {
+                            document.getElementById("btn_delete_events").style.display = "block"; 
+                        }
                         
                     }
                     if (lockRecords == 0)
@@ -3835,6 +3848,14 @@ $("body").on('click', '#student_empty', function(event) {
 })
 
 $('#agenda_select').on('change', function() {
+    var agendaSelectpriceEventOptions = $("#agenda_select").val();
+    if(agendaSelectpriceEventOptions == 2) {
+        $('#priceEventOptions').show();
+    } else {
+        $('#priceEventOptions').hide();
+    }
+
+    
     $('#all_day_input').prop( "checked", false)
     $('#student_empty').prop( "checked", false)
     $("#hourly").hide()
