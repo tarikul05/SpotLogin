@@ -18,11 +18,11 @@
                       </select>
                   </div>
                   <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Account name (full name / Name of the school)" id="fullname" name="fullname"
+                      <input type="text" class="form-control" placeholder="{{ __('Account name (full name / Name of the school)') }}" id="fullname" name="fullname"
                           required>
                   </div>
                   <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Username" id="username" name="username"
+                      <input type="text" class="form-control" placeholder="{{ __('username') }}" id="username" name="username"
                           required>
                   </div>
                   <div class="form-group">
@@ -53,19 +53,19 @@
                     </div>
                   <div class="form-group">
                       <div class="input-group" id="show_hide_password">
-                            <input class="form-control" autocomplete="on" type="password" id="password" placeholder="password" name="password"> 
+                            <input class="form-control" autocomplete="on" type="password" id="password" placeholder="{{ __('password') }}" name="password"> 
                             <div class="input-group-addon">
                                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
                             </div>
                       </div>
                   </div>
                   <small id="" class="password_hint">
-                        <strong>Password Must:</strong></br>
-                        > Be more than 7 Characters</br>
-                        > An Uppercase Character</br>
-                        > A Lowercase Character</br>
-                        > A Number</br>
-                        > A Special character</br>
+                    <strong>{{ __('Password Must') }}:</strong></br>
+                        > {{ __('Be more than 7 Characters') }}</br>
+                        > {{ __('An Uppercase Character') }}</br>
+                        > {{ __('A Lowercase Character') }}</br>
+                        > {{ __('A Number') }}</br>
+                        > {{ __('A Special character') }}</br>
                     </small>
                     <br>
                   <div class="checkbox text-center">
@@ -78,7 +78,7 @@
               </form>
               
               <div style="text-align:center;margin-top:10px;">
-                  <p>{{ __('Already have an account?')}} <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a> now</p>
+                  <p>{{ __('Already have an account?')}} <a class="login_btn" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Sign in') }}</a> {{ __('now') }}</p>
               </div>
           </div>
       </div>

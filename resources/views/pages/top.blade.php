@@ -78,15 +78,11 @@
         </div>
       </div>
       <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
-        <h2 class="gilroy-regular txtdarkblue mb-4">What is Sportlogin?</h2>
-        <p class="gilroy-light txtdarkblue">Over the years, I've noticed spending more and more time
-          managing planning, invoices and communication rather than actually coaching. </p>
-        <p class="gilroy-light txtdarkblue">I had to find a sustainable solution to remediate that. I
-          decided to create a new solution as I couldn't find an affordable, simple enough solution on the
-          market. </p>
-        <p class="gilroy-light txtdarkblue">That allowed me to save significant administrative time to keep
-          the focus on the main activity.</p>
-        <p class="gilroy-light txtdarkblue">It's been 10 years I'm using this solution called
+        <h2 class="gilroy-regular txtdarkblue mb-4">{{ __('What is Sportlogin?') }}</h2>
+        <p class="gilroy-light txtdarkblue">{{ __("Over the years, I've noticed spending more and more time managing planning, invoices and communication rather than actually coaching") }}.</p>
+        <p class="gilroy-light txtdarkblue">{{ __("I had to find a sustainable solution to remediate that. I decided to create a new solution as I couldn't find an affordable, simple enough solution on the market") }}.</p>
+        <p class="gilroy-light txtdarkblue">{{ __('That allowed me to save significant administrative time to keep the focus on the main activity') }}.</p>
+        <p class="gilroy-light txtdarkblue">{{ __("It's been 10 years I'm using this solution called") }}
           <b>SPORTLOGIN</b>
         </p>
       </div>
@@ -101,15 +97,14 @@
         </div>
       </div>
       <div class="col-lg-6 col-md-12 py-5 software-capabilities-content">
-        <h2 class="gilroy-regular txtdarkblue mb-4">Software capabilities</h2>
+        <h2 class="gilroy-regular txtdarkblue mb-4">{{ __("Software capabilities") }}</h2>
         <ul class="list-unstyled">
-          <li><i class="fas fa-chevron-right"></i> <b>PLAN,</b> lessons and events easily </li>
-          <li><i class="fas fa-chevron-right"></i> <b>PERSONNALIZE,</b> your different fees</li>
-          <li><i class="fas fa-chevron-right"></i> <b>MANAGE,</b> your students profile
-          </li>
-          <li><i class="fas fa-chevron-right"></i> <b>STAY INFORMED,</b> with real time visibility of the planning, for you and your students</li>
-          <li><i class="fas fa-chevron-right"></i> <b>INVOICE,</b> easily and automatically </li>
-          <li><i class="fas fa-chevron-right"></i> <b>KEEP TRACK,</b> of payments and invoices </li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("PLAN") }},</b> {{ __("lessons and events easily") }} </li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("PERSONNALIZE") }},</b> {{ __("your different fees") }}</li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("MANAGE") }},</b> {{ __("your students profile") }}</li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("STAY INFORMED") }},</b> {{ __("with real time visibility of the planning, for you and your students") }}</li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("INVOICE") }},</b> {{ __("easily and automatically") }}</li>
+          <li><i class="fas fa-chevron-right"></i> <b>{{ __("KEEP TRACK") }},</b> {{ __("of payments and invoices") }}</li>
         </ul>
       </div>
     </div>
@@ -125,9 +120,8 @@
         </div>
       </div>
       <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
-        <h2 class="gilroy-regular txtdarkblue mb-4">Our solutions</h2>
-        <p class="gilroy-light txtdarkblue"><b>Single coach :</b> Now, if a user chooses a single coach account, they don’t have access to the “teacher” tab in the header. So a single teacher account cannot become a school account for now.</p>
-        <p class="gilroy-light txtdarkblue"><b>School :</b> But if the user selects school accounts, they don’t have a limit on the amount of teachers they can add. So they can move from 2 teachers to 10 teachers if they want, the only different will be when they decide to go premium, they will have to pay for the right account type.</p>
+        <p class="gilroy-light txtdarkblue"><b>{{ __("Single coach") }} :</b> {{ __("Now, if a user chooses a single coach account, they don’t have access to the “teacher” tab in the header. So a single teacher account cannot become a school account for now") }}.</p>
+        <p class="gilroy-light txtdarkblue"><b>{{ __("School") }} :</b> {{ __("But if the user selects school accounts, they don’t have a limit on the amount of teachers they can add. So they can move from 2 teachers to 10 teachers if they want, the only different will be when they decide to go premium, they will have to pay for the right account type") }}.</p>
       </div>
     </div>
   </div>

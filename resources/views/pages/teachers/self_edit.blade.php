@@ -347,7 +347,7 @@
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" name="bank_country_code" id="bank_country_code">
-													<option value="">Select</option>
+													<option value="">{{ __('Select')}}</option>
 													@foreach($countries as $country)
 															<option value="{{ $country->code }}" {{!empty($teacher->bank_country_code) ? (old('country_code', $teacher->bank_country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }}</option>
 													@endforeach
