@@ -60,7 +60,7 @@
                     <input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
                   </div> 
                   <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Username')}}  </label>
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('ID')}}  </label>
                     <div class="col-sm-6">
                       <div class="form-group-data">
                         <input type="text" class="form-control" disabled="disabled" value="{{!empty($AppUI['username']) ? $AppUI['username'] : ''}}">
