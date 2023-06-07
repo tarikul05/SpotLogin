@@ -161,7 +161,7 @@ class Invoice extends BaseModel
      * @param array $params
      * @return $query
      */
-    public function getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type)
+    public function getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type,$timezone)
     {
         $studentEvents = DB::table('events')
             ->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -211,8 +211,11 @@ class Invoice extends BaseModel
         $studentEvents->whereNull('events.deleted_at');
         $studentEvents->whereNull('event_details.deleted_at');
 
-        $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $studentEvents->where('events.date_start', '>=', $dateS);
+        //$dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
+        $dateS = Carbon::now()->format('Y-m-d');
+        $dateS = Carbon::createFromFormat('Y-m-d', $dateS, $timezone)->setTimezone('UTC')->format('Y-m-d');
+        $studentEvents->whereDate('events.date_start', '>=', $dateS);
+
         $studentEvents->distinct('events.id');
         //$studentEvents->groupBy('event_details.student_id');
         //dd($studentEvents->toSql());

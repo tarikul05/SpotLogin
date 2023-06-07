@@ -1136,6 +1136,7 @@
                     //$('#unlock_btn').style.display="block";
                     //DisplayOnOff_buttons();
                     //modal.style.display = "none";
+                    location.reload()
                 }
                 else {
 

@@ -38,9 +38,9 @@
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
                                   {{__('Agenda')}}:  
                                 </h1> 
-                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
+                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
-                                    <i class="fa-solid fa-bell fa-bounce"></i>
+                                    <i class="fa-solid fa-bell fa-beat"></i>
                                     Lesson in progress...
                                 </em>
 							</div>
@@ -700,6 +700,7 @@
         document.getElementById("date_to").value = getCookie("date_to");
         FirstDay=document.getElementById("date_from").value;
         LastDay=document.getElementById("date_to").value;
+    
     }
     if (getCookie("view_mode") != "CurrentListView"){
         // GET THE FIRST AND LAST DATE OF THE MONTH.
@@ -1595,6 +1596,9 @@
 		document.getElementById("copy_student_id").value = getStudentIDs();
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
+        console.log('copy start',  document.getElementById("copy_date_from").value)
+        console.log('copy end',  document.getElementById("copy_date_to").value)
+
         var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
 		console.log("current view for copy="+cal_view_mode_for_copy.name);
         if(cal_view_mode_for_copy.name === "agendaWeek") {
@@ -2449,7 +2453,10 @@
                 else {
                     document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
                     document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
-                
+
+                    var date = moment(document.getElementById("date_to").value);
+                    var newDate = date.subtract(1, 'day').format('YYYY-MM-DD');
+                    document.getElementById("date_to").value = newDate;
                 }
                 
                 if (document.getElementById("prevnext").value == 'yes'){

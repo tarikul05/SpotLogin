@@ -511,13 +511,14 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
         $invoice_status_all = config('global.invoice_status');
         
+        $timezoneInvoiceList = $school->timezone;
         
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
         if ($user->isTeacherSchoolAdmin()) {
             $invoice_type = ($type == 'school') ? 'S' : 'T'; 
         }
         $query = new Invoice;
-        $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type);
+        $allEvents = $query->getStudentInvoiceList($user,$schoolId,$user_role,$invoice_type,$timezoneInvoiceList);
         //dd($allEvents->toSql());
         //dd($allEvents);
         $allStudentEvents = [];

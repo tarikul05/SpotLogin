@@ -506,9 +506,9 @@
 						<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
 						
 						
-						<div class="alert alert-warning">
+						<!--<div class="alert alert-warning">
 							{{ __('Enter the percentage reduction amount for each of the tranches. If a tranche is not applicable, the amount of the reduction must be set to')}} 
-						</div>
+						</div>-->
 						<div class="row">
 							<div class="col-md-8">
 								<div class="form-group row below_space">
