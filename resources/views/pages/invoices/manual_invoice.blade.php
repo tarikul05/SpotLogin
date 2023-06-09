@@ -29,7 +29,7 @@
 			</div>
 		</header>
         <?php //echo '<pre>' ; print_r($InvoicesExpData); exit; ?>
-        <div class="row" style="margin:0;">
+        <div class="row mb-5" style="margin:0;">
             <div class="col-lg-12">
                 <div id="content">
                     <form role="form" id="form_main" class="form-horizontal tbl_wrp_form" method="post" action="">
@@ -92,6 +92,8 @@
                             <?php //echo '<pre>'; print_r($students);exit; ?>
                             <div id="client_detail_id" open="">
                                 <div id="table_client">
+                                    <div class="card">
+                                        <div class="card-body bg-tertiary">
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
                                             <div class="input-group"> <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
@@ -177,12 +179,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- client info END -->
                             <!-- Seller info -->
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Account Invoicing') }}:</label>
 							</div>
+
+                            <div class="card">
+                                <div class="card-body bg-tertiary">
+
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->
                                 <div id="table_seller">
@@ -287,12 +295,18 @@
                                     </div>
                                 </div>
                             </div>
+                                </div>
+                            </div>
                             <!-- Seller info END -->
                             <!-- Payment Bank info for Seller -->
                             @if ($isInEurope)
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Payment Bank Information') }}:</label>
 							</div>
+
+                            <div class="card">
+                                <div class="card-body bg-tertiary">
+
                             <div id="" open="">
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
@@ -385,10 +399,14 @@
                                     </div>
                                 </div>
                             </div>
+                                </div>
+                            </div>
                             @else
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Payment Information') }}:</label>
 							</div>
+                            <div class="card">
+                                <div class="card-body bg-tertiary">
                             <div id="" open="">
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
@@ -425,6 +443,8 @@
                                                 <input type="text" class="form-control" id="name_for_checks" name="name_for_checks" value="" placeholder="Name for Checks" maxlength="100"> </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
                                 </div>
                             </div>
                             @endif
@@ -503,6 +523,10 @@
                             <div class="section_header_class">
 								<label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
 							</div>
+
+                            <div class="card">
+                                <div class="card-body bg-tertiary">
+
                             <div id="add_tax_div" open="">
                                 <div class="add_more_tax_row row">
                                     <div class="col-md-6">
@@ -535,6 +559,7 @@
                                     <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
                                 </div>
                             </div>
+                            <hr>
                             <div id="add_expense_div" open="">
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Add Expenses') }}:</label>
@@ -558,6 +583,8 @@
                                 <div id="add_more_expense_div"></div>
                                 <div class="row col-md-12">
                                     <button id="add_more_expense_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
+                                </div>
+                            </div>
                                 </div>
                             </div>
                         </fieldset>

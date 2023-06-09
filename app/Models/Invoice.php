@@ -187,7 +187,7 @@ class Invoice extends BaseModel
                 ]
             );
         
-        if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+        if ($user_role == 'admin_teacher' || $user_role == 'teacher_minimum') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -213,8 +213,8 @@ class Invoice extends BaseModel
 
         //$dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $dateS = Carbon::now()->format('Y-m-d');
-        $dateS = Carbon::createFromFormat('Y-m-d', $dateS, $timezone)->setTimezone('UTC')->format('Y-m-d');
-        $studentEvents->whereDate('events.date_start', '>=', $dateS);
+        //$dateS = Carbon::createFromFormat('Y-m-d', $dateS, $timezone)->setTimezone('UTC')->format('Y-m-d');
+        $studentEvents->whereDate('events.date_start', '<', $dateS);
 
         $studentEvents->distinct('events.id');
         //$studentEvents->groupBy('event_details.student_id');
@@ -272,7 +272,7 @@ class Invoice extends BaseModel
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = 'T'";
             $teacherEvents->whereRaw($qq);
             $teacherEvents->where('events.teacher_id', $user->person_id);
-        }else if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+        }else if ($user_role == 'admin_teacher' || $user_role == 'teacher') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $teacherEvents->whereRaw($qq);
             //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -376,7 +376,7 @@ class Invoice extends BaseModel
                 $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq);
                 $studentEvents->where('events.teacher_id', $user->person_id);
-            }else if ($user_role == 'admin_teacher' || $user_role == 'coach_user') {
+            }else if ($user_role == 'admin_teacher' || $user_role == 'teacher') {
                 $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $studentEvents->whereRaw($qq);
                 //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -711,15 +711,17 @@ class Invoice extends BaseModel
             $dateEnd = $this->formatDateTimeZone($dateEnd.' 23:59:59', 'long',$timeZone,'UTC');
             $dateS = $this->formatDateTimeZone($dateS.' 00:00:00', 'long',$timeZone,'UTC');
 
-            $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
-            $studentEvents->whereRaw($qq);
+           //// $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateS))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd))) ."'";
+          ////  $studentEvents->whereRaw($qq);
 
            // $studentEvents->where('event_details.participation_id', '>', 198);
             //$studentEvents->where('events.date_start', '>=', $dateS);
             //$studentEvents->where('events.date_end', '<=', $dateEnd);
             
             //dd($dateS);
-            if ($user_role != 'superadmin') {
+        /*  
+          
+          if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
                     $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                     $studentEvents->whereRaw($qq);
@@ -732,6 +734,10 @@ class Invoice extends BaseModel
             }
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
             $studentEvents->whereRaw($qq);
+            
+        */
+
+
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
             
             $studentEvents->whereNull('events.deleted_at');

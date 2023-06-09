@@ -901,6 +901,8 @@ $("#country_code, #billing_country_code").trigger('change')
 			return false;
 		}
 
+	
+
 		var p_person_id = document.getElementById("person_id").value,
 			school_id = document.getElementById("school_id").value
 			//p_month = document.getElementById("smonth").value,

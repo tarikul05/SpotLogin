@@ -30,7 +30,7 @@
                           required>
                   </div>
                   <div class="form-group custom-selection">
-                      <select class="selectpicker" id="country_code" name="country_code" required>
+                      <select class="selectpicker" data-live-search="true" id="country_code" name="country_code" required>
                           <option value="">{{ __('Select Country')}}</option>
                           @foreach ($countries as $key => $country)
                             <option 

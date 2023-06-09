@@ -878,6 +878,7 @@ class Event extends BaseModel
             ];
             
             $eventData = Event::where('id', $event_id)->update($eventUpdate);
+            $currentEvent = Event::find($event_id);
 
 
             $eventDetail = [
@@ -903,7 +904,7 @@ class Event extends BaseModel
                     }
                     
                 }
-                if ($lockStatus) {
+                if ($lockStatus && $currentEvent->event_type !== 100) {
                     Event::updateLatestPrice($event_id);
                 }
                 
