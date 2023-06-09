@@ -187,7 +187,7 @@ class Invoice extends BaseModel
                 ]
             );
         
-        if ($user_role == 'admin_teacher' || $user_role == 'teacher_minimum') {
+        if ($user_role == 'admin_teacher' || $user_role == 'teacher_minimum' || $user_role == 'teacher') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -211,10 +211,10 @@ class Invoice extends BaseModel
         $studentEvents->whereNull('events.deleted_at');
         $studentEvents->whereNull('event_details.deleted_at');
 
-        //$dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
-        $dateS = Carbon::now()->format('Y-m-d');
-        //$dateS = Carbon::createFromFormat('Y-m-d', $dateS, $timezone)->setTimezone('UTC')->format('Y-m-d');
-        $studentEvents->whereDate('events.date_start', '<', $dateS);
+        $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
+
+        $studentEvents->where('events.date_start', '<=', $dateActuelle);
+        
 
         $studentEvents->distinct('events.id');
         //$studentEvents->groupBy('event_details.student_id');
