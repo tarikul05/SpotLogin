@@ -610,9 +610,11 @@ div#navbarSupportedContent {
 .navbar-nav .nav-item {
     margin-top: 10px;
     margin-bottom: 10px;
+    min-width: 80px;
   }
 
   .navbar-nav .nav-item:first-child {
     min-width: 130px;
-    padding-left:10px;
+    padding-right:10px;
+    text-align: right;
   }
