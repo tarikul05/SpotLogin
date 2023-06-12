@@ -40,8 +40,8 @@
                                 @endif
                                 <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
                             @endif
-                                <a id="download_pdf_btn_a" target="_blank" href="<?php echo $invoice->invoice_filename?$invoice->invoice_filename : route('generateInvoicePDF',['invoice_id'=> $invoice->id]) ?>" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                    <lebel name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</lebel>
+                                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
+                                    <label name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</label>
                                 </a>
                             
                             @else
