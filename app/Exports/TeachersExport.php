@@ -72,7 +72,7 @@ class TeachersExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function query()
     {
-    	$schoolTeachers = SchoolTeacher::with(['teacher'])->where(['school_id' => $this->school_id])->whereIn('role_type',['teachers_all', 'teachers_medium','teachers_minimum']);
+    	$schoolTeachers = SchoolTeacher::with(['teacher'])->where(['school_id' => $this->school_id])->whereIn('role_type',['teachers_all', 'teachers_admin', 'teacher_school_admin', 'teachers_medium','teachers_minimum']);
         return $schoolTeachers;
     }
 

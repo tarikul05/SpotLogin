@@ -38,9 +38,9 @@
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
                                   {{__('Agenda')}}:  
                                 </h1> 
-                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] <i class="fa fa-clock-o"></i> <span id="currentTimer"></span></span>
+                                <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
-                                    <i class="fa-solid fa-bell fa-bounce"></i>
+                                    <i class="fa-solid fa-bell fa-beat"></i>
                                     Lesson in progress...
                                 </em>
 							</div>
@@ -108,14 +108,14 @@
                                     <div class="dropdown" id="dropdownActions">
                                       <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
                                       <div class="dropdown-content">
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-check"></i> <span id ="btn_validate_events_cap">Validate All Events</span></a>
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">Delete All Events</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-check"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
                                       </div>
                                     </div>
                                 <!--<a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>-->
-                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">Copy</span></button>
-                                <button style="display: none; max-width:80px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">Paste</span></button>
+                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy')}}</span></button>
+                                <button style="display: none; max-width:80px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">{{__('Paste')}}</span></button>
                                 @if(!$AppUI->isStudent())
                                     <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
                                         <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
@@ -145,14 +145,14 @@
                                     <div style="margin-top: 15px;">
                                         <div class="btn-group" style="margin-right:5px;">
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
-                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">Today</button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">{{__('Today')}}</button>
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
                                         </div>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">Day</button>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">Week</button> 
-                                        <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">Month</button>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">List</button> 
-                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">Current List</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">{{__('Day')}}</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">{{__('Week')}}</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">{{__('Month')}}</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">{{__('List')}}</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">{{__('Current List')}}</button> 
                                     </div>   
                                 </div>
                                 <div class="col-md-3" id="allFilters" style="display:none;">
@@ -255,16 +255,16 @@
                         <div class="modal-body">
                             <div class="col-md-10 offset-md-1 p-l-n p-r-n"> 
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-sm-3 text-left">Agenda Type :</label>
+                                    <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}} :</label>
                                     <div class="col-sm-7">
                                         <div class="selectdiv">
                                             <select class="form-control" id="agenda_select">
-                                                <option value="1">Lesson</option>
-                                                <option value="2">Event</option>
+                                                <option value="1">{{__('Lesson')}}</option>
+                                                <option value="2">{{__('Event')}}</option>
                                                 @if(!$AppUI->isTeacherMediumMinimum())
-                                                <option value="3">Student Off</option>
+                                                <option value="3">{{__('Student Off')}}</option>
                                                 @endif
-                                                <option value="4">Coach off</option>
+                                                <option value="4">{{__('Coach off')}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -295,9 +295,9 @@
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
-                                                                    <option value="T">Teacher invoice</option>  
+                                                                    <option value="T">{{__('Teacher invoice')}}</option>  
                                                                     @if($AppUI->isSchoolAdmin())
-                                                                    <option value="S">School invoice</option>
+                                                                    <option value="S">{{__('School invoice')}}</option>
                                                                     @endif
                                                                 </select>
                                                             </div>
@@ -326,7 +326,7 @@
                                                     </div>
                                                     <div class="form-group row show_coach_off hide_on_off">
                                                     @if(!$AppUI->isTeacherAdmin())
-                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                                     @endif
                                                     @if($AppUI->isTeacherAdmin())
                                                         <input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id; }}" readonly>
@@ -421,8 +421,8 @@
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sis_paying" name="sis_paying">
-                                                                    <option value="0">Hourly rate</option>
-                                                                    <option value="1">Fixed price</option>
+                                                                    <option value="0">{{__('Hourly rate') }}</option>
+                                                                    <option value="1">{{__('Fixed price') }}</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -432,9 +432,9 @@
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="student_sis_paying" name="student_sis_paying">
-                                                                    <option value="0">Hourly rate</option>
-                                                                    <option value="1">Fixed price</option>
-                                                                    <option value="2">Packaged</option>
+                                                                    <option value="0">{{__('Hourly rate') }}</option>
+                                                                    <option value="1">{{__('Fixed price') }}</option>
+                                                                    <option value="2">{{__('Packaged') }}</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -447,9 +447,9 @@
                                                                     @foreach($lessonPrice as $key => $lessprice)
                                                                         <option value="{{ $lessprice->lesson_price_student }}" {{ old('sevent_price') == $lessprice->lesson_price_student ? 'selected' : ''}}>    
                                                                         @if($lessprice->lesson_price_student == 'price_1')
-                                                                            Private Group
+                                                                        {{__('Private Group')}}
                                                                         @else
-                                                                            Group lessons for {{ $lessprice->divider }} students
+                                                                        {{__('Group lessons for')}} {{ $lessprice->divider }} {{__('students')}}
                                                                         @endif	
                                                                         </option>
                                                                     @endforeach
@@ -457,10 +457,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <!--<div id="price_per_student">
+                                                    
+                                                    <div id="priceEventOptions">
+                                                    <div id="price_per_student">
+                                                        <div class="row">
+                                                            <hr class="col-lg-12 col-sm-12 text-left" style="font-size:10px; color:#EEE;">
+                                                        </div>
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
-                                                            <div class="col-sm-7">
+                                                            <div class="col-sm-6">
                                                                 <div class="selectdiv">
                                                                     <select class="form-control" id="sprice_currency" name="sprice_currency">
                                                                         @foreach($currency as $key => $curr)
@@ -471,11 +476,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row not_teacher">
-                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">(class/hour)</span><span class="event-text">(per event)</span> :</label>
+                                                            <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">({{__('class/hour') }})</span><span class="event-text">(per event)</span> :</label>
                                                             <div class="col-sm-4">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
                                                                 </div>
@@ -483,10 +488,10 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="sprice_amount_sell_div"> 
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
                                                                 </div>
@@ -494,16 +499,21 @@
                                                         </div>
                                                         <div class="form-group row event">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges') }}{{ __('(per student)')}} : </label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="extra_charges_div"> 
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-calendar1"></i>
+                                                                        <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
                                                                     <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>-->
+                                                        <div class="row">
+                                                            <hr class="col-lg-12 col-sm-12 text-left" style="font-size:10px; color:#EEE;">
+                                                        </div>
+                                                    </div>
+                                                    </div>
+
                                                     
                                                 </div>
                                                 
@@ -540,7 +550,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>        
             <div class="modal-body">
-                <p class="success_message">Successfully added</p>
+                <p class="success_message">{{__('Successfully added') }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
@@ -573,18 +583,18 @@
                 <div class="EventModalClass" id="EventModalWin">
                     <div class="modal-content">
                         <div class="modal-body text-center">                    
-                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">Title</span></h4>
+                            <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">{{ __('Title') }}</span></h4>
                             <p style="font-size: 20px;"></p>
 
                             <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
-                            <span id="event_btn_confirm_text">Validate<span>
+                            <span id="event_btn_confirm_text">{{ __('Validate') }}<span>
                             </button>
 
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_confirm_unlock_text">Unlock<span>
                             </button> -->
                             <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
-                                <span id="event_btn_edit_text">View<span>
+                                <span id="event_btn_edit_text">{{ __('View') }}<span>
                             </a>
                         </div>
                     </div>
@@ -690,6 +700,7 @@
         document.getElementById("date_to").value = getCookie("date_to");
         FirstDay=document.getElementById("date_from").value;
         LastDay=document.getElementById("date_to").value;
+    
     }
     if (getCookie("view_mode") != "CurrentListView"){
         // GET THE FIRST AND LAST DATE OF THE MONTH.
@@ -786,14 +797,14 @@
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i>Add </a>';
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i>{{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
             
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> Add</button>';
+                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';                            
@@ -1109,15 +1120,15 @@
          
         $('#event_type').multiselect({
             includeSelectAllOption:true,
-            selectAllText: 'All Events',
+            selectAllText: '{{__("All Events") }}',
             maxHeight:true,
             enableFiltering:false,
-            nSelectedText  : 'Selected Event type ',
-            allSelectedText: 'All Events',
+            nSelectedText  : '{{__("Selected Event type") }} ',
+            allSelectedText: '{{__("All Events") }}',
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
-            filterPlaceholder: 'Search',
+            filterPlaceholder: '{{ __("Search") }}',
             numberDisplayed: 3,
             buttonWidth: '100%',
             // possible options: 'text', 'value', 'both'
@@ -1395,15 +1406,15 @@
         }
         $('#event_teacher').multiselect({
             includeSelectAllOption:true,
-            selectAllText: 'All Teachers',
+            selectAllText: '{{__("All Teachers") }}',
             maxHeight:true,
             enableFiltering:false,
-            nSelectedText  : 'Selected Teacher',
-            allSelectedText: 'All Teachers',
+            nSelectedText  : '{{__("Selected Teacher") }}',
+            allSelectedText: '{{__("All Teachers") }}',
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
-            filterPlaceholder: 'Search',
+            filterPlaceholder: '{{__("Search") }}',
             numberDisplayed: 3,
             buttonWidth: '100%',
             // possible options: 'text', 'value', 'both'
@@ -1584,6 +1595,9 @@
         document.getElementById("copy_event_id").value = getEventIDs();
 		document.getElementById("copy_student_id").value = getStudentIDs();
         document.getElementById("copy_teacher_id").value = getTeacherIDs();
+
+        console.log('copy start',  document.getElementById("copy_date_from").value)
+        console.log('copy end',  document.getElementById("copy_date_to").value)
 
         var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
 		console.log("current view for copy="+cal_view_mode_for_copy.name);
@@ -2327,6 +2341,9 @@
                             document.getElementById("btn_delete_events").style.display = "block";
                             document.getElementById("btn_validate_events").style.display = "block";
                         }
+                        if (selected_non_validate_delete_ids.length > 0) {
+                            document.getElementById("btn_delete_events").style.display = "block"; 
+                        }
                         
                     }
                     if (lockRecords == 0)
@@ -2436,7 +2453,10 @@
                 else {
                     document.getElementById("date_from").value = view.intervalStart.format('YYYY-MM-DD');
                     document.getElementById("date_to").value = view.intervalEnd.format('YYYY-MM-DD');
-                
+
+                    var date = moment(document.getElementById("date_to").value);
+                    var newDate = date.subtract(1, 'day').format('YYYY-MM-DD');
+                    document.getElementById("date_to").value = newDate;
                 }
                 
                 if (document.getElementById("prevnext").value == 'yes'){
@@ -3835,6 +3855,14 @@ $("body").on('click', '#student_empty', function(event) {
 })
 
 $('#agenda_select').on('change', function() {
+    var agendaSelectpriceEventOptions = $("#agenda_select").val();
+    if(agendaSelectpriceEventOptions == 2) {
+        $('#priceEventOptions').show();
+    } else {
+        $('#priceEventOptions').hide();
+    }
+
+    
     $('#all_day_input').prop( "checked", false)
     $('#student_empty').prop( "checked", false)
     $("#hourly").hide()

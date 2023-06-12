@@ -16,29 +16,32 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="pull-right btn-group">
-						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn" style="position: fixed; right:85px; top:101px;">  
 							<i class="fa fa-arrow-left"></i>
 							{{ __('Back')}}
 						</a>
 					</div>
 				</div>   
 			</div>          
-		</header>
+
 		<!-- Tabs navs -->
 
-		<nav>
+		<nav style="margin-bottom:0; padding-bottom:0;">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
+
+	</header>
+
 		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
 							
 		<!-- Tabs content -->
@@ -50,7 +53,7 @@
 						</div>
 						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
-								<label>This course is blocked, but it can still be modified by first clicking the unlock button.</label>
+								<label>This lesson is blocked, but it can still be modified by first clicking the unlock button.</label>
 								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
 							</div>
 						@endif
@@ -119,7 +122,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('All day') }} :</label>
 									<div class="col-sm-7">
-										{{ !empty($lessonData->fullday_flag) ? 'Yes' : 'Non(No)' }}
+										{{ !empty($lessonData->fullday_flag) ? 'Yes' : 'No' }}
 									</div>
 								</div>
 								<div class="form-group row">
@@ -220,7 +223,7 @@
 						</div>
 						
 					</fieldset>
-					<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>
+					<!--<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>-->
 			</div>
 		</div>
 	</div>

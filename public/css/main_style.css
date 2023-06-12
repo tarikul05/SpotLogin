@@ -404,7 +404,7 @@ footer p a:hover {
     color: red;
 }
 div#navbarSupportedContent {
-    max-width: 20%;
+    max-width: 22%;
 }
 
 @media only screen and (max-width: 1200px) {
@@ -605,3 +605,14 @@ div#navbarSupportedContent {
         margin-right: 10px;
     }
 }
+
+
+.navbar-nav .nav-item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .navbar-nav .nav-item:first-child {
+    min-width: 130px;
+    padding-left:10px;
+  }

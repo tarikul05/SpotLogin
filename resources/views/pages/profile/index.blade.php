@@ -20,14 +20,14 @@
               <div class="page_header_class">
                 <label id="page_header" name="page_header">
                   {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
-                </label>
+                </label>        
               </div>
             </div>
             <div class="col-sm-6 col-xs-12 btn-area">
               <div class="pull-right btn-group">
-                <button type="submit" class="btn bg-info text-white save_button float-end" id="update_btn">
+                <!--<button type="submit" class="btn bg-info text-white save_button float-end" id="update_btn">
                   {{ __('Save')}}
-                </button>
+                </button>-->
               </div>
             </div>    
           </div>                 
@@ -39,14 +39,14 @@
           <!-- Nav tabs -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account')}}</button>
-              <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Profile photo')}}</button>
+              <!--<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account')}}</button>-->
+              <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Logo')}}</button>
             </div>
           </nav>
           <!-- Nav tabs -->
           <!-- Tabs content -->
           <div class="tab-content" id="ex1-content">
-            <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+            <div class="tab-pane fade" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
               <div class="row">
                 <div class="col-sm-12 col-xs-12 header-area">
@@ -60,7 +60,7 @@
                     <input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
                   </div> 
                   <div class="form-group row">
-                    <label class="col-lg-4 col-sm-4 text-end">{{ __('Username')}}  </label>
+                    <label class="col-lg-4 col-sm-4 text-end">{{ __('ID')}}  </label>
                     <div class="col-sm-6">
                       <div class="form-group-data">
                         <input type="text" class="form-control" disabled="disabled" value="{{!empty($AppUI['username']) ? $AppUI['username'] : ''}}">
@@ -92,11 +92,17 @@
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+            <div class="tab-pane fade show active" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
               <div class="row">
                 <div class="col-sm-12 col-xs-12 header-area">
                   <div class="page_header_class">
+                    @if($AppUI->isStudent())
                     <label id="page_header" class="page_title text-black">{{ __('Profile picture')}}</label>
+                    @endif
+                    @if(!$AppUI->isStudent())
+                    <span id="page_header" class="page_title text-black"></span>
+                    <div class="alert alert-info">Your logo will be added to the invoices you can issue with premium access</div>
+                    @endif
                   </div>
                 </div>
               
@@ -148,6 +154,14 @@
           </div>
           <!-- Tabs content -->
           
+          
+          <table class="table table-stripped table-hover">
+            <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
+            <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
+            <tr><td><b>School timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+            <tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>
+          </table>
+
         </div>
       </form>
     </div>

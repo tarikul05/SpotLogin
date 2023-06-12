@@ -615,7 +615,9 @@ input.error {
 #edit_event .btn_area {
 	top: 95px;
 }
-
+#edit_event .btn_area {
+  top: 145px;
+}
 a#delete_btn {
 	display: none !important;
 }

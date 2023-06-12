@@ -671,6 +671,7 @@ $("body").on('change', '#category_select', function(event) {
 		$('#price_per_student').show();
 	}
 
+
 	var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
@@ -680,7 +681,7 @@ $("body").on('change', '#category_select', function(event) {
     }else{
         $("#price_per_student").hide();
     }
-
+    
 	getLatestPrice();
 });
 

@@ -519,6 +519,7 @@ class TeachersController extends Controller
             $lanCode = Session::get('locale');
         }
 
+
         if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{

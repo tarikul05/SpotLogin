@@ -3,8 +3,8 @@
 @section('head_links')
 <!-- datetimepicker -->
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
-<link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
 
 @endsection
@@ -63,7 +63,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
-													<option value="{{ $sub->id }}"   @foreach($studentOffList as $sublist){{$sublist->id == $sub->id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+												<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
 												@endforeach
 			  								</select>
 										</div>
