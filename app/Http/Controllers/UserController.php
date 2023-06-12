@@ -136,6 +136,7 @@ class UserController extends Controller
             try {
                 $data = [];
                 $data['email'] = $user->email;
+                $data['country_code'] = $school->country_code;
                 $data['name'] = $user->username;
                 $data['school_name'] = $school->school_name;
                 $verifyUser = [
