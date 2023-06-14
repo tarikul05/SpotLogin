@@ -98,6 +98,9 @@ class UserController extends Controller
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1, 'is_sent_invite'=>1 ]);
 
+            $trialDays = 91;
+            $trialEndsAt = now()->addDays($trialDays);
+
             $usersData = [
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
@@ -110,11 +113,16 @@ class UserController extends Controller
                 'password'=>$data['password'],
                 'is_mail_sent'=>0,
                 'is_active'=>1,
-                'is_firstlogin'=>0
+                'is_firstlogin'=>0,
+                'trial_ends_at' => $trialEndsAt,
             ];
-
+            $strip_userdata = [
+                'email'=> $data['email'],
+                'name' => $data['fullname'],
+            ];
             $user = User::create($usersData);
             $user->save();
+            $user->createAsStripeCustomer($strip_userdata);
             $result = array(
                 "status"     => 1,
                 'message' => __('Successfully Registered')
@@ -203,13 +211,22 @@ class UserController extends Controller
     {
         $data = $request->all();
         try{
-            $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 1,'is_active'=> 1]);
+            // create trail user
+            $trialDays = 91;
+            $trialEndsAt = now()->addDays($trialDays);
+            $full_name = $data['firstname'].''.$data['lastname'];
+            $strip_userdata = [
+                'email'=> $data['email'],
+                'name' => $full_name,
+            ];
+            $request->merge(['is_firstlogin'=>0,'is_mail_sent'=> 1,'is_active'=> 1, 'trial_ends_at' => $trialEndsAt]);
 
             $user = User::create($request->except(['_token']));
+            if($user){
+                $user->createAsStripeCustomer($strip_userdata);
+            }
             // return back()->withInput($request->all())->with('success', __('Successfully Registered!'));
            return redirect('/')->with('success', __('Successfully Registered!'));
-
-
         } catch (Exception $e) {
             //return error message\
            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
