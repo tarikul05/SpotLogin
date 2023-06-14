@@ -124,14 +124,14 @@
                         <td>{{ $invoice_name}}</td>
                         
                         <td>{{ number_format($invoice->total_amount, '2') }}</td>
+                        <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
                             <td class="text-center">
                                 <div id="status_{{$invoice->id}}">
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
-                                        <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner" aria-hidden="true"></i>
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
                                 @endif 
                                 </div>
@@ -141,9 +141,8 @@
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
-                                        <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner" aria-hidden="true"></i>
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
                                 @endif 
                                 </div>
@@ -174,8 +173,8 @@
                                             <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
                                             {{ __('View')}}
                                         </a>
-                                        <a target="_blank" class="dropdown-item" href="{{route('generateInvoicePDF',['invoice_id'=> $invoice->id]) }}">
-                                            <i class="fa fa-file-pdf-o txt-grey" aria-hidden="true"></i> 
+                                        <a target="_blank" class="dropdown-item" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}">
+                                            <i class="fa fa-file-pdf txt-grey" aria-hidden="true"></i> 
                                             {{ __('PDF')}}
                                         </a>
                                     @else
@@ -362,7 +361,7 @@
     }
 
 
-    $('#payment_btn').click(function (e) {
+    $('.payment_btn').click(function (e) {
         
         document.getElementById("loadercreditCardPayment").style.display = "none";
         document.getElementById("loaderStatusPayment").style.display = "block";
