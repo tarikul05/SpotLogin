@@ -148,7 +148,17 @@ class User extends Authenticatable
     public function isTeacherAdmin()
     {
 
-        return $this->hasAnyRole(['teachers_admin']);
+        return $this->hasAnyRole(['teachers_admin', 'single_coach_read_only', 'teacher_read_only']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherReadOnly()
+    {
+
+        return $this->hasAnyRole(['single_coach_read_only', 'teacher_read_only']);
     }
 
     /**

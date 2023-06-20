@@ -40,7 +40,7 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
-    <div class="container-fluid">
+    <div class="container-fluid body">
       <a class="navbar-brand" href="/">
         <img src="{{ asset('img/logo.png') }}" width="36">
       </a>
@@ -61,7 +61,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn" href="#ourSolutions" >{{ __('Our solutions') }}</a>
+            <a class="px-2 nav-link login_btn" href="#ourSolutions">{{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
             <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
@@ -77,52 +77,6 @@
     </div>
   </nav>
 
-
-  <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top" style="display:none">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <img src="{{ asset('img/logo.png') }}" width="36">
-      </a>
-      <li class="nav-item">
-        <select id="setLan" class="selectpicker" data-width="fit" >
-          @foreach ($language as $key => $lan)
-              <option 
-              value="{{ $lan->language_code }}"
-              @if ($lan->language_code == app()->getLocale())
-                  selected="selected"
-              @endif
-              data-icon="{{ $lan->flag_class}}"
-              >  {{ $lan->title }}</option>
-          @endforeach
-        </select>
-      </li>
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="px-2 nav-link login_btn" href="#ourSolutions" >{{ __('Our solutions') }}</a>
-              </li>
-              <li class="nav-item active">
-                <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
-              </li>
-              <li class="nav-item active">
-                <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
-              </li>
-              <li class="nav-item">
-                <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      
-      <!-- </div> -->
-    </div>
-  </nav>
 
 
   @yield('content')
@@ -170,7 +124,9 @@
     });
 
 
-    
+    $(".navbar-nav li a").click(function(event) {
+    $(".navbar-collapse").collapse('hide');
+  });
 
 
 

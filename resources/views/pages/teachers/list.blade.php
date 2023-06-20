@@ -15,7 +15,7 @@
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>{{ __('#') }}</th>
+                <!--<th>{{ __('#') }}</th>-->
                 <th>&nbsp;</th>
                 <th>{{ __('Name of the Teacher') }}</th>
                 <th>{{ __('Email') }}</th>
@@ -30,7 +30,7 @@
                 if (($teacher->pivot->role_type == 'school_admin') && !$AppUI->isSuperAdmin()) continue;
             @endphp
             <tr>
-                <td>{{ $teacher->id; }} </td>
+                <!--<td>{{ $teacher->id; }}</td>-->
                 <td>
                     <?php if (!empty($teacher->profileImage->path_name)): ?>
                         <img src="{{ $teacher->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">

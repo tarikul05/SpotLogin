@@ -136,7 +136,7 @@ class UserController extends Controller
         }
 
 
-
+        session(['firstConnexion' => true]);
 
         //sending activation email after successful signed up
         if (config('global.email_send') == 1) {

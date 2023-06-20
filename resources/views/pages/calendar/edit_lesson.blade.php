@@ -57,7 +57,7 @@
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
 						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }} </label>
+							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
 						</div>
 						<div class="card">
 							<div class="card-body bg-tertiary">
@@ -246,13 +246,19 @@
 									</div>
 								</div>
 								<div class="form-group row">
+									@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
+									@endif
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div"> 
+											@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 											<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
 											</span>
 											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
+											@else
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
+											@endif
 										</div>
 									</div>
 								</div>
@@ -281,17 +287,19 @@
 													<table id="attn_tbl" class="table">
 														<tbody>
 															<tr>
-																<th width="5%" style="text-align:left"></th>
-																<th width="15%" style="text-align:left">
+																<!--<th width="5%" style="text-align:left"></th>-->
+																<th width="20%" style="text-align:left">
 																	<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
 																@if($showPrice)
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
+																@endif
 																	<th width="15%" style="text-align:right">
 																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	</th>
@@ -300,7 +308,7 @@
 															
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->student_id }}</td>
+																<!--<td>{{ $student->student_id }}</td>-->
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
@@ -315,7 +323,11 @@
 																	<input type="hidden" name="attnValue[{{$student->id}}]" value="{{$student->participation_id}}">
 																</td>
 																@if($showPrice)
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
+																@else
+																
+																@endif
 																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
 																@endif
 															</tr>
@@ -329,7 +341,7 @@
 								</div>
 							</div>
 							@if(strtotime($date_end) < strtotime($current_time))
-							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
+							<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-3" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
 								<input type="submit" class="btn btn-sm btn-info button_lock_and_save"  style="position:absolute;top:10px;right:10px;" name="validate" value="Validate">
 							</div>
 							@endif

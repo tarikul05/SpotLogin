@@ -26,7 +26,7 @@ span.admin_name {
 	color: #fff;
 	line-height: 45px;
 	font-weight: 200;
-	margin-right: 20px;
+	margin-right: 10px;
 }
 
 img.admin_logo {
@@ -1005,7 +1005,7 @@ button#save_btn_more i {
 	div#nav-tab {
 		display: flex;
 		font-size: 14px;
-		margin-top: 40px;
+		margin-top: 0px;
 	}
 
 	#nav-tab .nav-link {
@@ -1320,5 +1320,1072 @@ a.btn.btn-theme-success.add_teacher_btn {
 		right: auto !important
 	}
 
+}
+
+
+
+/*
+* top payment info section sp
+*/
+
+.subscription_info {
+    width: 100%;
+    height: 60px;
+    left: 0px;
+    top: 0px;
+    background: #fafafa;
+	opacity: .7;
+}
+
+.subscription_info .text-success p {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    justify-content: center;
+    color: #152245;
+}
+
+.subscription_info .text-success .text .day_count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0187DB;
+    text-align: center;
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+    padding: 3px;
+    font-family: 'Gilroy';
+    font-weight: 600;
+    font-size: 18px;
+    color: #FFFFFF;
+    border-radius: 100%;
+}
+
+.subscription_info .text-success .text a {
+    color: #0075BF;
+    text-decoration: underline;
+    font-size: 18px;
+    padding-left: 3px;
+}
+
+/*
+* pricing page css
+*/
+.subscription-upgradeplan {
+    background: #f2fbff;
+    margin-top: 0 !important;
+}
+
+.subscription-upgradeplan .container {
+    padding-top: 20px;
+}
+
+.pricing {
+    padding: 0 0 162px;
+}
+
+.pricing-title {
+    padding-bottom: 20px;
+}
+
+.pricing-title .h3 {
+    margin: 0;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 58px;
+    text-align: center;
+    color: #152245;
+}
+
+.plans {
+    display: flex;
+    justify-content: center;
+}
+
+.plans .columns {
+    float: left;
+    width: 379px;
+    background: #FFFFFF;
+    box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
+    border-radius: 8px;
+    padding: 38px 36px 36px;
+    margin-left: 59px;
+}
+
+.plans .columns.premium-plan {
+    background: #0187DB;
+    box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
+    border-radius: 8px;
+}
+
+.plans .columns:first-child {
+    margin-left: 0;
+}
+
+.plans .price {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.plans .price li {
+    color: #152245;
+    border-bottom: 0;
+    padding: 0 0 15px;
+    text-align: left;
+    font-weight: 400;
+    font-size: 18px;
+    font-family: 'Gilroy';
+    display: flex;
+    width: 100%;
+}
+
+.plan_name_display {
+    display: inline-block !important;
+}
+
+.plans .price .plan_name {
+    padding-top: 0;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #152245;
+    padding-bottom: 5px;
+}
+
+.plans .premium-plan .price .plan_name {
+    padding-top: 0;
+    color: #FFFFFF;
+    padding-bottom: 5px;
+}
+
+.plans .price .plan_interval {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 48px;
+    color: #657E8E;
+    border-bottom: 2px solid #E1EFF7;
+    padding-bottom: 15px;
+}
+
+.plans .price .plan_interval.font_size {
+    font-size: 26px;
+}
+
+.plans .premium-plan .price .plan_interval {
+    color: #FFFFFF;
+}
+
+.plans .price .plan_interval .plan_type {
+    padding-top: 0;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23.2px;
+}
+
+.plans .premium-plan li {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: #FFFFFF;
+    display: inline-block;
+    width: 100%;
+}
+
+.plans .premium-plan li .svg_img,
+.plans .columns li .svg_img {
+    width: 30px;
+    float: left;
+}
+
+.plans .premium-plan li .text-area,
+.plans .columns li .text-area {
+    width: 276px;
+    padding-top: 2px;
+    float: left;
+}
+
+.plans .columns .free-plan-button {
+    padding: 0;
+    margin: 70px 0 0;
+    background: #FFFFFF;
+    border: 1.7078px solid #0187DB;
+    border-radius: 8px;
+}
+
+.plans .columns .free-plan-button.school_admin {
+    margin: 30px 0 0;
+}
+
+.plans .columns .free-plan-button.disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.plans .premium-plan .info-txt {
+    font-family: 'Gilroy';
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.plans .premium-plan .submit-button {
+    margin: 0 auto;
+    width: 307px;
+    height: 52px;
+    background: #FFFFFF;
+    border: 1.7078px solid #0187DB;
+    border-radius: 8px;
+}
+
+.plans .premium-plan .submit-button a,
+.plans .columns .free-plan-button a {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Gilroy';
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0187DB;
+    text-decoration: none;
+}
+
+
+/*
+** subscription-form css
+*/
+.subscribe-plan {
+    background: #f2fbff;
+    margin-top: 0 !important;
+    min-height: 40vw;
+}
+
+.subscribe-plan .container {
+    padding: 85px 0 99px;
+}
+
+.subscription-form-wrapper {
+    margin: 0 auto;
+    width: 492px;
+    background: #FFFFFF;
+    box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
+    border-radius: 8px;
+    padding: 44px;
+}
+
+.subscription-form-wrapper p,
+.subscription-form-wrapper h4,
+.subscription-form-wrapper h2,
+.subscription-form-wrapper h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.subscription-form-wrapper .payment-info-top .h4 {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #152245;
+}
+
+.subscription-form-wrapper .payment-info-top .txt {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #152245;
+}
+
+.subscription-form-wrapper .subscription-plan-info {
+    margin-top: 24px;
+}
+
+.subscription-form-wrapper .subscription-plan-info .h4 {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0187DB;
+}
+
+.subscription-form-wrapper .subscription-plan-info .h2 {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 44px;
+    color: #0187DB;
+}
+
+.subscription-form-wrapper .subscription-plan-info .h2 .intervation_type {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 23.2px;
+}
+
+.subscription-form-wrapper .payment-form {
+    padding: 16px 0 0;
+}
+
+.subscription-form-wrapper .payment-form label {
+    padding: 0 0 5px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+}
+
+.subscription-form-wrapper .payment-form .StripeElement,
+.subscription-form-wrapper .payment-form .form-control {
+    border: 1px solid #C0E7FF;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    height: 40px;
+    line-height: 35px;
+    color: #002A44;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-clip: padding-box;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.subscription-form-wrapper .payment-form .StripeElement.invalid {
+    border: 1px solid #E25950;
+    border-radius: 4px;
+}
+
+.subscription-form-wrapper .payment-form .form-group {
+    padding-bottom: 6px;
+}
+
+.subscription-form-wrapper .payment-form .form-control::placeholder {
+    color: #002A44;
+    opacity: 1;
+}
+
+.subscription-form-wrapper .payment-form .form-control:-ms-input-placeholder {
+    color: #002A44;
+}
+
+.subscription-form-wrapper .payment-form .form-control::-ms-input-placeholder {
+    color: #002A44;
+}
+
+.subscription-form-wrapper .payment-form .col_sep_div {
+    display: flex;
+}
+
+.subscription-form-wrapper .payment-form .padding_left {
+    margin-left: 5px;
+    width: 50%;
+}
+
+.subscription-form-wrapper .payment-form .padding_right {
+    margin-right: 5px;
+    width: 50%;
+}
+
+.subscription-form-wrapper .button-area {
+    margin-top: 15px;
+}
+
+.subscription-form-wrapper .button-area .btn_c {
+    width: 98px;
+    height: 52px;
+    margin-right: 8px;
+    background: #FFFFFF;
+    cursor: default;
+}
+
+.subscription-form-wrapper .button-area .btn-cancle {
+    border-radius: 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #657E8E;
+    text-decoration: none;
+}
+
+.subscription-form-wrapper .button-area .btn-blue {
+    width: 294px;
+    height: 52px;
+    background: #0187DB;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.payment-footer-wrapper {
+    margin-top: 23px;
+}
+
+.payment-footer-wrapper .title {
+    margin: 0 0 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+}
+
+.payment-footer-wrapper .f-txt {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 127%;
+    color: #657E8E;
+}
+
+.payment-footer-wrapper .f_margin_top {
+    margin-top: 25px;
+}
+
+
+/*
+** my-subscription-billing css
+*/
+
+.my_subscription {
+    border: 0px solid #E1EFF7;
+    width: 100%;
+}
+
+.my-subscription-billing .title {
+    padding: 25px 0;
+}
+
+.my-subscription-billing .title .h3 {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 36px;
+    color: #0075BF;
+}
+
+.my_subscription_billing tr {
+    border-bottom: 1px solid rgba(0, 0, 0, .25);
+    padding: 5px 0 6px;
+}
+
+.my_subscription_billing tr td {
+    padding: 20px 0 21px;
+}
+
+.my_subscription_billing tr td:first-child {
+    width: 30%;
+    padding: 20px 0 21px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription_billing tr td:last-child {
+    padding: 20px 0 21px;
+    padding-left: 10px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription_billing .price {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription_billing .payment_shudule {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription_billing .plan_type_p {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #97CC04;
+    background: #F6FFDB;
+    border: 1px solid #97CC04;
+    border-radius: 4px;
+}
+
+.my_subscription_billing .plan_type_f {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
+}
+
+.my_subscription_billing .interval {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription_billing .action_link {
+    text-decoration: none;
+}
+
+.my_subscription_billing .action_icon {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.subscriber_list {
+    height: 55vw;
+}
+
+.my_subscription_billing .plan_type {
+    background: #F6FFDB;
+    border: 1px solid #97CC04;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #97CC04;
+}
+
+.my_subscription_billing .plan_type_free {
+    padding: 4px 8px;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #657E8E;
+}
+
+.my-subscription-billingmy-subscription .card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+}
+
+.my-subscription-billing .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.my-subscription-billing .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+}
+
+.my-subscription-billing .gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.my-subscription-billingmy-subscription-billing .gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.my-subscription-billing .mb-3,
+.my-subscription-billing .my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.subscribe-upgradenewplan .subscription-form-wrapper {
+    margin-top: 60px;
+}
+
+/*
+** my subscription css
+*/
+
+.my_subscription {
+    border: 0px solid #E1EFF7;
+    width: 100%;
+}
+
+.my-subscription .title {
+    padding: 25px 0;
+}
+
+.my-subscription .title .h3 {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 36px;
+    color: #0075BF;
+}
+
+.my_subscription tr {
+    border-bottom: 1px solid rgba(0, 0, 0, .25);
+    padding: 5px 0 6px;
+}
+
+.my_subscription tr td:first-child {
+    width: 30%;
+    padding: 10px 0 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription tr td:last-child {
+    width: 70%;
+    padding: 20px 0 21px;
+    padding-left: 10px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription .price {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription .payment_shudule {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription .plan_type_p {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #97CC04;
+    background: #F6FFDB;
+    border: 1px solid #97CC04;
+    border-radius: 4px;
+}
+
+.my_subscription .plan_type_f {
+    padding: 4px 8px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #657E8E;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
+}
+
+.my_subscription .interval {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 21px;
+    color: #152245;
+}
+
+.my_subscription .action_link {
+    text-decoration: none;
+}
+
+.my_subscription .action_icon {
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.subscriber_list {
+    height: 55vw;
+}
+
+.my_subscription .plan_type {
+    background: #F6FFDB;
+    border: 1px solid #97CC04;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #97CC04;
+}
+
+.my_subscription .plan_type_free {
+    padding: 4px 8px;
+    background: #F0F0F0;
+    border: 1px solid #657E8E;
+    border-radius: 4px;
+    font-family: 'Gilroy';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+
+    color: #657E8E;
+}
+
+.my-subscription .card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+}
+
+.my-subscription .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.my-subscription .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+}
+
+.my-subscription .gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.my-subscription .gutters-sm>.col,
+.my-subscription .gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.my-subscription .mb-3,
+.my-subscription .my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.subscribe-upgradenewplan .subscription-form-wrapper {
+    margin-top: 60px;
+}
+
+/* .plan_center .price {
+    list-style-type: none;
+    border: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.plan_center .price:hover {
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2)
+}
+
+.plan_center .price .header {
+    background-color: #111;
+    color: white;
+    font-size: 25px;
+}
+
+.plan_center .price li {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+    text-align: center;
+}
+
+.plan_center .price .grey {
+    background-color: #eee;
+    font-size: 20px;
+}
+
+.plan_center .button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+} */
+
+.pc_only {
+    display: block;
+}
+
+.sp_only {
+    display: none;
+}
+
+/**
+* nav bar adjustment
+***/
+
+
+
+.user-area {
+    display: flex;
+    align-items: center;
+}
+
+/*
+** Other adjustment
+**
+*/
+.teacherhome,
+.studenthome {
+    padding-top: 85px;
+}
+
+.teacher_save {
+    top: 128px;
+    z-index: 9;
+}
+
+.sp_main_footer {
+    display: none;
+}
+
+.badgePremium {
+	position: absolute; right:100px; top:130px;
+	z-index:999;
+}
+
+.card {
+	box-shadow: 0px 10px 5px -10px #111; 
+}
+
+@media only screen and (max-width: 767px) {
+
+	.badgePremium {
+		display: none;
+	}
+
+    body {
+        margin-bottom: 70px;
+    }
+
+    .plan_center .columns {
+        width: 100%;
+    }
+
+    .pc_only {
+        display: none;
+    }
+
+    .sp_only {
+        display: block;
+    }
+
+    /*
+    * top payment info section sp
+    */
+    .subscription-upgradeplan {
+        padding-top: 30px;
+    }
+
+    .subscription_info {
+        height: 52px;
+		text-align: right;
+    }
+
+    .subscription_info .text-success p {
+        height: 52px;
+        font-size: 14px;
+    }
+
+    .subscription_info .text-success .text .day_count {
+        width: 28px;
+        height: 28px;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+    .subscription_info .text-success .text a {
+        font-size: 14px;
+    }
+
+    .pricing {
+        padding: 0 0 29px;
+    }
+
+    .pricing-title {
+        padding-bottom: 29px;
+    }
+
+    .pricing-title .h3 {
+        font-size: 28px;
+        line-height: 34px;
+    }
+
+    .plans {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .plans .columns {
+        width: 100%;
+        height: unset;
+        padding: 30px;
+        margin-left: 0;
+    }
+
+    .plans .sp_order {
+        order: 2;
+        margin-top: 24px;
+    }
+
+    .plans .premium-plan {
+        order: 1;
+    }
+
+    .plans .premium-plan li .svg_img,
+    .plans .columns li .svg_img {
+        width: 10%;
+        float: left;
+    }
+
+    .plans .premium-plan li .text-area,
+    .plans .columns li .text-area {
+        width: 90%;
+        padding-top: 2px;
+        float: left;
+    }
+
+    .plans .columns .free-plan-button {
+        margin: 24px 0 0;
+    }
+
+    .plans .premium-plan .submit-button {
+        width: 100%;
+    }
+
+   
+
+    .user-area {
+        display: inline-block;
+        padding-left: 0px;
+    }
+
+    .sp_main_footer {
+        position: fixed;
+        display: block;
+        padding: 0;
+        width: 100%;
+        bottom: 0%;
+        height: 65px;
+        background: #152245;
+        z-index: 2;
+    }
+
+    .sp_main_footer .footer_sp_menu ul {
+        height: 65px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .sp_main_footer .footer_sp_menu ul li {
+        width: 20%;
+    }
+
+    .sp_main_footer .footer_sp_menu ul li a {
+        font-family: 'Segoe UI';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        text-decoration: none;
+        color: #FFFFFF;
+    }
+
+    .sp_main_footer .footer_sp_menu ul li a span {
+        display: block;
+    }
+
+    .sp_main_footer .footer_sp_menu ul li a .menu {
+        padding-top: 7px;
+    }
 }
 

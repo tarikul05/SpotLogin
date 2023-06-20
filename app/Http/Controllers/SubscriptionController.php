@@ -12,6 +12,9 @@ use Carbon\Carbon;
 use Exception;
 use DateTime;
 
+use Stripe\Exception\ApiErrorException;
+use Stripe\Subscription;
+
 class SubscriptionController extends Controller
 {
     protected $stripe;
@@ -231,7 +234,7 @@ class SubscriptionController extends Controller
                 );
             $user->trial_ends_at = NULL;
             $user->save();
-            return redirect()->route('agenda')->with('success', 'Congratulations, you have succesully subscribed to our ' . $plan_name);
+            return redirect()->route('profile.plan')->with('success', 'Congratulations, you have succesully subscribed to our ' . $plan_name);
         } catch (IncompletePayment $exception) {
             return redirect()->back()->with('error', $exception->getCode().', '.$exception->getMessage());
         }
@@ -301,6 +304,32 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
+
+
+    public function cancelPlan(Request $request) {
+        try{
+            $user = auth()->user();
+            $subscription = null;
+            if($user->stripe_id){
+                $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+                if(!empty($subscription_info['data'])){
+                    $subscription = $subscription_info['data'][0];
+                    /*$this->stripe->subscriptions->cancel(
+                        $subscription['id'],
+                    );*/
+                    $this->stripe->subscriptions->update(
+                    $subscription['id'],
+                    ['cancel_at_period_end' => true]
+                    );
+                }
+            }
+            return redirect()->route('agenda')->with('success', 'Your subscription is cancelled !');
+        }catch(Exception $exception){
+            //test
+        }
+    }
+    
+
 
     public function mySubscription(Request $request){
         try{

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\URL;
 use App\Models\AttachedFile;
 use App\Models\Teacher;
 use App\Models\Student;
+use App\Models\Subscription;
+
 use App\Models\School;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,12 +20,13 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
   
+  protected $stripe;
+
   public function __construct()
-  {
-    parent::__construct();
-    
-    
-  }
+    {
+        parent::__construct();
+        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+    }
 
   
   /**
@@ -175,10 +178,34 @@ class ProfileController extends Controller
   * @return \Illuminate\Http\Response
   */
   public function userDetailUpdate(Request $request)
-  {
+{
     $response = [];
     $params = $request->all();
-    return view('pages.profile.index');
-  }
+
+    $user = auth()->user();
+    $subscription = null;
+    $invoice_url = '';
+    $product_object = null;
+    $subscriber = null;
+    if($user->stripe_id){
+        $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+        if(!empty($subscription_info['data'])){
+            $subscription = $subscription_info['data'][0];
+            $subscriber = (object) $subscription_info['data'][0];
+            $product_object = $this->stripe->products->retrieve(
+                $subscription['plan']['product'],
+                []
+            );
+            $invoice_url = $this->stripe->invoices->retrieve(
+              $subscriber->latest_invoice,
+              []
+            );
+      
+        }
+        
+    }
+
+    return view('pages.profile.index', compact('subscription', 'product_object', 'subscriber', 'invoice_url', 'user'));
+}
 
 }

@@ -65,17 +65,32 @@ class StudentsImport implements ToModel, WithHeadingRow
             'mobile' => $row['students_phone'],
             'email2' => $row['students_2nd_email'],
         ];
-        if (!empty($row['email'])) {
-            $this->dataFormate($data);
-        }
 
+            if (empty($row['email'])) {
+                $data['email'] = $this->valideChaine($row['firstname'] . '-' . $row['family_name']) . '@sportlogin.app';
+            }
+
+            $this->dataFormate($data);
+
+    }
+
+   public function valideChaine(string $chaineNonValide)
+    {
+      $chaineNonValide = preg_replace('`\s+`', '-', trim($chaineNonValide));
+      $chaineNonValide = str_replace("'", "-", $chaineNonValide);
+      $chaineNonValide = str_replace(",", "-", $chaineNonValide);
+      $chaineNonValide = preg_replace("`_+`", '-', trim($chaineNonValide));
+      $chaineValide=strtr($chaineNonValide,
+        "ÀÁÂàÄÅàáâàäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏ" .
+        "ìíîïÙÚÛÜùúûüÿÑñ",
+        "aaaaaaaaaaaaooooooooooooeeeeeeeecciiiiiiiiuuuuuuuuynn");
+      return ($chaineValide);
     }
 
     public function getMessage()
     {
         return "There is $this->recordInserted record inserted and $this->recordUpdated record updated.";
     }
-
 
     public function dataFormate($data=[])
     {
@@ -113,7 +128,10 @@ class StudentsImport implements ToModel, WithHeadingRow
             // 'is_sent_invite' => 0,
         ];
 Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
-        $stdExist =Student::where(['email'=> $data['email']])->first();
+        $stdExist = Student::where('email', $data['email'])
+        ->where('firstname', $data['firstname'])
+        ->where('lastname', $data['lastname'])
+        ->first();
         $schoolStdExist = SchoolStudent::where(['student_id'=> !empty($stdExist)? $stdExist->id : null , 'school_id'=> $this->school_id])->first();
         // dd($stdExist,$schoolStdExist, $studentData ,$schoolStudentData );
         if (empty($stdExist)) {

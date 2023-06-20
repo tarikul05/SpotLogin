@@ -17,7 +17,6 @@
 @show
 
 <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('css/payment_style.css') }}">
 <meta name="_token" content="{{ csrf_token() }}">
 <script type="text/javascript">
     var BASE_URL = "{{ URL::to('/')}}";
@@ -37,33 +36,23 @@
 	
 </head>
 <body>
-<?php 
-    use Illuminate\Support\Facades\Route;
-    $get_action = Route::getCurrentRoute()->getName();
-    $get_action = strtolower(str_replace('.','-', $get_action));
-?>
-<section class="">
-    <div class="pc_only">
-        @include('elements.payment_remainder')
-    </div>
-    <div class="m-4 top header-navbar">
-        @include('elements.header_menu')
-    </div>
-    <div class="sp_only">
-        @include('elements.payment_remainder')
-    </div>
+
+<section class="m-4 top">
+    @include('elements.header_menu')
 </section>
 
-<section class="{{ $get_action }}">
+<div style="position:relative; top:60px; width:100%;">
+  @include('elements.payment_remainder')
+</div>
+
+<section class="" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
     <div id="pageloader">
       <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
     </div>
 </section>
-<footer class="sp_main_footer">
-    @include('elements/footer_sp_menu')
-</footer>
+
 <!-- js comes form inner page start -->
 @section('footer_js')
 @show

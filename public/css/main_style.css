@@ -166,7 +166,7 @@ p {
 
 @media (min-width: 576px) {
     .login-signup-modal .modal-body {
-        width: 375px;
+        width: 100%;
         min-height: 150px;
     }
 }
@@ -606,15 +606,16 @@ div#navbarSupportedContent {
     }
 }
 
-
-.navbar-nav .nav-item {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    min-width: 80px;
+@media only screen and (max-width: 768px) {
+    .navbar-nav .nav-item:not(:last-child) {
+      height: 50px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #1c255a;
+    }
   }
-
+/*
   .navbar-nav .nav-item:first-child {
     min-width: 130px;
     padding-right:10px;
     text-align: right;
-  }
+  }*/

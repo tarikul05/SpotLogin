@@ -174,6 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
   
   Route::get('/my-subscription', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription');
 
+  Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
   Route::prefix('admin')->group(function() {
 
@@ -201,6 +202,8 @@ Route::group(['middleware' => ['auth']], function () {
     // tc template
     Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
+
+    Route::get('/profile-plan', [App\Http\Controllers\ProfileController::class, 'userDetailUpdate'])->name('profile.plan');
 
     // profile update
     Route::get('profile-update', 'ProfileController@userDetailUpdate');

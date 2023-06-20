@@ -11,11 +11,11 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid body students_list">
+  <div class="container-fluid body students_list mb-5">
    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
-                <th>{{ __('#') }}</th>
+                <!--<th>{{ __('#') }}</th>-->
                 <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
@@ -28,7 +28,7 @@
             @foreach($students as $student)
             
             <tr>
-                <td>{{ $student->id; }} </td>
+                <!--<td>{{ $student->id; }} </td>-->
                 <td>
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
@@ -51,9 +51,9 @@
                               @method('post')
                               @csrf
                               @if(!$student->pivot->is_sent_invite)
-                                  <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                                  <button class="btn btn-xs btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                               @else
-                                  <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                                  <button class="btn btn-xs btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                               @endif
                             </form>
                         @endcan
@@ -159,6 +159,7 @@
                 $(element).parents('.form-group').append(error);
             },
             submitHandler: function (form) {
+                $("#pageloader").fadeIn("fast");
                 return true;
             }
         });

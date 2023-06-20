@@ -60,15 +60,7 @@
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 
 
-					@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Recent information') }}</label>
-						</div>
-
-						<div class="alert alert-info"><i class="fa-solid fa-check"></i> PREMIUM Access activated</div>
-					</fieldset>
-					@endif
+		
 
 					<fieldset>
 						<div class="section_header_class">

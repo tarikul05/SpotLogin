@@ -332,6 +332,7 @@ li.light-blue-txt.gilroy-bold {
     border: 0;
     max-height: 46px;
 }
+
 .custom-selection .dropdown-toggle::after {
     content: "\f078";
     font-family: "Font Awesome 5 Free";
@@ -1528,4 +1529,23 @@ label#currency_alert_text {
     top: 50%; /* Ajout de cette ligne */
     left: 50%; /* Ajout de cette ligne */
     transform: translate(-50%, -50%); /* Ajout de cette ligne */
+  }
+
+  @media only screen and (max-width: 768px) {
+    .navbar-nav .nav-item {
+      height: 50px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #1c255a;
+    }
+    .navbar-nav.user-area a.user_profile {
+        padding-top: 13px !important;
+        border-bottom: 1px solid #1c255a;
+    }
+
+    .btns-plan .btn {
+        width: 100%;
+        display: inline-block;
+        margin-bottom:5px;
+    }
+
   }

@@ -493,7 +493,7 @@
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="number" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -504,7 +504,7 @@
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                                    <input id="extra_charges" name="extra_charges" type="number" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -574,6 +574,18 @@
     </div>
 </div>
 
+
+<!-- success modal-->
+<div class="modal" id="modal_free_trial">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-0">
+            <a href="{{route('subscription.upgradePlan')}}">
+                <img src="{{ asset('img/freetrial.gif') }}" style="width:100%;">
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Modal on event click -->	
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -607,12 +619,23 @@
 <!-- End Tabs content -->
 @endsection
 
-
 @section('footer_js')
 <!-- ================================= -->
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
+
+
+@if(session('firstConnexion') === true)
+    <script>
+    $(document).ready(function() {
+        $('#modal_free_trial').modal('show');
+    });
+    </script>
+    <?php session(['firstConnexion' => false]); ?>
+@endif
+
 <script>
+    
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
     var resultHtml_cc='';      //for populate list - agenda_table
@@ -644,8 +667,6 @@
     document.getElementById("zone").value = zone;
 
     var json_events = @json($events);
-
-   
 
    if ($(window).width() < 768) {
         var defview='agendaDay'; 
@@ -3373,6 +3394,9 @@ $( document ).ready(function() {
 	
 	$('#sprice_amount_buy').val(0);
 	$('#sprice_amount_sell').val(0);
+    $('#extra_charges').val(0);
+
+    
 	
 	$('.timepicker_start').timepicker({
 		timeFormat: 'HH:mm',

@@ -58,7 +58,7 @@
 						<div class="row">
 							<div class="col-md-7 offset-md-2">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="location" name="location">
@@ -71,7 +71,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group"> 
 											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($eventData->title) ? old('title', $eventData->title) : old('title')}}">
@@ -80,7 +80,7 @@
 								</div>
 								<div class="form-group row">
 									@if(!$AppUI->isTeacherAdmin())
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									@endif
 									@if($AppUI->isTeacherAdmin())
 										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
@@ -98,7 +98,7 @@
 									@endif
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
@@ -110,7 +110,7 @@
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="start_date_div"> 
@@ -132,7 +132,7 @@
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
 											<div class="input-group" id="end_date_div"> 
@@ -161,7 +161,7 @@
 									</div>
 								</div> -->
 								<div class="form-group row" id="hourly" style="display:none">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
+									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="sevent_price" name="sevent_price">
@@ -174,7 +174,7 @@
 								</div>
 								@if($priceShow)
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
+										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
 										<div class="col-sm-7">
 											<div class="selectdiv">
 												<select class="form-control" id="sprice_currency" name="sprice_currency">
@@ -187,7 +187,7 @@
 									</div>
 									<?php if(!$AppUI->isTeacher()){ ?>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
+										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
 											<div class="input-group" id="sprice_amount_buy_div"> 
 												<span class="input-group-addon">
@@ -200,25 +200,25 @@
 									</div>
 									<?php } ?>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
+										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
 										<div class="col-sm-4">
 											<div class="input-group" id="sprice_amount_sell_div"> 
 												<span class="input-group-addon">
 													<i class="fa fa-calendar1"></i>
 												</span>
-												<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
+												<input id="sprice_amount_sell" name="sprice_amount_sell" type="number" class="form-control" value="{{!empty($eventData->price_amount_sell) ? old('sprice_amount_sell', $eventData->price_amount_sell) : old('sprice_amount_sell')}}" autocomplete="off">
 												<input type="hidden" name="attendSellPrice" value="{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }}">
 											</div>
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
+										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
 										<div class="col-sm-4">
 											<div class="input-group" id="extra_charges_div"> 
 												<span class="input-group-addon">
 													<i class="fa fa-calendar1"></i>
 												</span>
-												<input id="extra_charges" name="extra_charges" type="text" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
+												<input id="extra_charges" name="extra_charges" type="number" class="form-control" value="{{!empty($eventData->extra_charges) ? old('sextra_charges', $eventData->extra_charges) : old('sextra_charges')}}" autocomplete="off">
 												<input type="hidden" name="attendSellPrice" value="{{ ($eventData->price_amount_sell) }}">
 											</div>
 										</div>
@@ -237,17 +237,19 @@
 													<table id="attn_tbl" class="table">
 														<tbody>
 															<tr>
-																<th width="5%" style="text-align:left"></th>
-																<th width="15%" style="text-align:left">
+																<!--<th width="5%" style="text-align:left"></th>-->
+																<th width="20%" style="text-align:left">
 																	<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left">
 																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
 																</th>
 																@if($priceShow)
+																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<th width="15%" style="text-align:right;">
 																		<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
 																	</th>
+																@endif
 																	<th width="15%" style="text-align:right">
 																		<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
 																	</th>
@@ -259,7 +261,7 @@
 															
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->student_id }}</td>
+																<!--<td>{{ $student->student_id }}</td>-->
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
@@ -275,8 +277,10 @@
 																</td>
 
 																@if($priceShow)
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
-																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
+																	@endif
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>	
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
 																@endif
 															</tr>

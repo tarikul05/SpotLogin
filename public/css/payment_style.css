@@ -1,12 +1,10 @@
 /*
 * top payment info section sp
 */
-body {
-    height: 55vw;
-}
+
 
 .content.agenda_page {
-    margin-top: 29px;
+    margin-top: 70px;
 }
 
 .subscription_info {
@@ -14,7 +12,7 @@ body {
     height: 56px;
     left: 0px;
     top: 0px;
-    background: #C0E7FF;
+    background: #e7f5fd;
 }
 
 .subscription_info .text-success p {
@@ -35,13 +33,13 @@ body {
     justify-content: center;
     background: #0187DB;
     text-align: center;
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
     margin-right: 5px;
     padding: 3px;
     font-family: 'Gilroy';
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
     color: #FFFFFF;
     border-radius: 100%;
 }
@@ -78,7 +76,7 @@ body {
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 700;
-    font-size: 48px;
+    font-size: 30px;
     line-height: 58px;
     text-align: center;
     color: #152245;
@@ -879,43 +877,8 @@ body {
 /**
 * nav bar adjustment
 ***/
-.header-navbar {
-    height: 90px;
-}
 
-.header-navbar .navbar {
-    margin: 0;
-    min-height: 90px;
-}
 
-.header-navbar .navbar .container-fluid,
-.header-navbar .navbar .navbar-collapse,
-.header-navbar .navbar .navbar-nav {
-    height: 90px;
-}
-
-.header-navbar .navbar .navbar-nav .nav-item,
-.header-navbar .navbar .navbar-nav .nav-link {
-    display: flex;
-    align-items: center;
-    height: inherit;
-    font-family: 'Gilroy';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    color: #FFFFFF;
-    padding-left: 24px;
-    padding-right: 25px;
-}
-
-.header-navbar .navbar .navbar-nav .nav-item.active {
-    background: #0075BF;
-    font-weight: 700;
-}
-
-.header-navbar .navbar .navbar-nav .nav-item:hover {
-    background: #0075BF;
-}
 
 .user-area {
     display: flex;

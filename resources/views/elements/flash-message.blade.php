@@ -11,7 +11,7 @@
 
 @if ($message = Session::get('error'))
 
-<div class="alert alert-dismissible alert-danger alert-block">
+<div class="alert alert-dismissible alert-danger alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
     <strong>{{ $message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
 </div>
@@ -34,29 +34,27 @@
 
 @if ($message = Session::get('warning'))
 
-<div class="alert alert-dismissible alert-warning alert-block">
+<div class="alert alert-dismissible alert-warning alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
     <strong>{{ $message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
 </div>
 
 @endif
-
    
 
 @if ($message = Session::get('info'))
 
-<div class="alert alert-dismissible alert-info alert-block">
+<div class="alert alert-dismissible alert-info alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
     <strong>{{ $message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
 </div>
 
 @endif
 
-  
 
 @if ($errors->any())
     @foreach ($errors->all() as $error)
-    <div class="alert alert-dismissible alert-danger alert-block">
+    <div class="alert alert-dismissible alert-danger alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
         
         
         {{ $error }}
@@ -73,5 +71,5 @@
         if (alertContainer) {
             alertContainer.style.display = 'none';
         }
-    }, 4500);
+    }, 2000);
 </script>

@@ -342,6 +342,7 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='
     return true;    
 }   //END - SendInvoiceEmail
 
+/*
 $(document).ready(function(){
     $(window).scroll(function() {
       if ($(document).scrollTop() > 55) {
@@ -350,4 +351,4 @@ $(document).ready(function(){
         $(".header-navbar").removeClass('navbar-fixed-top');
       }
     });
-});
+});*/
