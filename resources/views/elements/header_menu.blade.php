@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
-        <div class="container-fluid pl-4 pr-4">
+        <div class="container-fluid pl-1 pr-1">
             <a href="{{  route('agenda') }}" class="navbar-brand">
                 <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
             </a>

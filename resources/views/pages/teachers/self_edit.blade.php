@@ -15,9 +15,9 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-12 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;"> 
+				<div class="col-sm-12 col-xs-12 header-area" style="padding-bottom:25px;"> 
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }} </label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }} </label>
 					</div> 
 				</div>
 				<!--<div class="col-sm-6 col-xs-12 btn-area">
@@ -430,7 +430,7 @@
 						</div>
 					</fieldset>
 					
-					<button style="position: fixed; top:80px; right:85px; z-index:999;" type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save') }}</button>
 					
 				</form>
 			</div>

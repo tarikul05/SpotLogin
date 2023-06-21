@@ -14,7 +14,7 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
 					<div class="page_header_class">
 						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }}</label>
 					</div>

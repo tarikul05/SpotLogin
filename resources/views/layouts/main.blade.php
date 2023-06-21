@@ -74,5 +74,7 @@
       $('.select_two_defult_class').select2();
     });
   </script>
+
+  
 </body>
 </html>
