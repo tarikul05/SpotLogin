@@ -113,7 +113,7 @@
                             
                             <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
                                 @if( $is_subscribed )
-                                    <span class="badge bg-info">premium</span>
+                                    <span class="badge bg-success">premium</span>
                                 @endif
                                 @if( !$is_subscribed )
                                     <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
