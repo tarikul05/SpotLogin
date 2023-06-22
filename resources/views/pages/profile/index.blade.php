@@ -83,7 +83,15 @@
 
         <?php if($product_object){?>
           @if($subscriber->cancel_at_period_end)
-            <span class="text-danger">Your subscription is canceled and will stop the <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>.</span><br>
+          <?php
+          if($subscription['status'] === 'trialing') {
+            echo '<span class="text-danger">Your subscription is canceled and will stop the' . date('M j, Y', $subscription['billing_cycle_anchor']).'</span>';
+          }
+          if($subscription['status'] === 'active') {
+            echo '<span class="text-danger">Your subscription is canceled and will stop the' . date('M j, Y', $subscription['current_period_end']).'</span>';
+          }
+          ?>
+            <span class="text-danger">Your subscription is canceled and will stop the <?php echo date('M j, Y', $subscription['current_period_end']); ?>.</span><br>
           @endif
 
           @if($subscriber->status === 'trialing')
@@ -93,6 +101,10 @@
               <small>(you will not be charged until the end of your trial period)</small>
             <?php } ?>
             <hr>
+          @endif
+          @if($subscriber->status === 'active')
+              Premium Plan is active on your account.<br>
+              Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
           @endif
         <?php } ?>
         
@@ -108,10 +120,12 @@
                     if($AppUI->isSchoolAdmin()){
                         echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Trial period</span></td>';
                     }else{
-                      if(!empty($user->trial_ends_at)){ 
+                      $today_date = new DateTime();
+                      $trial_ends_at = new DateTime($user->trial_ends_at);
+                      if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
                         echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(Trial period)</small></td>';
                       } else {
-                        echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span></td>';
+                        echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic (Trial ended)</span></td>';
                       }
                     }
                 }
@@ -137,7 +151,12 @@
             if($subscription) { ?>
               <tr>
                 <?php {
-                  echo '<td width="250"><b>Next payment</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
+                  if($subscription['status'] === 'trialing') {
+                    echo '<td width="250"><b>Next payment</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
+                  }
+                  if($subscription['status'] === 'active') {
+                    echo '<td width="250"><b>Next payment</b></td><td>' . date('M j, Y', $subscription['current_period_end']).'</td>';
+                  }
                   }
                 ?>
               </tr>

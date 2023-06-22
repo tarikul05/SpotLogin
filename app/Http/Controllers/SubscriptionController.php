@@ -204,41 +204,55 @@ class SubscriptionController extends Controller
             // throw error message
         }
     }
-    public function supscribePlanStore(Request $request){
-        try {
-            $user = $request->user();
-            //find reming day
-            $ends_at = auth()->user()->trial_ends_at;
-            // $today_date = new DateTime();
-            // $ends_at = new DateTime($ends_at);
-            // $day_diff = $ends_at->diff($today_date)->format("%a");
-            $plan_id = $request->plan;
-            $plan_name = $request->plan_name;
-            // $plan = $this->stripe->plans->retrieve($plan_id, []);
-            if ($user->subscribed('default')) {
-                return redirect()->route('agenda')->with('success', 'already, You have subscribed ' . $plan_name);
-            }
-            $anchor = Carbon::parse($ends_at);
-            $paymentMethod = $request->paymentMethod;
-            $user->createOrGetStripeCustomer();
-            $user->updateDefaultPaymentMethod($paymentMethod);
-            $user->newSubscription('default', $plan_id)
-                    ->trialUntil($anchor->endOfDay())
-                    ->create($paymentMethod, [
-                        'email' => $user->email,
-                        'name'  => $request->card_holder_name,
-                    ],
-                    [
-                        'metadata' => ['note' => $user->email.', '.$request->card_holder_name ],
-                    ]
-                );
-            $user->trial_ends_at = NULL;
-            $user->save();
-            return redirect()->route('profile.plan')->with('success', 'Congratulations, you have succesully subscribed to our ' . $plan_name);
-        } catch (IncompletePayment $exception) {
-            return redirect()->back()->with('error', $exception->getCode().', '.$exception->getMessage());
+
+    public function supscribePlanStore(Request $request)
+{
+    try {
+        $user = $request->user();
+        $ends_at = auth()->user()->trial_ends_at;
+        $plan_id = $request->plan;
+        $plan_name = $request->plan_name;
+
+        if ($user->subscribed('default')) {
+            return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
         }
+
+        $paymentMethod = $request->paymentMethod;
+        $user->createOrGetStripeCustomer();
+        $user->updateDefaultPaymentMethod($paymentMethod);
+
+        $trialEndsAt = Carbon::parse($ends_at);
+        $now = now();
+
+        if ($trialEndsAt->isPast()) {
+            // Si la date de fin du trial est dans le passé, on démarre le plan premium immédiatement
+            $user->newSubscription('default', $plan_id)
+                ->create($paymentMethod, [
+                    'email' => $user->email,
+                    'name' => $request->card_holder_name,
+                ], [
+                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
+                ]);
+        } else {
+            // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
+            $user->newSubscription('default', $plan_id)
+                ->trialUntil($trialEndsAt->endOfDay())
+                ->create($paymentMethod, [
+                    'email' => $user->email,
+                    'name' => $request->card_holder_name,
+                ], [
+                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
+                ]);
+        }
+
+        $user->trial_ends_at = null;
+        $user->save();
+
+        return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
+    } catch (IncompletePayment $exception) {
+        return redirect()->back()->with('error', $exception->getCode() . ', ' . $exception->getMessage());
     }
+}
 
     public function singlePayment(Request $request, $payment_id = null){
         try {

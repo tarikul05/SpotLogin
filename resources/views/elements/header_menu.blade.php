@@ -64,12 +64,17 @@
 
                         @if(!$AppUI->isStudent())
                             <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __("Invoice's List") }}</a>
-                            <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __("Student's Invoice") }}</a>
+   
+                            <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __("Student's Invoice") }}</a>
+                            <?php } ?>
                             @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                                 <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Teacher's Invoice") }}</a>
                             @endif
                             @if(!$AppUI->isTeacherReadOnly())
-                                <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                            <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                    <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                             <?php } ?>
                             @endif
                         @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
@@ -114,7 +119,7 @@
                                     <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
                                         <span class="badge bg-info">basic</span>
                                     <?php } else { ?>
-                                        <span class="badge bg-warning">trial</span>
+                                        <span class="badge bg-warning">basic</span>
                                     <?php } ?>
                                 @endif
                             </span>
