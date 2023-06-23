@@ -24,6 +24,9 @@
 <!-- add new assets for modal of add event,lesson -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+
+
 <!-- end the assets area -->
 @endsection
 
@@ -244,9 +247,13 @@
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+            <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
             <div class="modal-header">
+                <h6 class="modal-title page_header_class">
+                  <i class="fa-regular fa-calendar-plus"></i>  Add an event / lesson
+                </h6>
                 <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
+                    <i class="fa-solid fa-circle-xmark fa-lg"></i>
                 </button>
             </div>
             <div class="modal-body">
@@ -272,7 +279,7 @@
                             </div>                   
                             <div class="tab-content" id="agenda_form_area" style="display:none">
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-                                    <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+                                    
                                         @csrf
                                         <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
                                         <fieldset>
@@ -347,7 +354,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv student_list">
-                                                                <select class="form-control" id="student" name="student[]" multiple="multiple">
+                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
                                                                     @foreach($studentsbySchool as $key => $student)
                                                                         <option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
                                                                     @endforeach
@@ -375,7 +382,7 @@
                                                                 <div class="input-group"> 
                                                                     <input id="start_time" name="start_time" type="text" class="form-control timepicker_start" value="{{old('start_time')}}">
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-clock-o"></i>
+                                                                        <i class="fa-solid fa-clock"></i>
                                                                     </span>
                                                                 </div>
                                                             </div>	
@@ -396,7 +403,7 @@
                                                                 <div class="input-group"> 
                                                                     <input id="end_time" name="end_time" type="text" class="form-control timepicker" value="{{old('end_time')}}">
                                                                     <span class="input-group-addon">
-                                                                        <i class="fa fa-clock-o"></i>
+                                                                        <i class="fa-solid fa-clock"></i>
                                                                     </span>
                                                                 </div>
                                                             </div>	
@@ -529,15 +536,20 @@
                                                 </div>
                                             </div>
                                         </fieldset>
-                                        <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-                                        <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
-                                    </form>
+                                        
+                                   
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+                <div class="modal-footer">
+                    <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+                    <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -3329,7 +3341,6 @@
 
 </script>
 
-<!-- add lesson,event,school and coach off js start here -->
 <script type="text/javascript">
 $(function() {
 	$("#start_date").datetimepicker({
@@ -3353,9 +3364,24 @@ $(function() {
 		todayBtn:false,
 	});
 });
-// $('#student').multiselect({
-// 	search: true
-// });
+
+
+
+  $('#student').multiselect({
+    maxHeight:true,
+    buttonWidth: '100%',
+    dropRight:false,
+    enableFiltering:true,
+    includeSelectAllOption: true, // Ajouter une option "Sélectionner tout"
+    includeFilterClearBtn: true,
+
+    search:true,
+    selectAllText: '{{__("All Students") }}',
+    enableCaseInsensitiveFiltering:true,
+    enableFullValueFiltering:false,
+  });
+
+
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
@@ -3869,6 +3895,11 @@ function getLatestPrice() {
     }
     
 }
+
+$('#student').multiselect({
+	search: true
+});
+
 
 $("body").on('click', '#student_empty', function(event) {
     if ($("#student_empty").prop('checked')) {

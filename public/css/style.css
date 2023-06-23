@@ -2430,3 +2430,17 @@ a.btn.btn-theme-success.add_teacher_btn {
 .withPaddingTop {
 	padding-top:80px;
 }
+
+
+.multiselect-item .input-group .input-group-addon {
+	display:none;
+}
+
+.multiselect-item .input-group .input-group-btn {
+	display:none;
+}
+
+.multiselect-item .input-group .multiselect-search {
+	width: 200px;
+	border-radius:7px;
+}
