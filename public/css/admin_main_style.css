@@ -159,13 +159,14 @@ div#ex1-content {
     border-width: 0 0 1px;
 }
 header.panel-heading {
-    margin: 40px 0;
-    padding-top: 1px;
-    padding-bottom: 5px;
-    top: 67px;
+    margin: 0px 0;
+    padding-top: 5px;
+    padding-bottom:10px;
+    top: 65px;
     position: sticky;
     z-index: 9;
     background: #fff;
+    width: 100%;
 }
 
 /********************ADMIN PANEL DEV CSS******************/
@@ -1379,7 +1380,7 @@ label#currency_alert_text {
         font-size: 19px !important;
     }
     header.panel-heading {
-        margin: 40px 0 10px !important;
+        margin: 40px 0 0px !important;
     }
     .student_save {
         top: 0px;

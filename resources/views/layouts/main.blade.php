@@ -41,10 +41,6 @@
     @include('elements.header_menu')
 </section>
 
-<div style="position:relative; top:60px; width:100%;">
-  @include('elements.payment_remainder')
-</div>
-
 <section class="" id="main-content">
 	@include('elements/flash-message')
     @yield('content')

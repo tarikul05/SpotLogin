@@ -99,8 +99,9 @@
                             @endif
                         @endunlessrole
                     @endunlessrole
-                    
+    
                 </div>
+                @include('elements.payment_remainder')
                 <div class="navbar-nav ms-auto user-area">
                     <?php if (!empty($AppUI['id'])): ?>
                         <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
@@ -125,6 +126,7 @@
                             </span>
                             
                         </a>
+
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
                             <div class="dropdown-menu header">

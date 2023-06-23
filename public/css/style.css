@@ -70,11 +70,11 @@ label.page_header.bold {
 }
 
 header.panel-heading {
-	margin: 40px 0;
+	margin: 0px 0;
 }
 
 nav {
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 }
 
 .section_header_class label {
@@ -886,7 +886,35 @@ button#save_btn_more i {
 	margin-top: 5px;
 }
 
+@media only screen and (max-width: 992px) {
+
+	.btn_actions {
+		width: 100%;
+		bottom:0px;
+		border-radius:0px;
+		position: fixed;
+	}
+
+	.btn_actions .section_header_class .card .card-body
+	{
+		border-radius:0px;
+	}
+
+}
+
 @media only screen and (max-width: 768px) {
+
+	.btn_actions {
+		width: 100%;
+		bottom:0px;
+		border-radius:0;
+		position: fixed;
+	}
+
+	.btn_actions .section_header_class .card .card-body
+	{
+		border-radius:0;
+	}
 
 	.language_page label,
 	.email_template_page label,
@@ -946,7 +974,7 @@ button#save_btn_more i {
 	}
 
 	.header-area {
-		margin-bottom: 15px;
+		margin-bottom: 1px;
 	}
 
 	.pull-right.btn-group.cal_top {
@@ -1166,7 +1194,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 
 @media only screen and (max-width: 768px) {
 	.header-area {
-		padding-top:35px;
+		padding-top:15px;
 		padding-bottom:0;
 		margin-bottom:0;
 	}
@@ -1334,6 +1362,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 .subscription_info {
     width: 300px;
 	margin:0 auto;
+	top:1px;
     height: 40px;
     left: 0px;
     top: 0px;
@@ -1341,7 +1370,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 	color:white;
 	border-top:1px solid #2b3069;
 	box-shadow: 1px 1px 2px 1px rgba(2, 2, 12, 0.5);
-	border-radius:0 0 8px 8px;
+	border-radius:8px;
 }
 
 .subscription_info .text-success p {
@@ -2268,16 +2297,12 @@ a.btn.btn-theme-success.add_teacher_btn {
 
 	.subscription_info {
 		width: 100%;
-		height: 40px;
-		margin: 0 auto; /* Ajout de cette propriété pour centrer horizontalement */
-		top: 66px;
-		background: #152245;
+		height: 39px;
+		background: transparent;
 		color: white;
-		border-top: 1px solid #0c103b;
-		box-shadow: 1px 1px 2px 1px rgba(2, 2, 12, 0.5);
-		border-radius: 0 0 8px 8px;
-		z-index: 999!important;
-		position: fixed;
+		border:none;
+		text-align: start;
+		border-radius:0 0 8px 8px;
 	  }
 
     .subscription_info .text-success p {

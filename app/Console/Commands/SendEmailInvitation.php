@@ -149,43 +149,46 @@ class SendEmailInvitation extends Command
      *
      */
     public function emailSend($data = [], $template_code = null)
-    {
-
-        try {
-            $lang = 'en';
-            if (isset($data['p_lang'])) {
-                $lang = $data['p_lang'];
-            }
-
-            $emailTemplateExist = EmailTemplate::where([
-                ['template_code', $template_code],
-                ['language', $lang]
-            ])->first();
-
-            if ($emailTemplateExist) {
-                $email_body = $emailTemplateExist->body_text;
-                $data['subject'] = $emailTemplateExist->subject_text;
-            } else {
-                $email_body = '<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
-                if (isset($data['subject'])) {
-                    $data['subject'] = $data['subject'];
-                } else {
-                    $data['subject'] = __('www.sportogin.ch: Welcome! Activate account.');
-                }
-            }
-            $data['body_text'] = $email_body;
-
-            if (isset($data['url'])) {
-                $data['url'] = $data['url'];
-            } else {
-                if (isset($data['token'])) {
-                    $data['url'] = route('add.verify.email', $data['token']);
-                }
-            }
-            Mail::to($data['email'])->send(new SportloginEmail($data));
-            return true;
-        } catch (\Exception $e) {
-            return false;
+{
+    try {
+        $lang = 'en';
+        if (isset($data['p_lang'])) {
+            $lang = $data['p_lang'];
         }
+
+        $emailTemplateExist = EmailTemplate::where([
+            ['template_code', $template_code],
+            ['language', $lang]
+        ])->first();
+
+        if ($emailTemplateExist) {
+            $email_body = $emailTemplateExist->body_text;
+            $data['subject'] = $emailTemplateExist->subject_text;
+        } else {
+            $email_body = '<p><strong><a href="[~~URL~~]">CONFIRM</a></strong></p>';
+            if (isset($data['subject'])) {
+                $data['subject'] = $data['subject'];
+            } else {
+                $data['subject'] = __('www.sportogin.ch: Welcome! Activate account.');
+            }
+        }
+        $data['body_text'] = $email_body;
+
+        if (isset($data['url'])) {
+            $data['url'] = $data['url'];
+        } else {
+            if (isset($data['token'])) {
+                $data['url'] = route('add.verify.email', $data['token']);
+            }
+        }
+
+        Mail::to($data['email'])->send(new SportloginEmail($data));
+
+        return true;
+    } catch (\Exception $e) {
+        // Afficher le message d'erreur ou faire un log de l'erreur ici
+        dd($e->getMessage());
+        return false;
     }
+}
 }

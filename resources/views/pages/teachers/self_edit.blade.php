@@ -15,9 +15,9 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-12 col-xs-12 header-area" style="padding-bottom:25px;"> 
+				<div class="col-sm-12 col-xs-12 header-area pb-3"> 
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }} </label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }}</label>
 					</div> 
 				</div>
 				<!--<div class="col-sm-6 col-xs-12 btn-area">
@@ -26,8 +26,7 @@
 					</div>
 				</div>-->
 			</div>
-		</header>
-		<!-- Tabs navs -->
+
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -50,6 +49,9 @@
 		</nav>
 		<!-- Tabs navs -->
 
+	</header>
+	<!-- Tabs navs -->
+
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<input type="hidden" id="user_id" name="user_id" value="{{$teacher->user->id}}">
@@ -61,8 +63,9 @@
 
 
 		
-
-					<fieldset>
+					<div class="row">
+					
+						<fieldset class="col-lg-10">
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
@@ -270,7 +273,7 @@
 										</div>
 									</div> -->
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
@@ -383,30 +386,33 @@
 							<div class="card">
 								<div class="card-body bg-tertiary">
 
-									
-							<div class="row">
-								<div class="col-md-6">
+
 									<div class="form-group row">
-
-										<label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="bank_name" name="bank_name" type="text"
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Payment preference') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+												<input class="form-control" id="bank_name" name="bank_name" type="text"
 												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+											</div>
 										</div>
-
 									</div>
+
 									@if($teacher == 'CA')
 									<div class="form-group row">
-										<label class="col-lg-12 col-sm-12 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('E-transfer email') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-brands fa-canadian-maple-leaf"></i></span>
+												<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
 												<span class="etransfer_acc"></span>	
+											</div>
 										</div>
 									</div>
 									@endif
-								</div>	
-							</div>
+									
+
 
 								</div>
 							</div>
@@ -430,7 +436,19 @@
 						</div>
 					</fieldset>
 					
-					<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+					<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+						<div class="section_header_class">
+						<label><br></label>
+						</div>
+						<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+							<div class="card-body">
+						<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			
 					
 				</form>
 			</div>
@@ -441,10 +459,13 @@
 						<label id="teacher_personal_data_caption">{{__('Sections and prices') }}<!--{{__('Number of students') }}--></label>
 					</div>
 
+					<div class="row">
+					<div class="col-lg-10">
+
 					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
 						<thead>
 							<tr>
-								<th>#</th>
+								<th><!--#--></th>
 								<th>{{__('Type of course')}}</th>
 								<th>{{__('Type of billing')}}</th>
 								<!-- <th class="buy"><span>{{__('Teacher price') }}</span></th> -->
@@ -484,7 +505,8 @@
 
 								 ?>
 								<tr>
-									<td>{{$lessionPrice->divider}}
+									<td>
+										<!--{{$lessionPrice->divider}}-->
 										<input type="hidden"
 										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
@@ -516,8 +538,19 @@
 						</tbody>
 						</table>
 
-					
-						<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save')}}</button>
+					</div>
+		
+						<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+							<div class="section_header_class">
+							</div>
+							<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+								<div class="card-body">
+							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
 					
 				</form>
 			</div>
