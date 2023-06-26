@@ -24,16 +24,21 @@
 span.admin_name {
 	font-size: 18px;
 	color: #fff;
-	line-height: 45px;
+	line-height: 50px;
 	font-weight: 200;
 	margin-right: 10px;
 }
 
+span.admin_name .badge {
+	padding:2px;
+	font-size:11px;
+}
+
 img.admin_logo {
 	border-radius: 90px;
-	width: 40px;
-	height: 40px;
-	margin-right: 20px;
+	width: 45px;
+	height: 45px;
+	margin-right: 10px;
 }
 
 label#page_header,
@@ -462,6 +467,7 @@ table.tc_template .detail_header {
 	color: #fff;
 	text-decoration: none;
 	display: block;
+	margin-right:5px;
 	padding: 12px 10px 10px 10px;
 	font-family: "Gilroy-Regular";
 	font-size: 17px;
@@ -477,6 +483,7 @@ table.tc_template .detail_header {
 .navbar-nav.user-area a.user_profile:hover,
 .navbar-nav.user-area a.user_profile:focus {
 	background: #0075bf;
+	margin-right:5px;
 	color: #152245;
 	display: block;
 	-webkit-transition: all 0.3s ease;
@@ -489,7 +496,7 @@ table.tc_template .detail_header {
 .dropdown-menu.header.show,
 .dropdown-menu.list.show {
 	display: block;
-	background: #35404d;
+	background: #10335f;
 	max-width: 180px;
 	margin-top: 0px;
 	right: 0;
@@ -893,11 +900,16 @@ button#save_btn_more i {
 		bottom:0px;
 		border-radius:0px;
 		position: fixed;
+		z-index: 9999;
 	}
 
 	.btn_actions .section_header_class .card .card-body
 	{
 		border-radius:0px;
+	}
+
+	#nav-tab .nav-link {
+		width: 100%;
 	}
 
 }
@@ -909,11 +921,16 @@ button#save_btn_more i {
 		bottom:0px;
 		border-radius:0;
 		position: fixed;
+		z-index: 9999;
 	}
 
 	.btn_actions .section_header_class .card .card-body
 	{
 		border-radius:0;
+	}
+
+	.section_header_class .cat_name {
+		font-size: 12px;
 	}
 
 	.language_page label,
@@ -1360,11 +1377,13 @@ a.btn.btn-theme-success.add_teacher_btn {
 */
 
 .subscription_info {
-    width: 300px;
+    width: auto;
 	margin:0 auto;
 	top:1px;
     height: 40px;
     left: 0px;
+	padding-left:4px;
+	padding-right:6px;
     top: 0px;
     background: #152245;
 	color:white;
@@ -1384,6 +1403,22 @@ a.btn.btn-theme-success.add_teacher_btn {
     color:white;
 }
 
+.subscription_info .text-success p a.custom-link {
+	font-size: 12px;
+	background-color: #2f8519;
+	color: white;
+	padding: 3px;
+	border-radius:5px;
+	text-decoration: none;
+	margin-left:10px;
+	opacity: .95;
+}
+
+.subscription_info .text-success p a.custom-link:hover {
+	opacity: 1;
+	font-size: 14px;
+}
+
 .subscription_info .text-success .text .day_count {
     display: flex;
     align-items: center;
@@ -1396,7 +1431,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     padding: 1px;
     font-family: 'Gilroy';
     font-weight: 300;
-    font-size: 15px;
+    font-size: 12px;
     color: #FFFFFF;
     border-radius: 100%;
 }
@@ -1447,21 +1482,29 @@ a.btn.btn-theme-success.add_teacher_btn {
 .plans .columns {
     float: left;
     width: 379px;
-    background: #FFFFFF;
+    background: #0187DB;
     box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
     border-radius: 8px;
     padding: 38px 36px 36px;
     margin-left: 59px;
+	opacity: .7;
 }
 
 .plans .columns.premium-plan {
     background: #0187DB;
     box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
     border-radius: 8px;
+	opacity: 1;
 }
 
 .plans .columns:first-child {
     margin-left: 0;
+	float: left;
+    box-shadow: 5.9773px 5.9773px 32.4482px rgba(1, 81, 131, 0.14);
+    border-radius: 8px;
+	background-color: #ffffff;
+    padding: 15px;
+	opacity: 1;
 }
 
 .plans .price {
@@ -1471,7 +1514,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 }
 
 .plans .price li {
-    color: #152245;
+    color: #35446d;
     border-bottom: 0;
     padding: 0 0 15px;
     text-align: left;
@@ -1491,7 +1534,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     font-weight: 600;
     font-size: 24px;
     line-height: 29px;
-    color: #152245;
+    color: #35446d;
     padding-bottom: 5px;
 }
 
@@ -1507,7 +1550,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     font-weight: 700;
     font-size: 40px;
     line-height: 48px;
-    color: #657E8E;
+    color: #35446d;
     border-bottom: 2px solid #E1EFF7;
     padding-bottom: 15px;
 }
@@ -1553,7 +1596,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 
 .plans .columns .free-plan-button {
     padding: 0;
-    margin: 70px 0 0;
+    margin: 20px 0 0;
     background: #FFFFFF;
     border: 1.7078px solid #0187DB;
     border-radius: 8px;
@@ -1586,10 +1629,11 @@ a.btn.btn-theme-success.add_teacher_btn {
     margin: 0 auto;
     width: 307px;
     height: 52px;
-    background: #FFFFFF;
+    background: #FFF;
     border: 1.7078px solid #0187DB;
     border-radius: 8px;
 }
+
 
 .plans .premium-plan .submit-button a,
 .plans .columns .free-plan-button a {
@@ -1604,6 +1648,23 @@ a.btn.btn-theme-success.add_teacher_btn {
     line-height: 24px;
     color: #0187DB;
     text-decoration: none;
+	opacity: .9;
+}
+
+.plans .premium-plan .submit-button a:hover,
+.plans .columns .free-plan-button a:hover {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Gilroy';
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 24px;
+    color: #0187DB;
+    text-decoration: none;
+	opacity: 1;
 }
 
 
@@ -1655,11 +1716,11 @@ a.btn.btn-theme-success.add_teacher_btn {
     color: #152245;
 }
 
-.subscription-form-wrapper .subscription-plan-info {
-    margin-top: 24px;
+ .subscription-plan-info {
+    margin-top: 0px;
 }
 
-.subscription-form-wrapper .subscription-plan-info .h4 {
+ .subscription-plan-info .h4 {
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 600;
@@ -1668,7 +1729,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     color: #0187DB;
 }
 
-.subscription-form-wrapper .subscription-plan-info .h2 {
+ .subscription-plan-info .h2 {
     font-family: 'Gilroy';
     font-style: normal;
     font-weight: 700;
@@ -1677,7 +1738,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     color: #0187DB;
 }
 
-.subscription-form-wrapper .subscription-plan-info .h2 .intervation_type {
+ .subscription-plan-info .h2 .intervation_type {
     font-size: 20px;
     font-weight: 400;
     line-height: 23.2px;
@@ -1785,6 +1846,20 @@ a.btn.btn-theme-success.add_teacher_btn {
     font-size: 20px;
     line-height: 24px;
     color: #FFFFFF;
+}
+
+.arrow-shape::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  right: -31px;
+  width: 0;
+  height: 0;
+  border-top: 40px solid transparent;
+  border-bottom: 40px solid transparent;
+  border-left: 30px solid #8bb3bd; /* Couleur de la flèche */
+  transform: skewX(0deg);
+  z-index: 9999;
 }
 
 .payment-footer-wrapper {
@@ -2288,6 +2363,21 @@ a.btn.btn-theme-success.add_teacher_btn {
         display: block;
     }
 
+	.arrow-shape::before {
+		display: none;
+	}
+
+	.payment-form .button-area .btn {
+		width: 100%;
+		margin-top:5px;
+		margin-bottom:12px;
+	}
+
+	.payment-form form {
+		padding-top: 5px;
+		padding: 5px;
+	}
+
     /*
     * top payment info section sp
     */
@@ -2296,13 +2386,7 @@ a.btn.btn-theme-success.add_teacher_btn {
     }
 
 	.subscription_info {
-		width: 100%;
-		height: 39px;
-		background: transparent;
-		color: white;
-		border:none;
-		text-align: start;
-		border-radius:0 0 8px 8px;
+		display: none;
 	  }
 
     .subscription_info .text-success p {
@@ -2355,6 +2439,10 @@ a.btn.btn-theme-success.add_teacher_btn {
     .plans .premium-plan {
         order: 1;
     }
+
+	.plans .columns:first-child {
+		margin-bottom:25px;
+	}
 
     .plans .premium-plan li .svg_img,
     .plans .columns li .svg_img {

@@ -27,8 +27,10 @@
 				</div>-->
 			</div>
 
+			
+	</header>
 
-		<nav>
+		<nav cklass="subNav">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
@@ -49,7 +51,6 @@
 		</nav>
 		<!-- Tabs navs -->
 
-	</header>
 	<!-- Tabs navs -->
 
 		<!-- Tabs content -->
@@ -462,81 +463,69 @@
 					<div class="row">
 					<div class="col-lg-10">
 
-					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
-						<thead>
-							<tr>
-								<th><!--#--></th>
-								<th>{{__('Type of course')}}</th>
-								<th>{{__('Type of billing')}}</th>
-								<!-- <th class="buy"><span>{{__('Teacher price') }}</span></th> -->
-								<th class="sell"><span>{{__('Student price') }}</span></th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach($eventCategory as $key => $category)
-							<tr style="background:lightblue;">
-								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
-								<!-- <td><label></label></td> -->
-								<td align="right" colspan="1">price/student/hour</td>
-							</tr>
-								@foreach($lessonPrices as $key => $lessionPrice)
-									<?php 
-									if ($lessionPrice->divider == 1) {
-										$textForTypeBilling = 'Private session';
-									}elseif ($lessionPrice->divider == 9999) {
-										$textForTypeBilling = 'Student more then 10';
-									}elseif ($lessionPrice->divider == -1) {
-										$textForTypeBilling = 'Fixed price';
-									}else{
-										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
-									}
-									// 0 = hourly 1= fix
-									$studentPrice = $category->s_std_pay_type; 
+						<div class="card">
+							<div class="card-body bg-tertiary">
 
-									if ( $studentPrice ==1) { // fix and fix price
-										if ($lessionPrice->divider != -1) continue;
-									}elseif ($studentPrice == 0) { // hourly and hourly
-										 if ($lessionPrice->divider == -1) continue;
-									}else{
-										
-											
-									}
+								<div class="table-responsive">
+									<table id="tariff_table_rate" class="table table-stripped table-hover">
+										<thead>
+											<tr>
+												<th><!--#--></th>
+												<th>{{__('Type of course')}}</th>
+												<th>{{__('Type of billing')}}</th>
+												<th class="sell"><span>{{__('Student price')}}</span></th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($eventCategory as $key => $category)
+											<tr style="background:lightblue;">
+												<td></td>
+												<td colspan="3"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+											</tr>
+											@foreach($lessonPrices as $key => $lessionPrice)
+												<?php 
+												if ($lessionPrice->divider == 1) {
+													$textForTypeBilling = 'Private session';
+												} elseif ($lessionPrice->divider == 9999) {
+													$textForTypeBilling = 'Student more than 10';
+												} elseif ($lessionPrice->divider == -1) {
+													$textForTypeBilling = 'Fixed price';
+												} else {
+													$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+												}
+												
+												$studentPrice = $category->s_std_pay_type; 
+								
+												if ($studentPrice == 1) {
+													// fix and fix price
+													if ($lessionPrice->divider != -1) continue;
+												} elseif ($studentPrice == 0) {
+													// hourly and hourly
+													if ($lessionPrice->divider == -1) continue;
+												} else {
+													// Add condition here if needed for other cases
+												}
+												?>
+												<tr>
+													<td>
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+													</td>
+													<td>{{__('Lessons/Events')}}</td>
+													<td>{{ __($textForTypeBilling) }}</td>
+													<td>
+														<input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
+													</td>
+												</tr>
+											@endforeach
+											@endforeach
+										</tbody>
+									</table>
+								</div>
 
-								 ?>
-								<tr>
-									<td>
-										<!--{{$lessionPrice->divider}}-->
-										<input type="hidden"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
-										>
-										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
-										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-									</td>
-									<td>{{__('Lessons/Events')}}</td>
-									<td>{{ __($textForTypeBilling) }}</td>
-
-									<!-- <td>
-										<input type="text"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
-										>
-									</td> -->
-									<td>
-										<input type="text"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" 
-										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
-										>
-									</td>
-								</tr>
-								@endforeach
-							@endforeach
-						</tbody>
-						</table>
+							</div>
+						</div>
 
 					</div>
 		

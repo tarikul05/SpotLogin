@@ -5,21 +5,174 @@
 @endsection
 
 @section('content')
-<div id="card-errors" role="alert"></div>
+
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="subscription-form-wrapper">
-                <div class="payment-info-top">
-                    <h4 class="h4">Payment details</h4>
-                    <p class="txt">Enter your payment details below to subscribe </p>
-                </div>
-                <div class="subscription-plan-info">
-                    <h4 class="h4">{{ $product_object['name'] }}</h4>
-                    <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
-                </div>
-                <div class="payment-form card_payment">
+
+    <header class="panel-heading" style="border: none;">
+        <div class="row panel-row" style="margin:0;">
+          <div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px;">
+            <div class="page_header_class">
+              <label id="page_header" name="page_header">
+                <i class="fa-solid fa-user"></i> {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
+              </label>        
+            </div>
+          </div>
+        </div>                 
+      </header>
+      
+      
+
+
+
+    <div class="row mt-3">
+
+        <div class="col-lg-12">
+            <div id="card-errors" role="alert"></div>
+            </div>
+
+        <div class="col-md-7 d-none d-sm-block">
+
+                    <div class="card">
+                        <div class="card-body pb-5">
+
+             
+                            <div class="subscription-plan-info pb-1">
+                                <h4 class="h4">{{ $product_object['name'] }}</h4>
+                                <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
+                            </div>
+                            <br>
+                            <div class="alert alert-info small arrow-shape">
+                                <p style="font-size:13px;"><i class="fa-solid fa-circle-info fa-beat"></i> <b>Automatic renewal</b></p>
+                                <p style="font-size:13px;">
+                                    Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>.<br>
+                                    You may cancel your subscription anytime from <b>My plan</b> section in your profile.
+                                </p>
+                            </div>
+         
+                            <ul class="list-group list-group-flush pb-1">
+                                <?php if($product_object['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
+                                    <!-- price id for 200 -->
+                                    <li class="list-group-item">
+                                        Unlimited <b>teachers</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Unlimited <b>students</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>students</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>teachers</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>schedule</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Share your schedule</b> with your team and your students
+                                    </li>
+                                    <li class="list-group-item">
+                                        Automatic invoice based on the Schedule <b>(students and teachers)</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manual invoices
+                                    </li>
+                                    <li class="list-group-item">
+                                        Access the mobile app
+                                    </li>
+                                <?php } else if($single_plan_info['id'] == env('stripe_school_premium_plan_two_price_id')){ ?>
+                                    <!-- price id for 125 -->
+                                    <li class="list-group-item">
+                                        Up to 5 <b>teachers</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Unlimited <b>students</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>students</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>teachers</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage your <b>schedule</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Share your schedule</b> with your team and your students
+                                    </li>
+                                    <li class="list-group-item">
+                                        Automatic invoice based on the Schedule <b>(students and teachers)</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manual invoices
+                                    </li>
+                                    <li class="list-group-item">
+                                        Create your final financial statement (for taxes)
+                                    </li>
+                                    <li class="list-group-item">
+                                        Access the mobile app
+                                    </li>
+                                <?php }else if($single_plan_info['id'] == env('stripe_single_cocah_premium_plan_price_id')){ ?>
+                                    <!-- price id for 50 -->
+                                    <!--<li class="list-group-item">
+                                        Unlimited <b>students</b>
+                                    </li>-->
+                                    <li class="list-group-item">
+                                        Manage your Unlimited <b>students</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manage and share your <b>schedule</b>
+                                    </li>
+                                    <!--<li class="list-group-item">
+                                        <b>Share your schedule</b> with your team and your students
+                                    </li>-->
+                                    <li class="list-group-item">
+                                        Automatic system invoice <!--based on the <b>Schedule</b>-->
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manual invoices
+                                    </li>
+                                    <li class="list-group-item">
+                                        Create final financial statement<!-- (for taxes)-->
+                                    </li>
+                                    <li class="list-group-item">
+                                        Access the mobile app
+                                    </li>
+                                <?php }else if($plan['id'] == env('stripe_teacher_premium_plan_price_id')){ ?>
+                                    <!-- price id for 25 -->
+                                    <li class="list-group-item">
+                                        Access the school <b>schedule</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        Access the <b>app</b>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Automatic invoice</b> based on your schedule
+                                    </li>
+                                    <li class="list-group-item">
+                                        Manal invoice
+                                    </li>
+                                    <li class="list-group-item">
+                                        Create your final financial statement <b>(for taxes)</b>
+                                    </li>
+                                <?php }else{ ?>
+                                    <!-- Handle other cases here -->
+                                <?php } ?>
+                            </ul>
+
+                        </div>
                     
+        </div>
+
+
+            
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body alert-info">
+                <div class="payment-info-top text-center">
+                    <p class="txt">Enter your payment<br>details below to subscribe </p>
+                </div>
+                <div class="payment-form card_payment pt-1 p-5">
                     <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
                         @csrf
                         <div class="form-group">
@@ -56,25 +209,29 @@
                                 </div>
                             </div> -->
                         </div>
-                        <div class="button-area">
-                            <div class="btn btn_c">
-                                <a class="btn-cancle" href="{{ url()->previous() }}">Cancel</a>
-                            </div>
-                            <button id="card-button" class="btn btn-blue" type="submit" data-secret="{{ $intent->client_secret }}"
-                            >Proceed payment</button>
-                        </div>
-                    
+
                         <div class="payment-footer-wrapper">
-                            <p class="title">Automatic renewal:</p>
-                            <p class="f-txt">
-                                Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>. 
-                                You may cancel your subscription anytime from <b>My subscription</b> section in your profile.
-                            </p>
                             <p class="f-txt f_margin_top">
                                 By clicking “Proceed payment” you agree to the <b>Terms and Conditions</b>.
                             </p>
                         </div>
+
+                        <div class="button-area pt-2">
+                                <a class="btn btn-default" href="{{ url()->previous() }}">Cancel</a>
+                            <button id="card-button" class="btn btn-success" type="submit" data-secret="{{ $intent->client_secret }}"
+                            >Proceed payment</button>
+                        </div>
+                    
+                        <div class="payment-footer-wrapper small text-center d-block d-sm-none">
+                                <p>-- Automatic renewal --</p>
+                                <p>
+                                    Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>. 
+                                    You may cancel your subscription anytime from <b>My plan</b> section in your profile.
+                                </p>
+                        </div>
+                        
                     </form>
+                </div>
                 </div>
             </div>
         </div>

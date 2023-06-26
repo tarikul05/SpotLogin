@@ -1549,4 +1549,10 @@ label#currency_alert_text {
         margin-bottom:5px;
     }
 
+    #example_filter a {
+        padding:3px;
+        height: 20px;
+    }
+
+
   }

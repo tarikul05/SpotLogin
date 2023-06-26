@@ -591,7 +591,7 @@
 <div class="modal" id="modal_free_trial">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-0">
-            <a href="{{route('subscription.upgradePlan')}}">
+            <a href="{{route('profile.plan')}}">
                 <img src="{{ asset('img/freetrial.gif') }}" style="width:100%;">
             </a>
         </div>
@@ -2165,13 +2165,16 @@
                 el.attr('title', event.tooltip);
                 //el.attr('data-html', 'true');
 
-                el.popover({
-                    title: event.tooltip,
-                    trigger: 'hover',
-                    html: true,
-                    placement: 'top',
-                    container: 'body'
-                });
+                setTimeout(function() {
+                    el.popover({
+                        title: event.tooltip,
+                        trigger: 'hover',
+                        html: true,
+                        placement: 'top',
+                        container: 'body'
+                    });
+                }, 1500);
+
                 //el.attr('timetext', event.title);
                 //$('#timetext').text(event.cours_name);
                 $(el).find('#timetext').append(' '+event.event_type_name);

@@ -66,7 +66,7 @@
                         <i class="fa-solid fa-check"></i>  Premium Access activated.
                       </div>
                   <?php }else{ ?>
-                    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Activate your Premium access and enable all features <a href="{{ route('subscription.upgradePlan') }}"> Upgrade now! </a></div>
+                    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Activate your Premium access and enable all features <a href="{{ route('subscription.upgradePlan') }}"> Choose a plan and upgrade now! </a></div>
                   <?php } ?>
                    
                     @endif
@@ -79,7 +79,7 @@
     <div class="card">
       <div class="card-body bg-tertiary">
 
-        <div class="h5 pt-2" style="color:#0075bf;">My plan detail</div>
+        <div class="h4 pt-2" style="color:#0075bf;">My Plan</div>
 
         <?php if($product_object){?>
           @if($subscriber->cancel_at_period_end)
@@ -136,9 +136,9 @@
             <tr>
                 <?php 
                   if($AppUI->isSchoolAdmin()){
-                      echo '<td width="250"><b>Trail Valid Until</b></td>';
+                      echo '<td><b>Trail Valid Until</b></td>';
                   }else{
-                      echo '<td width="250"><b>Basic Valid Until</b></td>';
+                      echo '<td><b>Basic Valid Until</b></td>';
                   }
                 ?>
                 <td>
@@ -152,10 +152,10 @@
               <tr>
                 <?php {
                   if($subscription['status'] === 'trialing') {
-                    echo '<td width="250"><b>Next payment</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
+                    echo '<td><b>Next payment</b></td><td>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
                   }
                   if($subscription['status'] === 'active') {
-                    echo '<td width="250"><b>Next payment</b></td><td>' . date('M j, Y', $subscription['current_period_end']).'</td>';
+                    echo '<td><b>Next payment</b></td><td>' . date('M j, Y', $subscription['current_period_end']).'</td>';
                   }
                   }
                 ?>
@@ -186,14 +186,14 @@
 
         <div class="mt-2 btns-plan">
           <?php if(!empty($subscriber)) { ?>
-            <a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}"><i class="fa-solid fa-arrow-right"></i> Upgrade Now !</a>
+            <a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}">Choose a Plan</a>
             @if($subscriber->cancel_at_period_end === true || $subscriber->cancel_at_period_end === "true")
             <a class="btn btn-warning btn-md disabled" href="#"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription !</a>
             @else
             <a class="btn btn-warning btn-md" href="#" id="buttonCancelSubscription"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription !</a>
             @endif
           <?php } else { ?>
-            <a class="btn btn-success" href="{{ route('subscription.upgradePlan') }}"><i class="fa-solid fa-arrow-right"></i> Upgrade Now !</a>
+            <a class="btn btn-success" href="{{ route('subscription.upgradePlan') }}"><i class="fa-regular fa-bell fa-bounce"></i>  Choose a Plan & Upgrade Now !</a>
           <?php } ?>
         </div>
 

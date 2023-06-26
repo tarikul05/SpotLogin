@@ -31,7 +31,7 @@
 			<!-- user email check start -->
 			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
-				<div class="form-group row">
+				<div class="form-group row studentFind">
 					<div class="text-center">
 						<h6 class="text-left" for="email" id="email_caption"><small>{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i></small></h6>
 					</div>
