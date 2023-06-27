@@ -893,6 +893,14 @@ button#save_btn_more i {
 	margin-top: 5px;
 }
 
+.btn_actions .section_header_class .card .card-body .btn {
+	margin-bottom:5px;
+}
+
+.alert {
+	min-height: 74px;
+}
+
 @media only screen and (max-width: 992px) {
 
 	.btn_actions {
@@ -901,6 +909,7 @@ button#save_btn_more i {
 		border-radius:0px;
 		position: fixed;
 		z-index: 9999;
+		margin-bottom:3px;
 	}
 
 	.btn_actions .section_header_class .card .card-body
@@ -922,6 +931,7 @@ button#save_btn_more i {
 		border-radius:0;
 		position: fixed;
 		z-index: 9999;
+		margin-bottom:3px;
 	}
 
 	.btn_actions .section_header_class .card .card-body

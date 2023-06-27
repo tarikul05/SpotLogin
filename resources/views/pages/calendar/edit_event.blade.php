@@ -27,7 +27,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
 					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
+						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Event') }}</label>
 					</div>
 				</div>    
 			</div>          
@@ -36,17 +36,22 @@
 
 		<nav style="margin-bottom:0; padding-bottom:0;">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Event Information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
 
 	</header>
 
+	<form class="form-horizontal" id="edit_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="edit_event" role="form">
+
+	<div class="row">
+		<div class="col-lg-10">
+
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="edit_event" method="post" action="{{ route('event.editAction',['school'=> $schoolId,'event'=> $eventId]) }}"  name="edit_event" role="form">
+				
 					@csrf
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
@@ -56,7 +61,7 @@
 						<div class="card">
 							<div class="card-body bg-tertiary">
 						<div class="row">
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
 									<div class="col-sm-7">
@@ -228,7 +233,7 @@
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
 							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-12">
 										<div class="form-group row">
@@ -293,15 +298,17 @@
 									</div>
 								</div>
 							</div>
+							<div class="d-block d-sm-none">
 							@if(strtotime($date_end) < strtotime($current_time))
-							<div id="button_lock_and_save_div" class="alert alert-info" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text">Please validate the event to make it available for invoicing</label>
-								<input type="submit" class="btn btn-sm btn-info button_lock_and_save"  style="position:absolute;top:10px;right:10px;" name="validate" value="Validate">
+							<div id="button_lock_and_save_div" class="alert alert-info text-center" role="alert"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+								<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100"  name="validate" value="Validate">
 							</div>
 							@endif
+							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
@@ -315,7 +322,7 @@
 						</div>
 					</div>
 					</fieldset>
-					<div class="btn_area page_header_class" style="position: fixed; top:101px; z-index:9999; right:0; padding-right:85px;">
+					<!--<div class="btn_area page_header_class" style="position: fixed; top:101px; z-index:9999; right:0; padding-right:85px;">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
 						@if($AppUI->person_id == $eventData->teacher_id)
 							@can('self-delete-event')
@@ -330,11 +337,57 @@
 							@endcan
 							@endif
 						@endif
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-					</div>
-				</form>
+						
+					</div>-->
+				
 			</div>
 		</div>
+
+	</div>
+	<div class="col-lg-2">
+
+		<div class="col-lg-2 btn_actions" style="position: fixed; right: 0;">
+			<div class="section_header_class">
+				<label><br></label>
+			</div>
+			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
+				<div class="card-body d-flex flex-wrap">
+					<button id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
+					<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda">Back</a>
+					@if($AppUI->person_id == $eventData->teacher_id)
+						@can('self-delete-event')
+							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+						@endcan
+					@else
+						@if(($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+						@else
+							@can('self-delete-event')
+								<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+							@endcan
+						@endif
+					@endif
+
+					<div class="d-none d-sm-block">
+						@if(strtotime($date_end) < strtotime($current_time))
+						<div id="button_lock_and_save_div" class="alert alert-info mt-3 text-center" role="alert">
+							<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+							<button id="save_btn_more" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate">{{ __('Validate') }}</button>
+						</div>
+						@endif
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	</div>
+
+</form>
+
 	</div>
 @endsection
 

@@ -280,7 +280,8 @@ class LessonsController extends Controller
                     Event::validate(['event_id'=>$eventId],1);
                     return Redirect::to($schoolId.'/view-event/'.$eventId);
                 }else{
-                 return back()->with('success', __('Successfully Registered'));
+                 //return back()->with('success', __('Successfully Registered'));
+                 return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
                 }
                 
             }  
@@ -660,7 +661,8 @@ class LessonsController extends Controller
                     Event::validate(['event_id'=>$lessonlId],1);
                     return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
                 }else{
-                    return back()->with('success', __('Successfully Registered'));
+                    //return back()->with('success', __('Successfully Registered'));
+                    return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
                 } 
         }  
         }catch (Exception $e) {
