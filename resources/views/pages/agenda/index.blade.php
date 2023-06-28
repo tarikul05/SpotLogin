@@ -39,7 +39,7 @@
 					<div class="col-lg-4 col-12 header-area">
 							<div class="page_header_class pt-1">
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
-                                  {{__('Agenda')}}:  
+                                  {{__('Agenda')}} : 
                                 </h1> 
                                 <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">

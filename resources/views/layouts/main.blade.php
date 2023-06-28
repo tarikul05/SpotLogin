@@ -41,7 +41,7 @@
     @include('elements.header_menu')
 </section>
 
-<section class="" id="main-content">
+<section class="pt-2" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
     <div id="pageloader">

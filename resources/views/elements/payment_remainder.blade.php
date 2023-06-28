@@ -11,7 +11,7 @@
         </div>
 
         <div class="d-block d-sm-none">
-            <div class="text-success pt-3">
+            <div class="text-success pt-3 text-center">
                 <p class="text small">
                     Trial period valid <?php echo $day_diff ?> days <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> Upgrade now!</a>
                 </p>

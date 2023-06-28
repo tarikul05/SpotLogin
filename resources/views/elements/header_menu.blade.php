@@ -1,9 +1,47 @@
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
-        <div class="container-fluid pl-1 pr-1">
-            <a href="{{  route('agenda') }}" class="navbar-brand">
-                <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
+        <div class="container-fluid paddingLogo">
+
+            <a href="{{  route('agenda') }}" class="navbar-brand d-none d-sm-block">
+                <img src="{{ asset('img/logo.png') }}" width="50px" alt="SpotLogin">
             </a>
+
+            <a class="user_profile d-block d-sm-none" href="<?= $BASE_URL;?>/admin/profile-update">
+
+                <div style="position: relative; width:48px; font-size:10px; display:inline;">
+                        @if( $is_subscribed )
+                        <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:0px;">premium</span>
+                        @endif
+                        @if( !$is_subscribed )
+                            <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                <span class="badge bg-info d-none d-sm-block" style="position: absolute; right:0;">basic</span>
+                            <?php } else { ?>
+                                <span class="badge bg-warning d-none d-sm-block" style="position: absolute; right:0;">basic</span>
+                            <?php } ?>
+                        @endif
+                    <?php if (!empty($AppUI->profileImage->path_name)): ?>
+                        <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </div>
+
+                    <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
+                        @if( $is_subscribed )
+                            <span class="badge bg-success d-sm-none">premium</span>
+                        @endif
+                        @if( !$is_subscribed )
+                            <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                <span class="badge bg-info d-sm-none">basic</span>
+                            <?php } else { ?>
+                                <span class="badge bg-warning d-sm-none">basic</span>
+                            <?php } ?>
+                        @endif
+                    </span>
+                    
+                </a>
+
+
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
@@ -26,54 +64,59 @@
                         $manualInvoice = route('adminmanualInvoice',[$schoolId]);
                     }
                     @endphp
-                    <a href="{{ $url }}" class="nav-item nav-link active">{{ __('My Schedule')}}</a>
+
+                    <div class="d-block d-sm-none pt-3">
+                        
+                    </div>
+    
+                    <a href="{{ $url }}" class="nav-item nav-link active text-center mr-2"><i class="fa-solid fa-calendar-days"></i> <span class="d-none d-sm-block"></span> {{ __('My Schedule')}}</a>
                     
                     @can('schools-list')
                         <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
-                            <a href="{{ route('schools') }}" class="nav-item nav-link">{{ __('Schools') }}</a>
+                            <a href="{{ route('schools') }}" class="nav-item nav-link text-center mr-2">{{ __('Schools') }}</a>
                         <?php else: ?>
-                            <a href="{{ route('school-update') }}" class="nav-item nav-link">{{ __('School') }}</a>
+                            <a href="{{ route('school-update') }}" class="nav-item nav-link text-center mr-2">{{ __('School') }}</a>
                         <?php endif; ?>
                     @endcan
 
                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
-                        <a href="{{ route('updateTeacher') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
+                        <a href="{{ route('updateTeacher') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a> 
                     @endif
 
                     @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                         @can('teachers-list')
                             @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link">{{ __('Teachers') }}</a> 
+                               <a href="{{ route('teacherHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users-gear"></i> <span class="d-none d-sm-block"></span> {{ __('Teachers') }}</a> 
                             @endif
                         @endcan
                     @endif
 
                     @if($AppUI->isStudent())
-                        <a href="{{ route('updateStudent') }}" class="nav-item nav-link">{{ __('My Account') }}</a> 
+                        <a href="{{ route('updateStudent') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a> 
                     @endif
                     
 
                     @can('students-list')
                         @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                           <a href="{{ route('studentHome') }}" class="nav-item nav-link">{{ __('Students') }}</a> 
+                           <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a> 
                         @endif
                     @endcan
                     <div class="nav-item dropdown">
-                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ __('Invoicing') }}</a>
+                         <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
 
                         @if(!$AppUI->isStudent())
-                            <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __("Invoice's List") }}</a>
+                            <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoice's List") }}</a>
    
                             <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                <a href="{{ $urlStudentInvoice }}" class="dropdown-item">{{ __("Student's Invoice") }}</a>
+                                <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's Invoice") }}</a>
                             <?php } ?>
                             @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                <a href="{{ $urlTeacherInvoice }}" class="dropdown-item">{{ __("Teacher's Invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                             @endif
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                    <a href="{{ $manualInvoice }}" class="dropdown-item">{{ __('Manual Invoice') }}</a>
+                                    <a href="{{ $manualInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
                              <?php } ?>
                             @endif
                         @else
@@ -91,6 +134,8 @@
                         </div>
                     </div>
                     @endif
+
+                    <a class="nav-item nav-link d-sm-none text-center text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
                     
                     @unlessrole('superadmin')
                         @unlessrole('student')
@@ -101,9 +146,14 @@
                     @endunlessrole
     
                 </div>
+
+                <!--Payment Reminded-->
                 @include('elements.payment_remainder')
-                <div class="navbar-nav ms-auto user-area">
+
+                <div class="navbar-nav ms-auto user-area d-none d-sm-block">
+
                     <?php if (!empty($AppUI['id'])): ?>
+                    <div class="d-flex align-items-center">
                         <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
 
                         <div style="position: relative; width:48px; font-size:10px; display:inline;">
@@ -170,9 +220,10 @@
                                 @endcan
 
 
-                                <a class="dropdown-item" href="/logout">{{ __('Logout') }}</a>
+                                <a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('Logout') }}</a>
                             </div>
                         </div>
+                    </div>
                     <?php endif; ?>
                 </div>
             </div>

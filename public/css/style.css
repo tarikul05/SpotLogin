@@ -21,12 +21,17 @@
 	color: #fff;
 }
 
+a {
+	text-decoration: none;
+}
+
 span.admin_name {
 	font-size: 18px;
 	color: #fff;
 	line-height: 50px;
 	font-weight: 200;
 	margin-right: 10px;
+	text-decoration: none;
 }
 
 span.admin_name .badge {
@@ -455,6 +460,7 @@ table.tc_template .detail_header {
 
 #nav-tab .nav-link:hover {
 	border: 0px;
+	background-color: #3b75bf;
 }
 
 #nav-tab .nav-link.active:hover {
@@ -497,13 +503,15 @@ table.tc_template .detail_header {
 .dropdown-menu.list.show {
 	display: block;
 	background: #10335f;
+	border-radius: 0 0 8px 8px;
 	max-width: 180px;
-	margin-top: 0px;
+	margin-top: 2px;
 	right: 0;
 	left: auto;
 	padding-top: 0;
 	padding-bottom: 0;
 }
+
 
 .dropdown-menu.header a,
 .dropdown-menu.list a {
@@ -520,6 +528,7 @@ table.tc_template .detail_header {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+
 
 .dro_set {
 	width: 26px;
@@ -540,6 +549,7 @@ table.tc_template .detail_header {
 	transition: all 0.3s ease;
 	display: block;
 	background: #0075bf;
+	border-radius: 0 0 8px 8px;
 }
 
 .dropdown-toggle::after {
@@ -1016,8 +1026,9 @@ button#save_btn_more i {
 		width: 100%;
 		flex-direction: row;
 		position: unset;
+		margin-top:0;
 	}
-
+	
 	input#search_text {
 		max-width: 68%;
 		float: left;
@@ -2323,8 +2334,7 @@ a.btn.btn-theme-success.add_teacher_btn {
 
 
 .user-area {
-    display: flex;
-    align-items: center;
+text-align: center;
 }
 
 /*

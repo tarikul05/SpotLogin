@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
   <!-- fontawesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
   <!-- Theme style -->
@@ -40,9 +40,9 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
-    <div class="container-fluid body">
+    <div class="container-fluid pl-4 pr-4">
       <a class="navbar-brand" href="/">
-        <img src="{{ asset('img/logo.png') }}" width="36">
+        <img src="{{ asset('img/logo.png') }}" width="50">
       </a>
       <select id="setLan" class="selectpicker ms-auto" data-width="fit" >
         @foreach ($language as $key => $lan)
@@ -59,19 +59,19 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2">
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn" href="#ourSolutions">{{ __('Our solutions') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#ourSolutions"><i class="fa-solid fa-code-fork"></i><span class="d-none d-sm-block" style="height:0;"></span> {{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fa-solid fa-lock"></i><span class="d-none d-sm-block"></span> {{ __('Login') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal"><i class="fa-solid fa-user-plus"></i><span class="d-none d-sm-block"></span> {{ __('Sign up') }}</a>
           </li>
-          <li class="nav-item">
+          <!--<li class="nav-item">
             <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </div>

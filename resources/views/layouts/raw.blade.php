@@ -41,7 +41,7 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
-    <div class="container-fluid">
+    <div class="container-fluid pl-4 pr-4">
       <a class="navbar-brand" href="/">
         <img src="{{ asset('img/logo.png') }}" width="36">
       </a>
