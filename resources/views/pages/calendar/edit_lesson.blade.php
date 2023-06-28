@@ -405,7 +405,7 @@
 					@if(strtotime($date_end) < strtotime($current_time))
 					<div id="button_lock_and_save_div" class="alert alert-info mt-5 text-center" role="alert">
 						<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-						<button id="save_btn_more" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate">{{ __('Validate') }}</button>
+						<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
 					</div>
 					@endif
 				</div>
@@ -673,16 +673,20 @@ $('.student_attn').change(function (e) {
 		type: 'POST',
 		dataType: 'json',
 		beforeSend: function( xhr ) {
-			$("#pageloader").show();
+			$("#pageloader").fadeIn();
 		},
 		success: function(response){	
 			if(response.status == 1){
-				
+				$("#pageloader").fadeOut();
 			}
 		},
 		complete: function( xhr ) {
-			$("#pageloader").hide();
-		}
+			
+		},
+		error: function (ts) { 
+				$("#pageloader").fadeOut();
+                ts.responseText+'-'+errorModalCall('{{ __("Lesson validation error ")}}');
+            }
 	})
 			            
 }); 
@@ -784,7 +788,7 @@ $('#edit_lesson').on('submit', function() {
 	}
 
 	if(endDate == ''){
-		var errMssg = 'Ednd date required';
+		var errMssg = 'End date required';
 		$('#end_date').addClass('error');
 	}else{
 		$('#end_date').removeClass('error');

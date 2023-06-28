@@ -372,7 +372,7 @@
 						@if(strtotime($date_end) < strtotime($current_time))
 						<div id="button_lock_and_save_div" class="alert alert-info mt-3 text-center" role="alert">
 							<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-							<button id="save_btn_more" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate">{{ __('Validate') }}</button>
+							<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
 						</div>
 						@endif
 					</div>

@@ -18,16 +18,11 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
 					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Event') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
+						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Event') }}</label>
 					</div>
 				</div>    
 				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="text-right">
-						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn" style="position: fixed; right:85px; top:101px;"> 
-							<i class="fa fa-arrow-left"></i>
-							{{ __('Back')}}
-						</a>
-					</div>
+					
 				</div>
 			</div>          
 	
@@ -35,12 +30,15 @@
 
 		<nav style="margin-bottom:0; padding-bottom:0;">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Event information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
 
 	</header>
+
+	<div class="row">
+		<div class="col-lg-10">
 
 		<!-- Tabs content -->
 		<div class="tab-content view_part" id="ex1-content">
@@ -49,7 +47,7 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Event information') }}</label>
 						</div>
-						@if((($AppUI->person_id == $eventData->teacher_id) || (($eventData->event_invoice_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
+						@if((($AppUI->person_id == $eventData->teacher_id) || (  ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This event is blocked, but it can still be modified by first clicking the unlock button.</label>
 								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
@@ -60,83 +58,71 @@
 						<div class="card">
 							<div class="card-body bg-tertiary">
 						<div class="row">
-							<div class="col-md-7 offset-md-2">
-							<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($locations->title) ? $locations->title : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Title') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventData->title) ? $eventData->title : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Professor') }} :</label>
-									<div class="col-sm-7">
-										{{!empty($professors->full_name) ? $professors->full_name : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Student') }} :</label>
-									<div class="col-sm-7">
-
-									<?php $i=1; $count = count($studentOffList); 
-										foreach($studentOffList as $student){
-											echo $student->nickname;
-											if($i != $count){
+							<div class="col-md-12">
+								<div class="table-responsive">
+									<table class="table table-stripped table-hover">
+									  <tbody>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Location') }} :</th>
+										  <td class="col-sm-7">{{ !empty($locations->title) ? $locations->title : '-' }}</td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Title') }} :</th>
+										  <td class="col-sm-7">{{ !empty($eventData->title) ? $eventData->title : '-' }}</td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Professor') }} :</th>
+										  <td class="col-sm-7">{{ !empty($professors->full_name) ? $professors->full_name : '-' }}</td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Student') }} :</th>
+										  <td class="col-sm-7">
+											<?php $i=1; $count = count($studentOffList);
+											foreach($studentOffList as $student){
+											  echo $student->nickname;
+											  if($i != $count){
 												echo ', ';
+											  }
+											  $i++;
 											}
-										$i++;
-										}
-									?>	
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Start date') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('End Date') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : ''; }}
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('All day') }} :</label>
-									<div class="col-sm-7">
-										{{ !empty($eventData->fullday_flag) ? 'Yes' : 'No' }}
-									</div>
-								</div>
-								@if($priceShow)
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left">{{__('Currency') }} :</label>
-										<div class="col-sm-7">
-											{{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }}
-										</div>
-									</div>
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per event)') }} :</label>
-										<div class="col-sm-7">
-											{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '' }}
-										</div>
-									</div>
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left">{{__('Student price (per student)') }} :</label>
-										<div class="col-sm-7">
-											{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : '' }}
-										</div>
-									</div>
-								@endif
-							</div>
+											?>  
+										  </td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Start date') }} :</th>
+										  <td class="col-sm-7">{{ !empty($date_start) ? date('l jS F-Y', strtotime($date_start)) : '-' }}</td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('End Date') }} :</th>
+										  <td class="col-sm-7">{{ !empty($date_end) ? date('l jS F-Y', strtotime($date_end)) : '-' }}</td>
+										</tr>
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('All day') }} :</th>
+										  <td class="col-sm-7">{{ !empty($eventData->fullday_flag) ? 'Yes' : 'No' }}</td>
+										</tr>
+										@if($priceShow)
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Currency') }} :</th>
+										  <td class="col-sm-7">{{ !empty($eventData->price_currency) ? $eventData->price_currency : '-' }}</td>
+										</tr>
+										@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Teacher price (per event)') }} :</th>
+										  <td class="col-sm-7">{{ !empty($eventData->price_amount_buy) ? $eventData->price_amount_buy : '-' }}</td>
+										</tr>
+										@endif
+										<tr>
+										  <th class="col-lg-3 col-sm-3 text-left">{{__('Student price (per student)') }} :</th>
+										  <td class="col-sm-7">{{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : '-' }}</td>
+										</tr>
+										@endif
+									  </tbody>
+									</table>
+								  </div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Attendance') }}</label>
 							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-12">
 										<div class="form-group row">
@@ -200,13 +186,13 @@
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
 							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-7">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left">{{__('Description') }} :</label>
 										<div class="col-sm-7 descrip">
-											{{ !empty($eventData->description) ? $eventData->description : ''; }}
+											{{ !empty($eventData->description) ? $eventData->description : 'no description.'; }}
 										</div>
 									</div>
 									</div>
@@ -218,7 +204,28 @@
 					</fieldset>
 					<!--<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>-->
 			</div>
+
+
 		</div>
+	</div>
+	<div class="col-lg-2">
+
+		<div class="col-lg-2 btn_actions" style="position: fixed; right: 0;">
+			<div class="section_header_class">
+				<label><br></label>
+			</div>
+			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
+				<div class="card-body d-flex flex-wrap">
+					<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<i class="fa fa-arrow-left"></i>
+						{{ __('Back')}}
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
 	</div>
 @endsection
 
@@ -240,7 +247,7 @@
             type: 'POST',
             dataType: 'json',
             beforeSend: function( xhr ) {
-                $("#pageloader").show();
+				$("#pageloader").fadeIn();
             },
             success: function (result) {
                 status = result.status;
@@ -258,9 +265,10 @@
                 }
             },   //success
             complete: function( xhr ) {
-                $("#pageloader").hide();
+				
             },
             error: function (ts) { 
+				$("#pageloader").fadeOut();
                 ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
         }); //ajax-type            
