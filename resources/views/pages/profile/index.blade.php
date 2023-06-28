@@ -546,7 +546,15 @@
                     <i class="fas fa-exclamation-circle fa-5x text-danger"></i> <!-- Utilisez l'icône d'alerte ou d'information souhaité -->
                 </div>
                 <p class="text-center mt-3">Do you really want to cancel your subscription?<br>
-                <small>(Your premium access will be valid until <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>)</small>
+                <small>(Your premium access will be valid until 
+
+                  @if($subscriber->status === 'active')
+                  <?php echo date('M j, Y', $subscription['current_period_end']); ?>
+                  @else
+                  <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>
+                  @endif
+                  
+                  )</small>
                 </p>
               <?php } ?>
             </div>

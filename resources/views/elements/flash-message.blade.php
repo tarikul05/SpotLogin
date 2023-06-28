@@ -1,3 +1,5 @@
+<div class="alertMessages">
+
 @if ($message = Session::get('success'))
 
 <div id="alert-container-success" class="alert alert-dismissible alert-success alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
@@ -64,6 +66,8 @@
     </div>
     @endforeach
 @endif
+
+</div>
 
 <script>
     setTimeout(function() {

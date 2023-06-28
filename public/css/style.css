@@ -897,7 +897,7 @@ button#save_btn_more i {
 	margin-bottom:5px;
 }
 
-.alert {
+.alertMessages .alert {
 	min-height: 74px;
 }
 
