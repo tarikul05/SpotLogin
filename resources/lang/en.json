@@ -318,7 +318,7 @@
     "max 255 character will suppor": "max 255 character will suppor",
     "now": "now",
     "of payments and invoices": "of payments and invoices",
-    "password": "password",
+    "password": "Password",
     "password not matched": "password not matched",
     "per event": "per event",
     "reminder_email_unpaid": "reminder email unpaid",
@@ -343,5 +343,6 @@
     "your different fees": "your different fees",
     "your students profile": "your students profile",
     "Sign up now and take advantage of a 90-free-day trial period": "Sign up now and take advantage of a 90-free-day trial period",
-    "Free Trial": "Free Trial"
+    "Free Trial": "Free Trial",
+    "Login ID": "Login ID"
 }
