@@ -66,19 +66,19 @@
             <a class="px-2 nav-link login_btn text-center" href="#ourSolutions">{{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }} <span class="d-sm-none">Now!</span></a>
           </li>
           <!--<li class="nav-item">
             <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
           </li>-->
         </ul>
 
-        <div class="alert alert-info mt-4 d-block d-sm-none" style="opacity:.8;">
+        <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;">
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
-          Get <b>90 days</b> Free-Trial with all features access
+          Get <b>90 days</b> Free-Trial<br>with all features access
         </div>
         
       </div>

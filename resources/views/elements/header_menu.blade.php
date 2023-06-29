@@ -16,9 +16,9 @@
                             @endif
                             @if( !$is_subscribed )
                                 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                    <span class="badge bg-info" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-info p-1" style="position: absolute; right:0px; top:-15px; padding:2px!important;">basic</span>
                                 <?php } else { ?>
-                                    <span class="badge bg-warning" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-warning p-1" style="position: absolute; right:0px; top:-15px; padding:2px!important;">basic</span>
                                 <?php } ?>
                             @endif
                         <?php if (!empty($AppUI->profileImage->path_name)): ?>
