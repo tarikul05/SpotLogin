@@ -1415,13 +1415,15 @@ label#currency_alert_text {
     }
     img.admin_logo {
         border-radius: 90px;
-        width: 30px !important;
-        height: 30px !important;
-        margin-right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        margin-top:3px;
+        margin-right: 14px !important;
         float: left;
     }
     span.admin_name {
-        line-height: 31px !important;
+        padding-top:18px;
+        line-height: 40px !important;
         text-decoration: none;
     }
     .dropdown-menu.header a {

@@ -28,15 +28,17 @@ a {
 span.admin_name {
 	font-size: 18px;
 	color: #fff;
-	line-height: 50px;
+	line-height: 25px;
 	font-weight: 200;
-	margin-right: 10px;
+	margin-right: 15px;
 	text-decoration: none;
 }
 
 span.admin_name .badge {
 	padding:2px;
 	font-size:11px;
+	position: absolute;
+	top:-28px;
 }
 
 img.admin_logo {
@@ -460,7 +462,7 @@ table.tc_template .detail_header {
 
 #nav-tab .nav-link:hover {
 	border: 0px;
-	background-color: #3b75bf;
+	/*background-color: #3b75bf;*/
 }
 
 #nav-tab .nav-link.active:hover {
@@ -941,6 +943,21 @@ button#save_btn_more i {
 }
 
 @media only screen and (max-width: 768px) {
+
+	span.admin_name {
+		font-size: 16px;
+		color: #fff;
+		line-height: 45px;
+		font-weight: 200;
+		margin-right: 10px;
+		text-decoration: none;
+		margin-right: 10px;
+	}
+
+	span.admin_name .badge {
+		position: absolute;
+		top:-18px;
+	}
 
 	.btn_actions {
 		width: 100%;
@@ -2410,8 +2427,6 @@ text-align: center;
 			opacity: 0;
 		}
 	}
-
-	
 
 	.badgePremium {
 		display: none;

@@ -6,40 +6,33 @@
                 <img src="{{ asset('img/logo.png') }}" width="50px" alt="SpotLogin">
             </a>
 
-            <a class="user_profile d-block d-sm-none" href="<?= $BASE_URL;?>/admin/profile-update">
+     
 
-                <div style="position: relative; width:48px; font-size:10px; display:inline;">
-                        @if( $is_subscribed )
-                        <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:0px;">premium</span>
-                        @endif
-                        @if( !$is_subscribed )
-                            <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                <span class="badge bg-info d-none d-sm-block" style="position: absolute; right:0;">basic</span>
-                            <?php } else { ?>
-                                <span class="badge bg-warning d-none d-sm-block" style="position: absolute; right:0;">basic</span>
-                            <?php } ?>
-                        @endif
-                    <?php if (!empty($AppUI->profileImage->path_name)): ?>
-                        <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
-                    <?php else: ?>
-                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
-                    <?php endif; ?>
-                </div>
+                <a class="user_profile d-block d-sm-none" href="<?= $BASE_URL;?>/admin/profile-update">
 
-                    <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
-                        @if( $is_subscribed )
-                            <span class="badge bg-success d-sm-none">premium</span>
-                        @endif
-                        @if( !$is_subscribed )
-                            <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                <span class="badge bg-info d-sm-none">basic</span>
-                            <?php } else { ?>
-                                <span class="badge bg-warning d-sm-none">basic</span>
-                            <?php } ?>
-                        @endif
-                    </span>
-                    
-                </a>
+                    <div style="position: relative; width:48px; font-size:10px; display:inline;">
+                            @if( $is_subscribed )
+                            <span class="badge bg-success p-1" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">premium</span>
+                            @endif
+                            @if( !$is_subscribed )
+                                <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                                    <span class="badge bg-info" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                                <?php } else { ?>
+                                    <span class="badge bg-warning" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                                <?php } ?>
+                            @endif
+                        <?php if (!empty($AppUI->profileImage->path_name)): ?>
+                            <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                        <?php else: ?>
+                            <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                        <?php endif; ?>
+                    </div>
+                        
+                        <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
+                            
+                        </span>
+                        
+                    </a>
 
                 <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="sr-only">Toggle navigation</span>
