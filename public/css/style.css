@@ -447,7 +447,7 @@ table.tc_template .detail_header {
 }
 
 #nav-tab .nav-link {
-	margin-right: 15px;
+	margin-right: 20px;
 	color: #657e8e;
 	border-left: 0px solid transparent;
 	border-right: 0px solid transparent;
@@ -911,6 +911,13 @@ button#save_btn_more i {
 	min-height: 74px;
 }
 
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 @media only screen and (max-width: 992px) {
 
 	.btn_actions {
@@ -940,7 +947,7 @@ button#save_btn_more i {
 		bottom:0px;
 		border-radius:0;
 		position: fixed;
-		z-index: 9999;
+		z-index: 999;
 		margin-bottom:3px;
 	}
 
@@ -2332,7 +2339,6 @@ a.btn.btn-theme-success.add_teacher_btn {
 ***/
 
 
-
 .user-area {
 text-align: center;
 }
@@ -2362,6 +2368,50 @@ text-align: center;
 }
 
 @media only screen and (max-width: 767px) {
+
+	.custom-collapse {
+		position: fixed;
+		top: 60px;
+		left: 0;
+		height: 100vh;
+		width: 100%;
+		background-color: transparent;
+		display: none;
+		z-index: 9999;
+	}
+	
+	.custom-collapse.show {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		background-color: #152245; /* Couleur de fond du menu */
+		animation: fadeIn 0.3s ease;
+	}
+	
+	.custom-collapse.hide {
+		animation: fadeOut 0.3s ease forwards;
+	}
+	
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	
+	@keyframes fadeOut {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	
 
 	.badgePremium {
 		display: none;

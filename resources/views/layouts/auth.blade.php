@@ -44,6 +44,7 @@
       <a class="navbar-brand" href="/">
         <img src="{{ asset('img/logo.png') }}" width="50">
       </a>
+
       <select id="setLan" class="selectpicker ms-auto" data-width="fit" >
         @foreach ($language as $key => $lan)
             <option 
@@ -55,25 +56,33 @@
             >  {{ $lan->title }}</option>
         @endforeach
       </select>
+      
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse custom-collapse " id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2">
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#ourSolutions"><i class="fa-solid fa-code-fork"></i><span class="d-none d-sm-block" style="height:0;"></span> {{ __('Our solutions') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#ourSolutions">{{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fa-solid fa-lock"></i><span class="d-none d-sm-block"></span> {{ __('Login') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal"><i class="fa-solid fa-user-plus"></i><span class="d-none d-sm-block"></span> {{ __('Sign up') }}</a>
+            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
           </li>
           <!--<li class="nav-item">
             <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
           </li>-->
         </ul>
+
+        <div class="alert alert-info mt-4 d-block d-sm-none" style="opacity:.8;">
+          <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
+          Get <b>90 days</b> Free-Trial with all features access
+        </div>
+        
       </div>
+      
     </div>
   </nav>
 

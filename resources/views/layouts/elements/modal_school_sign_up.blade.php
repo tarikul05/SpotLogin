@@ -24,7 +24,7 @@
                             required>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="{{ __('username') }}" id="username" name="username"
+                        <input type="text" class="form-control" placeholder="{{ __('Choose an ID') }}" id="username" name="username"
                             required>
                     </div>
                     <div class="form-group">
