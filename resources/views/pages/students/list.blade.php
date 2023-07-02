@@ -11,11 +11,22 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid body students_list">
-   <table id="example" class="display" style="width:100%">
+  <div class="container-fluid body students_list mb-3">
+
+    <header class="panel-heading" style="border: none;">
+        <div class="row panel-row" style="margin:0;">
+            <div class="col-sm-12 col-xs-12 header-area pb-3"> 
+                <div class="page_header_class">
+                    <label id="page_header" name="page_header"><i class="fa-solid fa-users"></i> {{ __('Student\'s List') }}</label>
+                </div> 
+            </div>
+        </div>
+    </header>
+
+   <table id="example" class="table table-stripped table-hover" style="width:100%">
         <thead>
             <tr>
-                <th>{{ __('#') }}</th>
+                <!--<th>{{ __('#') }}</th>-->
                 <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
@@ -28,8 +39,8 @@
             @foreach($students as $student)
             
             <tr>
-                <td>{{ $student->id; }} </td>
-                <td>
+                <!--<td>{{ $student->id; }} </td>-->
+                <td class="pt-3">
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php elseif (!empty($student->user->profileImage->path_name)): ?>
@@ -38,12 +49,12 @@
                         <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                     <?php endif; ?>
                 </td>
-                <td>
+                <td class="pt-3">
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
                 
-                <td>{{ $student->email; }} </td>
-                <td>
+                <td class="pt-3">{{ $student->email; }} </td>
+                <td class="pt-2">
                     @if(!$student->user)
                         <span>{{ __('No') }}</span>
                         @can('students-sent-mail')
@@ -51,9 +62,9 @@
                               @method('post')
                               @csrf
                               @if(!$student->pivot->is_sent_invite)
-                                  <button  class="btn btn-sm btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                                  <button class="btn btn-xs btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                               @else
-                                  <button  class="btn btn-sm btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
+                                  <button class="btn btn-xs btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
                               @endif
                             </form>
                         @endcan
@@ -61,11 +72,11 @@
                          <span class="">{{$student->user->username}}</span>
                     @endif
                 </td>
-                <td>{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
                 @if($student->pivot->deleted_at)
                     <td>{{__('Deleted')}}</td>
                 @else
-                    <td>
+                    <td class="pt-3">
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-ellipsis-h txt-grey"></i>
@@ -159,6 +170,7 @@
                 $(element).parents('.form-group').append(error);
             },
             submitHandler: function (form) {
+                $("#pageloader").fadeIn("fast");
                 return true;
             }
         });

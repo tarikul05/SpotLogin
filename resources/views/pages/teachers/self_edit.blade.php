@@ -15,9 +15,9 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-12 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;"> 
+				<div class="col-sm-12 col-xs-12 header-area pb-3"> 
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information:') }} </label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }}</label>
 					</div> 
 				</div>
 				<!--<div class="col-sm-6 col-xs-12 btn-area">
@@ -26,10 +26,11 @@
 					</div>
 				</div>-->
 			</div>
-		</header>
-		<!-- Tabs navs -->
 
-		<nav>
+			
+	</header>
+
+		<nav cklass="subNav">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 					{{ __('Contact Information') }}
@@ -50,6 +51,8 @@
 		</nav>
 		<!-- Tabs navs -->
 
+	<!-- Tabs navs -->
+
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<input type="hidden" id="user_id" name="user_id" value="{{$teacher->user->id}}">
@@ -60,17 +63,10 @@
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 
 
-					@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Recent information') }}</label>
-						</div>
-
-						<div class="alert alert-info"><i class="fa-solid fa-check"></i> PREMIUM Access activated</div>
-					</fieldset>
-					@endif
-
-					<fieldset>
+		
+					<div class="row">
+					
+						<fieldset class="col-lg-10">
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
@@ -278,7 +274,7 @@
 										</div>
 									</div> -->
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
@@ -391,30 +387,33 @@
 							<div class="card">
 								<div class="card-body bg-tertiary">
 
-									
-							<div class="row">
-								<div class="col-md-6">
+
 									<div class="form-group row">
-
-										<label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="bank_name" name="bank_name" type="text"
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Payment preference') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+												<input class="form-control" id="bank_name" name="bank_name" type="text"
 												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+											</div>
 										</div>
-
 									</div>
+
 									@if($teacher == 'CA')
 									<div class="form-group row">
-										<label class="col-lg-12 col-sm-12 text-left" for="sstreet" id="etransfer_acc_div">{{ __('E-transfer email')}}:</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('E-transfer email') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-brands fa-canadian-maple-leaf"></i></span>
+												<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
 												<span class="etransfer_acc"></span>	
+											</div>
 										</div>
 									</div>
 									@endif
-								</div>	
-							</div>
+									
+
 
 								</div>
 							</div>
@@ -438,7 +437,19 @@
 						</div>
 					</fieldset>
 					
-					<button style="position: fixed; top:80px; right:85px; z-index:999;" type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+					<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+						<div class="section_header_class">
+						<label><br></label>
+						</div>
+						<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+							<div class="card-body">
+						<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			
 					
 				</form>
 			</div>
@@ -449,83 +460,86 @@
 						<label id="teacher_personal_data_caption">{{__('Sections and prices') }}<!--{{__('Number of students') }}--></label>
 					</div>
 
-					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>{{__('Type of course')}}</th>
-								<th>{{__('Type of billing')}}</th>
-								<!-- <th class="buy"><span>{{__('Teacher price') }}</span></th> -->
-								<th class="sell"><span>{{__('Student price') }}</span></th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach($eventCategory as $key => $category)
-							<tr style="background:lightblue;">
-								<td></td>
-								<td colspan="2"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
-								<!-- <td><label></label></td> -->
-								<td align="right" colspan="1">price/student/hour</td>
-							</tr>
-								@foreach($lessonPrices as $key => $lessionPrice)
-									<?php 
-									if ($lessionPrice->divider == 1) {
-										$textForTypeBilling = 'Private session';
-									}elseif ($lessionPrice->divider == 9999) {
-										$textForTypeBilling = 'Student more then 10';
-									}elseif ($lessionPrice->divider == -1) {
-										$textForTypeBilling = 'Fixed price';
-									}else{
-										$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
-									}
-									// 0 = hourly 1= fix
-									$studentPrice = $category->s_std_pay_type; 
+					<div class="row">
+					<div class="col-lg-10">
 
-									if ( $studentPrice ==1) { // fix and fix price
-										if ($lessionPrice->divider != -1) continue;
-									}elseif ($studentPrice == 0) { // hourly and hourly
-										 if ($lessionPrice->divider == -1) continue;
-									}else{
-										
-											
-									}
+						<div class="card">
+							<div class="card-body bg-tertiary">
 
-								 ?>
-								<tr>
-									<td>{{$lessionPrice->divider}}
-										<input type="hidden"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
-										>
-										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
-										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
-									</td>
-									<td>{{__('Lessons/Events')}}</td>
-									<td>{{ __($textForTypeBilling) }}</td>
+								<div class="table-responsive">
+									<table id="tariff_table_rate" class="table table-stripped table-hover">
+										<thead>
+											<tr>
+												<th><!--#--></th>
+												<th>{{__('Type of course')}}</th>
+												<th>{{__('Type of billing')}}</th>
+												<th class="sell"><span>{{__('Student price')}}</span></th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($eventCategory as $key => $category)
+											<tr style="background:lightblue;">
+												<td></td>
+												<td colspan="3"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
+											</tr>
+											@foreach($lessonPrices as $key => $lessionPrice)
+												<?php 
+												if ($lessionPrice->divider == 1) {
+													$textForTypeBilling = 'Private session';
+												} elseif ($lessionPrice->divider == 9999) {
+													$textForTypeBilling = 'Student more than 10';
+												} elseif ($lessionPrice->divider == -1) {
+													$textForTypeBilling = 'Fixed price';
+												} else {
+													$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+												}
+												
+												$studentPrice = $category->s_std_pay_type; 
+								
+												if ($studentPrice == 1) {
+													// fix and fix price
+													if ($lessionPrice->divider != -1) continue;
+												} elseif ($studentPrice == 0) {
+													// hourly and hourly
+													if ($lessionPrice->divider == -1) continue;
+												} else {
+													// Add condition here if needed for other cases
+												}
+												?>
+												<tr>
+													<td>
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
+														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
+													</td>
+													<td>{{__('Lessons/Events')}}</td>
+													<td>{{ __($textForTypeBilling) }}</td>
+													<td>
+														<input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
+													</td>
+												</tr>
+											@endforeach
+											@endforeach
+										</tbody>
+									</table>
+								</div>
 
-									<!-- <td>
-										<input type="text"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
-										style="text-align:right" class="form-control numeric float"
-										>
-									</td> -->
-									<td>
-										<input type="text"
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
-										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" 
-										class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1)  ? 'd-none' : '' ?>"
-										>
-									</td>
-								</tr>
-								@endforeach
-							@endforeach
-						</tbody>
-						</table>
+							</div>
+						</div>
 
-					
-						<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-theme-success teacher_save"><i class="fa fa-save"></i> {{ __('Save')}}</button>
+					</div>
+		
+						<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+							<div class="section_header_class">
+							</div>
+							<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+								<div class="card-body">
+							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
 					
 				</form>
 			</div>

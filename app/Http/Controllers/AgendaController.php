@@ -314,7 +314,7 @@ class AgendaController extends Controller
 
             // $events = array();
             foreach ($eventData as $key => $fetch) {
-                if (in_array($fetch->event_type, [50,51])) continue;
+                if (in_array($fetch->event_type, [50,51,100])) continue;
 
                 $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$timeZone);
                 $fetch->date_end = $this->formatDateTimeZone($fetch->date_end, 'long', 'UTC',$timeZone);

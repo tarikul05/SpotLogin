@@ -115,7 +115,7 @@
     "List of invoice(s)": "List of invoice(s)",
     "Location": "Location",
     "Logged In Successfully": "Logged In Successfully",
-    "Login": "login",
+    "Login": "Login",
     "Login Fail, pls check password": "Login Fail, pls check password",
     "Logo": "Logo",
     "Logout": "Logout",
@@ -149,7 +149,7 @@
     "PERSONNALIZE": "PERSONNALIZE",
     "PLAN": "PLAN",
     "Packaged": "Packaged",
-    "Parameters": "Parameters",
+    "Parameters": "Settings",
     "Password Must": "Password Must",
     "Password changed Successfully.": "Password changed Successfully.",
     "Payment": "Payment",
@@ -318,7 +318,7 @@
     "max 255 character will suppor": "max 255 character will suppor",
     "now": "now",
     "of payments and invoices": "of payments and invoices",
-    "password": "password",
+    "password": "Password",
     "password not matched": "password not matched",
     "per event": "per event",
     "reminder_email_unpaid": "reminder email unpaid",
@@ -341,5 +341,8 @@
     "with real time visibility of the planning, for you and your students": "with real time visibility of the planning, for you and your students",
     "www.sportogin.ch: Welcome! Activate account.": "www.sportogin.ch: Welcome! Activate account.",
     "your different fees": "your different fees",
-    "your students profile": "your students profile"
+    "your students profile": "your students profile",
+    "Sign up now and take advantage of a 90-free-day trial period": "Sign up now and take advantage of a 90-free-day trial period",
+    "Free Trial": "Free Trial",
+    "Login ID": "Login ID"
 }

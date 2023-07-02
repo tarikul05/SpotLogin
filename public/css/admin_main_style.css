@@ -139,7 +139,7 @@ div#ex1-content {
     padding: 0.375rem 0.25rem;
 }
 .navbar.navbar-expand-lg.navbar-dark.bgdarkblue.shadow.fixed-top .navbar-brand {
-    margin-right: 0.5rem !important;
+    margin-right: 0.2rem !important;
 }
 .navbar {
     position: relative;
@@ -159,13 +159,14 @@ div#ex1-content {
     border-width: 0 0 1px;
 }
 header.panel-heading {
-    margin: 40px 0;
-    padding-top: 1px;
-    padding-bottom: 5px;
-    top: 67px;
+    margin: 0px 0;
+    padding-top: 0px;
+    padding-bottom:10px;
+    top: 60px;
     position: sticky;
     z-index: 9;
     background: #fff;
+    width: 100%;
 }
 
 /********************ADMIN PANEL DEV CSS******************/
@@ -332,6 +333,7 @@ li.light-blue-txt.gilroy-bold {
     border: 0;
     max-height: 46px;
 }
+
 .custom-selection .dropdown-toggle::after {
     content: "\f078";
     font-family: "Font Awesome 5 Free";
@@ -1101,6 +1103,8 @@ label.profile_img_area {
 
 .content.agenda_page {
     margin-top: -29px;
+    padding-left:50px;
+    padding-right:50px;
     /* padding-top: 2px; */
 }
 
@@ -1246,7 +1250,16 @@ label#currency_alert_text {
     }
 }
 
+.paddingLogo {
+    padding-left:55px;
+}
+
 @media only screen and (max-width: 768px) {
+
+    .paddingLogo {
+        padding-left:0;
+    }
+
     .m-4 {
         margin: 0.5rem !important;
     }
@@ -1341,7 +1354,7 @@ label#currency_alert_text {
     }
     .btn-area .btn-group .btn,
     .btn-area .btn {
-        margin-top: 20px;
+        margin-top: 35px;
     }
     .dataTables_wrapper {
         position: relative;
@@ -1378,7 +1391,7 @@ label#currency_alert_text {
         font-size: 19px !important;
     }
     header.panel-heading {
-        margin: 40px 0 10px !important;
+        margin: 10px 0 0px !important;
     }
     .student_save {
         top: 0px;
@@ -1402,13 +1415,16 @@ label#currency_alert_text {
     }
     img.admin_logo {
         border-radius: 90px;
-        width: 30px !important;
-        height: 30px !important;
-        margin-right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        margin-top:3px;
+        margin-right: 14px !important;
         float: left;
     }
     span.admin_name {
-        line-height: 31px !important;
+        padding-top:18px;
+        line-height: 40px !important;
+        text-decoration: none;
     }
     .dropdown-menu.header a {
         text-align: left !important;
@@ -1477,9 +1493,17 @@ label#currency_alert_text {
     .ty_bill label.invoice_type_label {
         display: none;
     }
+    .content.agenda_page {
+        margin-top: -29px;
+        padding-left:0px;
+        padding-right:0px;
+        /* padding-top: 2px; */
+    }
 }
 .modal-content {border: 0px solid rgba(0, 0, 0, 0.2); width: 100%;}
 .modal-body {width: 100%;}
+
+
 .dropdown {
     position: relative;
     display: inline-block;
@@ -1528,4 +1552,29 @@ label#currency_alert_text {
     top: 50%; /* Ajout de cette ligne */
     left: 50%; /* Ajout de cette ligne */
     transform: translate(-50%, -50%); /* Ajout de cette ligne */
+  }
+
+  @media only screen and (max-width: 768px) {
+    .navbar-nav .nav-item {
+      height: 45px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1c255a;
+    }
+    .navbar-nav.user-area a.user_profile {
+        padding-top: 13px !important;
+        border-bottom: 1px solid #1c255a;
+    }
+
+    .btns-plan .btn {
+        width: 100%;
+        display: inline-block;
+        margin-bottom:5px;
+    }
+
+    #example_filter a {
+        padding:3px;
+        height: 20px;
+    }
+
+
   }

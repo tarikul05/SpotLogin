@@ -13,11 +13,11 @@
         <form id="login_form" name="login_form" method="POST" action="{{ route('login.submit') }}">
 
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Username" id="login_username" name="login_username" required>
+            <input type="text" class="form-control" placeholder="Your Login ID" id="login_username" name="login_username" required>
           </div>
           <div class="form-group">
             <div class="input-group" id="show_hide_password">
-              <input class="form-control" autocomplete="on" type="password" placeholder="Password" id="login_password" name="login_password" required>
+              <input class="form-control" autocomplete="on" type="password" placeholder="Your Password" id="login_password" name="login_password" required>
               <div class="input-group-addon">
                 <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
               </div>

@@ -18,10 +18,11 @@ use App\Models\AttachedFile;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Traits\CreatedUpdatedBy;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes,CreatedUpdatedBy;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles, SoftDeletes,CreatedUpdatedBy, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,7 +48,8 @@ class User extends Authenticatable
         'is_active',
         'is_firstlogin',
         'created_by',
-        'modified_by'
+        'modified_by',
+        'trial_ends_at',
     ];
 
     /**
@@ -146,7 +148,17 @@ class User extends Authenticatable
     public function isTeacherAdmin()
     {
 
-        return $this->hasAnyRole(['teachers_admin']);
+        return $this->hasAnyRole(['teachers_admin', 'single_coach_read_only', 'teacher_read_only']);
+    }
+
+    /**
+     * Check user has Teachers authority
+     * @return boolean
+     */
+    public function isTeacherReadOnly()
+    {
+
+        return $this->hasAnyRole(['single_coach_read_only', 'teacher_read_only']);
     }
 
     /**
@@ -197,6 +209,15 @@ class User extends Authenticatable
     {
 
         return $this->hasAnyRole(['student']);
+    }
+
+     /**
+     * Check user has read only
+     * @return boolean
+     */
+    public function isReadOnly()
+    {
+        return $this->hasAnyRole(['read_only']);
     }
 
      /**

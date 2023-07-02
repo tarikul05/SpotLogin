@@ -14,7 +14,7 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:25px;">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
 					<div class="page_header_class">
 						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Student Information:') }}</label>
 					</div>
@@ -31,7 +31,7 @@
 			<!-- user email check start -->
 			<form action="" class="form-horizontal" action="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',[$schoolId]) : route('student.create')}}" method="post" action="" role="form">
 				@csrf
-				<div class="form-group row">
+				<div class="form-group row studentFind">
 					<div class="text-center">
 						<h6 class="text-left" for="email" id="email_caption"><small>{{__('Student Find') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Enter email to auto-populate the page')}}"></i></small></h6>
 					</div>
@@ -59,7 +59,14 @@
 		<!-- Tabs navs -->
 
 		<!-- Tabs content -->
+
+	
+
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{ route('student.createAction') }}"  name="add_student" role="form">
+
+			<div class="row">
+				<div class="col-lg-10">
+
 		<input type="hidden" name="school_id" value="{{ $schoolId }}">
 		<input type="hidden" name="user_id" value="{{ !empty($exUser) ? $exUser->id : '' }}">
 		@csrf	
@@ -485,8 +492,25 @@
 					</div>
 				</div>
 		</div>
-		<button type="submit" style="position: fixed; top:80px; right:85px; z-index:999;" id="save_btn" name="save_btn" class="btn btn-theme-success student_save student_save_ext"><i class="fa fa-save"></i> {{ __('Save') }}</button>
-		</form>
+		
+	
+				</div>
+
+				<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+					<div class="section_header_class">
+						<label id="address_caption"><br></label>
+					</div>
+					<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+						<div class="card-body">
+							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+				
+	
+	</form>
 	{{-- @endif --}} 
 	</div>
 	<!-- success modal-->

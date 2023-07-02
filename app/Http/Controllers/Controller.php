@@ -140,8 +140,11 @@ class Controller extends BaseController
         
         try {
             $lang = 'en'; 
-            if ($data['country_code'] == "FR") {
-                $lang = "fr"; 
+
+            if (isset($data['country_code'])) {
+                if ($data['country_code'] == "FR") {
+                    $lang = "fr"; 
+                }
             }
             $emailTemplateExist = EmailTemplate::where([
                 ['template_code', $template_code],

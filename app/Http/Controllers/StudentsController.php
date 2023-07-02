@@ -142,9 +142,12 @@ class StudentsController extends Controller
         }
         DB::beginTransaction();
         try{
-            // dd($alldata);
+            //dd($alldata);
             if (!empty($alldata['email'])) {
-                $student = Student::where(['email'=> $alldata['email']])->first();
+                $student = Student::where('email', $alldata['email'])
+                    ->where('firstname', $alldata['firstname'])
+                    ->where('lastname', $alldata['lastname'])
+                    ->first();
             }else {
                 $student = false;
             }
@@ -248,7 +251,7 @@ class StudentsController extends Controller
                 }
 
                 // sent email for new studnet
-                if (config('global.email_send') == 1 && ($sentInvite == 1)) {
+                if (config('global.email_send') == 1 && ($sentInvite == "1")) {
                     $data = [];
                     $data['email'] = $alldata['email'];
                     $data['username'] = $data['name'] = $alldata['nickname'];
@@ -258,13 +261,13 @@ class StudentsController extends Controller
                         'school_id' => $schoolId,
                         'person_id' => $student->id,
                         'person_type' => 'App\Models\Student',
-                        'token' => Str::random(10),
+                        'token' => $alldata['_token'],
                         'token_type' => 'VERIFY_SIGNUP',
                         'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                     ];
                     $verifyUser = VerifyToken::create($verifyUser);
                     $data['token'] = $verifyUser->token;
-                    $data['url'] = route('add.verify.email',$data['token']); 
+                    $data['url'] = route('add.verify.email',$data['token']);
 
                     if ($this->emailSend($data,'sign_up_confirmation_email')) {
                         $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
@@ -285,7 +288,6 @@ class StudentsController extends Controller
             }
             
         }catch (Exception $e) {
-            // dd($e);
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }

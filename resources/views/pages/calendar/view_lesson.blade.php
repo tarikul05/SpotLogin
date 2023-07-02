@@ -18,16 +18,11 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-top:8px; padding-bottom:20px;">
 					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('lesson') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
+						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Lesson') }}</label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="pull-right btn-group">
-						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn" style="position: fixed; right:85px; top:101px;">  
-							<i class="fa fa-arrow-left"></i>
-							{{ __('Back')}}
-						</a>
-					</div>
+		
 				</div>   
 			</div>          
 
@@ -35,12 +30,16 @@
 
 		<nav style="margin-bottom:0; padding-bottom:0;">
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
+				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson information') }}</button>
 			</div>
 		</nav>
 		<!-- Tabs navs -->
 
 	</header>
+
+	
+	<div class="row">
+		<div class="col-lg-10">
 
 		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
 							
@@ -60,7 +59,7 @@
 						<div class="card">
 							<div class="card-body bg-tertiary">
 						<div class="row">
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 							<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Category') }} :</label>
 									<div class="col-sm-7">
@@ -132,7 +131,7 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Number of students)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
 										{{ !empty($lessonData->price_amount_buy) ? 'Group lessons for '.$lessonData->no_of_students.' students' : '' }}
 									</div>
@@ -148,7 +147,7 @@
 								<div class="card-body bg-tertiary">
 							<div class="row">
 								
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-12">
 										<div class="form-group row">
@@ -164,12 +163,14 @@
 																<th width="15%" style="text-align:left"></th>
 																@if($showPrice)
 																	<th width="10%" style="text-align:left;">
+																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<label id="row_hdr_buy" name="row_hdr_buy">{{ __('Teacher') }}</label>
-																	<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
+																	@endif
 																	</th>
 																	<th width="10%" style="text-align:center">
 																	<label id="row_hdr_sale" name="row_hdr_sale">{{ __('Student') }}</label>
-																	<label>({{ !empty($eventData->price_currency) ? $eventData->price_currency : '' }})</label>
+																	<label>{{ !empty($eventData->price_currency) ? '(' + $eventData->price_currency + ')' : '' }}</label>
 																	</th>
 																@endif
 															</tr>
@@ -181,7 +182,11 @@
 																</td>
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
 																@if($showPrice)
-																	<td>{{ $student->buy_price }}</td>
+																	<td>
+																		@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+																		{{ $student->buy_price }}
+																		@endif
+																	</td>
 																	<td style="text-align:center">{{ $student->sell_price }}</td>
 																@endif
 															</tr>
@@ -205,7 +210,7 @@
 							<div class="card">
 								<div class="card-body bg-tertiary">
 							<div class="row">
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-7">
 									<div class="form-group row">
@@ -226,6 +231,27 @@
 					<!--<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>-->
 			</div>
 		</div>
+
+
+	</div>
+	<div class="col-lg-2">
+
+		<div class="col-lg-2 btn_actions" style="position: fixed; right: 0;">
+			<div class="section_header_class">
+				<label><br></label>
+			</div>
+			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
+				<div class="card-body d-flex flex-wrap">
+					<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<i class="fa fa-arrow-left"></i>
+						{{ __('Back')}}
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
 	</div>
 @endsection
 
@@ -247,7 +273,7 @@
             type: 'POST',
             dataType: 'json',
             beforeSend: function( xhr ) {
-                $("#pageloader").show();
+                $("#pageloader").fadeIn();
             },
             success: function (result) {
                 status = result.status;
@@ -265,9 +291,10 @@
                 }
             },   //success
             complete: function( xhr ) {
-                $("#pageloader").hide();
+                //$("#pageloader").fadeOut();
             },
             error: function (ts) { 
+				$("#pageloader").fadeOut();
                 ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
         }); //ajax-type            
