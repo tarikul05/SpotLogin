@@ -296,9 +296,17 @@
                         ?>
                         <tr>
                             <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
-                            <td><?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?></td>
-                            <td align="right"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
-                            <td align="right">
+                            <td><?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
+                            <br>
+                            <?php 
+                            if($item->no_of_students == 1) {
+                                echo 'Private Lesson';
+                            } else {
+                                echo 'Group of ' . $item->no_of_students . ' students';
+                            } ?>
+                            </td>
+                            <td style="text-align: left;"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
+                            <td style="text-align: right;">
                             <?php 
                                 if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
                                     echo number_format($item->price_unit, '2');
@@ -336,6 +344,25 @@
                                 <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
                                 <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
                             </tr>
+
+                            <?php if($invoice_data->total_amount_discount != 0){ ?>
+                                <tr class="extra_col_sub">
+                                    <td colspan="2" style="text-align:right">
+                                        <?php 
+                                            if($invoice_data->invoice_type == 1){
+                                                echo '<b>Discount on lesson</b>';
+                                            }else if($invoice_data->invoice_type == 2){
+                                                echo '<b>Commission amount</b>';
+                                            }else{
+                                                echo '<b>Commission amount</b>';
+                                            }
+                                        ?>
+                                    </td>
+                                    <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_1 .' %' }}</b></span></td>
+                                    <td class="price" style="text-align:right">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
+                                </tr>
+                                <?php } ?>
+
                             <tr class="extra_col_sub">
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
@@ -355,9 +382,9 @@
                                     <td colspan="4"></td>
                                 </tr>
                                 <tr class="extra_col_sub">
-                                    <td colspan="2" style="text-align:right">{{ __('invoice_sub_total') }}</td>
-                                    <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
-                                    <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
+                                    <td colspan="2" style="text-align:right"><!--{{ __('invoice_sub_total') }}--></td>
+                                    <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
+                                    <td style="text-align:right"><!--{{ number_format($sub_total_event,'2') }}--></td>
                                 </tr>
                             <?php } ?>
                     </tbody>
@@ -386,23 +413,7 @@
                         ?>
                     <?php } ?>
 
-                    <?php if($invoice_data->total_amount_discount != 0){ ?>
-                    <tr class="extra_col">
-                        <td colspan="2" class="text">
-                            <?php 
-                                if($invoice_data->invoice_type == 1){
-                                    echo '<b>Discount amount</b>';
-                                }else if($invoice_data->invoice_type == 2){
-                                    echo '<b>Commission amount</b>';
-                                }else{
-                                    echo '<b>Commission amount</b>';
-                                }
-                            ?>
-                        </td>
-                        <td style="text-align:right"><span style="font-size:12px;">Discount on lesson <b>{{ $invoice_data->discount_percent_1 }}%</b></span></td>
-                        <td colspan="1" class="price">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
-                    </tr>
-                    <?php } ?>
+                   
 
                     <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount + $invoice_data->tax_amount ; ?>
                     <tr class="total_col">

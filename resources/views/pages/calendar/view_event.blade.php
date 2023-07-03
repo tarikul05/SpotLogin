@@ -50,7 +50,7 @@
 						@if((($AppUI->person_id == $eventData->teacher_id) || (  ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This event is blocked, but it can still be modified by first clicking the unlock button.</label>
-								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								<!--<button class="btn btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
 								<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
 					
 							</div>
@@ -131,8 +131,8 @@
 													<table id="attn_tbl" class="table">
 														<tbody>
 															<tr>
-																<th width="5%" style="text-align:left"></th>
-																<th width="15%" style="text-align:left">
+																<!--<th width="5%" style="text-align:left"></th>-->
+																<th width="40%" style="text-align:left">
 																<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left"></th>
@@ -154,7 +154,7 @@
 															</tr>
 															@foreach($studentOffList as $student)
 															<tr>
-																<td>{{ $student->student_id }}</td>
+																<!--<td>{{ $student->student_id }}</td>-->
 																<td>
 																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
 																</td>
@@ -215,11 +215,20 @@
 				<label><br></label>
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body d-flex flex-wrap">
-					<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
-						<i class="fa fa-arrow-left"></i>
+				<div class="card-body p-3 pb-3 text-center">
+					<a class="btn btn-sm btn-info w-100 text-white mb-2" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<i class="fa-solid fa-arrow-left"></i>
 						{{ __('Back')}}
 					</a>
+
+					@if((($AppUI->person_id == $eventData->teacher_id) || (  ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($eventData->is_locked ==1))
+
+						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>
+						<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
+
+					@endif
+
+
 				</div>
 			</div>
 		</div>

@@ -1576,5 +1576,9 @@ label#currency_alert_text {
         height: 20px;
     }
 
+    .lesson_table table {
+       display: block;
+    }
 
   }
+

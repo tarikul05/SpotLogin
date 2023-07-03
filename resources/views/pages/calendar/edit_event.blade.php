@@ -351,9 +351,13 @@
 				<label><br></label>
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body d-flex flex-wrap">
-					<button id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
-					<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda">Back</a>
+				<div class="card-body p-3 pb-3">
+					
+					<div class="row">
+						<div class="col-4">
+					<a class="btn btn-default mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
+						</div>
+						<div class="col-8">
 					@if($AppUI->person_id == $eventData->teacher_id)
 						@can('self-delete-event')
 							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
@@ -367,6 +371,10 @@
 							@endcan
 						@endif
 					@endif
+						</div>
+					</div>
+
+					<button id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
 
 					<div class="d-none d-sm-block">
 						@if(strtotime($date_end) < strtotime($current_time))
