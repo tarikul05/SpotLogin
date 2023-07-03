@@ -38,53 +38,40 @@ class StudentsImport implements ToModel, WithHeadingRow
     {
         // dd($row);
         $data = [
-            'email' => $row['email'],
-            'lastname' => $row['family_name'],
-            'firstname' => $row['firstname'],
-            'nickname' => $row['nickname'],
-            'gender_id' => strtolower($row['gender']) == 'male' ? 1 : (strtolower($row['gender']) == 'female' ? 2 : 3) ,
-            'licence_usp' => $row['licence'],
-            'comment' => $row['comment'],
+            'email' => !empty($row['email']) ? $row['email'] : 'student@sportlogin.app',
+            'lastname' => !empty($row['family_name']) ? $row['family_name'] : '',
+            'firstname' => !empty($row['firstname']) ? $row['firstname'] : '',
+            'nickname' => !empty($row['nickname']) ? $row['nickname'] : '',
+            'gender_id' => strtolower($row['gender']) == 'male' ? 1 : (strtolower($row['gender']) == 'female' ? 2 : 3),
+            'licence_usp' => !empty($row['licence']) ? $row['licence'] : '',
+            'comment' => !empty($row['comment']) ? $row['comment'] : '',
             'birth_date' => !empty($row['birth_date']) ? date('Y-m-d H:i:s',strtotime($row['birth_date'])) : null,
-            'street' => $row['street'],
-            'street_number' => $row['street_no'],
-            'zip_code' => $row['postal_code'],
-            'place' => $row['city'],
+            'street' => !empty($row['street']) ? $row['street'] : '',
+            'street_number' => !empty($row['street_no']) ? $row['street_no'] : '',
+            'zip_code' => !empty($row['postal_code']) ? $row['postal_code'] : '',
+            'place' => !empty($row['city']) ? $row['city'] : '',
 
-            'billing_street' => $row['billing_street'],
-            'billing_street_number' => $row['billing_street_no'],
-            'billing_zip_code' => $row['billing_postal_code'],
-            'billing_place' => $row['billing_city'],
+            'billing_street' => !empty($row['billing_street']) ? $row['billing_street'] : '',
+            'billing_street_number' => !empty($row['billing_street_no']) ? $row['billing_street_no'] : '',
+            'billing_zip_code' => !empty($row['billing_postal_code']) ? $row['billing_postal_code'] : '',
+            'billing_place' => !empty($row['billing_city']) ? $row['billing_city'] : '',
 
-            'father_phone' => $row['fathers_phone'],
-            'father_email' => $row['fathers_email'],
-            'mother_phone' => $row['mothers_phone'],
-            'mother_email' => $row['mothers_email'],
+            'father_phone' => !empty($row['fathers_phone']) ? $row['fathers_phone'] : '',
+            'father_email' => !empty($row['fathers_email']) ? $row['fathers_email'] : '',
+            'mother_phone' => !empty($row['mothers_phone']) ? $row['mothers_phone'] : '',
+            'mother_email' => !empty($row['mothers_email']) ? $row['mothers_email'] : '',
 
 
-            'mobile' => $row['students_phone'],
-            'email2' => $row['students_2nd_email'],
+            'mobile' => !empty($row['students_phone']) ? $row['students_phone'] : '',
+            'email2' => !empty($row['students_2nd_email']) ? $row['students_2nd_email'] : '',
         ];
 
             if (empty($row['email'])) {
-                $data['email'] = $this->valideChaine($row['firstname'] . '-' . $row['family_name']) . '@sportlogin.app';
+                $data['email'] = 'student@sportlogin.app';
             }
 
             $this->dataFormate($data);
 
-    }
-
-   public function valideChaine(string $chaineNonValide)
-    {
-      $chaineNonValide = preg_replace('`\s+`', '-', trim($chaineNonValide));
-      $chaineNonValide = str_replace("'", "-", $chaineNonValide);
-      $chaineNonValide = str_replace(",", "-", $chaineNonValide);
-      $chaineNonValide = preg_replace("`_+`", '-', trim($chaineNonValide));
-      $chaineValide=strtr($chaineNonValide,
-        "ÀÁÂàÄÅàáâàäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏ" .
-        "ìíîïÙÚÛÜùúûüÿÑñ",
-        "aaaaaaaaaaaaooooooooooooeeeeeeeecciiiiiiiiuuuuuuuuynn");
-      return ($chaineValide);
     }
 
     public function getMessage()
