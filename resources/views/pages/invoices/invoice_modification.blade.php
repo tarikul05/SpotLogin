@@ -99,7 +99,7 @@
                                     <tbody>
                                         <tr class="header_tbl">
                                             <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
-                                            <th width="40%"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
+                                            <th width="40%" style="text-align:right"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
                                             <th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
                                             <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
                                         </tr>
@@ -116,7 +116,14 @@
                                                 @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
-                                                    <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}</td>
+                                                    <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}<br>
+                                                        <?php 
+                                                        if($item->no_of_students == 1) {
+                                                            echo 'Private Lesson';
+                                                        } else {
+                                                            echo 'Group of ' . $item->no_of_students . ' students';
+                                                        } ?>
+                                                    </td>
                                                     @if ($item->unit == 0)
                                                         <td></td>
                                                     @else
@@ -223,7 +230,7 @@
                                             
                                                 <tr>
                                                     <td colspan="2" style="text-align:right">Total events: </td>
-                                                    <td style="text-align:right">{{$sub_total_min_event}} minutes</td>
+                                                    <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                 </tr>
                                             @endif

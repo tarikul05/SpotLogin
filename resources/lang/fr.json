@@ -33,7 +33,7 @@
     "Choose an image ...": "Choisissez une image ...",
     "City": "Ville",
     "Coach": "Professeur",
-    "Coach off": "Entraîneur désactivé",
+    "Coach off": "Entraîneur absence",
     "Communicate with the parents within the app": "Communiquer avec les parents dans l'application",
     "Communication": "Communication",
     "Company (individual reason)": "Entreprise (raison individuelle)",
@@ -223,7 +223,7 @@
     "Street 2": "Rue 2",
     "Street No": "Numéro de rue",
     "Student": "Élève",
-    "Student Off": "Étudiant désactivé",
+    "Student Off": "Étudiant absence",
     "Student price (per student)": "Tarif élève (par élève)",
     "Student type of billing": "Type de facturation étudiant",
     "Student's Bill": "Facture de l'élève",
@@ -343,5 +343,6 @@
     "your students profile": "le profil de vos étudiants",
     "Sign up now and take advantage of a 90-free-day trial period": "Inscrivez-vous maintenant et profitez d'une période d'essai gratuite de 90 jours",
     "Free Trial": "Essai gratuit",
-    "Login ID": "Identifiants de connexion"
+    "Login ID": "Identifiants de connexion",
+    "invoice generated":"Facture générée avec succès!"
 }

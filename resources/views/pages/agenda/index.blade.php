@@ -1873,7 +1873,7 @@
 			header: false,
             views: {
                 agenda: {
-                    columnFormat: 'ddd MMM DD'
+                    columnFormat: ($(window).width() < 768) ? 'DD' : 'ddd MMM DD'
                 },
                 week: {
                     columnFormat: 'ddd MMM DD'
@@ -2226,7 +2226,8 @@
                             etime=stime;
                         }
 
-                    var dayEvent = moment(event.start).format('DD/MM/YYYY');    
+                    var dayEvent = moment(event.start).format('DD/MM/YYYY');   
+                    var dayEventEnd = moment(event.end).format('DD/MM/YYYY');    
                        
                     var eventStart = moment.utc(event.start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
                     var eventEnd = moment.utc(event.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
@@ -2264,7 +2265,17 @@
                     
                     //document.getElementById('event_modal_title').text=stime+' - '+etime+':'+event.title;
                     if (stime == '00:00') {
-                        $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr>'+event.title_for_modal+'</table>'); 
+                       
+                        var date1 = new Date(eventStartTimeStamp);
+                        var date2 = new Date(eventEndTimeStamp);
+                        var differenceInMillis = Math.abs(date2 - date1);
+                        var hoursDifference = differenceInMillis / (1000 * 60 * 60);
+
+                        if(Number(hoursDifference) == Number(24)) {
+                            $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+moment(event.start).format('DD/MM/YYYY')+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        } else {
+                            $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+' <p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+moment(event.start).format('DD/MM/YYYY')+' au '+moment(event.end).subtract(1, 'days').format('DD/MM/YYYY')+'</td></tr>'+event.title_for_modal+'</table>'); 
+                        }
                     }
                     else {
                         // $('#event_modal_title').text(event.event_type_name+':'+stime+'-'+etime+' '+event.title); 

@@ -163,13 +163,12 @@
 											@if($student->birth_date !== "1970-01-01 00:00:00")
 											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : ''}}">
 											<span class="input-group-addon">
-												<i class="fa fa-calendar"></i>
+												<i class="fa-solid fa-calendar-check"></i>
 											</span>
 											@endif
 											@if($student->birth_date === "1970-01-01 00:00:00")
-											
-											<div class="pt-3 pb-3"><i class="fa fa-calendar"></i> not specified</div>
-											<input id="birth_date" name="birth_date" type="hidden">
+											<div class="pt-3 pb-3 mr-2 pr-2"><i class="fa-regular fa-calendar-plus"></i></div>
+											<input id="birth_date"  class="datetimepicker" name="birth_date" type="text" value="not specified" style="border:none;padding:0; margin-left:5px;">	
 											@endif
 										</div>
 									</div>
@@ -532,8 +531,8 @@
 						<div class="section_header_class">
 							<label id="course_for_billing_caption">{{ __('Lessons applicable for invoicing') }}</label>
 						</div>
-						<div class="table-responsive">
-							<table class="table lessons-list" id="lesson_table">
+						<div class="table-responsive lesson_table">
+							<table class="w-100" id="lesson_table">
 								
 							</table>
 						</div>
@@ -700,6 +699,25 @@
 @section('footer_js')
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+	$("#birth_date").on("focus", function() {
+ $("#birth_date").datetimepicker({
+        defaultDate: "01/07/2023 00:00:00",
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+		format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+        minuteStep: 10,
+        minView: 3,
+        maxView: 3,
+        viewSelect: 3,
+      });
+});
+});
+
 	/*
 	* student province list
 	* function @billing province
@@ -797,8 +815,20 @@
 </script>
 
 <script type="text/javascript">
-	
+
 $(document).ready(function(){
+
+	$("#birth_date").datetimepicker({
+        defaultDate: new Date(),
+		format: "dd/mm/yyyy",
+        autoclose: true,
+        todayBtn: true,
+        minuteStep: 10,
+        minView: 3,
+        maxView: 3,
+        viewSelect: 3,
+		todayBtn:true,
+      });
 
 $("#country_code, #billing_country_code").trigger('change')
 

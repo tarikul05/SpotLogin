@@ -361,7 +361,8 @@ class AgendaController extends Controller
                     'location_id' => $fetch->location_id,
                     'teacher_id' => $fetch->teacher_id,
                     'event_price' => $fetch->event_price,
-                    'event_price' => $fetch->event_price
+                    'event_price' => $fetch->event_price,
+                    'no_of_students' => $fetch->no_of_students,
                 ];
                 $eventData = Event::create($data);
 

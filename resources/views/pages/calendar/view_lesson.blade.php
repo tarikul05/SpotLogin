@@ -53,7 +53,7 @@
 						@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 							<div class="alert alert-warning">
 								<label>This lesson is blocked, but it can still be modified by first clicking the unlock button.</label>
-								<button class="btn btn-sm btn-warning" onclick="confirm_event(true)">Unlock</button>
+								<!--<button class="btn btn-sm btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
 							</div>
 						@endif
 						<div class="card">
@@ -241,11 +241,19 @@
 				<label><br></label>
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body d-flex flex-wrap">
-					<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
-						<i class="fa fa-arrow-left"></i>
+				<div class="card-body p-3 pb-3 text-center">
+					<a class="btn btn-sm btn-info w-100 text-white mb-2" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<i class="fa-solid fa-arrow-left"></i>
 						{{ __('Back')}}
 					</a>
+					
+					@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
+
+						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>
+						<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($eventId) ? $eventId : ''; }}">
+
+					@endif
+
 				</div>
 			</div>
 		</div>

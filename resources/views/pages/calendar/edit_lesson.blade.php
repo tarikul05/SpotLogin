@@ -382,32 +382,39 @@
 				<label><br></label>
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
-				<div class="card-body d-flex flex-wrap">
-					<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda">Back</a>
-					@if($AppUI->person_id == $lessonData->teacher_id)
-						@can('self-delete-event')
-							<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-						@endcan
-					@else
-						@if(($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
-							<a class="btn btn-theme-warn mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-						@else
-							@can('self-delete-event')
-								<a class="btn btn-theme-warn mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
-							@endcan
-						@endif
-					@endif			
-					
-					<button id="save_btn" class="btn btn-theme-success w-100 mb-1"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-					<button id="save_btn_more" class="btn btn-theme-success w-100 mb-1"><i class="fa fa-save"></i>{{ __('Save & add more') }}</button>
-
-				<div class="d-none d-sm-block">
-					@if(strtotime($date_end) < strtotime($current_time))
-					<div id="button_lock_and_save_div" class="alert alert-info mt-5 text-center" role="alert">
-						<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-						<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
+				<div class="card-body p-3 pb-3">
+					<div class="row">
+						<div class="col-4">
+							<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
+						</div>
+						<div class="col-8">
+							@if($AppUI->person_id == $lessonData->teacher_id)
+								@can('self-delete-event')
+									<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+								@endcan
+							@else
+								@if(($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))
+									<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+								@else
+									@can('self-delete-event')
+										<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
+									@endcan
+								@endif
+							@endif
+						</div>
 					</div>
-					@endif
+				
+					<button id="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
+					<button id="save_btn_more" class="btn btn-theme-success w-100 mb-1">{{ __('Save & add more') }}</button>
+				
+					<div class="d-none d-sm-block">
+						@if(strtotime($date_end) < strtotime($current_time))
+						<div id="button_lock_and_save_div" class="alert alert-info mt-5 text-center" role="alert">
+							<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+							<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
+						</div>
+						@endif
+					</div>
 				</div>
 
 				</div>
