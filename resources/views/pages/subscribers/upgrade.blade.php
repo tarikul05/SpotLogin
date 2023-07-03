@@ -15,18 +15,13 @@
                   </label>        
                 </div>
               </div>
-              <div class="col-sm-6 col-xs-12 btn-area">
-                <div class="pull-right btn-group">
-                  <!--<button type="submit" class="btn bg-info text-white save_button float-end" id="update_btn">
-                    {{ __('Cnacel')}}
-                  </button>-->
-                </div>
+              <div class="col-sm-6 col-xs-12">
               </div>    
             </div>                 
           </header>
 
 
-        <div class="pricing-title pt-5 text-center">
+        <div class="pricing-title text-center">
             <!--<h3 class="h3 text-default text-center">Choose a plan and enable all features</h3>-->
 
             <?php if($is_subscribed && (!empty($subscription))){ ?>
@@ -80,14 +75,14 @@
                                       echo '<td><b>Plan Type</b><br><span class="badge bg-success"><i class="fa-solid fa-check"></i> Premium</span></td>';
                                   }else{
                                       if($AppUI->isSchoolAdmin()){
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Trial period</span></td>';
+                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info">Trial period</span></td>';
                                       }else{
                                         $today_date = new DateTime();
                                         $trial_ends_at = new DateTime($user->trial_ends_at);
                                         if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> <br>Basic</span> <small>(Trial period)</small></td>';
+                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info">Basic</span> <small>(Trial period)</small></td>';
                                         } else {
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-warning"><i class="fa-solid fa-circle-info"></i> Basic (Trial ended)</span></td>';
+                                          echo '<td><b>Plan Type</b><br><span class="badge bg-warning">Basic (Trial ended)</span></td>';
                                         }
                                       }
                                   }
@@ -144,7 +139,7 @@
                                 $today_date = new DateTime();
                                 $trial_ends_at = new DateTime($user->trial_ends_at);
                                 if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                                  echo '<h5>Get your Premium Plan before the end of your trial period<p><br></p><small>and continue to access all features</small></h5>';
+                                  echo '<h5 class="pt-5"><small>Get your Premium Plan before the end of your trial period</small></h5>';
                                 } else {
                                     echo '<h5>Get your Premium since your trial period is ended.<p><br></p><small>Continue to access all features now !</small></h5>';
                                 }   
