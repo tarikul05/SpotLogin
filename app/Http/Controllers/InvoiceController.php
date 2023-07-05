@@ -69,9 +69,11 @@ class InvoiceController extends Controller
                 $invoice_type = ($type == 'school') ? 'S' : 'T'; 
                 $invoices->where('category_invoiced_type', $invoice_type);
             }else if ($user_role == 'teacher') {
+                $invoice_type = ($type == 'school') ? 'S' : 'T'; 
                 $invoices->where('category_invoiced_type', $invoice_type);
                 $invoices->where('seller_id', $user->person_id);
             }elseif ($user_role == 'student') {
+                $invoice_type = 'S';
                 $invoices->where('category_invoiced_type', $invoice_type);
                 $invoices->where('client_id', $user->person_id);
                 $invoices->where('invoice_status', 10);

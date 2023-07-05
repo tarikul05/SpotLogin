@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\CreatedUpdatedBy;
 use App\Models\Teacher;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\School;
 use App\Models\EventCategory;
 use App\Models\LessonPriceTeacher;
@@ -473,10 +474,16 @@ class Event extends BaseModel
                 
             }
         }
+
+        $schoolIdsArray = $params['schools'];
         
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
-            $query->where('event_details.student_id', $params['person_id']);
+            $query->where('event_details.student_id', $params['person_id'])
+            ->orWhere(function (Builder $query) use ($schoolIdsArray) {
+                $query->whereIn('events.school_id', $schoolIdsArray)
+                      ->where('events.event_type', 50);
+            });
         }
         if ($user_role == 'teacher_minimum') {
             $query->where('events.teacher_id', $params['person_id']);

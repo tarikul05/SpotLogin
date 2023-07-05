@@ -15,14 +15,14 @@
   <div class="container-fluid body">
     <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
+            <div class="col-sm-9 col-xs-12 header-area" style="padding-bottom:25px;">
                 <div class="page_header_class">
-                    <label id="page_header_id" class="page_header" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('List of invoice(s)')}}</label>
+                    <label id="page_header_id" class="page_header" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('My invoices')}}</label>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 btn-area">
                 <div class="invoce_search_box">
-                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
+                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
                 </div>
             </div>
         </div>
@@ -126,18 +126,24 @@
                         <td>{{ number_format($invoice->total_amount, '2') }}</td>
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
-                            <td class="text-center">
+                            <td class="text-left">
                                 <div id="status_{{$invoice->id}}">
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
-                                @endif 
+                                    @endif 
+                                    @if($AppUI->isStudent())
+                                        <span class="small txt-grey pull-left">
+                                            <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                            {{$payment_status_all[$invoice->payment_status]}}
+                                        </span>
+                                    @endif 
                                 </div>
                             </td>
                         @else
-                            <td class="text-center">
+                            <td class="text-left">
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
@@ -145,6 +151,12 @@
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
                                 @endif 
+                                @if($AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        <i class="fa fa-credit-card fa-lg text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
+                                    </span>
+                                @endif
                                 </div>
                             </td>
                         @endif
@@ -157,12 +169,14 @@
                                       <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
                                 </span>-->
                             </td>
+                            @else
+                            <td></td>
                             @endif
                         @else
                             <td></td>
                         @endif
                         
-                        <td>
+                        <td class="text-right">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-ellipsis-h txt-grey"></i>
