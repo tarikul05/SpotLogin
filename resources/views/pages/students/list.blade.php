@@ -69,7 +69,7 @@
                             </form>
                         @endcan
                     @else
-                         <span class="">{{$student->user->username}}</span>
+                    <p class="pt-2 text-left small">registered</p>    <!--<span class="">{{$student->user->username}}</span>-->
                     @endif
                 </td>
                 <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
