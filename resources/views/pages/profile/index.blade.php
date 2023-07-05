@@ -44,34 +44,47 @@
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <!--<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account')}}</button>-->
+              @if(!$AppUI->isStudent())
               <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_account" type="button" role="tab" aria-controls="nav-account" aria-selected="false">{{ __('My Account')}}</button>
               <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Logo')}}</button>
+              @endif
+
+              @if($AppUI->isStudent())
+              <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="false">{{ __('My Account')}}</button>
+              <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Profile Image')}}</button>
+              @endif
+
             </div>
           </nav>
           <!-- Nav tabs -->
           <!-- Tabs content -->
           <div class="tab-content" id="ex1-content">
 
+            @if($AppUI->isStudent())
+            <div class="tab-pane fade" id="tab_account" role="tabpanel" aria-labelledby="tab_account">
+            @endif
+            @if(!$AppUI->isStudent())
             <div class="tab-pane fade show active" id="tab_account" role="tabpanel" aria-labelledby="tab_account">
+            @endif
+
               <div class="row">
                 <div class="col-sm-12 col-xs-12 header-area">
                   <div class="page_header_class">
                     @if($AppUI->isStudent())
-                    <label id="page_header" class="page_title text-black">{{ __('Profile picture')}}</label>
+
                     @endif
                     @if(!$AppUI->isStudent())
-                    <span id="page_header" class="page_title text-black"></span>
-                    <?php if(!empty($subscription)) { ?>
-                      <div class="alert alert-info  h6">
-                        <i class="fa-solid fa-check"></i>  Premium Access activated.
-                      </div>
-                  <?php }else{ ?>
-                    <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Activate your Premium access and enable all features <a href="{{ route('subscription.upgradePlan') }}"> Choose a plan and upgrade now! </a></div>
-                  <?php } ?>
-                   
+                      <span id="page_header" class="page_title text-black"></span>
+                      <?php if(!empty($subscription)) { ?>
+                        <div class="alert alert-info  h6">
+                          <i class="fa-solid fa-check"></i>  Premium Access activated.
+                        </div>
+                      <?php }else{ ?>
+                        <div class="alert alert-info"><i class="fa-solid fa-circle-info"></i> Activate your Premium access and enable all features <a href="{{ route('subscription.upgradePlan') }}"> Choose a plan and upgrade now! </a></div>
+                      <?php } ?>
                     @endif
 
-
+@if(!$AppUI->isStudent())
 <div class="row">
 
   <div class="col-lg-5 mb-2">
@@ -223,6 +236,7 @@
 
 
     </div>
+  @endif
 
           <div class="my_subscription row gutters-sm" style="display: none;">
             <div class="col-md-4 mb-3">
@@ -419,8 +433,12 @@
               </div>
             </div>
 
+            @if($AppUI->isStudent())
+            <div class="tab-pane fade active show" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+            @endif
+            @if(!$AppUI->isStudent())
             <div class="tab-pane fade" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-
+            @endif
               <div class="row">
                 <div class="col-sm-12 col-xs-12 header-area">
                   <div class="page_header_class">
@@ -609,7 +627,12 @@
         $("#user_profile_image").attr("src",mfile);
         $("#admin_logo").attr("src",mfile);
         $("#delete_profile_image").show();
-        successModalCall("Your logo is added!");
+        var isStudent = "{{ $AppUI->isStudent() }}";
+        if(isStudent) {
+          successModalCall("Your profile picture is added!");
+        } else {
+          successModalCall("Your logo is added!");
+        }
       },// success
       error: function (reject) {
         loader.fadeOut();

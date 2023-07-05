@@ -248,16 +248,19 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
-            <div class="modal-header">
+            <div class="modal-header text-white" style="background-color: #152245;">
                 <h6 class="modal-title page_header_class">
                   <i class="fa-regular fa-calendar-plus"></i>  Add an event / lesson
                 </h6>
-                <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
-                    <i class="fa-solid fa-circle-xmark fa-lg"></i>
+                <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
+                    <div id="infoLesson" class="text-center alert alert-info">
+                        <i class="fa-solid fa-circle-info"></i> Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day.
+                    </div>
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="col-md-10 offset-md-1 p-l-n p-r-n"> 
@@ -545,9 +548,9 @@
                 </div>
             </div>
 
-                <div class="modal-footer">
-                    <button id="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-                    <button id="save_btn_more" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save & add more') }} </button>
+                <div class="modal-footer pt-0" style="background-color: #152245;">
+                    <button id="save_btn_more" class="btn btn-info">{{ __('Save & add more') }} </button>
+                    <button id="save_btn" class="btn btn-theme-success">{{ __('Save') }} </button>
                 </div>
             </form>
         </div>
@@ -610,8 +613,8 @@
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">{{ __('Title') }}</span></h4>
                             <p style="font-size: 20px;"></p>
 
-                            <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
-                            <span id="event_btn_confirm_text">{{ __('Validate') }}<span>
+                            <button type="button" id="btn_confirm" onclick="confirm_event()" class="btn btn-sm btn-info button_lock_and_save" data-dismiss="modal" style="width:100px;">
+                            <span id="event_btn_confirm_text"><i class="fa-solid fa-lock"></i> {{ __('Validate') }}<span>
                             </button>
 
                             <!-- <button type="button" id="btn_confirm_unlock" onclick="confirm_event(true)" class="btn btn-theme-success" data-dismiss="modal" style="width:100px;">
@@ -830,7 +833,7 @@
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success dropdown-toggle btn-add-event" style="border-radius:4px!important; height:35px;"><i class="glyphicon glyphicon-plus"></i>{{ __("Add") }}</a>';
+            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
@@ -3376,6 +3379,7 @@ $(function() {
 		maxView: 3,
 		viewSelect: 3,
 		todayBtn:false,
+        minDate: $("#start_date").val()
 	});
 });
 
@@ -3749,6 +3753,13 @@ $(document).ready(function() {
     }else{
         var page_action = 'javascript:void(0)';
     }
+
+    //const endTime = endDate.format('HH:mm');
+    //const endresult = endDate.subtract(1, 'seconds').format('DD/MM/YYYY');
+
+/*$('#end_date').val("15/01/2023");
+    $('#end_time').val("15:20").trigger('change');
+    $('#agenda_select').trigger('change');*/
     
     if(agenda_select != ''){
 		$('#agenda_form_area').show();
@@ -3756,7 +3767,7 @@ $(document).ready(function() {
             $('#start_date').on('change', function(e){  
                 $("#end_date").val($("#start_date").val());  
             });
-            $( "#end_date" ).attr("readonly", "readonly");;	
+            $( "#end_date" ).attr("readonly", "readonly");
             $('.lesson').show();
             $('.event').hide();
             //$('#sis_paying').val(1);
@@ -3921,7 +3932,35 @@ $("body").on('click', '#student_empty', function(event) {
     }else{
         $('#student').val([]).multiselect('refresh');
     }
-})
+});
+
+
+
+
+    $('#agenda_select').on('change', function(e) {
+        var agendaSelectdates = $("#agenda_select").val();
+        if(agendaSelectdates == 1) {
+            $("#end_date").val($("#start_date").val());
+            $("#end_date").prop("disabled", true);
+            $("#infoLesson").fadeIn();
+        } else {
+            $("#end_date").prop("disabled", false); 
+            $("#infoLesson").fadeOut();
+        }
+    });
+
+
+        $('#end_date').on('change', function(e) {
+        if ($("#end_date").val() < $("#start_date").val()) {
+            $("#end_date").val($("#start_date").val());
+            errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+            setTimeout(() => {
+                $("#end_date").val($("#start_date").val());
+            }, "200")
+        }
+        });
+    
+
 
 $('#agenda_select').on('change', function() {
     var agendaSelectpriceEventOptions = $("#agenda_select").val();

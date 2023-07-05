@@ -428,7 +428,9 @@
                 $hours = floor($total_min / 60);
                 $minutes = $total_min % 60;
             ?>
-            <p>{{ __('invoice_duration_text') }} {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} {{ __('invoice_duration_hours') }} {{ $minutes }} {{ __('invoice_duration_minutes') }}.</p>
+            <?php if($invoice_data->invoice_type > 0) { ?>
+                <p>{{ __('invoice_duration_text') }} {{ str_pad($hours, 2 ,'0', STR_PAD_LEFT) }} {{ __('invoice_duration_hours') }} {{ $minutes }} {{ __('invoice_duration_minutes') }}.</p>
+            <?php } ?>
         </div>
     </main>
     <footer>

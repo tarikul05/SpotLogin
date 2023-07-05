@@ -461,7 +461,7 @@ class AgendaController extends Controller
 
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
-        //dd($data);
+        $data['schools'] = [$schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId()];
 
         //$query1 = new Event;
         $eventData = $event->filter($data);

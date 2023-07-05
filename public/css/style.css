@@ -632,6 +632,17 @@ input.error {
 	z-index: 9;
 }
 
+.save_and_more_area {
+	position: relative;
+}
+
+.save_and_more_area i{
+	position: absolute;
+	left: 35px;
+	top: 13px;
+	color: white;
+}
+
 #edit_event .btn_area {
 	top: 95px;
 }

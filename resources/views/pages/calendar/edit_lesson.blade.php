@@ -346,8 +346,11 @@
 							</div>
 							<div class="d-block d-sm-none">
 							@if(strtotime($date_end) < strtotime($current_time))
-							<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-3" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+							<div id="button_lock_and_save_div" class="alert alert-info mt-5 mb-3 text-center" role="alert" style="position: relative; display: block;"><label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
+								<div class="save_and_more_area mt-1">
 								<input type="submit" class="btn btn-sm btn-info button_lock_and_save w-100" name="validate" value="Validate">
+								<i class="fa-solid fa-lock"></i>
+								</div>
 							</div>
 							@endif
 							</div>
@@ -384,10 +387,10 @@
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
 				<div class="card-body p-3 pb-3">
 					<div class="row">
-						<div class="col-4">
+						<div class="col-12">
 							<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
 						</div>
-						<div class="col-8">
+						<div class="col-12">
 							@if($AppUI->person_id == $lessonData->teacher_id)
 								@can('self-delete-event')
 									<a class="btn btn-theme-warn w-100 mb-1" href="#" id="delete_btn" style="display: block !important;">Delete</a>
@@ -411,7 +414,10 @@
 						@if(strtotime($date_end) < strtotime($current_time))
 						<div id="button_lock_and_save_div" class="alert alert-info mt-5 text-center" role="alert">
 							<label id="button_lock_and_save_help_text"><i class="fa-regular fa-bell fa-bounce"></i> Please validate the event to make it available for invoicing</label>
-							<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
+							<div class="save_and_more_area">
+								<input type="submit" class="mt-1 btn btn-sm btn-info button_lock_and_save w-100 mb-1"  name="validate" value="{{ __('Validate') }}">
+								<i class="fa-solid fa-lock"></i>
+							</div>
 						</div>
 						@endif
 					</div>
