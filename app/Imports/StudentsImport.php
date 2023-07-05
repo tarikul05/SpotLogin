@@ -42,7 +42,7 @@ class StudentsImport implements ToModel, WithHeadingRow
             'lastname' => !empty($row['family_name']) ? $row['family_name'] : '',
             'firstname' => !empty($row['firstname']) ? $row['firstname'] : '',
             'nickname' => !empty($row['nickname']) ? $row['nickname'] : '',
-            'gender_id' => strtolower($row['gender']) == 'male' ? 1 : (strtolower($row['gender']) == 'female' ? 2 : 3),
+            'gender_id' => !empty($row['gender']) ? strtolower($row['gender']) == 'male' ? 1 : (strtolower($row['gender']) == 'female' ? 2 : 3):3,
             'licence_usp' => !empty($row['licence']) ? $row['licence'] : '',
             'comment' => !empty($row['comment']) ? $row['comment'] : '',
             'birth_date' => !empty($row['birth_date']) ? date('Y-m-d H:i:s',strtotime($row['birth_date'])) : null,
