@@ -3941,7 +3941,7 @@ $("body").on('click', '#student_empty', function(event) {
         var agendaSelectdates = $("#agenda_select").val();
         if(agendaSelectdates == 1) {
             $("#end_date").val($("#start_date").val());
-            $("#end_date").prop("disabled", true);
+            //$("#end_date").prop("disabled", true);
             $("#infoLesson").fadeIn();
         } else {
             $("#end_date").prop("disabled", false); 
