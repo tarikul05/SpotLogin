@@ -1907,13 +1907,13 @@ a.btn.btn-theme-success.add_teacher_btn {
 .arrow-shape::before {
   content: "";
   position: absolute;
-  top: 22px;
+  top: 29px;
   right: -31px;
   width: 0;
   height: 0;
   border-top: 40px solid transparent;
   border-bottom: 40px solid transparent;
-  border-left: 30px solid #8bb3bd; /* Couleur de la flèche */
+  border-left: 30px solid #c9d1d3; /* Couleur de la flèche */
   transform: skewX(0deg);
   z-index: 9999;
 }

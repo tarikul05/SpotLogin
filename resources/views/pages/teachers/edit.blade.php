@@ -578,17 +578,23 @@
 				<form class="form-horizontal" id="add_price" action="{{!empty($teacher) ? route('updatePriceAction',[$teacher->id]): '/'}}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
 					@csrf
 					<div class="section_header_class">
-						<label id="teacher_personal_data_caption">{{__('Number of students') }}</label>
+						<label id="teacher_personal_data_caption">{{__('Sections and prices') }}</label>
 					</div>
 
-					<table id="tariff_table_rate" class="table list-item tariff_table_rate" width="100%">
+					<div class="row">
+						<div class="col-lg-10">
+
+							<div class="card">
+								<div class="card-body bg-tertiary">
+
+					<table id="tariff_table_rate" class="table table-stripped table-hover" width="100%">
 						<thead>
 							<tr>
 								<th>#</th>
-								<th class="pc_only">{{__('Category Type')}}</th>
+								<th>{{__('Category Type')}}</th>
 								<th>{{__('Type of billing')}}</th>
-								<th class="buy"><span>{{__('Teacher price') }}</span></th>
-								<th class="sell"><span>{{__('Student price') }}</span></th>
+								<th class="buy" style="text-align: right;"><span>{{__('Teacher price') }}</span></th>
+								<th class="sell" style="text-align: right;"><span>{{__('Student price') }}</span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -597,7 +603,7 @@
 								<td></td>
 								<td><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 								<td class="pc_only">&nbsp;</td>
-								<td>Total price/hour</td>
+								<td style="text-align: right;">Total price/hour</td>
 								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
@@ -637,7 +643,7 @@
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_id]" value="{{$lessionPrice->id}}">
 									</td>
-									<td class="pc_only">{{__('Lessons/Events..')}}</td>
+									<td>{{__('Lessons/Events..')}}</td>
 									<td>{{ __($textForTypeBilling) }}</td>
 									<td>
 										<input type="text" 
@@ -663,9 +669,27 @@
 						</tbody>
 						</table>
 
-					@can('teachers-update')
+						</div>
+
+						<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+							<div class="section_header_class">
+							</div>
+							<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+								<div class="card-body">
+									@can('teachers-update')
+										<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+									@endcan
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+					<!--@can('teachers-update')
 						<button type="submit" id="save_btn" name="save_btn" class="btn btn-success teacher_save"><em class="glyphicon glyphicon-floppy-save"></em> {{ __('Save')}}</button>
-					@endcan
+					@endcan-->
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
