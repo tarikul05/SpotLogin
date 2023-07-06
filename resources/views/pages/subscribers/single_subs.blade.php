@@ -26,14 +26,10 @@
 
     <div class="row mt-3">
 
-        <div class="col-lg-12">
-            <div id="card-errors" role="alert"></div>
-            </div>
+        <div class="col-md-7 card d-none d-sm-block">
 
-        <div class="col-md-7 d-none d-sm-block">
 
-                    <div class="card">
-                        <div class="card-body pb-5">
+                        <div class="card-body">
 
              
                             <div class="subscription-plan-info pb-1">
@@ -41,7 +37,7 @@
                                 <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
                             </div>
                             <br>
-                            <div class="alert alert-info small arrow-shape">
+                            <div class="card p-4 bg-tertiary small arrow-shape">
                                 <p style="font-size:13px;"><i class="fa-solid fa-circle-info fa-beat"></i> <b>Automatic renewal</b></p>
                                 <p style="font-size:13px;">
                                     Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>.<br>
@@ -49,7 +45,7 @@
                                 </p>
                             </div>
          
-                            <ul class="list-group list-group-flush pb-1">
+                            <ul class="list-group list-group-flush pt-4 mb-1">
                                 <?php if($product_object['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
                                     <!-- price id for 200 -->
                                     <li class="list-group-item">
@@ -137,7 +133,7 @@
                                     <li class="list-group-item">
                                         Access the mobile app
                                     </li>
-                                <?php }else if($plan['id'] == env('stripe_teacher_premium_plan_price_id')){ ?>
+                                <?php }else if($single_plan_info['id'] == env('stripe_teacher_premium_plan_price_id')){ ?>
                                     <!-- price id for 25 -->
                                     <li class="list-group-item">
                                         Access the school <b>schedule</b>
@@ -158,21 +154,24 @@
                                     <!-- Handle other cases here -->
                                 <?php } ?>
                             </ul>
-
+                            <p style="padding:1px;"></p>
                         </div>
                     
-        </div>
+    
 
 
             
         </div>
         <div class="col-md-5">
             <div class="card">
-                <div class="card-body alert-info">
+                <div class="card-body bg-tertiary">
                 <div class="payment-info-top text-center">
-                    <p class="txt">Enter your payment<br>details below to subscribe </p>
+                    <p class="txt">Enter your payment<br>details below to subscribe</p>
                 </div>
-                <div class="payment-form card_payment pt-1 p-5">
+
+                <div id="card-errors" role="alert"></div>
+
+                <div class="payment-form card_payment pt-1 p-1 pb-3">
                     <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
                         @csrf
                         <div class="form-group">
@@ -212,14 +211,14 @@
 
                         <div class="payment-footer-wrapper">
                             <p class="f-txt f_margin_top">
-                                By clicking “Proceed payment” you agree to the <b>Terms and Conditions</b>.
+                                Your subscription will renew automatically every month.<br>
+                                By clicking "Proceed payment" you agree to the <b>Terms and Conditions</b>.
                             </p>
                         </div>
 
                         <div class="button-area pt-2">
                                 <a class="btn btn-default" href="{{ url()->previous() }}">Cancel</a>
-                            <button id="card-button" class="btn btn-success" type="submit" data-secret="{{ $intent->client_secret }}"
-                            >Proceed payment</button>
+                            <button id="card-button" class="btn btn-success" type="submit" data-secret="{{ $intent->client_secret }}"><i class="fa-solid fa-spinner fa-spin loaderPayment" style="display:none;"></i> Proceed payment</button>
                         </div>
                     
                         <div class="payment-footer-wrapper small text-center d-block d-sm-none">
@@ -229,6 +228,7 @@
                                     You may cancel your subscription anytime from <b>My plan</b> section in your profile.
                                 </p>
                         </div>
+                        
                         
                     </form>
                 </div>
@@ -289,11 +289,11 @@
             },
             },
             invalid: {
-                color: '#E25950',
+                color: '#842029',
                 fontSize: '18px',
                 '::placeholder': {
-                    color: '#FFCCA5',
-                    fontSize: '18px',
+                    color: '#842029',
+                    fontSize: '17px',
                 },
             },
         };
@@ -346,6 +346,7 @@
         var form = document.getElementById('payment-form-sub');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
+            $('.loaderPayment').fadeIn();
             var card_holder_name = document.getElementById("card_holder_name").value;
             stripe
                 .handleCardSetup(clientSecret, cardNumber , {
@@ -354,6 +355,7 @@
                     }
                 })
                 .then(function(result) {
+                    $('.loaderPayment').fadeOut();
                     if (result.error) {
                         var errorElement = document.getElementById('card-errors');
                         errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
@@ -369,7 +371,11 @@
 
         function errorMessage(error_code){
             var error_message = '';
-            if(error_code === 'incomplete_number'){
+            if(error_code === 'invalid_number') {
+                error_message = 'Invalid card number'
+            }else if(error_code === 'setup_intent_authentication_failure'){
+                error_message = 'The provided payment method has failed authentication. Please provide a new payment method'
+            }else if(error_code === 'incomplete_number'){
                 error_message = 'Incomplete card number'
             }else if(error_code === 'incomplete_expiry'){
                 error_message = 'Incomplete expiry date'
@@ -384,7 +390,7 @@
             }else if(error_code === 'card_declined'){
                 error_message = 'your card has been declined'
             }else{
-                error_message = error_code + 'error occurred'
+                error_message = error_code
             }
             return error_message;
         }

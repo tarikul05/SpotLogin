@@ -111,7 +111,7 @@
                                     <div class="dropdown" id="dropdownActions">
                                       <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
                                       <div class="dropdown-content">
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-check"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
                                         <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
                                       </div>
                                     </div>
