@@ -23,10 +23,12 @@
         </div>
     </header>
 
+    <form action="{{ route('students.delete') }}" method="POST">
+        @csrf
    <table id="example" class="table table-stripped table-hover" style="width:100%">
         <thead>
             <tr>
-                <!--<th>{{ __('#') }}</th>-->
+                <th><input type="checkbox" id="select-all"></th>
                 <th>&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
@@ -40,6 +42,7 @@
             
             <tr>
                 <!--<td>{{ $student->id; }} </td>-->
+                <td><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
                 <td class="pt-3">
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
@@ -112,14 +115,33 @@
             @endforeach
         </tbody>
     </table>
+    <button type="submit" id="delete-selected">Delete the selected students</button>
+    </form>
   </div>
 @endsection
 @include('layouts.elements.modal_csv_import')
 @section('footer_js')
+<script>
+    document.getElementById('select-all').addEventListener('change', function () {
+        var checkboxes = document.querySelectorAll('input[name="selected_students[]"]');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = this.checked;
+        }
+        
+        if (this.checked) {
+            var deleteButton = document.getElementById('delete-selected');
+            deleteButton.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+</script>
 <script type="text/javascript">
     $(document).ready( function () {
         $('#example').DataTable({
             language: { search: "" },
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
             "responsive": true,
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_",

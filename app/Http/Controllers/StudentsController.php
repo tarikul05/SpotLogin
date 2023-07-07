@@ -524,6 +524,31 @@ class StudentsController extends Controller
     }
 
 
+    public function delete(Request $request)
+    {
+        $selectedStudents = $request->input('selected_students', []);
+
+        if (empty($selectedStudents)) {
+            return redirect()->back()->with('error', 'Please select at least 1 student to delete.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            SchoolStudent::whereIn('student_id', $selectedStudents)->delete();
+
+            Student::whereIn('id', $selectedStudents)->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'The selected students have been deleted.');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return redirect()->back()->with('error', 'An error occurred while deleting students.');
+        }
+    }
+
     /**
      * change status.
      *
