@@ -358,8 +358,14 @@
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv student_list">
                                                                 <select class="multiselect" id="student" name="student[]" multiple="multiple">
-                                                                    @foreach($students as $key => $student)
-                                                                        <option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->firstname }} {{ $student->lastname }}</option>
+                                                                    @foreach($studentsbySchool as $key => $student)
+                                                                        <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : ''}}>
+                                                                            @php
+                                                                            $studentName = App\Models\Student::find($student->student_id);
+                                                                            @endphp
+
+                                                                            {{$studentName->firstname}} {{$studentName->lastname}}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
