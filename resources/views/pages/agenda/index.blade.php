@@ -358,8 +358,8 @@
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv student_list">
                                                                 <select class="multiselect" id="student" name="student[]" multiple="multiple">
-                                                                    @foreach($studentsbySchool as $key => $student)
-                                                                        <option value="{{ $student->student_id }}" {{ old('student') == $student->student_id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+                                                                    @foreach($students as $key => $student)
+                                                                        <option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->firstname }} {{ $student->lastname }}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -396,6 +396,7 @@
                                                         <div class="col-sm-7 row">
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="end_date_div"> 
+                                                                    <input type="text" class="form-control" readonly id="infoDateEnd" value="{{old('end_date')}}">
                                                                     <input id="end_date" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off" readonly>
                                                                     <span class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
@@ -1519,7 +1520,7 @@
                     var resultHtml ='';
                     var i='0';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
+                        resultHtml+='<option value="'+value.student_id+'">'+value.firstname+' '+value.lastname+'</option>'; 
                     });
                     $('#event_student, #student').html(resultHtml);
                     $("#event_student").multiselect('destroy');
@@ -3941,14 +3942,24 @@ $("body").on('click', '#student_empty', function(event) {
         var agendaSelectdates = $("#agenda_select").val();
         if(agendaSelectdates == 1) {
             $("#end_date").val($("#start_date").val());
-            //$("#end_date").prop("disabled", true);
+            $("#end_date").prop("hidden", true);
             $("#infoLesson").fadeIn();
+            $("#infoDateEnd").fadeIn();
+            $("#infoDateEnd").val($("#start_date").val());
         } else {
-            $("#end_date").prop("disabled", false); 
+            $("#end_date").prop("hidden", false); 
             $("#infoLesson").fadeOut();
+            $("#infoDateEnd").fadeOut();
         }
     });
 
+
+    $('#start_date').on('change', function(e) {
+    var agendaSelectdates = $("#agenda_select").val();
+            if(agendaSelectdates == 1) {
+                $("#infoDateEnd").val($("#start_date").val());
+            }
+        })
 
         $('#end_date').on('change', function(e) {
         if ($("#end_date").val() < $("#start_date").val()) {

@@ -14,9 +14,9 @@ use App\Models\EventDetails;
 use App\Models\EventCategory;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Currency;
 use App\Models\School;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 class AgendaController extends Controller
 {
@@ -547,6 +547,7 @@ class AgendaController extends Controller
             foreach($eventDetailsStudentId as $std){
                 // $student = Student::find($std['student_id']);
                 $schoolStudent = $schoolTeacher = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
+                $theStudent =  Student::active()->find($std['student_id']);
                 if ($schoolStudent) {
                     if ($i!=0) {
                         if ($i==count($eventDetailsStudentId)) {
@@ -555,10 +556,10 @@ class AgendaController extends Controller
                             $student_name .=', ';
                         }
                     }else{
-                        $first_student_name = $schoolStudent->nickname;
+                        $first_student_name = $theStudent->firstname . ' ' . $theStudent->lastname;
                     }
                     // $student_name .= $student->firstname;
-                    $student_name .= $schoolStudent->nickname;
+                    $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname;
                     $i++;
                 }
             }
@@ -847,15 +848,25 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        $students = SchoolStudent::active()->where('school_id',$schoolId);
-     
+        
+        $students = SchoolStudent::active()->where('school_id', $schoolId);
+        
         if ($user_role =='student' ) { 
-           $students->where('student_id',$user->person_id);
+        $students->where('student_id', $user->person_id);
         }
-        $students = $students->get();
-        //$locations = Student::active()->where('school_id', $schoolId)->orderBy('id')->get();
-        return $locations =json_encode($students);
 
+        $students = $students->get();
+
+        $studentIds = $students->pluck('student_id')->toArray();
+        $studentInfo = Student::whereIn('id', $studentIds)->get(['id', 'firstname', 'lastname'])->keyBy('id');
+
+        $students = $students->map(function ($student) use ($studentInfo) {
+            $student->firstname = $studentInfo[$student->student_id]->firstname;
+            $student->lastname = $studentInfo[$student->student_id]->lastname;
+            return $student;
+        });
+
+        return $locations = json_encode($students);
     }
 
     /**

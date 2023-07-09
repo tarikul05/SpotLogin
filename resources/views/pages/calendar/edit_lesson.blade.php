@@ -125,7 +125,13 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
-													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> {{ $sub->nickname }}</option>
+													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> 
+														@php
+														$student = App\Models\Student::find($sub->student_id);
+														@endphp
+
+														{{$student->firstname}} {{$student->lastname}}
+													</option>
 												@endforeach
 			  								</select>
 										</div>
@@ -314,7 +320,11 @@
 															<tr>
 																<!--<td>{{ $student->student_id }}</td>-->
 																<td>
-																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
+																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small">
+																@php
+																$studentName = App\Models\Student::find($student->student_id);
+																@endphp
+																{{$studentName->firstname}} {{$studentName->lastname}}
 																</td>
 																<td>
 																	<div class="selectdiv">
