@@ -1520,7 +1520,7 @@
                     var resultHtml ='';
                     var i='0';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.student_id+'">'+value.firstname+' '+value.lastname+'</option>'; 
+                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
                     });
                     $('#event_student, #student').html(resultHtml);
                     $("#event_student").multiselect('destroy');
