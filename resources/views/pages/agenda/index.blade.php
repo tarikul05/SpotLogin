@@ -9,12 +9,12 @@
 <link href="{{ asset('css/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css" integrity="sha512-fZNmykQ6RlCyzGl9he+ScLrlU0LWeaR6MO/Kq9lelfXOw54O63gizFMSD5fVgZvU1YfDIc6mxom5n60qJ1nCrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js" integrity="sha512-lxQ4VnKKW7foGFV6L9zlSe+6QppP9B2t+tMMaV4s4iqAv4iHIyXED7O+fke1VeLNaRdoVkVt8Hw/jmZ+XocsXQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('js/fullcalendar.js')}}"></script>
@@ -791,6 +791,9 @@
     RenderCalendar();
 
     $(document).ready(function(){
+
+        setTimeout(() => {
+
         if (user_role == "student") {
             document.getElementById('event_school').style.display="none";
 			document.getElementById('event_type').style.display="none";
@@ -862,6 +865,7 @@
 		
         $(".fc-content-skeleton tbody tr:nth-child(n+4)").hide()
 		
+    });
 	}); //ready
 
     function DownloadEventsICS(CalType) {
@@ -1520,11 +1524,11 @@
                     var resultHtml ='';
                     var i='0';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
+                        resultHtml+='<option value="'+value.student_id+'">'+value.firstname+' '+value.lastname+'</option>'; 
                     });
-                    $('#event_student, #student').html(resultHtml);
-                    $("#event_student").multiselect('destroy');
-                    $('#student').multiselect({ search: true })
+                    //$('#event_student, #student').html(resultHtml);
+                    //$("#event_student").multiselect('destroy');
+                    //$('#student').multiselect({ search: true })
                     
                 },   //success
                 complete: function( xhr ) {
