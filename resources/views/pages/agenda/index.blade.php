@@ -1520,7 +1520,7 @@
                     var resultHtml ='';
                     var i='0';
                     $.each(data, function(key,value){
-                        resultHtml+='<option value="'+value.student_id+'">'+value.nickname+'</option>'; 
+                        resultHtml+='<option value="'+value.student_id+'">'+value.firstname+' '+value.lastname+'</option>'; 
                     });
                     $('#event_student, #student').html(resultHtml);
                     $("#event_student").multiselect('destroy');
@@ -3942,12 +3942,12 @@ $("body").on('click', '#student_empty', function(event) {
         var agendaSelectdates = $("#agenda_select").val();
         if(agendaSelectdates == 1) {
             $("#end_date").val($("#start_date").val());
-            $("#end_date").prop("hidden", true);
+            $("#end_date").attr("hidden", true);
             $("#infoLesson").fadeIn();
             $("#infoDateEnd").fadeIn();
             $("#infoDateEnd").val($("#start_date").val());
         } else {
-            $("#end_date").prop("hidden", false); 
+            $("#end_date").attr("hidden", false); 
             $("#infoLesson").fadeOut();
             $("#infoDateEnd").fadeOut();
         }
