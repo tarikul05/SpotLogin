@@ -91,7 +91,9 @@
 
 									<?php $i=1; $count = count($studentOffList); 
 										foreach($studentOffList as $student){
-											echo $student->nickname;
+											//echo $student->nickname;
+											$studentName = App\Models\Student::find($student->student_id);
+											echo $studentName->firstname . ' ' . $studentName->lastname;
 											if($i != $count){
 												echo ', ';
 											}
@@ -178,7 +180,11 @@
 															<tr>
 																<td>{{ $student->student_id }}</td>
 																<td>
-																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small"> {{ $student->nickname }}
+																<img src="{{ asset('img/photo_blank.jpg') }}" width="18" height="18" class="img-circle account-img-small">
+																@php
+																$studentName = App\Models\Student::find($student->student_id);
+																@endphp
+																{{$studentName->firstname}} {{$studentName->lastname}}
 																</td>
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
 																@if($showPrice)

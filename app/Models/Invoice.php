@@ -178,7 +178,7 @@ class Invoice extends BaseModel
                 'event_details.student_id as person_id',
                 'users.profile_image_id as profile_image_id'
             )
-            ->selectRaw("CONCAT_WS('', students.firstname, students.middlename, students.lastname)  AS student_name")
+            ->selectRaw("CONCAT_WS(' ', students.firstname, students.lastname) AS student_name")
             ->where(
                 [
                     'events.school_id' => $schoolId,
