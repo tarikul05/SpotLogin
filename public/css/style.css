@@ -2628,3 +2628,13 @@ text-align: center;
 	width: 200px;
 	border-radius:7px;
 }
+
+.multiselect-container .multiselect-all.active:not(.multiselect-active-item-fallback), .multiselect-container .multiselect-all:not(.multiselect-active-item-fallback):active, .multiselect-container .multiselect-group.active:not(.multiselect-active-item-fallback), .multiselect-container .multiselect-group:not(.multiselect-active-item-fallback):active, .multiselect-container .multiselect-option.active:not(.multiselect-active-item-fallback), .multiselect-container .multiselect-option:not(.multiselect-active-item-fallback):active {
+    background-color: #ffffff;
+    color: #000;
+}
+/*
+.multiselect-container span:hover {
+    color: #213db8;
+	background-color: #eee;
+}*/
