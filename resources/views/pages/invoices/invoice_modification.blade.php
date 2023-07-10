@@ -100,7 +100,7 @@
                                         <tr class="header_tbl">
                                             <th width="30%"><span id="row_hdr_date" name="row_hdr_date">{{ __('invoice_column_date') }}</span></th>
                                             <th width="40%" style="text-align:right"><span id="item_particular_caption" name="item_particular_caption">{{ __('invoice_column_details') }}</span></th>
-                                            <th width="15%" style="text-align:right"><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}</span></th>
+                                            <th width="15%" style="text-align:right"><?php if($invoice->invoice_type > 0) { ?><span id="item_unit_caption" name="item_unit_caption">{{ __('Unit') }}<?php } ?></span></th>
                                             <th width="15%" style="text-align:right"><span id="row_hdr_amount" name="row_hdr_amount">{{ __('invoice_column_amount') }}</span></th>
                                         </tr>
                                     @if (!empty($invoice->invoice_items))

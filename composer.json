@@ -17,7 +17,9 @@
         "laravel/ui": "^3.4",
         "laravelcollective/html": "^6.3",
         "maatwebsite/excel": "^3.1",
-        "spatie/laravel-permission": "^5.5"
+        "moneyphp/money": "^3.3",
+        "spatie/laravel-permission": "^5.5",
+        "umpirsky/currency-list": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

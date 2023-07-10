@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49c3d73b551f9e2741216bb982d72bc2",
+    "content-hash": "828d54f088e63d89b7d170565e8f55cb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6660,6 +6660,52 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.5"
             },
             "time": "2022-09-12T13:28:28+00:00"
+        },
+        {
+            "name": "umpirsky/currency-list",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/umpirsky/currency-list.git",
+                "reference": "4ab0b8244b44aa41fc859809e90d6e9fe00ae59e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/umpirsky/currency-list/zipball/4ab0b8244b44aa41fc859809e90d6e9fe00ae59e",
+                "reference": "4ab0b8244b44aa41fc859809e90d6e9fe00ae59e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "slowprog/composer-copy-file": "^0.2",
+                "symfony/locale": "^2.7|^3.0",
+                "umpirsky/list-generator": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "copy-file": {
+                    "vendor/umpirsky/list-generator/Dockerfile": "./",
+                    "vendor/umpirsky/list-generator/docker-compose.yml": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saša Stamenković",
+                    "email": "umpirsky@gmail.com"
+                }
+            ],
+            "description": "List of all currencies with names and ISO 4217 codes in all languages and all data formats.",
+            "support": {
+                "issues": "https://github.com/umpirsky/currency-list/issues",
+                "source": "https://github.com/umpirsky/currency-list/tree/master"
+            },
+            "time": "2018-11-20T08:43:41+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

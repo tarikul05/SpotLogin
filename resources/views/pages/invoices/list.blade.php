@@ -198,7 +198,7 @@
                                         </a>
                                     @endif
 
-                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0)) 
+                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0) && (!$AppUI->isStudent())) 
                                         <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                     @endif
                                 </div>
