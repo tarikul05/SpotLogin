@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Currency extends BaseModel
 {
     use  SoftDeletes;
-    protected $table = 'currencies';
+    protected $table = 'currencies_country';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'modified_at';
     protected $primaryKey = 'currency_code';

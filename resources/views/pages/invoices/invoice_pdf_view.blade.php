@@ -273,7 +273,7 @@
                     <tr>
                         <th class="col_date">{{ __('invoice_column_date') }}</th>
                         <th class="col_details">{{ __('invoice_column_details') }}</th>
-                        <th class="col_duration">{{ __('invoice_column_duration') }}</th>
+                        <th class="col_duration"><?php if($invoice_data->invoice_type > 0) { ?>{{ __('invoice_column_duration') }}<?php } ?></th>
                         <th class="col_amount">{{ __('invoice_column_amount') }}</th>
                     </tr>
                 </thead>

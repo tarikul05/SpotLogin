@@ -2198,7 +2198,7 @@
             eventClick: function(event, jsEvent, view) {
                 let loggedId = <?= $AppUI->person_id ?>;
                 let evnUsrId = event.teacher_id;
-                let invoice_type = event.invoice_type
+                let invoice_type = event.event_invoice_type
                 
                 if (event.url) {
                     SetEventCookies();
@@ -2212,7 +2212,7 @@
                             if(type_removed.includes(event.event_type) != true){ 
                                 if(loggedId == evnUsrId){
                                     $('#btn_confirm').show();
-                                }else if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') && invoice_type == 'S'){
+                                }else if((user_role == 'admin_teacher' || user_role == 'school_admin_teacher') ){ /*&& invoice_type == 'S'*/
                                     $('#btn_confirm').show(); 
                                 }else{
                                     $('#btn_confirm').hide();
