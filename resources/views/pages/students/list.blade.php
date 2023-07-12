@@ -24,6 +24,7 @@
     </header>
 
     <form action="{{ route('students.delete') }}" method="POST">
+        @method('delete')
         @csrf
    <table id="example" class="table table-stripped table-hover" style="width:100%">
         <thead>
@@ -42,8 +43,8 @@
             
             <tr>
                 <!--<td>{{ $student->id; }} </td>-->
-                <td><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                <td class="pt-3">
+                <td class="pt-3"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
+                <td class="pt-2">
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php elseif (!empty($student->user->profileImage->path_name)): ?>
@@ -55,24 +56,17 @@
                 <td class="pt-3">
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
-                
                 <td class="pt-3">{{ $student->email; }} </td>
                 <td class="pt-2">
                     @if(!$student->user)
                         <span>{{ __('No') }}</span>
                         @can('students-sent-mail')
-                            <form method="post" style="display: inline" onsubmit="return confirm('{{ __("Are you sure want to send Invitation?")}}')" action="{{route('studentInvitation',['school'=>$schoolId,'student'=>$student->id])}}">
-                              @method('post')
-                              @csrf
-                              @if(!$student->pivot->is_sent_invite)
-                                  <button class="btn btn-xs btn-info" type="submit" title="Send invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
-                              @else
-                                  <button class="btn btn-xs btn-info" type="submit" title="Resend invitation" ><i class="fa-solid fa-envelope"></i> Send invite</i></button>
-                              @endif
-                            </form>
+                            <button class="btn btn-xs btn-info send-invite-btn" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i> Send invite
+                            </button>
                         @endcan
                     @else
-                    <p class="pt-2 text-left small">registered</p>    <!--<span class="">{{$student->user->username}}</span>-->
+                        <p class="pt-2 text-left small">registered</p>    <!--<span class="">{{$student->user->username}}</span>-->
                     @endif
                 </td>
                 <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
@@ -115,12 +109,27 @@
             @endforeach
         </tbody>
     </table>
-    <button type="submit" id="delete-selected">Delete the selected students</button>
+    <button type="submit" id="delete-selected" onclick="return confirm('Are you sure you want to delete the selected students?')">Delete the selected students</button>
     </form>
   </div>
 @endsection
 @include('layouts.elements.modal_csv_import')
 @section('footer_js')
+<script>
+var sendInviteButtons = document.getElementsByClassName('send-invite-btn');
+Array.prototype.forEach.call(sendInviteButtons, function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var schoolId = this.getAttribute('data-school');
+        var studentId = this.getAttribute('data-student');
+        if (confirm('Are you sure want to send Invitation?')) {
+            var redirectUrl = '{{ route('studentInvitationGet', ['school' => ':school', 'student' => ':student']) }}';
+            redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
+            window.location.href = redirectUrl;
+        }
+    });
+});
+</script>
 <script>
     document.getElementById('select-all').addEventListener('change', function () {
         var checkboxes = document.querySelectorAll('input[name="selected_students[]"]');

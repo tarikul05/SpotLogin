@@ -650,7 +650,7 @@
 @if(session('firstConnexion') === true)
     <script>
     $(document).ready(function() {
-        $('#modal_free_trial').modal('show');
+        //$('#modal_free_trial').modal('show');
     });
     </script>
     <?php session(['firstConnexion' => false]); ?>
