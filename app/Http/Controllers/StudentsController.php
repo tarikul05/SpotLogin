@@ -595,6 +595,34 @@ class StudentsController extends Controller
         }
     }
 
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function studentInvitationGet(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        try {
+            $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+            
+            $school = School::find($schoolId);
+            $student = Student::find($studentId);
+            if ($student && !empty($student->email)) {
+                $this->emailSet($school, $schoolStudent, $student, 'App\Models\Student');
+                return redirect()->back()->with('success', 'Invitation sent successfully');
+            }else{
+                return redirect()->back()->with('error', __('Email not found'));
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
     public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
     {
         //sending activation email after successful signed up

@@ -370,11 +370,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('studentDelete');
     Route::post('/{school}/student/{student}', [App\Http\Controllers\StudentsController::class, 'changeStatus'])->name('studentStatus');
     Route::post('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitation'])->name('studentInvitation');
+    Route::get('/{school}/student_email_send/{student}', [App\Http\Controllers\StudentsController::class, 'studentInvitationGet'])->name('studentInvitationGet');
 
     // Route::post('update-student-photo', ['as' =>'student.update_photo','uses' =>'StudentsController@profilePhotoUpdate' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     // Route::post('delete-student-photo', ['as' =>'student.delete_photo','uses' =>'StudentsController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('student-user-update/{user}', ['as' =>'student.user_update','uses' =>'StudentsController@userUpdate' ]);
-    Route::post('/delete', [App\Http\Controllers\StudentsController::class, 'delete'])->name('students.delete');
+    Route::delete('/students/delete', [App\Http\Controllers\StudentsController::class, 'delete'])->name('students.delete');
 
     Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
     Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
