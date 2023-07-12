@@ -59,12 +59,18 @@
       let loader = $('#pageloader');
       window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
-        $("#allFilters").fadeIn('fast');
+        $("#loaderFilters").fadeOut('fast');
+        setTimeout(() => {
+          $("#allFilters").fadeIn('fast');
+        }, 500);
       });
 
       setTimeout(() => {
         $("#pageloader").fadeOut('fast');
-        $("#allFilters").fadeIn('fast');
+        $("#loaderFilters").fadeOut('fast');
+        setTimeout(() => {
+          $("#allFilters").fadeIn('fast');
+        }, 500);
       }, 2500);
 
       $('.select_two_defult_class').select2();
