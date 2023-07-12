@@ -103,19 +103,23 @@
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
-
-      
+    
     let loader = $('#pageloader');
-    window.addEventListener('load', function() {
-      $("#pageloader").fadeOut('fast');
-      $("#allFilters").fadeIn('fast');
-      
-    });
-
-    setTimeout(() => {
+      window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
-        $("#allFilters").fadeIn('fast');
-      }, 1000);
+        $("#loaderFilters").fadeOut('fast');
+        setTimeout(() => {
+          $("#allFilters").fadeIn('fast');
+        }, 500);
+      });
+
+      setTimeout(() => {
+        $("#pageloader").fadeOut('fast');
+        $("#loaderFilters").fadeOut('fast');
+        setTimeout(() => {
+          $("#allFilters").fadeIn('fast');
+        }, 500);
+      }, 2500);
 
     $("#setLan").change(function(event) {
       var lanCode = $(this).val();

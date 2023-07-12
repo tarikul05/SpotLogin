@@ -158,7 +158,11 @@
                                         <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">{{__('Current List')}}</button> 
                                     </div>   
                                 </div>
-                                <div class="col-md-3" id="allFilters" style="display:none;">
+                                <div class="col-md-3">                             
+                                    <div class="text-center pt-5" id="loaderFilters">
+                                        <i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>
+                                    </div>
+                                 <div id="allFilters" style="display:none;">
                                     <div id="event_school_div" name="event_school_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
@@ -209,6 +213,7 @@
                                             </div>
                                         </div> 
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div style="margin-top: 25px;">
