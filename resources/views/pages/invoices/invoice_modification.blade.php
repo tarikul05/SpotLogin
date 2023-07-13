@@ -117,12 +117,14 @@
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                                                     <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}<br>
+                                                        @if ($invoice->invoice_type > 0)
                                                         <?php 
                                                         if($item->no_of_students == 1) {
                                                             echo 'Private Lesson';
                                                         } else {
                                                             echo 'Group of ' . $item->no_of_students . ' students';
                                                         } ?>
+                                                        @endif
                                                     </td>
                                                     @if ($item->unit == 0)
                                                         <td></td>
