@@ -172,7 +172,7 @@
                         <ul class="price">
                             <li class="plan_name_display">
                                 <div class="plan_name">Basic plan</div>
-                                <div class="plan_interval">Free <span class="plan_type">/90 days</span></div>
+                                <div class="plan_interval">Free <span class="plan_type">/60 days</span></div>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -241,7 +241,7 @@
                         <ul class="price">
                             <li class="plan_name_display">
                                 <div class="plan_name">Basic plan</div>
-                                <div class="plan_interval">Free <span class="plan_type">/90 days</span></div>
+                                <div class="plan_interval">Free <span class="plan_type">/60 days</span></div>
                             </li>
                             <li>
                                 <span class="svg_img">

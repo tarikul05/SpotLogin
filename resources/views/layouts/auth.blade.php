@@ -78,7 +78,7 @@
 
         <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;">
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
-          Get <b>90 days</b> Free-Trial<br>with all features access
+          Get <b>60 days</b> Free-Trial<br>with all features access
         </div>
         
       </div>
