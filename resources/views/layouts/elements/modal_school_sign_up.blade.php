@@ -83,7 +83,7 @@
                 <div class="col-lg-6 bg-tertiary text-center p-3">
                 <div class="d-none d-sm-block"><br><br></div>
                 <h4 class="d-none d-sm-block">{{ __('Free Trial') }}</h4>
-                <h5 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 90-free-day trial period') }}</h5>
+                <h5 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 60-free-day trial period') }}</h5>
                 <div class="d-none d-sm-block"><br><br></div>
                     <small id="" class="password_hint bg-tartiary card pt-1 mt-2">
                         <strong>{{ __('Password Must') }}:</strong></br>
