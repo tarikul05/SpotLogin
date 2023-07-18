@@ -208,8 +208,6 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
     v_title = ((title == '') ? v_title : title);
     var p_event_id = p_event_id;
     document.getElementById("p_school_id").value = p_school_id;
-                
-    
 
     //email selection modal on click email reminder -->
 
@@ -237,13 +235,20 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $("#mother_email_div").hide();
             }
 
-            if (value.student_email  && value.student_email != '') {
+            if (value.secondary_email && value.secondary_email != '') {
                 //document.getElementById("student_email_chk").value = value.student_email;
                 document.getElementById("student_email_chk").checked = true;
-                $('#student_email_cap').html(value.student_email);
+                $('#student_email_cap').html(value.secondary_email);
                 $("#student_email_div").show();
             } else {
-                $("#student_email_div").hide();
+                if (value.primary_email  && value.primary_email != '') {
+                    //document.getElementById("student_email_chk").value = value.student_email;
+                    document.getElementById("student_email_chk").checked = true;
+                    $('#student_email_cap').html(value.primary_email);
+                    $("#student_email_div").show();
+                } else {
+                    $("#student_email_div").hide();
+                }
             }
         } else {
 
@@ -301,11 +306,11 @@ function getCookie(cname) {
     return "";
 } 
 
-function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='',p_school_id=0){
+function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email,p_school_id=0){
     var emails='',email_cc='',email_bcc='',email_subject='',email_body='',data='';
     var p_attached_file ='';
     var client_id='',client_name='',client_lastname='',client_firstname='',invoice_price='',invoice_filename='';
-    
+    console.log('les emails', p_email)
     $.ajax({
         url: BASE_URL + '/pay_reminder_email',
         data: 'type=fetch_email_inv_detail&template_code='+p_template_code+'&p_inv_auto_id='+p_inv_auto_id+'&p_inv_file='+p_inv_file+'&p_email='+p_email+'&p_school_id='+p_school_id,
@@ -317,8 +322,9 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email ='
         },
         success: function(data) {
             console.log(data);
+            $("#email_list_modal").modal('hide');
             $("#pageloader").hide();
-            successModalCall("email_sent",'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
+            successModalCall("Email successfully sent to all selected addresses",'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
             // $.each(data, function(key,value){
             //     email_subject=value.subject_text;
             //     email_body=value.body_text;

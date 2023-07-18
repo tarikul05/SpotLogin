@@ -57,16 +57,19 @@
                     <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
                 </td>
                 <td class="pt-3">{{ $student->email; }} </td>
-                <td class="pt-2">
+                <td class="pt-3">
                     @if(!$student->user)
-                        <span>{{ __('No') }}</span>
+                        <button disabled style="border:1px solid #EEE; font-size:12px;margin:0; width:150px;">{{ __('Not yet registered') }}</button><br>
                         @can('students-sent-mail')
-                            <button class="btn btn-xs btn-info send-invite-btn" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
                             </button>
                         @endcan
                     @else
-                        <p class="pt-2 text-left small">registered</p>    <!--<span class="">{{$student->user->username}}</span>-->
+                    <button disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;">{{ __('Registered') }}</button><br>    <!--<span class="">{{$student->user->username}}</span>-->
+                        <button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <i class="fa-solid fa-envelope"></i> Re-send invite
+                        </button>
                     @endif
                 </td>
                 <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>

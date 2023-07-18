@@ -118,7 +118,8 @@ class InvoiceController extends Controller
                 $student = Student::find($result_data->client_id);
                 if ($student) {
                     if (isset($student->student_notify) && $student->student_notify == 1) {
-                        $result_data->student_email = $student->email;
+                        //$result_data->student_email = $student->email2;
+                        $result_data->secondary_email = $student->email2;
                     }
                     if (isset($student->father_notify) && $student->father_notify == 1) {
                         $result_data->father_email = $student->father_email;
@@ -128,7 +129,8 @@ class InvoiceController extends Controller
                     }
                     $result_data->class_name = 'student';
                     $result_data->primary_email = $student->email;
-                    $result_data->secondary_email = $student->email2;
+                    $result_data->student_email = $student->email;
+                    //$result_data->secondary_email = $student->email2;
                 }
                 
             } else {
@@ -183,6 +185,8 @@ class InvoiceController extends Controller
                 $emails[] = $teacher->email;
                 $emails[] = $teacher->email2;
             }
+           
+
             $result_data->emails = $emails;
 
             $invoiceCurrency = InvoiceItem::active()->where('invoice_id', $p_inv_auto_id)->get()->pluck('price_currency')->join(',');

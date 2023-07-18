@@ -842,40 +842,56 @@
 
     <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
         aria-labelledby="email_list_modal" name="email_list_modal">
-        <div class="modal-dialog mt-5" role="document">
+        <div class="modal-dialog modal-dialog-centered mt-5" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
+                    <h4 class="light-blue-txt gilroy-bold">Send the invoice</h4>
                 </div>
                 <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                     <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
-
-                        <div class="form-group col-md-12" id="father_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap">{{ __("Father's email")}}:</label>
+                        <div class="alert alert-info">
+                            <div class="form-group col-md-12">
+                            <i class="fa-solid fa-file-pdf"></i> Format type file: PDF<br>
+                            <i class="fa-regular fa-envelope"></i> Send Type: By email
                             </div>
                         </div>
-
-                        <div class="form-group col-md-12" id="mother_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">{{ __("Mother's email")}}:</label>
+                        <div class="form-group row col-md-12" id="father_email_div">
+                            <div class="btn-group border-bottom col-md-9 text-left">
+                                <input  type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked> 
+                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Father's email")}})</div>
                             </div>
+                            <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
+                                ({{ __("Father's email")}})
+                            </div>  
                         </div>
 
-                        <div class="form-group col-md-12" id="student_email_div">
-                            <div class="btn-group text-left">
-                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap">{{ __("Student's email")}}:</label>
+                        <div class="form-group row col-md-12" id="mother_email_div">
+                            <div class="btn-group col-md-9 border-bottom text-left">
+                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
+                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Mother's email")}})</div>
                             </div>
+                            <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
+                                ({{ __("Mother's email")}})
+                            </div>  
+                        </div>
 
+                        <div class="form-group row col-md-12" id="student_email_div">
+                            <div class="btn-group col-md-9 text-left">
+                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
+                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Student's email")}})</div>
+                            </div>
+                            <div class="col-md-3 pt-2 text-right d-none d-sm-block">
+                                ({{ __("Student's email")}})
+                            </div> 
                         </div>
 
                         <div class="form-group col-md-12">
                             <div class="text-left">
                                 <div class="checked">
-                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
+                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="Add another email adress here" value="" maxlength="100">
                                 </div>
                             </div>
                         </div>
@@ -1231,7 +1247,7 @@
             dataType: 'json',
             //async: false,
             success: function (result) {
-                console.log(result);
+                console.log('resultttttt', result);
                 if (result.status) {
                     confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
                     return false;
@@ -1258,22 +1274,30 @@
         var p_inv_auto_id = document.getElementById("invoice_id").value;
         var p_seleted_invoice_type = document.getElementById("invoice_type").value;
         var p_school_id = document.getElementById("p_school_id").value;
-        if ((document.getElementById("father_email_chk").checked == true) && (document.getElementById("father_email_chk").value != '')) {
-            p_emails = document.getElementById("father_email_chk").value + "|";
+
+        if (document.getElementById("father_email_chk").checked) {
+            if (document.getElementById("father_email_cap").textContent != '') {
+                p_emails = document.getElementById("father_email_cap").textContent + "|";
+            }
         }
-        if ((document.getElementById("mother_email_chk").checked == true) && (document.getElementById("mother_email_chk").value != '')) {
-            p_emails += document.getElementById("mother_email_chk").value + "|";
+        if (document.getElementById("mother_email_chk").checked) {
+            if (document.getElementById("mother_email_cap").textContent != '') {
+                p_emails += document.getElementById("mother_email_cap").textContent + "|";
+            }
         }
 
-        if ((document.getElementById("student_email_chk").checked == true) && (document.getElementById("student_email_chk").value != '')) {
-            p_emails += document.getElementById("student_email_chk").value + "|";
+        if (document.getElementById("student_email_chk").checked) {
+            if (document.getElementById("student_email_cap").textContent != '') {
+                p_emails += document.getElementById("student_email_cap").textContent + "|";
+            }
         }
+
         if ($('#other_email').val() != '') {
             p_emails += $('#other_email').val();
         }
 
 
-        console.log(p_seleted_invoice_type);
+        console.log('list emails send', p_emails);
         
         SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
         
