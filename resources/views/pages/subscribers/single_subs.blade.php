@@ -169,6 +169,7 @@
                     <p class="txt">Enter your payment<br>details below to subscribe</p>
                 </div>
 
+                <div class="beforeError" style="min-height: 40px;"></div>
                 <div id="card-errors" role="alert"></div>
 
                 <div class="payment-form card_payment pt-1 p-1 pb-3">
@@ -356,6 +357,7 @@
                 })
                 .then(function(result) {
                     $('.loaderPayment').fadeOut();
+                    $('.beforeError').fadeOut('fast');
                     if (result.error) {
                         var errorElement = document.getElementById('card-errors');
                         errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
