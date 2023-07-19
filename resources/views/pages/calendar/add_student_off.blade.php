@@ -161,6 +161,27 @@ $('#student').multiselect({
 	search: true
 });
 
+//Verifiy dates
+$('#start_date').on('change', function(e) {
+if ($("#end_date").val() < $("#start_date").val()) {
+	$("#end_date").val($("#start_date").val());
+	errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+	setTimeout(() => {
+		$("#end_date").val($("#start_date").val());
+	}, "200")
+}
+})
+
+$('#end_date').on('change', function(e) {
+if ($("#end_date").val() < $("#start_date").val()) {
+	$("#end_date").val($("#start_date").val());
+	errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+	setTimeout(() => {
+		$("#end_date").val($("#start_date").val());
+	}, "200")
+}
+});
+
 // save functionality
 $('#student_off').on('submit', function() {
 		var formData = $('#add_teacher').serializeArray();
