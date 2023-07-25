@@ -15,10 +15,10 @@
 <div class="content" id="manual_invoice_page">
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
+			<div class="row panel-row" style="margin:0; padding-top:15px;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Detail')}}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Invoice')}}</label>
 					</div>
 				</div>
                 <div class="col-sm-6 col-xs-12 btn-area pt-1">
@@ -50,7 +50,7 @@
                         <label style="display:none;" id="bank_caption" name="bank_caption">Bank</label>
                         <label style="display:none;" id="holder_cap" name="holder_cap">Account Holder</label>
                         <fieldset>
-                            <table id="table_header" class="m_invoice_info" width="100%" border="1" style="background:lightblue;">
+                            <table id="table_header" class="table table-stripped" width="100%" style="background:rgb(223, 228, 230);">
                                 <tbody>
                                     <tr>
                                         <td colspan="2" align="center">
@@ -455,7 +455,7 @@
 							</div>
                             <div id="details_transaction" open="">
                                 <!-- <summary><h4></h4></summary> -->
-                                <table id="details_tbl" width="100%" border="1" cellpadding="0" cellspacing="0" style="background:lightblue;">
+                                <table id="details_tbl" class="table table-stripped" width="100%" cellpadding="0" cellspacing="0" style="background:rgb(223, 228, 230);">
                                     <thead>
                                         <tr>
                                             <th style="display: none;" width="0%">#</th>
@@ -463,9 +463,9 @@
                                                 <label id="row_hdr_date" name="row_hdr_date" class="gilroy-semibold light-blue-txt">Date</label>
                                             </th>
                                             <th width="manual_inv_txt">
-                                                <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Details</label>
+                                                <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Description/Detail</label>
                                             </th>
-                                            <th width="10%" style="text-align:right">
+                                            <th width="10%" style="text-align:center;">
                                                 <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Currency</label>
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
@@ -512,58 +512,117 @@
                                             <th></th>
                                         </tr>
                                         <tr>
-                                            <th colspan="5" style="text-align:right">
-                                                <button type="button" class="btn btn-theme-success add-row"><em class="glyphicon glyphicon-plus"></em>Add</button>
+                                            <th colspan="5" style="text-align:right;">
+                                                <button type="button" class="btn btn-theme-success add-row"><em class="glyphicon glyphicon-plus"></em>Add invoice item</button>
                                             </th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
                             <!-- Transaction Detail info END -->
-                            <div class="section_header_class">
-								<label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
-							</div>
-
-                            <div class="card">
-                                <div class="card-body bg-tertiary">
+                            
 
                             <div id="add_tax_div" open="">
-                                <div class="add_more_tax_row row">
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255"> </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5"> </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255"> </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
-                                            <div class="col-sm-7">
-                                                <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100"> </div>
-                                        </div>
-                                    </div>
+        
+                                <?php $count = count($RegisterTaxData); ?>
+                                <?php if($count > 0) { ?>
+                                <div class="section_header_class">
+                                    <label class="invoice_subtitle">{{__('Taxes') }}:</label>
                                 </div>
+                                You have <?php echo $count; ?> taxes pre-registered
+                                <?php } else { ?>
+                                    <div class="section_header_class">
+                                        <label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
+                                    </div>
+                                    <div class="card mb-2">
+                                    <div class="card-body bg-tertiary">
+                                        <span class="badge bg-info">new</span>
+                                    <div class="add_more_tax_row row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255"> </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5"> </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255"> </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100"> </div>
+                                            </div>
+                                        </div>
+                                    </div></div>
+                                    </div>
+                                <?php } ?>
+
+                                <?php foreach($RegisterTaxData as $tax): ?>
+                                <div class="add_more_tax_row card mb-2">
+                                    <div class="card-body bg-tertiary">
+                                <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                                                <div class="col-sm-7">                                        
+                                                    <input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                                                <div class="col-sm-7">                                        
+                                                    <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
+                                                </div>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                                                <div class="col-sm-7">                                        
+                                                    <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="255">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
+                                                <div class="col-sm-7">                                        
+                                                    <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
+                                                </div>
+                                                <div class="col-sm-1">                                        
+                                                    <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div></div>
+                                <?php endforeach; ?>
+
+                                
+
                                 <div id="add_more_tax_div"></div>
-                                <div class="row col-md-12">
+                                <div class="row col-md-12 mt-3 mb-5">
                                     <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
                                 </div>
                             </div>
-                            <hr>
+                            
+
                             <div id="add_expense_div" open="">
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Add Expenses') }}:</label>
                                 </div>
+                                <div class="card mb-2">
+                                    <div class="card-body bg-tertiary">
+                                        <span class="badge bg-info">new</span>
                                 <div class="add_more_expense_row row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
@@ -580,18 +639,20 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                                 <div id="add_more_expense_div"></div>
-                                <div class="row col-md-12">
+                                
+                            </div></fieldset>
+                            </div>
+                                </div>
+                                <div class="row col-md-12 mt-3 mb-5">
                                     <button id="add_more_expense_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
-                                </div>
-                            </div>
-                                </div>
-                            </div>
+                      
+                            
                         </fieldset>
                     </form>
                 </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -606,8 +667,10 @@ var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
 
 $(document).on('click','#add_more_tax_btn',function(){
 
-    var resultHtml = `<div class="add_more_tax_row row">
-        <hr>
+    var resultHtml = `<div class="add_more_tax_row card mb-2">
+                <div class="card-body bg-tertiary">
+                    <span class="badge bg-info">new</span>
+                    <div class="row">
             <div class="col-md-6">
                 <div class="form-group row">
                     <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
@@ -636,10 +699,11 @@ $(document).on('click','#add_more_tax_btn',function(){
                         <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
                     </div>
                     <div class="col-sm-1">                                        
-                        <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             </div>
+        </div></div>
         </div>`;
 
         $("#add_more_tax_div").append(resultHtml);
@@ -652,8 +716,10 @@ $(document).on('click','.delete_tax',function(){
 
 $(document).on('click','#add_more_expense_btn',function(){
 
-var resultHtml = `<div class="add_more_expense_row row">
-        <hr>
+var resultHtml = `<div class="card add_more_expense_row mb-2">
+    <div class="card-body bg-tertiary">
+        <span class="badge bg-info">new</span>
+        <div class="row">
         <div class="col-md-6">
             <div class="form-group row">
                 <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
@@ -671,10 +737,11 @@ var resultHtml = `<div class="add_more_expense_row row">
                     <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100">
                 </div>
                 <div class="col-sm-1">                                        
-                        <button type="button" class="btn btn-theme-warn delete_expense"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn btn-theme-warn delete_expense"><i class="fa-solid fa-trash"></i></button>
                     </div>
             </div>
-        </div>
+        </div></div>
+    </div>
     </div>`;
 
     $("#add_more_expense_div").append(resultHtml);

@@ -64,6 +64,7 @@ class InvoiceController extends Controller
 // dd($invoice_type);
         $invoices = Invoice::active()
                     ->where('school_id', $this->schoolId);
+
         if ($user_role != 'superadmin') {
             if ($user->isTeacherSchoolAdmin()) {
                 $invoice_type = ($type == 'school') ? 'S' : 'T'; 
@@ -85,7 +86,10 @@ class InvoiceController extends Controller
         }
 
         $invoices->orderBy('id', 'desc');
-        $invoices = $invoices->get();
+        $results =  $invoices = $invoices->get();
+
+        //dd($results);
+
         return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
@@ -1044,6 +1048,7 @@ class InvoiceController extends Controller
         try {
             $data = $request->all();
             //dd($data);
+            $tax_ids = $data['selectedTaxIds'];
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
@@ -1078,11 +1083,12 @@ class InvoiceController extends Controller
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user);
             $invoiceData['created_by'] = $user->id;
-           
+
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
 
+            
             $query = new Invoice;
             $studentEvents = $query->generateStudentEvent($user,$p_person_id,$schoolId,$user_role,$invoice_type,$dateS,$dateEnd,$p_event_ids);
             
@@ -1164,6 +1170,31 @@ class InvoiceController extends Controller
                     
 
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
+                    
+
+                    $total_tax_perc = 0;
+                    $total_tax_amount = 0;
+                    $detail_id =  explode(',',$tax_ids);
+                    $mytaxes = InvoicesTaxes::whereIn('id', $detail_id)->get();
+
+                    if (!empty($mytaxes)) {
+                        foreach ($mytaxes as $tax) {
+                            $taxData = [
+                                'invoice_id' => $invoiceItemData['invoice_id'],
+                                'tax_name' => $tax->tax_name,
+                                'tax_percentage' => $tax->tax_percentage,
+                                'tax_number' => $tax->tax_number,
+                                'tax_amount' => number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2),
+                            ];
+                            
+                            $total_tax_perc += $tax->tax_percentage;
+                            $total_tax_amount += number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2);
+                            $InvoiceTax = InvoicesTaxes::create($taxData);
+                        }
+                           
+                    }
+
+
                     $amt_for_disc = 0;
                     $v_amount_discount_1 = 0;
                     $v_amount_discount_2 = 0;
@@ -1262,7 +1293,11 @@ class InvoiceController extends Controller
             $updateInvoiceCalculation['invoice_header'] = 'From '.$invoiceData->period_starts.' to '.$invoiceData->period_ends.' - '.$teacher_fullname.' "'.$school->school_name.'" from '.$invoiceData->date_invoice;
             
             // print_r($invoiceData->id);
-            
+             // update invoice tax info
+
+             $updateInvoiceCalculation['tax_perc'] = $total_tax_perc;
+             $updateInvoiceCalculation['tax_amount'] = $total_tax_amount;
+    
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
             $result = array(
@@ -1380,12 +1415,16 @@ class InvoiceController extends Controller
         //     # code...
         // }
         //dd($invoice->invoice_items);
+
+        //$RegisterTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
+        $RegisterTaxData = InvoicesTaxes::active()->where(['invoice_id'=> $invoice->id])->get();
+
         $genders = config('global.gender');
         $countries = Country::active()->get();
         return view('pages.invoices.invoice_modification', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice'));
+        ])->with(compact('timeZone','genders','invoice_status_all', 'invoice_type_all','countries', 'provinces','invoice', 'RegisterTaxData'));
     }
 
     /**
@@ -1414,6 +1453,8 @@ class InvoiceController extends Controller
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
 
+        $RegisterTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
+
         $teachers = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = DB::table('school_student')
                     ->join('students','school_student.student_id','=','students.id')
@@ -1423,7 +1464,7 @@ class InvoiceController extends Controller
         return view('pages.invoices.manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency','school_currency', 'isInEurope'));
+        ])->with(compact('genders','school','schoolId','countries', 'provinces','students','teachers','currency','school_currency', 'RegisterTaxData', 'isInEurope'));
     }
 
     /**
@@ -1461,10 +1502,12 @@ class InvoiceController extends Controller
         $InvoicesExpData = InvoicesExpenses::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();  
         $InvoicesItemData = InvoiceItem::active()->where(['invoice_id'=>$invoiceId])->get()->toArray();       
 
+        $RegisterTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
+
         return view('pages.invoices.update_manual_invoice', [
             'title' => 'Invoice',
             'pageInfo' => ['siteTitle' => '']
-        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData', 'isInEurope'));
+        ])->with(compact('genders','currency','schoolId','school','countries', 'provinces','students','teachers','invoiceData','InvoicesTaxData','InvoicesExpData','InvoicesItemData', 'RegisterTaxData', 'isInEurope'));
     }
 
     /**

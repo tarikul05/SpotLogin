@@ -44,13 +44,13 @@
             <option value="1">Paid</option>
             <option value="0">Unpaid</option>
         </select>
-        <table id="example" class="display" style="width:100%">
+        <table id="example" class="display table table-stripped table-hover" style="width:100%">
             <thead>
                 <tr>
                     <!-- <th style="display: none">{{ __('#') }}</th>
                     <th style="display: none">{{ __('#') }}</th> -->
-                    <th>&nbsp;</th>
-                    <th>{{ __('#') }}</th>
+                    <!--<th>&nbsp;</th>-->
+                    <!--<th>{{ __('#') }}</th>-->
                     <th>{{ __('Date') }}</th>
                     <th class="sp_only">{{ __('Client Name') }}</th>
                     <th>{{ __('Type') }}</th>
@@ -97,8 +97,8 @@
                     <tr>
                         <!-- <td style="display: none">{{ $invoice->id; }}</td>
                         <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
-                        <th>&nbsp;</th>
-                        <td class="txt-grey text-left">{{ $i }} </td>
+                        <!--<th>&nbsp;</th>-->
+                        <!--<td class="txt-grey text-left">{{ $i }} </td>-->
                         
                         <td>
                             {{ date('d M Y', strtotime($invoice->date_invoice)); }}
@@ -123,7 +123,7 @@
                         @endphp
                         <td>{{ $invoice_name}}</td>
                         
-                        <td>{{ number_format($invoice->total_amount, '2') }}</td>
+                        <td>{{ number_format($invoice->total_amount + $invoice->tax_amount, '2') }}</td>
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
                             <td class="text-left">
@@ -273,7 +273,7 @@
             //"searching": true,
             //"bProcessing": true,
             "bDestroy": true, 
-            "order": [[2, "asc"]],
+            "order": [[2, "desc"]],
             "bFilter": true,
             "bInfo": false,
             "lengthChange": false,

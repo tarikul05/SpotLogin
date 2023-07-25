@@ -51,6 +51,18 @@ class AppServiceProvider extends ServiceProvider
         );
 
         view()->composer(
+            ['layouts.auth', 'layouts.verify'], 
+            function ($view) {
+                $language = Language::orderBy('sort_order')->get();
+                $countries = Country::where([
+                    ['is_active', 1],
+                    ['deleted_at', null]
+                ])->orderBy('code')->get();
+                $view->with(compact('language', 'countries'));
+            }
+        );
+
+        view()->composer(
             ['layouts.main'], 
             function ($view) {
                 $user = auth()->user();

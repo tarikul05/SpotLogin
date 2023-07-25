@@ -539,6 +539,10 @@
 						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+
+
+
+
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -673,6 +677,7 @@
 								</div>
 							</div>
 						</div>
+						<input type="hidden" name="selected_tax_ids" value="">
 					</form>
 				</div> 
 				<!--End of Tab 4 -->
@@ -695,9 +700,7 @@
 	<!-- End Tabs content -->
 @endsection
 
-
 @section('footer_js')
-
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -922,8 +925,21 @@ $("#country_code, #billing_country_code").trigger('change')
 		return selected_events;
 	}
 
+
+
+
 	$('#btn_convert_invoice').click(function(e) {
-		
+
+		var selectedTaxIds = [];
+
+		var checkboxes = document.querySelectorAll('.taxe_class');
+		checkboxes.forEach(function(checkbox) {
+			if (checkbox.checked) {
+				var taxId = checkbox.dataset.id;
+				selectedTaxIds.push(taxId);
+			}
+		});
+
 		$(this).attr("disabled", "disabled");
 		var p_event_ids = GetCheckBoxSelectedValues('event_check');
 		if (p_event_ids == '') {
@@ -947,9 +963,12 @@ $("#country_code, #billing_country_code").trigger('change')
 		
 		var p_invoice_id = '';
 		var auto_id = 0;
-		var inv_type=getUrlVarsO()["inv_type"]
+		var inv_type=getUrlVarsO()["inv_type"];
+
+		console.log('he', JSON.stringify(selectedTaxIds))
+		var tax_ids = selectedTaxIds
 		
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type;
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -967,12 +986,13 @@ $("#country_code, #billing_country_code").trigger('change')
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
-					errorModalCall(GetAppMessage('error_message_text'));
+					errorModalCall(result);
 					// alert(value.status);
 				}
 			}, // success
 			error: function(ts) {
-				errorModalCall(GetAppMessage('error_message_text'));
+				errorModalCall(ts);
+				console.log(ts)
 				// alert(ts.responseText + ' Generate Invoice')
 			}
 		}); // Ajax
@@ -1455,7 +1475,6 @@ $('#save_btn').click(function (e) {
 							}
 							resultHtml += '</tr>';
 							
-
 							
 							prev_week = value.week_name;
 
@@ -1512,6 +1531,35 @@ $('#save_btn').click(function (e) {
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
+
+
+				
+
+
+
+				var RegisterTaxData = @json($RegisterTaxData);
+
+				var totalTaxAmount = 0;
+				var sub_total_lesson = total_sell.toFixed(2); 
+	
+				RegisterTaxData.forEach(function(tax) {
+					totalTaxAmount += sub_total_lesson * parseFloat(tax.tax_percentage) / 100;
+				});
+
+				var grandTotal = totalTaxAmount > 0 ? sub_total_lesson + totalTaxAmount : sub_total_lesson;
+
+				RegisterTaxData.forEach(function(tax) {
+						resultHtml += '<tr style="background-color:#EEE;">' +
+					'<td><input class="taxe_class" type="checkbox" data-id="' + tax.id + '" checked></td>' +
+					'<td colspan="6" style="text-align:right">tax ' + tax.tax_name + ' (' + tax.tax_percentage + '%)</td>' +
+					'<td colspan="2" style="text-align:right"><b>+' + (parseFloat(total_sell) * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</b></td>' +
+					'</tr>';
+        		});
+	
+
+
+
+
 
 
 				var disc1_perc = 0,
@@ -1641,7 +1689,7 @@ $('#save_btn').click(function (e) {
 						}
 
 						total_disc = (disc1_amt + disc2_amt + disc3_amt + disc4_amt + disc5_amt + disc6_amt);
-						total_sell = total_sell - total_disc;
+						total_sell = totalTaxAmount + total_sell - total_disc;
 				} // calculate disc
 
 				if (total_disc > 0) {
@@ -1693,6 +1741,9 @@ $('#save_btn').click(function (e) {
 				document.getElementById("lesson_footer_div").style.display = "none";
 		}
 	} // populate_student_lesson
+
+
+
 
 
 	function preview() {

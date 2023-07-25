@@ -1,4 +1,4 @@
-@extends('layouts.raw')
+@extends('layouts.verify')
 
 @section('head_links')
 
@@ -7,31 +7,27 @@
 @section('content')
   <div class="content">
 	<div class="container-fluid">
-		<header class="panel-heading" style="border: none;">
+		<header class="panel-heading2" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area">
-					<div class="page_header_class">
-						<label id="page_header" name="page_header">Creating user for {{ $school->school_name }}</label>
+					<div class="page_header_class2">
+						<label id="page_header" name="page_header">{{ __('Welcome') }} {{ !empty($user_data) ? $user_data->firstname : '' }},</label>
+						<span>{{ __('You are invited by') }} <b>{{ $school->school_name }}</b> {{ __('to create your personnal account') }}</span>
 					</div>
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
+				<!--<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>
-				</div>    
+				</div>    -->
 			</div>          
 		</header>
 		<!-- Tabs navs -->
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
+
 
 		<!-- Tabs content -->
-		<div class="tab-content" id="ex1-content">
+		<div class="tab-content pt-2" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 				<form action="{{route('user.add')}}" class="form-horizontal" id="add_user" name="add_user" method="post" role="form">
 					@csrf
@@ -40,18 +36,18 @@
           <input type="hidden" name="person_type" value="{{ !empty($verifyToken) ? $verifyToken->person_type : '' }}">
 					<input type="hidden" name="school_id" value="{{ !empty($verifyToken) ? $verifyToken->school_id : '' }}">
 					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
-						</div>
+
+						<div class="card">
+							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
-                <div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Username') }} : *</label>
+                			<div class="form-group row">
+									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Login ID') }} : *</label>
 									<div class="col-sm-7">
 										<input class="form-control require" id="add_username" maxlength="50" name="username" placeholder="username" type="text">
 									</div>
 								</div>
-                <div class="form-group row">
+                				<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="password" id="password_label_id">{{__('Password') }} : *</label>
 									<div class="col-sm-7">
 										<div class="input-group">
@@ -60,14 +56,7 @@
 												<i class="fa fa-eye"></i>
 											</span>
 										</div>
-										<small id="" class="password_hint">
-                        <strong>Password Must:</strong></br>
-                        > Be more than 7 Characters</br>
-                        > An Uppercase Character</br>
-                        > A Lowercase Character</br>
-                        > A Number</br>
-                        > A Special character</br>
-                    </small>
+										
 									</div>
 								</div>
 								<div class="form-group row">
@@ -97,8 +86,7 @@
 										<input class="form-control require" id="firstname" name="firstname" type="text" value="{{ !empty($user_data) ? $user_data->firstname : '' }}">
 									</div>
 								</div>
-							</div>
-							<div class="col-md-6">
+					
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
@@ -109,9 +97,23 @@
 									</div>
 								</div>
 							</div>
-							<div class="clearfix"></div>
-					
+						
+					<div class="col-md-6">
+						<small>
+							<strong>{{ __('Password Must') }}:</strong></br>
+								> {{ __('Be more than 7 Characters') }}</br>
+								> {{ __('An Uppercase Character') }}</br>
+								> {{ __('A Lowercase Character') }}</br>
+								> {{ __('A Number') }}</br>
+								> {{ __('A Special character') }}</br>
+							</small>
+
+						<hr>
+
+						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Create my account') }} </button>
+					</div>
 						</div>
+							</div></div>
 					</fieldset>
 				</form>
 			</div>

@@ -1,29 +1,14 @@
+<div class="section_header_class">
+	<label id="teacher_personal_data_caption">{{__('Settings') }}</label>
+</div>
 <div class="row">
     <!-- Tabs navs -->
 	<div class="card-body">
     <nav class="col-lg-10">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab_inner_part1" type="button" role="tab" aria-controls="nav-tab_inner_part1" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tab_inner_part2" type="button" role="tab" aria-controls="nav-tab_inner_part2" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_location.index',['school'=> $schoolId]) : route('event_location.index') }}">{{ __('Locations') }}</a>
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tab_inner_part3" type="button" role="tab" aria-controls="nav-tab_inner_part3" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_level.index',['school'=> $schoolId]) : route('event_level.index') }}">{{ __('Level') }}</a>
-        </div>
-        <div class="float-end btn-group">
-            <a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> Delete</a>
-
-        @can('parameters-create-udpate')
-           
-
-			<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
-				<br><p></p>
-				<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
-					<div class="card-body">
-						<button id="save_btn_param" name="save_btn_param" class="btn btn-success save_button"><i class="fa fa-save"></i> Save settings</button>
-					</div>
-				</div>
-			</div>
-
-
-        @endcan
+            <a class="nav-link active" id="clickCategory" data-bs-toggle="tab" data-bs-target="#tab_inner_part1" type="button" role="tab" aria-controls="nav-tab_inner_part1" aria-selected="false" href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_category.index',['school'=> $schoolId]) : route('event_category.index') }}">{{ __('Event Category') }}</a>
+            <a class="nav-link" id="clickLocation" data-bs-toggle="tab" data-bs-target="#tab_inner_part2" type="button" role="tab" aria-controls="nav-tab_inner_part2" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_location.index',['school'=> $schoolId]) : route('event_location.index') }}">{{ __('Locations') }}</a>
+            <a class="nav-link" id="clickLevel" data-bs-toggle="tab" data-bs-target="#tab_inner_part3" type="button" role="tab" aria-controls="nav-tab_inner_part3" aria-selected="false"  href="{{ auth()->user()->isSuperAdmin() ? route('admin_event_level.index',['school'=> $schoolId]) : route('event_level.index') }}">{{ __('Level') }}</a>
         </div>
     </nav>
 	</div>
@@ -53,7 +38,7 @@
                     </div>
 					<?php //echo '<pre>';print_r($eventCat); ?>
                     <div class="row">
-                        <div id="add_more_event_category_div" class="col-md-10" style="z-index:999;">
+                        <div id="add_more_event_category_div" class="col-md-10" style="z-index:98;">
                         @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
                             @foreach($eventCat as $cat)
                                 <div class="col-md-12 add_more_event_category_row row border-top pb-2 pt-2">
@@ -155,11 +140,7 @@
                                 </div>
                             @php $count++; endforeach @endphp
                         </div>
-                        <div class="col-lg-12">
-                        @can('parameters-create-udpate')
-                            <button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>Add Another Category</button>
-                        @endcan
-                        </div>
+                       
                     </div>
 
                 </div>
@@ -180,14 +161,14 @@
                     </div>
                     <div class="row">
                         <div id="add_more_location_div" class="col-md-8">
-                            @php $count= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
+                            @php $countLocation= isset($eventLastLocaId->id) ? ($eventLastLocaId->id) : 1; @endphp
                             @foreach($locations as $loca)
                                 <div class="col-md-12 add_more_location_row row">
                                     <div class="col-md-5 col-9">
                                         <div class="form-group row">
                                             <div class="col-sm-11">
-                                                <input type="hidden" name="location[{{$count}}][id]" value="<?= $loca->id; ?>">
-                                                <input class="form-control location_name" name="location[{{$count}}][name]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
+                                                <input type="hidden" name="location[{{$countLocation}}][id]" value="<?= $loca->id; ?>">
+                                                <input class="form-control location_name" name="location[{{$countLocation}}][name]" placeholder="{{ __('Location Name') }}" value="<?= $loca->title; ?>" type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -201,17 +182,18 @@
                                         @endcan
                                     </div>
                                 </div>
-                            @php $count++; endforeach @endphp
+                            @php $countLocation++; endforeach @endphp
                         </div>
                         <div class="col-md-12">
                         @can('parameters-create-udpate')
-                            <button id="add_more_location_btn" data-last_location_id="{{$count}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>
+                            <!--<button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn bg-info text-white save_button"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Location') }}</button>-->
                         @endcan
                         </div>
                     </div>
 
                 </div>
             </div>
+			
             <!-- End Tabs content -->
             <!-- Tabs content -->
             <div id="tab_inner_part3" class="tab_inner tab-pane tab-content">
@@ -227,14 +209,14 @@
                     </div>
                     <div class="row">
                         <div id="add_more_level_div" class="col-md-8">
-                        @php $count= isset($eventLastLevelId->id) ? ($eventLastLevelId->id) : 1; @endphp
+                        @php $countLevel= isset($eventLastLevelId->id) ? ($eventLastLevelId->id) : 1; @endphp
                         @foreach($levels as $lvl)
                                 <div class="col-md-12 add_more_level_row row">
                                     <div class="col-md-5 col-9">
                                         <div class="form-group row">
                                             <div class="col-sm-11">
-                                                <input type="hidden" name="level[{{$count}}][id]" value="<?= $lvl->id; ?>">
-                                                <input class="form-control level_name" name="level[{{$count}}][name]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
+                                                <input type="hidden" name="level[{{$countLevel}}][id]" value="<?= $lvl->id; ?>">
+                                                <input class="form-control level_name" name="level[{{$countLevel}}][name]" placeholder="{{ __('Level Name') }}" value="<?= $lvl->title; ?>" type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -248,11 +230,11 @@
                                         @endcan
                                     </div>
                                 </div>
-                            @php $count++; endforeach @endphp
+                            @php $countLevel++; endforeach @endphp
                         </div>
                         <div class="col-md-12">
                         @can('parameters-create-udpate')
-                            <button id="add_more_level_btn" type="button" data-last_level_id="{{$count}}"  class="btn bg-info save_button text-white"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>
+                            <!--<button id="add_more_level_btn" type="button" data-last_level_id="{{$countLevel}}"  class="btn bg-info save_button text-white"><i class="fa fa-plus" aria-hidden="true"></i>{{ __('Add Another Level') }}</button>-->
                         @endcan
                         </div>
                     </div>
@@ -262,6 +244,23 @@
     </form>
 		</div>
 	</div>
+
+	
+	@can('parameters-create-udpate')
+	<div class="col-lg-2 btn_actions" style="position:fixed; right:0; z-index:9999;">
+		<br><br><p></p>
+		<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+			<div class="card-body">
+				<button id="add_more_event_category_btn" data-last_event_cat_id="{{$count}}" type="button" class="btn bg-info text-white save_button w-100"><i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add a category') }}</button>
+				<button style="display: none;" id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="mt-1 btn bg-info text-white save_button w-100"><i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add a location') }}</button>
+				<button style="display: none;" id="add_more_level_btn" type="button" data-last_level_id="{{$countLevel}}"  class="mt-1 btn bg-info save_button text-white w-100"><i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add a level') }}</button>
+				<button id="save_btn_param" name="save_btn_param" class="mt-1 btn btn-success save_button w-100"><i class="fa fa-save"></i> Save settings</button>
+			</div>
+		</div>
+	</div>
+@endcan
+
+
     <!-- End Tabs content -->
 </div>
 
@@ -369,6 +368,7 @@ $(document).ready(function(){
 		</div>`;
 
 		$("#add_more_event_category_div").append(resultHtml);
+		window.scrollTo(0, document.body.scrollHeight);
 	})
 	$(document).on('click','.delete_event',function(){
 		var lst_id = $(this).attr('data-r_id');
@@ -429,7 +429,26 @@ $(document).ready(function(){
 		</div>`;
 
 		$("#add_more_level_div").append(resultHtml);
-	})
+		window.scrollTo(0, document.body.scrollHeight);
+	});
+
+
+	$(document).on('click','#clickCategory',function(){
+		$('#add_more_event_category_btn').fadeIn();
+		$('#add_more_location_btn').fadeOut();
+		$('#add_more_level_btn').fadeOut();
+	});
+	$(document).on('click','#clickLocation',function(){
+		$('#add_more_event_category_btn').fadeOut();
+		$('#add_more_location_btn').fadeIn();
+		$('#add_more_level_btn').fadeOut();
+	});
+	$(document).on('click','#clickLevel',function(){
+		$('#add_more_event_category_btn').fadeOut();
+		$('#add_more_location_btn').fadeOut();
+		$('#add_more_level_btn').fadeIn();
+	});
+
 
 	$(document).on('click','.delete_level',function(){
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
@@ -488,6 +507,7 @@ $(document).ready(function(){
 		</div>`;
 
 		$("#add_more_location_div").append(resultHtml);
+		window.scrollTo(0, document.body.scrollHeight);
 	})
 
 	$(document).on('click','.delete_location',function(){

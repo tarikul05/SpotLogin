@@ -67,8 +67,8 @@
                         @endcan
                     @else
                     <button disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;">{{ __('Registered') }}</button><br>    <!--<span class="">{{$student->user->username}}</span>-->
-                        <button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
-                            <i class="fa-solid fa-envelope"></i> Re-send invite
+                        <button class="send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <i class="fa-solid fa-envelope"></i> Re-send password
                         </button>
                     @endif
                 </td>
@@ -125,7 +125,7 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
         event.preventDefault();
         var schoolId = this.getAttribute('data-school');
         var studentId = this.getAttribute('data-student');
-        if (confirm('Are you sure want to send Invitation?')) {
+        if (confirm('Are you sure want to send an invitation to this student ?')) {
             var redirectUrl = '{{ route('studentInvitationGet', ['school' => ':school', 'student' => ':student']) }}';
             redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
             window.location.href = redirectUrl;
@@ -133,6 +133,21 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
     });
 });
 </script>
+<script>
+    var sendInviteButtons = document.getElementsByClassName('send-password-btn');
+    Array.prototype.forEach.call(sendInviteButtons, function(button) {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            var schoolId = this.getAttribute('data-school');
+            var studentId = this.getAttribute('data-student');
+            if (confirm('Are you sure want to send an invitation to reset the password of this student ?')) {
+                var redirectUrl = '{{ route('studentPasswordGet', ['school' => ':school', 'student' => ':student']) }}';
+                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
+                window.location.href = redirectUrl;
+            }
+        });
+    });
+    </script>
 <script>
     document.getElementById('select-all').addEventListener('change', function () {
         var checkboxes = document.querySelectorAll('input[name="selected_students[]"]');

@@ -10,9 +10,7 @@
 @endsection
 <?php 
     $invoiceIssued = ($invoice->invoice_status ==10);
-
  ?>
-
 @section('content')
 <div class="content">
 	<div class="container-fluid">
@@ -76,7 +74,7 @@
                             @if ($invoice->seller_country_id != 'CA')
                                 <label class="section_header_class">{{ $invoice->invoice_header }}</label>
                             @endif
-                            <table class="table" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
+                            <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
                                 
                                     
                                     @php 
@@ -164,11 +162,10 @@
                                             </tr> -->
                                             <label style="display:none;" 
                                                 id="ssubtotal_amount_all">
-                                                <?php echo !empty($sub_total_lesson) ? number_format($sub_total_lesson,'2') :'0.00'; ?></label>
-                                                        
+                                                <?php echo !empty($sub_total_lesson) ? number_format($sub_total_lesson,'2') :'0.00'; ?></label>                
                                             
                                             @if ($event_type == 10)
-                                                <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
+                                                
                                                 
                                                 <tr>
                                                     <td colspan="2" style="text-align:right">Sub-Total Lessons</td>
@@ -177,6 +174,10 @@
                                                         {{ number_format($sub_total_lesson,'2') }}
                                                     </td>
                                                 </tr>
+
+                                
+                                                <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</p>
+
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
@@ -190,6 +191,7 @@
                                                         <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align: right; padding-right: 5px;" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
                                                     </td>
                                                 </tr>
+
                                                 <tr>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount Amount:</td>
@@ -281,7 +283,7 @@
                                     @if ($invoice->tax_amount > 0)
 
                                     @foreach(DB::table('invoices_taxes')->where('invoice_id', $invoice->id)->get() as $item)
-                                    <tr>
+                                    <tr style="background-color: #EEE;">
                                         <td colspan="2" style="text-align:right">{{ $item->tax_name }}</td>
                                         <td>({{ $item->tax_percentage }}%)</td>
                                         <td style="text-align:right; margin-right:0 padding-right:0;">
@@ -919,6 +921,7 @@
 
 
 @section('footer_js')
+
 <script type="text/javascript">
     $("#date_invoice").datetimepicker({
 		format: "dd/mm/yyyy",

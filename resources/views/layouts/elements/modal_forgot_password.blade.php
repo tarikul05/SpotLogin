@@ -4,13 +4,13 @@
         <div class="modal-content">
             <div class="modal-header d-block text-center border-0">
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-                <h3 class="modal-title light-blue-txt gilroy-bold" id="forgotPasswordModalLabel">{{ __('Forgot assword?') }}</h3>
+                <h3 class="modal-title light-blue-txt gilroy-bold" id="forgotPasswordModalLabel">{{ __('Forgot Password?') }}</h3>
                 
             </div>
             <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
                 <form id="forgot_password_form" name="forgot_password_form" method="POST" action="#">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="{{ __('username required') }}" id="forgot_password_username" name="forgot_password_username" required>
+                    <input type="text" class="form-control" placeholder="{{ __('Login ID required') }}" id="forgot_password_username" name="forgot_password_username" required>
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('submit') }}</button>
                 </form>
@@ -33,7 +33,7 @@ $(document).ready(function() {
         },
         // Specify validation error messages
         messages: {
-            forgot_password_username: "{{ __('Please enter a username')}}"
+            forgot_password_username: "{{ __('Please enter a valid Login ID')}}"
         },
         errorPlacement: function(error, element) {
             if (element.attr("type") == "checkbox") {

@@ -47,6 +47,11 @@
 					{{ __('Sections and prices')}}
 				</button>
 				@endif
+				@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+				 <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_taxes" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					{{ __('Taxes')}}
+				</button>
+				@endif
 			</div>
 		</nav>
 		<!-- Tabs navs -->
@@ -543,6 +548,78 @@
 					
 				</form>
 			</div>
+
+
+
+
+
+
+
+
+
+	<div class="tab-pane fade" id="tab_taxes" role="tabpanel" aria-labelledby="tab_taxes">
+				<div class="section_header_class">
+					<label id="teacher_personal_data_caption">{{__('Taxes') }}</label>
+				</div>
+				<form class="form-horizontal" id="add_price" action="{{ route('selfUpdateTaxeAction') }}"  method="POST" enctype="multipart/form-data" name="add_price" role="form">
+					@csrf
+				<div class="row">
+					<div class="col-lg-10">
+						<?php foreach($InvoicesTaxData as $tax): ?>
+						<div class="add_more_tax_row row mb-2">
+							<div class="card">
+									<div class="card-body bg-tertiary">
+								<div class="col-md-12">
+									<div class="form-group row">
+										<label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+										<div class="col-sm-7">                                        
+											<input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255">
+										</div>
+									</div>
+									<div class="form-group row">
+										<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+										<div class="col-sm-7">                                        
+											<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
+										</div>
+									</div>
+								</div>
+					
+								<div class="col-md-12">
+									<div class="form-group row">
+										<label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+										<div class="col-sm-7">                                        
+											<input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="100">
+										</div>
+										<div class="col-sm-2">                                        
+											<button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
+										</div>
+									</div>	
+								</div>
+							</div></div>
+							</div>
+					<?php endforeach; ?>
+
+						<div id="add_more_tax_div"></div>
+
+					</div>
+					<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
+						<div class="section_header_class">
+						</div>
+						<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
+							<div class="card-body">
+								<button id="add_more_tax_btnn" type="button" class="btn bg-info text-white w-100"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
+								<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mt-1">{{ __('Save') }}</button>
+							</div>
+						</div>
+			</div>
+		</div>
+				</form>
+	</div>
+
+
+
+
+
 			
 
 			<!--Start of Tab 5 -->
@@ -570,6 +647,61 @@
 
 
 @section('footer_js')
+
+<script type="text/javascript">
+
+	//var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
+	
+	$(document).on('click','#add_more_tax_btnn',function(){
+	
+		var resultHtml = `<div class="add_more_tax_row row mb-2">
+			<div class="card">
+					<div class="card-body bg-tertiary">
+						<span class="badge bg-info">new</span>
+				<div class="col-md-12">
+					<div class="form-group row">
+						<label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+						<div class="col-sm-7">                                        
+							<input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+						<div class="col-sm-7">                                        
+							<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
+						</div>
+					</div>
+				</div>
+	
+				<div class="col-md-12">
+					<div class="form-group row">
+						<label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+						<div class="col-sm-7">                                        
+							<input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
+						</div>
+						<div class="col-sm-2">                                        
+							<button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
+						</div>
+					</div>
+					
+				</div>
+			</div></div>
+			</div>`;
+	
+			$("#add_more_tax_div").append(resultHtml);
+			window.scrollTo(0, document.body.scrollHeight);
+	
+	})
+	
+	$(document).on('click','.delete_tax',function(){
+		$(this).parents('.add_more_tax_row').remove();
+	})
+
+	</script>
+	
+	
+	
+
 <script type="text/javascript">
 
 	/*
