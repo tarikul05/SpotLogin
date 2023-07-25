@@ -42,4 +42,36 @@ class Helper
         }
         return $carbon->toDateTimeString();
     }
+    
+    // Fonction pour valider le mot de passe selon les critères spécifiés
+    public function validatePassword($password)
+    {
+        // Vérifier la longueur du mot de passe (au moins 8 caractères)
+        if (strlen($password) < 8) {
+            return 'Le mot de passe doit contenir au moins 8 caractères.';
+        }
+
+        // Vérifier s'il y a une lettre majuscule
+        if (!preg_match('/[A-Z]/', $password)) {
+            return 'Le mot de passe doit contenir au moins une lettre majuscule.';
+        }
+
+        // Vérifier s'il y a une lettre minuscule
+        if (!preg_match('/[a-z]/', $password)) {
+            return 'Le mot de passe doit contenir au moins une lettre minuscule.';
+        }
+
+        // Vérifier s'il y a un chiffre
+        if (!preg_match('/[0-9]/', $password)) {
+            return 'Le mot de passe doit contenir au moins un chiffre.';
+        }
+
+        // Vérifier s'il y a un caractère spécial (caractère non-alphanumérique)
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            return 'Le mot de passe doit contenir au moins un caractère spécial.';
+        }
+
+        // Le mot de passe correspond aux critères
+        return true;
+    }
 }
