@@ -45,7 +45,7 @@ $(document).ready(function() {
 
         submitHandler: function(form) {
             let loader = $('#pageloader');
-            loader.show("fast");
+            loader.fadeIn("fast");
             var p_lang = $('#setLan').val();
             
             var formdata = $("#forgot_password_form").serializeArray();
@@ -73,12 +73,13 @@ $(document).ready(function() {
                 //async: false,
                 //encode: true,
                 beforeSend: function (xhr) {
-                    loader.show("fast");
+                    loader.fadeIn("fast");
                 },
                 success: function(data) {
                     //alert(data.status);  
                     if (data.status) {
-                        successModalCall("{{ __('Reset Password Email Sent, Reset password link has been sent to your registered email')}}");
+                        $('#forgotPasswordModal').modal('hide');
+                        successModalCall("{{ __('Reset password link has been sent to your registered email')}}");
                     } else {
                         errorModalCall(data.msg);
                     }
@@ -88,7 +89,7 @@ $(document).ready(function() {
                     errorModalCall(GetAppMessage('error_message_text'));
                 },
                 complete: function() {
-                    loader.hide("fast");
+                    loader.fadeOut("fast");
                 }
             });
 
