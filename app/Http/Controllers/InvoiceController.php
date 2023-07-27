@@ -1172,27 +1172,7 @@ class InvoiceController extends Controller
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
                     
 
-                    $total_tax_perc = 0;
-                    $total_tax_amount = 0;
-                    $detail_id =  explode(',',$tax_ids);
-                    $mytaxes = InvoicesTaxes::whereIn('id', $detail_id)->get();
-
-                    if (!empty($mytaxes)) {
-                        foreach ($mytaxes as $tax) {
-                            $taxData = [
-                                'invoice_id' => $invoiceItemData['invoice_id'],
-                                'tax_name' => $tax->tax_name,
-                                'tax_percentage' => $tax->tax_percentage,
-                                'tax_number' => $tax->tax_number,
-                                'tax_amount' => number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2),
-                            ];
-                            
-                            $total_tax_perc += $tax->tax_percentage;
-                            $total_tax_amount += number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2);
-                            $InvoiceTax = InvoicesTaxes::create($taxData);
-                        }
-                           
-                    }
+                
 
 
                     $amt_for_disc = 0;
@@ -1261,6 +1241,29 @@ class InvoiceController extends Controller
 
                 }
                 
+            }
+
+
+            $total_tax_perc = 0;
+            $total_tax_amount = 0;
+            $detail_id =  explode(',',$tax_ids);
+            $mytaxes = InvoicesTaxes::whereIn('id', $detail_id)->get();
+
+            if (!empty($mytaxes)) {
+                foreach ($mytaxes as $tax) {
+                    $taxData = [
+                        'invoice_id' => $invoiceItemData['invoice_id'],
+                        'tax_name' => $tax->tax_name,
+                        'tax_percentage' => $tax->tax_percentage,
+                        'tax_number' => $tax->tax_number,
+                        'tax_amount' => number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2),
+                    ];
+                    
+                    $total_tax_perc += $tax->tax_percentage;
+                    $total_tax_amount += number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2);
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+                    
             }
             
             $tax_amount=($total_amount *($tax_perc/100));

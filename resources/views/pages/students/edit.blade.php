@@ -1345,7 +1345,7 @@ $('#save_btn').click(function (e) {
 
 							if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
 									selected_items += 1;
-									resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+									resultHtml += "<td><input class='event_class' data-amount='"+(value.sell_price+value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
 							} else {
 									resultHtml += "<td>-</td>";
 							}
@@ -1469,7 +1469,7 @@ $('#save_btn').click(function (e) {
 
 							costs_1 = value.extra_charges;
 							if (value.extra_charges != 0) {
-									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
+									resultHtml += '<td style="text-align:right">+' + costs_1.toFixed(2) + '</td>';
 							} else {
 									resultHtml += '<td style="text-align:right"></td>';
 							}
@@ -1550,18 +1550,12 @@ $('#save_btn').click(function (e) {
 
 				RegisterTaxData.forEach(function(tax) {
 						resultHtml += '<tr style="background-color:#EEE;">' +
-					'<td><input class="taxe_class" type="checkbox" data-id="' + tax.id + '" checked></td>' +
+					'<td><input id="checkbox-'+tax.id+'" class="taxe_class" type="checkbox" data-amount="' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '" data-id="' + tax.id + '" checked></td>' +
 					'<td colspan="6" style="text-align:right">tax ' + tax.tax_name + ' (' + tax.tax_percentage + '%)</td>' +
-					'<td colspan="2" style="text-align:right"><b>+' + (parseFloat(total_sell) * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</b></td>' +
+					'<td colspan="2" style="text-align:right"><b>+' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</b></td>' +
 					'</tr>';
         		});
 	
-
-
-
-
-
-
 				var disc1_perc = 0,
 						disc2_perc = 0,
 						disc3_perc = 0,
@@ -1689,8 +1683,13 @@ $('#save_btn').click(function (e) {
 						}
 
 						total_disc = (disc1_amt + disc2_amt + disc3_amt + disc4_amt + disc5_amt + disc6_amt);
-						total_sell = totalTaxAmount + total_sell - total_disc;
+						total_sell = (total_sell + totalTaxAmount) - total_disc;
+						var inittotal_sell = total_sell - total_disc;
 				} // calculate disc
+				else {
+					total_sell = (total_sell + totalTaxAmount) - total_disc;
+					var inittotal_sell = total_sell - total_disc;
+				}
 
 				if (total_disc > 0) {
 						resultHtml += '<tr><td colspan="3"></td>';
@@ -1710,11 +1709,69 @@ $('#save_btn').click(function (e) {
 					}
 				}
 
-				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
+				
+
+				resultHtml += '<td style="text-align:right" id="totalPrice">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
 
 				//display grand total
 				$('#lesson_table').html(resultHtml);
+
+
+				var totalAmount = 0;
+				var checkboxes = document.querySelectorAll('.taxe_class');
+				checkboxes.forEach(function(checkbox) {
+				var amount = parseFloat(checkbox.dataset.amount);
+				totalAmount += amount;
+				});
+		
+				// Add Event Listeners when DOM created
+				var checkboxes = document.querySelectorAll('.taxe_class');
+					checkboxes.forEach(function(checkbox) {
+					checkbox.addEventListener('change', function(event) {
+						if (event.currentTarget.checked) {
+							var amount = parseFloat(checkbox.dataset.amount);
+							totalAmount += amount;
+							console.log('total amount tax', totalAmount)
+							total_sell = (total_sell + amount);
+							document.getElementById('totalPrice').textContent = total_sell.toFixed(2);
+						} else {
+							var amount = parseFloat(checkbox.dataset.amount);
+							totalAmount = totalAmount - amount;
+							console.log('total amount tax', totalAmount)
+							total_sell = (total_sell - amount);
+							document.getElementById('totalPrice').textContent = total_sell.toFixed(2);
+						}
+					});
+				});
+
+				var checkboxesEvent = document.querySelectorAll('.event_class');
+				checkboxesEvent.forEach(function(checkbox) {
+				var amount = parseFloat(checkbox.dataset.amount);
+				totalAmount += amount;
+				});
+		
+				// Add Event Listeners when DOM created
+				var checkboxesEvents = document.querySelectorAll('.event_class');
+				checkboxesEvents.forEach(function(checkbox) {
+					checkbox.addEventListener('change', function(event) {
+						if (event.currentTarget.checked) {
+							var amount = parseFloat(checkbox.dataset.amount);
+							totalAmount += amount;
+							console.log('total amount tax', totalAmount)
+							total_sell = (total_sell + amount);
+							document.getElementById('totalPrice').textContent = total_sell.toFixed(2);
+						} else {
+							var amount = parseFloat(checkbox.dataset.amount);
+							totalAmount = totalAmount - amount;
+							console.log('total amount tax', totalAmount)
+							total_sell = (total_sell - amount);
+							document.getElementById('totalPrice').textContent = total_sell.toFixed(2);
+						}
+					});
+				});
+
+
 				//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
 
 				if (all_ready == 1) {
@@ -1736,7 +1793,7 @@ $('#save_btn').click(function (e) {
 
 		} //found records
 		else {
-				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recrd</td></tr></tbody>';
+				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recprd</td></tr></tbody>';
 				$('#lesson_table').html(resultHtml);
 				document.getElementById("lesson_footer_div").style.display = "none";
 		}
