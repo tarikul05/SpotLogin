@@ -253,6 +253,7 @@ class AuthController extends Controller
                             $data['name'] = $user->username;
                             $verifyUser = [
                                 'user_id' => $user->id,
+                                'person_id' => $user->person_id,
                                 'token' => Str::random(5),
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
@@ -285,7 +286,7 @@ class AuthController extends Controller
                         } catch (\Exception $e) {
                             $result = array(
                                 'status' => true,
-                                'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                                'message' => __('Maybe an error occurend. we sent you an activation code. Check your email and click on the link to verify.'),
                             );
                             $user->is_active = 1;
                             $user->save();

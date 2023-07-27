@@ -8,7 +8,7 @@
             <div class="modal-header d-block text-center border-0">
                 
                 <h5 class="modal-title font-weight-bold" id="resetpasswordModalLabel">{{ __('Reset Pasword')}}</h5>
-                <span>Account : {{ $user->firstname }} {{ $user->lastname }}
+                <span>Account Login ID : {{ $user->username }} ({{ $user->firstname }} {{ $user->lastname }})
             </div>
 
             <div class="card">
@@ -50,8 +50,8 @@
                     </div>
 
 
-                    <div class="card">
-                        <div class="card-body bg-tertiary">
+                    <div class="card2">
+                        <div class="card-body">
                     <small>
                         <strong>{{ __('Password Must') }}:</strong></br>
                             > {{ __('Be more than 7 Characters') }}</br>

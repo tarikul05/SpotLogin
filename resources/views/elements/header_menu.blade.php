@@ -173,7 +173,7 @@
                             </div>
                        
 
-                            <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
+                            <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : $AppUI['nickname'];?>
                                 @if( $is_subscribed )
                                     <span class="badge bg-success d-sm-none">premium</span>
                                 @endif

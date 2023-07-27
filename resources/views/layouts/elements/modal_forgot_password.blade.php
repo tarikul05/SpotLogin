@@ -63,6 +63,7 @@ $(document).ready(function() {
                 "name": "p_lang",
                 "value": p_lang
             });
+            formdata['username'] = $('#forgot_password_username').val();
 
             $.ajax({
                 url: BASE_URL + '/forgot_password',
