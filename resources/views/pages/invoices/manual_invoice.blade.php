@@ -823,13 +823,13 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
         }
     })
 
-    $(".tax_amount").each(function(){
+    /*$(".tax_amount").each(function(){
         if($(this).val()){
             var tax_amount = Number($(this).val());
             var tax_percentage = parseFloat(Number(tax_amount/mtotal * 100)).toFixed(2);
             $(this).parents('.add_more_tax_row').find('.tax_percentage').val(tax_percentage);
         }
-    })
+    })*/
 }
 
  $(function() {
