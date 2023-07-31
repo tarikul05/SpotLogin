@@ -347,7 +347,7 @@
                                 <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
                             </tr>
 
-                            <?php if($invoice_data->total_amount_discount != 0){ ?>
+                            <?php if($invoice_data->amount_discount_1 != 0){ ?>
                                 <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right">
                                         <?php 
@@ -361,15 +361,16 @@
                                         ?>
                                     </td>
                                     <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_1 .' %' }}</b></span></td>
-                                    <td class="price" style="text-align:right">- <b>{{ $invoice_data->total_amount_discount }}</b></td>
+                                    <td class="price" style="text-align:right">- <b>{{ number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2') }}</b></td>
+                                    <?php $totalDiscount = number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2'); ?>
                                 </tr>
-                                <?php } ?>
+                                <?php } else { $totalDiscount = 0; }?>
 
                             <tr class="extra_col_sub">
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
                                     <?php
-                                        $total_lesson = $sub_total_lesson-$disc1_amt = $invoice_data->amount_discount_1 ? $invoice_data->amount_discount_1 :0;            
+                                        $total_lesson = $sub_total_lesson-$totalDiscount;            
                                     ?>
                                     <span id="stotal_amount_with_discount_lesson" 
                                     class="form-control-static numeric"
@@ -403,21 +404,28 @@
                     ?>
                     <?php } ?>
 
-                    <?php if($invoice_data->tax_amount > 0){ ?>
-                        <?php
+                    <?php 
+                    $totalTaxesSupp=0;
+                    if($invoice_data->tax_amount > 0){ ?>
+                    
+                    <?php
+            
                         foreach ($InvoicesTaxData as $item) {
                             echo '<tr class="extra_col">';
                             echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b></td>';
                             echo '<td style="text-align:right" class="text">' . $item['tax_percentage'] . '%</td>';
-                            echo '<td style="text-align:right" colspan="1" class="price">+ <b>' . $item['tax_amount'] . '</b></td>';
+                            echo '<td style="text-align:right" colspan="1" class="price">+ <b>' . ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100 . '</b></td>';
                             echo '</tr>';
+                            //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
+                            $totalTaxesSupp = ($totalTaxesSupp + ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100);
                         }
                         ?>
                     <?php } ?>
 
                    
+              
 
-                    <?php $total = ($sub_total_event +$sub_total_lesson + $invoice_data->extra_expenses) - $invoice_data->total_amount_discount + $invoice_data->tax_amount ; ?>
+                    <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
                     <tr class="total_col">
                          <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>

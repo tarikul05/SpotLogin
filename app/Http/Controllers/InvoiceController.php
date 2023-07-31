@@ -1049,6 +1049,7 @@ class InvoiceController extends Controller
             $data = $request->all();
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
+            $discountPercentage = $data['discountPercentage'];
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
@@ -1068,6 +1069,7 @@ class InvoiceController extends Controller
             $p_invoice_id=trim($data['p_invoice_id']);
             $p_event_ids=trim($data['p_event_ids']);
             $inv_type = trim($data['inv_type']);
+            $data['p_discount_perc'] = $discountPercentage;
             
             
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -1120,6 +1122,8 @@ class InvoiceController extends Controller
             $total_amount_extra = 0;
             $teacher_fullname = '';
             $price_currency = '';
+            $totalsubwithdiscountwithoutextra=0;
+            $totalExtras=0;
 
             foreach ($data as $key => $value) {
                 try{
@@ -1161,18 +1165,19 @@ class InvoiceController extends Controller
                         $value->sell_total = $value->sell_price;
                     }
                     $invoiceItemData['total_item'] = $value->sell_total+$value->costs_1;
+
+                    $totalsubwithdiscountwithoutextra = $totalsubwithdiscountwithoutextra + $value->sell_total+$value->costs_1;
+                    $totalExtras = $totalExtras + $value->costs_1;
                     
                     //$invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'];
                     //$invoiceItemData['subtotal_amount_with_discount'] =0;
                     //$invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
-                    $invoiceItemData['subtotal_amount_with_discount'] =0;
+                    $invoiceItemData['subtotal_amount_with_discount'] = $invoiceItemData['total_item'] - (($invoiceItemData['total_item'] * $discountPercentage) / 100);
                     $invoiceItemData['subtotal_amount_no_discount'] = $invoiceItemData['total_item'];
-                    
+                 
 
                     $v_subtotal_amount_all = $invoiceItemData['total_item'];
                     
-
-                
 
 
                     $amt_for_disc = 0;
@@ -1248,7 +1253,8 @@ class InvoiceController extends Controller
             $total_tax_amount = 0;
             $detail_id =  explode(',',$tax_ids);
             $mytaxes = InvoicesTaxes::whereIn('id', $detail_id)->get();
-
+            $tructotal = number_format($totalsubwithdiscountwithoutextra * $discountPercentage /100, 2);
+            $totaltruc = number_format($totalsubwithdiscountwithoutextra - $tructotal, 2);
             if (!empty($mytaxes)) {
                 foreach ($mytaxes as $tax) {
                     $taxData = [
@@ -1256,7 +1262,7 @@ class InvoiceController extends Controller
                         'tax_name' => $tax->tax_name,
                         'tax_percentage' => $tax->tax_percentage,
                         'tax_number' => $tax->tax_number,
-                        'tax_amount' => number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2),
+                        'tax_amount' => number_format($totaltruc * $tax['tax_percentage'] / 100, 2),
                     ];
                     
                     $total_tax_perc += $tax->tax_percentage;
@@ -1269,6 +1275,8 @@ class InvoiceController extends Controller
             $tax_amount=($total_amount *($tax_perc/100));
            
             $updateInvoiceCalculation = [
+               'discount_percent_1' => $discountPercentage,
+               'amount_discount_1' => number_format(($total_amount_extra*$discountPercentage)/100,2),
                'subtotal_amount_all' => $subtotal_amount_all,
                'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
@@ -1281,13 +1289,13 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> $total_amount_extra,
+               'total_amount'=> number_format($total_amount_extra+$total_tax_amount,2),
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
                'tax_amount'=> $tax_amount,
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
-               'extra_expenses' => $extra_expenses
+               'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses
             
             ];
             if (!empty($price_currency)) {
@@ -1298,7 +1306,7 @@ class InvoiceController extends Controller
             // print_r($invoiceData->id);
              // update invoice tax info
 
-             $updateInvoiceCalculation['tax_perc'] = $total_tax_perc;
+             $updateInvoiceCalculation['tax_perc'] = number_format($total_tax_perc,2);
              $updateInvoiceCalculation['tax_amount'] = $total_tax_amount;
     
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
