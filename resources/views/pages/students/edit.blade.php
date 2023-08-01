@@ -2081,19 +2081,54 @@ $('#save_btn').click(function (e) {
 						var TotalWithDiscount = parseFloat(subTotalWithDiscount.textContent);
 						var subTotalExtra = document.getElementById('extras');
 						var TotalExtra = parseFloat(subTotalExtra.textContent);
-
+	
+						var subtotalAl = parseFloat(document.getElementById('stotal_amount_with_discount').textContent);
 						
 						if (event.currentTarget.checked) {
 							var amount = parseFloat(checkbox.dataset.amount);
 							console.log('total amount tax plus', amount)
 							total_sell = parseFloat(TotalWithDiscount + amount);
 							document.getElementById('grand_total_amount').textContent = total_sell.toFixed(2);
+							
+							var totalNewTaxes = 0;
+							var checkboxesTaxes = document.querySelectorAll('.taxe_class');
+							checkboxesTaxes.forEach(function(checkbox) {
+								if (checkbox.checked) {
+									var amount = document.getElementById('stotal_amount_with_discount').textContent * parseFloat(checkbox.dataset.percentage) / 100;
+									totalNewTaxes = totalNewTaxes + amount;
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+								}
+							});
+							
+							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
+							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
+							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
 						} else {
 							var amount = parseFloat(checkbox.dataset.amount);
 							console.log('total amount tax less', amount)
 							console.log('total => ' + TotalWithDiscount + ' - ' + amount + ' = ' + (TotalWithDiscount - amount))
 							total_sell = parseFloat((TotalWithDiscount - amount));
 							document.getElementById('grand_total_amount').textContent = total_sell.toFixed(2);
+
+							var totalNewTaxes = 0;
+							var checkboxesTaxes = document.querySelectorAll('.taxe_class');
+							checkboxesTaxes.forEach(function(checkbox) {
+								if (checkbox.checked) {
+									var amount = document.getElementById('stotal_amount_with_discount').textContent * parseFloat(checkbox.dataset.percentage) / 100;
+									totalNewTaxes = totalNewTaxes + amount;
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+								}
+							});
+							
+							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
+							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
+							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
+							
+
 						}
 					});
 				});
@@ -2137,15 +2172,17 @@ $('#save_btn').click(function (e) {
 							var totalNewTaxes = 0;
 							var checkboxes = document.querySelectorAll('.taxe_class');
 							checkboxes.forEach(function(checkbox) {
-						
-								var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
-								totalNewTaxes = totalNewTaxes + amount;
-								$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
-								console.log('new tax => ' + amount);
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
 
-								var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
-								inputElement.setAttribute('data-amount', amount);
-
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
 						
 							});
 
@@ -2194,15 +2231,17 @@ $('#save_btn').click(function (e) {
 							var totalNewTaxes = 0;
 							var checkboxes = document.querySelectorAll('.taxe_class');
 							checkboxes.forEach(function(checkbox) {
-						
-								var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
-								totalNewTaxes = totalNewTaxes + amount;
-								$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
-								console.log('new tax => ' + amount);
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
 
-								var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
-								inputElement.setAttribute('data-amount', amount);
-
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
 						
 							});
 
@@ -2275,15 +2314,17 @@ $('#save_btn').click(function (e) {
 							var totalNewTaxes = 0;
 							var checkboxes = document.querySelectorAll('.taxe_class');
 							checkboxes.forEach(function(checkbox) {
-						
-								var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
-								totalNewTaxes = totalNewTaxes + amount;
-								$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
-								console.log('new tax => ' + amount);
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
 
-								var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
-								inputElement.setAttribute('data-amount', amount);
-
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
 						
 							});
 
@@ -2338,15 +2379,17 @@ $('#save_btn').click(function (e) {
 							var totalNewTaxes = 0;
 							var checkboxes = document.querySelectorAll('.taxe_class');
 							checkboxes.forEach(function(checkbox) {
-						
-								var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
-								totalNewTaxes = totalNewTaxes + amount;
-								$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
-								console.log('new tax => ' + amount);
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
 
-								var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
-								inputElement.setAttribute('data-amount', amount);
-
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
 						
 							});
 
@@ -2522,15 +2565,17 @@ $('#save_btn').click(function (e) {
 
 		var checkboxes = document.querySelectorAll('.taxe_class');
 		checkboxes.forEach(function(checkbox) {
-	
-			var amount = total_amount * parseFloat(checkbox.dataset.percentage) / 100;
-			totalNewTaxes = totalNewTaxes + amount;
-			$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
-			console.log('new tax => ' + amount);
+			
+				var amount = total_amount * parseFloat(checkbox.dataset.percentage) / 100;
+				if (checkbox.checked) {
+					totalNewTaxes = totalNewTaxes + amount;
+				}
+				$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+				console.log('new tax => ' + amount);
 
-			var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
-			inputElement.setAttribute('data-amount', amount);
-
+				var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+				inputElement.setAttribute('data-amount', amount);
+			
 	
 		});
 
