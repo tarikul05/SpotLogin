@@ -537,6 +537,9 @@
 							</table>
 						</div>
 
+						<input type="text" style="display:none;" name="finaltotaltaxes" value="0" id="finaltotaltaxes">
+
+
 						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 								<br><br>
@@ -930,6 +933,11 @@ $("#country_code, #billing_country_code").trigger('change')
 	
 		var selectedTaxIds = [];
 
+		var sdiscountPercentInput = document.getElementById('sdiscount_percent_1');
+		if(sdiscountPercentInput>100) {
+			errorModalCall('Please change your discount percentage')
+		}
+
 		var checkboxes = document.querySelectorAll('.taxe_class');
 		checkboxes.forEach(function(checkbox) {
 			if (checkbox.checked) {
@@ -971,7 +979,10 @@ $("#country_code, #billing_country_code").trigger('change')
 		if (sdiscountPercentInput) {
 			discountPercentage = parseFloat(sdiscountPercentInput.value);
 		}
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage;
+		var finaltaxess = document.getElementById('total-taxes')
+		var finaltotaltaxes = finaltaxess.textContent
+		alert(finaltotaltaxes)
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -989,12 +1000,12 @@ $("#country_code, #billing_country_code").trigger('change')
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
-					errorModalCall(result);
+					//errorModalCall(result);
 					// alert(value.status);
 				}
 			}, // success
 			error: function(ts) {
-				errorModalCall(ts);
+				//errorModalCall(ts);
 				console.log(ts)
 				// alert(ts.responseText + ' Generate Invoice')
 			}
@@ -2102,6 +2113,7 @@ $('#save_btn').click(function (e) {
 							});
 							
 							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
 							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
 							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
@@ -2124,6 +2136,7 @@ $('#save_btn').click(function (e) {
 							});
 							
 							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
 							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
 							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
@@ -2187,6 +2200,7 @@ $('#save_btn').click(function (e) {
 							});
 
 							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
 
 
@@ -2246,6 +2260,7 @@ $('#save_btn').click(function (e) {
 							});
 
 							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
 
 
@@ -2329,6 +2344,7 @@ $('#save_btn').click(function (e) {
 							});
 
 							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
 
 
@@ -2394,6 +2410,7 @@ $('#save_btn').click(function (e) {
 							});
 
 							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
 
 
@@ -2421,8 +2438,11 @@ $('#save_btn').click(function (e) {
 				$(".numeric").keyup(function () {
 					var checkPercentForDiscount = $("#sdiscount_percent_1").val();
 					if(checkPercentForDiscount>100) {
-						errorModalCall('The maximum of percentage discount is 100.')
+						document.getElementById("sdiscount_percent_1").textContent = 100
+						$('#errorModal').modal('hide')
+						errorModalCall('The maximum of percentage discount is 100.');
 					} else {
+						$("#btn_convert_invoice").removeAttr("disabled");
             			CalculateDiscount('discount');
 					}
 				});
@@ -2438,8 +2458,10 @@ $('#save_btn').click(function (e) {
 					})
 					var checkAmountForDiscount = $("#samount_discount_1").val();
 					if(checkAmountForDiscount>maxPossible){
+						$('#errorModal').modal('hide')
 						errorModalCall('The maximum amount of discount is ' + maxPossible)
 					} else {
+						$("#btn_convert_invoice").removeAttr("disabled");
 						CalculateDiscount('amount');
 					}
 				});
@@ -2507,7 +2529,7 @@ $('#save_btn').click(function (e) {
             }
             
 
-            total_amount_discount = Number(disc1_amt);
+            total_amount_discount = parseFloat(disc1_amt).toFixed(2);
             if ($('#stotal_amount_discount').length > 0) {
                 $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
             }
@@ -2580,6 +2602,7 @@ $('#save_btn').click(function (e) {
 		});
 
 		$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+		document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
 		$("#sub-total-before-charges").text(parseFloat(subtotal_amount_with_discount_lesson + subtotal_amount_with_discount_event + totalNewTaxes).toFixed(2));
 
 		

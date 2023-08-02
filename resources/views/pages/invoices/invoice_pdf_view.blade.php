@@ -412,9 +412,9 @@
             
                         foreach ($InvoicesTaxData as $item) {
                             echo '<tr class="extra_col">';
-                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b></td>';
-                            echo '<td style="text-align:right" class="text">' . $item['tax_percentage'] . '%</td>';
-                            echo '<td style="text-align:right" colspan="1" class="price">+ <b>' . ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100 . '</b></td>';
+                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
+                            echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
+                            echo '<td style="text-align:right" colspan="1" class="price"><b>' . ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100 . '</b></td>';
                             echo '</tr>';
                             //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
                             $totalTaxesSupp = ($totalTaxesSupp + ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100);

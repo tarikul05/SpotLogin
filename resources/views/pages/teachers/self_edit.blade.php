@@ -589,6 +589,7 @@
 										<label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
 										<div class="col-sm-7">                                        
 											<input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="100">
+											<p style="font-size:11px;">this number will show on your invoice</p>
 										</div>
 										<div class="col-sm-2">                                        
 											<button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>

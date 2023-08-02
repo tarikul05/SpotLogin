@@ -1044,12 +1044,17 @@ class InvoiceController extends Controller
             'status' => false,
             'message' => __('failed to get lesson data'),
         );
+
         //echo Carbon::now()->format('F'); exit();
         try {
             $data = $request->all();
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
             $discountPercentage = $data['discountPercentage'];
+            if($discountPercentage > 100) {
+                return false;
+            }
+            $totalAllTaxesAmount = $data['finaltotaltaxes'];
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
@@ -1292,7 +1297,7 @@ class InvoiceController extends Controller
                'total_amount'=> number_format($total_amount_extra+$total_tax_amount,2),
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
-               'tax_amount'=> $tax_amount,
+               'tax_amount'=> $totalAllTaxesAmount,
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
                'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses
@@ -1307,7 +1312,7 @@ class InvoiceController extends Controller
              // update invoice tax info
 
              $updateInvoiceCalculation['tax_perc'] = number_format($total_tax_perc,2);
-             $updateInvoiceCalculation['tax_amount'] = $total_tax_amount;
+             $updateInvoiceCalculation['tax_amount'] = $totalAllTaxesAmount;
     
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
