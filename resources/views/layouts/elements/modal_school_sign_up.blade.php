@@ -18,8 +18,8 @@
                     <div class="form-group custom-selection">
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
                             <option value="COACH">{{ __('Single coach') }}</option>
-                            <option value="SCHOOL">{{ __('School') }} (for testing)</option>
-                            <!--<option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>-->
+                            <!--<option value="SCHOOL">{{ __('School') }} (for testing)</option>-->
+                            <option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>
                         </select>
                     </div>
 
@@ -57,8 +57,7 @@
                                 <option value="">{{ __('Select Country')}}</option>
                                 @foreach ($countries as $key => $country)
                                     <option 
-                                    value="{{ $country->code }}"
-                                    >  {{ $country->name }} {{ $country->code }}</option>
+                                    value="{{ $country->code }}">{{ $country->name }}</option>
                                 @endforeach
 
                             </select>
