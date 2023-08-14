@@ -482,7 +482,7 @@
                                                 <input type="text" id="caption" name="caption[]" value="<?= $item['caption']; ?>" class="form-control">
                                             </td>
                                             <td class="row_item_value">
-                                                <input type="number" pattern="[0-9.]" id="total_item1" name="total_item[]" value="<?= $item['total_item']; ?>" style="text-align: right;" class="form-control numeric float item_value">
+                                                <input type="text" pattern="[0-9.]" id="total_item1" name="total_item[]" value="<?= $item['total_item']; ?>" style="text-align: right;" class="form-control numeric float item_value">
                                             </td>
                                             <td>
                                                 <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row">
@@ -734,7 +734,7 @@ $(".add-row").click(function(){
     var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
     markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date[]" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
     markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';                   
-    markup+='<td class="row_item_value"><input type="number" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
+    markup+='<td class="row_item_value"><input type="text" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
     markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><i class="fa fa-remove"></i></button></td>';
     //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
     markup+='</tr>';   

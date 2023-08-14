@@ -24,7 +24,7 @@ use Spatie\Permission\Models\Role;
 use Cookie;
 use DateTime;
 use Illuminate\Support\Str;
-
+use App\Helpers\Helper;
 
 class AuthController extends Controller
 {
@@ -253,6 +253,7 @@ class AuthController extends Controller
                             $data['name'] = $user->username;
                             $verifyUser = [
                                 'user_id' => $user->id,
+                                'person_id' => $user->person_id,
                                 'token' => Str::random(5),
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
@@ -285,7 +286,7 @@ class AuthController extends Controller
                         } catch (\Exception $e) {
                             $result = array(
                                 'status' => true,
-                                'message' => __('We sent you an activation code. Check your email and click on the link to verify.'),
+                                'message' => __('Maybe an error occurend. we sent you an activation code. Check your email and click on the link to verify.'),
                             );
                             $user->is_active = 1;
                             $user->save();
@@ -332,11 +333,15 @@ class AuthController extends Controller
                                     ])->first();
             
             if(isset($verifyUser) ){
-                $user = $verifyUser->user;
-                if($user) {
+                $user = User::where([
+                    ['person_id', $verifyUser->person_id],
+                    ['is_active', 1],
+                    ['deleted_at', null],
+                ])->first();  
+                if ($user) {
                     return view('pages.auth.reset_password', ['title' => 'User Login','user'=>$user]);
                 }else{
-                    echo '<h1>Invalid reset password Link.</h1>'; die;
+                    echo '<h1>Invalid reset password Link..</h1>'; die;
                 }
             }else{
                 echo '<h1>Invalid reset password Link.</h1>'; die;
@@ -355,7 +360,7 @@ class AuthController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
      */
-    public function resetPasswordSubmit(ResetPasswordRequest $request)
+    public function resetPasswordSubmit(Request $request)
     {
         try {
             $data = $request->all();
@@ -364,9 +369,17 @@ class AuthController extends Controller
                             ['deleted_at', null],
                     ])->first();
             if ($user) {
-                $user->password = $data['reset_password_pass'];
-                $user->save();
-                return back()->with('status', "Password changed successfully!");
+
+                $dataPasswordValidation = new Helper();
+                $passwordValidation = $dataPasswordValidation->validatePassword($data['reset_password_pass']);
+
+                if ($passwordValidation === true) {
+                    $user->password = $data['reset_password_pass'];
+                    $user->save();
+                    return back()->with('status', "Password changed successfully!");
+                } else {
+                    return back()->with('error', "Please verify your password");
+                }
             }
         } catch (Exception $e) {
             //return error message
@@ -459,6 +472,5 @@ class AuthController extends Controller
         ->withCookie($date_from)
         ->withCookie($date_to);
     }
-
     
 }

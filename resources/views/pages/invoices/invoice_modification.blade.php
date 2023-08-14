@@ -10,9 +10,8 @@
 @endsection
 <?php 
     $invoiceIssued = ($invoice->invoice_status ==10);
-
+    $totalWithDiscount=0;
  ?>
-
 @section('content')
 <div class="content">
 	<div class="container-fluid">
@@ -76,7 +75,7 @@
                             @if ($invoice->seller_country_id != 'CA')
                                 <label class="section_header_class">{{ $invoice->invoice_header }}</label>
                             @endif
-                            <table class="table" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
+                            <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
                                 
                                     
                                     @php 
@@ -116,7 +115,13 @@
                                                 @endphp
                                                 <tr>
                                                     <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
-                                                    <td style="text-align:right">{!! !empty($item->caption) ? $item->caption : ''; !!}<br>
+                                                    <td style="text-align:right">
+                                                        {!! !empty($item->caption) ? $item->caption : ''; !!}
+                                                        <?php
+                                                            $cost1 = extractExtraCharges($item->caption);
+                                                        ?>
+                                                        
+                                                        <br>
                                                         @if ($invoice->invoice_type > 0)
                                                         <?php 
                                                         if($item->no_of_students == 1) {
@@ -134,7 +139,13 @@
                                                     @if ($invoice->invoice_type == 2)
                                                         <td style="text-align:right">{{ !empty($item->price) ? number_format($item->price,'2') : ''; }}</td>
                                                     @else
-                                                        <td style="text-align:right">{{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}</td>
+                                                        <td style="text-align:right">
+                                                        <?php  if ($event_type == 10){ ?>
+                                                            {{ !empty($item->price_unit) ? number_format($item->price_unit,'2') : ''; }}
+                                                        <?php } else { ?>
+                                                            {{ !empty($item->price_unit) ? number_format($item->price_unit-$cost1,'2') : ''; }}
+                                                        <?php } ?>
+                                                        </td>
                                                     @endif
                                                 </tr>
                                                 @php 
@@ -164,20 +175,22 @@
                                             </tr> -->
                                             <label style="display:none;" 
                                                 id="ssubtotal_amount_all">
-                                                <?php echo !empty($sub_total_lesson) ? number_format($sub_total_lesson,'2') :'0.00'; ?></label>
-                                                        
+                                                <?php echo !empty($sub_total_lesson) ? number_format($sub_total_lesson,'2') :'0.00'; ?></label>                
                                             
                                             @if ($event_type == 10)
-                                                <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</>
+                                                
                                                 
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Sub-Total Lessons</td>
+                                                    <td colspan="2" style="text-align:right"><b>Sub-Total Lessons</b></td>
                                                     <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
                                                     <td style="text-align:right">
                                                         {{ number_format($sub_total_lesson,'2') }}
                                                     </td>
                                                 </tr>
-                                                <tr>
+
+                                                <p style="display: none;" id="ssubtotal_amount_with_discount_lesson">{{ number_format($sub_total_lesson,'2') }}</p>
+
+                                                <tr style="background-color: #EEE;">
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
                                                     @else
@@ -187,10 +200,12 @@
                                                         
                                                     </td>
                                                     <td style="text-align:right">
-                                                        <input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align: right; padding-right: 5px;" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
+                                                        <!--<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align: right; padding-right: 5px;" value="{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>--> 
+                                                        <span><b>-{{$invoice->discount_percent_1 ? $invoice->discount_percent_1 :0}}%</b></span>
                                                     </td>
                                                 </tr>
-                                                <tr>
+
+                                                <tr style="background-color: #EEE;">
                                                     @if ($invoice->invoice_type == 1)
                                                     <td colspan="2" style="text-align:right">Discount Amount:</td>
                                                     @else
@@ -203,24 +218,29 @@
                                                         <?php
                                                         $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;            
                                                         ?>
+                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? $sub_total_lesson*$invoice->discount_percent_1/100 : 0; ?>
+                                                        <?php $totalWithDiscount = $sub_total_lesson-$discount; ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
-                                                        <input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align: right; padding-right: 5px;" value="{{number_format($disc1_amt,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}> 
-                                                        
+                                                        <!--<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align: right; padding-right: 5px;" value="{{number_format($discount,'2')}}" placeholder="" {{ $invoiceIssued ? "disabled='disabled'" : "" }}>-->
+                                                        <span><b>-{{number_format($discount,'2')}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Total Lesson:</td>
+                                                    <td colspan="2" style="text-align:right"><b>Total Lesson:</b></td>
                                                     <td style="text-align:right">
                                                         
                                                     </td>
                                                     <td style="text-align:right">
+
+                                                
+
                                                         <?php
                                                         $total_lesson = $sub_total_lesson-$disc1_amt = $invoice->amount_discount_1 ? $invoice->amount_discount_1 :0;            
                                                         ?>
                                                         <span id="stotal_amount_with_discount_lesson" 
                                                         class="form-control-static numeric"
-                                                        style="text-align:right;">{{number_format($total_lesson,'2')}}</> 
+                                                        style="text-align:right;">{{number_format($totalWithDiscount,'2')}}</> 
                                                         
                                                     </td>
                                                 </tr>
@@ -233,7 +253,7 @@
                                                 <tr>
                                                     <td colspan="2" style="text-align:right">Total events: </td>
                                                     <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
-                                                    <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
+                                                    <td style="text-align:right">{{ number_format($sub_total_event-$invoice->extra_expenses,'2') }}</td>
                                                 </tr>
                                             @endif
                                             
@@ -241,6 +261,14 @@
                                     @endif
                                 </tbody>  
                                    
+                                <tr>
+                                    <td colspan="2" style="text-align:right"><b>Sub-Total</b>: </td>
+                                    <td style="text-align:right"></td>
+                                    <td style="text-align:right">
+                                        <b><?php echo  $totaux = number_format((($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount),2); ?></b>
+                                    </td>
+                                </tr>
+
                                 <tbody> 
                                     @if ($invoice->invoice_type == 2 && $invoice->total_amount_discount != 0)
                                         <tr>
@@ -278,18 +306,60 @@
 
 
                                     @endif
+
+                                    <!--<br>
+                                    Subtotal Lesson <?php echo $sub_total_lesson ; ?>
+                                    <br>
+                                    Discount : <?php echo $discount = $sub_total_lesson*$invoice->discount_percent_1/100 ?>
+                                    <br>TOTAL LESSON => <?php echo $totalWithDiscount = $sub_total_lesson-$discount; ?>
+                                    <br>TOTAL EVENTS => <?php echo $sub_total_event; ?>
+                                    <br>TOTAUX => <?php echo  $totaux = (($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount); ?>-->
+                                    
+                                    <?php $countAllTaxes=0; ?>
+
+                                  <?php
+                                  $invoices_taxes = DB::table('invoices_taxes')->where('invoice_id', $invoice->id)->get();
+                                    foreach ($invoices_taxes as $item) {
+                                        // Calcul du nouvel amount en fonction du pourcentage de taxe pour chaque élément
+                                        $newAmount = $totaux * ($item->tax_percentage / 100);
+
+                                        // Ajout du nouvel amount à la variable $countAllTaxes (en utilisant une opération de somme)
+                                        $countAllTaxes += $item->tax_amount ? number_format($newAmount, 2) : 0;
+                                    }
+                                  ?>
+                              
+                                    <!--TOUT FINI => <?php echo $totaux + $countAllTaxes + $invoice->extra_expenses ?>-->
+
+
+                                    <?php $totaltaxAmount=0; ?>
                                     @if ($invoice->tax_amount > 0)
 
                                     @foreach(DB::table('invoices_taxes')->where('invoice_id', $invoice->id)->get() as $item)
-                                    <tr>
+                                    <tr style="background-color: #EEE;">
                                         <td colspan="2" style="text-align:right">{{ $item->tax_name }}</td>
                                         <td>({{ $item->tax_percentage }}%)</td>
                                         <td style="text-align:right; margin-right:0 padding-right:0;">
-                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{ $item->tax_amount ? number_format($item->tax_amount, 1) : '0' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">
+                                            <!--<input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{ $item->tax_amount ? number_format($totaux*$item->tax_percentage/100, 2) : '0' }}" placeholder="" style="text-align: right; padding-right: 5px;" disabled="disabled">-->
+                                            <span>+{{ $item->tax_amount ? number_format($totaux*$item->tax_percentage/100, 2) : '0' }}</span>
+                                            <?php $totaltaxAmount = $item->tax_amount ? ( $totaltaxAmount + number_format($totaux*$item->tax_percentage/100, 2)) : 0; ?>
                                         </td>
                                     </tr>
                                     @endforeach
 
+                                    
+                                    <tr>
+                                        <td colspan="2" style="text-align:right"><b>Sub-Total:</b></td>
+                                        <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
+                                        <td style="text-align:right"><b>{{ number_format((($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount+$totaltaxAmount),2) }}</b></td>
+                                    </tr>
+
+                                    @if ($invoice->extra_expenses > 0)
+                                    <tr>
+                                        <td colspan="2" style="text-align:right">Extra Charges: </td>
+                                        <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
+                                        <td style="text-align:right">+{{ number_format($invoice->extra_expenses,'2') }}</td>
+                                    </tr>
+                                    @endif
 
                                     <!--<tr>
                                         <td colspan="2" style="text-align:right">Tax:</td>
@@ -305,10 +375,14 @@
                                     <tr class="alert alert-info">
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
-                                        <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grand_total,'2') }}</b></span></td>
+                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses ?>
+                                        <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
                             </table>
+
+                            
+
                             <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
                             <input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
                             <input type="hidden" id="approved_flag" name="approved_flag" value="0">
@@ -915,10 +989,29 @@
         </div>
     </div>
 </div>
+<?php
+function extractExtraCharges($inputString) {
+    // Utilisation d'une expression régulière pour rechercher le motif "Extra charges" suivi d'un espace et d'un ou plusieurs chiffres
+    $pattern = '/Extra charges (\d+)/';
+
+    // Utilisation de la fonction preg_match pour chercher le motif dans le string $inputString
+    if (preg_match($pattern, $inputString, $matches)) {
+        // $matches[0] contient la chaîne correspondant au motif entier (par exemple, "Extra charges 50")
+        // $matches[1] contient le premier groupe capturé par les parenthèses dans l'expression régulière (dans ce cas, le chiffre)
+        // On retourne le chiffre extrait
+        return $matches[1];
+    } else {
+        // Si le motif n'a pas été trouvé, on peut retourner false ou une valeur par défaut selon les besoins
+        return false;
+    }
+}
+?>
+
 @endsection
 
 
 @section('footer_js')
+
 <script type="text/javascript">
     $("#date_invoice").datetimepicker({
 		format: "dd/mm/yyyy",

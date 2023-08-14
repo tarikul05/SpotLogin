@@ -318,6 +318,7 @@
     "now": "maintenant",
     "of payments and invoices": "des paiements et des factures",
     "password": "mot de passe",
+    "Password": "Mot de passe",
     "password not matched": "le mot de passe ne correspond pas",
     "per event": "par évènement",
     "reminder_email_unpaid": "email de rappel impayé",
@@ -343,6 +344,10 @@
     "your students profile": "le profil de vos étudiants",
     "Sign up now and take advantage of a 90-free-day trial period": "Inscrivez-vous maintenant et profitez d'une période d'essai gratuite de 60 jours",
     "Free Trial": "Essai gratuit",
-    "Login ID": "Identifiants de connexion",
-    "invoice generated":"Facture générée avec succès!"
+    "Login ID": "Identifiant",
+    "invoice generated":"Facture générée avec succès!",
+    "You are invited by":"Vous êtes invité par",
+    "to create your personnal account":" à créer votre compte personnel",
+    "Welcome":"Bienvenue",
+    "Create my account":"Créer mon compte"
 }

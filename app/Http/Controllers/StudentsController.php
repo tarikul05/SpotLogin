@@ -11,6 +11,7 @@ use App\Models\SchoolStudent;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Level;
+use App\Models\InvoicesTaxes;
 use App\Models\Province;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
@@ -493,7 +494,9 @@ class StudentsController extends Controller
         $levels = Level::active()->where('school_id',$schoolId)->get();
         $genders = config('global.gender');
 
-        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName','provinces','school'));
+        $RegisterTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
+
+        return view('pages.students.edit')->with(compact('emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','levels','schoolName','provinces','school', 'RegisterTaxData'));
     }
 
     /**
@@ -623,6 +626,36 @@ class StudentsController extends Controller
         }
     }
 
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function studentPasswordGet(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        try {
+            $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+            
+            $school = School::find($schoolId);
+            $student = Student::find($studentId);
+            if ($student && !empty($student->email)) {
+                $this->passwordSet($school, $schoolStudent, $student, 'App\Models\Student');
+                return redirect()->back()->with('success', 'Invitation sent successfully');
+            }else{
+                return redirect()->back()->with('error', __('Email not found'));
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+    
+
     public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
     {
         //sending activation email after successful signed up
@@ -646,6 +679,44 @@ class StudentsController extends Controller
                 $data['url'] = route('add.verify.email', $data['token']);
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
+                    $data = [];
+                    $data['is_sent_invite'] = 1;
+                    $alldata->update($data);
+                    
+                    //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
+                } else {
+                    return false;
+                }
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function passwordSet($school, $alldata, $person, $type = 'App\Models\Student')
+    {
+        //sending activation email after successful signed up
+        try {
+            $schoolId = $school->id;
+            if (config('global.email_send') == 1) {
+                $data = [];
+                $data['email'] = $person->email;
+                $data['username'] = $alldata->nickname;
+                $data['school_name'] = $school->school_name;
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $person->id,
+                    'person_type' => $type,
+                    'token' => Str::random(10),
+                    'token_type' => 'VERIFY_RESET_PASSWORD',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('reset_password.email', $data['token']);
+
+                if ($this->emailSend($data, 'forgot_password_email')) {
                     $data = [];
                     $data['is_sent_invite'] = 1;
                     $alldata->update($data);

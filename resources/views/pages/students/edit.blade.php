@@ -536,9 +536,14 @@
 								
 							</table>
 						</div>
+
+						<input type="text" style="display:none;" name="finaltotaltaxes" value="0" id="finaltotaltaxes">
+
+
 						<div class="alert alert-danger" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
-								<button style="position: absolute;right: 0;top: -2px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+								<br><br>
+								<button style="position: absolute;right: 140px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -673,6 +678,7 @@
 								</div>
 							</div>
 						</div>
+						<input type="hidden" name="selected_tax_ids" value="">
 					</form>
 				</div> 
 				<!--End of Tab 4 -->
@@ -695,9 +701,7 @@
 	<!-- End Tabs content -->
 @endsection
 
-
 @section('footer_js')
-
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -922,12 +926,30 @@ $("#country_code, #billing_country_code").trigger('change')
 		return selected_events;
 	}
 
+
+
+
 	$('#btn_convert_invoice').click(function(e) {
-		
+	
+		var selectedTaxIds = [];
+
+		var sdiscountPercentInput = document.getElementById('sdiscount_percent_1');
+		if(sdiscountPercentInput>100) {
+			errorModalCall('Please change your discount percentage')
+		}
+
+		var checkboxes = document.querySelectorAll('.taxe_class');
+		checkboxes.forEach(function(checkbox) {
+			if (checkbox.checked) {
+				var taxId = checkbox.dataset.id;
+				selectedTaxIds.push(taxId);
+			}
+		});
+
 		$(this).attr("disabled", "disabled");
 		var p_event_ids = GetCheckBoxSelectedValues('event_check');
 		if (p_event_ids == '') {
-			//DisplayMessage("Sélectionnez au moins un élément pour générer la facture.");
+			errorModalCall('Please add lesson(s) or event(s) to continue...')
 			return false;
 		}
 
@@ -947,9 +969,21 @@ $("#country_code, #billing_country_code").trigger('change')
 		
 		var p_invoice_id = '';
 		var auto_id = 0;
-		var inv_type=getUrlVarsO()["inv_type"]
-		
-		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type;
+		var inv_type=getUrlVarsO()["inv_type"];
+
+		console.log('he', JSON.stringify(selectedTaxIds))
+		var tax_ids = selectedTaxIds
+
+		var sdiscountPercentInput = document.getElementById('sdiscount_percent_1');
+		var discountPercentage = 0;
+		if (sdiscountPercentInput) {
+			discountPercentage = parseFloat(sdiscountPercentInput.value);
+		}
+		var finaltaxess = document.getElementById('total-taxes')
+		var finaltotaltaxes = finaltaxess.textContent
+		var totalAmountGet = document.getElementById('grand_total_amount')
+		var totalAmountGet = totalAmountGet.textContent
+		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -967,12 +1001,13 @@ $("#country_code, #billing_country_code").trigger('change')
 
 					//location.reload(); //commented by soumen divert to invoice screen.     
 				} else {
-					errorModalCall(GetAppMessage('error_message_text'));
+					//errorModalCall(result);
 					// alert(value.status);
 				}
 			}, // success
 			error: function(ts) {
-				errorModalCall(GetAppMessage('error_message_text'));
+				//errorModalCall(ts);
+				console.log(ts)
 				// alert(ts.responseText + ' Generate Invoice')
 			}
 		}); // Ajax
@@ -982,12 +1017,14 @@ $("#country_code, #billing_country_code").trigger('change')
 			var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){ 
 				window.location = BASE_URL+ url;  
-			}, 3000);
+			}, 1500);
 			
 			return false;
 		}
 
 		return false;
+
+
 	});
 
 	$("#send_email_btn").click(function (e) {
@@ -1260,6 +1297,11 @@ $('#save_btn').click(function (e) {
 		var isTeacher = +"{{$AppUI->isTeacher()}}";
 		var inv_type=getUrlVarsO()["inv_type"]
 
+		var subTotalLessons = 0;
+		var subTotalEvents = 0;
+		var subTotalEventsExtra = 0;
+		var totalMinutesLessons = 0;
+		var currencyTotal = 'USD';
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
 		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
@@ -1272,51 +1314,103 @@ $('#save_btn').click(function (e) {
 			dataType: 'json',
 			async: false,
 			success: function(result) {
-					$.each(result.data, function(key, value) {
+
+						// Initialise les tableaux pour les événements et les leçons
+						var events = [];
+						var lessons = [];
+
+						// Sépare les événements et les leçons en fonction de leur type
+						for (var i = 0; i < result.data.length; i++) {
+							var item = result.data[i];
+							if (item.event_type === 100) {
+								events.push(item);
+							} else if (item.event_type === 10) {
+								lessons.push(item);
+							}
+						}
+
+						var justOneWeekLabel = 0;
+
+					//List lessons
+					$.each(lessons, function(key, value) {
 							record_found += 1;
 							// week summary
-							if ((prev_week != '') && (prev_week != value.week_name)) {
-									resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-									resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
-									// alert('no_of_teachers='+no_of_teachers);
-									if (no_of_teachers == 1){
-											resultHtml += '<td style="text-align:right"></td>';
-									}else {
-											if (!isTeacher) {
-												resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-											}
-										}
-		
-									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
-									resultHtml += '</tr>'
-									week_total_buy = 0;
-									week_total_sell = 0;
-							}
+							//if ((prev_week != '') && (prev_week != value.week_name)) {
+							//		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+							//		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+							//		// alert('no_of_teachers='+no_of_teachers);
+							//		if (no_of_teachers == 1){
+							//				resultHtml += '<td style="text-align:right"></td>';
+							//		}else {
+							//				if (!isTeacher) {
+							//					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+							//				}
+							//			}
+		//
+							//		resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
+							//		resultHtml += '</tr>'
+							//		week_total_buy = 0;
+							//		week_total_sell = 0;
+							//}
 
 							if (prev_week != value.week_name) {
+
+								if(justOneWeekLabel == 0) {
+								
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
-									resultHtml += '<b><tr class="course_week_header"><td colspan="1">' + week_caption + ' ' + value.week_no + '</td>';
+									resultHtml += '<b><tr class="course_week_header"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
 									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td colspan="1">Date</td>';
-									resultHtml += '<b><td colspan="1">Time</td>';
-									resultHtml += '<b><td colspan="1">Duration</td>';
-									resultHtml += '<b><td colspan="1">Category</td>';
-									resultHtml += '<b><td colspan="1">Teacher</td>';
-									resultHtml += '<b><td colspan="1">Lesson</td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Date</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Time</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Duration</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Category</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Teacher</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Lesson</b></td>';
+
+
+									
+									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
+									if (result.no_of_teachers == 1){
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1">' + '' + '</td>';
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Price</b></td>';
+									} else {
+										if (!isTeacher) {
+											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
+										}
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Student Price</b></td>';
+									}
+		
+		
+									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+								} else {
+
+									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
+										resultHtml += '<b><tr class="course_week_header"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td>';
+									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><td colspan="1"></td>';
+
+
 									
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1">Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td style="text-align:right" colspan="1">Teacher Price</td>';
+											resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
 										}
-										resultHtml += '<b><td style="text-align:right" colspan="1">Student Price</td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
 									}
 		
 		
-									resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+									resultHtml += '<td style="text-align:right" colspan="1"></td></tr></b>';
+								}
+									justOneWeekLabel = justOneWeekLabel + 1;
 
 							}
 							resultHtml += '<tr>';
@@ -1325,7 +1419,266 @@ $('#save_btn').click(function (e) {
 
 							if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
 									selected_items += 1;
-									resultHtml += "<td><input class='event_class' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+									resultHtml += "<td><input class='lesson_class' data-amount='"+(value.sell_price+value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+							} else {
+									resultHtml += "<td>-</td>";
+							}
+
+							//below locked and invoiced
+							
+							if (value.ready_flag == 1) {
+								resultHtml += "<td>";
+									resultHtml += "<i class='fa fa-lock'></i> ";
+									resultHtml += "</td>";
+							} else {
+								resultHtml += "<td>";
+									resultHtml += "-";
+									resultHtml += "</td>";
+							}
+							//if (value.is_sell_invoiced > 0) {
+									//comments as Kim as per Sportlogin Before the app.doc
+									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
+							//}
+							
+							//above locked and invoiced
+
+							resultHtml += '<td width="10%">' + value.date_start + '</td>';
+							if (value.duration_minutes == 0) {
+								resultHtml += '<td style="text-align:center" colspan="2">' + GetAppMessage('allday_event_caption') + '</td>';
+							}else {
+								resultHtml += '<td>' + value.time_start + '</td>';
+								resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
+								totalMinutesLessons = totalMinutesLessons + value.duration_minutes;
+							}
+							if (value.event_type == 100) {
+								if (value.title != '' && value.title != null) {
+									resultHtml += '<td>Event : '+value.title+'</td>';
+								}else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								resultHtml += '<td>' + value.category_name + '</td>';
+							}
+							
+							resultHtml += '<td>' + value.teacher_name + '</td>';
+							if (value.event_type == 100) {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Event</td>';
+								}
+							} else {
+								if (value.count_name > 1) {
+									resultHtml += '<td>Group Lessons for '+value.count_name+' Student(s)</td>';
+								}
+								else{
+									resultHtml += '<td>Private Lesson</td>';
+								}
+
+							}
+
+							//resultHtml += '<td>' + value.title + '</td>';
+
+							// all_ready = 0 means not ready to generate invoice
+							//var icon  ='<img src="../images/icons/locked.gif" width="12" height="12"/>';
+							if (value.ready_flag == 0) {
+								//all_ready = 0;
+								if (!isTeacher) {
+									resultHtml += "<td></td>";
+								}
+
+							var myTimezone = "{{ $school->timezone }}";
+							var TheDateStart = moment(value.date_start, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_start + ':00';
+							var TheDateEnd = moment(value.date_end, "DD/MM/YYYY").format("YYYY-MM-DD") + ' ' + value.time_end + ':00';
+
+							var eventStart = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var eventEnd = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone);
+							var now = moment().tz(myTimezone).format('YYYY-MM-DDTHH:mm:00');
+							const eventStartTimeStamp = moment.utc(TheDateStart + ' ' + value.time_start, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const eventEndTimeStamp = moment.utc(TheDateEnd + ' ' + value.time_end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+							const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
+	
+							if (eventStart.isBefore(now)) {
+								if (value.event_type == 100) {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								} else {
+									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+								}
+							} else {
+								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
+                    			var phrase = "Available in " + timeBetween;
+								resultHtml += '<td style="text-align:right; font-size:11px;">('+phrase+')</td>';
+							}
+								
+							} else {
+								if (no_of_teachers == 1){
+										resultHtml += '<td style="text-align:right"></td>';
+								}else {
+									if (value.event_type!=100 && value.cat_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else if (value.event_type!=10 && value.event_invoice_type=='T') {
+										value.buy_price = value.sell_price;
+									} 
+									else{
+										value.buy_price = value.buy_price;
+									}
+									if (!isTeacher) {
+										resultHtml += '<td style="text-align:right">' + value.price_currency + ' <b>' + value.buy_price.toFixed(2) + '</b></td>';
+								
+									}
+								}
+								currencyTotal = value.price_currency;
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' <b>' + value.sell_price.toFixed(2) + '</b></td>';
+								//total_buy += value.buy_price;
+								//total_sell += value.sell_price + value.extra_charges;
+								
+								//week_total_buy += value.buy_price;
+								//week_total_sell += value.sell_price + value.extra_charges;
+								
+
+								if (value.event_type == 10) {
+									amount_for_disc=amount_for_disc+value.sell_price;
+									subTotalLessons = subTotalLessons + value.sell_price;
+								}
+							}
+
+							costs_1 = value.extra_charges;
+							if (value.extra_charges != 0) {
+									resultHtml += '<td style="text-align:right">+' + costs_1.toFixed(2) + '</td>';
+							} else {
+									resultHtml += '<td style="text-align:right"></td>';
+							}
+							resultHtml += '</tr>';
+							
+							
+							prev_week = value.week_name;
+
+							if (person_type == 'student_lessons') {
+									if (value.is_sell_invoiced != 0) {
+											//invoice_already_generated=1;  //commented by soumen to display items which has been generated already    
+									} else {
+
+									}
+							}
+					}); //for each record
+
+					if(totalMinutesLessons>0) {
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"><br><b>Total Lessons duration <i class="fa-solid fa-arrow-right"></i></b></td><td style="text-align:left;"><br><b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Lessons </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b></td><td></td></tr>';
+					
+					//Lesson Discount
+					resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Discount(%) on Lessons:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+					resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Discount Amount:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+
+
+					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Lessons</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td></td></tr>';
+
+					} else { resultHtml += '<span style="display:none;" id="ssubtotal_amount_with_discount_lesson">0</span>' }
+					
+					justOneWeekLabel = 0;
+
+					$.each(events, function(key, value) {
+							record_found += 1;
+							// week summary
+							//if ((prev_week != '') && (prev_week != value.week_name)) {
+							//		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+							//		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+							//		// alert('no_of_teachers='+no_of_teachers);
+							//		if (no_of_teachers == 1){
+							//				resultHtml += '<td style="text-align:right"></td>';
+							//		}else {
+							//				if (!isTeacher) {
+							//					resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+							//				}
+							//			}
+		//
+							//		resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
+							//		resultHtml += '</tr>'
+							//		week_total_buy = 0;
+							//		week_total_sell = 0;
+							//}
+
+							if (prev_week != value.week_name) {
+
+								if(justOneWeekLabel == 0) {
+									
+									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
+									resultHtml += '<b><tr class="course_week_header"><td colspan="1"><span style="font-size:11px;">[ EVENT ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Date</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Time</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Duration</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Category</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Teacher</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Lesson</b></td>';
+									
+									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
+									if (result.no_of_teachers == 1){
+										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Price/<b></td>';
+									} else {
+										if (!isTeacher) {
+											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
+										}
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Student Price</b></td>';
+									}
+		
+		
+									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+								} else {
+
+								//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
+								resultHtml += '<b><tr class="course_week_header"><td colspan="1"><span style="font-size:11px;">[ EVENT ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
+								resultHtml += '<b><td colspan="1">' + '' + '</td>';
+								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1"></td>';
+
+
+
+								//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
+								if (result.no_of_teachers == 1){
+									resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+								} else {
+									if (!isTeacher) {
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+									}
+									resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+								}
+
+
+								resultHtml += '<td style="text-align:right" colspan="1"></td></tr></b>';
+								}
+
+								justOneWeekLabel = justOneWeekLabel + 1;
+
+							}
+							resultHtml += '<tr>';
+
+							resultHtml += '<td style="display:none;">' + value.event_id + '</td>';
+
+							if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
+									selected_items += 1;
+									resultHtml += "<td><input class='event_class' data-amount='"+(value.sell_price).toFixed(2)+"' data-extra='"+(value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
 							} else {
 									resultHtml += "<td>-</td>";
 							}
@@ -1434,9 +1787,11 @@ $('#save_btn').click(function (e) {
 								
 									}
 								}
-								resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_price.toFixed(2) + '</td>';
+								resultHtml += '<td style="text-align:right">' + value.price_currency + ' <b>' + value.sell_price.toFixed(2) + '</b></td>';
 								total_buy += value.buy_price;
 								total_sell += value.sell_price + value.extra_charges;
+								subTotalEvents = subTotalEvents + value.buy_price;
+								subTotalEventsExtra = subTotalEventsExtra + value.extra_charges;
 								
 								week_total_buy += value.buy_price;
 								week_total_sell += value.sell_price + value.extra_charges;
@@ -1449,13 +1804,12 @@ $('#save_btn').click(function (e) {
 
 							costs_1 = value.extra_charges;
 							if (value.extra_charges != 0) {
-									resultHtml += '<td style="text-align:right">' + costs_1.toFixed(2) + '</td>';
+									resultHtml += '<td style="text-align:right">+' + costs_1.toFixed(2) + '</td>';
 							} else {
 									resultHtml += '<td style="text-align:right"></td>';
 							}
 							resultHtml += '</tr>';
 							
-
 							
 							prev_week = value.week_name;
 
@@ -1466,7 +1820,14 @@ $('#save_btn').click(function (e) {
 
 									}
 							}
-					}); //for each record
+					});
+
+
+					if(subTotalEvents > 0) {
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
+					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span>'; }
+
+
 			}, // success
 			error: function(ts) {
 				//errorModalCall(GetAppMessage('error_message_text'));
@@ -1474,46 +1835,78 @@ $('#save_btn').click(function (e) {
 			}
 		}); // Ajax
 
+
+
+
+
+
+		
+
+
 		
 		if (record_found > 0) {
 
 				// summary for last week of course records
-				if ((week_total_buy > 0) || (week_total_sell > 0)) {
-					
-						resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-						resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
-
-						if (no_of_teachers == 1){
-							resultHtml += '<td style="text-align:right"></td>';
-						}else {
-							if (!isTeacher) {
-								resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-						
-							}
-						}
-
-						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
-						resultHtml += '</tr>'
-						week_total_buy = 0;
-						week_total_sell = 0;
-				}
+				//if ((week_total_buy > 0) || (week_total_sell > 0)) {
+				//	
+				//		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
+				//		resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
+//
+				//		if (no_of_teachers == 1){
+				//			resultHtml += '<td style="text-align:right"></td>';
+				//		}else {
+				//			if (!isTeacher) {
+				//				resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
+				//		
+				//			}
+				//		}
+//
+				//		resultHtml += '<td style="text-align:right">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</td>';
+//
+				//		resultHtml += '</tr>'
+				//		week_total_buy = 0;
+				//		week_total_sell = 0;
+				//}
 
 				// display grand total
-				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
+				resultHtml += '<tr><td colspan="6">';
+				resultHtml += '<td colspan="2" style="text-align:right; font-weight: bold;"><br>' + sub_total_caption + ':</td>';
 
 				if (no_of_teachers == 1){
 				resultHtml += '<td style="text-align:right"></td>';
 				}else {
 					if (!isTeacher) {
-						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right; font-weight: bold;"><br>' + total_buy.toFixed(2) + '</td>';
 					}
 				}
 
-				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
+				resultHtml += '<td style="text-align:right"><br>'+currencyTotal+' <span style="font-weight: bold;" id="stotal_amount_with_discount">' + (subTotalLessons + subTotalEvents).toFixed(2) + '</span></td>';
+				
 				resultHtml += '</tr>'
 
 
+
+
+				var RegisterTaxData = @json($RegisterTaxData);
+
+				var totalTaxAmount = 0;
+				var sub_total_lesson = (subTotalLessons + subTotalEvents).toFixed(2); 
+	
+				RegisterTaxData.forEach(function(tax) {
+					totalTaxAmount += sub_total_lesson * parseFloat(tax.tax_percentage) / 100;
+				});
+				
+				var grandTotal = totalTaxAmount > 0 ? sub_total_lesson + totalTaxAmount : sub_total_lesson;
+
+				RegisterTaxData.forEach(function(tax) {
+						resultHtml += '<tr style="background-color:#EEE;">' +
+					'<td><input id="checkbox-'+tax.id+'" class="taxe_class" type="checkbox" data-amount="' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '" data-percentage="' + tax.tax_percentage + '" data-id="' + tax.id + '" checked></td>' +
+					'<td colspan="7" style="text-align:right">tax ' + tax.tax_name + ' (' + tax.tax_percentage + '%)</td>' +
+					'<td colspan="1" style="text-align:right"><b>+<span id="cap_tax_' + tax.id + '">' + (sub_total_lesson * parseFloat(tax.tax_percentage) / 100).toFixed(2) + '</span></b></td>' +
+					'<td></td>' + 
+					'</tr>';
+        		});
+	
 				var disc1_perc = 0,
 						disc2_perc = 0,
 						disc3_perc = 0,
@@ -1641,8 +2034,13 @@ $('#save_btn').click(function (e) {
 						}
 
 						total_disc = (disc1_amt + disc2_amt + disc3_amt + disc4_amt + disc5_amt + disc6_amt);
-						total_sell = total_sell - total_disc;
+						total_sell = (subTotalLessons + subTotalEvents + totalTaxAmount) + subTotalEventsExtra - total_disc;
+						var inittotal_sell = total_sell - total_disc;
 				} // calculate disc
+				else {
+					total_sell = (subTotalLessons + subTotalEvents + totalTaxAmount) + subTotalEventsExtra - total_disc;
+					var inittotal_sell = subTotalLessons + subTotalEvents - total_disc;
+				}
 
 				if (total_disc > 0) {
 						resultHtml += '<tr><td colspan="3"></td>';
@@ -1650,23 +2048,426 @@ $('#save_btn').click(function (e) {
 						resultHtml += '<td style="text-align:right" colspan="2"><strong>-' + total_disc.toFixed(2) + '<strong></tr>';
 				}
 
+
+				resultHtml += '<tr><td colspan="8" style="text-align:right;"><b>Total taxes</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="total-taxes">'+(totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+				resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>Sub-Total</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+
+				if(subTotalEventsExtra > 0) {
+					resultHtml += '<tr style="background-color:#EEE;"><td colspan="8" style="text-align:right;">Total Extra Charges</td><td colspan="1" style="text-align:right;">'+currencyTotal+' <b><span id="extras">'+subTotalEventsExtra.toFixed(2)+'</span></b></td><td></td></tr>';
+				} else { resultHtml += '<span id="extras" style="display:none;">0</span>'; }
+
 				// display grand total
-				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
-				resultHtml += '<td colspan="2">Total</td>';
+				resultHtml += '<tr><td style="font-weight: bold;" colspan="6">';
+				resultHtml += '<td style="text-align:right; font-weight: bold;" colspan="2" class="pt-3">TOTAL</td>';
 				
 				if (no_of_teachers == 1){
-					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right;"></td>';
 				}else {
 					if (!isTeacher) {
-						resultHtml += '<td style="text-align:right">' + total_buy.toFixed(2) + '</td>';
+						resultHtml += '<td style="text-align:right; font-weight: bold;">' + total_buy.toFixed(2) + '</td>';
 					}
 				}
 
-				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
+				
+
+				resultHtml += '<td style="text-align:right" class="pt-3">'+currencyTotal+' <span style="font-weight: bold;" id="grand_total_amount">' + (total_sell).toFixed(2) + '</span></td><td></td>';
 				resultHtml += '</tr>'
 
 				//display grand total
 				$('#lesson_table').html(resultHtml);
+
+
+				var totalAmount = 0;
+				var checkboxes = document.querySelectorAll('.taxe_class');
+				checkboxes.forEach(function(checkbox) {
+				var amount = parseFloat(checkbox.dataset.amount);
+				totalAmount += amount;
+				});
+		
+				// Add Event Listeners when DOM created
+				var checkboxes = document.querySelectorAll('.taxe_class');
+					checkboxes.forEach(function(checkbox) {
+					checkbox.addEventListener('change', function(event) {
+
+						var subTotalWithDiscount = document.getElementById('grand_total_amount');
+						var TotalWithDiscount = parseFloat(subTotalWithDiscount.textContent);
+						var subTotalExtra = document.getElementById('extras');
+						var TotalExtra = parseFloat(subTotalExtra.textContent);
+	
+						var subtotalAl = parseFloat(document.getElementById('stotal_amount_with_discount').textContent);
+						
+						if (event.currentTarget.checked) {
+							var amount = parseFloat(checkbox.dataset.amount);
+							console.log('total amount tax plus', amount)
+							total_sell = parseFloat(TotalWithDiscount + amount);
+							document.getElementById('grand_total_amount').textContent = total_sell.toFixed(2);
+							
+							var totalNewTaxes = 0;
+							var checkboxesTaxes = document.querySelectorAll('.taxe_class');
+							checkboxesTaxes.forEach(function(checkbox) {
+								if (checkbox.checked) {
+									var amount = document.getElementById('stotal_amount_with_discount').textContent * parseFloat(checkbox.dataset.percentage) / 100;
+									totalNewTaxes = totalNewTaxes + amount;
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+								}
+							});
+							
+							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
+							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
+							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
+						} else {
+							var amount = parseFloat(checkbox.dataset.amount);
+							console.log('total amount tax less', amount)
+							console.log('total => ' + TotalWithDiscount + ' - ' + amount + ' = ' + (TotalWithDiscount - amount))
+							total_sell = parseFloat((TotalWithDiscount - amount));
+							document.getElementById('grand_total_amount').textContent = total_sell.toFixed(2);
+
+							var totalNewTaxes = 0;
+							var checkboxesTaxes = document.querySelectorAll('.taxe_class');
+							checkboxesTaxes.forEach(function(checkbox) {
+								if (checkbox.checked) {
+									var amount = document.getElementById('stotal_amount_with_discount').textContent * parseFloat(checkbox.dataset.percentage) / 100;
+									totalNewTaxes = totalNewTaxes + amount;
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+								}
+							});
+							
+							document.getElementById('total-taxes').textContent = totalNewTaxes.toFixed(2);
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							var TotalsubTotalBeforeCharges = document.getElementById('stotal_amount_with_discount').textContent
+							var totalBeforeCHarge = (totalNewTaxes + subtotalAl)
+							document.getElementById('sub-total-before-charges').textContent = totalBeforeCHarge.toFixed(2);
+							
+
+						}
+					});
+				});
+
+				var checkboxesEvent = document.querySelectorAll('.event_class');
+				checkboxesEvent.forEach(function(checkbox) {
+				var amount = parseFloat(checkbox.dataset.amount);
+				totalAmount += amount;
+				});
+		
+				// Add Event Listeners when DOM created
+				var checkboxesEvents = document.querySelectorAll('.event_class');
+				checkboxesEvents.forEach(function(checkbox) {
+					checkbox.addEventListener('change', function(event) {
+						if (event.currentTarget.checked) {
+							//if checked
+							$('#btn_convert_invoice').removeAttr("disabled");
+							var oldtotalLessons = document.getElementById("ssubtotal_amount_with_discount_lesson");
+							var totalLessons = parseFloat(oldtotalLessons.textContent)
+							var newTotalEvents= 0;
+
+							var amount = parseFloat(checkbox.dataset.amount);
+							var oldSubTotalEvent = document.getElementById("stotal_amount_with_discount_event");
+							var newTotalEvents =  parseFloat(oldSubTotalEvent.textContent);
+							$("#stotal_amount_with_discount_event").text((parseFloat(newTotalEvents+amount)).toFixed(2));
+
+							if(totalLessons>0) {
+								if ($('#sdiscount_percent_1').length > 0) {
+									var newDiscount = $("#sdiscount_percent_1").val();
+									var totalDiscount = ((totalLessons*newDiscount) /100);
+									var totalLessons = Number((totalLessons - totalDiscount))
+									$("#ssubtotal_amount_with_discount").text(parseFloat(totalLessons).toFixed(2));
+									$('#samount_discount_1').val(parseFloat(totalDiscount).toFixed(2));
+								}
+							}
+
+							var newSubTotaux = (parseFloat((newTotalEvents+amount) + totalLessons))		
+							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
+
+
+							var totalNewTaxes = 0;
+							var checkboxes = document.querySelectorAll('.taxe_class');
+							checkboxes.forEach(function(checkbox) {
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
+						
+							});
+
+							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
+
+
+							var totalExtraSupp = 0;
+							var suppExtra = parseFloat(checkbox.dataset.extra);
+							var spanElement = document.getElementById('extras');
+							if (spanElement) {
+							var contenuValeurNumerique = parseFloat(spanElement.textContent);
+							totalExtraSupp = contenuValeurNumerique + suppExtra
+							$("#extras").text(parseFloat(totalExtraSupp).toFixed(2));
+							}
+
+							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+
+
+						} else {
+							//if Unchecked
+							
+							var oldtotalLessons = document.getElementById("ssubtotal_amount_with_discount_lesson");
+							var totalLessons = parseFloat(oldtotalLessons.textContent)
+							var newTotalEvents= 0;
+
+							var amount = parseFloat(checkbox.dataset.amount);
+							var oldSubTotalEvent = document.getElementById("stotal_amount_with_discount_event");
+							var newTotalEvents =  parseFloat(oldSubTotalEvent.textContent);
+							$("#stotal_amount_with_discount_event").text((parseFloat(newTotalEvents-amount)).toFixed(2));
+
+							if(totalLessons>0) {
+								if ($('#sdiscount_percent_1').length > 0) {
+									var newDiscount = $("#sdiscount_percent_1").val();
+									var totalDiscount = ((totalLessons*newDiscount) /100);
+									var totalLessons = Number((totalLessons - totalDiscount))
+									$("#ssubtotal_amount_with_discount").text(parseFloat(totalLessons).toFixed(2));
+									$('#samount_discount_1').val(parseFloat(totalDiscount).toFixed(2));
+								}
+							}
+
+							var newSubTotaux = (parseFloat((newTotalEvents-amount) + totalLessons))		
+							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
+
+
+							var totalNewTaxes = 0;
+							var checkboxes = document.querySelectorAll('.taxe_class');
+							checkboxes.forEach(function(checkbox) {
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
+						
+							});
+
+							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
+
+
+							var totalExtraSupp = 0;
+							var suppExtra = parseFloat(checkbox.dataset.extra);
+							var spanElement = document.getElementById('extras');
+							if (spanElement) {
+							var contenuValeurNumerique = parseFloat(spanElement.textContent);
+							totalExtraSupp = contenuValeurNumerique - suppExtra
+							$("#extras").text(parseFloat(totalExtraSupp).toFixed(2));
+							}
+
+
+							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+
+
+						}
+					});
+				});
+
+
+
+				var checkboxesLesson = document.querySelectorAll('.lesson_class');
+				checkboxesLesson.forEach(function(checkbox) {
+				var amount = parseFloat(checkbox.dataset.amount);
+				totalAmount += amount;
+				});
+		
+				// Add Event Listeners when DOM created
+				var checkboxesLessons = document.querySelectorAll('.lesson_class');
+				checkboxesLessons.forEach(function(checkbox) {
+					checkbox.addEventListener('change', function(event) {
+						if (event.currentTarget.checked) {
+							//if checked
+							$('#btn_convert_invoice').removeAttr("disabled");
+							var amount = parseFloat(checkbox.dataset.amount);
+							var oldSubtoTalLessons = document.getElementById("ssubtotal_amount_with_discount_lesson");
+							console.log('ssubtotal_amount_with_discount_lesson', parseFloat(oldSubtoTalLessons.textContent))
+							var newSubtoTalLessons = (parseFloat(oldSubtoTalLessons.textContent)+amount);
+							console.log('newSubtoTalLessons', newSubtoTalLessons)
+							$("#ssubtotal_amount_with_discount_lesson").text(parseFloat(newSubtoTalLessons).toFixed(2));
+								var totalLessons = 0;
+								if(newSubtoTalLessons>0) {
+									if ($('#sdiscount_percent_1').length > 0) {
+										var newDiscount = $("#sdiscount_percent_1").val();
+										var totalDiscount = ((newSubtoTalLessons*newDiscount) /100);
+										var totalLessons = Number((newSubtoTalLessons - totalDiscount))
+										$("#ssubtotal_amount_with_discount").text(parseFloat(totalLessons).toFixed(2));
+										$('#samount_discount_1').val(parseFloat(totalDiscount).toFixed(2));
+									}
+										$('#sdiscount_percent_1').removeAttr("disabled");
+										$('#samount_discount_1').removeAttr("disabled");
+								} else {
+									$("#ssubtotal_amount_with_discount").text(parseFloat(0).toFixed(2));
+									//$('#sdiscount_percent_1').val(0);
+									//$('#samount_discount_1').val(0);
+									$('#sdiscount_percent_1').attr("disabled", "disabled");
+									$('#samount_discount_1').attr("disabled", "disabled");
+								}
+
+							var newTotalEvents = document.getElementById("stotal_amount_with_discount_event");
+							console.log('stotal_amount_with_discount_event', parseFloat(newTotalEvents.textContent));
+							var newSubTotaux = (parseFloat(newTotalEvents.textContent) + parseFloat(totalLessons))
+							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
+
+							var totalNewTaxes = 0;
+							var checkboxes = document.querySelectorAll('.taxe_class');
+							checkboxes.forEach(function(checkbox) {
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
+						
+							});
+
+							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
+
+
+							var totalExtraSupp = 0;
+							var spanElement = document.getElementById('extras');
+							if (spanElement) {
+							var contenuValeurNumerique = parseFloat(spanElement.textContent);
+							totalExtraSupp = contenuValeurNumerique
+							console.log(contenuValeurNumerique);
+							}
+
+
+							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+
+
+
+						} else {
+							//if Unchecked
+							var amount = parseFloat(checkbox.dataset.amount);
+							var oldSubtoTalLessons = document.getElementById("ssubtotal_amount_with_discount_lesson");
+							console.log('ssubtotal_amount_with_discount_lesson', parseFloat(oldSubtoTalLessons.textContent))
+							var newSubtoTalLessons = (parseFloat(oldSubtoTalLessons.textContent)-amount);
+							console.log('newSubtoTalLessons', newSubtoTalLessons)
+							$("#ssubtotal_amount_with_discount_lesson").text(parseFloat(newSubtoTalLessons).toFixed(2));
+								var totalLessons = 0;
+								if(newSubtoTalLessons>0) {
+									if ($('#sdiscount_percent_1').length > 0) {
+										var newDiscount = $("#sdiscount_percent_1").val();
+										var totalDiscount = ((newSubtoTalLessons*newDiscount) /100);
+										var totalLessons = Number((newSubtoTalLessons - totalDiscount))
+										$("#ssubtotal_amount_with_discount").text(parseFloat(totalLessons).toFixed(2));
+										$('#samount_discount_1').val(parseFloat(totalDiscount).toFixed(2));
+									}
+								} else {
+									$("#ssubtotal_amount_with_discount").text(parseFloat(0).toFixed(2));
+									$('#sdiscount_percent_1').val(0);
+									$('#samount_discount_1').val(0);
+									$('#sdiscount_percent_1').attr("disabled", "disabled");
+									$('#samount_discount_1').attr("disabled", "disabled");
+									errorModalCall('You unchecked all lessons for this invoice. So your Lesson discount is now reset. Please add again your discount if you need it and if you check a lesson.')
+								}
+
+							var newTotalEvents = document.getElementById("stotal_amount_with_discount_event");
+							console.log('stotal_amount_with_discount_event', parseFloat(newTotalEvents.textContent));
+							var newSubTotaux = (parseFloat(newTotalEvents.textContent) + parseFloat(totalLessons))
+							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
+
+							var totalNewTaxes = 0;
+							var checkboxes = document.querySelectorAll('.taxe_class');
+							checkboxes.forEach(function(checkbox) {
+								
+									var amount = newSubTotaux * parseFloat(checkbox.dataset.percentage) / 100;
+									if (checkbox.checked) {
+										totalNewTaxes = totalNewTaxes + amount;
+									}
+									$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+									console.log('new tax => ' + amount);
+
+									var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+									inputElement.setAttribute('data-amount', amount);
+								
+						
+							});
+
+							$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+							document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+							$("#sub-total-before-charges").text(parseFloat(newSubTotaux + totalNewTaxes).toFixed(2));
+
+
+							var totalExtraSupp = 0;
+							var spanElement = document.getElementById('extras');
+							if (spanElement) {
+							var contenuValeurNumerique = parseFloat(spanElement.textContent);
+							totalExtraSupp = contenuValeurNumerique
+							console.log(contenuValeurNumerique);
+							}
+
+
+							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+
+
+
+
+
+
+						}
+					});
+				});
+
+
+				$(".numeric").keyup(function () {
+					var checkPercentForDiscount = $("#sdiscount_percent_1").val();
+					if(checkPercentForDiscount>100) {
+						document.getElementById("sdiscount_percent_1").textContent = 100
+						$('#errorModal').modal('hide')
+						errorModalCall('The maximum of percentage discount is 100.');
+					} else {
+						$("#btn_convert_invoice").removeAttr("disabled");
+            			CalculateDiscount('discount');
+					}
+				});
+
+				$(".numeric_amount").keyup(function () {
+					var checkboxesLessons = document.querySelectorAll('.lesson_class');
+					var maxPossible=0;
+					checkboxesLessons.forEach(function(checkbox) {
+						if (checkbox.checked) {
+							var amount = parseFloat(checkbox.dataset.amount);
+							maxPossible += amount;
+						};
+					})
+					var checkAmountForDiscount = $("#samount_discount_1").val();
+					if(checkAmountForDiscount>maxPossible){
+						$('#errorModal').modal('hide')
+						errorModalCall('The maximum amount of discount is ' + maxPossible)
+					} else {
+						$("#btn_convert_invoice").removeAttr("disabled");
+						CalculateDiscount('amount');
+					}
+				});
+
+
 				//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
 
 				if (all_ready == 1) {
@@ -1688,11 +2489,137 @@ $('#save_btn').click(function (e) {
 
 		} //found records
 		else {
-				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recrd</td></tr></tbody>';
+				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recprd</td></tr></tbody>';
 				$('#lesson_table').html(resultHtml);
 				document.getElementById("lesson_footer_div").style.display = "none";
 		}
 	} // populate_student_lesson
+
+
+	function CalculateDiscount(type) {
+        var subtotal_amount_all = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+        var disc1 = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
+        var disc1_amt = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
+
+        
+
+        var subtotal_amount_with_discount = 0.0;
+        var subtotal_amount_with_discount_lesson = 0.0;
+        var subtotal_amount_with_discount_event = 0.0;
+        
+        if ($('#ssubtotal_amount_with_discount_lesson').length > 0) {
+            subtotal_amount_all = $("#ssubtotal_amount_with_discount_lesson").text();
+            if ($('#sdiscount_percent_1').length > 0) {
+                disc1 = $("#sdiscount_percent_1").val();
+            }
+            if ($('#samount_discount_1').length > 0) {
+                disc1_amt = $("#samount_discount_1").val();
+            }
+            
+            disc1_amt = ((type == 'discount')?Number((subtotal_amount_all * disc1) / 100):Number(disc1_amt));
+            disc1 = ((type == 'amount')?Number((disc1_amt * 100) / subtotal_amount_all):Number(disc1));
+
+            if(type == 'discount'){
+                if ($('#samount_discount_1').length > 0) {
+                    $("#samount_discount_1").val(parseFloat(disc1_amt).toFixed(2));
+                }
+            } else {
+                if ($('#sdiscount_percent_1').length > 0) {
+                    $("#sdiscount_percent_1").val(parseFloat(disc1).toFixed(2));
+                }
+            }
+            
+
+            total_amount_discount = parseFloat(disc1_amt).toFixed(2);
+            if ($('#stotal_amount_discount').length > 0) {
+                $("#stotal_amount_discount").val(parseFloat(total_amount_discount).toFixed(2));
+            }
+            subtotal_amount_with_discount_lesson = Number($("#ssubtotal_amount_with_discount_lesson").text());
+            subtotal_amount_with_discount_lesson = Number(+subtotal_amount_with_discount_lesson) - Number(+total_amount_discount);
+        } 
+       
+            $("#ssubtotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
+        
+        if ($('#stotal_amount_with_discount_event').length > 0) {
+            subtotal_amount_with_discount_event = Number($("#stotal_amount_with_discount_event").text());
+        } 
+        //console.log(subtotal_amount_with_discount_event);
+        subtotal_amount_with_discount = Number(+subtotal_amount_with_discount_lesson) + Number(+subtotal_amount_with_discount_event);
+        
+        if ($('#stotal_amount_with_discount').length > 0) {
+            $("#stotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount).toFixed(2));
+        } 
+        //subtotal_amount_with_discount_lesson = Number(+stotal_amount_with_discount_lesson) + Number(+total_amount_discount);
+        
+        //subtotal_amount_no_discount=parseFloat($("#ssubtotal_amount_no_discount").text());
+        subtotal_amount_no_discount = 0;
+
+        total_amount = (+subtotal_amount_no_discount) + (+subtotal_amount_with_discount);
+        
+        if ($('#total_commission').length > 0) {
+            total_commission = Number($("#total_commission").val());
+
+            total_amount = (Number(total_amount) - (total_commission));
+
+        }
+        
+        
+        //$("#stotal_amount").text(total_amount);
+        //console.log(total_amount);
+        
+        var extra = 0;
+        var taxes = 0;
+        if ($('#sextra_expenses').length > 0) {
+            extra = Number(document.getElementById("sextra_expenses").value);
+        } 
+        if ($('#taxes').length > 0) {
+            taxes = Number(document.getElementById("taxes").value);
+        } 
+        var grand_total = (+total_amount) + (+extra) + (+taxes);
+
+        //console.log(grand_total);
+        $("#grand_total_amount").text(parseFloat(grand_total).toFixed(2));
+
+        $("#grand_total_cap").html(parseFloat(grand_total).toFixed(2));
+        //$("#tax_amount_cap").html(parseFloat(tax_amount).toFixed(2));
+        //$("#extra_expenses_cap").html(parseFloat(extra).toFixed(2));
+
+		var totalNewTaxes = 0;
+
+		var checkboxes = document.querySelectorAll('.taxe_class');
+		checkboxes.forEach(function(checkbox) {
+			
+				var amount = total_amount * parseFloat(checkbox.dataset.percentage) / 100;
+				if (checkbox.checked) {
+					totalNewTaxes = totalNewTaxes + amount;
+				}
+				$("#cap_tax_"+checkbox.dataset.id).text(parseFloat(amount).toFixed(2));
+				console.log('new tax => ' + amount);
+
+				var inputElement = document.getElementById('checkbox-'+checkbox.dataset.id);
+				inputElement.setAttribute('data-amount', amount);
+			
+	
+		});
+
+		$("#total-taxes").text(parseFloat(totalNewTaxes).toFixed(2));
+		document.getElementById('finaltotaltaxes').value = totalNewTaxes.toFixed(2);
+		$("#sub-total-before-charges").text(parseFloat(subtotal_amount_with_discount_lesson + subtotal_amount_with_discount_event + totalNewTaxes).toFixed(2));
+
+		
+		var totalExtraSupp = 0;
+		var spanElement = document.getElementById('extras');
+		if (spanElement) {
+		var contenuValeurNumerique = parseFloat(spanElement.textContent);
+		totalExtraSupp = contenuValeurNumerique
+		console.log(contenuValeurNumerique);
+		}
+
+
+		document.getElementById('grand_total_amount').textContent = (totalExtraSupp+totalNewTaxes+total_amount).toFixed(2);
+
+
+    }
 
 
 	function preview() {
@@ -1724,6 +2651,7 @@ $('#save_btn').click(function (e) {
             }
         }
     }
+	
 
 
 	$('.box_img i.fa.fa-close').click(function (e) {

@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\EmailTemplate;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
+use App\Models\InvoicesTaxes;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
 use DateTimeZone;
@@ -416,7 +417,6 @@ class TeachersController extends Controller
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
-
         return view('pages.teachers.edit')->with(compact('teacher','emailTemplate','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice','provinces','school', 'isInEurope'));
     }
 
@@ -547,7 +547,7 @@ class TeachersController extends Controller
         $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         $school = School::find($schoolId);
-
+        $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
         
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
@@ -560,6 +560,7 @@ class TeachersController extends Controller
         'school',
         'eventLastLocaId',
         'eventCat',
+        'InvoicesTaxData',
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope'));
     }
 
@@ -819,6 +820,52 @@ class TeachersController extends Controller
 
     }
 
+
+    /**
+     * Check users .
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function selfTaxeUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $teacher = Teacher::find($user->person_id);
+
+      // dd($alldata);
+      DB::beginTransaction();
+        try{
+            //$dataParam = $request->all();
+            $dataParam = $request->merge(['created_by' => $user->id])->all();
+            InvoicesTaxes::where('invoice_id', null)
+            ->where('created_by', $user->id)
+            ->forceDelete();
+
+            if (!empty($dataParam['tax_name'])) {
+                for($i=0; $i < count($dataParam['tax_name']);$i++){
+                    $taxData = [
+                        'invoice_id'   => null,
+                        'tax_name' => $dataParam['tax_name'][$i],
+                        'tax_percentage' => $dataParam['tax_percentage'][$i],
+                        'tax_number' => $dataParam['tax_number'][$i],
+                        'tax_amount' => null,
+                    ];
+                    $InvoiceTax = InvoicesTaxes::create($taxData);
+                }
+            }  
+
+
+            DB::commit();
+            return back()->withInput($request->all())->with('success', __('Taxes updated successfully!'));
+        }catch (\Exception $e) {
+            DB::rollBack();
+            // dd($e);
+            //return error message
+            return redirect()->back()->withInput($request->all())->withErrors($e->getMessage());
+        }
+    }
 
 
     /**

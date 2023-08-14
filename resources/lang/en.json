@@ -319,6 +319,7 @@
     "now": "now",
     "of payments and invoices": "of payments and invoices",
     "password": "Password",
+    "Password": "Password",
     "password not matched": "password not matched",
     "per event": "per event",
     "reminder_email_unpaid": "reminder email unpaid",
@@ -345,5 +346,9 @@
     "Sign up now and take advantage of a 90-free-day trial period": "Sign up now and take advantage of a 60-free-day trial period",
     "Free Trial": "Free Trial",
     "Login ID": "Login ID",
-    "invoice generated":"Invoice generated with success!"
+    "invoice generated":"Invoice generated with success!",
+    "You are invited by":"You are invited by",
+    "to create your personnal account":"to create your personnal account",
+    "Welcome":"Welcome",
+    "Create my account":"Create my account"
 }

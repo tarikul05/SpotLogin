@@ -1,15 +1,18 @@
-@extends('layouts.raw')
+@extends('layouts.verify')
 
 @section('content')
 <!-- Reset Password -->
-<div class="login-signup-modal mt-200">
+<div class="login-signup-modal">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content pt-5">
             <div class="modal-header d-block text-center border-0">
                 
-                <h2 class="modal-title text-primary font-weight-bold" id="resetpasswordModalLabel">{{ __('Reset Pasword')}}</h2>
-                
+                <h5 class="modal-title font-weight-bold" id="resetpasswordModalLabel">{{ __('Reset Pasword')}}</h5>
+                <span>Account Login ID : {{ $user->username }} ({{ $user->firstname }} {{ $user->lastname }})
             </div>
+
+            <div class="card">
+                <div class="card-body bg-tertiary">
             <div class="modal-body" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
                 <form method="POST" action="{{route('reset_password.submit')}}">
                 
@@ -40,24 +43,34 @@
                     <div class="form-group">
                         <input type="password" class="form-control" placeholder="Enter New Password" id="reset_password_pass" name="reset_password_pass" required>
                     </div>
-                    <small id="" class="password_hint">
-                        <strong>Password Must:</strong></br>
-                        > Be more than 7 Characters</br>
-                        > An Uppercase Character</br>
-                        > A Lowercase Character</br>
-                        > A Number</br>
-                        > A Special character</br>
-                    </small>
+                   
 
                     <div class="form-group">
                         <input type="password" class="form-control" placeholder="Confirm Password" id="reset_password_confirm_pass" name="reset_password_confirm_pass" required>
                     </div>
+
+
+                    <div class="card2">
+                        <div class="card-body">
+                    <small>
+                        <strong>{{ __('Password Must') }}:</strong></br>
+                            > {{ __('Be more than 7 Characters') }}</br>
+                            > {{ __('An Uppercase Character') }}</br>
+                            > {{ __('A Lowercase Character') }}</br>
+                            > {{ __('A Number') }}</br>
+                            > {{ __('A Special character') }}</br>
+                        </small>
+                        </div>
+                    </div>
                         
-                    
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Submit')}}</button>
+                    <div class="mt-3 text-center">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Submit')}}</button>
+                    </div>
                 </form>
                 
             </div>
+        </div>
+    </div>
         </div>
     </div>
 </div>
