@@ -112,7 +112,9 @@
             @endforeach
         </tbody>
     </table>
-    <button type="submit" id="delete-selected" onclick="return confirm('Are you sure you want to delete the selected students?')">Delete the selected students</button>
+    <div class="delete_studentList">
+        <button type="submit" id="delete-selected" onclick="return confirm('Are you sure you want to delete the selected students?')">Delete the selected students</button>
+    </div>
     </form>
   </div>
 @endsection
