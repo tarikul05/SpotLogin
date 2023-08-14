@@ -144,18 +144,37 @@
                             <div class="row" id="school_cal">
                                 <div class="col-md-9">
                                     <!-- fullcalendar -->
-                                    <div id="calendar"></div>
-                                    <div style="margin-top: 15px;">
+                                    <div style="margin-bottom: 15px;" class="agendaContent1">
                                         <div class="btn-group" style="margin-right:5px;">
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">{{__('Today')}}</button>
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
                                         </div>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_day" type="button">{{__('Day')}}</button>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_week" type="button">{{__('Week')}}</button> 
-                                        <button class="btn btn-sm calendar_buttons" id="btn_month" type="button">{{__('Month')}}</button>
-                                        <button class="btn btn-sm calendar_buttons" id="btn_list" type="button">{{__('List')}}</button> 
-                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list" type="button">{{__('Current List')}}</button> 
+                                        <div class="btn-group" id="calendar_dropdown">
+                                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa-regular fa-eye"></i>  {{__('Select View')}}
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="calendar_dropdown">
+                                                <button class="dropdown-item calendar_buttons" id="btn_day" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Day')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_week" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Week')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_month" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Month')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('List')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Current List')}}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="calendar" class="calendarContent"></div>
+                                    <div style="margin-top: 15px;" class="agendaContent2">
+                                        <div class="btn-group" style="margin-right:5px;">
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">{{__('Today')}}</button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
+                                        </div>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_day2" type="button">{{__('Day')}}</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_week2" type="button">{{__('Week')}}</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_month2" type="button">{{__('Month')}}</button>
+                                        <button class="btn btn-sm calendar_buttons" id="btn_list2" type="button">{{__('List')}}</button> 
+                                        <button class="btn btn-sm calendar_buttons" id="btn_current_list2" type="button">{{__('Current List')}}</button> 
                                     </div>   
                                 </div>
                                 <div class="col-md-3">                             
@@ -848,7 +867,7 @@
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+='<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
+            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
@@ -980,19 +999,19 @@
     });
 
     //right: 'prev,today,next month,agendaWeek,agendaDay MyListButton'
-	$('#btn_prev').on('click', function() {
+	$('#btn_prev, #btn_prev2').on('click', function() {
         $('#calendar').fullCalendar('prev');
 	});
 
-	$('#btn_today').on('click', function() {
+	$('#btn_today, #btn_today2').on('click', function() {
         $('#calendar').fullCalendar('today');
 	});
 
-	$('#btn_next').on('click', function() {
+	$('#btn_next, #btn_next2').on('click', function() {
         $('#calendar').fullCalendar('next');
 	});
 
-	$('#btn_month').on('click', function() {
+	$('#btn_month, #btn_month2').on('click', function() {
         $("#btn_prev").prop("disabled", false);
         $("#btn_next").prop("disabled", false);
         $("#btn_today").prop("disabled", false);
@@ -1000,27 +1019,27 @@
         hideExtraRowInMonthView()
 	});
 
-	$('#btn_week').on('click', function() {
+	$('#btn_week, #btn_week2').on('click', function() {
         $("#btn_prev").prop("disabled", false);
         $("#btn_next").prop("disabled", false);
         $("#btn_today").prop("disabled", false);
         $('#calendar').fullCalendar('changeView', 'agendaWeek');
 	});
 
-	$('#btn_day').on('click', function() {
+	$('#btn_day, #btn_day2').on('click', function() {
         $("#btn_prev").prop("disabled", false);
         $("#btn_next").prop("disabled", false);
         $("#btn_today").prop("disabled", false);
         $('#calendar').fullCalendar('changeView', 'agendaDay');
 	});
-    $('#btn_list').on('click', function() {
+    $('#btn_list, #btn_list2').on('click', function() {
         //getFreshEvents('ListView');	  
         $("#btn_prev").prop("disabled", false);
         $("#btn_next").prop("disabled", false);
         $("#btn_today").prop("disabled", false);
 		$('#calendar').fullCalendar('changeView', 'listMonth');	
 	});
-    $('#btn_current_list').on('click', function() {
+    $('#btn_current_list, #btn_current_list2').on('click', function() {
         //getFreshEvents('CurrentListView');
        // CallListView();	  
 
@@ -1697,9 +1716,6 @@
     //validate multiple events based on date, events type, teacher and student etc
     $('#btn_validate_events').click(function (e) {
 	
-
-        var cal_view_mode=$('#calendar').fullCalendar('getView');
-		console.log("cal_view_mode="+cal_view_mode.name);
         
         var user_role=document.getElementById("user_role").value;
         if (user_role == 'student') {
@@ -1711,13 +1727,11 @@
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
 
-        if(cal_view_mode.name !== "agendaDay") {
-            const date = moment(p_to_date);
-            const newDate = date.subtract(1, 'days');
-            p_to_date = newDate.format('YYYY-MM-DD');
-            console.log('new date-1', p_to_date); // Day-1
-        }
-        
+        const date = moment(p_to_date);
+        const newDate = date.subtract(1, 'days');
+        p_to_date = newDate.format('YYYY-MM-DD');
+        console.log('new date-1', p_to_date); // Day-1
+
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();
@@ -4173,7 +4187,7 @@ $('#event_invoice_type').on('change', function() {
 
 $( document ).ready(function() {
 
-    $('#add_lesson_btn').on('click', function() {
+    $('#button_menu_div').on('click', '#add_lesson_btn', function() {
 
         if (getSchoolIDs('is_multi')) {
                 $('#modal_lesson_price').modal('show');

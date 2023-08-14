@@ -1116,6 +1116,35 @@ label.profile_img_area {
     font-family: "Gilroy-Regular";
     /* height: 68vh; */
 }
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    top: 80%;
+    left: 7px;
+    height: 1em;
+    width: 1em;
+    margin-top: -9px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 0.15em solid white;
+    border-radius: 1em;
+    box-shadow: 0 0 0.2em #444;
+    box-sizing: content-box;
+    text-align: center;
+    text-indent: 0 !important;
+    font-family: "Courier New",Courier,monospace;
+    line-height: 1em;
+    background-color: #31b131;
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+    content: "\f150"; /* Code Unicode de l'icône chevron-circle-down de Font Awesome */
+    font-family: "Font Awesome 5 Free"; /* Assurez-vous d'utiliser la bonne famille de polices */
+    background-color: #31b131; /* Couleur de fond pour l'icône */
+}
+
 .dataTables_wrapper .dataTables_filter input {
     border: 1px solid #aaa;
     border-radius: 3px;
@@ -1554,7 +1583,48 @@ label#currency_alert_text {
     transform: translate(-50%, -50%); /* Ajout de cette ligne */
   }
 
+    .calendarContent {
+        padding-bottom:0;
+    }
+
+    .agendaContent1 {
+        display: none;
+    }
+    .agendaContent2 {
+        display: block;
+    }
+
+    /* Styliser les divs pour les écrans larges */
+    @media only screen and (max-width: 768px) {
+        .agendaContent1 {
+            display: block;
+        }
+        
+        .agendaContent2 {
+        display: none;
+        }
+
+        .calendarContent {
+            padding-bottom:40px;
+        }
+
+    }
+
+    /* Styliser les divs pour les petits écrans */
+    @media screen and (max-width: 767px) {
+        .agendaContent1, .agendaContent2 {
+            position: static;
+            margin: 0;
+        }
+    }
+
   @media only screen and (max-width: 768px) {
+    
+    .delete_studentList {
+        padding-top:40px;
+        text-align: center;
+    }
+
     .navbar-nav .nav-item {
       height: 45px;
       padding-bottom: 10px;
