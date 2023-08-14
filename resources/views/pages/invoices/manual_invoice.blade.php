@@ -1351,7 +1351,8 @@ function AddEditInvoice(){
                 if(result.status == 1){
                     status_flag = 'success';
                     p_auto_id=result.id;
-                    window.location.href = window.location.href+'/'+p_auto_id
+                    var newURL = BASE_URL + '/admin/' + result.schoolId + '/modification-invoice/' + p_auto_id;
+                    window.location.href = newURL //window.location.href+'/'+p_auto_id
                 }
             },   // success
             error: function(ts) { 

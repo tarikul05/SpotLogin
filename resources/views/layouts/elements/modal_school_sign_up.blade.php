@@ -58,7 +58,7 @@
                                 @foreach ($countries as $key => $country)
                                     <option 
                                     value="{{ $country->code }}"
-                                    >  {{ $country->name }}</option>
+                                    >  {{ $country->name }} {{ $country->code }}</option>
                                 @endforeach
 
                             </select>

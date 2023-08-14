@@ -1697,6 +1697,9 @@
     //validate multiple events based on date, events type, teacher and student etc
     $('#btn_validate_events').click(function (e) {
 	
+
+        var cal_view_mode=$('#calendar').fullCalendar('getView');
+		console.log("cal_view_mode="+cal_view_mode.name);
         
         var user_role=document.getElementById("user_role").value;
         if (user_role == 'student') {
@@ -1708,11 +1711,13 @@
         var p_from_date=document.getElementById("date_from").value,
         p_to_date=document.getElementById("date_to").value;
 
-        const date = moment(p_to_date);
-        const newDate = date.subtract(1, 'days');
-        p_to_date = newDate.format('YYYY-MM-DD');
-        console.log('new date-1', p_to_date); // Day-1
-
+        if(cal_view_mode.name !== "agendaDay") {
+            const date = moment(p_to_date);
+            const newDate = date.subtract(1, 'days');
+            p_to_date = newDate.format('YYYY-MM-DD');
+            console.log('new date-1', p_to_date); // Day-1
+        }
+        
         var p_event_school_id=getSchoolIDs();
         var p_event_type_id=getEventIDs();
         var p_student_id=getStudentIDs();

@@ -478,7 +478,7 @@
 												<th><!--#--></th>
 												<th>{{__('Type of course')}}</th>
 												<th>{{__('Type of billing')}}</th>
-												<th class="sell"><span>{{__('Student price')}}</span></th>
+												<th class="sell" style="text-align: right;"><span>{{__('Per student /hour')}}</span></th>
 											</tr>
 										</thead>
 										<tbody>

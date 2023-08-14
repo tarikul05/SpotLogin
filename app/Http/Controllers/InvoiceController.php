@@ -1055,6 +1055,7 @@ class InvoiceController extends Controller
                 return false;
             }
             $totalAllTaxesAmount = $data['finaltotaltaxes'];
+            $totalAmountGet = $data['totalAmountGet'];
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
@@ -1294,10 +1295,10 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> number_format($total_amount_extra+$total_tax_amount,2),
+               'total_amount'=> $totalAmountGet, //number_format($total_amount_with_discount+$totalAllTaxesAmount,2),
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
-               'tax_amount'=> $totalAllTaxesAmount,
+               'tax_amount'=> number_format($totalAllTaxesAmount,2),
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
                'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses
@@ -1311,8 +1312,8 @@ class InvoiceController extends Controller
             // print_r($invoiceData->id);
              // update invoice tax info
 
-             $updateInvoiceCalculation['tax_perc'] = number_format($total_tax_perc,2);
-             $updateInvoiceCalculation['tax_amount'] = $totalAllTaxesAmount;
+             $updateInvoiceCalculation['tax_perc'] = $total_tax_perc;
+             $updateInvoiceCalculation['tax_amount'] = number_format($totalAllTaxesAmount,2);
     
             $invoiceDataUpdate = Invoice::where('id', $invoiceData->id)->update($updateInvoiceCalculation);
             
@@ -1639,6 +1640,10 @@ class InvoiceController extends Controller
                 'invoice_creation_type' => 'Y'
             ];
 
+            if($dataParam['p_invoice_type'] == 0) {
+                $data['invoice_status'] = 1;
+            }
+
             $Invoice = Invoice::create($data);
             $total_tax_perc = 0;
             $total_tax_amount = 0;
@@ -1702,6 +1707,7 @@ class InvoiceController extends Controller
             return [
                 'id' => $Invoice->id,
                 'status' => 1,
+                'schoolId' => $schoolId,
                 'message' =>  __('Successfully Registered')
             ];
         }catch (Exception $e) {

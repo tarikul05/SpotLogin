@@ -1173,7 +1173,7 @@ $('#save_btn').click(function (e) {
 
 		} //found records
 		else {
-				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Recrd</td></tr></tbody>';
+				resultHtml = '<tbody><tr class="lesson-item-list-empty"> <td colspan="12">No Record</td></tr></tbody>';
 				$('#lesson_table').html(resultHtml);
 				document.getElementById("lesson_footer_div").style.display = "none";
 		}

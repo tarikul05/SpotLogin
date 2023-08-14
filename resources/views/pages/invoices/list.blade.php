@@ -123,7 +123,7 @@
                         @endphp
                         <td>{{ $invoice_name}}</td>
                         
-                        <td>{{ number_format((($invoice->subtotal_amount_no_discount-($invoice->subtotal_amount_no_discount*$invoice->discount_percent_1)/100)) + $invoice->tax_amount, '2') }}</td>
+                        <td>{{ $invoice->total_amount }}</td>
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
                             <td class="text-left">
