@@ -57,8 +57,7 @@
                                 <option value="">{{ __('Select Country')}}</option>
                                 @foreach ($countries as $key => $country)
                                     <option 
-                                    value="{{ $country->code }}"
-                                    >  {{ $country->name }} {{ $country->code }}</option>
+                                    value="{{ $country->code }}">{{ $country->name }}</option>
                                 @endforeach
 
                             </select>
