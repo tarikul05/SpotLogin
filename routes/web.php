@@ -36,6 +36,26 @@ Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_ve
 Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
+//Categories for faqs
+Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.list');
+Route::get('/admin/categories/add', [App\Http\Controllers\CategoryController::class, 'add'])->name('categories.add');
+Route::get('/admin/categories/show/{category}', [App\Http\Controllers\CategoryController::class, 'show'])->name('categories.show');
+Route::get('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
+Route::post('/admin/categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
+Route::put('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
+Route::delete('/admin/categories/remove/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.remove');
+
+//Faqs
+Route::get('/faqs-tutos', [App\Http\Controllers\FaqController::class, 'tutos'])->name('faqs.tutos'); //for users
+Route::get('/faqs-tutos/show/{faq}', [App\Http\Controllers\FaqController::class, 'tutosShow'])->name('faqs.tutos.show'); //for users
+//for admins
+Route::get('/admin/faqs', [App\Http\Controllers\FaqController::class, 'index'])->name('faqs.list');
+Route::get('/admin/faqs/add', [App\Http\Controllers\FaqController::class, 'add'])->name('faqs.add');
+Route::get('/admin/faqs/show/{faq}', [App\Http\Controllers\FaqController::class, 'show'])->name('faqs.show');
+Route::get('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'edit'])->name('faqs.edit');
+Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'create'])->name('faqs.create');
+Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update');
+Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove');
 
 
 //email-send school AJAX
@@ -171,7 +191,7 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('single-invoice-payment/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'singlePayment'])->name('subscription.payment');
   Route::post('single-subscription/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'storeSinglePayment'])->name('subscription.singleCharge');
-  
+
   Route::get('/my-subscription', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription');
 
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
@@ -289,7 +309,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('manualInvoice');
     Route::get('/{school}/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('adminmanualInvoice');
     Route::get('/{school}/manual-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'updatemanualInvoice'])->name('adminupdatemanualInvoice');
-    
+
   }); //Admin scope end
 
 
@@ -328,7 +348,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/{school}/teacher/{teacher}', [App\Http\Controllers\TeachersController::class, 'changeStatus'])->name('teacherStatus');
     Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
-  
+
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
@@ -344,7 +364,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-teacher-photo', ['as' =>'teacher.delete_photo','uses' =>'TeachersController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::post('teacher-user-update/{user}', ['as' =>'teacher.user_update','uses' =>'TeachersController@userUpdate' ]);
 
-    
+
     // Route::post('/{school}/add-student-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
   });
     Route::get('/update-student', [App\Http\Controllers\StudentsController::class, 'self_edit'])->name('updateStudent');
@@ -411,6 +431,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/update_invoice_data', 'InvoiceController@invoiceDataUpdate')->name('invoiceDataUpdate');
 
     Route::get('/invoice-pdf', [App\Http\Controllers\InvoiceController::class, 'generateInvoicePDF'])->name('generateInvoicePDF');
-    
+
 });
 

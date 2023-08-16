@@ -13,10 +13,10 @@
 <div class="content">
 	<div class="container-fluid body">
     <header class="panel-heading" style="border: none;">
-      <div class="row panel-row" style="margin:0;">
+      <div class="row panel-row">
         <div class="col-sm-6 col-xs-12 header-area">
           <div class="page_header_class">
-            <label id="page_header" name="page_header">School Key Information</label>
+            <label id="page_header" name="page_header">Registered Schools</label>
           </div>
         </div>
         <div class="col-sm-6 col-xs-12 btn-area">
@@ -26,7 +26,7 @@
         </div>    
       </div>          
     </header>
-    <div class="m-4">
+    <div>
       <table id="list_tbl" class="display" style="width:100%">
           <thead>
               <tr>
@@ -35,8 +35,8 @@
                 <th>Name of the School</th>
                 <th>Type</th>
                 <th>Incorporation Date </th>
-                <th>Contact Person</th>
-                <th>Contact Person e-Mail</th>
+                <!--<th>Contact Person</th>-->
+                <th>Principal E-Mail</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -57,7 +57,7 @@
                 <td>{{ $school->school_name }}</td>
                 <td>{{ ($school->school_type == 'S')? 'School': 'Coach' }}</td>
                 <td>{{ $school->incorporation_date }}</td>
-                <td>{{ $school->contact_firstname }}</td>
+                <!--<td>{{ $school->contact_firstname }}</td>-->
                 <td>{{ $school->email }}</br>
                 {{ $school->email2 }}
                 </td>
