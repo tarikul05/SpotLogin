@@ -32,7 +32,7 @@
     
 </script>
 <script src="{{ asset('js/common-scripts.js')}}"></script>
-
+<x-embed-styles />
 	
 </head>
 <body>

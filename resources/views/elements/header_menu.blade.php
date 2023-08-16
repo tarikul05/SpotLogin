@@ -62,8 +62,10 @@
                         
                     </div>
     
-                    <a href="{{ $url }}" class="nav-item nav-link active text-center mr-2"><i class="fa-solid fa-calendar-days"></i> <span class="d-none d-sm-block"></span> {{ __('My Schedule')}}</a>
-                    
+                    @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                        <a href="{{ $url }}" class="nav-item nav-link active text-center mr-2"><i class="fa-solid fa-calendar-days"></i> <span class="d-none d-sm-block"></span> {{ __('My Schedule')}}</a>
+                    @endif
+
                     @can('schools-list')
                         <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
                             <a href="{{ route('schools') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-building"></i> <span class="d-none d-sm-block"></span> {{ __('Schools') }}</a>
@@ -87,13 +89,13 @@
                     @if($AppUI->isStudent())
                         <a href="{{ route('updateStudent') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a> 
                     @endif
-                    
 
                     @can('students-list')
                         @if($AppUI['person_type'] != 'SUPER_ADMIN')
                            <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a> 
                         @endif
                     @endcan
+                    @if($AppUI['person_type'] != 'SUPER_ADMIN')
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
@@ -117,6 +119,12 @@
                         @endcan
                         </div>
                     </div>
+                    @endif
+
+                    @if($AppUI['person_type'] == 'SUPER_ADMIN')
+                        <a href="{{ route('faqs.list') }}" class="nav-item nav-link text-center mr-2"><i class="fa-regular fa-circle-question"></i> <span class="d-none d-sm-block"></span> {{ __('F.A.Q') }}</a> 
+                    @endif
+
                     @if($AppUI->isTeacherSchoolAdmin())
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice"></i> <span class="d-none d-sm-block"></span> {{ __('School Invoicing') }}</a>
@@ -201,6 +209,12 @@
                                     @can('parameters-list')
                                         <!--<a class="dropdown-item" href="{{ route('event_category.index') }}">{{ __('Parameters') }}</a>-->
                                     @endcan
+                                @endif
+                                @if($AppUI['person_type'] == 'SUPER_ADMIN')
+                                    <a class="dropdown-item" href="/admin/faqs">{{ __('F.A.Q / Tutos') }}</a>
+                                @endif
+                                @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                                    <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
                                 @endif
                                 @can('email-template-list')
                                     <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>

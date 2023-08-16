@@ -174,6 +174,8 @@ class AuthController extends Controller
                         );
                         if (!$user->isSuperAdmin()) {
                             $result['login_url'] = '/permission-check';
+                        } else {
+                            $result['login_url'] = RouteServiceProvider::SUPERADMIN;
                         }
                         return response()->json($result);
                     }

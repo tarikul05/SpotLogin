@@ -19,6 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/agenda';
+    public const SUPERADMIN = '/admin/schools';
     public const ROOT = '/';
     public const LOGIN = '/';
 
