@@ -74,7 +74,7 @@
                         //invoice_type = 0 means manual invoice
                         if ($invoice->invoice_type == 0) {
                             if ($invoice->invoice_status == 10) {
-                                if(!empty($schoolId)){ 
+                                if(!empty($schoolId)){
                                     $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
                                 } else {
                                     $edit_view_url = route('modificationInvoice',[$invoice->id]);
@@ -83,7 +83,7 @@
                                 $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
                             }
                         } else {
-                            if(!empty($schoolId)){ 
+                            if(!empty($schoolId)){
                                 $edit_view_url = route('adminmodificationInvoice',[$schoolId,$invoice->id]);
                             } else {
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
@@ -93,13 +93,13 @@
                         $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
 
                     @endphp
-                
+
                     <tr>
                         <!-- <td style="display: none">{{ $invoice->id; }}</td>
                         <td style="display: none"><div id="status_id_{{ $invoice->id; }}">{{$invoice->payment_status}}</div></td> -->
                         <!--<th>&nbsp;</th>-->
                         <!--<td class="txt-grey text-left">{{ $i }} </td>-->
-                        
+
                         <td>
                             {{ date('d M Y', strtotime($invoice->date_invoice)); }}
                         </td>
@@ -122,8 +122,13 @@
                         }
                         @endphp
                         <td>{{ $invoice_name}}</td>
-                        
+
+                        @if ($invoice->invoice_type == 0)
+                        <td>{{ $invoice->total_amount + $invoice->tax_amount }}</td>
+                        @else
                         <td>{{ $invoice->total_amount }}</td>
+                        @endif
+
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
                             <td class="text-left">
@@ -133,13 +138,13 @@
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
-                                    @endif 
+                                    @endif
                                     @if($AppUI->isStudent())
                                         <span class="small txt-grey pull-left">
                                             <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                             {{$payment_status_all[$invoice->payment_status]}}
                                         </span>
-                                    @endif 
+                                    @endif
                                 </div>
                             </td>
                         @else
@@ -150,7 +155,7 @@
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
                                     </span>
-                                @endif 
+                                @endif
                                 @if($AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card fa-lg text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
@@ -175,7 +180,7 @@
                         @else
                             <td></td>
                         @endif
-                        
+
                         <td class="text-right">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -184,25 +189,25 @@
                                 <div class="dropdown-menu list action text-left">
                                     @if ($invoice->invoice_status > 1)
                                         <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                            <i class="fa fa-eye txt-grey" aria-hidden="true"></i> 
+                                            <i class="fa fa-eye txt-grey" aria-hidden="true"></i>
                                             {{ __('View')}}
                                         </a>
                                         <a target="_blank" class="dropdown-item" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}">
-                                            <i class="fa fa-file-pdf txt-grey" aria-hidden="true"></i> 
+                                            <i class="fa fa-file-pdf txt-grey" aria-hidden="true"></i>
                                             {{ __('PDF')}}
                                         </a>
                                     @else
                                         <a class="dropdown-item" href="{{ $edit_view_url }}">
-                                            <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i> 
+                                            <i class="fa fa-pencil-alt txt-grey" aria-hidden="true"></i>
                                             {{ __('Edit')}}
                                         </a>
                                     @endif
 
-                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0) && (!$AppUI->isStudent())) 
+                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0) && (!$AppUI->isStudent()))
                                         <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
                                     @endif
                                 </div>
-                            </div>  
+                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -266,19 +271,19 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        
+
 
         var table = $('#example').DataTable({
             "responsive": true,
             //"searching": true,
             //"bProcessing": true,
-            "bDestroy": true, 
-            "order": [[2, "desc"]],
+            "bDestroy": true,
+            "order": [[1, "desc"]],
             "bFilter": true,
             "bInfo": false,
             "lengthChange": false,
             "info": true,
-            "pageLength": 10  
+            "pageLength": 10
             ,'aoColumnDefs': [{
                 'bSortable': false,
                 'aTargets': [-1] /* 1st one, start by the right */
@@ -286,20 +291,20 @@
             //,"paging": false
             //"serverSide":true,
             "pagingType": "simple_numbers"
-            
+
         });
         $('#search_text').on('keyup change', function () {
             //table.search(this.value).draw();
             //table.clear().draw();
             console.log($(this).val());
             table.search($(this).val()).draw();
-            
+
         });
         $("#example_filter").hide();
-        
+
     } );
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
-        
+
         $('#seleted_auto_id').val(p_value);
         $('#p_school_id').val(p_school_id);
         $('#seleted_invoice_type').val(p_invoice_type);
@@ -320,18 +325,18 @@
                 if (result.status) {
                     confirmPayReminderModalCall(p_value,'{{ __('Do you want to send email')}}',result.data,p_school_id);
                     return false;
-                    
+
                 }
                 else {
                     errorModalCall('{{ __("Event validation error")}}');
                 }
-                
+
             },   // sucess
-            error: function (ts) { 
+            error: function (ts) {
                 errorModalCall(GetAppMessage('error_message_text'));
-                //alert(ts.responseText + 'populate Invoice Payment Status') 
+                //alert(ts.responseText + 'populate Invoice Payment Status')
             }
-        }); // Ajax        
+        }); // Ajax
 
 
         $("#email_list_modal").modal('show');
@@ -376,7 +381,7 @@
 
 
     $('.payment_btn').click(function (e) {
-        
+
         document.getElementById("loadercreditCardPayment").style.display = "none";
         document.getElementById("loaderStatusPayment").style.display = "block";
 
@@ -406,7 +411,7 @@
                 dataType: 'json',
                 async: false,
                 success: function (result) {
-                   
+
                     status = result.status;
                     if (status == 'success') {
 				        successModalCall('invoice payment paid');
@@ -419,26 +424,26 @@
                             var redirectUrl = './invoices';
                             window.location.href = redirectUrl;
                         }, 1200);
-                        
+
                     }
                     else {
                         errorModalCall('error_message_text');
                     }
                 },   //success
-                error: function (ts) { 
+                error: function (ts) {
                     errorModalCall('error_message_text');
 
                 }
-            }); //ajax-type            
+            }); //ajax-type
 
-    });    
+    });
 
     function UpdatePaymentStatus(p_auto_id) {
         var payment_status;
         var v_status = "status_" + p_auto_id;
         var v_status_id = "status_id_" + p_auto_id;
         var p_payment_status = document.getElementById(v_status_id).innerHTML;
-        
+
         if (p_auto_id == '') {
             //alert('Invalid invoice.. ');
             errorModalCall(GetAppMessage('error_message_text'));
@@ -457,7 +462,7 @@
         let payment_text_paid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Paid</span>";
         let payment_text_unpaid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Unpaid</span>";
 
-        
+
         //console.log('status='+((p_payment_status = 0) ? 1 : 0));
 
         var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_auto_id;
@@ -467,7 +472,7 @@
         // document.getElementById(v_status_id).innerHTML = payment_status;
         // document.getElementById(v_status).innerHTML = payment_text;
         $.ajax({
-        
+
                 url: BASE_URL + '/update_payment_status',
                 data: data,
                 type: 'POST',
@@ -491,9 +496,9 @@
                     }
                 },   //success
                 error: function (ts) { errorModalCall(GetAppMessage('error_message_text'));
-                //alert(ts.responseText + ' Update Invoice Payment Status=' + status) 
+                //alert(ts.responseText + ' Update Invoice Payment Status=' + status)
                 }
-        }); //ajax-type            
+        }); //ajax-type
         return false;
     }
 

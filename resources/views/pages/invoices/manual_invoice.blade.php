@@ -22,8 +22,8 @@
 					</div>
 				</div>
                 <div class="col-sm-6 col-xs-12 btn-area pt-1">
-                    <div class="float-end btn-group save-button "> 
-                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">Save</button> 
+                    <div class="float-end btn-group save-button ">
+                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">Save</button>
                     </div>
                 </div>
 			</div>
@@ -70,7 +70,7 @@
                                             <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
                                         </td>
                                         <td class="invoice_name">
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="Invoice Name" tabindex="0" maxlength="150"> 
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="Invoice Name" tabindex="0" maxlength="150">
                                         </td>
                                         <td class="lbl_date_invoice" align="center">
                                             <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
@@ -78,8 +78,8 @@
                                         <td class="date_invoice_div">
                                             <div class="input-group datepicker" id="date_invoice_div">
                                                 <!--<input id="date_invoice" name="date_invoice" type="text" class="form-control datepicker" /> -->
-                                                <input id="date_invoice" name="date_invoice" type="text" placeholder="Date of invoice" class="form-control datetimepicker"> 
-                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+                                                <input id="date_invoice" name="date_invoice" type="text" placeholder="Date of invoice" class="form-control datetimepicker">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                             </div>
                                         </td>
                                     </tr>
@@ -166,7 +166,7 @@
                                                 <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
-                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id"> 
+                                                        <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -194,11 +194,11 @@
                             <div id="seller_detail_id" open="">
                                 <!-- <summary></summary> -->
                                 <div id="table_seller">
-                                    <?php //echo '<pre>';print_r($AppUI);exit;  
+                                    <?php //echo '<pre>';print_r($AppUI);exit;
                                         if($AppUI->isTeacherSchoolAdmin()){ ?>
                                     <div class="row">
                                         <div class="col-sm-9 col-md-3" style="margin-bottom: 15px;">
-                                            <div class="input-group"> 
+                                            <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="fa fa-search" aria-hidden="true"></i>
                                             </span>
@@ -413,20 +413,20 @@
                                         <div class="form-group row">
                                             <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
                                             <div class="col-sm-12">
-                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100"> 
+                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100">
                                             </div>
-                                        </div>          
+                                        </div>
                                             <input type="hidden" class="form-control" id="payment_bank_name" name="payment_bank_name" value="" placeholder="" maxlength="100">
-                                            <input type="hidden" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100">                    
-                                            <input type="hidden" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8">                      
-                                            <input type="hidden" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150">                              
-                                            <input type="hidden" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30">                          
-                                            <input type="hidden" class="form-control" id="payment_bank_country_id" value="US" name="payment_bank_country_id">                  
-                                            <input type="hidden" class="form-control" id="bank_province_id" name="bank_province_id">                  
-                                            <input type="hidden" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50">                           
-                                            <input type="hidden" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30">                            
+                                            <input type="hidden" class="form-control" id="payment_bank_address" name="payment_bank_address" value="" placeholder="" maxlength="100">
+                                            <input type="hidden" class="form-control" id="payment_bank_zipcode" name="payment_bank_zipcode" value="" placeholder="" maxlength="8">
+                                            <input type="hidden" class="form-control" id="payment_bank_place" name="payment_bank_place" value="" placeholder="" maxlength="150">
+                                            <input type="hidden" class="form-control" id="payment_bank_account" name="payment_bank_account" value="" placeholder="" maxlength="30">
+                                            <input type="hidden" class="form-control" id="payment_bank_country_id" value="US" name="payment_bank_country_id">
+                                            <input type="hidden" class="form-control" id="bank_province_id" name="bank_province_id">
+                                            <input type="hidden" class="form-control" id="payment_bank_iban" name="payment_bank_iban" value="" placeholder="" maxlength="50">
+                                            <input type="hidden" class="form-control" id="payment_bank_swift" name="payment_bank_swift" value="" placeholder="" maxlength="30">
                                             <input type="hidden" class="form-control" id="payment_phone" name="payment_phone" value="" placeholder="" maxlength="150">
-                                    </div>                        
+                                    </div>
                                 </div>
                                 <div class="row" id="payment_bank_info_canada">
                                     <div class="col-md-6">
@@ -488,14 +488,14 @@
                                             <td>
                                                 <div class="input-group datetimepicker" id="date_div">
                                                     <input id="date" name="date[]" type="text" class="form-control datetimepicker" value="">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span> 
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <input type="text" id="caption" name="caption[]" placeholder="" class="form-control">
                                             </td>
                                             <td class="row_item_value">
-                                                <input type="number" pattern="[0-9.]" id="total_item1" name="total_item[]" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
+                                                <input type="text" pattern="[0-9.]" id="total_item1" name="total_item[]" placeholder="" style="text-align: right;" class="form-control numeric float item_value">
                                             </td>
                                             <td>
                                                 <button tabindex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row">
@@ -520,10 +520,10 @@
                                 </table>
                             </div>
                             <!-- Transaction Detail info END -->
-                            
+
 
                             <div id="add_tax_div" open="">
-        
+
                                 <?php $count = count($RegisterTaxData); ?>
                                 <?php if($count > 0) { ?>
                                 <div class="section_header_class">
@@ -574,31 +574,31 @@
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
-                                                <div class="col-sm-7">                                        
+                                                <div class="col-sm-7">
                                                     <input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
-                                                <div class="col-sm-7">                                        
+                                                <div class="col-sm-7">
                                                     <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
                                                 </div>
                                             </div>
                                         </div>
-                            
+
                                         <div class="col-md-6">
                                             <div class="form-group row">
                                                 <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
-                                                <div class="col-sm-7">                                        
+                                                <div class="col-sm-7">
                                                     <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="255">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
-                                                <div class="col-sm-7">                                        
+                                                <div class="col-sm-7">
                                                     <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
                                                 </div>
-                                                <div class="col-sm-1">                                        
+                                                <div class="col-sm-1">
                                                     <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </div>
@@ -607,14 +607,14 @@
                                     </div></div>
                                 <?php endforeach; ?>
 
-                                
+
 
                                 <div id="add_more_tax_div"></div>
                                 <div class="row col-md-12 mt-3 mb-5">
                                     <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
                                 </div>
                             </div>
-                            
+
 
                             <div id="add_expense_div" open="">
                                 <div class="section_header_class">
@@ -642,14 +642,14 @@
                             </div>
                         </div>
                                 <div id="add_more_expense_div"></div>
-                                
+
                             </div></fieldset>
                             </div>
                                 </div>
                                 <div class="row col-md-12 mt-3 mb-5">
                                     <button id="add_more_expense_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Expense</button>
-                      
-                            
+
+
                         </fieldset>
                     </form>
                 </div>
@@ -674,13 +674,13 @@ $(document).on('click','#add_more_tax_btn',function(){
             <div class="col-md-6">
                 <div class="form-group row">
                     <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
-                    <div class="col-sm-7">                                        
+                    <div class="col-sm-7">
                         <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
-                    <div class="col-sm-7">                                        
+                    <div class="col-sm-7">
                         <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
                     </div>
                 </div>
@@ -689,16 +689,16 @@ $(document).on('click','#add_more_tax_btn',function(){
             <div class="col-md-6">
                 <div class="form-group row">
                     <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
-                    <div class="col-sm-7">                                        
+                    <div class="col-sm-7">
                         <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
-                    <div class="col-sm-7">                                        
+                    <div class="col-sm-7">
                         <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
                     </div>
-                    <div class="col-sm-1">                                        
+                    <div class="col-sm-1">
                         <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
@@ -723,20 +723,20 @@ var resultHtml = `<div class="card add_more_expense_row mb-2">
         <div class="col-md-6">
             <div class="form-group row">
                 <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
-                <div class="col-sm-7">                                        
+                <div class="col-sm-7">
                     <input type="text" class="form-control" name="expense_name[]" value="" placeholder="Expense Name" maxlength="255">
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            
+
             <div class="form-group row">
                 <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">Amount</label>
-                <div class="col-sm-7">                                        
+                <div class="col-sm-7">
                     <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100">
                 </div>
-                <div class="col-sm-1">                                        
+                <div class="col-sm-1">
                         <button type="button" class="btn btn-theme-warn delete_expense"><i class="fa-solid fa-trash"></i></button>
                     </div>
             </div>
@@ -753,16 +753,16 @@ $(document).on('click','.delete_expense',function(){
 })
 
 $(".add-row").click(function(){
-    var i =document.getElementById("details_tbl").rows.length-2;            
-    
+    var i =document.getElementById("details_tbl").rows.length-2;
+
     var markup = '<tr id="tr_row_id" class="detail_row"><td style="display: none;">'+i+'</td>';
     markup+='<td><div class="input-group datetimepicker" id="date_div"> <input name="date[]" type="text" class="form-control date_picker" value=""/><span class="input-group-addon"><i class="fa fa-calendar"></i></span></div></td>';
-    markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';                   
-    markup+='<td class="row_item_value"><input type="number" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
+    markup+='<td><input type="text" id="caption" name="caption[]" placeholder="" class="form-control"></td>';
+    markup+='<td class="row_item_value"><input type="text" pattern="[0-9.]" id="total_item'+i+'" name="total_item[]" placeholder="" style="text-align: right;" pattern="^[0-9]\d{0,9}(\.\d{1,3})?%?$" class="form-control numeric float item_value"></td>';
     markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="btn btn-theme-warn delete_row"><i class="fa fa-remove"></i></button></td>';
     //markup+='<td><button tabIndex="-1" onclick="remove_rows(this)" type="button" id="del" class="delete_row">X</button></td>';
-    markup+='</tr>';   
-    
+    markup+='</tr>';
+
     $("#details_tbl tbody").append(markup);
 
     $('.date_picker').datetimepicker({
@@ -787,7 +787,7 @@ function remove_rows(r){
     //alert(i);
     if (i>4){
         i = r.parentNode.parentNode.rowIndex;
-        document.getElementById("details_tbl").deleteRow(i);        
+        document.getElementById("details_tbl").deleteRow(i);
         //$(this).parent("tr").remove();
     };
 
@@ -800,9 +800,9 @@ var mytable = document.getElementById("details_tbl");
 var rCount = mytable.rows.length-1;
 for (var i=1; i<rCount; i++){
     try {
-        curval=parseFloat(mytable.rows[i].cells[3].getElementsByTagName('input')[0].value);    
+        curval=parseFloat(mytable.rows[i].cells[3].getElementsByTagName('input')[0].value);
         if (isNaN(curval)==false) {
-            mtotal+=curval;    
+            mtotal+=curval;
         }else {
             //mtotal+=curval;
         }
@@ -843,7 +843,7 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 		viewSelect: 3,
 		todayBtn:false,
 	});
-    
+
     $("#date_invoice").datetimepicker({
         format: "dd.mm.yyyy",
         autoclose: true,
@@ -855,7 +855,7 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 		todayBtn:false,
 	});
 
-        
+
     $(".date_picker").datetimepicker({
         format: "dd.mm.yyyy",
         autoclose: true,
@@ -877,7 +877,7 @@ document.getElementById("grand_total").innerHTML=mtotal.toFixed(2);
 
 $( document ).ready(function() {
     var userType = '<?= $AppUI->roleType(); ?>' ;
-   
+
     if(userType == 'school_admin' || userType == 'teacher_admin'){
         var p_code=<?= $AppUI->school_id; ?> ;;
 	    var p_type='school';
@@ -895,7 +895,7 @@ $( document ).ready(function() {
 	$.ajax({
 	url: BASE_URL + '/invoice_data',
 	data: 'p_type='+p_type+'&p_code='+p_code,
-	type: 'POST',                     
+	type: 'POST',
 	dataType: 'json',
 	async: false,
 	success: function(data) {
@@ -907,9 +907,9 @@ $( document ).ready(function() {
 			}else if (p_type == 'school') {
 				document.getElementById("invoice_type").value=0;
 			}
-		
+
 			document.getElementById("seller_id").value=p_code;
-			
+
             if (p_type == 'school') {
                 document.getElementById("seller_name").value=value.school_name;
                 document.getElementById("seller_firstname").value=value.school_name;
@@ -919,8 +919,8 @@ $( document ).ready(function() {
                 document.getElementById("seller_firstname").value=value.firstname;
                 document.getElementById("seller_lastname").value=value.lastname;
             }
-			
-	
+
+
 			document.getElementById("seller_street_number").value=value.street_number
 			document.getElementById("seller_street").value=value.street;
 			document.getElementById("seller_street2").value=value.street2;
@@ -933,11 +933,11 @@ $( document ).ready(function() {
 			}
 			document.getElementById("seller_zip_code").value=value.zip_code;
 			document.getElementById("seller_place").value=value.place;
-			
+
 			document.getElementById("seller_email").value=value.email;
-			
+
 			document.getElementById("payment_bank_account_name").value=value.bank_account;
-			
+
             if(isInEurope) {
                 document.getElementById("payment_bank_name").value=value.bank_name;
                 document.getElementById("payment_bank_address").value=value.bank_address;
@@ -951,8 +951,8 @@ $( document ).ready(function() {
 			}
 			if (value.bank_province_id > 0){
 				$("#bank_province_id").val(value.bank_province_id );
-			} 
-			
+			}
+
             if(isInEurope) {
                 document.getElementById("payment_bank_iban").value=value.bank_iban;
                 document.getElementById("payment_bank_account").value=value.bank_account;
@@ -961,11 +961,11 @@ $( document ).ready(function() {
 
 			document.getElementById("seller_phone").value=value.phone;
 			document.getElementById("seller_mobile").value=value.mobile;
-		
+
 
 		});
 	},   // sucess
-	error: function(ts) { 
+	error: function(ts) {
 		//errorModalCall(GetAppMessage('error_message_text'));
 
 		}
@@ -996,7 +996,7 @@ function get_client_seller_info(obj){
 	$.ajax({
 	url: BASE_URL + '/invoice_data',
 	data: 'p_type='+p_type+'&p_code='+p_code,
-	type: 'POST',                     
+	type: 'POST',
 	dataType: 'json',
 	async: false,
 	success: function(data) {
@@ -1015,22 +1015,22 @@ function get_client_seller_info(obj){
 
                 if (value.firstname != null){
                     var fname = value.firstname;
-                }else{ 
+                }else{
                     var fname = value.school_name
                 }
 
 				document.getElementById("client_id").value=p_code;
 				document.getElementById("client_name").value=value.firstname +' '+ value.lastname;
-				
+
 				document.getElementById("client_firstname").value= fname;
 				document.getElementById("client_lastname").value=value.lastname;
-				
+
 				document.getElementById("client_street_number").value=value.street_number;
 				document.getElementById("client_street").value=value.street;
 				document.getElementById("client_street2").value=value.street2;
 				document.getElementById("client_country_id").value=value.country_code
 
-                document.getElementById("select2-client_country_id-container").textContent = getCountryName(value.country_code) + ' (' + value.country_code + ')';
+               // document.getElementById("select2-client_country_id-container").textContent = getCountryName(value.country_code) + ' (' + value.country_code + ')';
 
 				if(value.country_code == 'CA'){
 					 $('#client_province_id_div').show();
@@ -1039,18 +1039,18 @@ function get_client_seller_info(obj){
                      $('#client_province_id_div').hide();
                      $('#seller_province_id_div').hide();
                 }
-				
+
 				if(value.province_id > 0){
 					$("#client_province_id").val(value.province_id);
 				}
-				
+
 				document.getElementById("client_zip_code").value=value.zip_code;
 				document.getElementById("client_place").value=value.place;
-				
+
 		}else if (obj.id == "seller_list_id"){
-		
+
 			document.getElementById("seller_id").value=p_code;
-			
+
 			if (p_type == 'school') {
                 document.getElementById("seller_name").value=value.school_name;
                 document.getElementById("seller_firstname").value=value.school_name;
@@ -1060,8 +1060,8 @@ function get_client_seller_info(obj){
                 document.getElementById("seller_firstname").value=value.firstname;
                 document.getElementById("seller_lastname").value=value.lastname;
             }
-			
-	
+
+
 			document.getElementById("seller_street_number").value=value.street_number
 			document.getElementById("seller_street").value=value.street;
 			document.getElementById("seller_street2").value=value.street2;
@@ -1074,11 +1074,11 @@ function get_client_seller_info(obj){
 			}
 			document.getElementById("seller_zip_code").value=value.zip_code;
 			document.getElementById("seller_place").value=value.place;
-			
+
 			document.getElementById("seller_email").value=value.email;
-			
+
 			document.getElementById("payment_bank_account_name").value=value.bank_account;
-			
+
             if(isInEurope) {
                 document.getElementById("payment_bank_name").value=value.bank_name;
                 document.getElementById("payment_bank_address").value=value.bank_address;
@@ -1086,14 +1086,14 @@ function get_client_seller_info(obj){
                 document.getElementById("payment_bank_place").value=value.bank_place;
                 document.getElementById("payment_bank_country_id").value=value.bank_country_id;
             }
-			
+
 			if(value.bank_country_id == 'CA'){
 				// PopulateProvince(value.bank_country_id == 'CA','bank');
 			}
 			if (value.bank_province_id > 0){
 				$("#bank_province_id").val(value.bank_province_id );
-			} 
-			
+			}
+
             if(isInEurope) {
                 document.getElementById("payment_bank_iban").value=value.bank_iban;
                 document.getElementById("payment_bank_account").value=value.bank_account;
@@ -1102,28 +1102,28 @@ function get_client_seller_info(obj){
 
 			document.getElementById("seller_phone").value=value.phone;
 			document.getElementById("seller_mobile").value=value.mobile;
-		}	
+		}
 
 		});
 	},   // sucess
-	error: function(ts) { 
+	error: function(ts) {
 		//errorModalCall(GetAppMessage('error_message_text'));
 
 		}
-	}); 
-	
+	});
+
 }
 
 // Get country name from country code
-function getCountryName(countryCode) {
-    var listCountries = @json($countries) 
+/*function getCountryName(countryCode) {
+    var listCountries = @json($countries)
   for (var i = 0; i < listCountries.length; i++) {
     if (listCountries[i].code === countryCode) {
       return listCountries[i].name;
     }
   }
   return null; // Retourne null si aucun pays ne correspond au code
-}
+}*/
 
 function PopulateProvince(country_code, type = null) {
     $.ajax({
@@ -1166,9 +1166,9 @@ function PopulateProvince(country_code, type = null) {
     });
 }
 
-$('#save_btn').click(function (e) {		
-    e.preventDefault();					
-    AddEditInvoice();    
+$('#save_btn').click(function (e) {
+    e.preventDefault();
+    AddEditInvoice();
 });
 
 function AddEditInvoice(){
@@ -1180,31 +1180,31 @@ function AddEditInvoice(){
     //alert(p_price_currency)
     if (p_invoice_name ==''){
         //errorModalCall(GetAppMessage('Invalid_invoice')+' name.');
-        
+
         //alert(GetAppMessage("Invalid_invoice")+' name.');
         //return false;
     }
     if (p_date_invoice ==''){
         //errorModalCall(GetAppMessage('Invalid_invoice')+' date.');
-        
+
         //alert(GetAppMessage("Invalid_invoice")+' date');
         //return false;
     }
-    
+
     if (p_price_currency == '') {
         //errorModalCall(GetAppMessage('Invalid_invoice')+' Currency.');
-        
+
         //alert(GetAppMessage("Invalid_invoice")+' Currency.');
         //return false;
-    } 
-    
+    }
+
     p_date_invoice=p_date_invoice.replace("/",".");
     p_date_invoice=p_date_invoice.replace("/",".");
-    
+
     var p_invoice_status_id = document.getElementById("invoice_status_id").value;
     var p_invoice_type = document.getElementById("invoice_type").value;
-    
-    
+
+
     var p_client_id = document.getElementById("client_id").value;
     var p_client_name = document.getElementById("client_name").value;
     var p_client_firstname = document.getElementById("client_firstname").value;
@@ -1215,7 +1215,7 @@ function AddEditInvoice(){
     var p_client_country_id = document.getElementById("client_country_id").value;
     var p_client_province_id = document.getElementById("client_province_id").value;
 
-    
+
     var p_client_zip_code = document.getElementById("client_zip_code").value;
     var p_client_place = document.getElementById("client_place").value;
     var p_seller_id = document.getElementById("seller_id").value;
@@ -1232,7 +1232,7 @@ function AddEditInvoice(){
     var p_seller_place = document.getElementById("seller_place").value;
     var p_seller_phone = document.getElementById("seller_phone").value;
     var p_seller_mobile = document.getElementById("seller_mobile").value;
-    var p_seller_email = document.getElementById("seller_email").value;        
+    var p_seller_email = document.getElementById("seller_email").value;
     var p_payment_bank_account_name = document.getElementById("payment_bank_account_name").value;
 
     var p_payment_bank_name = !isInEurope ? '' : document.getElementById("payment_bank_name").value;
@@ -1246,7 +1246,7 @@ function AddEditInvoice(){
     var p_payment_bank_swift = !isInEurope ? '' : document.getElementById("payment_bank_swift").value;
     var p_total_amount = document.getElementById("grand_total").innerText;
     var p_detail_rows = '';
-    
+
     var tbl = document.getElementById("details_tbl");
     var rCount = tbl.rows.length;
     var mdt,mcaption,mtotal_item;
@@ -1264,11 +1264,11 @@ function AddEditInvoice(){
     var tax_percentage = $("input[name='tax_percentage[]']").map(function(){return $(this).val();}).get();
     var tax_number = $("input[name='tax_number[]']").map(function(){return $(this).val();}).get();
     var tax_amount = $("input[name='tax_amount[]']").map(function(){return $(this).val();}).get();
-    
+
     var expense_name = $("input[name='expense_name[]']").map(function(){return $(this).val();}).get();
     var expense_amount = $("input[name='expense_amount[]']").map(function(){return $(this).val();}).get();
 
-    
+
     if (p_auto_id == ''){
         p_auto_id = 0;
     }
@@ -1277,7 +1277,7 @@ function AddEditInvoice(){
     }
     var status_flag='';
     var data='' ;
-        
+
         $.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1335,12 +1335,12 @@ function AddEditInvoice(){
                 tax_name:tax_name,
                 tax_percentage:tax_percentage,
                 tax_number:tax_number,
-                tax_amount:tax_amount, 
+                tax_amount:tax_amount,
                 expense_name:expense_name ,
                 expense_amount:expense_amount,
                 p_e_transfer_email:p_e_transfer_email,
                 p_payment_phone:p_payment_phone,
-                p_name_for_checks:p_name_for_checks, 
+                p_name_for_checks:p_name_for_checks,
                 p_total_amount:p_total_amount
             },
             type: 'POST',
@@ -1355,15 +1355,15 @@ function AddEditInvoice(){
                     window.location.href = newURL //window.location.href+'/'+p_auto_id
                 }
             },   // success
-            error: function(ts) { 
+            error: function(ts) {
                 //errorModalCall(ts.responseText+' '+GetAppMessage('error_message_text'));
 
-            }                
-            
-        }); //ajax-type      
-        
+            }
+
+        }); //ajax-type
+
         return false;
-        
+
 }   //AddEditInvoice
 
 
@@ -1387,7 +1387,7 @@ $(document).on('change','#client_firstname',function(){
         var month = now.getMonth()+1;
         var day = now.getDate();
         var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
-        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();        
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
         var invoice_name = 'INV/'+$(this).val()+'/'+current_date;
         $("#invoice_name").val(invoice_name);
     }
@@ -1400,7 +1400,7 @@ $(document).on('change','#client_list_id',function(){
         var month = now.getMonth()+1;
         var day = now.getDate();
         var current_date=now.getFullYear() + '-' +((''+month).length<2 ? '0' : '') + month + '-' +((''+day).length<2 ? '0' : '') + day;
-        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(); 
+        var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
         var invoice_name = 'INV/'+$("#client_firstname").val()+'/'+current_date;
         $("#invoice_name").val(invoice_name);
     }
