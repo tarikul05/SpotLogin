@@ -23,7 +23,7 @@ use DB;
 
 class LessonsController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +42,7 @@ class LessonsController extends Controller
     public function addEvent(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -69,7 +69,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -92,15 +92,15 @@ class LessonsController extends Controller
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$eventData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
 
                 if($user->isTeacher()){
-                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null; 
-                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null; 
+                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
+                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null;
                     $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
                 }else{
                     $attendBuyPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : null;
                     $indBuyPrice = isset($eventData['sprice_amount_buy']) ? (($eventData['sprice_amount_buy'])/($stu_num)) : null;
                     $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
                 }
-                    
+
                 $data = [
                     'title' => $eventData['title'],
                     'school_id' => $schoolId,
@@ -138,7 +138,7 @@ class LessonsController extends Controller
                 }
 
                 DB::commit();
-                 
+
                  if($eventData['save_btn_more'] == 1){
                     return [
                         'status' => 1,
@@ -150,12 +150,12 @@ class LessonsController extends Controller
                         'message' =>  __('Successfully Registered')
                     ];
                 }
-                
-            }  
+
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -169,12 +169,12 @@ class LessonsController extends Controller
     {
 
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $eventId = $request->route('event'); 
+        $eventId = $request->route('event');
         $eventData = Event::active()->where(['id'=>$eventId, 'event_type' => 100])->first();
         if ($eventData->is_locked) {
             return Redirect::to($schoolId.'/view-event/'.$eventId);
@@ -192,14 +192,14 @@ class LessonsController extends Controller
         $redirect_url = '';
         if (!empty($reqData['redirect_url'])) {
             $redirect_url = $reqData['redirect_url'].'&tab=tab_3';
-            
+
         }
         if (!empty($eventData)){
             return view('pages.calendar.edit_event')->with(compact('eventId','eventData','relationData','schoolId','eventCategory','locations','professors','studentOffList','students','lessonPrice','currency','redirect_url'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
-        
+
     }
 
      /**
@@ -213,13 +213,13 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
 
-                $eventId = $request->route('event'); 
+                $eventId = $request->route('event');
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']);
                 $end_date = str_replace('/', '-', $eventData['end_date']);
@@ -230,8 +230,8 @@ class LessonsController extends Controller
                 $stu_num = count($eventData['student']);
 
                 if($user->isTeacher()){
-                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null; 
-                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null; 
+                    $attendBuyPrice =  isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
+                    $indBuyPrice = isset($eventData['sprice_amount_sell']) ? (($eventData['sprice_amount_sell'])/($stu_num)) : null;
                     $attendSellPrice = isset($eventData['sprice_amount_sell']) ? $eventData['sprice_amount_sell'] : null;
                 }else{
                     $attendBuyPrice = isset($eventData['sprice_amount_buy']) ? $eventData['sprice_amount_buy'] : null;
@@ -275,7 +275,7 @@ class LessonsController extends Controller
                 }
 
                 DB::commit();
-                 
+
                 if(isset($eventData['validate']) && !empty($eventData['validate'])){
                     Event::validate(['event_id'=>$eventId],1);
                     return Redirect::to($schoolId.'/view-event/'.$eventId);
@@ -283,16 +283,16 @@ class LessonsController extends Controller
                  //return back()->with('success', __('Successfully Registered'));
                  return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
                 }
-                
-            }  
+
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
-   
+
 
         /**
      * Show the form for creating a new resource.
@@ -302,19 +302,19 @@ class LessonsController extends Controller
     public function viewEvent(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $eventId = $request->route('event'); 
+        $eventId = $request->route('event');
         $eventData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->first();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
 
         //echo '<pre>';print_r($eventData);exit;
-        
+
         $professors = SchoolTeacher::where(['teacher_id'=>$eventData->teacher_id, 'school_id' => $schoolId])->first();
-        
+
         $locations = DB::table('locations')->select('locations.title')->leftJoin('events', 'events.location_id', '=', 'locations.id')->where(['events.id'=>$eventId, 'event_type' => 100,'events.is_active' => 1,'locations.is_active' => 1])->first();
         $lessonPrice = LessonPrice::active()->get();
         return view('pages.calendar.view_event')->with(compact('eventData','schoolId','locations','professors','studentOffList','lessonPrice','eventId'));
@@ -326,10 +326,10 @@ class LessonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function addLesson(Request $request, $schoolId = null)
-    {   
+    {
         $lessonlId= $_GET['id'];
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -359,15 +359,15 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
-               
+
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
 
                 $lessonData = $request->all();
-                
+
                 $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
                 $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
@@ -388,7 +388,7 @@ class LessonsController extends Controller
                 }else{
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60));
                 }
-                
+
                 $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
                 if($lessonData['sis_paying'] == 1 && $lessonData['student_sis_paying'] == 1 ){
@@ -458,7 +458,7 @@ class LessonsController extends Controller
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
                 }
-                    
+
                 DB::commit();
 
                 if($lessonData['save_btn_more'] == 1){
@@ -475,13 +475,13 @@ class LessonsController extends Controller
                         'status' => 2,
                         'message' =>  __('Successfully Registered')
                     ];
-                }     
-               
-            }  
+                }
+
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -505,7 +505,7 @@ class LessonsController extends Controller
             $school = School::active()->find($schoolId);
         }
 
-        $lessonlId = $request->route('lesson'); 
+        $lessonlId = $request->route('lesson');
         $lessonData = Event::active()->where(['id'=>$lessonlId, 'event_type' => 10])->first();
         if ($lessonData->is_locked) {
             return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
@@ -517,7 +517,7 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->Join('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
-       
+
         $lessonPrice = LessonPrice::active()->get();
         $currency = Currency::getCurrencyByCountry($school->country_code,true);
 
@@ -546,7 +546,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -554,7 +554,7 @@ class LessonsController extends Controller
 
                 $lessonlId = $request->route('lesson');
                 $lessonData = $request->all();
-                // dd($lessonData['validate']); 
+                // dd($lessonData['validate']);
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -654,7 +654,7 @@ class LessonsController extends Controller
                         $eventDetails = EventDetails::create($dataDetails);
                 }
                 DB::commit();
-            
+
                 if($lessonData['save_btn_more'] == 1){
                     return Redirect::to($schoolId.'/add-lesson?id='.$lessonlId);
                 }else if(isset($lessonData['validate']) && !empty($lessonData['validate'])){
@@ -663,12 +663,12 @@ class LessonsController extends Controller
                 }else{
                     //return back()->with('success', __('Successfully Registered'));
                     return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
-                } 
-        }  
+                }
+        }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -682,12 +682,12 @@ class LessonsController extends Controller
     public function viewLesson(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $lessonlId = $request->route('lesson'); 
+        $lessonlId = $request->route('lesson');
         $lessonData = Event::active()->find($lessonlId);
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
         $professors = DB::table('events')->select('school_teacher.nickname','school_teacher.teacher_id')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$lessonlId, 'event_type' => 10,'events.is_active' => 1])->first();
@@ -710,7 +710,7 @@ class LessonsController extends Controller
     public function studentOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -730,7 +730,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -738,7 +738,7 @@ class LessonsController extends Controller
 
                 $studentOffData = $request->all();
                 $start_date = str_replace('/', '-', $studentOffData['start_date']);
-                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';                
+                $end_date = str_replace('/', '-', $studentOffData['end_date']).' 23:59:59';
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
@@ -763,7 +763,7 @@ class LessonsController extends Controller
                         'student_id' => $user->person_id,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
-                
+
                 } else {
                     foreach($studentOffData['student'] as $std){
                         $dataDetails = [
@@ -773,9 +773,9 @@ class LessonsController extends Controller
                         $eventDetails = EventDetails::create($dataDetails);
                     }
                 }
-                
+
                 DB::commit();
-                
+
                 if($studentOffData['save_btn_more'] == 1){
                     return [
                         'status' => 1,
@@ -789,12 +789,12 @@ class LessonsController extends Controller
                         'message' =>  __('Successfully Registered')
                     ];
                 }
-                 
-            }  
+
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -807,13 +807,13 @@ class LessonsController extends Controller
     public function editStudentOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
 
-        $studentOffId = $request->route('id'); 
+        $studentOffId = $request->route('id');
         $studentOffData = Event::active()->where(['id'=>$studentOffId, 'event_type' => 51])->first();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $studentOffList = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studentOffId, 'event_type' => 51,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
@@ -835,7 +835,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -848,7 +848,7 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $studentOffData['zone'],'UTC');
-                $studoffId = $request->route('id'); 
+                $studoffId = $request->route('id');
 
                 $data = [
                     'title' => $studentOffData['title'],
@@ -862,14 +862,14 @@ class LessonsController extends Controller
 
                 $event = Event::where('id', $studoffId)->update($data);
                 EventDetails::where('event_id',$studoffId)->forceDelete();
-                
+
                 if($user->isStudent()){
                     $dataDetails = [
                         'event_id'   => $studoffId,
                         'student_id' => $user->person_id,
                     ];
                     $eventDetails = EventDetails::create($dataDetails);
-                
+
                 } else {
                     foreach($studentOffData['student'] as $std){
                         $dataDetails = [
@@ -879,14 +879,14 @@ class LessonsController extends Controller
                         $eventDetails = EventDetails::create($dataDetails);
                     }
                 }
-                
+
                 DB::commit();
                 return Redirect::to('/agenda')->with('success', __('Successfully Registered'));
-            }  
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -899,15 +899,21 @@ class LessonsController extends Controller
     public function viewStudentOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
 
-        $studoffId = $request->route('id'); 
+        $studoffId = $request->route('id');
         $studentOffData = DB::table('events')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->first();
-        $studentOffList = DB::table('events')->select('school_student.nickname')->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')->leftJoin('school_student', 'school_student.id', '=', 'event_details.student_id')->where(['events.id'=>$studoffId, 'event_type' => 51,'events.is_active' => 1])->groupBy('school_student.student_id')->get();
+        $studentOffList = DB::table('events')
+        ->select('users.firstname', 'users.lastname')
+        ->leftJoin('event_details', 'events.id', '=', 'event_details.event_id')
+        ->leftJoin('users', 'event_details.student_id', '=', 'users.person_id')
+        ->where(['events.id' => $studoffId, 'events.event_type' => 51, 'events.is_active' => 1])
+        ->groupBy('users.firstname', 'users.lastname', 'event_details.student_id')
+        ->get();
         return view('pages.calendar.view_student_off')->with(compact('studentOffData','studentOffList','schoolId','studoffId'));
     }
 
@@ -919,12 +925,12 @@ class LessonsController extends Controller
     public function coachOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         return view('pages.calendar.add_coach_off')->with(compact('schoolId','professors'));
     }
 
@@ -938,7 +944,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -962,18 +968,18 @@ class LessonsController extends Controller
                     'fullday_flag' => isset($coachOffData['fullday_flag']) ? $coachOffData['fullday_flag'] : 'Y',
                     'description' => $coachOffData['description']
                 ];
-                
+
                 $event = Event::create($data);
 
                 $dataDetails = [
                     'event_id' => $event->id,
                     'teacher_id' => $coachOffData['teacher_select'],
                 ];
-                
+
                 $eventDetails = EventDetails::create($dataDetails);
-                
+
                 DB::commit();
-                
+
                 if($coachOffData['save_btn_more'] == 1){
                     return [
                         'status' => 1,
@@ -985,11 +991,11 @@ class LessonsController extends Controller
                         'message' =>  __('Successfully Registered')
                     ];
                 }
-            }  
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -1003,16 +1009,16 @@ class LessonsController extends Controller
     public function editCoachOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $coachoffId = $request->route('id'); 
+        $coachoffId = $request->route('id');
         $coachoffData = Event::active()->where(['id'=>$coachoffId, 'event_type' => 50])->first();
-        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get(); 
+        $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         if (!empty($coachoffData)){
-            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors','coachoffId'));    
+            return view('pages.calendar.edit_coach_off')->with(compact('coachoffId','coachoffData','schoolId','professors','coachoffId'));
         }else{
             return redirect()->route('agenda',['school'=> $schoolId]);
         }
@@ -1028,7 +1034,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -1042,7 +1048,7 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $coachOffData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $coachOffData['zone'],'UTC');
-                $coachoffId = $request->route('id'); 
+                $coachoffId = $request->route('id');
 
                 $data = [
                     'title' => $coachOffData['title'],
@@ -1054,23 +1060,23 @@ class LessonsController extends Controller
                     'description' => $coachOffData['description'],
                     'teacher_id' => $coachOffData['teacher_select']
                 ];
-                
+
                 $event = Event::where('id', $coachoffId)->update($data);
 
                 $dataDetails = [
                     'event_id' => $coachoffId,
                     'teacher_id' => $coachOffData['teacher_select'],
                 ];
-                
+
                 $eventDetails = EventDetails::where('event_id', $coachoffId)->update($dataDetails);
-                
+
                 DB::commit();
                 return back()->with('success', __('Successfully Registered'));
-            }  
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -1083,12 +1089,12 @@ class LessonsController extends Controller
     public function viewCoachOff(Request $request, $schoolId = null)
     {
         $user = Auth::user();
-        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
-        $coachoffId = $request->route('id'); 
+        $coachoffId = $request->route('id');
         $coachoffData = DB::table('events')->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'events.teacher_id')->where(['events.id'=>$coachoffId, 'event_type' => 50,'events.is_active' => 1])->first();
         return view('pages.calendar.view_coach_off')->with(compact('coachoffData','coachoffId','schoolId'));
     }
@@ -1099,7 +1105,7 @@ class LessonsController extends Controller
         try{
             if ($request->isMethod('post')){
                 $user = Auth::user();
-                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ; 
+                $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
                 $school = School::active()->find($schoolId);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
@@ -1108,7 +1114,7 @@ class LessonsController extends Controller
                 $lessonlId = $request->route('id');
                 $lessonData = $request->all();
                 $type = $lessonData['type'];
-              
+
                 if($type == 1){
                     $dataDetails = [
                         'participation_id' => $lessonData['typeId']
@@ -1120,16 +1126,16 @@ class LessonsController extends Controller
                             'participation_id' => $value['typeId']
                         ];
                         $eventDetails = EventDetails::where(['event_id'=> $lessonlId,'student_id'=> $value['stuId']])->update($dataDetails);
-                    }    
+                    }
                 }
                 DB::commit();
-                 
+
                  return back()->with('success', __('Successfully Registered'));
-            }  
+            }
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput($request->all())->with('error', __('Internal server error'));
-        }   
+        }
 
         return $result;
     }
@@ -1192,16 +1198,16 @@ class LessonsController extends Controller
 
 
     /**
-     * check if price exist for student 
+     * check if price exist for student
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function lessonPriceCheck(Request $request)
-    {   
+    {
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            $stu_num = explode("_", $lessonData['sevent_price']);    
+            $stu_num = explode("_", $lessonData['sevent_price']);
             $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
             if (!empty($lessonPriceTeacher)) {
                 return [
@@ -1220,13 +1226,13 @@ class LessonsController extends Controller
 
 
         /**
-     * check if price exist for student 
+     * check if price exist for student
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function lessonFixedPrice(Request $request)
-    {   
+    {
         if ($request->isMethod('post')){
             $lessonData = $request->all();
 
@@ -1259,12 +1265,12 @@ class LessonsController extends Controller
                     'data' => ['price_buy'=> $buyPrice, 'price_sell'=>$sellPrice],
                     'message' =>  __('Successfully get price for this teacher')
                 ];
-                
+
             } catch (Exception $e) {
                return [
                     'status' => 0,
                     'message' =>  __('No price for this teacher')
-                ]; 
+                ];
             }
 
         }

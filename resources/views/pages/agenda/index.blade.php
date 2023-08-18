@@ -2323,8 +2323,16 @@
                         $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table style="width:100%;" class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa-solid fa-clock"></i> Timer :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>');
                     }
 
-
+                if((user_role == 'student') ){
+                   if(event.event_type == 50) {
+                    $("#btn_edit_view").fadeOut();
+                   } else {
+                    $("#btn_edit_view").fadeIn();
                     $("#btn_edit_view").attr("href", event.url);
+                   }
+                } else {
+                    $("#btn_edit_view").attr("href", event.url);
+                }
                     $("#EventModal").modal('show');
                     return false;
                 }

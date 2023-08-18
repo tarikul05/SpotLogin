@@ -124,7 +124,7 @@
                         <td>{{ $invoice_name}}</td>
 
                         @if ($invoice->invoice_type == 0)
-                        <td>{{ $invoice->total_amount + $invoice->tax_amount }}</td>
+                        <td>{{ $invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses }}</td>
                         @else
                         <td>{{ $invoice->total_amount }}</td>
                         @endif

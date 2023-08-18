@@ -529,7 +529,7 @@
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Taxes') }}:</label>
                                 </div>
-                                You have <?php echo $count; ?> taxes pre-registered
+                                You have <?php echo $count; ?> pre-registered {{$count > 1 ? __('taxes') : __('tax')}}
                                 <?php } else { ?>
                                     <div class="section_header_class">
                                         <label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
