@@ -277,7 +277,7 @@
                         <th class="col_amount">{{ __('invoice_column_amount') }}</th>
                     </tr>
                 </thead>
-                <?php 
+                <?php
                     $sub_total_lesson = 0;
                     $sub_total_min_lesson = 0;
                     $total_lesson = 0;
@@ -291,7 +291,7 @@
                     foreach($invoice_items as $event_key => $invoice_item){ ?>
                     <tbody>
                         <?php
-                            foreach($invoice_item as $key => $item){ 
+                            foreach($invoice_item as $key => $item){
                                 $total_min += $item->unit;
                         ?>
                         <tr>
@@ -299,7 +299,7 @@
                             <td><?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
                             <br>
                             @if ($invoice_data->invoice_type > 0)
-                                <?php 
+                                <?php
                                 if($item->no_of_students == 1) {
                                     echo 'Private Lesson';
                                 } else {
@@ -309,7 +309,7 @@
                             </td>
                             <td style="text-align: left;"><?php if($item->unit){ echo $item->unit.' minutes';} ?> </td>
                             <td style="text-align: right;">
-                            <?php 
+                            <?php
                                 if($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2 ){
                                     echo number_format($item->price_unit, '2');
                                 }else{
@@ -318,7 +318,7 @@
                             ?>
                             </td>
                         </tr>
-                        <?php 
+                        <?php
                             if($event_key == 10){
                                 if ($invoice_data->invoice_type == 1 || $invoice_data->invoice_type == 2){
                                     $sub_total_lesson += $item->price;
@@ -335,7 +335,7 @@
                                 $sub_total_min_event = $sub_total_min_event + $item->unit;
                             }
 
-                            } 
+                            }
                         ?>
                         <?php if ($event_key == 10){ ?>
                             <tr class="extra_col_sub extra_col_h">
@@ -350,7 +350,7 @@
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
                                 <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right">
-                                        <?php 
+                                        <?php
                                             if($invoice_data->invoice_type == 1){
                                                 echo '<b>Discount on lesson</b>';
                                             }else if($invoice_data->invoice_type == 2){
@@ -370,11 +370,11 @@
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
                                     <?php
-                                        $total_lesson = $sub_total_lesson-$totalDiscount;            
+                                        $total_lesson = $sub_total_lesson-$totalDiscount;
                                     ?>
-                                    <span id="stotal_amount_with_discount_lesson" 
+                                    <span id="stotal_amount_with_discount_lesson"
                                     class="form-control-static numeric"
-                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</span> 
+                                    style="text-align:right;">{{number_format($total_lesson,'2')}}</span>
                                 </td>
                             </tr>
                             <tr class="extra_col_sub extra_col_h">
@@ -391,39 +391,52 @@
                                 </tr>
                             <?php } ?>
                     </tbody>
-                <?php } ?>        
+                <?php } ?>
                 <tfoot>
-                <?php if($invoice_data->extra_expenses > 0){ ?>
+
+
                     <?php
-                    foreach ($InvoicesExpData as $item) {
-                        echo '<tr class="extra_col">';
-                        echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['expense_name'] . '</b></td>';
-                        echo '<td style="text-align:right" colspan="2" class="price">+ <b>' . $item['expense_amount'] . '</b></td>';
-                        echo '</tr>';
-                    }
+                    $totalTaxesSupp=0;
+                    if($invoice_data->tax_amount > 0){ ?>
+
+                    <?php
+                        if($invoice_data->invoice_type > 0)
+                                    foreach ($InvoicesTaxData as $item) {
+                                        echo '<tr class="extra_col">';
+                                        echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
+                                        echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
+                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format( ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
+                                        echo '</tr>';
+                                        //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
+                                        $totalTaxesSupp = ($totalTaxesSupp + ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100);
+                                    }
+                        else {
+                            foreach ($InvoicesTaxData as $item) {
+                                        echo '<tr class="extra_col">';
+                                        echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
+                                        echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
+                                        echo '<td style="text-align:right" colspan="1" class="price"><b>' . number_format( ((($sub_total_event)+$total_lesson) * $item['tax_percentage']) /100, '2') . '</b></td>';
+                                        echo '</tr>';
+                                        //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
+                                        $totalTaxesSupp = $invoice_data->invoice_type > 0 ? ($totalTaxesSupp + ((($sub_total_event)+$total_lesson) * $item['tax_percentage']) /100) : ($totalTaxesSupp + $invoice_data->extra_expenses + ((($sub_total_event)+$total_lesson) * $item['tax_percentage']) /100);
+                                    }
+                        }
                     ?>
                     <?php } ?>
 
-                    <?php 
-                    $totalTaxesSupp=0;
-                    if($invoice_data->tax_amount > 0){ ?>
-                    
-                    <?php
-            
-                        foreach ($InvoicesTaxData as $item) {
+                    <?php if($invoice_data->extra_expenses > 0){ ?>
+                        <?php
+                        foreach ($InvoicesExpData as $item) {
                             echo '<tr class="extra_col">';
-                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['tax_name'] . '</b> <span style="font-size:11px;">[ N° ' . $item['tax_number'] . ' ]</span></td>';
-                            echo '<td style="text-align:right; font-size:13px;" class="text">' . $item['tax_percentage'] . '%</td>';
-                            echo '<td style="text-align:right" colspan="1" class="price"><b>' . ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100 . '</b></td>';
+                            echo '<td style="text-align:right" colspan="2" class="text"><b>' . $item['expense_name'] . '</b></td>';
+                            echo '<td style="text-align:right" colspan="2" class="price">+ <b>' . $item['expense_amount'] . '</b></td>';
                             echo '</tr>';
-                            //((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson)*$item['tax_percentage'])/100;
-                            $totalTaxesSupp = ($totalTaxesSupp + ((($sub_total_event-$invoice_data->extra_expenses)+$total_lesson) * $item['tax_percentage']) /100);
                         }
                         ?>
-                    <?php } ?>
+                        <?php } ?>
 
-                   
-              
+
+
 
                     <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
                     <tr class="total_col">
@@ -434,7 +447,7 @@
             </table>
         </div>
         <div class="course-duration">
-            <?php 
+            <?php
                 $hours = floor($total_min / 60);
                 $minutes = $total_min % 60;
             ?>
@@ -449,7 +462,7 @@
             <table class="table" style="border: 0;">
                 <tr>
                     <td>
-                        <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email) 
+                        <?php if(!empty($invoice_data->etransfer_acc) || !empty($invoice_data->e_transfer_email)
                         || !empty($invoice_data->payment_bank_account_name) || !empty($invoice_data->payment_bank_name)
                         || !empty($invoice_data->payment_bank_zipcode) || !empty($invoice_data->payment_bank_place)
                         || $invoice_data->payment_bank_place || !empty($invoice_data->payment_bank_country_code) ) {?>

@@ -22,13 +22,13 @@
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="pull-right btn-group">
-						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+						<a class="btn btn-sm btn-info text-white" href="<?= $BASE_URL;?>/agenda" id="back_btn">
 							<i class="fa fa-arrow-left"></i>
 							{{ __('Back')}}
 						</a>
 					</div>
 				</div>
-			</div>          
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -63,15 +63,11 @@
 									<label class="col-lg-2 col-sm-2 text-left">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 
-									<?php $i=1; $count = count($studentOffList); 
-										foreach($studentOffList as $student){
-											echo $student->nickname;
-											if($i != $count){
-												echo ', ';
-											}
-										$i++;
-										}
-									?>	
+                                        @foreach($studentOffList as $student)
+                                            {{$student->firstname}} {{$student->lastname}}
+                                        @endforeach
+
+
 									</div>
 								</div>
 								<div class="form-group row">
@@ -126,7 +122,7 @@
         if (unlock) {
             var data = 'unlock=1&p_event_auto_id=' + p_event_auto_id;
         }
-        
+
         var status = '';
         $.ajax({
             url: BASE_URL + '/confirm_event',
@@ -154,10 +150,10 @@
             complete: function( xhr ) {
                 $("#pageloader").hide();
             },
-            error: function (ts) { 
+            error: function (ts) {
                 ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
-        }); //ajax-type            
+        }); //ajax-type
 
     }
 </script>
