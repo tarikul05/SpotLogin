@@ -41,11 +41,14 @@
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
                                   {{__('Agenda')}} :
                                 </h1>
+                                <div id="dateTime">
                                 <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
                                     <i class="fa-solid fa-bell fa-beat"></i>
                                     Lesson in progress...
                                 </em>
+                                </div>
+                                <div id="messageContainer" style="display: none;"></div>
 							</div>
 					</div>
                    <div class="col-lg-5 col-12 btn-area pt-2 align-items-end">
@@ -381,7 +384,7 @@
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
                                                         <div class="col-sm-7">
                                                             <div class="selectdiv student_list">
-                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
+                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple" style="height: 300px; overflow-y: scroll;">>
                                                                     @foreach($studentsbySchool as $key => $student)
                                                                         <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : ''}}>
                                                                             @php
@@ -591,12 +594,11 @@
 <!-- success modal-->
 <div class="modal modal_parameter" id="add_lesson_success">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <button type="button" class="close" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="modal-body">
-                <p class="success_message">{{__('Successfully added') }}</p>
+        <div class="modal-content" style="border:4px solid #97cc04;">
+            <div class="modal-body text-center">
+                <h1 class="text-success"><i class="fa-solid fa-check"></i></h1>
+                <h3 class="text-success">{{__('Successfully added') }}</h3>
+                <p>{{__('You can add now another lesson or event') }}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
@@ -604,6 +606,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 <!-- success modal-->
@@ -1673,13 +1678,16 @@
         var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
 		console.log("current view for copy="+cal_view_mode_for_copy.name);
         if(cal_view_mode_for_copy.name === "agendaWeek") {
-		    errorModalCall('Schedule of current week view is copied ! You can past it in other week.');
+		    successModalCall('Copied with success', 'Schedule of current week view is copied ! You can past it in other week.');
+            showMessage('Schedule of current week view is copied!', 'success')
         }
         if(cal_view_mode_for_copy.name === "agendaDay") {
-		    errorModalCall('Schedule of current day view is copied ! You can past it in other day.');
+		    successModalCall('Copied with success', 'Schedule of current day view is copied ! You can past it in other day.');
+            showMessage('Schedule of current day view is copied!', 'success')
         }
         if(cal_view_mode_for_copy.name === "month") {
-		    errorModalCall('Schedule of current month view is copied ! You can past it in other month.');
+		    successModalCall('Copied with success', 'Schedule of current month view is copied ! You can past it in other month.');
+            showMessage('Schedule of current month view is copied!', 'success')
         }
 
         return false;
@@ -2460,9 +2468,27 @@
                 if ((foundRecords == 0) && (document.getElementById("copy_date_from").value.length != 0)
                     && (document.getElementById("copy_view_mode").value == view.name) )
                 {
-                    document.getElementById("btn_goto_planning").style.display = "block";
+
+                    var source_start_date = document.getElementById("date_from").value;
+                    var source_end_date = document.getElementById("date_to").value;
+                    var target_start_date = document.getElementById("copy_date_from").value;
+                    var target_end_date = document.getElementById("copy_date_to").value;
+
+                    var momentSourceStart = moment(source_start_date, "YYYY-MM-DD");
+                    var momentSourceEnd = moment(source_end_date, "YYYY-MM-DD");
+                    var momentTargetStart = moment(target_start_date, "YYYY-MM-DD");
+                    var momentTargetEnd = moment(target_end_date, "YYYY-MM-DD");
+
+                    if (momentSourceEnd.isBefore(momentTargetStart)) {
+                        document.getElementById("btn_goto_planning").style.display = "none";
+                        showMessage('Your cannot copy your events or lessons in the past.', 'danger');
+                    } else {
+                        document.getElementById("btn_goto_planning").style.display = "block";
+                    }
                 }
 
+                target_start_date=document.getElementById("date_from").value;
+        target_end_date=document.getElementById("date_to").value;
 
                 foundRecords=0;
 
@@ -3268,7 +3294,6 @@
         view_mode = document.getElementById("view_mode").value;
         var p_event_location_id=getLocationIDs();
 
-
         var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
@@ -3402,9 +3427,10 @@
     //     console.log('lost focus');
     // });
 
-</script>
 
-<script type="text/javascript">
+
+
+
 $(function() {
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -3432,17 +3458,16 @@ $(function() {
 
 
   $('#student').multiselect({
-    maxHeight:true,
+    maxHeight: 400,  // Augmentez cette valeur selon vos besoins
     buttonWidth: '100%',
-    dropRight:false,
-    enableFiltering:true,
-    includeSelectAllOption: true, // Ajouter une option "Sélectionner tout"
+    dropRight: false,
+    enableFiltering: true,
+    includeSelectAllOption: true,
     includeFilterClearBtn: true,
-
-    search:true,
+    search: true,
     selectAllText: '{{__("All Students") }}',
-    enableCaseInsensitiveFiltering:true,
-    enableFullValueFiltering:false,
+    enableCaseInsensitiveFiltering: true,
+    enableFullValueFiltering: false,
   });
 
 
@@ -3754,6 +3779,8 @@ $('#add_lesson').on('submit', function(e) {
     }
 
     if(errMssg == ""){
+
+
         // console.log("hello");
         $.ajax({
             url: page_action,
@@ -3764,6 +3791,10 @@ $('#add_lesson').on('submit', function(e) {
             success: function(response){
                 if(response.status == 1){
                     $('#add_lesson_success').modal('show');
+
+                    $('#student').multiselect('deselectAll', false);
+                    $('#student').multiselect('updateButtonText');
+
                     // $("#add_lesson")[0].reset();
                     // $('#student').val([]).multiselect('refresh');
                     // const startresult = moment().format('DD/MM/YYYY');
@@ -4220,6 +4251,53 @@ $( document ).ready(function() {
     });
 });
 
+
+function showMessage(messageText, messageType) {
+
+    var messageClass = "";
+    switch (messageType) {
+        case "success":
+            messageClass = "text-success";
+            break;
+        case "danger":
+            messageClass = "text-danger";
+            break;
+        case "info":
+            messageClass = "text-info";
+            break;
+        default:
+            messageClass = ""; // ou une autre classe par défaut si vous le souhaitez
+    }
+
+    var dateTimeDiv = document.getElementById("dateTime");
+    var messageDiv = document.getElementById("messageContainer");
+
+    // Crée l'élément icône
+    const iconElement = document.createElement("i");
+    iconElement.className = "fa-solid fa-bell fa-beat";
+
+    // Vide le contenu précédent du messageDiv
+    messageDiv.innerHTML = '';
+
+    // Ajoute l'icône au messageDiv
+    messageDiv.appendChild(iconElement);
+
+    // Ajoute le texte du message après l'icône
+    messageDiv.appendChild(document.createTextNode(' ' + messageText));
+
+    //Add class
+    messageDiv.classList.add(messageClass);
+
+    // Cachez la date/heure et affichez le message
+    dateTimeDiv.style.display = "none";
+    messageDiv.style.display = "block";
+
+    // Après 5 secondes, cachez le message et affichez à nouveau la date/heure
+    setTimeout(function() {
+        messageDiv.style.display = "none";
+        dateTimeDiv.style.display = "block";
+    }, 5000);  // 5000 millisecondes = 5 secondes
+}
 
 
 $( document ).ready(function() {

@@ -327,7 +327,7 @@ class LessonsController extends Controller
      */
     public function addLesson(Request $request, $schoolId = null)
     {
-        $lessonlId= $_GET['id'];
+        $lessonlId = $request->input('id');
         $user = Auth::user();
         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
         $school = School::active()->find($schoolId);
@@ -343,6 +343,7 @@ class LessonsController extends Controller
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $lessonPrice = LessonPrice::active()->get();
+
         $currency = Currency::getCurrencyByCountry($school->country_code,true);
 
         return view('pages.calendar.add_lesson')->with(compact('lessonData','relationData','schoolId','eventCategory','locations','professors','students','lessonPrice','currency','studentOffList'));
@@ -467,7 +468,7 @@ class LessonsController extends Controller
                         'message' =>  __('Successfully Registered')
                     ];
                 }else if($lessonData['save_btn_more'] == 2){
-                    return Redirect::to($schoolId.'/add-lesson?id='.$event->id)->withInput($request->all())->with('success', __('Successfully Registered'));
+                    return Redirect::to($schoolId.'/add-lesson?id='.$event->id.'&isnew=1')->withInput($request->all())->with('success', __('Successfully Registered'));
                 }else if($lessonData['save_btn_more'] == 3){
                     return Redirect::to('/agenda');
                 }else{
@@ -1207,11 +1208,12 @@ class LessonsController extends Controller
     {
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            $stu_num = explode("_", $lessonData['sevent_price']);
-            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['category_select'],'lesson_price_id'=>$stu_num[1],'teacher_id'=>$lessonData['teacher_select']])->first();
+            //$stu_num = explode("_", $lessonData['sevent_price']);
+            $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id']])->first();
             if (!empty($lessonPriceTeacher)) {
                 return [
                     'status' => 1,
+                    'lessonPriceTeacher' => $lessonPriceTeacher,
                     'message' =>  __('Successfully get price for this teacher')
                 ];
             }else{

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventCategoryController extends Controller
 {
-    
+
     /**
      * Create a new controller instance
      *
@@ -30,14 +30,14 @@ class EventCategoryController extends Controller
      * @return Response
     */
     public function index($schoolId = null)
-    { 
+    {
         $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
         }
@@ -47,31 +47,34 @@ class EventCategoryController extends Controller
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
 
         return view('pages.event_category.index',compact('eventCat','eventLastCatId','schoolId'));
-    }   
+    }
     /**
      * Remove the specified resource from storage.
      * @return Response
     */
- 
+
     public function addEventCategory(Request $request)
     {
         try{
             if ($request->isMethod('post')){
-                
+
                 $categoryData = $request->all();
                 $user = Auth::user();
                 if ($user->isSuperAdmin()) {
-                    $userSchoolId = $categoryData['school_id']; 
+                    $userSchoolId = $categoryData['school_id'];
                 }else {
                     $userSchoolId = $user->selectedSchoolId();
                 }
-                
+
+                dd($categoryData['category']);
+
                 foreach($categoryData['category'] as $cat){
                     $invoicedType = $user->isTeacher() ? 'T' : $cat['invoice'];
                     if(isset($cat['id']) && !empty($cat['id'])){
                         $answers = [
                             'school_id' => $userSchoolId,
                             'title' => $cat['name'],
+                            'bg_color_agenda' => $cat['bg_color_agenda'],
                             'invoiced_type' => $invoicedType
                         ];
                         $eventCat = EventCategory::where('id', $cat['id'])->update($answers);
@@ -79,6 +82,7 @@ class EventCategoryController extends Controller
                         $answers = [
                             'school_id' => $userSchoolId,
                             'title' => $cat['name'],
+                            'bg_color_agenda' => $cat['bg_color_agenda'],
                             'invoiced_type' => $invoicedType
                         ];
                         $eventCat = EventCategory::create($answers);
@@ -96,11 +100,11 @@ class EventCategoryController extends Controller
                 'status' => 0,
                 'message' =>  __('Internal server error')
             ];
-        }   
+        }
 
         return $result;
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -110,7 +114,7 @@ class EventCategoryController extends Controller
     public function removeEventCategory($id)
     {
         $eventCat = EventCategory::find($id)->delete();
-        
+
         if($eventCat==1){
             return $result = array(
                 "status"     => 1,
@@ -118,5 +122,5 @@ class EventCategoryController extends Controller
             );
         }
     }
- 
+
 }

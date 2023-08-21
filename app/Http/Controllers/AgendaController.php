@@ -76,7 +76,7 @@ class AgendaController extends Controller
                         $event_types[$key.'-'.$eventCat->id] = trim($value.' : '.$eventCat->title);
                         $count_cat++;
                       }
-                } 
+                }
                 if ($count_cat==0) {
                     $event_types[$key]= $value;
                 }
@@ -112,19 +112,19 @@ class AgendaController extends Controller
         if ($user->isTeacherAll()) {
             $user_role = 'teacher_all';
         }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) { 
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role =='teacher' ) {
             $user_role = 'teacher';
         }
         //$eventData = Event::active()->where('school_id', $schoolId)->get();
 
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
-        
+
         //dd($eventData);
         $events = array();
 
         $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
-       
+
         //dd($events);
         $events = json_encode($events);
         //unset($event_types[10]);
@@ -204,7 +204,7 @@ class AgendaController extends Controller
             //             ];
             //         }
 
-                    
+
             //         if ($eventdetail->participation_id !== 199) {
             //             $eventdetail = $eventdetail->update($eventDetailPresent);
             //         } else {
@@ -449,11 +449,11 @@ class AgendaController extends Controller
         // if ($user->isTeacherAll()) {
         //     $user_role = 'teacher_all';
         // }
-         if ($user->isTeacherMedium() || $user_role =='teacher' ) { 
+         if ($user->isTeacherMedium() || $user_role =='teacher' ) {
             $user_role = 'teacher';
         }
 
-        if ($user->isTeacherMinimum()) { 
+        if ($user->isTeacherMinimum()) {
             $user_role = 'teacher_minimum';
         }
 
@@ -486,7 +486,7 @@ class AgendaController extends Controller
 
             // }
             $start_date = date('Y-m-d', strtotime($fetch->date_start));
-            $end_date = date('Y-m-d', strtotime($fetch->date_end));  
+            $end_date = date('Y-m-d', strtotime($fetch->date_end));
             $allday = ($fetch->fullday_flag == "Y") ? true : false;
             $e['allDay'] = $allday;
             if ($allday == true) {
@@ -509,6 +509,9 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
+                    if (!$user->isTeacherSchoolAdmin()) {
+                        $e['backgroundColor'] = trim($eventCategory->bg_color_agenda);
+                    }
                 $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
             }
             $e['event_type'] = $fetch->event_type;
@@ -585,11 +588,11 @@ class AgendaController extends Controller
                     $e['tooltip']=$evntTypeNm.' <br /> Students: '.$student_name;
                     $e['title_for_modal']=$evntTypetitle.' Students: '.$student_name;
                 }
-                
+
             }else{ // lession and event type
-                
+
                 $e['title']= $event_types[$e['event_type']].' '.$e['title'];
-                
+
                 if ($user->isTeacherAdmin()) {
                     $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                 } else {
@@ -606,10 +609,10 @@ class AgendaController extends Controller
 
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
-             
+
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
                     } else {
-     
+
                         $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
                     }
                     $e['title'] = $e['title'].' ('.$student_name. ')';
@@ -624,14 +627,14 @@ class AgendaController extends Controller
                 }
             }
 
-            
-            
+
+
 
             $e['content'] = ($e['cours_name']);
 
             if($fetch->event_type == 10){
                $e['invoice_type'] = $eventCategory->invoiced_type;
-            }elseif($fetch->event_type == 100){   
+            }elseif($fetch->event_type == 100){
                $e['invoice_type'] = $fetch->event_invoice_type;
             }
 
@@ -756,15 +759,15 @@ class AgendaController extends Controller
                         if($user->can('self-edit-events')){
                             $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-                        }    
+                        }
                     } else {
                         if($user->can('others-edit-events')){
                             $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-coach-off/'.$fetch->id;
-                        }else{  
+                        }else{
                             $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-coach-off/'.$fetch->id;
-                        }    
+                        }
                     }
                 }
                 /* only own vacation entry can be edited by user - Student */
@@ -773,15 +776,15 @@ class AgendaController extends Controller
                         if($user->can('self-edit-events')){
                             $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
-                        }    
+                        }
                     } else {
                         if($user->can('others-edit-events')){
                             $action_type='edit';
                             $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
-                        }else{ 
+                        }else{
                             $action_type='view';
                             $page_name='/'.$fetch->school_id.'/view-student-off/'.$fetch->id;
-                        }    
+                        }
                     }
 
                 }
@@ -790,7 +793,7 @@ class AgendaController extends Controller
             $e['url'] = $page_name;
 
             $e['action_type'] = $action_type;
-            
+
             array_push($events, $e);
         }
 
@@ -848,10 +851,10 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
-        
+
         $students = SchoolStudent::active()->where('school_id', $schoolId);
-        
-        if ($user_role =='student' ) { 
+
+        if ($user_role =='student' ) {
         $students->where('student_id', $user->person_id);
         }
 
@@ -880,7 +883,7 @@ class AgendaController extends Controller
 
         $user = Auth::user();
         $schoolId = $data['school_id'];
-        
+
         if ($user->isTeacherMediumMinimum()) {
             $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->get();
         }else{
@@ -943,25 +946,25 @@ class AgendaController extends Controller
         }
         $professorsQuery = SchoolTeacher::active()->onlyTeacher()->where('school_id', $schoolId);
 
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') { 
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $user_role == 'teacher') {
             $professorsQuery->where('teacher_id', $user->person_id);
         }
-        
+
         $professors = $professorsQuery->get();
         //$students = SchoolStudent::active()->where('school_id', $schoolId)->get();
         //$locations = Teacher::active()->where('school_id', $schoolId)->orderBy('id')->get();
-        
+
         $mergedList = [];
-        
+
         foreach ($professors as $professor) {
             $lesson_price_teachers = LessonPriceTeacher::where('teacher_id', $professor->teacher_id)->get();
             $professorData = $professor->toArray();
             $professorData['lesson_price_teachers'] = $lesson_price_teachers->toArray();
             $mergedList[] = $professorData;
         }
-        
+
         $mergedListJSON = json_encode($mergedList);
-        
+
         return $mergedListJSON;
 
     }
@@ -1069,7 +1072,7 @@ class AgendaController extends Controller
             $param['p_from_date']= trim($data['p_from_date']);
             $param['p_to_date']= trim($data['p_to_date']);
             $param['location_id']= trim($data['location_id']);
-            
+
             $param['school_id']= trim($data['p_event_school_id']);
             //$param['event_type']= trim($data['p_event_type_id']);
             //$param['teacher_id']= trim($data['p_teacher_id']);

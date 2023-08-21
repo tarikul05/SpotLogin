@@ -13,7 +13,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <!-- Bootstrap select box-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
-
+  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 
@@ -49,7 +49,7 @@
         <li class="nav-item">
           <select id="setLan" class="selectpicker" data-width="fit" >
             @foreach ($language as $key => $lan)
-                <option 
+                <option
                 value="{{ $lan->language_code }}"
                 @if ($lan->language_code == app()->getLocale())
                     selected="selected"
@@ -60,7 +60,7 @@
           </select>
         </li>
 
-        
+
       </ul>
     </div>
   </nav>
@@ -78,7 +78,7 @@
 
 
   <!--common script for all pages-->
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <!-- JavaScript Bundle with Popper -->
@@ -88,14 +88,14 @@
 
 
   <!--common script for all pages-->
-    
+
   <script src="{{ asset('js/common-scripts.js')}}"></script>
 
 
 </body>
 <script type="text/javascript">
   $(document).ready(function() {
-    
+
     let loader = $('#pageloader');
       window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
@@ -119,7 +119,7 @@
     });
 
   });
-  
+
 </script>
 
 </html>
