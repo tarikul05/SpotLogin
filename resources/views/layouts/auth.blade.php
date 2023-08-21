@@ -13,7 +13,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <!-- Bootstrap select box-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
-
+  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -47,7 +47,7 @@
 
       <select id="setLan" class="selectpicker ms-auto" data-width="fit" >
         @foreach ($language as $key => $lan)
-            <option 
+            <option
             value="{{ $lan->language_code }}"
             @if ($lan->language_code == app()->getLocale())
                 selected="selected"
@@ -56,7 +56,7 @@
             >  {{ $lan->title }}</option>
         @endforeach
       </select>
-      
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -80,9 +80,9 @@
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
           Get <b>60 days</b> Free-Trial<br>with all features access
         </div>
-        
+
       </div>
-      
+
     </div>
   </nav>
 
@@ -100,16 +100,16 @@
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
   </footer>
 
-  
+
   @include('layouts.elements.modal_login')
   @include('layouts.elements.modal_reset_login')
   @include('layouts.elements.modal_school_sign_up')
   @include('layouts.elements.modal_forgot_password')
   @include('layouts.elements.modal_loader')
 
-  
+
   <!--common script for all pages-->
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <!-- JavaScript Bundle with Popper -->
@@ -119,7 +119,7 @@
 
 
   <!--common script for all pages-->
-    
+
   <script src="{{ asset('js/common-scripts.js')}}"></script>
 
 </body>
@@ -140,7 +140,7 @@
 
 
   });
-  
+
 </script>
 
 </html>

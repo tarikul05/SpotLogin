@@ -15,10 +15,10 @@
 
     <header class="panel-heading" style="border: none;">
         <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-12 col-xs-12 header-area pb-3"> 
+            <div class="col-sm-12 col-xs-12 header-area pb-3">
                 <div class="page_header_class">
                     <label id="page_header" name="page_header"><i class="fa-solid fa-users"></i> {{ __('Student\'s List') }}</label>
-                </div> 
+                </div>
             </div>
         </div>
     </header>
@@ -40,7 +40,7 @@
         </thead>
         <tbody>
             @foreach($students as $student)
-            
+
             <tr>
                 <!--<td>{{ $student->id; }} </td>-->
                 <td class="pt-3"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
@@ -48,7 +48,7 @@
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php elseif (!empty($student->user->profileImage->path_name)): ?>
-                        <img src="{{ $student->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe"> 
+                        <img src="{{ $student->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php else: ?>
                         <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
                     <?php endif; ?>
@@ -105,7 +105,7 @@
                                 </form>
                                 @endcan
                             </div>
-                        </div>  
+                        </div>
                     </td>
                 @endif
             </tr>
@@ -117,21 +117,55 @@
     </div>
     </form>
   </div>
+
+
+
+<!-- success modal-->
+<div class="modal modal_parameter" id="sendMailOk">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border:4px solid #97cc04;">
+            <div class="modal-body text-center">
+                <h1 class="text-success"><i class="fa-solid fa-check"></i></h1>
+                <h3 class="text-success">{{__('Successfully sended') }}</h3>
+                <p>{{__('Your student will receive an email with instructions.') }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @endsection
 @include('layouts.elements.modal_csv_import')
 @section('footer_js')
 <script>
-var sendInviteButtons = document.getElementsByClassName('send-invite-btn');
-Array.prototype.forEach.call(sendInviteButtons, function(button) {
-    button.addEventListener('click', function(event) {
+$(document).ready(function() {
+    $('.send-invite-btn').on('click', function(event) {
         event.preventDefault();
-        var schoolId = this.getAttribute('data-school');
-        var studentId = this.getAttribute('data-student');
-        if (confirm('Are you sure want to send an invitation to this student ?')) {
+        $("#pageloader").fadeIn("fast");
+        var schoolId = $(this).attr('data-school');
+        var studentId = $(this).attr('data-student');
+        //if (confirm('Are you sure want to send an invitation to this student ?')) {
             var redirectUrl = '{{ route('studentInvitationGet', ['school' => ':school', 'student' => ':student']) }}';
             redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
-            window.location.href = redirectUrl;
-        }
+
+            // Sending an AJAX request
+            $.ajax({
+                url: redirectUrl,
+                method: 'GET',
+                success: function(response) {
+                    $("#pageloader").fadeOut("fast");
+                    $('#sendMailOk').modal('show');
+                },
+                error: function(error) {
+                    $("#pageloader").fadeOut("fast");
+                    alert('Error occurred while sending the invitation. Please try again.');
+                }
+            });
+        //}
     });
 });
 </script>
@@ -156,7 +190,7 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
         for (var checkbox of checkboxes) {
             checkbox.checked = this.checked;
         }
-        
+
         if (this.checked) {
             var deleteButton = document.getElementById('delete-selected');
             deleteButton.scrollIntoView({ behavior: 'smooth' });
@@ -176,6 +210,17 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
                 "sLengthMenu": "Show _MENU_",
             }
         });
+
+        var searchInput = document.querySelector('.dataTables_wrapper .dataTables_filter input');
+        searchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.backgroundImage = 'none';
+            }
+            else {
+                this.style.backgroundImage = 'url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgICB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgICB2ZXJzaW9uPSIxLjEiICAgaWQ9InN2ZzQ0ODUiICAgdmlld0JveD0iMCAwIDIxLjk5OTk5OSAyMS45OTk5OTkiICAgaGVpZ2h0PSIyMiIgICB3aWR0aD0iMjIiPiAgPGRlZnMgICAgIGlkPSJkZWZzNDQ4NyIgLz4gIDxtZXRhZGF0YSAgICAgaWQ9Im1ldGFkYXRhNDQ5MCI+ICAgIDxyZGY6UkRGPiAgICAgIDxjYzpXb3JrICAgICAgICAgcmRmOmFib3V0PSIiPiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+ICAgICAgICA8ZGM6dHlwZSAgICAgICAgICAgcmRmOnJlc291cmNlPSJodHRwOi8vcHVybC5vcmcvZGMvZGNtaXR5cGUvU3RpbGxJbWFnZSIgLz4gICAgICAgIDxkYzp0aXRsZT48L2RjOnRpdGxlPiAgICAgIDwvY2M6V29yaz4gICAgPC9yZGY6UkRGPiAgPC9tZXRhZGF0YT4gIDxnICAgICB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLC0xMDMwLjM2MjIpIiAgICAgaWQ9ImxheWVyMSI+ICAgIDxnICAgICAgIHN0eWxlPSJvcGFjaXR5OjAuNSIgICAgICAgaWQ9ImcxNyIgICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAuNCw4NjYuMjQxMzQpIj4gICAgICA8cGF0aCAgICAgICAgIGlkPSJwYXRoMTkiICAgICAgICAgZD0ibSAtNTAuNSwxNzkuMSBjIC0yLjcsMCAtNC45LC0yLjIgLTQuOSwtNC45IDAsLTIuNyAyLjIsLTQuOSA0LjksLTQuOSAyLjcsMCA0LjksMi4yIDQuOSw0LjkgMCwyLjcgLTIuMiw0LjkgLTQuOSw0LjkgeiBtIDAsLTguOCBjIC0yLjIsMCAtMy45LDEuNyAtMy45LDMuOSAwLDIuMiAxLjcsMy45IDMuOSwzLjkgMi4yLDAgMy45LC0xLjcgMy45LC0zLjkgMCwtMi4yIC0xLjcsLTMuOSAtMy45LC0zLjkgeiIgICAgICAgICBjbGFzcz0ic3Q0IiAvPiAgICAgIDxyZWN0ICAgICAgICAgaWQ9InJlY3QyMSIgICAgICAgICBoZWlnaHQ9IjUiICAgICAgICAgd2lkdGg9IjAuODk5OTk5OTgiICAgICAgICAgY2xhc3M9InN0NCIgICAgICAgICB0cmFuc2Zvcm09Im1hdHJpeCgwLjY5NjQsLTAuNzE3NiwwLjcxNzYsMC42OTY0LC0xNDIuMzkzOCwyMS41MDE1KSIgICAgICAgICB5PSIxNzYuNjAwMDEiICAgICAgICAgeD0iLTQ2LjIwMDAwMSIgLz4gICAgPC9nPiAgPC9nPjwvc3ZnPg==)';
+            }
+        });
+
         @can('students-create')
         $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.export',['school'=> $schoolId]) : route('student.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Export")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Import")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.student.create',['school'=> $schoolId]) : route('student.create') }}">{{__("Add New")}}</a>')
         @endcan
@@ -196,7 +241,7 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
             if (currency_title == null || currency_title == "") {
                 document.getElementById("currency_title").focus();
                 $('#currency_title').parents('.form-group-data').append("<span class='error'>{{__('This field is required.')}}</span>");
-                error = true;             
+                error = true;
             }
 
 
@@ -205,7 +250,7 @@ Array.prototype.forEach.call(sendInviteButtons, function(button) {
             }else{
                 return true;
             }
-        } 
+        }
         $("#csv_import").validate({
             // Specify validation rules
             rules: {

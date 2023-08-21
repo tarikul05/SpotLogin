@@ -11,17 +11,21 @@ jQuery(document).ready(function($) {
 function successModalCall(title, desc = '') {
   $('#successModal').remove();
   var modalHtml = '';
-  modalHtml = `<div class="modal fade" id="successModal" name="successModal">
-        <div class="modal-dialog modal-dialog-centered mt-5">
-            <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
-                    <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
-                    <p style="font-size: 20px;">` + desc + `</p>
-                    <button type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>`;
+  modalHtml = `<div class="modal modal_parameter" id="successModal">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border:4px solid #97cc04;">
+          <div class="modal-body text-center">
+              <h1 class="text-success"><i class="fa-solid fa-check"></i></h1>
+              <h3 class="text-success">` + title + `</h3>
+              <p>` + desc + `</p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          </div>
+      </div>
+  </div>
+</div>
+`;
   $('body').append(modalHtml);
   $("#successModal").modal('show');
 }
@@ -32,7 +36,7 @@ function errorModalCall(title, desc = '') {
   modalHtml = `<div class="modal fade" id="errorModal" name="errorModal">
             <div class="modal-dialog modal-dialog-centered mt-5">
                 <div class="modal-content">
-                    <div class="modal-body text-center p-4">                    
+                    <div class="modal-body text-center p-4">
                         <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
                         <p style="font-size: 20px;">` + desc + `</p>
                         <button type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;">OK</button>
@@ -45,6 +49,8 @@ function errorModalCall(title, desc = '') {
   $("#errorModal").modal('show');
 }
 
+
+
 function GetAppMessage(appcode){
     var appmsg='';
     if (typeof(Storage) !== "undefined") {
@@ -53,7 +59,7 @@ function GetAppMessage(appcode){
                 appmsg=sessionStorage.getItem(appcode);
             }
         if ((appmsg == null)){
-            appmsg='';    
+            appmsg='';
         }
     } else {
         //undefined
@@ -78,35 +84,35 @@ function afficherHeureActuelle(myTimezone) {
     var heure = maintenant.format('HH');
     var minute = maintenant.format('mm');
     var seconde = maintenant.format('ss');
-  
+
     var heureActuelle = heure + ':' + minute; /*+ ':' + seconde;*/
     $('#currentTimer').text(heureActuelle);
-  
+
     setTimeout(function() {
       afficherHeureActuelle(myTimezone);
     }, 30000);
   }
 
 function confirmModalCall(title,function_name){
-    $('#confirmModal').remove();  
+    $('#confirmModal').remove();
     var modalHtml='';
-    
+
     var v_title='remove_title_text';
     var ok_btn_text='confirm_ok_btn';
     var cancel_btn_text='confirm_cancel_btn';
-    
+
     v_title = ((title == '') ? v_title : title);
     //ok_btn_text = ((ok_btn_text =='') ? 'Ok' : ok_btn_text);
     //cancel_btn_text = ((ok_btn_text =='') ? 'Cancel' : cancel_btn_text);
-    
+
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
         <div class="modal-dialog mt-5">
             <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
+                <div class="modal-body text-center p-4">
                     <h4 class="light-blue-txt gilroy-bold">`+v_title+`</h4>
-                    
+
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
                     <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
                 </div>
@@ -120,13 +126,13 @@ function confirmModalCall(title,function_name){
 
 
 function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true){
-    $('#confirmModal').remove();  
+    $('#confirmModal').remove();
     var modalHtml='';
-    
+
     var v_title='remove_title_text';
     var ok_btn_text='Confirm';
     var cancel_btn_text='Cancel';
-    
+
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
     if (p_event_id.length!=0) {
@@ -137,7 +143,7 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
         aria-labelledby="confirmModal" name="confirmModal">
         <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
+                <div class="modal-body text-center p-4">
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
                     <br>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
@@ -158,13 +164,13 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
 }
 
 function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_events){
-    $('#confirmModal').remove();  
+    $('#confirmModal').remove();
     var modalHtml='';
-    
+
     var v_title='remove_title_text';
     var ok_btn_text='Confirm';
     var cancel_btn_text='Cancel';
-    
+
     v_title = ((title == '') ? v_title : title);
     //var selected_ids = [];
     if (p_event_id.length!=0) {
@@ -175,7 +181,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
         aria-labelledby="confirmModal" name="confirmModal">
         <div class="modal-dialog modal-dialog-centered mt-5">
             <div class="modal-content">
-                <div class="modal-body text-center p-4">                    
+                <div class="modal-body text-center p-4">
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
                     <!--<div class="alert alert-info">
                     <p><i class="fa fa-info"></i> You can validate all events you see on the current view for the pasts events.</p>
@@ -200,11 +206,11 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
 
 
 function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
-    //$('#email_list_modal').hide();  
+    //$('#email_list_modal').hide();
     //var modalHtml='';
-    
+
     var v_title='remove_title_text';
-    
+
     v_title = ((title == '') ? v_title : title);
     var p_event_id = p_event_id;
     document.getElementById("p_school_id").value = p_school_id;
@@ -271,7 +277,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
                 $('#mother_email_cap').html('');
                 $("#mother_email_div").hide();
             }
-        
+
         }
 
     });
@@ -285,7 +291,7 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
         $("#student_email_div").hide();
     }
     //send email dialog -->
-   
+
     //$('body').append(modalHtml);
     $("#email_list_modal").modal('show');
 }
@@ -304,7 +310,7 @@ function getCookie(cname) {
         }
     }
     return "";
-} 
+}
 
 function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email,p_school_id=0){
     var emails='',email_cc='',email_bcc='',email_subject='',email_body='',data='';
@@ -314,7 +320,7 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email,p_
     $.ajax({
         url: BASE_URL + '/pay_reminder_email',
         data: 'type=fetch_email_inv_detail&template_code='+p_template_code+'&p_inv_auto_id='+p_inv_auto_id+'&p_inv_file='+p_inv_file+'&p_email='+p_email+'&p_school_id='+p_school_id,
-        type: 'POST',                     
+        type: 'POST',
         dataType: 'json',
         //async: false,
         beforeSend: function( xhr ) {
@@ -333,19 +339,19 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email,p_
             //     } else {
             //         emails=value.emails;
             //     }
-                
+
             //     client_name=value.client_name;
             //     invoice_filename=value.invoice_filename;
 			// });
         },   // sucess
-        error: function(ts) { 
+        error: function(ts) {
             $("#pageloader").hide();
             alert(ts.responseText+'sorry for the inconvenience caused.')
-            //alert(ts.responseText+' email template='+p_template_code) 
+            //alert(ts.responseText+' email template='+p_template_code)
         }
     });
-    
-    return true;    
+
+    return true;
 }   //END - SendInvoiceEmail
 
 /*

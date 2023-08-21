@@ -22,6 +22,7 @@ class EventCategory extends BaseModel
     protected $fillable = [
       'school_id',
       'title',
+      'bg_color_agenda',
       'invoiced_type',
       'package_invoice',
       's_std_pay_type', //0 = hrly, 1 = fixed, 2 = package
@@ -33,7 +34,7 @@ class EventCategory extends BaseModel
       'modified_by'
     ];
 
- 
+
 
     /**
      * The attributes that should be casted to native types.

@@ -870,7 +870,7 @@ span.no_select input {
 	float: right;
 	margin: 30px 10px 0px 10px;
 }
-
+/*
 div#add_lesson_success {
 	margin-top: 120px;
 }
@@ -889,7 +889,7 @@ div#add_lesson_success {
 div#addAgendaModal {
 	overflow-y: scroll;
 }
-
+*/
 h3#add_lesson_success {
 	text-align: center;
 	font-size: 18px;
@@ -1063,7 +1063,7 @@ button#save_btn_more i {
 		position: unset;
 		margin-top:0;
 	}
-	
+
 	input#search_text {
 		max-width: 68%;
 		float: left;
@@ -2392,7 +2392,7 @@ text-align: center;
 }
 
 .card {
-	box-shadow: 0px 10px 5px -10px #111; 
+	box-shadow: 0px 10px 5px -10px #111;
 }
 
 @media only screen and (max-width: 767px) {
@@ -2407,7 +2407,7 @@ text-align: center;
 		display: none;
 		z-index: 9999;
 	}
-	
+
 	.custom-collapse.show {
 		display: flex;
 		flex-direction: column;
@@ -2416,11 +2416,11 @@ text-align: center;
 		background-color: #152245; /* Couleur de fond du menu */
 		animation: fadeIn 0.3s ease;
 	}
-	
+
 	.custom-collapse.hide {
 		animation: fadeOut 0.3s ease forwards;
 	}
-	
+
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -2429,7 +2429,7 @@ text-align: center;
 			opacity: 1;
 		}
 	}
-	
+
 	@keyframes fadeOut {
 		from {
 			opacity: 1;
@@ -2561,7 +2561,7 @@ text-align: center;
         width: 100%;
     }
 
-   
+
 
     .user-area {
         display: inline-block;

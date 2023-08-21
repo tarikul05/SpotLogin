@@ -46,10 +46,20 @@
                                         <div class="form-group row">
                                             <div class="col-sm-11 pt-2">
                                                 <input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
-                                                <input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <input class="form-control category_name" name="category[{{$count}}][name]" placeholder="{{ __('Category Name') }}" value="<?= $cat->title; ?>" type="text">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <div class="form-group ml-1" style="padding-left:10px;">
+                                                            <input type="text" name="category[{{$count}}][bg_color_agenda]" value="{{!empty($cat->bg_color_agenda) ? $cat->bg_color_agenda : old('bg_color_agenda')}}"  class="colorpicker dot category_bg_color_agenda" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                                     <div class="col-md-8 col-6">
                                         <div class="form-group row invoice_part">
@@ -61,7 +71,7 @@
 												<div>
                                                 	<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
                                                 </div>
-                                                
+
 												<div>
 													<input type="radio" class="invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
 												</div>
@@ -140,7 +150,7 @@
                                 </div>
                             @php $count++; endforeach @endphp
                         </div>
-                       
+
                     </div>
 
                 </div>
@@ -193,7 +203,7 @@
 
                 </div>
             </div>
-			
+
             <!-- End Tabs content -->
             <!-- Tabs content -->
             <div id="tab_inner_part3" class="tab_inner tab-pane tab-content">
@@ -245,7 +255,7 @@
 		</div>
 	</div>
 
-	
+
 	@can('parameters-create-udpate')
 	<div class="col-lg-2 btn_actions" style="position:fixed; right:0; z-index:9999;">
 		<br><br><p></p>
@@ -266,6 +276,32 @@
 
 <script type="text/javascript">
 
+$(document).ready(function() {
+    $('.colorpicker').each(function() {
+        var colorValue = $(this).val() || "{{ old('bg_color_agenda') }}";
+        $(this).wheelColorPicker({
+            sliders: "whsvp",
+            preview: true,
+            format: "css"
+        }).wheelColorPicker('value', colorValue);
+        console.log('couleur', colorValue)
+    });
+});
+
+$(document).ready(function(){
+    $('.colorpicker').on('colorpickerChange', function(event) {
+        $(this).val(event.color.toString());
+        console.log('new color', event.color.toString())
+    });
+});
+
+function initializeColorpicker(element) {
+    element.wheelColorPicker({
+        sliders: "whsvp",
+        preview: true,
+        format: "css"
+    });
+}
 
 $(document).ready(function(){
 	$(document).on('click','#add_more_event_category_btn',function(){
@@ -277,7 +313,16 @@ $(document).ready(function(){
 				<span class="badge bg-info">new</span>
 				<div class="form-group row">
 					<div class="col-sm-11 pt-2">
+                        <div class="row">
+                            <div class="col-lg-9">
 						<input class="form-control category_name" name="category[`+lst_id+`][name]" placeholder="Category Name" type="text">
+                        </div>
+                        <div class="col-lg-3">
+                        <div class="form-group ml-1" style="padding-left:10px;">
+                            <input type="text" name="category[`+lst_id+`][bg_color_agenda]"  class="colorpicker dot category_bg_color_agenda" />
+                        </div>
+                    </div>
+                    </div>
 					</div>
 				</div>
 			</div>
@@ -296,7 +341,7 @@ $(document).ready(function(){
 						  <input class="invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
 					   </div>
                        @endif
-                    </div>   
+                    </div>
 					<div class="col-sm-8">
 						<div class="pack_invoice_area student form-group row">
 							@if(!$AppUI->isTeacherAdmin())
@@ -368,6 +413,9 @@ $(document).ready(function(){
 		</div>`;
 
 		$("#add_more_event_category_div").append(resultHtml);
+
+        initializeColorpicker($("#add_more_event_category_div .colorpicker").last());
+
 		window.scrollTo(0, document.body.scrollHeight);
 	})
 	$(document).on('click','.delete_event',function(){
@@ -653,10 +701,10 @@ $(document).ready(function(){
 		var type = $(this).val();
 		if(type == 'T'){
 			$(this).closest(".invoice_part").find('.pack_invoice_area.student').hide();
-			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').show();	
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').show();
 		}else if(type == 'S'){
-			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').hide();	
-			$(this).closest(".invoice_part").find('.pack_invoice_area.student').show();	
+			$(this).closest(".invoice_part").find('.pack_invoice_area.teacher').hide();
+			$(this).closest(".invoice_part").find('.pack_invoice_area.student').show();
 		}
 	});
 
