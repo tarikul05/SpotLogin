@@ -91,7 +91,7 @@
 									@endif
 									<div class="col-sm-7">
 										@if($AppUI->isTeacherAdmin())
-											<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+											<input type="hidden" name="teacher_select" class="form-control" value="{{ $lessonData->teacher_id; }}" readonly>
 										@else
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
@@ -129,7 +129,7 @@
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
-													<i class="fa fa-calendar"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
 										</div>
@@ -137,7 +137,7 @@
 											<div class="input-group">
 												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{!empty($lessonData->start_time) ? old('start_time', $lessonData->start_time) : old('start_time')}}">
 												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
 										</div>
@@ -150,7 +150,7 @@
 											<div class="input-group" id="end_date_div">
 												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off" readonly>
 												<span class="input-group-addon">
-													<i class="fa fa-calendar"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
 										</div>
@@ -158,14 +158,14 @@
 											<div class="input-group">
 												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
 												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} <small>(minutes)</small> :</label>
 									<div class="col-sm-2">
 										<div class="input-group">
 											<input id="duration" name="duration" type="text" class="form-control" value="{{!empty($lessonData->duration_minutes) ? old('duration', $lessonData->duration_minutes) : old('duration')}}">
@@ -224,7 +224,7 @@
 								<div id="price_per_student" style="display:none;">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
-									<div class="col-sm-7">
+									<div class="col-sm-4">
 										<div class="selectdiv">
 											<select class="form-control" id="sprice_currency" name="sprice_currency">
 												@foreach($currency as $key => $curr)
@@ -235,25 +235,25 @@
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>
+									<!--<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per class)') }} :</label>-->
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_buy_div">
-											<span class="input-group-addon">
+											<!--<span class="input-group-addon">
 												<i class="fa fa-calendar1"></i>
-											</span>
-											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+											</span>-->
+											<input id="sprice_amount_buy" name="sprice_amount_buy" type="hidden" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
 										</div>
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student /hour)') }} :</label>
+									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
 										<div class="input-group" id="sprice_amount_sell_div">
 											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
+												<i class="fa-solid fa-arrow-right"></i>
 											</span>
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
-										</div>
+                                        </div>
 									</div>
 								</div>
 								</div>
@@ -359,11 +359,11 @@ $( document ).ready(function() {
 			$('#sprice_amount_buy').prop('disabled', false);
 		}
 		if(s_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}else if(s_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);
+			//$('#sprice_amount_sell').prop('disabled', false);
 		}else if(s_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}
 
     }else{
@@ -375,11 +375,11 @@ $( document ).ready(function() {
 			$('#sprice_amount_buy').prop('disabled', false);
 		}
 		if(t_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}else if(t_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);
+			//$('#sprice_amount_sell').prop('disabled', false);
 		}else if(t_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}
     }
 
@@ -391,8 +391,9 @@ $( document ).ready(function() {
 		$('#price_per_student').show();
 	}
 
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
+	//$('#sprice_amount_buy').val(0);
+	//$('#sprice_amount_sell').val(0);
+
 	if(s_thr_pay_type == 0){
 		$('#hourly').show();
         $('#price_per_student').hide();
@@ -446,6 +447,7 @@ $( document ).ready(function() {
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 			}
+            getLatestPrice()
 		}
 
 	function recalculate_end_time(start_value, duration) {
@@ -536,8 +538,8 @@ $( document ).ready(function() {
 $('#sis_paying').on('change', function() {
 	$('#hourly').hide();
 	$('#price_per_student').hide();
-	$('#sprice_amount_buy').val(0);
-	$('#sprice_amount_sell').val(0);
+	//$('#sprice_amount_buy').val(0);
+	//$('#sprice_amount_sell').val(0);
 	if(this.value == 1){
 		$('#hourly').show();
 	}else if(this.value == 2){
@@ -639,11 +641,11 @@ $("body").on('change', '#category_select', function(event) {
 			$('#sprice_amount_buy').prop('disabled', false);
 		}
 		if(s_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}else if(s_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);
+			//$('#sprice_amount_sell').prop('disabled', false);
 		}else if(s_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}
 	}else{
 		$("#sis_paying").val(s_thr_pay_type);
@@ -659,11 +661,11 @@ $("body").on('change', '#category_select', function(event) {
 		}
 
 		if(t_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}else if(t_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);
+			//$('#sprice_amount_sell').prop('disabled', false);
 		}else if(t_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);
+			//$('#sprice_amount_sell').prop('disabled', true);
 		}
 	}
 	if(s_thr_pay_type == 0){
@@ -719,6 +721,7 @@ $("#student, #teacher_select").on('change', function(event) {
 	        "value": stdSelected,
 	    });
 
+
 	    //if (categoryId > 0 && teacherSelect > 0) {
 	        $.ajax({
 	            url: BASE_URL + '/check-lesson-price',
@@ -733,11 +736,15 @@ $("#student, #teacher_select").on('change', function(event) {
 	                        $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
 	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
 
-                            console.log('new price', response.lessonPriceTeacher['price_sell'])
+                            console.log('new price',  response.lessonPriceTeacher['price_sell']);
+                            var newDuration = $("#duration").val();
+
+                            var $sellPriceCal = (response.lessonPriceTeacher['price_sell']*(newDuration/60));
+
                             var inputElem = document.getElementById('sprice_amount_sell');
                             if(inputElem) {
                                 inputElem.removeAttribute('disabled');
-                                inputElem.value = response.lessonPriceTeacher['price_sell'];
+                                inputElem.value = $sellPriceCal;
                                 inputElem.setAttribute('disabled', 'disabled');
                             }
 
@@ -786,6 +793,22 @@ $( document ).ready(function() {
 		}
 	});
 
+
+    document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+        var priceAmountSell = @json($lessonData ? $lessonData->price_amount_sell : null);
+        console.log('price', priceAmountSell);
+
+        var inputElem = document.getElementById('sprice_amount_sell');
+        if(inputElem) {
+            inputElem.removeAttribute('disabled');
+            inputElem.value = priceAmountSell;
+           // inputElem.setAttribute('disabled', 'disabled');
+        } else {
+            console.error('Element #sprice_amount_sell not found');
+        }
+    }, 1500); // 4000 millisecondes = 4 secondes
+});
 
 </script>
 @endsection

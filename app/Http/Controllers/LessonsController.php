@@ -371,6 +371,7 @@ class LessonsController extends Controller
 
                 $lessonData['sprice_amount_buy'] = isset($lessonData['sprice_amount_buy']) ? $lessonData['sprice_amount_buy'] : 0;
                 $lessonData['sprice_amount_sell'] = isset($lessonData['sprice_amount_sell']) ? $lessonData['sprice_amount_sell'] : 0;
+
                 $start_date = str_replace('/', '-', $lessonData['start_date']).' '.$lessonData['start_time'];
                 $end_date = str_replace('/', '-', $lessonData['end_date']).' '.$lessonData['end_time'];
                 $start_date = date('Y-m-d H:i:s',strtotime($start_date));
@@ -392,6 +393,8 @@ class LessonsController extends Controller
 
                 $sellPriceCal = ($eventPrice['price_sell']*($lessonData['duration']/60));
 
+
+
                 if($lessonData['sis_paying'] == 1 && $lessonData['student_sis_paying'] == 1 ){
                    $attendBuyPrice = ($lessonData['sprice_amount_buy']*($lessonData['duration']/60))/$studentCount;
                    $attendSellPrice = $lessonData['sprice_amount_sell'];
@@ -407,6 +410,8 @@ class LessonsController extends Controller
                 if (isset($eventCategory->t_std_pay_type) && $eventCategory->t_std_pay_type == 1) {
                      $attendSellPrice = $lessonData['sprice_amount_sell']*($lessonData['duration']/60);
                 }
+
+
 
                 // fix 2 decimal value
                 $attendSellPrice = round($attendSellPrice,2);
@@ -431,6 +436,8 @@ class LessonsController extends Controller
                     'is_paying' => $lessonData['sis_paying'],
                     'student_is_paying' => $lessonData['student_sis_paying'],
                 ];
+
+                //dd($data);
 
                 $event = Event::create($data);
                 if (!empty($lessonData['student'])) {

@@ -34,9 +34,9 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Lesson') }}</label>
 					</div>
-				</div>    
-			</div>          
-	
+				</div>
+			</div>
+
 		<!-- Tabs navs -->
 
 		<nav style="margin-bottom:0; padding-bottom:0;">
@@ -55,7 +55,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-	
+
 					@csrf
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
@@ -95,7 +95,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($lessonData->title) ? old('title', $lessonData->title) : old('title')}}">
 										</div>
 									</div>
@@ -106,7 +106,7 @@
 									@endif
 									@if($AppUI->isTeacherAdmin())
 										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
-									@else	
+									@else
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
@@ -125,7 +125,7 @@
 										<div class="selectdiv student_list">
 											<select class="form-control" id="student" name="student[]" multiple="multiple">
 												@foreach($students as $sub)
-													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach> 
+													<option value="{{ $sub->student_id }}"  @foreach($studentOffList as $sublist){{$sublist->student_id == $sub->student_id ? 'selected': ''}}   @endforeach>
 														@php
 														$student = App\Models\Student::find($sub->student_id);
 														@endphp
@@ -144,52 +144,52 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="start_date_div"> 
+											<div class="input-group" id="start_date_div">
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 										<div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{date('H:i', strtotime($date_start))}}">
 												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="end_date_div"> 
+											<div class="input-group" id="end_date_div">
 												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off" readonly>
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 										<div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{!empty($lessonData->end_time) ? old('end_time', $lessonData->end_time) : old('end_time')}}">
 												<span class="input-group-addon">
-													<i class="fa fa-clock-o"></i>
+													<i class="fa-solid fa-clock"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 									</div>
 								</div>
 								<div class="form-group row not-allday">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Duration') }} :</label>
 									<div class="col-sm-2">
-										<div class="input-group"> 
+										<div class="input-group">
 											<input id="duration" name="duration" type="text" class="form-control" value="{{!empty($lessonData->duration_minutes) ? old('duration', $lessonData->duration_minutes) : old('duration')}}">
 										</div>
-									</div>		
+									</div>
 								</div>
 								<!-- <div class="form-group row">
 									<div id="all_day_div111" class="row">
@@ -222,7 +222,7 @@
 										</div>
 									</div>
 								</div>
-								
+
 								<div class="form-group row" id="hourly" style="display:none">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
 									<div class="col-sm-7">
@@ -234,7 +234,7 @@
 														Private Group
 													@else
 														Group lessons for {{ $lessprice->divider }} students
-													@endif	
+													@endif
 													</option>
 												@endforeach
 											</select>
@@ -245,7 +245,7 @@
 								<div id="price_per_student">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Currency') }} :</label>
-									<div class="col-sm-7">
+									<div class="col-sm-4">
 										<div class="selectdiv">
 											<select class="form-control" id="sprice_currency" name="sprice_currency" readonly>
 												@foreach($currency as $key => $curr)
@@ -260,10 +260,10 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (class/hour)') }} :</label>
 									@endif
 									<div class="col-sm-4">
-										<div class="input-group" id="sprice_amount_buy_div"> 
+										<div class="input-group" id="sprice_amount_buy_div">
 											@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
+												<i class="fa-solid fa-arrow-right"></i>
 											</span>
 											<input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{ isset($lessonData['price_amount_buy']) && !empty($lessonData['price_amount_buy']) ? $lessonData['price_amount_buy'] : 0 }}" autocomplete="off">
 											@else
@@ -275,9 +275,9 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (student/hour)') }} :</label>
 									<div class="col-sm-4">
-										<div class="input-group" id="sprice_amount_sell_div"> 
+										<div class="input-group" id="sprice_amount_sell_div">
 											<span class="input-group-addon">
-												<i class="fa fa-calendar1"></i>
+												<i class="fa-solid fa-arrow-right"></i>
 											</span>
 											<input id="sprice_amount_sell" name="sprice_amount_sell" type="text" class="form-control" value="{{ isset($lessonData['price_amount_sell']) && !empty($lessonData['price_amount_sell']) ? $lessonData['price_amount_sell'] : 0 }}" autocomplete="off">
 										</div>
@@ -302,7 +302,7 @@
 																	<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left">
-																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
+																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>
 																</th>
 																@if($showPrice)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
@@ -315,7 +315,7 @@
 																	</th>
 																@endif
 															</tr>
-															
+
 															@foreach($studentOffList as $student)
 															<tr>
 																<!--<td>{{ $student->student_id }}</td>-->
@@ -340,9 +340,9 @@
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->buy_price) ? $relationData->buy_price: 0  }}</td>
 																@else
-																
+
 																@endif
-																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} {{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</td>
+																	<td style="text-align:right">{{ isset($lessonData->price_currency) && !empty($lessonData->price_currency) ? $lessonData->price_currency : '' }} <span class="priceByStudent">{{ isset($relationData->sell_price) ? $relationData->sell_price : 0 }}</span></td>
 																@endif
 															</tr>
 															@endforeach
@@ -371,7 +371,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($lessonData->description) ? old('description', $lessonData->description) : old('description')}}</textarea>
 										</div>
 									</div>
@@ -416,10 +416,10 @@
 							@endif
 						</div>
 					</div>
-				
+
 					<button id="save_btn" class="btn btn-theme-success w-100 mb-1">{{ __('Save') }}</button>
 					<button id="save_btn_more" class="btn btn-theme-success w-100 mb-1">{{ __('Save & add more') }}</button>
-				
+
 					<div class="d-none d-sm-block">
 						@if(strtotime($date_end) < strtotime($current_time))
 						<div id="button_lock_and_save_div" class="alert alert-info mt-5 text-center" role="alert">
@@ -461,9 +461,9 @@ $(function() {
 		todayBtn:false,
 	});
 
-	$('#start_date').on('change', function(e){  
-		$("#end_date").val($("#start_date").val());  
-	});	
+	$('#start_date').on('change', function(e){
+		$("#end_date").val($("#start_date").val());
+	});
 });
 
 $('#student').multiselect({
@@ -473,14 +473,14 @@ $('#student').multiselect({
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
-	
+
 	if (cnt >= 10) {
 		document.getElementById("sevent_price").value='price_10';
 	}else{
 		document.getElementById("sevent_price").value='price_'+cnt;
 	}
-		
-	 
+
+
 })
 
 $( document ).ready(function() {
@@ -498,35 +498,35 @@ $( document ).ready(function() {
         $("#sis_paying").val(s_thr_pay_type);
         $("#teacher_type_billing").show();
 		if(s_thr_pay_type == 0){
-			$('#sprice_amount_buy').prop('disabled', true);   
+			$('#sprice_amount_buy').prop('disabled', true);
 		}else if(s_thr_pay_type == 1){
-			$('#sprice_amount_buy').prop('disabled', false);  
+			$('#sprice_amount_buy').prop('disabled', false);
 		}
 		if(s_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);   
+			$('#sprice_amount_sell').prop('disabled', true);
 		}else if(s_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);  
+			$('#sprice_amount_sell').prop('disabled', false);
 		}else if(s_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);  
+			$('#sprice_amount_sell').prop('disabled', true);
 		}
 
     }else{
         $("#teacher_type_billing").hide();
         $("#student_sis_paying").val(t_std_pay_type);
 		if(s_thr_pay_type == 0){
-			$('#sprice_amount_buy').prop('disabled', true);   
+			$('#sprice_amount_buy').prop('disabled', true);
 		}else if(s_thr_pay_type == 1){
-			$('#sprice_amount_buy').prop('disabled', false);  
+			$('#sprice_amount_buy').prop('disabled', false);
 		}
 		if(t_std_pay_type == 0){
-			$('#sprice_amount_sell').prop('disabled', true);   
+			$('#sprice_amount_sell').prop('disabled', true);
 		}else if(t_std_pay_type == 1){
-			$('#sprice_amount_sell').prop('disabled', false);  
+			$('#sprice_amount_sell').prop('disabled', false);
 		}else if(t_std_pay_type == 2){
-			$('#sprice_amount_sell').prop('disabled', true);  
+			$('#sprice_amount_sell').prop('disabled', true);
 		}
     }
-	
+
 	if(s_thr_pay_type == 0){
 		$('#hourly').show();
         $('#price_per_student').show();
@@ -569,12 +569,12 @@ $( document ).ready(function() {
 		}
 	});
 
-	
+
 	function CalcDuration(){
 		var el_start = $('#start_time'),
 		el_end = $('#end_time'),
 		el_duration = $('#duration');
-		
+
 			if (el_end.val() < el_start.val()) {
 				$('#end_time').val(recalculate_end_time(el_start.val(),15));
 				el_duration.val(recalculate_duration(el_start.val(), $('#end_time').val()));
@@ -582,6 +582,7 @@ $( document ).ready(function() {
 			else{
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 			}
+            getLatestPrice()
 		}
 
 	function recalculate_end_time(start_value, duration) {
@@ -590,7 +591,7 @@ $( document ).ready(function() {
 				start_hours_number = parseInt((start_minutes / 60).toString(), 10),
 				start_hours = start_hours_number;
 				if (start_hours > 23) {start_hours = start_hours - 24;}
-				return string_right('00' + start_hours.toString(), 2) + ':' + string_right('00' + (start_minutes - (start_hours_number * 60)).toString(), 2); 
+				return string_right('00' + start_hours.toString(), 2) + ':' + string_right('00' + (start_minutes - (start_hours_number * 60)).toString(), 2);
 		}
 		return 0;
 	}
@@ -639,7 +640,7 @@ $( document ).ready(function() {
 		return re.test(s_hours);
 	}
 
-	$('#start_time, #end_time, #duration').on('change', function(e){  
+	$('#start_time, #end_time, #duration').on('change', function(e){
 	var event_source = $(this).attr('id');
 	var el_duration = $('#duration');
 	if (event_source === 'start_time'){
@@ -650,11 +651,11 @@ $( document ).ready(function() {
 	var el_start = $('#start_time'),
 		el_end = $('#end_time');
 
-		if (event_source === 'end_time' || event_source === 'start_time') {	
+		if (event_source === 'end_time' || event_source === 'start_time') {
 			if (el_end.val() < el_start.val()) {
 				$('#end_time').val(el_start.val());
-			};		
-			el_duration.val(recalculate_duration(el_start.val(), el_end.val())); 
+			};
+			el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
 		} else {
 			if (!(parseInt(el_duration.val(), 10) == el_duration.val())) {
 				el_duration.val(20);
@@ -664,7 +665,7 @@ $( document ).ready(function() {
 					el_duration.val(((60*24) - 1));
 				}
 				$('#end_time').val(recalculate_end_time(el_start.val(), el_duration.val()));
-			}        
+			}
 		}
 	});
 })
@@ -689,7 +690,7 @@ $('.student_attn').change(function (e) {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	
+
 	$.ajax({
 		url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$lessonlId}}',
 		data: { type:1, stuId:stuId, typeId:typeId },
@@ -698,21 +699,21 @@ $('.student_attn').change(function (e) {
 		beforeSend: function( xhr ) {
 			$("#pageloader").fadeIn();
 		},
-		success: function(response){	
+		success: function(response){
 			if(response.status == 1){
 				$("#pageloader").fadeOut();
 			}
 		},
 		complete: function( xhr ) {
-			
+
 		},
-		error: function (ts) { 
+		error: function (ts) {
 				$("#pageloader").fadeOut();
                 ts.responseText+'-'+errorModalCall('{{ __("Lesson validation error ")}}');
             }
 	})
-			            
-}); 
+
+});
 
 
 // save functionality
@@ -720,16 +721,16 @@ $('#mark_present_btn').click(function (e) {
 	//if (confirm("Mark all student as present ?")) {
 		var data = [];
 		$('.student_attn').val('200');
-		$('.student_attn').each(function(){ 
+		$('.student_attn').each(function(){
 			data.push({stuId : $(this).attr('data-id'), typeId : 200 })
-		});	
-		
+		});
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		
+
 		$.ajax({
 			url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$lessonlId}}',
 			data: { type:2, data:data },
@@ -738,9 +739,9 @@ $('#mark_present_btn').click(function (e) {
 			beforeSend: function( xhr ) {
 				$("#pageloader").show();
 			},
-			success: function(response){	
+			success: function(response){
 				if(response.status == 1){
-					
+
 				}
 			},
 			complete: function( xhr ) {
@@ -748,8 +749,8 @@ $('#mark_present_btn').click(function (e) {
 			}
 		})
 	//}
-			            
-}); 
+
+});
 
 $("body").on('click', '#all_day', function(event) {
     if ($(this).prop('checked')) {
@@ -773,7 +774,7 @@ $('#edit_lesson').on('submit', function() {
 	var emptyStdchecked = $("#student_empty").prop('checked');
 
 	var errMssg = '';
-	
+
 	// if(title == ''){
 	// 	var errMssg = 'Title required';
 	// 	$('#Title').addClass('error');
@@ -820,7 +821,7 @@ $('#edit_lesson').on('submit', function() {
 	if(errMssg == ""){
 		return true;
 	}else{
-		return false;	
+		return false;
 	}
 
 });
@@ -837,7 +838,7 @@ $('#edit_lesson').on('submit', function() {
 					window.location.href = BASE_URL+'/agenda';
 				}
 			},   //success
-			error: function(ts) { 
+			error: function(ts) {
 				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
 			}
 		}); //ajax-type
@@ -861,7 +862,7 @@ $('#edit_lesson').on('submit', function() {
 		var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
 		var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
 		var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
-		
+
 		if (datainvoiced == 'S') {
 			if (s_std_pay_type == 2) {
 	            $("#std-check-div").css('display', 'block');
@@ -873,18 +874,18 @@ $('#edit_lesson').on('submit', function() {
 			$("#sis_paying").val(s_thr_pay_type);
 
 			if(s_thr_pay_type == 0){
-				$('#sprice_amount_buy').prop('disabled', true);   
+				$('#sprice_amount_buy').prop('disabled', true);
 			}else if(s_thr_pay_type == 1){
-				$('#sprice_amount_buy').prop('disabled', false);  
+				$('#sprice_amount_buy').prop('disabled', false);
 			}
 			if(s_std_pay_type == 0){
-				$('#sprice_amount_sell').prop('disabled', true);   
+				$('#sprice_amount_sell').prop('disabled', true);
 			}else if(s_std_pay_type == 1){
-				$('#sprice_amount_sell').prop('disabled', false);  
+				$('#sprice_amount_sell').prop('disabled', false);
 			}else if(s_std_pay_type == 2){
-				$('#sprice_amount_sell').prop('disabled', true);  
+				$('#sprice_amount_sell').prop('disabled', true);
 			}
-			
+
 		}else{
 			$("#sis_paying").val(s_thr_pay_type);
 			$("#student_sis_paying").val(t_std_pay_type);
@@ -893,17 +894,17 @@ $('#edit_lesson').on('submit', function() {
 			$("#student_empty").prop('checked', false);
 
 			if(s_thr_pay_type == 0){
-				$('#sprice_amount_buy').prop('disabled', true);   
+				$('#sprice_amount_buy').prop('disabled', true);
 			}else if(s_thr_pay_type == 1){
-				$('#sprice_amount_buy').prop('disabled', false);  
+				$('#sprice_amount_buy').prop('disabled', false);
 			}
 
 			if(t_std_pay_type == 0){
-				$('#sprice_amount_sell').prop('disabled', true);   
+				$('#sprice_amount_sell').prop('disabled', true);
 			}else if(t_std_pay_type == 1){
-				$('#sprice_amount_sell').prop('disabled', false);  
+				$('#sprice_amount_sell').prop('disabled', false);
 			}else if(t_std_pay_type == 2){
-				$('#sprice_amount_sell').prop('disabled', true);  
+				$('#sprice_amount_sell').prop('disabled', true);
 			}
 		}
 		if(s_thr_pay_type == 0){
@@ -913,14 +914,14 @@ $('#edit_lesson').on('submit', function() {
 			$('#hourly').hide();
 			$('#price_per_student').show();
 		}
-		
+
 
 		var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
 	    var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
 	    var isTeacher = +"{{$AppUI->isTeacher()}}";
 
 	    if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-	        $("#price_per_student").show(); 
+	        $("#price_per_student").show();
 	    }else{
 	        $("#price_per_student").hide();
 	    }
@@ -957,16 +958,16 @@ $("#student, #teacher_select").on('change', function(event) {
 	        "name": "no_of_students",
 	        "value": stdSelected,
 	    });
-	    
-	    if (categoryId > 0 && teacherSelect > 0) {
+
+	    //if (categoryId > 0 && teacherSelect > 0) {
 	        $.ajax({
-	            url: BASE_URL + '/check-lesson-fixed-price',
-	            async: false, 
+	            url: BASE_URL + '/check-lesson-price',
+	            async: false,
 	            data: formData,
 	            type: 'POST',
 	            dataType: 'json',
 	            success: function(response){
-	                if(response.status == 1){
+	                /*if(response.status == 1){
 	                    if (response.data) {
 	                        $("#sprice_amount_buy").val(response.data.price_buy)
 	                        @if(isset($lessonData->eventcategory->t_std_pay_type) && $lessonData->eventcategory->t_std_pay_type == 1)
@@ -974,21 +975,40 @@ $("#student, #teacher_select").on('change', function(event) {
 	                        $("#sprice_amount_sell").val(response.data.price_sell)
 	                        @endif
 	                    }
-	                }
+	                }*/
+                    if (response.status == 1) {
+	                        $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
+	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
+
+                            console.log('new price',  response.lessonPriceTeacher['price_sell']);
+                            var newDuration = $("#duration").val();
+
+                            var $sellPriceCal = (response.lessonPriceTeacher['price_sell']*(newDuration/60));
+
+                            var inputElem = document.getElementById('sprice_amount_sell');
+                            if(inputElem) {
+                                inputElem.removeAttribute('disabled');
+                                inputElem.value = $sellPriceCal;
+                                inputElem.setAttribute('disabled', 'disabled');
+                            }
+                            $(".priceByStudent").text($sellPriceCal);
+
+
+	                    }
 	            }
 	        })
-	    }
-	    
+	    //}
+
 	}
 
-	
+
 	$("body").on('click', '#student_empty', function(event) {
 		if ($("#student_empty").prop('checked')) {
 			$('#student').multiselect( 'reset' );
 			$('#student').multiselect( 'disable', true );
 		}else{
 			$('#student').multiselect( 'disable', false );
-		}	
+		}
 	})
 
 	$( document ).ready(function() {
@@ -1004,7 +1024,7 @@ $("#student, #teacher_select").on('change', function(event) {
 		});
 	});
 
-	$(window).scroll(function() {    
+	$(window).scroll(function() {
 		var scroll = $(window).scrollTop();
 		if (scroll >= 80) {
 				$("#edit_lesson .btn_area").addClass("btn_area_fixed");
