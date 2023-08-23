@@ -31,7 +31,7 @@ class Currency extends BaseModel
       'modified_by'
     ];
 
- 
+
 
     /**
      * The attributes that should be casted to native types.
@@ -63,17 +63,23 @@ class Currency extends BaseModel
         return $query->where('country_code', $code);
     }
 
-    public function getCurrencyByCountry($code,$isArry=false)
+    public function getCurrencyByCountry($code, $isArry=false)
     {
-        $currency = self::active()->where('country_code', $code)->get();
-        
-        if (count($currency) == 0) {
-            $currency = self::active()->where('country_code', 'US')->get();
+        if ($isArry) {
+            $currency = self::active()->where('country_code', $code)->get();
+
+            if ($currency->isEmpty()) {
+                $currency = self::active()->where('country_code', 'US')->get();
+            }
+            return $currency->toArray();
+        } else {
+            $currency = self::active()->where('country_code', $code)->first();
+
+            if (!$currency) {
+                $currency = self::active()->where('country_code', 'US')->first();
+            }
+            return $currency;
         }
-        if (!$isArry) {
-            $currency = $currency[0];
-        }
-        return $currency;
     }
 
 }
