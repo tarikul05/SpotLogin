@@ -13,10 +13,10 @@ class CurrencyTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('currencies')->delete();
-        
+        \DB::table('cd sp')->delete();
+
         \DB::table('currencies')->insert(array (
-            0 => 
+            0 =>
             array (
                 'currency_code' => 'AUD',
                 'name' => 'AUD',
@@ -26,7 +26,7 @@ class CurrencyTableSeeder extends Seeder
                 'is_active' => 1,
                 'created_at' => now(),
             ),
-            1 => 
+            1 =>
             array (
               'currency_code' => 'CAD',
               'name' => 'CAD',
@@ -36,7 +36,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            2 => 
+            2 =>
             array (
               'currency_code' => 'CHF',
               'name' => 'CHF',
@@ -46,7 +46,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            3 => 
+            3 =>
             array (
               'currency_code' => 'CNY',
               'name' => 'CNY',
@@ -56,7 +56,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            4 => 
+            4 =>
             array (
               'currency_code' => 'CZK',
               'name' => 'CZK',
@@ -66,7 +66,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            5 => 
+            5 =>
             array (
               'currency_code' => 'DEM',
               'name' => 'DEM',
@@ -76,7 +76,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            6 => 
+            6 =>
             array (
               'currency_code' => 'DKK',
               'name' => 'DKK',
@@ -86,7 +86,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            7 => 
+            7 =>
             array (
               'currency_code' => 'EUR',
               'name' => 'EUR',
@@ -96,7 +96,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            8 => 
+            8 =>
             array (
               'currency_code' => 'GBP',
               'name' => 'GBP',
@@ -106,7 +106,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            9 => 
+            9 =>
             array (
               'currency_code' => 'JPY',
               'name' => 'JPY',
@@ -116,7 +116,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            10 => 
+            10 =>
             array (
               'currency_code' => 'RON',
               'name' => 'RON',
@@ -126,7 +126,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            11 => 
+            11 =>
             array (
               'currency_code' => 'RUB',
               'name' => 'RUB',
@@ -136,7 +136,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            12 => 
+            12 =>
             array (
               'currency_code' => 'SGD',
               'name' => 'SGD',
@@ -146,7 +146,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            13 => 
+            13 =>
             array (
               'currency_code' => 'TRY',
               'name' => 'TRY',
@@ -156,7 +156,7 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            14 => 
+            14 =>
             array (
               'currency_code' => 'USD',
               'name' => 'USD',
@@ -166,9 +166,9 @@ class CurrencyTableSeeder extends Seeder
               'is_active' => 1,
               'created_at' => now(),
             ),
-            
+
         ));
-        
-        
+
+
     }
 }
