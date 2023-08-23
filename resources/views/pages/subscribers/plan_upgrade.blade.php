@@ -19,9 +19,13 @@
                     <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
                 </div>
                 <div class="payment-form card_payment">
-                    
+
                     <form action="{{ route('subscribe.storeUpgradePlan') }}" method="post" id="payment-form-sub">
                         @csrf
+                        <div class="form-group">
+                            <label for="coupon_code">Coupon Code</label>
+                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter Coupon Code">
+                        </div>
                         <div class="form-group">
                             <!-- <label for="card_holder_name">Card holder</label> -->
                             <input type="hidden" name="price_duration" value="{{ $single_plan_info['id'] }}" />
@@ -31,7 +35,7 @@
                         <div class="ex_card_info">
                             <?php $i = 0;
                             foreach ($payment_methods as $payment_method) {
-                                $i++; 
+                                $i++;
                               if($i == 1){
                                 $checked = 'checked';
                               }else{
@@ -69,7 +73,7 @@
                                       <!-- <input data-stripe="cvc" name="" type="input" class="form-control" id="cvv" placeholder="123"> -->
                                   </div>
                               </div>
-                              
+
                               <!-- <div class="padding_left">
                                   <div class="form-group">
                                       <label for="cvv">ZIP</label>
@@ -85,11 +89,11 @@
                             </div>
                             <button id="card-button" class="btn btn-blue" type="submit">Proceed payment</button>
                         </div>
-                    
+
                         <div class="payment-footer-wrapper">
                             <p class="title">Automatic renewal:</p>
                             <p class="f-txt">
-                                Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>. 
+                                Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>.
                                 You may cancel your subscription anytime from <b>My subscription</b> section in your profile.
                             </p>
                             <p class="f-txt f_margin_top">
@@ -172,11 +176,11 @@
         //         displayError.textContent = '';
         //     }
         // });
-        
+
         // Handle form submission.
         var form = document.getElementById('payment-form-sub');
         var haspayment_method = $("input[name='has_payment']:checked").val();
-        
+
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             if (haspayment_method === 'new_card') {
@@ -192,7 +196,7 @@
                         var errorElement = document.getElementById('card-errors');
                         errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
                         '<strong>' + errorMessage(result.error.code) +'</strong>'+
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+   
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                         '</div>';
                         window.scrollTo(0, 10);
                     } else {

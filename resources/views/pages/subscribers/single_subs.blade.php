@@ -14,13 +14,13 @@
             <div class="page_header_class">
               <label id="page_header" name="page_header">
                 <i class="fa-solid fa-user"></i> {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
-              </label>        
+              </label>
             </div>
           </div>
-        </div>                 
+        </div>
       </header>
-      
-      
+
+
 
 
 
@@ -31,7 +31,7 @@
 
                         <div class="card-body">
 
-             
+
                             <div class="subscription-plan-info pb-1">
                                 <h4 class="h4">{{ $product_object['name'] }}</h4>
                                 <h2 class="h2">{{ $single_plan_info['amount']/100 }}$ <span class="intervation_type">/{{ $single_plan_info['interval'] }}</span></h2>
@@ -44,7 +44,7 @@
                                     You may cancel your subscription anytime from <b>My plan</b> section in your profile.
                                 </p>
                             </div>
-         
+
                             <ul class="list-group list-group-flush pt-4 mb-1">
                                 <?php if($product_object['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
                                     <!-- price id for 200 -->
@@ -156,11 +156,11 @@
                             </ul>
                             <p style="padding:1px;"></p>
                         </div>
-                    
-    
 
 
-            
+
+
+
         </div>
         <div class="col-md-5">
             <div class="card">
@@ -175,6 +175,10 @@
                 <div class="payment-form card_payment pt-1 p-1 pb-3">
                     <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
                         @csrf
+                        <div class="form-group">
+                            <label for="coupon_code">Coupon Code (Optional)</label>
+                            <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Enter coupon code if you have one">
+                        </div>
                         <div class="form-group">
                             <label for="card_holder_name">Card holder</label>
                             <input type="hidden" name="plan" value="{{ $single_plan_info['id'] }}" />
@@ -221,16 +225,16 @@
                                 <a class="btn btn-default" href="{{ url()->previous() }}">Cancel</a>
                             <button id="card-button" class="btn btn-success" type="submit" data-secret="{{ $intent->client_secret }}"><i class="fa-solid fa-spinner fa-spin loaderPayment" style="display:none;"></i> Proceed payment</button>
                         </div>
-                    
+
                         <div class="payment-footer-wrapper small text-center d-block d-sm-none">
                                 <p>-- Automatic renewal --</p>
                                 <p>
-                                    Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>. 
+                                    Your subscription will renew automatically every month as one paypent of <b>{{ $single_plan_info['amount']/100 }}.00$</b>.
                                     You may cancel your subscription anytime from <b>My plan</b> section in your profile.
                                 </p>
                         </div>
-                        
-                        
+
+
                     </form>
                 </div>
                 </div>
@@ -241,7 +245,7 @@
                 <div id="card-errors" role="alert"></div>
                 <form action="{{ route('subscribe.store') }}" method="post" id="payment-form-sub">
                     @csrf
-                    <br>            
+                    <br>
                     <div class="form-group">
                         <div class="card-header">
                             <label for="card-element" style="font-size: 20px;">
@@ -271,6 +275,7 @@
             </div>
         </div> -->
     </div>
+    <br><br>
 </div>
     <script>
         var elementStyles = {
@@ -342,7 +347,7 @@
         //         displayError.textContent = '';
         //     }
         // });
-        
+
         // Handle form submission.
         var form = document.getElementById('payment-form-sub');
         form.addEventListener('submit', function(event) {
@@ -362,7 +367,7 @@
                         var errorElement = document.getElementById('card-errors');
                         errorElement.innerHTML = '<div class="alert alert-dismissible alert-danger alert-block">'+
                         '<strong>' + errorMessage(result.error.code) +'</strong>'+
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+   
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                         '</div>';
                         window.scrollTo(0, 10);
                     } else {

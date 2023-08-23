@@ -206,53 +206,80 @@ class SubscriptionController extends Controller
     }
 
     public function supscribePlanStore(Request $request)
-{
-    try {
-        $user = $request->user();
-        $ends_at = auth()->user()->trial_ends_at;
-        $plan_id = $request->plan;
-        $plan_name = $request->plan_name;
+    {
+        try {
+            $user = $request->user();
+            $ends_at = auth()->user()->trial_ends_at;
+            $plan_id = $request->plan;
+            $plan_name = $request->plan_name;
 
-        if ($user->subscribed('default')) {
-            return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
-        }
+            if ($user->subscribed('default')) {
+                return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
+            }
 
-        $paymentMethod = $request->paymentMethod;
-        $user->createOrGetStripeCustomer();
-        $user->updateDefaultPaymentMethod($paymentMethod);
+            $paymentMethod = $request->paymentMethod;
+            $user->createOrGetStripeCustomer();
+            $user->updateDefaultPaymentMethod($paymentMethod);
 
-        $trialEndsAt = Carbon::parse($ends_at);
-        $now = now();
+            $trialEndsAt = Carbon::parse($ends_at);
+            $now = now();
 
-        if ($trialEndsAt->isPast()) {
-            // Si la date de fin du trial est dans le passé, on démarre le plan premium immédiatement
-            $user->newSubscription('default', $plan_id)
-                ->create($paymentMethod, [
+            $coupon_code = $request->input('coupon_code');
+
+            if ($trialEndsAt->isPast()) {
+                // Si la date de fin du trial est dans le passé, on démarre le plan premium immédiatement
+                $subscription = $user->newSubscription('default', $plan_id);
+
+                if (!empty($coupon_code)) {
+                    $subscription->withCoupon($coupon_code); // Appliquer le coupon
+                }
+
+                $subscription->create($paymentMethod, [
                     'email' => $user->email,
                     'name' => $request->card_holder_name,
                 ], [
                     'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
                 ]);
-        } else {
-            // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
-            $user->newSubscription('default', $plan_id)
-                ->trialUntil($trialEndsAt->endOfDay())
-                ->create($paymentMethod, [
+            } else {
+                // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
+                $subscription = $user->newSubscription('default', $plan_id)
+                ->trialUntil($trialEndsAt->endOfDay());
+
+                if (!empty($coupon_code)) {
+                    $subscription->withCoupon($coupon_code); // Appliquer le coupon
+                }
+
+                $subscription->create($paymentMethod, [
                     'email' => $user->email,
                     'name' => $request->card_holder_name,
                 ], [
                     'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
                 ]);
+            }
+
+            $user->trial_ends_at = null;
+            $user->save();
+
+            return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
+        } catch (InvalidRequestException $e) {
+            if (strpos($e->getMessage(), 'No such coupon:') !== false) {
+                // L'erreur est liée à un coupon invalide
+                return redirect()->back()->with('error', 'The provided coupon code is invalid. Please try again.');
+            } else {
+                // Autres erreurs liées à InvalidRequestException
+                return redirect()->back()->with('error', 'An error occurred while processing your subscription. Please try again.');
+            }
+        } catch (IncompletePayment $exception) {
+            return redirect()->back()->with('error', $exception->getCode() . ', ' . $exception->getMessage());
+        } catch (\Exception $e) {
+            // Gérer d'autres exceptions non liées à Stripe ici
+            if (strpos($e->getMessage(), 'No such coupon:') !== false) {
+                // L'erreur est liée à un coupon invalide
+                return redirect()->back()->with('error', 'The provided coupon code is invalid. Please try again.');
+            }
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
-        $user->trial_ends_at = null;
-        $user->save();
-
-        return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
-    } catch (IncompletePayment $exception) {
-        return redirect()->back()->with('error', $exception->getCode() . ', ' . $exception->getMessage());
     }
-}
 
     public function singlePayment(Request $request, $payment_id = null){
         try {
@@ -342,7 +369,7 @@ class SubscriptionController extends Controller
             //test
         }
     }
-    
+
 
 
     public function mySubscription(Request $request){
