@@ -105,7 +105,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									@endif
 									@if($AppUI->isTeacherAdmin())
-										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+										<input type="hidden" name="teacher_select" id="teacher_select" class="form-control" value="{{ $lessonData->teacher_id }}" readonly>
 									@else
 									<div class="col-sm-7">
 										<div class="selectdiv">
@@ -937,6 +937,7 @@ $("#student, #teacher_select").on('change', function(event) {
 	    var agendaSelect = +$("#agenda_select").val();
 	    var categoryId = +$("#category_select").val();
 	    var teacherSelect = +$("#teacher_select").val();
+        var duration = +$("#duration").val();
 	    var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
 
 	    var formData = $('#from').serializeArray();
@@ -958,6 +959,12 @@ $("#student, #teacher_select").on('change', function(event) {
 	        "name": "no_of_students",
 	        "value": stdSelected,
 	    });
+        formData.push({
+	        "name": "duration",
+	        "value": duration,
+	    });
+
+        console.log(formData)
 
 	    //if (categoryId > 0 && teacherSelect > 0) {
 	        $.ajax({
@@ -967,6 +974,7 @@ $("#student, #teacher_select").on('change', function(event) {
 	            type: 'POST',
 	            dataType: 'json',
 	            success: function(response){
+                    console.log('response', response)
 	                /*if(response.status == 1){
 	                    if (response.data) {
 	                        $("#sprice_amount_buy").val(response.data.price_buy)
@@ -977,22 +985,20 @@ $("#student, #teacher_select").on('change', function(event) {
 	                    }
 	                }*/
                     if (response.status == 1) {
-	                        $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
-	                        $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_sell'])
 
-                            console.log('new price',  response.lessonPriceTeacher['price_sell']);
+                        //if(response.lessonPriceTeacher['lesson_price_student'] == 'price_fix') {
+                        //    $("#sprice_amount_buy").val(response.lessonPriceTeacher['price_buy'])
+	                    //    $("#sprice_amount_sell").val(response.lessonPriceTeacher['price_buy'])
+                        //    console.log('new price',  response.lessonPriceTeacher['price_buy']);
+                        //    var newDuration = $("#duration").val();
+                        //    $(".priceByStudent").text(response.lessonPriceTeacher['price_buy']);
+                        //} else {
+	                        $("#sprice_amount_buy").val(response.newPrice)
+	                        $("#sprice_amount_sell").val(response.newPrice)
+                            console.log('new price',  response.newPrice);
                             var newDuration = $("#duration").val();
-
-                            var $sellPriceCal = (response.lessonPriceTeacher['price_sell']*(newDuration/60));
-
-                            var inputElem = document.getElementById('sprice_amount_sell');
-                            if(inputElem) {
-                                inputElem.removeAttribute('disabled');
-                                inputElem.value = $sellPriceCal;
-                                inputElem.setAttribute('disabled', 'disabled');
-                            }
-                            $(".priceByStudent").text($sellPriceCal);
-
+                            $(".priceByStudent").text(response.newPrice);
+                        //}
 
 	                    }
 	            }
