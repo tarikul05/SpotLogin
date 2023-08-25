@@ -1215,12 +1215,26 @@ class LessonsController extends Controller
     {
         if ($request->isMethod('post')){
             $lessonData = $request->all();
-            //$stu_num = explode("_", $lessonData['sevent_price']);
+            $studentCount = $lessonData['no_of_students'];
+            $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
             $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id']])->first();
+            $duration = $lessonData['duration'];
+
+            if(!empty($studentCount)){
+                if($lessonPriceTeacher['lesson_price_student'] === "price_fix") {
+                    $buyPriceCal = ($lessonPriceTeacher['price_buy']*($duration/60));
+                } else {
+                    $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
+                }
+            }else{
+                $buyPriceCal = ($eventPrice['price_buy']*($duration/60));
+            }
+
             if (!empty($lessonPriceTeacher)) {
                 return [
                     'status' => 1,
                     'lessonPriceTeacher' => $lessonPriceTeacher,
+                    'newPrice' => $buyPriceCal,
                     'message' =>  __('Successfully get price for this teacher')
                 ];
             }else{

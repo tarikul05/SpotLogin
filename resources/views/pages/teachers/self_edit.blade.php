@@ -15,10 +15,10 @@
 	<div class="container-fluid body">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-12 col-xs-12 header-area pb-3"> 
+				<div class="col-sm-12 col-xs-12 header-area pb-3">
 					<div class="page_header_class">
 						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }}</label>
-					</div> 
+					</div>
 				</div>
 				<!--<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
@@ -27,7 +27,7 @@
 				</div>-->
 			</div>
 
-			
+
 	</header>
 
 		<nav cklass="subNav">
@@ -68,15 +68,15 @@
 					<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 
 
-		
+
 					<div class="row">
-					
+
 						<fieldset class="col-lg-10">
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Personal information') }}</label>
 						</div>
 
-						
+
 						<div class="card">
 							<div class="card-body bg-tertiary">
 
@@ -187,7 +187,7 @@
 						</div>
 
 						<div class="row">
-							
+
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
@@ -358,7 +358,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									
+
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
 										<div class="col-sm-7">
@@ -412,18 +412,18 @@
 												<span class="input-group-addon"><i class="fa-brands fa-canadian-maple-leaf"></i></span>
 												<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
-												<span class="etransfer_acc"></span>	
+												<span class="etransfer_acc"></span>
 											</div>
 										</div>
 									</div>
 									@endif
-									
+
 
 
 								</div>
 							</div>
-							
-							@endif	
+
+							@endif
 							<!-- <div id="commentaire_div">
 								<div class="section_header_class">
 									<label id="private_comment_caption">{{__('Private comment') }}</label>
@@ -441,7 +441,7 @@
 							</div> -->
 						</div>
 					</fieldset>
-					
+
 					<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
 						<div class="section_header_class">
 						<label><br></label>
@@ -454,8 +454,8 @@
 					</div>
 
 				</div>
-			
-					
+
+
 				</form>
 			</div>
 			<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
@@ -488,7 +488,7 @@
 												<td colspan="3"><input class="form-control disable_input" disabled="" id="category_name12" type="hidden" style="text-align:left" value="Soccer-School2"><label><strong>{{$category->title}}</strong></label></td>
 											</tr>
 											@foreach($lessonPrices as $key => $lessionPrice)
-												<?php 
+												<?php
 												if ($lessionPrice->divider == 1) {
 													$textForTypeBilling = 'Private session';
 												} elseif ($lessionPrice->divider == 9999) {
@@ -498,9 +498,9 @@
 												} else {
 													$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
 												}
-												
-												$studentPrice = $category->s_std_pay_type; 
-								
+
+												$studentPrice = $category->s_std_pay_type;
+
 												if ($studentPrice == 1) {
 													// fix and fix price
 													if ($lessionPrice->divider != -1) continue;
@@ -533,7 +533,7 @@
 						</div>
 
 					</div>
-		
+
 						<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
 							<div class="section_header_class">
 							</div>
@@ -545,7 +545,7 @@
 						</div>
 
 					</div>
-					
+
 				</form>
 			</div>
 
@@ -572,29 +572,29 @@
 								<div class="col-md-12">
 									<div class="form-group row">
 										<label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
-										<div class="col-sm-7">                                        
+										<div class="col-sm-7">
 											<input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
-										<div class="col-sm-7">                                        
+										<div class="col-sm-7">
 											<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
 										</div>
 									</div>
 								</div>
-					
+
 								<div class="col-md-12">
 									<div class="form-group row">
 										<label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
-										<div class="col-sm-7">                                        
+										<div class="col-sm-7">
 											<input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="100">
 											<p style="font-size:11px;">this number will show on your invoice</p>
 										</div>
-										<div class="col-sm-2">                                        
+										<div class="col-sm-2">
 											<button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
 										</div>
-									</div>	
+									</div>
 								</div>
 							</div></div>
 							</div>
@@ -621,7 +621,7 @@
 
 
 
-			
+
 
 			<!--Start of Tab 5 -->
 			<div id="tab_5" class="tab-pane">
@@ -652,9 +652,9 @@
 <script type="text/javascript">
 
 	//var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
-	
+
 	$(document).on('click','#add_more_tax_btnn',function(){
-	
+
 		var resultHtml = `<div class="add_more_tax_row row mb-2">
 			<div class="card">
 					<div class="card-body bg-tertiary">
@@ -662,46 +662,46 @@
 				<div class="col-md-12">
 					<div class="form-group row">
 						<label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
-						<div class="col-sm-7">                                        
+						<div class="col-sm-7">
 							<input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255">
 						</div>
 					</div>
 					<div class="form-group row">
 						<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
-						<div class="col-sm-7">                                        
+						<div class="col-sm-7">
 							<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
 						</div>
 					</div>
 				</div>
-	
+
 				<div class="col-md-12">
 					<div class="form-group row">
 						<label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
-						<div class="col-sm-7">                                        
+						<div class="col-sm-7">
 							<input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
 						</div>
-						<div class="col-sm-2">                                        
+						<div class="col-sm-2">
 							<button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
 						</div>
 					</div>
-					
+
 				</div>
 			</div></div>
 			</div>`;
-	
+
 			$("#add_more_tax_div").append(resultHtml);
 			window.scrollTo(0, document.body.scrollHeight);
-	
+
 	})
-	
+
 	$(document).on('click','.delete_tax',function(){
 		$(this).parents('.add_more_tax_row').remove();
 	})
 
 	</script>
-	
-	
-	
+
+
+
 
 <script type="text/javascript">
 
@@ -712,7 +712,7 @@
 	$('#country_code').change(function(){
 		var country_code = $(this).val();
 		var set_province = '<?= $teacher->province_id ?>';
-		
+
 		get_province_lists(country_code, set_province);
 	})
 
