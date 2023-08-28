@@ -11,6 +11,7 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Models\User;
 use App\Models\VerifyToken;
 use App\Models\EmailTemplate;
+use App\Models\TermConditionLang;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -47,8 +48,8 @@ class AuthController extends Controller
     }
 
     /**
-     * Login UI and Login confirmation 
-     * 
+     * Login UI and Login confirmation
+     *
      * @return void
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -59,12 +60,18 @@ class AuthController extends Controller
             $user = Auth::user();
             return redirect(RouteServiceProvider::HOME);
         }
-        return view('pages.top', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
+
+        $template = TermConditionLang::where([
+            /*['tc_template_id', 1],*/
+            ['language_id', app()->getLocale()],
+            ['is_active', 1]
+        ])->first();
+        return view('pages.top', ['title' => 'User Login','template'=>$template, 'pageInfo'=>['siteTitle'=>'']]);
     }
 
     /**
-     * Login UI and Login confirmation 
-     * 
+     * Login UI and Login confirmation
+     *
      * @return void
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -78,10 +85,10 @@ class AuthController extends Controller
     }
 
 
-    
+
     /**
      * AJAX login submit method
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -108,11 +115,11 @@ class AuthController extends Controller
         }
     }
 
-     
+
 
     /**
      * AJAX login submit method
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -125,7 +132,7 @@ class AuthController extends Controller
         );
         try {
             $data = $request->all();
-            
+
             if ($data['type'] === "validate_username") {
                 $p_username=trim($_POST['p_username']);
                 $field = 'username';
@@ -139,15 +146,15 @@ class AuthController extends Controller
                 }
                 return response()->json($result);
             }
-            else if ($data['type'] === 'login_submit') { 
+            else if ($data['type'] === 'login_submit') {
 
                 $username = $data['login_username'];
                 $field = 'username';
                 $user = User::getUserData($field, $username);
-            
+
                 if ($user) {
                     if(Auth::attempt(['username' => $data['login_username'], 'password' => $data['login_password']], $request->filled('remember'))){
-                    
+
                         // Auth::login($user);
                         $user = Auth::user();
                         $country_code = null;
@@ -180,11 +187,11 @@ class AuthController extends Controller
                         return response()->json($result);
                     }
                 }
-                
+
             }
             else if ($data['type'] === "check_first_login") {
-                
-            
+
+
                 $user_name = $data['login_username'];
                 $password = $data['login_password'];
                 $user = User::getFirstLoginData_after_reset($user_name, $password);
@@ -203,9 +210,9 @@ class AuthController extends Controller
                             'status' => 1,
                             'message' => __('Login Fail, pls check password'),
                         );
-                    } 
+                    }
                 }
-                
+
             }
 
             return response()->json($result);
@@ -215,13 +222,13 @@ class AuthController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-        
+
     }
 
 
     /**
      * forgot password send and reset
-     * 
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-15
@@ -236,7 +243,7 @@ class AuthController extends Controller
             $data = $request->all();
             if ($data['type'] === "forgot_password_submit") {
 
-            
+
                 $username=trim($_POST['forgot_password_username']);
                 $p_lang=trim($_POST['p_lang']);
 
@@ -244,11 +251,11 @@ class AuthController extends Controller
                     ['username', $username],
                     ['is_active', 1],
                     ['deleted_at', null],
-                ])->first();  
+                ])->first();
                 if ($user) {
                     //sending email for forgot password
                     if (config('global.email_send') == 1) {
-                        
+
                         try {
                             $data = [];
                             $data['email'] = $user->email;
@@ -259,17 +266,17 @@ class AuthController extends Controller
                                 'token' => Str::random(5),
                                 'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                             ];
-                            
-                    
+
+
                             $verifyUser = VerifyToken::create($verifyUser);
-                    
-                            $data['token'] = $verifyUser->token; 
-                            $data['username'] = $user->username; 
+
+                            $data['token'] = $verifyUser->token;
+                            $data['username'] = $user->username;
                             $data['subject']='Reset Password';
-                            $data['url'] = route('reset_password.email',$data['token']); 
-                            
-                            $data['p_lang'] = $p_lang; 
-                            
+                            $data['url'] = route('reset_password.email',$data['token']);
+
+                            $data['p_lang'] = $p_lang;
+
 
                             if ($this->emailSend($data,'forgot_password_email')) {
                                 $user->is_mail_sent = 1;
@@ -300,9 +307,9 @@ class AuthController extends Controller
                 }   else {
                     $result = array('status'=>false,'msg'=>__('Username not exist'));
                 }
-                
-            
-            
+
+
+
             }
 
             return response()->json($result);
@@ -312,34 +319,34 @@ class AuthController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-        
+
     }
 
 
 
      /**
-     * signup virification 
-     * 
+     * signup virification
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
      */
     public function resetPasswordEmail($token)
     {
-        
+
         try {
             $to = Carbon::now()->format("Y-m-d");
             $verifyUser = VerifyToken::where([
                                         ['expire_date', '>=', $to],
                                         ['token', $token]
                                     ])->first();
-            
+
             if(isset($verifyUser) ){
                 $user = User::where([
                     ['person_id', $verifyUser->person_id],
                     ['is_active', 1],
                     ['deleted_at', null],
-                ])->first();  
+                ])->first();
                 if ($user) {
                     return view('pages.auth.reset_password', ['title' => 'User Login','user'=>$user]);
                 }else{
@@ -356,8 +363,8 @@ class AuthController extends Controller
 
 
      /**
-     * reset password change 
-     * 
+     * reset password change
+     *
      * @return json
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-11
@@ -391,7 +398,7 @@ class AuthController extends Controller
 
     /**
      * checked permission
-     * 
+     *
      * @return json
      * @author Tarikul
      * @version 0.1 written in 2022-02-11
@@ -412,7 +419,7 @@ class AuthController extends Controller
         }elseif ($user->person_type == 'App\Models\Teacher' && count($user->schools()) == 1 ) {
             // $read_only_role = $this->user_read_only($user);
             $tRoleType = $user->schools()[0]->pivot->role_type;
-            $user->syncRoles([$tRoleType]);  
+            $user->syncRoles([$tRoleType]);
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect(RouteServiceProvider::HOME);
@@ -452,10 +459,10 @@ class AuthController extends Controller
         return $read_only_role;
     }
 
-   
+
     /**
      * logout action
-     * 
+     *
      * @return redirect to login page
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-02-03
@@ -474,5 +481,5 @@ class AuthController extends Controller
         ->withCookie($date_from)
         ->withCookie($date_to);
     }
-    
+
 }

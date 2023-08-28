@@ -202,6 +202,15 @@ class UserController extends Controller
     }
 
 
+    public function checkUsername(string $username)
+    {
+        if (User::where('username', $username)->exists()) {
+            return response()->json(['available' => false]);
+        }
+
+        return response()->json(['available' => true]);
+    }
+
 
      /**
      * signup confirmation
@@ -252,7 +261,7 @@ class UserController extends Controller
         try{
             Auth::logout();
             Session::flush();
-    
+
             $cal_view_mode = Cookie::forget('cal_view_mode');
             $date_from = Cookie::forget('date_from');
             $view_mode = Cookie::forget('view_mode');
@@ -311,7 +320,7 @@ class UserController extends Controller
         try{
             Auth::logout();
             Session::flush();
-    
+
             $cal_view_mode = Cookie::forget('cal_view_mode');
             $date_from = Cookie::forget('date_from');
             $view_mode = Cookie::forget('view_mode');
@@ -342,11 +351,11 @@ class UserController extends Controller
                 }else{
                     if ($verifyToken->person_type =='App\Models\Student') {
                         $exist = SchoolStudent::where(['student_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
-    
+
                     }
                     if ($verifyToken->person_type =='App\Models\Teacher') {
                         $exist = SchoolTeacher::where(['teacher_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
-    
+
                     }
                     if ($exist) {
                         $exist->has_user_account = 1;
@@ -405,7 +414,7 @@ class UserController extends Controller
     public function active_school(Request $request)
     {
         $data = $request->all();
-        
+
         try{
             $user = User::where(['id'=>$data['user_id']])->orderBy('id','desc')->first();
             $userName = !empty($user) && $user->username == $data['login_username'] ? $user->username : '';

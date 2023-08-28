@@ -455,6 +455,8 @@ $(function() {
         autoclose: true,
         todayBtn: true,
 		minuteStep: 10,
+        firstDay: 0,
+        weekStart: 1,
 		minView: 3,
 		maxView: 3,
 		viewSelect: 3,

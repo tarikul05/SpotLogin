@@ -45,38 +45,31 @@
         <img src="{{ asset('img/logo.png') }}" width="50">
       </a>
 
-      <select id="setLan" class="selectpicker ms-auto" data-width="fit" >
-        @foreach ($language as $key => $lan)
-            <option
-            value="{{ $lan->language_code }}"
-            @if ($lan->language_code == app()->getLocale())
-                selected="selected"
-            @endif
-            data-icon="{{ $lan->flag_class}}"
-            >  {{ $lan->title }}</option>
-        @endforeach
-      </select>
+
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse custom-collapse " id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2">
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#ourSolutions">{{ __('Our solutions') }}</a>
+            <a class=" nav-link login_btn text-center" href="#ourSolutions">{{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
+            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
           </li>
           <li class="nav-item active">
-            <a class="px-2 nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }} <span class="d-sm-none">Now!</span></a>
+            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }} <span class="d-sm-none">Now!</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
           </li>
           <!--<li class="nav-item">
             <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
           </li>-->
         </ul>
 
-        <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;">
+        <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
           Get <b>60 days</b> Free-Trial<br>with all features access
         </div>
@@ -94,6 +87,18 @@
   </div>
 
   <footer>
+    <select id="setLan" class="selectpicker ms-auto mb-3" data-width="fit" >
+        @foreach ($language as $key => $lan)
+            <option
+            value="{{ $lan->language_code }}"
+            @if ($lan->language_code == app()->getLocale())
+                selected="selected"
+            @endif
+            data-icon="{{ $lan->flag_class}}"
+            >  {{ $lan->title }}</option>
+        @endforeach
+      </select>
+
     <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
 
