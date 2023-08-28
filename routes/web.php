@@ -135,6 +135,8 @@ Route::post('/get_province_by_country', [App\Http\Controllers\ProvincesControlle
 
 Route::get('parameters', 'ParametersController@index')->name('parameters');
 
+Route::get('/check-username/{username}', [App\Http\Controllers\UserController::class, 'checkUsername']);
+
 Route::get('check-translation', function(){
   \App::setLocale('fr');
   dd(__('website'));

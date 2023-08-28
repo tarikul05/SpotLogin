@@ -33,11 +33,11 @@ function successModalCall(title, desc = '') {
 function errorModalCall(title, desc = '') {
   $('#errorModal').remove();
   var modalHtml = '';
-  modalHtml = `<div class="modal fade" id="errorModal" name="errorModal">
+  modalHtml = `<div class="modal" id="errorModal" name="errorModal">
             <div class="modal-dialog modal-dialog-centered mt-5">
-                <div class="modal-content">
-                    <div class="modal-body text-center p-4">
-                        <h4 class="light-blue-txt gilroy-bold">` + title + `</h4>
+                <div class="modal-content" style="border:4px solid #ff0000;">
+                <div class="modal-body text-center">
+                        <h2 class="text-danger">` + title + `</h2>
                         <p style="font-size: 20px;">` + desc + `</p>
                         <button type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;">OK</button>
                     </div>

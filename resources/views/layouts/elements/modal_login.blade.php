@@ -26,7 +26,7 @@
           <div style="margin-bottom:10px;"><small><a class="forgot_password_btn"  data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">{{ __('Forgot password?') }}</a></small></div>
           <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('Sign in') }}</button>
         </form>
-        
+
         <!-- <div style="text-align:center;margin-top:10px;">
             <p>{{ __('Please_sign_up') }} <a href="#" class="signup_btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a>
             </p>
@@ -58,14 +58,14 @@ $(document).ready(function() {
     }
   });
 
-  
+
   function FirstLoginAfterResetPass() {
-      
+
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-      
+
       var status = 1;
       var formdata = $("#login_form").serializeArray();
-      
+
       formdata.push({
         "name": "type",
         "value": "check_first_login"
@@ -137,14 +137,14 @@ $(document).ready(function() {
         document.getElementById("reset_username").value = document.getElementById("login_username").value;
         $("#loginModal").modal('hide');
         $("#resetModal").modal('show');
-        
+
         return false;
       }
 
       var formdata = $("#login_form").serializeArray();
       var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-      
-      
+
+
       formdata.push({
         "name": "type",
         "value": "login_submit"
@@ -164,15 +164,15 @@ $(document).ready(function() {
           loader.fadeIn("fast");
         },
         success: function(data) {
-          
+
           if (data.status == 0) {
             var username = $("#login_username").val();
 
-           
-           
+
+
             $("#loginModal").modal('hide');
             //successModalCall("{{ __('Logged In Successfully') }}");
-            
+
             setTimeout(function() {
               window.location.href = data.login_url;
             }, 1000);
@@ -183,9 +183,9 @@ $(document).ready(function() {
 
             setTimeout(() => {
               loader.fadeOut("fast");
-              errorModalCall("{{ __('Invalid username or password') }}");
+              errorModalCall('Information', "{{ __('Invalid username or password') }}");
             }, "900")
-           
+
 
           }
 
@@ -193,7 +193,7 @@ $(document).ready(function() {
         error: function(ts) {
           setTimeout(() => {
             loader.fadeOut("fast");
-            errorModalCall("{{ __('Invalid username or password') }}");
+            errorModalCall('Information', "{{ __('Invalid username or password') }}");
           }, "900")
 
         },

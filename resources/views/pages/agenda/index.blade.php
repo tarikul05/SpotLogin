@@ -3438,6 +3438,7 @@ $(function() {
         todayBtn: true,
 		minuteStep: 10,
 		minView: 3,
+        weekStart: 1,
 		maxView: 3,
 		viewSelect: 3,
 		todayBtn:false,
@@ -3447,6 +3448,7 @@ $(function() {
         autoclose: true,
         todayBtn: true,
 		minuteStep: 10,
+        weekStart: 1,
 		minView: 3,
 		maxView: 3,
 		viewSelect: 3,
@@ -4040,7 +4042,7 @@ $("body").on('click', '#student_empty', function(event) {
         $('#end_date').on('change', function(e) {
         if ($("#end_date").val() < $("#start_date").val()) {
             $("#end_date").val($("#start_date").val());
-            errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+            errorModalCall('Information', '{{ __("Please ensure that the end date comes after the start date ")}}');
             setTimeout(() => {
                 $("#end_date").val($("#start_date").val());
             }, "200")

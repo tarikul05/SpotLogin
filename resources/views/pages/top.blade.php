@@ -8,7 +8,7 @@
     <div class="row h-100 align-items-center">
       <div class="col-12">
         <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}">Sportlogin</h1>
-        <h4 class="gilroy-bold text-white">{{ __('Let Sportlogin do your off-ice') }} </h4>
+        <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
         <div class="masthead-btn-area">
@@ -51,8 +51,8 @@
         </div>
         <h4 class="gilroy-bold">{{ __('Communication') }}</h4>
 
-        <p class="gilroy-light txtdarkblue">{{ __('Communicate with the parents within the app') }} <br>
-        <h4 class="gilroy-bold">{{ __('Cooming Soon')}}</h4>
+        <p class="gilroy-light txtdarkblue">{{ __('Manage your students (import/export)') }} <br>
+        <!--<h4 class="gilroy-bold">{{ __('Cooming Soon')}}</h4>-->
         </p>
 
       </div>
@@ -61,8 +61,8 @@
           <img src="{{ asset('img/payment.svg') }}" alt="" class="mx-auto">
         </div>
         <h4 class="gilroy-bold">{{ __('Payment') }} </h4>
-        <p class="gilroy-light txtdarkblue">{{ __('Allow your students to pay online in a click') }}
-        <h4 class="gilroy-bold">{{ __('Cooming Soon') }} </h4>
+        <p class="gilroy-light txtdarkblue">{{ __('Allow your students to pay online in a click') }} <span class="badge bg-light text-dark">Coming Soon</span>
+        <!--<h4 class="gilroy-bold">{{ __('Cooming Soon') }} </h4>-->
         </p>
       </div>
     </div>
@@ -126,4 +126,44 @@
     </div>
   </div>
 </section>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white" style="background-color: #152245;">
+          <h5 class="modal-title" id="exampleModalLabel">Privacy policy</h5>
+            <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
+        </div>
+        <div class="modal-body">
+            {!! $template->tc_text !!}
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">I understand</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $('#switchModalBtn').on('click', function() {
+        $('#exampleModal').modal('hide');
+      });
+
+      $('#exampleModal').on('hidden.bs.modal', function (e) {
+        $('#schoolsignupModal').modal('show');
+        //document.getElementById('terms_condition').checked = true;
+        $('#terms_condition').prop('checked', true).trigger('change');
+      });
+    });
+
+    $('#terms_condition').on('click', function() {
+    if($(this).prop('checked')) {
+      // Si la case est cochée, activez le bouton
+      $('#signup_form_button').prop('disabled', false);
+    } else {
+      // Sinon, désactivez le bouton
+      $('#signup_form_button').prop('disabled', true);
+    }
+  });
+    </script>
 @endsection

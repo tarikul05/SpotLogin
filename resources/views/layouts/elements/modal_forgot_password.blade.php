@@ -5,7 +5,7 @@
             <div class="modal-header d-block text-center border-0">
                 <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                 <h3 class="modal-title light-blue-txt gilroy-bold" id="forgotPasswordModalLabel">{{ __('Forgot Password?') }}</h3>
-                
+
             </div>
             <div class="modal-body text-center" style="max-width: 375px; margin: 0 auto;padding-top: 0;">
                 <form id="forgot_password_form" name="forgot_password_form" method="POST" action="#">
@@ -14,7 +14,7 @@
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block">{{ __('submit') }}</button>
                 </form>
-                
+
             </div>
         </div>
     </div>
@@ -47,10 +47,10 @@ $(document).ready(function() {
             let loader = $('#pageloader');
             loader.fadeIn("fast");
             var p_lang = $('#setLan').val();
-            
+
             var formdata = $("#forgot_password_form").serializeArray();
             var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-      
+
             formdata.push({
                 "name": "type",
                 "value": "forgot_password_submit"
@@ -76,17 +76,17 @@ $(document).ready(function() {
                     loader.fadeIn("fast");
                 },
                 success: function(data) {
-                    //alert(data.status);  
+                    //alert(data.status);
                     if (data.status) {
                         $('#forgotPasswordModal').modal('hide');
                         successModalCall("{{ __('Reset password link has been sent to your registered email')}}");
                     } else {
-                        errorModalCall(data.msg);
+                        errorModalCall('Information', data.msg);
                     }
 
                 }, // sucess
                 error: function(ts) {
-                    errorModalCall(GetAppMessage('error_message_text'));
+                    errorModalCall('Information', GetAppMessage('error_message_text'));
                 },
                 complete: function() {
                     loader.fadeOut("fast");

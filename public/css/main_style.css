@@ -404,7 +404,7 @@ footer p a:hover {
     color: red;
 }
 div#navbarSupportedContent {
-    max-width: 22%;
+    max-width: 50%;
 }
 
 @media only screen and (max-width: 1200px) {
@@ -614,7 +614,10 @@ div#navbarSupportedContent {
       border-bottom: 1px solid #1c255a;
     }
 
-    
+    .navbar-collapse {
+        height: 100vh;
+    }
+
 .custom-collapse .navbar-nav {
     width: 100%;
     display: flex;
