@@ -1119,31 +1119,16 @@ label.profile_img_area {
 
 table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
 table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
-    top: 80%;
-    left: 7px;
-    height: 1em;
-    width: 1em;
+    top: 51%;
+    left: 40px;
+    padding-top:2px;
+    height: 1.2em;
+    width: 1.2em;
     margin-top: -9px;
-    display: block;
     position: absolute;
-    color: white;
-    border: 0.15em solid white;
-    border-radius: 1em;
-    box-shadow: 0 0 0.2em #444;
-    box-sizing: content-box;
-    text-align: center;
-    text-indent: 0 !important;
-    font-family: "Courier New",Courier,monospace;
-    line-height: 1em;
-    background-color: #31b131;
 }
 
-table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before,
-table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
-    content: "\f150"; /* Code Unicode de l'icône chevron-circle-down de Font Awesome */
-    font-family: "Font Awesome 5 Free"; /* Assurez-vous d'utiliser la bonne famille de polices */
-    background-color: #31b131; /* Couleur de fond pour l'icône */
-}
+
 
 .dataTables_wrapper .dataTables_filter input {
     border: 1px solid #aaa;
@@ -1421,7 +1406,19 @@ label#currency_alert_text {
         font-size: 19px !important;
     }
     header.panel-heading {
-        margin: 10px 0 0px !important;
+        margin: 0px 0;
+        padding-top: 0px;
+        padding-bottom:10px;
+        top: 1px;
+        position: sticky;
+        z-index: 9;
+        background: #fff;
+        width: 100%;
+    }
+
+    header.panel-header .panel-row {
+        margin-top:0;
+        padding-top:0;
     }
     .student_save {
         top: 0px;

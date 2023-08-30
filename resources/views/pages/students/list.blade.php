@@ -30,7 +30,7 @@
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all"></th>
-                <th>&nbsp;</th>
+                <th class="d-none d-sm-table-cell">&nbsp;</th>
                 <th>{{ __('Name of the Student') }}</th>
                 <th>{{ __('Email Address') }}</th>
                 <th>{{ __('User Account') }}</th>
@@ -44,7 +44,7 @@
             <tr>
                 <!--<td>{{ $student->id; }} </td>-->
                 <td class="pt-3"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                <td class="pt-2">
+                <td class="pt-2 d-none d-sm-table-cell">
                     <?php if (!empty($student->profileImageStudent->path_name)): ?>
                         <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php elseif (!empty($student->user->profileImage->path_name)): ?>
@@ -59,17 +59,24 @@
                 <td class="pt-3">{{ $student->email; }} </td>
                 <td class="pt-3">
                     @if(!$student->user)
-                        <button disabled style="border:1px solid #EEE; font-size:12px;margin:0; width:150px;">{{ __('Not yet registered') }}</button><br>
+                        <div class="d-block d-sm-none"><br></div>
+                        <a disabled style="border:1px solid #EEE; font-size:12px;margin:0; width:150px;">{{ __('Not yet registered') }}</a><br>
                         @can('students-sent-mail')
-                            <button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <!--<button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
-                            </button>
+                            </button>-->
+                            <a href="javascript:void(0)" role="button" class="btn btn-primary btn-md send-invite-btn" style="width: 120px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i> Send invite
+                            </a>
                         @endcan
                     @else
-                    <button disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;">{{ __('Registered') }}</button><br>    <!--<span class="">{{$student->user->username}}</span>-->
-                        <button class="send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                    <a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;">{{ __('Registered') }}</a><br>    <!--<span class="">{{$student->user->username}}</span>-->
+                        <!--<button class="send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                             <i class="fa-solid fa-envelope"></i> Re-send password
-                        </button>
+                        </button>-->
+                        <a href="javascript:void(0)" role="button" class="btn btn-primary btn-md send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <i class="fa-solid fa-envelope"></i> Resend password
+                        </a>
                     @endif
                 </td>
                 <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
@@ -143,7 +150,7 @@
 @section('footer_js')
 <script>
 $(document).ready(function() {
-    $('.send-invite-btn').on('click', function(event) {
+    $(document).on('click', '.send-invite-btn', function(event) {
         event.preventDefault();
         $("#pageloader").fadeIn("fast");
         var schoolId = $(this).attr('data-school');
@@ -170,19 +177,36 @@ $(document).ready(function() {
 });
 </script>
 <script>
-    var sendInviteButtons = document.getElementsByClassName('send-password-btn');
-    Array.prototype.forEach.call(sendInviteButtons, function(button) {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
-            var schoolId = this.getAttribute('data-school');
-            var studentId = this.getAttribute('data-student');
-            if (confirm('Are you sure want to send an invitation to reset the password of this student ?')) {
-                var redirectUrl = '{{ route('studentPasswordGet', ['school' => ':school', 'student' => ':student']) }}';
-                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
-                window.location.href = redirectUrl;
-            }
-        });
+$(document).ready(function() {
+    $(document).on('click', '.send-password-btn', function(event) {
+        event.preventDefault();
+        $("#pageloader").fadeIn("fast");
+
+        var schoolId = $(this).attr('data-school');
+        var studentId = $(this).attr('data-student');
+
+        //if (confirm('Are you sure want to send an invitation to reset the password of this student ?')) {
+            var redirectUrl = '{{ route('studentPasswordGet', ['school' => ':school', 'student' => ':student']) }}';
+            redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);
+
+            // Sending an AJAX request
+            $.ajax({
+                url: redirectUrl,
+                method: 'GET',
+                success: function(response) {
+                    $("#pageloader").fadeOut("fast");
+                    $('#sendMailOk').modal('show');
+                },
+                error: function(error) {
+                    $("#pageloader").fadeOut("fast");
+                    alert('Error occurred while sending the password reset invitation. Please try again.');
+                }
+            });
+        //} else {
+        //    $("#pageloader").fadeOut("fast");
+        //}
     });
+});
     </script>
 <script>
     document.getElementById('select-all').addEventListener('change', function () {
@@ -205,6 +229,7 @@ $(document).ready(function() {
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, 'All']
             ],
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
             "responsive": true,
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_",
