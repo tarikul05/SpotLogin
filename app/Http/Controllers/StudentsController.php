@@ -123,9 +123,9 @@ class StudentsController extends Controller
         $user = Auth::user();
         $alldata = $request->all();
 
+        $schoolId = $alldata['school_id'];
+        $school = School::active()->find($schoolId);
         if ($user->isSuperAdmin()) {
-            $schoolId = $alldata['school_id'];
-            $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return [
                     'status' => 1,
@@ -134,9 +134,11 @@ class StudentsController extends Controller
             }
             $schoolId = $school->id;
             $schoolName = $school->school_name;
+            $schoolEmail = $school->email;
         }else {
             $schoolId = $user->selectedSchoolId();
             $schoolName = $user->selectedSchoolName();
+            $schoolEmail = $school->email;
             $school = School::active()->find($schoolId);
             $schoolId = $school->id;
             $schoolName = $school->school_name;
@@ -257,7 +259,8 @@ class StudentsController extends Controller
                     $data['email'] = $alldata['email'];
                     $data['username'] = $data['name'] = $alldata['nickname'];
                     $data['school_name'] = $schoolName;
-                    $data['admin_email_from'] = $school->email;
+                    $data['admin_email_from'] = $schoolEmail;
+                    $data['admin_email_from_name'] = $schoolName;
                     $verifyUser = [
                         'school_id' => $schoolId,
                         'person_id' => $student->id,
@@ -678,6 +681,7 @@ class StudentsController extends Controller
                 $data['token'] = $verifyUser->token;
                 $data['url'] = route('add.verify.email', $data['token']);
                 $data['admin_email_from'] = $school->email;
+                $data['admin_email_from_name'] = $school->school_name;
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];
