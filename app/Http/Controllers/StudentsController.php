@@ -258,6 +258,7 @@ class StudentsController extends Controller
                     $data['username'] = $data['name'] = $alldata['nickname'];
                     $data['school_name'] = $schoolName;
                     $data['admin_email_from'] = $school->email;
+                    $data['admin_email_from_name'] = $school->school_name;
                     $verifyUser = [
                         'school_id' => $schoolId,
                         'person_id' => $student->id,

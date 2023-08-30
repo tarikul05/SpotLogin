@@ -49,6 +49,10 @@ class ReminderEmail
                 $email_data['admin_email_from']=$result_data['admin_email_from'];
             }
 
+            if (isset($result_data['admin_email_from_name'])) {
+                $email_data['admin_email_from_name']=$result_data['admin_email_from_name'];
+            }
+
             $email_data['username'] = $target_user->firstname;
             $email_data['school_name'] = $schoolName;
             $email_data['client_name'] = $client_name;
