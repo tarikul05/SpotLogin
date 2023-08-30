@@ -152,7 +152,7 @@ class StudentsController extends Controller
             }else {
                 $student = false;
             }
-            
+
             $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
 
             $authUser = $request->user();
@@ -216,7 +216,7 @@ class StudentsController extends Controller
                     } else {
                         return redirect()->back()->withInput($request->all())->with('error', __('This Student already exist with your school'));
                     }
-                    
+
                 }else{ // studne and school_student data not exist
 
                     if($request->file('profile_image_file')){
@@ -257,7 +257,7 @@ class StudentsController extends Controller
                     $data['email'] = $alldata['email'];
                     $data['username'] = $data['name'] = $alldata['nickname'];
                     $data['school_name'] = $schoolName;
-
+                    $data['admin_email_from'] = $school->email;
                     $verifyUser = [
                         'school_id' => $schoolId,
                         'person_id' => $student->id,
@@ -287,7 +287,7 @@ class StudentsController extends Controller
                 //return redirect(route('studentHome'))->with('success', __('Student added successfully!'));
                 return redirect()->route('editStudent',['student' => $student->id])->with('success', __('Student added successfully!'));
             }
-            
+
         }catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
@@ -304,7 +304,7 @@ class StudentsController extends Controller
      */
     public function editStudentAction(Request $request, Student $student)
     {
-        
+
         $authUser = $user = Auth::user();
         // $authUser = $request->user();
         $alldata = $request->all();
@@ -354,7 +354,7 @@ class StudentsController extends Controller
                 {
                     try {
                         $image = $request->file('profile_image_file');
-                        
+
                         if($image->getSize()>0)
                         {
                             $mime_type = $image->getMimeType();
@@ -583,7 +583,7 @@ class StudentsController extends Controller
         try {
             $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
             //->update(['is_sent_invite'=>$is_sent_invite]);
-            
+
             $school = School::find($schoolId);
             $student = Student::find($studentId);
             if ($student && !empty($student->email)) {
@@ -592,7 +592,7 @@ class StudentsController extends Controller
             }else{
                 return redirect()->back()->with('error', __('Email not found'));
             }
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
@@ -611,7 +611,7 @@ class StudentsController extends Controller
         try {
             $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
             //->update(['is_sent_invite'=>$is_sent_invite]);
-            
+
             $school = School::find($schoolId);
             $student = Student::find($studentId);
             if ($student && !empty($student->email)) {
@@ -620,7 +620,7 @@ class StudentsController extends Controller
             }else{
                 return redirect()->back()->with('error', __('Email not found'));
             }
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
@@ -639,7 +639,7 @@ class StudentsController extends Controller
         try {
             $schoolStudent = SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->first();
             //->update(['is_sent_invite'=>$is_sent_invite]);
-            
+
             $school = School::find($schoolId);
             $student = Student::find($studentId);
             if ($student && !empty($student->email)) {
@@ -648,13 +648,13 @@ class StudentsController extends Controller
             }else{
                 return redirect()->back()->with('error', __('Email not found'));
             }
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
     }
 
-    
+
 
     public function emailSet($school, $alldata, $person, $type = 'App\Models\Student')
     {
@@ -677,12 +677,13 @@ class StudentsController extends Controller
                 $verifyUser = VerifyToken::create($verifyUser);
                 $data['token'] = $verifyUser->token;
                 $data['url'] = route('add.verify.email', $data['token']);
+                $data['admin_email_from'] = $school->email;
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];
                     $data['is_sent_invite'] = 1;
                     $alldata->update($data);
-                    
+
                     //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                 } else {
                     return false;
@@ -720,7 +721,7 @@ class StudentsController extends Controller
                     $data = [];
                     $data['is_sent_invite'] = 1;
                     $alldata->update($data);
-                    
+
                     //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                 } else {
                     return false;
@@ -942,13 +943,13 @@ class StudentsController extends Controller
     {
         $user = Auth::user();
         $alldata = $request->all();
-        
+
         $student = Student::find($user->person_id);
         $schoolId = $user->selectedSchoolId();
-        
+
         DB::beginTransaction();
         try{
-            
+
             $birthDate=date('Y-m-d H:i:s',strtotime($alldata['birth_date']));
             $studentData = [
                     // 'gender_id' => $alldata['gender_id'],
@@ -980,7 +981,7 @@ class StudentsController extends Controller
                     'email2' => $alldata['email2'],
                     'student_notify' => isset($alldata['student_notify']) && !empty($alldata['student_notify']) ? 1 : 0 ,
             ];
-            
+
             if($request->file('profile_image_file'))
             {
                 $image = $request->file('profile_image_file');
@@ -1007,7 +1008,7 @@ class StudentsController extends Controller
                     }
                 }
             }
-            
+
             $exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
             if (!empty($alldata['email'])) {
                 if ($exist->email != $alldata['email']) {
@@ -1028,7 +1029,7 @@ class StudentsController extends Controller
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
-                        $data['url'] = route('add.verify.email',$data['token']); 
+                        $data['url'] = route('add.verify.email',$data['token']);
                         if (!$this->emailSend($data,'sign_up_confirmation_email')) {
                             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
                         }
