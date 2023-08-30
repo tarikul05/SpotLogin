@@ -42,16 +42,17 @@ class ReminderEmail
             $email_data = [];
             $email_data['subject'] = 'Pay reminder email';
             $email_data['admin_email_from'] = $school->email;
+            $email_data['admin_email_from_name']=$school->school_name;
             $email_data['p_lang'] = $p_lang;
             $email_data['name'] = $target_user->firstname . ' ' . $target_user->lastname;
 
-            if (isset($result_data['admin_email_from'])) {
-                $email_data['admin_email_from']=$result_data['admin_email_from'];
-            }
+            //if (isset($result_data['admin_email_from'])) {
+             //   $email_data['admin_email_from']=$result_data['admin_email_from'];
+        //}
 
-            if (isset($result_data['admin_email_from_name'])) {
+           /* if (isset($result_data['admin_email_from_name'])) {
                 $email_data['admin_email_from_name']=$result_data['admin_email_from_name'];
-            }
+            }*/
 
             $email_data['username'] = $target_user->firstname;
             $email_data['school_name'] = $schoolName;
