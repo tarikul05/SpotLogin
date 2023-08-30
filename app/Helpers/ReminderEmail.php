@@ -26,7 +26,7 @@ class ReminderEmail
             }
             $p_email = trim($data['p_email']);
             $p_school_id = trim($data['p_school_id']);
-            $school = School::active()->find($p_school_id);
+            $school = School::active()->find($user->selectedSchoolId());
             if ($user->isSuperAdmin()) {
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
