@@ -110,6 +110,7 @@ class SendEmailInvitation extends Command
                 $verifyUser = VerifyToken::create($verifyUser);
                 $data['token'] = $verifyUser->token;
                 $data['url'] = route('add.verify.email', $data['token']);
+                $data['admin_email_from'] = $school->email;
 
                 if ($this->emailSend($data, 'sign_up_confirmation_email')) {
                     $data = [];

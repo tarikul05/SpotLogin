@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Helpers;
 
 use App\Http\Controllers\Controller;
@@ -7,7 +7,7 @@ use App\Models\School;
 class ReminderEmail
 {
     /**
-     * Send reminder email 
+     * Send reminder email
      *
      * @param object $request
      * @param object $result_data
@@ -26,9 +26,8 @@ class ReminderEmail
             }
             $p_email = trim($data['p_email']);
             $p_school_id = trim($data['p_school_id']);
+            $school = School::active()->find($user->selectedSchoolId());
             if ($user->isSuperAdmin()) {
-
-                $school = School::active()->find($p_school_id);
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
@@ -42,9 +41,13 @@ class ReminderEmail
 
             $email_data = [];
             $email_data['subject'] = 'Pay reminder email';
-
+            $email_data['admin_email_from'] = $school->email;
             $email_data['p_lang'] = $p_lang;
             $email_data['name'] = $target_user->firstname . ' ' . $target_user->lastname;
+
+            if (isset($result_data['admin_email_from'])) {
+                $email_data['admin_email_from']=$result_data['admin_email_from'];
+            }
 
             $email_data['username'] = $target_user->firstname;
             $email_data['school_name'] = $schoolName;
