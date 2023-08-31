@@ -1269,12 +1269,61 @@ label#currency_alert_text {
     padding-left:55px;
 }
 
+.search-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.searchForEvent {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-top: 10px !important; /* Adjust this value as needed */
+    }
+    .search_text_box {
+        display: none;
+    }
+    .searchForEvent {
+        display: block;
+        position: absolute;
+        top:10px;
+        right: 5px;
+    }
+
+    #btn_copy_events {
+        display:none;
+    }
+    #btn_goto_planning {
+        display:none;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .mobile-add-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        padding: 10px;
+        position: absolute;
+        top:5px;
+        right: 5px;
+    }
+    .mobile-add-btn i {
+        font-size: 16px;
+    }
+}
 @media only screen and (max-width: 768px) {
 
     .paddingLogo {
         padding-left:0;
     }
-
+    .styledropdownActions {
+        display: none;
+    }
     .m-4 {
         margin: 0.5rem !important;
     }
@@ -1369,7 +1418,7 @@ label#currency_alert_text {
     }
     .btn-area .btn-group .btn,
     .btn-area .btn {
-        margin-top: 35px;
+        margin-top: 0px;
     }
     .dataTables_wrapper {
         position: relative;
