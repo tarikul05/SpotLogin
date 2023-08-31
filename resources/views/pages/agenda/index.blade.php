@@ -41,6 +41,7 @@
                                 <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
                                   {{__('Agenda')}} :
                                 </h1>
+                                <i class="fa-solid fa-magnifying-glass search-icon searchForEvent"></i>
                                 <div id="dateTime">
                                 <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
@@ -110,29 +111,39 @@
 
 
 
-
-                                    <div class="dropdown" id="dropdownActions">
-                                      <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
-                                      <div class="dropdown-content">
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
-                                        <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
-                                      </div>
-                                    </div>
+                                <div class="styledropdownActions d-none d-sm-block" style="display:inline-block;">
+                                    <div class="btn-group">
+                                        <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
+                                        <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
+                                        <div class="dropdown-content">
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
+                                        </div>
+                                        </div>
+                                </div>
+                                <div class="btn-group">
                                 <!--<a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>-->
-                                <button style="display: none; max-width:80px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy')}}</span></button>
-                                <button style="display: none; max-width:80px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">{{__('Paste')}}</span></button>
+                                <button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy')}}</span></button>
+                                <button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">{{__('Paste')}}</span></button>
                                 @if(!$AppUI->isStudent())
                                     <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
                                         <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
                                         <span id ="btn_export_events_cap">Excel</span>
                                     </a>
                                 @endif
+                                </div>
+                                </div>
+
                             </div>
+
+                          </div>
                         </div>
-					</div>
-                    <div class="col-lg-3 col-12 btn-area align-items-end text-center">
+
+                    <div class="col-lg-3 text-right col-12 btn-area align-items-end text-center">
+                        @if(!$AppUI->isStudent())
                         <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
+                        @endif
                     </div>
 				</div>
 			</header>
@@ -147,15 +158,15 @@
                             <div class="row" id="school_cal">
                                 <div class="col-md-9">
                                     <!-- fullcalendar -->
-                                    <div style="margin-bottom: 15px;" class="agendaContent1">
+                                    <div style="margin-bottom: 5px;" class="agendaContent1 mb-2">
                                         <div class="btn-group" style="margin-right:5px;">
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">{{__('Today')}}</button>
                                             <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
                                         </div>
                                         <div class="btn-group" id="calendar_dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa-regular fa-eye"></i>  {{__('Select View')}}
+                                            <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa-regular fa-eye"></i>  {{__('Views')}} <i class="fa fa-caret-down"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="calendar_dropdown">
                                                 <button class="dropdown-item calendar_buttons" id="btn_day" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Day')}}</button>
@@ -165,6 +176,23 @@
                                                 <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Current List')}}</button>
                                             </div>
                                         </div>
+                                        <div class="btn-group ml-2 text-right">
+                                            @if(!$AppUI->isStudent())
+                                                <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    {{__('Actions')}} <i class="fa fa-caret-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="calendar_dropdown" style="padding-top:0; padding-bottom:0;">
+                                                    <button class="dropdown-item calendar_buttons badge-success" id="add_lesson_btn_mobile" type="button"><i class="fa-regular fa-plus"></i> Add new</button>
+                                                    <button class="dropdown-item calendar_buttons" id="btn_copy_events_mobile" type="button"><i class="fa-regular fa-copy"></i> {{__('Copy')}}</button>
+                                                    <button class="dropdown-item calendar_buttons" id="btn_goto_planning_mobile" type="button"><i class="fa-regular fa-paste"></i> {{__('Paste')}}</button>
+                                                    <button class="dropdown-item calendar_buttons badge-info" id="btn_validate_events_mobile" type="button"><i class="fa-solid fa-lock"></i> {{__('Validate All')}}</button>
+                                                    <button class="dropdown-item calendar_buttons badge-warning" id="btn_delete_events_mobile" type="button"><i class="fas fa-trash"></i> {{__('Delete All')}}</button>
+                                                </div>
+                                            @else
+                                                <a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
+                                            @endif
+                                        </div>
+
                                     </div>
                                     <div id="calendar" class="calendarContent"></div>
                                     <div style="margin-top: 15px;" class="agendaContent2">
@@ -676,6 +704,7 @@
 <!-- ================================= -->
 
 
+
 @if(session('firstConnexion') === true)
     <script>
     $(document).ready(function() {
@@ -684,6 +713,12 @@
     </script>
     <?php session(['firstConnexion' => false]); ?>
 @endif
+
+<script>
+$('.search-icon').on('click', function() {
+    $('#search_text').toggle();
+});
+</script>
 
 <script>
 
@@ -872,14 +907,14 @@
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
+            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
 
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</button>';
+                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';
@@ -1658,7 +1693,8 @@
     })
     //Convert HTML Table to CSV Method : END
     //capture events criteria
-    $('#btn_copy_events').click(function (e) {
+        $(document).on('click', '#btn_copy_events,#btn_copy_events_mobile', function() {
+
         document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
         document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
 		document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
@@ -1694,7 +1730,7 @@
     })
 
     //delete multiple events based on date, events type, teacher and student etc
-    $('#btn_delete_events').click(function (e) {
+        $(document).on('click', '#btn_delete_events,#btn_delete_events_mobile', function(e) {
 
 
         var user_role=document.getElementById("user_role").value;
@@ -1722,8 +1758,7 @@
 
 
     //validate multiple events based on date, events type, teacher and student etc
-    $('#btn_validate_events').click(function (e) {
-
+        $(document).on('click', '#btn_validate_events,#btn_validate_events_mobile', function(e) {
 
         var user_role=document.getElementById("user_role").value;
         if (user_role == 'student') {
@@ -1769,6 +1804,7 @@
                 dataType: "JSON",
                 success:function(result){
                     document.getElementById("btn_validate_events").style.display = "none";
+                    document.getElementById("btn_validate_events_mobile").style.display = "none";
                     var status =  result.status;
                     //$('#calendar').fullCalendar('removeEvents');
                     //$('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
@@ -1795,6 +1831,7 @@
                 dataType: "JSON",
                 success:function(result){
                     document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
                     var status =  result.status;
 
                     //alert(status);
@@ -2399,9 +2436,13 @@
 
                 resultHtml='';
                 document.getElementById("btn_copy_events").style.display = "none";
+                document.getElementById("btn_copy_events_mobile").style.display = "none";
                 document.getElementById("btn_goto_planning").style.display = "none";
+                document.getElementById("btn_goto_planning_mobile").style.display = "none";
                 document.getElementById("btn_delete_events").style.display = "none";
+                document.getElementById("btn_delete_events_mobile").style.display = "none";
                 document.getElementById("btn_validate_events").style.display = "none";
+                document.getElementById("btn_validate_events_mobile").style.display = "none";
 
                 var user_role=document.getElementById("user_role").value;
                 let selected_non_validate_ids = document.getElementById("get_non_validate_event_id").value;
@@ -2410,12 +2451,16 @@
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_copy_events").style.display = "none";
+                        document.getElementById("btn_copy_events_mobile").style.display = "none";
                     } else {
                         document.getElementById("btn_copy_events").style.display = "block";
+                        document.getElementById("btn_copy_events_mobile").style.display = "block";
                         if (selected_non_validate_ids.length ==0) {
                             document.getElementById("btn_validate_events").style.display = "none";
+                            document.getElementById("btn_validate_events_mobile").style.display = "none";
                         }else {
                             document.getElementById("btn_validate_events").style.display = "block";
+                            document.getElementById("btn_validate_events_mobile").style.display = "block";
                         }
                     }
                 }
@@ -2424,41 +2469,57 @@
                 {
                     if (user_role == 'student') {
                         document.getElementById("btn_validate_events").style.display = "none";
+                        document.getElementById("btn_validate_events_mobile").style.display = "none";
                         document.getElementById("btn_delete_events").style.display = "none";
+                        document.getElementById("btn_delete_events_mobile").style.display = "none";
                     }else if (user_role == 'admin_teacher' || user_role == 'school_admin_teacher') {
                         if (selected_non_validate_ids.length == 0) {
                             document.getElementById("btn_validate_events").style.display = "none";
+                            document.getElementById("btn_validate_events_mobile").style.display = "none";
                             document.getElementById("btn_delete_events").style.display = "none";
+                            document.getElementById("btn_delete_events_mobile").style.display = "none";
                         }else{
                             document.getElementById("btn_validate_events").style.display = "block";
+                            document.getElementById("btn_validate_events_mobile").style.display = "block";
                             document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_delete_events_mobile").style.display = "block";
                         }
                         if (selected_non_validate_delete_ids.length > 0) {
                             document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_delete_events_mobile").style.display = "block";
                         }
                     } else {
                         //Delete button will be visible if events are available and all events are in unlock mode
                         if (selected_non_validate_ids.length ==0) {
                             document.getElementById("btn_delete_events").style.display = "none";
+                            document.getElementById("btn_delete_events_mobile").style.display = "none";
                             document.getElementById("btn_validate_events").style.display = "none";
+                            document.getElementById("btn_validate_events_mobile").style.display = "none";
                         }else {
                             document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_delete_events_mobile").style.display = "block";
                             document.getElementById("btn_validate_events").style.display = "block";
+                            document.getElementById("btn_validate_events_mobile").style.display = "block";
                         }
                         if (selected_non_validate_delete_ids.length > 0) {
                             document.getElementById("btn_delete_events").style.display = "block";
+                            document.getElementById("btn_delete_events_mobile").style.display = "block";
                         }
 
                     }
                     if (lockRecords == 0)
                     {
                         document.getElementById("btn_delete_events").style.display = "none";
+                        document.getElementById("btn_delete_events_mobile").style.display = "none";
                         document.getElementById("btn_validate_events").style.display = "none";
+                        document.getElementById("btn_validate_events_mobile").style.display = "none";
 
                     }
                 } else{
                     document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
                     document.getElementById("btn_validate_events").style.display = "none";
+                    document.getElementById("btn_validate_events_mobile").style.display = "none";
                 }
 
 
@@ -2481,9 +2542,11 @@
 
                     if (momentSourceEnd.isBefore(momentTargetStart)) {
                         document.getElementById("btn_goto_planning").style.display = "none";
+                        document.getElementById("btn_goto_planning_mobile").style.display = "none";
                         showMessage('Your cannot copy your events or lessons in the past.', 'danger');
                     } else {
                         document.getElementById("btn_goto_planning").style.display = "block";
+                        document.getElementById("btn_goto_planning_mobile").style.display = "block";
                     }
                 }
 
@@ -2798,11 +2861,13 @@
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                    document.getElementById("btn_validate_events_mobile").style.display = "none";
                 } else {
                     selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
                 } else {
                     selected_validate_ids.join("|");
                 }
@@ -3097,11 +3162,13 @@
                 document.getElementById("get_event_id").value = selected_ids;
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_validate_events").style.display = "none";
+                    document.getElementById("btn_validate_events_mobile").style.display = "none";
                 } else {
                     selected_validate_ids.join("|");
                 }
                 if (selected_validate_ids.length ==0) {
                     document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
                 } else {
                     selected_validate_ids.join("|");
                 }
@@ -3272,6 +3339,7 @@
         // }
         if (user_role =='student'){
             document.getElementById("btn_copy_events").style.display="none";
+            document.getElementById("btn_copy_events_mobile").style.display="none";
             document.getElementById("btn_goto_planning").style.display="none";
             document.getElementById("event_teacher").style.display="none";
 			document.getElementById("event_student_div").style.display="none";
@@ -3281,7 +3349,8 @@
 
 
     //creating events
-    $('#btn_goto_planning').click(function (e) {
+    $(document).on('click', '#btn_goto_planning,#btn_goto_planning_mobile', function(e) {
+
         var school_id=document.getElementById('school_id').value;
         var source_start_date=document.getElementById("copy_date_from").value,
         source_end_date=document.getElementById("copy_date_to").value,
@@ -4231,7 +4300,7 @@ $('#event_invoice_type').on('change', function() {
 
 $( document ).ready(function() {
 
-    $('#button_menu_div').on('click', '#add_lesson_btn', function() {
+    $(document).on('click', '#add_lesson_btn,#add_lesson_btn_mobile', function() {
 
         if (getSchoolIDs('is_multi')) {
                 $('#modal_lesson_price').modal('show');
