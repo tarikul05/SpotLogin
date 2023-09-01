@@ -144,7 +144,7 @@
                         @if(!$AppUI->isStudent())
                         <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
                         @else
-                        <div id="search_text"></div>
+                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
                         @endif
                     </div>
 				</div>
