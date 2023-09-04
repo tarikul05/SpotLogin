@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/translations/update',
         'translations/updateKey',
         'admin/update-profile-photo',
-        'admin/delete-profile-photo'
+        'admin/delete-profile-photo',
+        '/stripe/webhook',
     ];
 }

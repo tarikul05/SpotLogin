@@ -8,6 +8,15 @@ use Illuminate\Support\Carbon;
 use Stripe\Stripe;
 use Stripe\Webhook;
 
+
+/**
+ * Handle the webhook request.
+ *
+ * @param Request $request The request object.
+ * @throws \UnexpectedValueException If the event cannot be constructed.
+ * @throws \Stripe\Exception\SignatureVerificationException If the signature verification fails.
+ * @return \Illuminate\Http\JsonResponse The response indicating the webhook was received.
+ */
 class StripeWebhookController extends Controller
 {
     public function handleWebhook(Request $request)
