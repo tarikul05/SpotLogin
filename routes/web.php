@@ -21,6 +21,7 @@ Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
 
 // Route::get('login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
 // AJAX
+Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
@@ -153,7 +154,6 @@ Route::get('setlang/{locale}', function ($locale) {
 // auth
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
   Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
