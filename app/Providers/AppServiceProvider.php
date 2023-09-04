@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer(
-            ['layouts.auth', 'layouts.raw'], 
+            ['layouts.auth', 'layouts.raw'],
             function ($view) {
                 $language = Language::orderBy('sort_order')->get();
                 $countries = Country::where([
@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         view()->composer(
-            ['layouts.auth', 'layouts.verify'], 
+            ['layouts.auth', 'layouts.verify'],
             function ($view) {
                 $language = Language::orderBy('sort_order')->get();
                 $countries = Country::where([
@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         view()->composer(
-            ['layouts.main'], 
+            ['layouts.main'],
             function ($view) {
                 $user = auth()->user();
                 $is_subscribed = $user->subscribed('default');

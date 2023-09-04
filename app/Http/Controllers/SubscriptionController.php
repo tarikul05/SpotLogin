@@ -14,6 +14,7 @@ use DateTime;
 
 use Stripe\Exception\ApiErrorException;
 use Stripe\Subscription;
+use Stripe\Customer;
 
 class SubscriptionController extends Controller
 {
@@ -86,6 +87,25 @@ class SubscriptionController extends Controller
             // throw error message
         }
     }
+
+
+    /** Function return all invoice customer Stripe */
+    public function invoicesCustomer(Request $request){
+        try{
+            $user = auth()->user();
+
+                    $invoice = $this->stripe->invoices->all(
+                    ['customer' => $user->stripe_id],
+                    );
+
+            return view('pages.subscribers.invoice', compact('invoice'));
+
+        } catch (Exception $e) {
+            // throw error message
+
+        }
+    }
+
 
     public function upgradePlan(Request $request)
     {
@@ -393,4 +413,48 @@ class SubscriptionController extends Controller
             // throw error
         }
     }
+
+
+
+
+    public function checkStripeSubscription(User $user)
+    {
+        $user = auth()->user();
+
+        // Vérifiez si nous avons déjà vérifié l'abonnement aujourd'hui
+        if ($user->last_stripe_check && $user->last_stripe_check->isToday()) {
+            return;
+        }
+
+        // Récupérez l'objet client Stripe
+        try {
+            $customer = Customer::retrieve($user->stripe_id);
+
+            // Parcourez tous les abonnements du client et vérifiez s'il a un abonnement valide
+            foreach ($customer->subscriptions->data as $subscription) {
+                if (in_array($subscription->status, ['active', 'trialing'])) {
+                    // L'utilisateur a un abonnement actif ou en période d'essai, ajoutez donc le rôle à l'utilisateur
+                    $user->assignRole('single_coach_read_only');
+
+                    // Mettez à jour la date de dernière vérification
+                    $user->last_stripe_check = Carbon::now();
+                    $user->save();
+
+                    return;
+                }
+            }
+        } catch (\Exception $e) {
+            // Gérez les exceptions ici (par exemple, enregistrez une erreur dans un journal)
+        }
+
+        // Si l'utilisateur n'a pas d'abonnement valide, retirez le rôle
+        $user->removeRole('single_coach_read_only');
+
+        // Mettez à jour la date de dernière vérification
+        $user->last_stripe_check = Carbon::now();
+        $user->save();
+    }
+
+
+
 }

@@ -52,27 +52,40 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2">
+
           <li class="nav-item active">
             <a class=" nav-link login_btn text-center" href="#ourSolutions">{{ __('Our solutions') }}</a>
           </li>
           <li class="nav-item active">
-            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
+            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }}</a>
           </li>
           <li class="nav-item active">
-            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">{{ __('Sign up') }} <span class="d-sm-none">Now!</span></a>
+        <div style="background-color:#3486c9; opacity:.7; border-radius:8px; padding-top:0px; margin-right:10px; line-height:21px;">
+                <a style="line-height:21px; margin-top:3px;" class=" nav-link active login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
+            </div>
           </li>
-          <li class="nav-item active">
-            <a class=" nav-link login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
-          </li>
-          <!--<li class="nav-item">
-            <a class="px-2 nav-link" href="#"><img src="{{ asset('img/globe.svg') }}" width="32" height="32"></a>
-          </li>-->
+          <select id="setLan" class="selectpicker pt-1 d-none d-sm-block" data-width="fit">
+            @foreach ($language as $key => $lan)
+                <option
+                value="{{ $lan->language_code }}"
+                @if ($lan->language_code == app()->getLocale())
+                    selected="selected"
+                @endif
+                data-icon="{{ $lan->flag_class}}"
+                >  {{ $lan->title }}</option>
+            @endforeach
+          </select>
         </ul>
-
         <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
           Get <b>60 days</b> Free-Trial<br>with all features access
         </div>
+
+        <div class="d-flex justify-content-center d-sm-none pt-2">
+            <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
+            <span class="nav-link text-center" style="padding:3px;">|</span>
+            <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms & conditions</a>
+          </div>
 
       </div>
 
@@ -87,7 +100,7 @@
   </div>
 
   <footer>
-    <select id="setLan" class="selectpicker ms-auto mb-3" data-width="fit" >
+    <select id="setLan2" class="selectpicker ms-auto" data-width="fit" >
         @foreach ($language as $key => $lan)
             <option
             value="{{ $lan->language_code }}"
@@ -99,9 +112,13 @@
         @endforeach
       </select>
 
-    <h2 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h2>
-    <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/call.svg') }}" alt=""> +41 22 50 17 956 </a></p>
+      <div class="d-flex justify-content-center">
+        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
+        <span class="nav-link text-center" style="padding:3px;">|</span>
+        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms & conditions</a>
+      </div>
 
+    <h3 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h3>
     <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
   </footer>
 
@@ -132,7 +149,7 @@
   $(document).ready(function() {
 
 
-    $("#setLan").change(function(event) {
+    $("#setLan,#setLan2").change(function(event) {
       var lanCode = $(this).val();
       window.location.href = BASE_URL+"/setlang/"+lanCode ;
     });
@@ -147,5 +164,18 @@
   });
 
 </script>
+
+<script>
+    window.axeptioSettings= {
+    clientId: "64f5f5db11dead27b74467c9",
+    };
+
+    (function(d,s) {
+    var t = d.getElementsByTagName(s)[0],e = d.createElement(s);
+    e.async = true;
+    e.src = "//static.axept.io/sdk.js";
+    t.parentNode.insertBefore(e, t);
+    })(document, "script");
+    </script>
 
 </html>

@@ -99,7 +99,7 @@
 
                         <br>
                         <div class="checkbox text-center">
-                            <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">{{ __('terms and conditions') }}</a></label>
+                            <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">{{ __('terms and conditions') }}</a></label>
                         </div>
                         <br>
                         <div class="text-center">

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-  
+
   protected $stripe;
 
   public function __construct()
@@ -28,7 +28,7 @@ class ProfileController extends Controller
         $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
     }
 
-  
+
   /**
   * Update the specified resource in storage.
   *
@@ -58,19 +58,19 @@ class ProfileController extends Controller
         if ($authUser->person_type == 'App\Models\Student') {
             Student::where('id', $authUser->person_id)->update($userData);
         }
-      
+
       return back()->withInput($request->all())->with('success', __('Profile updated successfully!'));
     } catch (\Exception $e) {
       //return error message
       return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
-      
+
     }
-    
+
   }
-  
 
 
-  
+
+
   /**
   * AJAX Action Update the specified resource in storage.
   *
@@ -83,21 +83,21 @@ class ProfileController extends Controller
     $result = array(
       'status' => 0,
       "file_id" => '0',
-      "image_file" => '',   
+      "image_file" => '',
       'message' => __('failed to change image'),
     );
     try{
       $authUser = $request->user();
       if($request->file('profile_image_file'))
       {
-        
+
         $image = $request->file('profile_image_file');
         $mime_type = $image->getMimeType();
         $extension = $image->getClientOriginalExtension();
         if($image->getSize()>0)
-        { 
-          list($path, $imageNewName) = $this->__processImg($image,'UserImage',$authUser); 
-          
+        {
+          list($path, $imageNewName) = $this->__processImg($image,'UserImage',$authUser);
+
           if (!empty($path)) {
             $fileData = [
               'visibility' => 1,
@@ -108,24 +108,24 @@ class ProfileController extends Controller
               'extension'=>$extension,
               'mime_type'=>$mime_type
             ];
-            
+
             $attachedImage = AttachedFile::create($fileData);
-            
+
             $data['profile_image_id'] = $attachedImage->id;
-            
+
           }
         }
       }
-      
+
       if ($authUser->update($data)) {
         $result = array(
           "status"     => 1,
           "file_id" => $authUser->profile_image_id,
-          "image_file" => $path,   
+          "image_file" => $path,
           'message' => __('Successfully Changed Profile image')
         );
       }
-      
+
     } catch (\Exception $e) {
       //return error message
       $result['message'] = __('Internal server error');
@@ -136,7 +136,7 @@ class ProfileController extends Controller
 
   /**
    *  AJAX action image delete and unlink
-   * 
+   *
    * @return json
    * @author Mamun <lemonpstu09@gmail.com>
    * @version 0.1 written in 2022-03-10
@@ -145,7 +145,7 @@ class ProfileController extends Controller
   {
     $authUser = $request->user();
     $result = array(
-      'status' => 'failed',   
+      'status' => 'failed',
       'message' => __('failed to remove image'),
     );
     try{
@@ -172,7 +172,7 @@ class ProfileController extends Controller
 
   /**
   * Display the specified resource.
-  * 
+  *
   * @param  \Illuminate\Http\Request  $request
   * @param  \App\Models\User  $user
   * @return \Illuminate\Http\Response
@@ -200,12 +200,15 @@ class ProfileController extends Controller
               $subscriber->latest_invoice,
               []
             );
-      
         }
-        
+
+        $invoices = $this->stripe->invoices->all(
+        ['customer' => $user->stripe_id],
+        );
+
     }
 
-    return view('pages.profile.index', compact('subscription', 'product_object', 'subscriber', 'invoice_url', 'user'));
+    return view('pages.profile.index', compact('subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices'));
 }
 
 }

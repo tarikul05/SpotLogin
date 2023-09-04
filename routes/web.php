@@ -198,6 +198,8 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
+  Route::post('/stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
+
   Route::prefix('admin')->group(function() {
 
     Route::resource('roles', "RoleController");
