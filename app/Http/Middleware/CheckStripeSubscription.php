@@ -25,6 +25,6 @@ class CheckStripeSubscription
             app('App\Http\Controllers\SubscriptionController')->checkStripeSubscription($user);
         }
 
-       // return $next($request);
+        return $next($request);
     }
 }
