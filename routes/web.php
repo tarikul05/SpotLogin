@@ -199,7 +199,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
   //Route::post('/stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
-  Route::post('/stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
+  Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
 
   Route::prefix('admin')->group(function() {
 
