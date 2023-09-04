@@ -153,7 +153,7 @@ Route::get('setlang/{locale}', function ($locale) {
 // auth
 Route::group(['middleware' => ['auth']], function () {
 
-
+    Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
   Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'welcome'])->name('Home');
   Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
@@ -197,9 +197,6 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/my-subscription', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription');
 
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
-
-  //Route::post('/stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
-  Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
 
   Route::prefix('admin')->group(function() {
 
