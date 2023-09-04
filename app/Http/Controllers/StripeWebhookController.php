@@ -43,7 +43,7 @@ class StripeWebhookController extends Controller
 
             // Rechercher l'utilisateur par stripe_id
             $user = User::where('stripe_id', $subscription->customer)->first();
-
+            $trialEndsAt = Carbon::createFromTimestamp($subscription->trial_end);
             if ($user) {
                 if (in_array($subscription->status, ['active', 'trialing'])) {
                     // Si l'abonnement est actif ou en période d'essai, retirez le rôle en lecture seule
@@ -55,6 +55,7 @@ class StripeWebhookController extends Controller
 
                 $user->subscriptions()->where('stripe_id', $subscription->id)->update([
                     'stripe_status' => $subscription->status,
+                    'trial_ends_at' => $trialEndsAt
                 ]);
 
                 $user->last_stripe_check = Carbon::now();
@@ -65,7 +66,7 @@ class StripeWebhookController extends Controller
 
             // Rechercher l'utilisateur par stripe_id
             $user = User::where('stripe_id', $subscription->customer)->first();
-            $trialEndsAt = Carbon::createFromTimestamp($timestamp);
+            $trialEndsAt = Carbon::createFromTimestamp($subscription->trial_end);
             if ($user) {
                 // Assignez le rôle en lecture seule lorsque l'abonnement est supprimé
                 $user->assignRole('single_coach_read_only');
@@ -83,7 +84,7 @@ class StripeWebhookController extends Controller
 
             // Rechercher l'utilisateur par stripe_id
             $user = User::where('stripe_id', $subscription->customer)->first();
-            $trialEndsAt = Carbon::createFromTimestamp($timestamp);
+            $trialEndsAt = Carbon::createFromTimestamp($subscription->trial_end);
 
             if ($user) {
                 // Assignez le rôle en lecture seule lorsque l'abonnement est supprimé
