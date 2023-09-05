@@ -23,14 +23,14 @@
           <div class="pull-right">
               <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="Search">
           </div>
-        </div>    
-      </div>          
+        </div>
+      </div>
     </header>
     <div>
       <table id="list_tbl" class="display" style="width:100%">
           <thead>
               <tr>
-                <th>#</th>
+                <!--<th>#</th>-->
                 <th></th>
                 <th>Name of the School</th>
                 <th>Type</th>
@@ -45,7 +45,7 @@
             @php ($i = 1)
             @foreach ($schools as $key => $school)
               <tr>
-                <td>{{ $i++ }}</td>
+                <!--<td>{{ $i++ }}</td>-->
                 <td>
                   <?php if (!empty($school->logoImage->path_name)): ?>
                     <img src="{{ $school->logoImage->path_name }}" width='30' height='30' class='img-circle account-img-small'/>
@@ -58,7 +58,7 @@
                 <td>{{ ($school->school_type == 'S')? 'School': 'Coach' }}</td>
                 <td>{{ $school->incorporation_date }}</td>
                 <!--<td>{{ $school->contact_firstname }}</td>-->
-                <td>{{ $school->email }}</br>
+                <td>{{ $school->email }}<br>
                 {{ $school->email2 }}
                 </td>
                 <td>
@@ -71,13 +71,14 @@
                 <td>
                   <a class="btn btn-sm btn-primary" href="{{ route('adminTeachers',[$school->id]) }}"> {{ __('Teachers')}} </a>
                   <a class="btn btn-sm btn-warning" href="{{ route('adminStudents',[$school->id]) }}"> {{ __('Students')}} </a>
-                   <a class="btn btn-sm btn-primary" href="{{ route('adminInvoiceList',[$school->id]) }}"> {{ __('Invoices')}} </a>
-                  <a class="btn btn-sm btn-theme-success" href="{{ URL::to('/admin/school-update/'.$school->id)}}"> {{ __('Edit')}} </a>
+                   <a class="btn btn-sm btn-info" href="{{ route('adminInvoiceList',[$school->id]) }}"> {{ __('Invoices')}} </a>
+                   <a class="btn btn-sm btn-theme-success" href="{{ URL::to('/admin/school-update/'.$school->id)}}"> {{ __('Edit')}} </a>
+                   <a class="btn btn-sm btn-danger" onclick="deactivateUser({{ $school->id }})"> {{ __('Disable')}}</a>
                 </td>
               </tr>
             @endforeach
-              
-              
+
+
           </tbody>
       </table>
     </div>
@@ -89,7 +90,13 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        
+
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        }
+    });
+
         //var lang_json_file=getLangJsonFileName();
             $('#list_tbl').DataTable( {
                 "responsive": true,
@@ -105,21 +112,43 @@
                 //     "url": lang_json_file,
                 //     paginate: {
                 //       next: '>', // or '?'
-                //       previous: '<' // or '?' 
-                //     }                    
+                //       previous: '<' // or '?'
+                //     }
                 // },
                 "pageLength": 10,
-                "sPrevious": "<", 
+                "sPrevious": "<",
                 "sNext": ">" // This is the link to the next page
                 ,"bJQueryUI": false
-            });    
-            
+            });
+
             var table = $('#list_tbl').DataTable();
             $('#search_text').on('keyup change', function () {
                 //table.search(this.value).draw();
                 $('#list_tbl').DataTable().search($(this).val()).draw();
-                
-            }); 
+
+            });
     });
+
+
+    function deactivateUser(userId) {
+        console.log('stop ID ', userId)
+        data = 'user_id=' + userId
+    $.ajax({
+        url: BASE_URL + '/deactivate_user',
+        type: 'POST',
+        data,
+        dataType: 'json',
+        async:false,
+        success: function(response) {
+           // reload the current page
+           window.location.reload();
+        },
+        error: function(e) {
+            alert('Erreur lors de la désactivation de l\'utilisateur');
+        }
+    });
+}
+
+
 </script>
 @endsection
