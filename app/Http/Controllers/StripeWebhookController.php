@@ -23,7 +23,7 @@ class StripeWebhookController extends Controller
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $endpointSecret = 'whsec_ueBB01Z6TTr7uNZ1i5YNBwiE9lR26Ino';
+        $endpointSecret = env('STRIPE_ENDPOINT_SECRET');
 
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
