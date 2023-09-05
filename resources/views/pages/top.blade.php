@@ -127,6 +127,48 @@
   </div>
 </section>
 
+<div class="modal fade" id="modalStudent" tabindex="-1" role="dialog" aria-labelledby="modalStudent" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white" style="background-color: #152245;">
+          <h5 class="modal-title" id="exampleModalLabel">Students Login</h5>
+            <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
+        </div>
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="{{ asset('img/StudentStep1.png') }}" alt="" class="img-fluid img-thumbnail" width="100%">
+                </div>
+                <div class="col-md-8 p-2 pt-4 text-center">
+                    <h6 class="gilroy-light txtdarkblue"><i class="fa-solid fa-circle-info"></i> {{ __("You receive an email from your coach with a link to create your account") }}.</h6>
+                    <p></p>
+                    <h6 class="gilroy-light txtdarkblue"><i class="fa-solid fa-circle-info"></i> {{ __("Click on the link and follow the instructions") }}.</h6>
+                </div>
+            </div>
+<hr>
+            <div class="row">
+
+                <div class="col-md-8 p-2 pt-4 text-center">
+                    <h6 class="gilroy-light txtdarkblue"><i class="fa-solid fa-circle-info"></i> {{ __("Complete your personnal informations") }}.</h6>
+                    <p></p>
+                    <h6 class="gilroy-light txtdarkblue"><i class="fa-solid fa-circle-info"></i> {{ __("Valid for create your account") }}.</h6>
+                </div>
+                <div class="col-md-3">
+                    <img src="{{ asset('img/StudentStep2.png') }}" alt="" class="img-fluid img-thumbnail" width="100%">
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -143,16 +185,32 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white" style="background-color: #152245;">
+          <h5 class="modal-title" id="exampleModalLabel">General Terms and conditions</h5>
+            <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
+        </div>
+        <div class="modal-body">
+            {!! $template->spp_text !!}
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">I understand</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     $(document).ready(function() {
       $('#switchModalBtn').on('click', function() {
-        $('#exampleModal').modal('hide');
+        $('#exampleModal2').modal('hide');
       });
 
-      $('#exampleModal').on('hidden.bs.modal', function (e) {
+      $('#exampleModal2').on('hidden.bs.modal', function (e) {
         $('#schoolsignupModal').modal('show');
         //document.getElementById('terms_condition').checked = true;
-        $('#terms_condition').prop('checked', true).trigger('change');
+        //$('#terms_condition').prop('checked', true).trigger('change');
       });
     });
 

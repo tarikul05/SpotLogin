@@ -84,7 +84,7 @@
         <div class="d-flex justify-content-center d-sm-none pt-2">
             <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
             <span class="nav-link text-center" style="padding:3px;">|</span>
-            <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms & conditions</a>
+            <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">Terms & conditions</a>
           </div>
 
       </div>
@@ -115,7 +115,7 @@
       <div class="d-flex justify-content-center">
         <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
         <span class="nav-link text-center" style="padding:3px;">|</span>
-        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Terms & conditions</a>
+        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">Terms & conditions</a>
       </div>
 
     <h3 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h3>
