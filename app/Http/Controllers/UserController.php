@@ -248,6 +248,53 @@ class UserController extends Controller
         return redirect()->back()->withInput($request->all())->with('error', __('failed to signup'));
     }
 
+    /**
+     * Disables the user by setting their 'is_active' flag to 0,
+     * logging them out, and clearing the session.
+     *
+     * @throws Some_Exception_Class description of exception
+     * @return void
+     */
+    public function disable_user()
+    {
+        $user = Auth::user();
+        $user->is_active = 0;
+        $user->save();
+        Auth::logout();
+        Session::flush();
+        return redirect()->route('Home');
+    }
+
+    /**
+     * Deactivates a user and their associated school.
+     *
+     * @param Request $request The request object containing the user_id parameter.
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the success message or the error message.
+     */
+    public function deactivate(Request $request) {
+        $userID = $request->input('user_id');
+        $user = User::where('school_id', $userID)->first();
+        $school = School::where('id', $userID)->first();
+
+        if ($user) {
+            $user->is_active = 0;
+            $user->save();
+
+            if ($school) {
+                $school->is_active = 0;
+                $school->save();
+            }
+
+            return response()->json(['message' => 'Utilisateur et école désactivés avec succès'], 200);
+        } else {
+            return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+        }
+    }
+
+
+
+
+
 
     /**
      * signup virification
