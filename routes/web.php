@@ -198,6 +198,9 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
+    Route::get('/user/disable', [App\Http\Controllers\UserController::class, 'disable_user'])->name('user.disable_user');
+    Route::post('/deactivate_user', [App\Http\Controllers\UserController::class, 'deactivate'])->name('user.deactivate');
+
   Route::prefix('admin')->group(function() {
 
     Route::resource('roles', "RoleController");

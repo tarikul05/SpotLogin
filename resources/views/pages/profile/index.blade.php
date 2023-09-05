@@ -525,6 +525,8 @@
                   <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
                   <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
                   <tr><td><b>School timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                    <tr class="mt-2"><td><b class="text-danger">Delete my account</b></td> <td>
+                        <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">Delete my account</a></td></tr>
                   <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->
                 </table>
                 </div>
@@ -598,7 +600,28 @@
     </div>
   </div>
 
-
+  <div class="modal" id="delete_user">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete my account</h5>
+                <span type="button" class="close" data-dismiss="modal"><i class="fa-solid fa-question fa-beat"></i></span>
+            </div>
+            <div class="modal-body">
+              <?php if(!empty($subscription)) { ?>
+                <div class="text-center">
+                    <i class="fas fa-exclamation-circle fa-5x text-danger"></i> <!-- Utilisez l'icône d'alerte ou d'information souhaité -->
+                </div>
+        <p class="text-center mt-3">Do you really want to delete your account ?<br></p>
+              <?php } ?>
+            </div>
+            <div class="modal-footer">
+                <a href="<?= $BASE_URL;?>/admin/profile-update" class="btn btn-secondary close"  data-dismiss="modal">No</a>
+                <a class="btn btn-danger" href="{{ route('user.disable_user') }}">Yes, i confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
 
   <div class="modal" id="cancel_subscription">
     <div class="modal-dialog modal-dialog-centered">
