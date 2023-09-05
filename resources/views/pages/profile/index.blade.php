@@ -20,7 +20,7 @@
               <div class="page_header_class">
                 <label id="page_header" name="page_header">
                   <i class="fa-solid fa-user"></i> {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
-                </label>        
+                </label>
               </div>
             </div>
             <div class="col-sm-6 col-xs-12 btn-area">
@@ -29,28 +29,31 @@
                   {{ __('Save')}}
                 </button>-->
               </div>
-            </div>    
-          </div>                 
+            </div>
+          </div>
         </header>
 
         <?php if(!empty($subscription)) { ?>
             <img src="{{ asset('img/member_ship.png') }}" width="70" class="rounded-circle badgePremium">
         <?php } ?>
-      
+
         <div class="col-lg-12 col-md-12 col-sm-12">
           @csrf
-          
+
           <!-- Nav tabs -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
               <!--<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account')}}</button>-->
               @if(!$AppUI->isStudent())
-              <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_account" type="button" role="tab" aria-controls="nav-account" aria-selected="false">{{ __('My Account')}}</button>
+              <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_account" type="button" role="tab" aria-controls="nav-account" aria-selected="false">{{ __('My Plan')}}</button>
+              <button class="nav-link" id="nav-account-user-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-account-user" aria-selected="false">{{ __('My Account')}}</button>
               <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Logo')}}</button>
               @endif
 
+
+
               @if($AppUI->isStudent())
-              <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="false">{{ __('My Account')}}</button>
+              <button class="nav-link active" id="nav-account-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="false">{{ __('My plan')}}</button>
               <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">{{ __('Profile Image')}}</button>
               @endif
 
@@ -88,7 +91,7 @@
 <div class="row">
 
   <div class="col-lg-5 mb-2">
-        
+
     <div class="card">
       <div class="card-body bg-tertiary">
 
@@ -120,13 +123,13 @@
               Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
           @endif
         <?php } ?>
-        
-        
+
+
         <table class="table table-stripped table-hover">
 
           <tr>
             <td><b>Plan Type</b></td>
-            <?php 
+            <?php
                 if($product_object){
                     echo '<td><span class="badge bg-success"><i class="fa-solid fa-check"></i> '.$product_object->name.'</span></td>';
                 }else{
@@ -147,7 +150,7 @@
 
           <?php if(!empty($user->trial_ends_at)){ ?>
             <tr>
-                <?php 
+                <?php
                   if($AppUI->isSchoolAdmin()){
                       echo '<td><b>Trail Valid Until</b></td>';
                   }else{
@@ -160,7 +163,7 @@
             </tr>
           <?php } ?>
 
-          <?php 
+          <?php
             if($subscription) { ?>
               <tr>
                 <?php {
@@ -188,7 +191,7 @@
             <?php if(!empty($subscription)) { ?>
               <tr>
                 <td><b>Invoice</b></td><td>
-                  <i class="fa-solid fa-download"></i> 
+                  <i class="fa-solid fa-download"></i>
                   <a class="action_link" target="_blank" href="<?= $invoice_url['hosted_invoice_url'] ?>">
                   <span class="action_icon">Download</span>
               </a></td>
@@ -199,11 +202,11 @@
 
         <div class="mt-2 btns-plan">
           <?php if(!empty($subscriber)) { ?>
-            <a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}">Choose a Plan</a>
+            <!--<a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}">Choose a Plan</a>-->
             @if($subscriber->cancel_at_period_end === true || $subscriber->cancel_at_period_end === "true")
-            <a class="btn btn-warning btn-md disabled" href="#"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription !</a>
+            <a class="btn btn-warning btn-md disabled" href="#"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription</a>
             @else
-            <a class="btn btn-warning btn-md" href="#" id="buttonCancelSubscription"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription !</a>
+            <a class="btn btn-warning btn-md" href="#" id="buttonCancelSubscription"><i class="fa-solid fa-arrow-right"></i> Cancel my subscription</a>
             @endif
           <?php } else { ?>
             <a class="btn btn-success" href="{{ route('subscription.upgradePlan') }}"><i class="fa-regular fa-bell fa-bounce"></i>  Choose a Plan & Upgrade Now !</a>
@@ -219,18 +222,48 @@
 
   <div class="col-lg-6 mb-2">
 
-    <div class="card" style="box-shadow: 0px 15px 10px -15px #111;">
-      <div class="card-body bg-tertiary">
-        <div class="h5 pt-2" style="color:#0075bf;">My account</div>                    
-      <table class="table table-stripped table-hover">
-        <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
-        <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
-        <tr><td><b>School timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
-        <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->
-      </table>
-
-      </div>
-    </div>
+     <!-- foreach user invoices list from Stripe API and "invoices" array  in a form select -->
+     <?php if(!empty($invoices)): ?>
+     <div class="table-invoices mb-3">
+           <div class="card">
+             <div class="card-body bg-tertiary">
+               <div class="d-flex justify-content-between align-items-center">
+                 <div class="h5" style="color:#0075bf;">Invoices</div>
+                 <!-- add select box on same line than Invoice Title align right -->
+                 <select id="invoiceFilter">
+                   <?php foreach($invoices as $invoice): ?>
+                     <option value="<?= $invoice['hosted_invoice_url'] ?>"><?php echo date('M j, Y', $invoice['created']); ?></option>
+                   <?php endforeach;?>
+                 </select>
+               </div>
+               <div class="table-responsive">
+                 <table class="table table-stripped table-hover">
+                   <thead>
+                     <tr>
+                       <th class="text-center">Date</th>
+                       <th class="text-center">Amount</th>
+                       <th class="text-center">Status</th>
+                       <th class="text-center">Action</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <?php foreach($invoices as $invoice): ?>
+                       <tr class="<?= $invoice['id'] ?>">
+                         <td class="text-center"><?php echo date('M j, Y', $invoice['created']); ?></td>
+                         <td class="text-center"><?= '$'.($invoice['amount_paid']/100) ?></td>
+                         <td class="text-center"><?= $invoice['status'] ?></td>
+                         <td class="text-center">
+                           <a class="action_link" href="<?= $invoice['hosted_invoice_url'] ?>" target="_blank"><i class="fa-solid fa-download"></i></a>
+                         </td>
+                       </tr>
+                     <?php endforeach;?>
+                   </tbody>
+                 </table>
+               </div>
+             </div>
+           </div>
+         </div>
+       <?php endif;?>
 
   </div>
 
@@ -243,11 +276,11 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column">
-      
-                
+
+
                         <?php if(!empty($user->trial_ends_at)){ ?>
                             <p class="text-secondary mb-1">
-                                <?php 
+                                <?php
                                 if($AppUI->isSchoolAdmin()){
                                     echo '<b>Trail Valid Until</b>';
                                 }else{
@@ -256,8 +289,8 @@
                             ?>:  <?= date('M j, Y', strtotime($user->trial_ends_at)) ?></td>
                             </p>
                         <?php } ?>
-                        <p class="text-secondary mb-1"><b>Next Payment:</b> 
-                            <?php 
+                        <p class="text-secondary mb-1"><b>Next Payment:</b>
+                            <?php
                                 if($subscription){
                                     echo '<span class="">' . date('M j, Y', $subscription['billing_cycle_anchor']).'</span>';
                                 }else{
@@ -267,7 +300,7 @@
                         </p>
                         <p class="text-muted font-size-sm mb-1">
                             <b>Plan Type : </b>
-                            <?php 
+                            <?php
                                 if($product_object){
                                     echo '<span class="plan_type_p">'.$product_object->name.'</span>';
                                 }else{
@@ -296,7 +329,7 @@
                             <span class="action_icon">Change plan type</span>
                         </a>
                         <button class="btn btn-outline-success">Cancle</button>
-                    
+
                   </div>
                 </div>
               </div>
@@ -306,7 +339,7 @@
                 <div class="card-body">
                     <table class="my_subscription">
                         <tbody>
-                            <?php if($AppUI->isSchoolAdmin()){ ?> 
+                            <?php if($AppUI->isSchoolAdmin()){ ?>
                                 <!-- school first higher plan info -->
                                 <?php if(isset($subscription['plan']['id']) && $subscription['plan']['id'] == env('stripe_school_premium_plan_one_price_id')) {?>
                                     <tr>
@@ -386,7 +419,7 @@
                                         <td>Access the mobile app</td>
                                     </tr>
                             <?php } ?>
-                            <?php if($AppUI->isTeacherAll() || $AppUI->isTeacherMedium() || $AppUI->isTeacherMinimum()){ ?> 
+                            <?php if($AppUI->isTeacherAll() || $AppUI->isTeacherMedium() || $AppUI->isTeacherMinimum()){ ?>
                                 <tr>
                                     <td>Access the school schedule </td>
                                 </tr>
@@ -427,7 +460,7 @@
 
 
 
-          
+
                   </div>
                 </div>
               </div>
@@ -445,11 +478,11 @@
                     <label id="page_header" class="page_title text-black">{{ __('User Account')}}</label>
                   </div>
                 </div>
-              
+
                 <div class="col-md-6 offset-md-2">
                   <div class="form-group">
                     <input type="hidden" id="user_id" name="user_id" value="{{!empty($AppUI['id']) ? $AppUI['id'] : '0'}}">
-                  </div> 
+                  </div>
                   <div class="form-group row">
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('ID')}}  </label>
                     <div class="col-sm-6">
@@ -463,7 +496,7 @@
                     <div class="col-sm-6">
                       <div class="form-group-data">
                         <input type="text" class="form-control" id="firstname" name="firstname" value="{{!empty($AppUI['firstname']) ? old('firstname', $AppUI['firstname']) : old('firstname')}}">
-                        
+
                       </div>
                     </div>
                   </div>
@@ -477,12 +510,28 @@
                     <label class="col-lg-4 col-sm-4 text-end">{{ __('New Password')}}: </label>
                     <div class="col-sm-6 form-group-data">
                       <input type="password" type="text" class="form-control" id="password" name="password" value="">
-                      
+
                     </div>
                   </div> -->
                 </div>
               </div>
             </div>
+
+            <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+            <div class="card" style="box-shadow: 0px 15px 10px -15px #111;">
+                <div class="card-body bg-tertiary">
+               <div class="h5 pt-2" style="color:#0075bf;">My account</div>
+                <table class="table table-stripped table-hover">
+                  <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
+                  <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
+                  <tr><td><b>School timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                  <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->
+                </table>
+                </div>
+              </div>
+            </div>
+
+
             <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
               <div class="row">
                 <div class="col-sm-12 col-xs-12 header-area">
@@ -496,7 +545,7 @@
                     @endif
                   </div>
                 </div>
-              
+
                 <div class="col-md-6">
                   <form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
                     <div class="form-group row">
@@ -513,7 +562,7 @@
                                 style="margin-right:10px;">
                           <?php endif; ?>
 
-                            
+
                             <div style="display:flex;flex-direction: column;">
                               <div style="margin:5px;">
                                 <span class="btn btn-theme-success">
@@ -564,14 +613,14 @@
                     <i class="fas fa-exclamation-circle fa-5x text-danger"></i> <!-- Utilisez l'icône d'alerte ou d'information souhaité -->
                 </div>
                 <p class="text-center mt-3">Do you really want to cancel your subscription?<br>
-                <small>(Your premium access will be valid until 
+                <small>(Your premium access will be valid until
 
                   @if($subscriber->status === 'active')
                   <?php echo date('M j, Y', $subscription['current_period_end']); ?>
                   @else
                   <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>
                   @endif
-                  
+
                   )</small>
                 </p>
               <?php } ?>
@@ -588,6 +637,20 @@
 @endsection
 
 @section('footer_js')
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#showInvoice").click(function(){
+        $(".table-invoices").toggle();
+        });
+    });
+</script>
+<script>
+   $('#invoiceFilter').on('change', function() {
+    var url = this.value;
+    window.open(url, '_blank');
+    })
+    </script>
 <script>
 	$(document).ready(function(){
     $('#buttonCancelSubscription').on('click', function() {
@@ -640,7 +703,7 @@
         errors = errors.errors;
         $.each(errors, function (key, val) {
           //$("#" + key + "_error").text(val[0]);
-          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
         });
       },
       complete: function() {
@@ -673,7 +736,7 @@
           $("#delete_profile_image").hide();
           successModalCall(response.message);
         }
-              
+
       },
       error: function (reject) {
         loader.hide("fast");
@@ -681,7 +744,7 @@
         errors = errors.errors;
         $.each(errors, function (key, val) {
           //$("#" + key + "_error").text(val[0]);
-          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+          errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
         });
       },
       complete: function() {

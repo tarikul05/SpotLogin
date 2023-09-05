@@ -52,6 +52,8 @@ class User extends Authenticatable
         'trial_ends_at',
     ];
 
+    protected $dates = ['last_stripe_check'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -170,7 +172,7 @@ class User extends Authenticatable
 
         return $this->hasAnyRole(['teachers_all']);
     }
-    
+
     /**
      * Check user has Teachers authority
      * @return boolean
@@ -228,7 +230,7 @@ class User extends Authenticatable
         return $this->morphTo(__FUNCTION__, 'person_type', 'person_id');
     }
 
-    
+
      /**
      * Get the schools for the user.
      */
@@ -236,9 +238,9 @@ class User extends Authenticatable
     {
         if (!empty($this->school_id)) {
             return $this->personable->schools[0];
-        } 
+        }
         return '';
-        
+
 
     }
 
@@ -314,9 +316,9 @@ class User extends Authenticatable
      */
     public function student()
     {
-        
+
         return $this->belongsTo(Student::class, 'person_id', 'id');
-        
+
     }
 
      /**
@@ -324,9 +326,9 @@ class User extends Authenticatable
      */
     public function parent()
     {
-        
+
         return $this->belongsTo(Parent::class, 'person_id', 'id');
-        
+
     }
 
 
@@ -337,7 +339,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(AttachedFile::class, 'profile_image_id', 'id');
     }
-  
+
 
 
     /**
@@ -348,7 +350,7 @@ class User extends Authenticatable
     // public function getRelatedSchoolAttribute()
     // {
 
-        
+
     //     $school_data = '';
 
     //     switch ($this->person_type) {
@@ -380,27 +382,27 @@ class User extends Authenticatable
     // }
 
     static public function getUserData($field,$username,$password = null){
-        
+
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null],
                 ['is_active', 1]
             ])->first();
-        
+
     }
 
     static public function getUserDataDetails($field,$username,$password = null){
-        
+
             return $user = self::where([
                 [$field, $username],
                 ['deleted_at', null],
                 ['is_active', 1]
             ])->first()->toArray();
-        
+
     }
 
     public function getFirstLoginData_after_reset($username,$password = null){
-        
+
         //return $user = User::whereUsername($username)->wherePassword(Hash::make($password))->first();
         return $user = self::where([
             ['username', $username],
@@ -411,7 +413,7 @@ class User extends Authenticatable
 
     }
     public function change_password($username,$old_password,$new_password){
-        
+
         $user = self::where([
             ['username', $username],
             ['is_firstlogin',1],
@@ -429,8 +431,8 @@ class User extends Authenticatable
                 'status' => 1,
                 'message' => __('Old password not matched'),
             );
-        } 
-        
+        }
+
         $user->password = $new_password;
         $user->is_firstlogin = 0;
         $user->save();
@@ -438,9 +440,9 @@ class User extends Authenticatable
             'status' => 0,
             'message' => __('password reset done'),
         );
-        
+
 
     }
 
-   
+
 }

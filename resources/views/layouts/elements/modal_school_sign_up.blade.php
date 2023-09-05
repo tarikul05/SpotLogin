@@ -23,6 +23,9 @@
                         </select>
                     </div>
 
+                    <div class="alert alert-warning">This sign-up form is only for Coachs and Schools. If you are a <b>student</b> invited by your school or your teacher, please
+                        <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">click here</a></div>
+
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="{{ __('Account name (full name / Name of the school)') }}" id="fullname" name="fullname" required>
                     </div>
@@ -85,8 +88,8 @@
                 </div>
                 <div class="col-lg-6 bg-tertiary text-center p-3">
                 <div class="d-none d-sm-block"><br><br></div>
-                <h4 class="d-none d-sm-block">{{ __('Free Trial') }}</h4>
-                <h5 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 60-free-day trial period') }}</h5>
+                <h5 class="d-none d-sm-block">{{ __('Free Trial') }}</h5>
+                <h4 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h4>
                 <div class="d-none d-sm-block"><br><br></div>
                     <small id="" class="password_hint bg-tartiary card pt-1 mt-2 pb-2">
                         <strong>{{ __('Password Must') }}:</strong></br>
@@ -99,7 +102,7 @@
 
                         <br>
                         <div class="checkbox text-center">
-                            <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">{{ __('terms and conditions') }}</a></label>
+                            <label><input type="checkbox" id="terms_condition" name="terms_condition" required> {{ __('I agree with the') }} <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">{{ __('terms and conditions') }}</a></label>
                         </div>
                         <br>
                         <div class="text-center">

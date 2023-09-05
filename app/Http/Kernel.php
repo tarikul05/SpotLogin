@@ -38,12 +38,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Localization::class,
+            \App\Http\Middleware\CheckStripeSubscription::class,
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CheckStripeSubscription::class,
         ],
     ];
 
@@ -70,5 +72,6 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
 
         'select_role' => \App\Http\Middleware\SelectRole::class,
+        'checkStripeSubscription' => \App\Http\Middleware\CheckStripeSubscription::class,
     ];
 }
