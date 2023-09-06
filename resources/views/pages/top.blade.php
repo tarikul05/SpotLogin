@@ -6,12 +6,12 @@
   <div class="circle-bg"></div>
   <div class="container-fluid h-100">
     <div class="row h-100 align-items-center">
-      <div class="col-12">
+      <div class="col-12 bloc-title">
         <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}">Sportlogin</h1>
         <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
-        <div class="masthead-btn-area">
+        <div class="masthead-btn-area" style="display: none;">
           <a href="#" class="head-btn">
             <img src="{{ asset('img/app-store.svg') }}" width="148">
           </a>
@@ -249,6 +249,9 @@
     };
     if(isMobile.any())
     $(".masthead-btn-area").fadeOut("fast");
-
+    else
+    $(".masthead-btn-area").fadeIn("fast");
+    // add class pt-2 to .masthead-btn-area
+    $(".bloc-title").addClass("pt-5");
 </script>
 @endsection
