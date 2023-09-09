@@ -122,7 +122,15 @@
               Premium Plan is active on your account.<br>
               Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
           @endif
-        <?php } ?>
+        <?php } else {
+
+        if($last_past_subscription) {
+            if($last_past_subscription['status'] === 'canceled'){
+                echo 'Your subscription has been canceled since the ' . date('M j, Y', $last_past_subscription['billing_cycle_anchor']);
+            }
+        }
+
+        }?>
 
 
         <table class="table table-stripped table-hover">
@@ -141,7 +149,17 @@
                       if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
                         echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(Trial period)</small></td>';
                       } else {
-                        echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic (Trial ended)</span></td>';
+
+                        if($last_past_subscription) {
+                        if($last_past_subscription['status'] === 'canceled'){
+                            echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(Cancelled)</small></td>';
+                        } else {
+                        echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> <small>(Incomplete payment)</small></td>';
+                        }
+                        } else {
+                            echo '<td><span class="badge bg-info"><i class="fa-solid fa-circle-info"></i> Basic</span> (Trial ended)</td>';
+                        }
+
                       }
                     }
                 }
