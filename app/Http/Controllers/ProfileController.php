@@ -187,19 +187,25 @@ class ProfileController extends Controller
     $invoice_url = '';
     $product_object = null;
     $subscriber = null;
+    $last_past_subscription = null;
     if($user->stripe_id){
         $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
-        if(!empty($subscription_info['data'])){
-            $subscription = $subscription_info['data'][0];
-            $subscriber = (object) $subscription_info['data'][0];
-            $product_object = $this->stripe->products->retrieve(
-                $subscription['plan']['product'],
-                []
-            );
-            $invoice_url = $this->stripe->invoices->retrieve(
-              $subscriber->latest_invoice,
-              []
-            );
+
+        foreach($subscription_info['data'] as $subs) {
+            if($subs['status'] == 'active' || $subs['status'] == 'trialing') {
+                $subscription = $subs;
+                $subscriber = (object) $subs;
+                $product_object = $this->stripe->products->retrieve(
+                    $subs['plan']['product'],
+                    []
+                );
+                $invoice_url = $this->stripe->invoices->retrieve(
+                    $subscriber->latest_invoice,
+                    []
+                );
+            } elseif($subs['status'] == 'canceled' || $subs['status'] == 'inactive') {
+                $last_past_subscription = $subs;
+            }
         }
 
         $invoices = $this->stripe->invoices->all(
@@ -208,7 +214,7 @@ class ProfileController extends Controller
 
     }
 
-    return view('pages.profile.index', compact('subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices'));
+    return view('pages.profile.index', compact('subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices', 'last_past_subscription'));
 }
 
 }
