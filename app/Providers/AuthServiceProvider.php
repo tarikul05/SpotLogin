@@ -26,11 +26,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        
+
         // Implicitly grant "superadmin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::before(function ($user, $ability) {
-            
+
             if($user->hasRole('superadmin')){
                 return true;
             }
@@ -41,7 +41,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         // Gate::after(function ($user, $ability) {
-            
+
         //     if($user->hasRole('superadmin')){
         //         return true;
         //     }
@@ -51,7 +51,7 @@ class AuthServiceProvider extends ServiceProvider
         //     return $this->check_read_only($user, $ability) ? $this->check_read_only($user, $ability) : false;
         // });
     }
-    
+
     public function check_read_only($user,  $ability){
         $today_date = new DateTime();
         $today_time = $today_date->getTimestamp();
@@ -74,7 +74,7 @@ class AuthServiceProvider extends ServiceProvider
                 $role_un = $this->remove_duplicate_role($com_role);
                 // dd($role_un, $ability);
                 // $has_check = array_search($ability, array_column($role_un, 'name'));
-                
+
                 return array_search($ability, array_column($role_un, 'name'));
             }
         }
@@ -108,7 +108,7 @@ class AuthServiceProvider extends ServiceProvider
         if($user->isTeacherAdmin()){
             return 'single_coach_read_only';
         }else if($user->isTeacherAll() || $user->isTeacherMedium() || $user->isTeacherMinimum()){
-            return 'teacher_read_only';
+            return 'single_coach_read_only';
         }else{
             return 'read_only';
         }
