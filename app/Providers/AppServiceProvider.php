@@ -74,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
                     $day_diff = $ends_at->diff($today_date)->format("%a");
                     $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
                     $product_info = NULL;
+                    $plan = NULL;
                 }else{
                     $trial_ends_date = null;
                     $day_diff = null;
@@ -81,7 +82,7 @@ class AppServiceProvider extends ServiceProvider
                     $plan = $user->subscriptions()->active()->first();
                     $product_info = $this->getPlanName($plan);
                 }
-                $view->with(compact('is_subscribed','trial_ends_date', 'day_diff','user', 'today_date', 'ends_at','product_info'));
+            $view->with(compact('is_subscribed','trial_ends_date', 'day_diff','user', 'today_date', 'ends_at', 'plan','product_info'));
             }
         );
     }

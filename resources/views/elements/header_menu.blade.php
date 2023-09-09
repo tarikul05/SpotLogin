@@ -12,7 +12,11 @@
 
                     <div style="position: relative; width:48px; font-size:10px; display:inline;">
                             @if( $is_subscribed )
+                            @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                             <span class="badge bg-success p-1" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">premium</span>
+                            @else
+                            <span class="badge bg-info p-1" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                            @endif
                             @endif
                             @if( !$is_subscribed )
                                 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
@@ -99,11 +103,9 @@
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
-
                         @if(!$AppUI->isStudent())
                             <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoice's List") }}</a>
-
-                            <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                            <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){   ?>
                                 @if(!$AppUI->isTeacherReadOnly())
                                     <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's Invoice") }}</a>
                                 @endif
@@ -112,7 +114,7 @@
                                 <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
                             @endif
                             @if(!$AppUI->isTeacherReadOnly())
-                            <?php if( $is_subscribed || !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
+                            <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
                                     <a href="{{ $manualInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
                              <?php } ?>
                             @endif
@@ -165,7 +167,11 @@
                             <div style="position: relative; width:48px; font-size:10px; display:inline;">
                                 @if(!$AppUI->isStudent())
                                     @if( $is_subscribed )
+                                    @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                                     <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:0px;">premium</span>
+                                    @else
+                                    <span class="badge bg-info p-1 d-none d-sm-block" style="position: absolute; right:0px;">basic</span>
+                                    @endif
                                     @endif
                                     @if( !$is_subscribed )
                                         <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
@@ -185,7 +191,11 @@
 
                             <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : $AppUI['nickname'];?>
                                 @if( $is_subscribed )
+                                @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                                     <span class="badge bg-success d-sm-none">premium</span>
+                                    @else
+                                    <span class="badge bg-info d-sm-none">basic</span>
+                                    @endif
                                 @endif
                                 @if( !$is_subscribed )
                                     <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>

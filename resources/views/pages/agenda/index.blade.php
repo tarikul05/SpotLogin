@@ -24,7 +24,8 @@
 <!-- add new assets for modal of add event,lesson -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
 <!-- end the assets area -->
@@ -111,7 +112,7 @@
 
 
 
-                                <div class="styledropdownActions d-none d-sm-block" style="display:inline-block;">
+                                <div class="styledropdownActions d-none d-md-block" style="display:inline-block;">
                                     <div class="btn-group">
                                         <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
                                         <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
@@ -727,6 +728,17 @@ $('.search-icon').on('click', function() {
 </script>
 
 <script>
+    if($(window).width() < 768) {
+        toastr.options = {
+            "positionClass": "toast-bottom-full-width",
+            "timeOut": "4000",
+        }
+
+        toastr.info('Press and hold for 2 seconds on calendar, then release to add a lesson or event');
+    }
+</script>
+
+<script>
 
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
@@ -913,14 +925,14 @@ $('.search-icon').on('click', function() {
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
+            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
 
             // cours - events - PopulateButtonMenuList
             if ((value.value == 10) && user_role != 'student'){
-                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
+                menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
                 // menuHtml+='<ul class="dropdown-menu" role="menu">';
