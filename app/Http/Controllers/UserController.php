@@ -101,7 +101,7 @@ class UserController extends Controller
             $teacher->save();
             $teacher->schools()->attach($school->id, ['nickname' => $data['fullname'],'role_type'=>$roleType, 'has_user_account'=> 1, 'is_sent_invite'=>1 ]);
 
-            $trialDays = 61;
+            $trialDays = 30;
             $trialEndsAt = now()->addDays($trialDays);
 
             $usersData = [
@@ -224,7 +224,7 @@ class UserController extends Controller
         $data = $request->all();
         try{
             // create trail user
-            $trialDays = 61;
+            $trialDays = 30;
             $trialEndsAt = now()->addDays($trialDays);
             $full_name = $data['firstname'].''.$data['lastname'];
             $strip_userdata = [
