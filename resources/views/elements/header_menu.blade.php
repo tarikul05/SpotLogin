@@ -123,6 +123,16 @@
                         @endcan
                         </div>
                     </div>
+
+                    @if($AppUI['person_type'] != 'SUPER_ADMIN')
+                    <div class="d-xl-none">
+                            <a class="nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
+                            <a class="nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                            <a class="nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
+                            </div>
+                    @endif
+
+
                     @endif
 
                     @if($AppUI['person_type'] == 'SUPER_ADMIN')
@@ -229,10 +239,8 @@
                                     <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
                                     <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
                                     <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
-                                @endif
-                                @can('email-template-list')
-                                    <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
-                                @endcan
+                                    <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                                    <a class="dropdown-item" href="/                     @endcan
                                 @can('terms-condition-list')
                                     <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
                                 @endcan
