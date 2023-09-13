@@ -773,7 +773,7 @@ $('.search-icon').on('click', function() {
     var json_events = @json($events);
 
    if ($(window).width() < 768) {
-        var defview='agendaDay';
+        var defview='timeGridThreeDay';
     }
     else {
         var defview='agendaWeek';
