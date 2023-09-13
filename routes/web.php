@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ContactFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,9 @@ Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'c
 Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update');
 Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove');
 
+Route::get('contact-form', [ContactFormController::class, 'showForm'])->name('contact.form');
+Route::get('contact-staff', [ContactFormController::class, 'showFormStaff'])->name('contact.staff');
+Route::post('contact-form', [ContactFormController::class, 'submitForm'])->name('contact.form.submit');
 
 //email-send school AJAX
 Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');

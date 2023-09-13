@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function __construct()
     {
-        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $this->stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
     }
 
     /**
@@ -68,9 +68,11 @@ class AppServiceProvider extends ServiceProvider
                 $user = auth()->user();
                 $is_subscribed = $user->subscribed('default');
                 $today_date = new DateTime();
+                $today_date->setTime(0, 0, 0);
                 if(!$is_subscribed){
                     $ends_at = $user->trial_ends_at;
                     $ends_at = new DateTime($ends_at);
+                    $ends_at->setTime(0, 0, 0);
                     $day_diff = $ends_at->diff($today_date)->format("%a");
                     $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
                     $product_info = NULL;

@@ -26,7 +26,7 @@
 
     <div class="row mt-3">
 
-        <div class="col-md-7 card d-none d-sm-block">
+        <div class="col-md-8 card d-none d-sm-block">
 
 
                         <div class="card-body">
@@ -162,7 +162,7 @@
 
 
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body bg-tertiary">
                 <div class="payment-info-top text-center">
@@ -215,15 +215,18 @@
                         </div>
 
                         <div class="payment-footer-wrapper">
-                            <p class="f-txt f_margin_top">
+                            <p class="f-txt f_margin_top text-center">
                                 Your subscription will renew automatically every month.<br>
                                 By clicking "Proceed payment" you agree to the <b>Terms and Conditions</b>.
                             </p>
                         </div>
 
-                        <div class="button-area pt-2">
-                                <a class="btn btn-default" href="{{ url()->previous() }}">Cancel</a>
+                        <div class="button-area text-center pt-2">
                             <button id="card-button" class="btn btn-success" type="submit" data-secret="{{ $intent->client_secret }}"><i class="fa-solid fa-spinner fa-spin loaderPayment" style="display:none;"></i> Proceed payment</button>
+                        </div>
+
+                        <div class="button-area text-center pt-2">
+                            <a class="" href="{{ url()->previous() }}">Cancel</a>
                         </div>
 
                         <div class="payment-footer-wrapper small text-center d-block d-sm-none">
@@ -352,6 +355,7 @@
         var form = document.getElementById('payment-form-sub');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
+            $("#pageloader").fadeIn();
             $('.loaderPayment').fadeIn();
             var card_holder_name = document.getElementById("card_holder_name").value;
             stripe
@@ -361,7 +365,6 @@
                     }
                 })
                 .then(function(result) {
-                    $('.loaderPayment').fadeOut();
                     $('.beforeError').fadeOut('fast');
                     if (result.error) {
                         var errorElement = document.getElementById('card-errors');
@@ -369,6 +372,8 @@
                         '<strong>' + errorMessage(result.error.code) +'</strong>'+
                         '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                         '</div>';
+                        $("#pageloader").fadeOut();
+                        $('.loaderPayment').fadeOut();
                         window.scrollTo(0, 10);
                     } else {
                         stripeTokenHandler(result.setupIntent.payment_method);
@@ -386,6 +391,8 @@
                 error_message = 'Incomplete card number'
             }else if(error_code === 'incomplete_expiry'){
                 error_message = 'Incomplete expiry date'
+            }else if(error_code === 'invalid_expiry_year_past'){
+                error_message = 'Invalid expiry year'
             }else if(error_code === 'incomplete_cvc'){
                 error_message = 'Incomplete security code'
             }else if(error_code === 'incorrect_cvc'){
