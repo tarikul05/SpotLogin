@@ -125,11 +125,9 @@
                     </div>
 
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                    <div class="d-xl-none">
-                            <a class="nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
-                            <a class="nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                            <a class="nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
-                            </div>
+                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
+                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
                     @endif
 
 
@@ -221,10 +219,12 @@
                         <div class="dropdown">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
                             <div class="dropdown-menu header">
-                                <!-- <a class="dropdown-item" href="/email/email_template">
-                                    Modèle d'email
+                                @if($AppUI['person_type'] == 'SUPER_ADMIN')
+                               <a class="dropdown-item" href="/admin/email_template">
+                                    Email Template
                                 </a>
-                                <a class="dropdown-item" href="/admin/update_core_dataset_options">
+                                @endif
+                                <!--<a class="dropdown-item" href="/admin/update_core_dataset_options">
                                     data set master
                                 </a> -->
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
@@ -240,7 +240,7 @@
                                     <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
                                     <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
                                     <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                                    <a class="dropdown-item" href="/                     @endcan
+                                @endif
                                 @can('terms-condition-list')
                                     <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
                                 @endcan
