@@ -15,7 +15,9 @@ class ContactFormController extends Controller
     {
         $authUser = $request->user();
         if ($authUser->isSchoolAdmin() || $authUser->isTeacherSchoolAdmin() || $authUser->isTeacherAdmin()) {
-            $students = SchoolStudent::where(['school_id' => $authUser->school_id, 'is_active' => 1])->get();
+            $students = SchoolStudent::where(['school_id' => $authUser->school_id, 'is_active' => 1])
+            ->with('student')
+            ->get();
         } else {
         $students = User::where(['school_id' => $authUser->school_id, 'person_type' => 'App\Models\Teacher', 'is_active' => 1])->get();
         }
@@ -24,13 +26,7 @@ class ContactFormController extends Controller
 
     public function showFormStaff(Request $request)
     {
-        $authUser = $request->user();
-        if ($authUser->isSchoolAdmin() || $authUser->isTeacherSchoolAdmin() || $authUser->isTeacherAdmin()) {
-            $students = SchoolStudent::where(['school_id' => $authUser->school_id, 'is_active' => 1])->get();
-        } else {
-        $students = User::where(['school_id' => $authUser->school_id, 'person_type' => 'App\Models\Teacher', 'is_active' => 1])->get();
-        }
-        return view('pages.contact.staff', compact('students'));
+        return view('pages.contact.staff');
     }
 
     public function submitForm(Request $request)

@@ -34,7 +34,7 @@ class SchoolStudent extends BaseModel
         'is_sent_invite'
     ];
 
-   
+
 
     /**
      * The attributes that should be casted to native types.
