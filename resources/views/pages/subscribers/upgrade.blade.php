@@ -12,12 +12,12 @@
                 <div class="page_header_class">
                   <label id="page_header" name="page_header">
                     <i class="fa-solid fa-user"></i> {{__('User Account')}}: <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : '';?>
-                  </label>        
+                  </label>
                 </div>
               </div>
               <div class="col-sm-6 col-xs-12">
-              </div>    
-            </div>                 
+              </div>
+            </div>
           </header>
 
 
@@ -33,11 +33,11 @@
             <div class="col-md-12 plans">
 
                 <div class="columns p-4 card">
-                  
+
                         <div class="card-body p-4 bg-tertiary">
-                  
+
                           <div class="h4 pt-2" style="color:#0075bf;">My current plan</div>
-                  
+
                           <?php if($is_subscribed){?>
                             @if($subscription['cancel_at_period_end'])
                             <?php
@@ -50,7 +50,7 @@
                             ?>
                               <span class="text-danger">Your subscription is canceled and will stop the <?php echo date('M j, Y', $subscription['current_period_end']); ?>.</span><br>
                             @endif
-                  
+
                             @if($subscription['status'] === 'trialing')
                               Your trial period is valid until <?= date('M j, Y', $subscription['billing_cycle_anchor']) ?>.
                               <?php if($is_subscribed){ ?>
@@ -64,13 +64,13 @@
                                 Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
                             @endif
                           <?php } ?>
-                          
-                          
+
+
                           <table class="table table-stripped table-hover">
-                  
+
                             <tr>
-                              
-                              <?php 
+
+                              <?php
                                   if($is_subscribed){
                                       echo '<td><b>Plan Type</b><br><span class="badge bg-success"><i class="fa-solid fa-check"></i> Premium</span></td>';
                                   }else{
@@ -88,10 +88,10 @@
                                   }
                               ?>
                             </tr>
-                  
+
                             <?php if(!empty($user->trial_ends_at)){ ?>
                               <tr>
-                                  <?php 
+                                  <?php
                                     if($AppUI->isSchoolAdmin()){
                                         $until = '<b>Trail Valid Until</b>';
                                     }else{
@@ -103,8 +103,8 @@
                                   </td>
                               </tr>
                             <?php } ?>
-                  
-                            <?php 
+
+                            <?php
                               if($subscription) { ?>
                                 <tr>
                                   <?php {
@@ -118,9 +118,9 @@
                                   ?>
                                 </tr>
                               <?php } ?>
-                  
+
                               <tr>
-                        
+
                                   <?php if(!empty($subscription)) { ?>
                                       <td><b>Price</b><br><span class="price"><?= '$'.($subscription['plan']['amount_decimal'])/100 ?></span>
                                       <span class="interval"><?= '/'.$subscription['plan']['interval'] ?></span></td>
@@ -128,27 +128,27 @@
                                       <td><b>Price</b><br><span class="price">Free</span></td>
                                   <?php } ?>
                               </tr>
-                
+
                           </table>
 
 
                     <div class="text-center">
-                    <?php 
-                          if($is_subscribed){      
-                          }else{                   
+                    <?php
+                          if($is_subscribed){
+                          }else{
                                 $today_date = new DateTime();
                                 $trial_ends_at = new DateTime($user->trial_ends_at);
                                 if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
                                   echo '<h5 class="pt-5"><small>Get your Premium Plan before the end of your trial period</small></h5>';
                                 } else {
                                     echo '<h5>Get your Premium since your trial period is ended.<p><br></p><small>Continue to access all features now !</small></h5>';
-                                }   
+                                }
                           }
                       ?>
                     </div>
 
 
-                  
+
                           <div class="mt-2 btns-plan">
                             <?php if($is_subscribed) { ?>
                               <a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}">Congratulations ! you already have a premium plan !</a>
@@ -162,17 +162,17 @@
                               <!--<a class="btn btn-success" href="#">Please choose a plan and unlock all features</a>-->
                             <?php } ?>
                           </div>
-                  
+
                         </div>
-                  
+
                 </div>
 
                 <div class="columns sp_order">
-                    <?php if($AppUI->isTeacherAdmin()){ ?> 
+                    <?php if($AppUI->isTeacherAdmin()){ ?>
                         <ul class="price">
                             <li class="plan_name_display">
                                 <div class="plan_name">Basic plan</div>
-                                <div class="plan_interval">Free <span class="plan_type">/60 days</span></div>
+                                <div class="plan_interval">Free <span class="plan_type">/30 days</span></div>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -190,7 +190,7 @@
                                 </span>
                                 <span class="text-area">Manage your <b>students</b></span>
                             </li>
-                            
+
                             <li>
                                 <span class="svg_img">
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -217,7 +217,7 @@
                                 </span>
                                 <span class="text-area">Access the <b>mobile app</b></span>
                             </li>
-                            <?php 
+                            <?php
                                 $active_class = '';
                                 if(!empty($trial_ends_date) || $is_subscribed){
                                     $active_class = 'disabled';
@@ -237,11 +237,11 @@
                             <li class="info-txt"></li>
                         </ul>
                     <?php } ?>
-                    <?php if($AppUI->isTeacherAll() || $AppUI->isTeacherMedium() || $AppUI->isTeacherMinimum()){ ?> 
+                    <?php if($AppUI->isTeacherAll() || $AppUI->isTeacherMedium() || $AppUI->isTeacherMinimum()){ ?>
                         <ul class="price">
                             <li class="plan_name_display">
                                 <div class="plan_name">Basic plan</div>
-                                <div class="plan_interval">Free <span class="plan_type">/60 days</span></div>
+                                <div class="plan_interval">Free <span class="plan_type">/30 days</span></div>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -259,7 +259,7 @@
                                 </span>
                                 <span class="text-area">Access the <b>mobile app</b></span>
                             </li>
-                            <?php 
+                            <?php
                                 $active_class = '';
                                 if(!empty($trial_ends_date) || $is_subscribed){
                                     $active_class = 'disabled';
@@ -279,7 +279,7 @@
                             <li class="info-txt"></li>
                         </ul>
                     <?php } ?>
-                    <?php if($AppUI->isSchoolAdmin()){ ?> 
+                    <?php if($AppUI->isSchoolAdmin()){ ?>
                         <ul class="price">
                             <li class="plan_name_display">
                                 <div class="plan_name">Basic</div>
@@ -357,7 +357,7 @@
                                 </span>
                                 <span class="text-area">Access the <b>mobile app</b></span>
                             </li>
-                            <?php 
+                            <?php
                                 $active_class = '';
                                 if(!empty($trial_ends_date) || $is_subscribed){
                                     $active_class = 'disabled';
@@ -379,7 +379,7 @@
                     <?php } ?>
                 </div>
                 <?php sort($plans); ?>
-                @foreach($plans as $plan)                   
+                @foreach($plans as $plan)
                 <div class="columns premium-plan">
                     <ul class="price">
                         <li>
@@ -657,14 +657,14 @@
                             <li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose this plan</a></li>
                             <li class="info-txt text-warning">you will not be the charged until the end of your trial period</li>
                         <?php } else {
-                            if($subscription['plan']['id'] == $plan['id']){    
+                            if($subscription['plan']['id'] == $plan['id']){
                         ?>
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Your current plan</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
                             <li class="submit-button"><a href="{{ route('subscribe.upgradeNewPlan', ['payment_id'=>$plan['id']]) }}" class="button">Upgrade plan</a></li>
                             <li class="info-txt text-warning">you will not be the charged until the end of your trial period</li>
-                        <?php   
+                        <?php
                                 }
                             }
                         ?>

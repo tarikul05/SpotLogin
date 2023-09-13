@@ -227,6 +227,8 @@
                                 @endif
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
                                     <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
+                                    <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                                    <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
                                 @endif
                                 @can('email-template-list')
                                     <a class="dropdown-item" href="/admin/email-template">{{ __('Email Template') }}</a>
