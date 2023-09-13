@@ -186,6 +186,7 @@ class ProfileController extends Controller
     $subscription = null;
     $invoice_url = '';
     $product_object = null;
+    $invoices = null;
     $subscriber = null;
     $last_past_subscription = null;
     if($user->stripe_id){
