@@ -30,13 +30,13 @@
             @if(!$AppUI->isStudent())
             <select class="form-select" id="emailTo" name="emailTo" required>
                 @foreach($students as $student)
-                <option value="{{ $student->email }}">{{ $student->nickname }} [ {{ $student->email }} ]</option>
+                <option value="{{ $student->student->email }}">{{ $student->nickname }} [ {{ $student->student->email }} ]</option>
                 @endforeach
             </select>
             @else
             <select class="form-select" id="emailTo" name="emailTo" required>
                 @foreach($students as $student)
-                <option value="{{ $student->email }}">{{ $student->firstname . ' ' . $student->lastname }} {{ $AppUI->isStudent() ? '' : '['.$student->email.']' }}</option>
+                <option value="{{ $student->email }}">{{ $student->firstname . ' ' . $student->lastname }} [ {{ $student->email }} ]</option>
                 @endforeach
             </select>
             @endif

@@ -24,7 +24,8 @@
         <div class="mb-3">
             <label for="subject" class="form-label">Subject</label>
             <select class="form-control" id="subject" name="subject" required>
-                <option value="">I have a question</option>
+                <option value="">choose a subject</option>
+                <option value="question">I have a question</option>
                 <option value="probleme_technique">Technical problem</option>
                 <option value="bug_report">Bug report</option>
                 <option value="amelioration_suggestion">Suggestion for improvement</option>
