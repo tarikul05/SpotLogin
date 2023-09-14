@@ -1646,7 +1646,7 @@ label#currency_alert_text {
     }
 
     /* Styliser les divs pour les écrans larges */
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 769px) {
         .agendaContent1 {
             display: block;
         }
@@ -1656,13 +1656,15 @@ label#currency_alert_text {
         }
 
         .calendarContent {
-            padding-bottom:40px;
+            padding-bottom:20px;
         }
 
     }
 
+
+
     /* Styliser les divs pour les petits écrans */
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 768px) {
         .agendaContent1, .agendaContent2 {
             position: static;
             margin: 0;
