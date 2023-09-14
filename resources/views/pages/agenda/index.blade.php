@@ -35,11 +35,12 @@
 <div class="content agenda_page">
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
-			<header class="panel-heading" style="border: none;">
+
 				<div class="row panel-row pt-2" style="margin:0;">
-					<div class="col-lg-4 col-12 header-area">
+					<div class="col-md-5 col-xs-12 header-area">
+                        <header class="panel-heading" style="border: none;">
 							<div class="page_header_class pt-1">
-                                <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
+                                <h1 for="calendar" class="titleCalendar text-dynamic" id="cal_title" style="display: block;">
                                   {{__('Agenda')}} :
                                 </h1>
                                 <i class="fa-solid fa-magnifying-glass search-icon searchForEvent"></i>
@@ -52,8 +53,9 @@
                                 </div>
                                 <div id="messageContainer" style="display: none;"></div>
 							</div>
+                        </header>
 					</div>
-                   <div class="col-lg-5 col-12 btn-area pt-2 align-items-end">
+                   <div class="col-md-4  btn-area pt-2 align-items-end">
                         <div class="d-flex justify-content-end btn-group cal_top">
                             <input type="hidden" name="school_id" id="school_id" value="{{$schoolId}}">
                             <input type="hidden" name="max_teachers" id="max_teachers" value="<?php if($school){ echo $school->max_teachers; } ?>">
@@ -96,7 +98,7 @@
                             <input type="hidden" name="event_location_all_flag" size="14px" id="event_location_all_flag" value="1">
                             <input type="hidden" name="event_category_all_flag" size="14px" id="event_category_all_flag" value="0">
 
-                            <div id="button_menu_div" class="btn-group buttons" onclick="SetEventCookies()">
+                            <div id="button_menu_div" class="btn-group buttons d-flex" onclick="SetEventCookies()">
                                 @php
                                 $icalPersonal = route('ical.personalEvents');
                                 if(!empty($schoolId)){
@@ -112,26 +114,37 @@
 
 
 
-                                <div class="styledropdownActions d-none d-md-block" style="display:inline-block;">
+                                <div class="styledropdownActions d-none d-md-block" style="display:inline-block; z-index:999;">
                                     <div class="btn-group">
                                         <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
-                                        <span class="btn btn-sm btn-theme-warn">Actions <i class="fa fa-caret-down"></i></span>
+                                        <span class="btn btn-theme-outline">Actions <i class="fa fa-caret-down"></i></span>
                                         <div class="dropdown-content">
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
-                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-lock"></i> <span id ="btn_validate_events_cap">{{__('Validate All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn m-1 mb-2"><i class="fas fa-trash"></i> <span id ="btn_delete_events_cap">{{__('Delete All')}}</span></a>
+
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline m-1 mb-2"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy All')}}</span></a>
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline m-1 mb-2"><em class="glyphicon glyphicon-fast-forward"></em> <span id ="btn_goto_planning_cap">{{__('Paste')}}</span></a>
+
+
+
+                                            @if(!$AppUI->isStudent())
+                                            <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline m-1"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
+                                                <span id ="btn_export_events_cap">Excel</span></a>
+                                            @endif
+
                                         </div>
                                         </div>
                                 </div>
                                 <div class="btn-group">
                                 <!--<a style="display: none;" href="#" id="btn_validate_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_validate_events_cap">Validate All</span></a>
                                 <a style="display: none;" href="#" id="btn_delete_events" target="_blank" class="btn btn-sm btn-theme-warn"><em class="glyphicon glyphicon-remove"></em><span id ="btn_delete_events_cap">Delete All</span></a>-->
-                                <button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy')}}</span></button>
-                                <button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">{{__('Paste')}}</span></button>
+                                <!--<button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_copy_events" target="_blank" class="btn btn-theme-outline"><i class="far fa-copy"></i> <span id ="btn_copy_events_cap">{{__('Copy')}}</span></button>
+                                <button style="display: none; max-width:80px; display:inline-block;" href="#" id="btn_goto_planning" target="_blank" class="btn btn-theme-outline"><em class="glyphicon glyphicon-fast-forward"></em><span id ="btn_goto_planning_cap">{{__('Paste')}}</span></button>-->
                                 @if(!$AppUI->isStudent())
-                                    <a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
+                                    <!--<a href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline">
                                         <img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
                                         <span id ="btn_export_events_cap">Excel</span>
-                                    </a>
+                                    </a>-->
                                 @endif
                                 </div>
                                 </div>
@@ -141,7 +154,7 @@
                           </div>
                         </div>
 
-                    <div class="col-lg-3 text-right col-12 btn-area align-items-end text-center">
+                    <div class="col-md-3 text-right  btn-area align-items-end text-center">
                         @if(!$AppUI->isStudent())
                         <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
                         @else
@@ -149,7 +162,7 @@
                         @endif
                     </div>
 				</div>
-			</header>
+
             <div class="clearfix"></div>
             <div class="row" style="margin:0;">
                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -728,7 +741,7 @@ $('.search-icon').on('click', function() {
 </script>
 
 <script>
-    if($(window).width() < 768) {
+    if($(window).width() < 1200) {
         toastr.options = {
             "positionClass": "toast-bottom-full-width",
             "timeOut": "4000",
@@ -772,7 +785,7 @@ $('.search-icon').on('click', function() {
 
     var json_events = @json($events);
 
-   if ($(window).width() < 768) {
+   if ($(window).width() < 1200) {
         var defview='timeGridThreeDay';
     }
     else {
@@ -1977,7 +1990,7 @@ $('.search-icon').on('click', function() {
 			header: false,
             views: {
                 agenda: {
-                    columnFormat: ($(window).width() < 768) ? 'DD' : 'ddd MMM DD'
+                    columnFormat: ($(window).width() < 1200) ? 'DD' : 'ddd MMM DD'
                 },
                 week: {
                     columnFormat: 'ddd MMM DD'
@@ -2580,14 +2593,14 @@ $('.search-icon').on('click', function() {
                 var btnDeleteEvents = document.getElementById("btn_delete_events");
 
                 // Récupérer l'élément dropdownActions
-                var dropdownActions = document.getElementById("dropdownActions");
+                //var dropdownActions = document.getElementById("dropdownActions");
 
                 // Vérifier si l'un des boutons est affiché
-                if (btnValidateEvents.style.display !== "none" || btnDeleteEvents.style.display !== "none") {
-                dropdownActions.style.display = "block"; // Afficher le dropdown
-                } else {
-                dropdownActions.style.display = "none"; // Masquer le dropdown
-                }
+                //if (btnValidateEvents.style.display !== "none" || btnDeleteEvents.style.display !== "none") {
+                //dropdownActions.style.display = "block"; // Afficher le dropdown
+                //} else {
+                //dropdownActions.style.display = "none"; // Masquer le dropdown
+                //}
 
                 $('#agenda_table tr').click(function(){
 

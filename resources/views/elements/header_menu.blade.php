@@ -125,9 +125,13 @@
                     </div>
 
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
-                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                        <a class="d-xl-none nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
+                        @if(!$AppUI->isStudent())
+                            <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
+                        @endif
+                        <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                        @if(!$AppUI->isStudent())
+                            <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
+                        @endif
                     @endif
 
 
@@ -236,10 +240,13 @@
                                     <a class="dropdown-item" href="/admin/faqs">{{ __('F.A.Q / Tutos') }}</a>
                                 @endif
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                                    <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
+                                    @if(!$AppUI->isStudent())
+                                        <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
+                                    @endif
                                     <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                                    <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
-                                    <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
+                                    @if(!$AppUI->isStudent())
+                                        <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
+                                    @endif
                                 @endif
                                 @can('terms-condition-list')
                                     <a class="dropdown-item" href="/admin/term_cond/term_cond_cms">{{ __('Terms & Conditions') }}</a>
