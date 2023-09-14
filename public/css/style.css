@@ -52,7 +52,7 @@ label#page_header,
 #cal_title {
 	color: #0075bf;
 	float: left;
-	font-size: 25px;
+	font-size: 18px;
 	padding: 0;
 	margin: 0;
 	position: relative;
@@ -952,6 +952,7 @@ button#save_btn_more i {
 	}
 
 }
+
 
 @media only screen and (max-width: 768px) {
 
@@ -2393,6 +2394,12 @@ text-align: center;
 
 .card {
 	box-shadow: 0px 10px 5px -10px #111;
+}
+
+@media only screen and (min-width: 1200px) {
+#cal_title {
+	font-size: 23px;
+}
 }
 
 @media only screen and (max-width: 767px) {
