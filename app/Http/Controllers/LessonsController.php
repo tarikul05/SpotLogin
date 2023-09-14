@@ -1138,14 +1138,14 @@ class LessonsController extends Controller
                 }
                 DB::commit();
 
-                 return back()->with('success', __('Successfully Registered'));
+                return response()->json(['status' => 1], 200);
             }
         }catch (Exception $e) {
             DB::rollBack();
-            return back()->withInput($request->all())->with('error', __('Internal server error'));
+            return response()->json(['status' => 0, 'error' => __('Internal server error')], 500);
         }
 
-        return $result;
+        return response()->json(['status' => 0], 400);
     }
 
     /**
