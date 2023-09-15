@@ -2381,7 +2381,9 @@ text-align: center;
     padding-top: 85px;
 }
 
-
+.fc-unthemed .fc-list-empty {
+background-color: #ffffff;
+}
 
 .sp_main_footer {
     display: none;
