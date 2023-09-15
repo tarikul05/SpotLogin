@@ -35,11 +35,11 @@
 <div class="content agenda_page">
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
-
+            <header class="panel-heading" style="border: none;">
 				<div class="row panel-row pt-2" style="margin:0;">
 					<div class="col-md-5 col-xs-12 header-area">
-                        <header class="panel-heading" style="border: none;">
-							<div class="page_header_class pt-1">
+
+							<div class="page_header_class pt-1" style="position: static;">
                                 <h1 for="calendar" class="titleCalendar text-dynamic" id="cal_title" style="display: block;">
                                   {{__('Agenda')}} :
                                 </h1>
@@ -53,7 +53,7 @@
                                 </div>
                                 <div id="messageContainer" style="display: none;"></div>
 							</div>
-                        </header>
+
 					</div>
                    <div class="col-md-4  btn-area pt-2 align-items-end">
                         <div class="d-flex justify-content-end btn-group cal_top">
@@ -313,6 +313,7 @@
                     </section>
                 </div>
             </div>
+        </header>
 		</form>
 	</div>
 </div>
