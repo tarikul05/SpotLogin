@@ -2014,6 +2014,7 @@ $('.search-icon').on('click', function() {
             height: 'parent', // calendar content height excluding header
             contentHeight: v_calc_height, // calendar content height excluding header
             timezone: myTimezone,
+            noEventsMessage:"No lessons yet",
             locale: currentLangCode,
 			buttonIcons: true, // show the prev/next text
 			allDayDefault: true,

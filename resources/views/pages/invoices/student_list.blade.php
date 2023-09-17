@@ -12,12 +12,12 @@
             <div class="col-sm-6 col-xs-12 header-area">
                 <div class="page_header_class">
                     @if($type == 'school')
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</label>
+                    <label id="page_header_id" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoicing for the school') }}</label>
                     @else
-                    <label id="page_header_id" name="page_header_id">{{ __('Invoicing for myself') }}</label>
+                    <label id="page_header_id" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoicing System') }}</label>
                     @endif
                 </div>
-                
+
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
                 <div class="invoce_search_box">
@@ -49,7 +49,7 @@
                     @php
                         $i++;
                     @endphp
-                
+
                     <tr>
                         <td class="txt-grey text-center">{{ $i }} </td>
                         <td>
@@ -60,12 +60,12 @@
                             <?php endif; ?>
                         {{ $event->student_full_name; }}</td>
                         <td>{{ $event->invoice_items; }}</td>
-                       
+
                         <td align="center">
-                            <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged" 
-                            href="{{ auth()->user()->isSuperAdmin() ? 
-                                    route('adminEditStudent',['school'=> $schoolId,'student'=> $event->person_id]) : 
-                                    route('editStudent',['student' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}" 
+                            <a id="inv_butt_tobe_charged" name="inv_butt_tobe_charged"
+                            href="{{ auth()->user()->isSuperAdmin() ?
+                                    route('adminEditStudent',['school'=> $schoolId,'student'=> $event->person_id]) :
+                                    route('editStudent',['student' => $event->person_id]) }}?action=edit&tab=tab_3&inv_type={{$type}}"
                             class="btn btn-sm btn-theme-success inv_butt_tobe_charged_cls">
                             {{ __('View items to be invoiced') }}</a>
                         </td>
@@ -82,19 +82,19 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        
+
 
         var table = $('#example').DataTable({
             //"responsive": true,
             //"searching": true,
             //"bProcessing": true,
-            "bDestroy": true, 
+            "bDestroy": true,
             "order": [[0, "asc"]],
             "bFilter": true,
             "bInfo": false,
             "lengthChange": false,
             "info": true,
-            "pageLength": 10  
+            "pageLength": 10
             ,'aoColumnDefs': [{
                 'bSortable': false,
                 'aTargets': [-1] /* 1st one, start by the right */
@@ -102,14 +102,14 @@
             //,"paging": false
             //"serverSide":true,
             "pagingType": "simple_numbers"
-            
+
         });
         $('#search_text').on('keyup change', function () {
             //table.search(this.value).draw();
             //table.clear().draw();
             console.log($(this).val());
             table.search($(this).val()).draw();
-            
+
         });
         $("#example_filter").hide();
 
