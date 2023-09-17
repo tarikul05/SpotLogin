@@ -955,7 +955,6 @@ button#save_btn_more i {
 
 
 @media only screen and (max-width: 768px) {
-
 	span.admin_name {
 		font-size: 16px;
 		color: #fff;
@@ -1267,11 +1266,25 @@ a.btn.btn-theme-success.add_teacher_btn {
 }
 
 @media only screen and (max-width: 768px) {
+    .section_header_class  {
+        font-size: 11px;
+    }
+    .lesson_table {
+        border:1px solid #EEE;
+        padding:5px;
+    }
+    .below_space {
+        text-align: center;
+    }
 	.header-area {
 		padding-top:15px;
 		padding-bottom:0;
 		margin-bottom:0;
 	}
+       .table_header_invoice {
+    display: none!important;
+    }
+
 	.pc_only {
 		display: none;
 	}
