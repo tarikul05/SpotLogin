@@ -17,38 +17,38 @@
 	<div class="container-fluid">
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
-					<div class="page_header_class">
-						<label id="page_header" name="page_header">{{ __('Invoice Detail')}}</label>
+				<div class="col-sm-6 col-6 header-area">
+				<div class="page_header_class">
+						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoice Detail')}}</label>
 					</div>
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area" style="text-align: right;">
+				<div class="col-sm-6 col-6 btn-area" style="text-align: right;">
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
 
                             @if($invoice->invoice_status ==10)
 
                             @if(!$AppUI->isStudent())
                                 @if($invoice->payment_status ==0)
-                                    <a id="payment_btn" target href class="btn btn-theme-warn"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as Paid')}}
+                                    <a id="payment_btn" target href class="btn btn-theme-warn">
+                                        <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-block">{{__('Flag as Paid')}}</span>
                                     </a>
                                 @else
                                     <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                        {{__('Flag as UnPaid')}}
+                                        <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-block">{{__('Flag as UnPaid')}}</span>
                                     </a>
                                 @endif
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})">{{__('Send by email')}}</button>
+                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-block">{{__('Send by email')}}</span></button>
                             @endif
-                                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline"><i class="fa fa-file-pdf-o"></i>
-                                    <label name="download_pdf_btn" id="download_pdf_btn">{{__('Download PDF')}}</label>
+                            <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
+                                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block"> {{__('Download PDF')}}</span></label>
                                 </a>
 
                             @else
                                 <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                    <i class="fa fa-cog" aria-hidden="true"></i> {{__('Issue invoice')}}
+                                    <i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Issue invoice')}}</span>
                                 </a>
-                                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank">{{__('Print Preview')}}</a>
-                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href="">{{__('Delete')}}</a>
+                                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block">{{__('Print Preview')}}</span></a>
+                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
                                 <!--<a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>-->
                             @endif
 
@@ -71,9 +71,9 @@
 			<div class="tab-content" id="invoice-details-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
-                        <fieldset>
+                        <fieldset class="section_header_class">
                             @if ($invoice->seller_country_id != 'CA')
-                                <label class="section_header_class">{{ $invoice->invoice_header }}</label>
+                                <label>{{ $invoice->invoice_header }}</label>
                             @endif
                             <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
 
@@ -1350,7 +1350,6 @@ function extractExtraCharges($inputString) {
             dataType: 'json',
             //async: false,
             success: function (result) {
-                console.log('resultttttt', result);
                 if (result.status) {
                     confirmPayReminderModalCall(p_value,'Do you want to validate events',result.data,p_school_id);
                     return false;

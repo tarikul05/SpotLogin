@@ -31,8 +31,8 @@
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -63,7 +63,7 @@
 					</button> -->
 					@endif
 				@endcan
-			</div>	
+			</div>
 		</nav>
 		<!-- Tabs navs -->
 
@@ -86,7 +86,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
-									
+
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Status') }}</label>
 										<div class="col-sm-7">
@@ -95,7 +95,7 @@
 													<option value="">Select</option>
 													<option value="1" {{!empty($relationalData->is_active) ?  'selected' : '' }}>{{ __('Active')}}</option>
 													<option value="0" {{ ($relationalData->is_active == 0) ? 'selected' : ''}}>{{ __('Inactive')}}</option>
-												
+
 												</select>
 											</div>
 										</div>
@@ -104,7 +104,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text" 
+										<input class="form-control require" id="nickname" maxlength="50" name="nickname" placeholder="Pseudo" type="text"
 										value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}"
 										>
 										@if ($errors->has('nickname'))
@@ -158,7 +158,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
+										<div class="input-group" id="birth_date_div">
 											<input id="birth_date" value="{{!empty($teacher->birth_date) ? date('d/m/Y', strtotime($teacher->birth_date)) : old('birth_date')}}" name="birth_date" type="text" class="form-control">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -176,7 +176,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 											<input class="form-control" value="{{!empty($teacher->email) ? old('email', $teacher->email) : old('email')}}" id="email" name="email" type="text">
 										</div>
 									</div>
@@ -298,7 +298,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="phone" id="phone_caption">{{__('Phone') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 												<input class="form-control" value="{{!empty($teacher->phone) ? old('phone', $teacher->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
 										</div>
@@ -317,7 +317,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Téléphone mobile') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-mobile"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
 												<input class="form-control" value="{{!empty($teacher->mobile) ? old('mobile', $teacher->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
 										</div>
@@ -328,7 +328,7 @@
 										<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email_caption">{{__('Email') }} :</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+												<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 												<input class="form-control" value="{{!empty($teacher->email2) ? old('email2', $teacher->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
 										</div>
@@ -390,7 +390,7 @@
 									</div>
 								</div>
 								<div class="col-md-6">
-									
+
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
 										<div class="col-sm-7">
@@ -429,14 +429,14 @@
 										<div class="col-sm-7">
 											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($teacher->etransfer_acc) ? old('etransfer_acc', $teacher->etransfer_acc) : old('etransfer_acc')}}">
-												<span class="etransfer_acc"></span>	
+												<span class="etransfer_acc"></span>
 										</div>
 									</div>
-								</div>	
+								</div>
 							</div>
 								</div>
 							</div>
-							@endif	
+							@endif
 
 
 							@if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
@@ -469,24 +469,24 @@
 			</div>
 			<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 				<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
-					
+
 					<input type="hidden" name="selected_month" id="selected_month" value="">
 					<input type="hidden" name="selected_year" id="selected_year" value="">
-					<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}"> 
-					<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}"> 
-					
+					<input type="hidden" name="person_id" id="person_id" value="{{!empty($teacher->id) ? old('person_id', $teacher->id) : old('person_id')}}">
+					<input type="hidden" name="no_of_teachers" id="no_of_teachers" value="{{!empty($school->max_teachers) ? old('no_of_teachers', $school->max_teachers) : old('no_of_teachers')}}">
+
 					<div class="row">
 						<div id="teacher_disc_perc_div" name="teacher_disc_perc_div">
-							
+
 							<div class="form-group row">
 								<div class="col-md-8">
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left"> {{ __("Commission") }} (%):</label>
 										<div class="col-sm-2">
-											 
+
 										</div>
 										<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-											<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control"> 
+											<input id="discount_perc" name="discount_perc" type="text" value="{{!empty($teacher->tax_perc) ? $teacher->tax_perc : 0 }}" class="form-control">
 										</div>
 										<div class="col-sm-1" style="margin-left: 10px;">
 											<button id="changer_btn" class="btn btn-sm btn-primary">Modify</button>
@@ -499,10 +499,10 @@
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left"> {{ __('Period') }}:</label>
 								<div class="col-sm-2">
-									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date"> 
+									<input class="form-control" name="billing_period_start_date" id="billing_period_start_date">
 								</div>
 								<div class="col-sm-2 offset-md-0"  style="margin-left: 10px;">
-									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date"> 
+									<input class="form-control" name="billing_period_end_date" id="billing_period_end_date">
 								</div>
 								<div class="col-sm-1" style="margin-left: 10px;">
 									<button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
@@ -541,7 +541,7 @@
 									<td>Group lessons for 3 students</td>
 									<td></td>
 									<td>
-										<a id="correct_btn" href="" class="btn btn-xs btn-info"> 
+										<a id="correct_btn" href="" class="btn btn-xs btn-info">
 											<i class="fa fa-pencil"></i>{{__('Validate')}}
 										</a>
 									</td>
@@ -607,8 +607,8 @@
 								<td align="right" colspan="1">price/student/hour</td>
 							</tr>
 								@foreach($lessonPrices as $key => $lessionPrice)
-								
-								<?php 
+
+								<?php
 									if ($lessionPrice->divider == 1) {
 										$textForTypeBilling = 'Private session';
 									}elseif ($lessionPrice->divider == 9999) {
@@ -620,24 +620,24 @@
 									}
 									// 0 = hourly 1= fix
 									$tacherPrice = $category->s_thr_pay_type;
-									$studentPrice = $category->s_std_pay_type; 
+									$studentPrice = $category->s_std_pay_type;
 
 									if ( ($tacherPrice == 1) && (in_array($studentPrice, [1,2])) ) { // fix and fix price
 										if ($lessionPrice->divider != -1) continue;
 									}elseif (($tacherPrice == 0) && ($studentPrice == 0)) { // hourly and hourly
 										 if ($lessionPrice->divider == -1) continue;
 									}else{
-										
+
 
 									}
 
 								 ?>
 
-									
+
 								<tr class="<?= $lessionPrice->divider != -1 ? 'regular' : 'fix' ?>">
 									<td>{{$key+1}}
-										<input type="hidden" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" 
+										<input type="hidden"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}"
 										>
 										<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
@@ -646,20 +646,20 @@
 									<td>{{__('Lessons/Events..')}}</td>
 									<td>{{ __($textForTypeBilling) }}</td>
 									<td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_buy]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_buy'] : '0.00' }}"
-										style="text-align:right" 
-										class="form-control numeric float 
+										style="text-align:right"
+										class="form-control numeric float
 										<?= (($tacherPrice == 1) && ($lessionPrice->divider != -1)) || (($tacherPrice == 0) && ($lessionPrice->divider == -1))  ? 'd-none' : '' ?>"
 										>
 									</td>
 									<td>
-										<input type="text" 
-										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"  
+										<input type="text"
+										name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]"
 										value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}"
-										style="text-align:right" 
-										class="form-control numeric float 
+										style="text-align:right"
+										class="form-control numeric float
 										<?= ( ($studentPrice == 1) && ($lessionPrice->divider != -1) ) || (($studentPrice == 0) && ($lessionPrice->divider == -1)) ||  ($studentPrice == 2) ? 'd-none' : '' ?>"
 										>
 									</td>
@@ -699,7 +699,7 @@
 							<label id="page_header" class="page_title text-black">{{ __('Photo')}}</label>
 						</div>
 					</div>
-				
+
 					<div class="col-md-6">
 						<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
 							<div class="form-group row">
@@ -758,7 +758,7 @@
 					<div class="form-group row">
 						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
 						<div class="col-sm-7">
-							<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($teacher->user->username) ? old('admin_username', $teacher->user->username) : old('admin_username')}}">      
+							<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($teacher->user->username) ? old('admin_username', $teacher->user->username) : old('admin_username')}}">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -771,7 +771,7 @@
 						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
 						<div class="col-sm-7">
 							<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
-                  
+
 						</div>
 					</div>
 					<div class="form-group row">
@@ -794,14 +794,14 @@
 						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
 						<div class="col-sm-7">
 							<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($teacher->user->email) ? $teacher->user->email : old('email_to_id')}}">
-						
+
 						</div>
 					</div>
 					<div class="form-group row">
 						<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
 						<div class="col-sm-7">
 							<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
-						
+
 						</div>
 					</div>
 					<div class="row">
@@ -823,7 +823,7 @@
 														</div>
 													</span>
 												</div>
-												
+
 											</td>
 										</tr>
 									</tbody>
@@ -923,7 +923,7 @@ $(document).ready(function(){
 	// 	var formdata = $("#teacherUserForm").serializeArray();
 	// 	var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
-		
+
 	// 	formdata.push({
 	// 			"name": "_token",
 	// 			"value": csrfToken
@@ -963,8 +963,8 @@ $(document).ready(function(){
 	// 			errorModalCall('error_message_text');
 	// 		}
 	// 	});
-	
-	// });    //contact us button click 
+
+	// });    //contact us button click
 
 
 	$('#changer_btn').click(function(e) {
@@ -995,7 +995,7 @@ $(document).ready(function(){
 	populate_teacher_lesson();
 
 	$('#billing_period_search_btn').on('click', function() {
-		populate_teacher_lesson(); //refresh lesson details for billing	
+		populate_teacher_lesson(); //refresh lesson details for billing
 	});
 
 	function GetCheckBoxSelectedValues(p_chkbox) {
@@ -1020,7 +1020,7 @@ $(document).ready(function(){
 
 	    var from_date = moment(($("#billing_period_start_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
 		var to_date = moment(($("#billing_period_end_date").val()),"DD/MM/YYYY").format("YYYY.MM.DD");
-		
+
 	    var p_invoice_id = '';
 	    var auto_id = 0;
 	    var p_month = document.getElementById("smonth").value;
@@ -1033,10 +1033,10 @@ $(document).ready(function(){
 	    var p_discount_perc = document.getElementById('discount_perc').value;
 
 	    data = 'type=generate_teacher_invoice&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_month=' + p_month + '&p_year=' + p_year + '&p_discount_perc=' + p_discount_perc+'&p_billing_period_start_date='+from_date+'&p_billing_period_end_date='+to_date+ '&p_event_ids=' + p_event_ids +'&inv_type=' + inv_type;
-	    
+
 		$.ajax({
 			url: BASE_URL + '/generate_teacher_invoice',
-			
+
 			//url: '../teacher/teacher_events_data.php',
 			data: data,
 			type: 'POST',
@@ -1046,15 +1046,15 @@ $(document).ready(function(){
 
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
-					
+
 					successModalCall("{{ __('invoice generated')}}");
 
-					//location.reload(); //commented by soumen divert to invoice screen.     
+					//location.reload(); //commented by soumen divert to invoice screen.
 				} else {
 					errorModalCall(GetAppMessage('error_message_text'));
 					// alert(value.status);
 				}
-				
+
 				//location.reload();
 			}, // success
 			error: function(ts) {
@@ -1064,10 +1064,10 @@ $(document).ready(function(){
 	    }); // Ajax
 	    if (auto_id > 0) {
 	      	var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
-			setTimeout(function(){ 
-				window.location = BASE_URL+ url;  
+			setTimeout(function(){
+				window.location = BASE_URL+ url;
 				}, 3000);
-			
+
 			return false;
 	    }
 
@@ -1080,8 +1080,8 @@ $(document).ready(function(){
 
 })
 
-$(function() { 
-	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); 
+$(function() {
+	$('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" });
 	$('.colorpicker').wheelColorPicker('value', "{{ $relationalData->bg_color_agenda }}");
 
 
@@ -1091,7 +1091,7 @@ $(function() {
 	}
 	if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
-		document.getElementById("save_btn").style.display="none";					
+		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	}
 
@@ -1110,7 +1110,7 @@ function ChangeImage() {
 	formData.append('type', 'upload_image');
 	formData.append('user_id', user_id);
 	formData.append('teacher_id', {{ $teacher->id }});
-	
+
 	let loader = $('#pageloader');
 	loader.show("fast");
 	$.ajax({
@@ -1135,7 +1135,7 @@ function ChangeImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -1164,7 +1164,7 @@ function DeleteProfileImage() {
 				$("#delete_profile_image").hide();
 				successModalCall(response.message);
 			}
-						
+
 		},
 		error: function (reject) {
 			loader.hide("fast");
@@ -1172,7 +1172,7 @@ function DeleteProfileImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -1296,7 +1296,7 @@ function populate_teacher_lesson() {
 				// }
 				resultHtml += '<td width="10%">' + value.date_start + '</td>';
 				if (value.event_type == 100) {
-					
+
 					if (value.title != '' && value.title != null) {
 							resultHtml += '<td colspan="2">Event : '+value.title+'</td>';
 						}else{
@@ -1309,13 +1309,13 @@ function populate_teacher_lesson() {
 				//resultHtml += '<td></td>';
 				//resultHtml += '<td>' + value.time_start + '</td>';
 				//resultHtml += '<td>' + value.duration_minutes + ' minutes </td>';
-						
+
 				// if (value.event_type == 100) {
 				// 	resultHtml += '<td>' + value.price_name + '</td>';
 				// } else {
 				// 	resultHtml += '<td>' + value.price_name + '</td>';
 				// }
-				
+
 				resultHtml += '<td colspan="2">' + value.student_name + '</td>';
 				//resultHtml += '<td>' + value.title + '</td>';
 				if (value.event_type == 100) {
@@ -1325,7 +1325,7 @@ function populate_teacher_lesson() {
 					else{
 						resultHtml += '<td colspan="2">Private Event</td>';
 					}
-					
+
 				} else {
 					if (value.count_student > 1) {
 						resultHtml += '<td colspan="2">Group Lessons for '+value.count_student+' Student(s)</td>';
@@ -1360,7 +1360,7 @@ function populate_teacher_lesson() {
 				}
 
 				resultHtml += '</tr>';
-				
+
 
 				prev_week = value.week_name;
 				// for teacher
@@ -1381,7 +1381,7 @@ function populate_teacher_lesson() {
 			resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 			resultHtml += '<td colspan="3">' + sub_total_caption + ' ' + week_caption + ' </td>';
 			resultHtml += '<td style="text-align:right">' + week_total_buy.toFixed(2) + '</td>';
-			resultHtml+='<td style="text-align:right" colspan="2"></td>';   
+			resultHtml+='<td style="text-align:right" colspan="2"></td>';
 			resultHtml += '</tr>'
 			week_total_buy = 0;
 			week_total_sell = 0;
@@ -1390,8 +1390,8 @@ function populate_teacher_lesson() {
 		// display grand total
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="2">' + sub_total_caption + ': </td>';
-		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>'; 
-		resultHtml+='<td style="text-align:right" colspan="1"></td>';    
+		resultHtml+='<td style="text-align:right" colspan="2">'+total_buy.toFixed(2)+'</td>';
+		resultHtml+='<td style="text-align:right" colspan="1"></td>';
 		//resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 		resultHtml += '</tr>'
 
@@ -1429,7 +1429,7 @@ function populate_teacher_lesson() {
 		resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 		resultHtml += '<td colspan="3">Total</td>';
 		resultHtml += '<td style="text-align:right" colspan="1">' + total_buy.toFixed(2) + '</td>';
-		resultHtml+='<td style="text-align:right" colspan="2"></td>';   
+		resultHtml+='<td style="text-align:right" colspan="2"></td>';
 		//resultHtml+='<td style="text-align:right">'+total_buy.toFixed(2)+'</td>';
 		resultHtml += '</tr>'
 
@@ -1480,13 +1480,13 @@ function populate_teacher_lesson() {
 // 			"name": "_token",
 // 			"value": csrfToken,
 // 		});
-// 		if(error < 1){	
+// 		if(error < 1){
 // 			$.ajax({
 // 				url: BASE_URL + '/add-teacher-action',
 // 				data: formData,
 // 				type: 'POST',
 // 				dataType: 'json',
-// 				success: function(response){	
+// 				success: function(response){
 // 					if(response.status == 1){
 // 						$('#modal_add_teacher').modal('show');
 // 						$("#modal_alert_body").text('{{ __('Successfully registered') }}');
@@ -1496,8 +1496,8 @@ function populate_teacher_lesson() {
 // 		}else{
 // 			$('#modal_add_teacher').modal('show');
 // 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-// 		}	            
-// });  
+// 		}
+// });
 $('#country_code').change(function(){
 	var country_code = $(this).val();
 	var set_province = '<?= $teacher->province_id ?>';
