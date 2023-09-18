@@ -1282,9 +1282,9 @@ label#currency_alert_text {
     .container {
         padding-top: 10px !important; /* Adjust this value as needed */
     }
-    .search_text_box {
+    /*.search_text_box {
         display: none;
-    }
+    }*/
     .searchForEvent {
         display: block;
         position: absolute;

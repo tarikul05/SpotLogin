@@ -41,10 +41,10 @@
                         <div id="add_more_event_category_div" class="col-md-10" style="z-index:98;">
                         @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
                             @foreach($eventCat as $cat)
-                                <div class="col-md-12 add_more_event_category_row row border-top pb-2 pt-2">
+                                <div class="col-md-12 add_more_event_category_row row border-top pb-2 pt-2 mb-5">
                                     <div class="col-md-3 col-5">
                                         <div class="form-group row">
-                                            <div class="col-sm-11 pt-2">
+                                            <div class="md-12 pt-2">
                                                 <input type="hidden" name="category[{{$count}}][id]" value="<?= $cat->id; ?>">
                                                 <div class="row">
                                                     <div class="col-lg-9">
@@ -308,9 +308,8 @@ $(document).ready(function(){
 		var lst_id = $(this).attr('data-last_event_cat_id');
 		var incre = (parseInt(lst_id)+1);
 		$(this).attr('data-last_event_cat_id',incre);
-		var resultHtml = `<div class="col-md-12 add_more_event_category_row row border-top">
+		var resultHtml = `<span class="badge bg-info">new</span><div class="col-md-12 add_more_event_category_row row border-top mb-5">
 			<div class="col-md-3 col-5">
-				<span class="badge bg-info">new</span>
 				<div class="form-group row">
 					<div class="col-sm-11 pt-2">
                         <div class="row">
