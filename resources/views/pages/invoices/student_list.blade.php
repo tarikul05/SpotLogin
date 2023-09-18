@@ -10,7 +10,7 @@
     <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-6 col-xs-12 header-area">
-                <div class="page_header_class">
+                <div class="page_header_class mb-3">
                     @if($type == 'school')
                     <label id="page_header_id" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoicing for the school') }}</label>
                     @else
@@ -34,8 +34,7 @@
         <table id="example" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>{{ __('#') }}</th>
-                    <th>{{ __("Student’s name") }}</th>
+                    <th>{{ __("Student") }}</th>
                     <th>{{ __('Items') }}</th>
                     <th>{{ __('Action') }}</th>
                 </tr>
@@ -51,7 +50,6 @@
                     @endphp
 
                     <tr>
-                        <td class="txt-grey text-center">{{ $i }} </td>
                         <td>
                             <?php if (!empty($event->profile_image)): ?>
                                 <img src="{{ $event->profile_image }}" class="admin_logo" id="admin_logo"  alt="globe">

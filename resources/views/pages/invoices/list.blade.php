@@ -15,13 +15,13 @@
   <div class="container-fluid body">
     <header class="panel-heading invoice_list_header" style="border: none;">
         <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-9 col-xs-12 header-area" style="padding-bottom:25px;">
+            <div class="col-sm-9 m-12 header-area" style="padding-bottom:25px;">
                 <div class="page_header_class">
                     <label id="page_header_id" class="page_header" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('My invoices')}}</label>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 btn-area">
-                <div class="invoce_search_box">
+            <div class="col-lg-3 m-12 btn-area">
+                <div class="invoice_search_box">
                     <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
                 </div>
             </div>
@@ -29,10 +29,10 @@
         @if(!$AppUI->isStudent())
             <div class="invoice_list_button">
                 @if($AppUI->isSchoolAdmin())
-                <button onclick="addFilter('Teacher')" class="filter-btn btn btn-info btn-sm">Teacher</button>
+                <span onclick="addFilter('Teacher')" class="filter-btn badge bg-info badge-btn">Teacher</span>
                 @endif
-                <button onclick="addFilter('Student')" class="filter-btn btn btn-primary btn-sm">Student</button>
-                <button onclick="addFilter('Manuel(M)')" class="filter-btn btn btn-success btn-sm">Manuel(M)</button>
+                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Student</span>
+                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manuel (M)</span>
             </div>
         @endif
     </header>
@@ -44,21 +44,21 @@
             <option value="1">Paid</option>
             <option value="0">Unpaid</option>
         </select>
-        <table id="example" class="display table table-stripped table-hover" style="width:100%">
+        <table id="example1" class="table table-stripped table-hover" style="width:100%">
             <thead>
                 <tr>
                     <!-- <th style="display: none">{{ __('#') }}</th>
                     <th style="display: none">{{ __('#') }}</th> -->
                     <!--<th>&nbsp;</th>-->
                     <!--<th>{{ __('#') }}</th>-->
-                    <th>{{ __('Date') }}</th>
-                    <th class="sp_only">{{ __('Client Name') }}</th>
-                    <th>{{ __('Type') }}</th>
-                    <th>{{ __('Invoice Name') }}</th>
+                    <th class="mobile-hide">{{ __('Date') }}</th>
+                    <th class="sp_only">{{ __('Client') }}</th>
+                    <th class="mobile-hide">{{ __('Type') }}</th>
+                    <th class="mobile-hide">{{ __('Invoice Name') }}</th>
                     <th>{{ __('Amount') }}</th>
-                    <th>{{ __('Status') }}</th>
+                    <th class="mobile-hide">{{ __('Status') }}</th>
+                    <th class="mobile-hide"></th>
                     <th></th>
-                    <th>{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,18 +100,23 @@
                         <!--<th>&nbsp;</th>-->
                         <!--<td class="txt-grey text-left">{{ $i }} </td>-->
 
-                        <td>
+                        <td class="responsive-td mobile-hide">
                             {{ date('d M Y', strtotime($invoice->date_invoice)); }}
                         </td>
-                        <td class="sp_only"><?= $invoice->client_name ?></td>
+                        <td class="sp_only responsive-td">
+                            <span class="d-block d-sm-none">
+                                <b>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</b>
+                            </span>
+                         <?= $invoice->client_name ?>
+                        </td>
                         @php
                         if($invoice->invoice_type ==0){
                             @endphp
-                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}(M)</td>
+                            <td class="responsive-td mobile-hide">{{ $invoice_type_all[$invoice->invoice_type]; }} (M)</td>
                             @php
                         } else {
                             @endphp
-                            <td>{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
+                            <td class="responsive-td mobile-hide">{{ $invoice_type_all[$invoice->invoice_type]; }}</td>
                             @php
                         }
                         $invoice_name = $invoice->invoice_name;
@@ -121,17 +126,17 @@
                             $invoice_name .= '-'.$invoice->client_name;
                         }
                         @endphp
-                        <td>{{ $invoice_name}}</td>
+                        <td class="responsive-td mobile-hide">{{ $invoice_name}}</td>
 
                         @if ($invoice->invoice_type == 0)
-                        <td>{{ $invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses }}</td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ $invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses }}</b></td>
                         @else
-                        <td>{{ $invoice->total_amount }}</td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ $invoice->total_amount }}</b></td>
                         @endif
 
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
                         @if ($invoice->payment_status == 0)
-                            <td class="text-left">
+                            <td class="responsive-td mobile-hide text-left">
                                 <div id="status_{{$invoice->id}}">
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
@@ -148,7 +153,7 @@
                                 </div>
                             </td>
                         @else
-                            <td class="text-left">
+                            <td class="responsive-td mobile-hide text-left">
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
@@ -167,7 +172,7 @@
                         @endif
                         @if ($invoice->invoice_status > 1)
                             @if(!$AppUI->isStudent())
-                            <td class="text-center">
+                            <td class="responsive-td text-center mobile-hide">
                                 <!--<i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner fa-lg mr-1 light-blue-txt pull-left" aria-hidden="true"></i>
                                 <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                 <span class="small txt-grey pull-left">
@@ -175,10 +180,10 @@
                                 </span>-->
                             </td>
                             @else
-                            <td></td>
+                            <td class="mobile-hide"></td>
                             @endif
                         @else
-                            <td></td>
+                            <td class="mobile-hide"></td>
                         @endif
 
                         <td class="text-right">
@@ -273,36 +278,15 @@
     $(document).ready( function () {
 
 
-        var table = $('#example').DataTable({
-            "responsive": true,
-            //"searching": true,
-            //"bProcessing": true,
-            "bDestroy": true,
-            "order": [[1, "desc"]],
-            "bFilter": true,
-            "bInfo": false,
-            "lengthChange": false,
-            "info": true,
-            "pageLength": 10
-            ,'aoColumnDefs': [{
-                'bSortable': false,
-                'aTargets': [-1] /* 1st one, start by the right */
-            }],
-            //,"paging": false
-            //"serverSide":true,
-            "pagingType": "simple_numbers"
-
-        });
-        $('#search_text').on('keyup change', function () {
-            //table.search(this.value).draw();
-            //table.clear().draw();
-            console.log($(this).val());
-            table.search($(this).val()).draw();
-
-        });
-        $("#example_filter").hide();
-
+    var table = $('#example1').DataTable({
+        dom: '<"top">rt<"bottom"lip><"clear">',
+    });
+    $('#search_text').on('keyup change', function () {
+        table.search($(this).val()).draw();
+    });
+    $("#example_filter").hide();
     } );
+
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
 
         $('#seleted_auto_id').val(p_value);

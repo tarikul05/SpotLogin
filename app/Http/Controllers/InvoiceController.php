@@ -641,9 +641,9 @@ class InvoiceController extends Controller
                 $studentEvents->where(
                     function ($query) {
                         $query->where('event_details.is_sell_invoiced', '=', 0)
-                            ->orWhereNull('event_details.is_sell_invoiced');
+                              ->orWhereNull('event_details.is_sell_invoiced');
                     }
-                );
+                )->orderBy('event_details.id', 'desc');
             }
             //dd($studentEvents->toSql());
             $dataFetched = $studentEvents->get();

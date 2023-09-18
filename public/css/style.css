@@ -951,10 +951,35 @@ button#save_btn_more i {
 		width: 100%;
 	}
 
+    .calendar_buttons {
+        padding: 5px;
+        margin:2px;
+    }
+
+    .area-container {
+        padding: 0;
+    }
+
 }
 
+.invoice_search_box {
+    width: 100%;
+    text-align: left;
+}
+
+@media (max-width: 767px) {
+    .jQWCP-mobile {
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      /* La ligne suivante est optionnelle, elle ajoute une transition pour un déplacement plus fluide */
+      transition: top 0.3s, transform 0.3s;
+      z-index: 999999!important;
+
+    }
+  }
 
 @media only screen and (max-width: 768px) {
+
 	span.admin_name {
 		font-size: 16px;
 		color: #fff;
@@ -1264,6 +1289,38 @@ a.btn.btn-theme-success.add_teacher_btn {
 .bg-tertiary {
 	background-color:rgba(246, 246, 248, 0.068);
 }
+
+@media (max-width: 767px) {
+    .mobile-hide {
+    display: none;
+    }
+}
+
+.dataTables_length {
+    padding: 10px 0; /* Ajouter du padding en haut et en bas */
+}
+
+.badge-btn {
+    font-size:14px;
+    cursor: pointer;
+}
+
+  @media (max-width: 767px) {
+    .invoice_list_button {
+        position: absolute;
+        top:2px;
+        right:2px;
+    }
+    .invoice_list_button .btn {
+        padding: 1px; /* Réduit le padding vertical à 0, et maintient un petit padding horizontal */
+        line-height: .5;
+    }
+    .badge-btn {
+        font-size:12px;
+        cursor: pointer;
+    }
+  }
+
 
 @media only screen and (max-width: 768px) {
     .section_header_class  {
