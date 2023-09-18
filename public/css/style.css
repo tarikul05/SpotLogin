@@ -951,6 +951,15 @@ button#save_btn_more i {
 		width: 100%;
 	}
 
+    .calendar_buttons {
+        padding: 5px;
+        margin:2px;
+    }
+
+    .area-container {
+        padding: 0;
+    }
+
 }
 
 .invoice_search_box {
