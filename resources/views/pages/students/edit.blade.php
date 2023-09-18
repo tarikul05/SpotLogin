@@ -990,7 +990,8 @@ $("#country_code, #billing_country_code").trigger('change')
 		var finaltaxess = document.getElementById('total-taxes')
 		var finaltotaltaxes = finaltaxess.textContent
 		var totalAmountGet = document.getElementById('grand_total_amount')
-		var totalAmountGet = totalAmountGet.textContent
+		var totalAmountGet = parseFloat(totalAmountGet.textContent);
+        //return console.log('yo', 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet)
 		data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet;
 
 		$.ajax({
