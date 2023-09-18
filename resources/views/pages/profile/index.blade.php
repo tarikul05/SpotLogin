@@ -33,9 +33,6 @@
           </div>
         </header>
 
-        <?php if(!empty($subscription)) { ?>
-            <img src="{{ asset('img/member_ship.png') }}" width="70" class="rounded-circle badgePremium">
-        <?php } ?>
 
         <div class="col-lg-12 col-md-12 col-sm-12">
           @csrf
