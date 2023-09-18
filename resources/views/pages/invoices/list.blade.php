@@ -105,7 +105,7 @@
                         </td>
                         <td class="sp_only responsive-td">
                             <span class="d-block d-sm-none">
-                            <b>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</b>
+                                <b>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</b>
                             </span>
                          <?= $invoice->client_name ?>
                         </td>
@@ -180,10 +180,10 @@
                                 </span>-->
                             </td>
                             @else
-                            <td></td>
+                            <td class="mobile-hide"></td>
                             @endif
                         @else
-                            <td></td>
+                            <td class="mobile-hide"></td>
                         @endif
 
                         <td class="text-right">
