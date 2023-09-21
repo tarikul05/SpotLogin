@@ -92,7 +92,7 @@
                                         $total_min = 0;
                                         $total = 0;
                                         $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
-                                        $invoice->date_due = Helper::formatDateTimeZone($invoice->date_due, 'long','UTC',$zone);
+                                        $invoice->date_due = $invoice->date_due ? Helper::formatDateTimeZone($invoice->date_due, 'long','UTC',$zone) : '';
                                         $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
                                         $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
 
@@ -528,8 +528,12 @@
                             <div class="form-group row">
                                 <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date due</label>
                                 <div class="col-sm-2">
+                                    <?php
+                                      $date = $invoice->date_invoice;
+                                      $new_date = date('Y-m-d H:i:s', strtotime('+7 days', strtotime($date)));
+                                    ?>
                                         <div class="input-group" id="date_invoice_due1">
-                                        <input id="date_invoice_due" name="date_invoice_due" type="text" class="form-control" value="{{$invoice->date_due ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_due))) :''}}">
+                                        <input id="date_invoice_due" name="date_invoice_due" type="text" class="form-control" value="{{$invoice->date_due ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_due))) : $new_date}}">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
