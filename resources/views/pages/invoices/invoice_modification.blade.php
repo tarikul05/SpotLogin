@@ -530,7 +530,7 @@
                                 <div class="col-sm-2">
                                     <?php
                                       $date = $invoice->date_invoice;
-                                      $new_date = date('Y-m-d H:i:s', strtotime('+7 days', strtotime($date)));
+                                      $new_date = date('Y-m-d', strtotime('+7 days', strtotime($date)));
                                     ?>
                                         <div class="input-group" id="date_invoice_due1">
                                         <input id="date_invoice_due" name="date_invoice_due" type="text" class="form-control" value="{{$invoice->date_due ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_due))) : $new_date}}">
