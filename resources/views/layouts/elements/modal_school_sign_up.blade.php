@@ -34,6 +34,10 @@
                         <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                     </div>
 
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Confirm Email Address" id="email_confirm" name="email_confirm" required>
+                    </div>
+
 
                     <div class="card bg-tertiary p-2 mb-3">
                         <small class="pb-2 light-blue-txt">Login credentials</small>
@@ -186,10 +190,10 @@ function checkUsernameIfExist(username) {
 
       if (selectElement.value === "COACH") {
         fullNameInput.placeholder = "{{ __('Coach Name') }}";
-        emailInput.placeholder = "{{ __('Coach Email Adress') }}";
+        emailInput.placeholder = "{{ __('Coach Email Address') }}";
       } else if (selectElement.value === "SCHOOL") {
         fullNameInput.placeholder = "{{ __('School Name') }}";
-        emailInput.placeholder = "{{ __('School Email Adress') }}";
+        emailInput.placeholder = "{{ __('School Email Address') }}";
       }
     }
   </script>
@@ -200,43 +204,49 @@ $(document).ready(function () {
 
     $("#signup_form").submit(function(e) {
     e.preventDefault();
-    }).validate({
-        // Specify validation rules
-        rules: {
-            terms_condition:"required",
-            school_type: "required",
-            fullname: "required",
-            username: "required",
-            country_id: "required",
-            email: {
-                required: true,
-                email: true
-            },
-            password: {
-                required: true,
-                minlength: 7
-            }
+}).validate({
+    // Specify validation rules
+    rules: {
+        terms_condition: "required",
+        school_type: "required",
+        fullname: "required",
+        username: "required",
+        country_id: "required",
+        email: {
+            required: true,
+            email: true
         },
-        // Specify validation error messages
-        messages: {
-            terms_condition: "{{__('Please accept terms and conditions')}}",
-            school_type: "{{__('Please select type')}}",
-            fullname: "{{ __('Please enter your full name')}}",
-            username: "{{ __('Please enter your username')}}",
-            country_code: "{{ __('Please select country')}}",
-            password: {
-                required: "{{ __('Please provide a password')}}",
-                minlength: "{{ __('Your password must be at least 7 characters long')}}"
-            },
-            email: "{{ __('Please enter a valid email address')}}"
+        email_confirm: {
+            required: true,
+            email: true,
+            equalTo: "#email"
         },
-        errorPlacement: function(error, element) {
-            if (element.attr("type") == "checkbox") {
-                $(element).parents('.checkbox').append(error);
-            } else {
-                $(element).parents('.form-group').append(error);
-            }
+        password: {
+            required: true,
+            minlength: 7
+        }
+    },
+    // Specify validation error messages
+    messages: {
+        terms_condition: "{{__('Please accept terms and conditions')}}",
+        school_type: "{{__('Please select type')}}",
+        fullname: "{{ __('Please enter your full name')}}",
+        username: "{{ __('Please enter your username')}}",
+        country_code: "{{ __('Please select country')}}",
+        password: {
+            required: "{{ __('Please provide a password')}}",
+            minlength: "{{ __('Your password must be at least 7 characters long')}}"
         },
+        email: "{{ __('Please enter a valid email address')}}",
+        email_confirm: "{{ __('Email addresses don\'t match')}}"
+    },
+    errorPlacement: function(error, element) {
+        if (element.attr("type") == "checkbox") {
+            $(element).parents('.checkbox').append(error);
+        } else {
+            $(element).parents('.form-group').append(error);
+        }
+    },
         submitHandler: function (form) {
             var loader = $('#pageloader');
             var Validate_User_Name = ValidateUserName();
@@ -283,13 +293,21 @@ $(document).ready(function () {
 
                             $("#schoolsignupModal").modal('hide');
                             //$("#successModal").modal('show');
-                            successModalCall(data.message);
-
+                            //successModalCall(data.message);
+                            Swal.fire(
+                            'Congratulations!',
+                            data.message,
+                            'success'
+                            )
 
                             //$("#loginModal").modal('show');
                         } else {
-                            errorModalCall(GetAppMessage('error_message_text'));
-
+                            //errorModalCall(GetAppMessage('error_message_text'));
+                            Swal.fire(
+                            'Information',
+                            data.message,
+                            'error'
+                            )
                         }
 
                     }, // sucess

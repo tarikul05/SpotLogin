@@ -247,7 +247,7 @@
             <div class="right_part">
                 <div class="invoice_date">
                     <div><span class="txt">{{ __('date_of_invocie') }} </span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->format('d.m.Y');}}</span></div>
-                    <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ Carbon\Carbon::parse($invoice_data->date_invoice)->addDays(7)->format('d.m.Y')}}</span></div>
+                    <div class="padding_top"><span class="txt">{{ __('due_date_of_invocie') }}</span><span class="date">{{ $invoice_data->date_due ?  Carbon\Carbon::parse($invoice_data->date_due)->format('d.m.Y') : Carbon\Carbon::parse($invoice_data->date_invoice)->addDays(7)->format('d.m.Y')}}</span></div>
                 </div>
             </div>
         </div>
@@ -487,9 +487,9 @@
                         <?php if(!empty($invoice_data->payment_bank_place)){?>
                             <div class="txt"><b>Place : <b>{{ $invoice_data->payment_bank_place }}</div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->payment_bank_country_code)){?>
+                        <!--<?php if(!empty($invoice_data->payment_bank_country_code)){?>
                             <div class="txt"><b>Bank Country Code : <b>{{ $invoice_data->payment_bank_country_code }}</div>
-                        <?php } ?>
+                        <?php } ?>-->
                         <?php if(!empty($invoice_data->etransfer_acc)){ ?>
                             <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
                         <?php } ?>

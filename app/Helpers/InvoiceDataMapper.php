@@ -26,7 +26,7 @@ class InvoiceDataMapper
      */
     public function __construct()
     {
-        
+
     }
 
     /**
@@ -58,11 +58,12 @@ class InvoiceDataMapper
             'period_starts' => $dateS,
             'period_ends' => $dateEnd,
             'date_invoice' => Carbon::now()->format('Y-m-d H:i:s'),
+            'date_due' => Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
         ];
         if ($p_invoice_id != '') {
             $invoiceData['invoice_no'] = $p_invoice_id;
         }
-        
+
 
 
         if ($invoice_type == 'T') {
@@ -85,7 +86,7 @@ class InvoiceDataMapper
             $invoiceData['seller_gender_id'] = $teacher->gender_id;
             $invoiceData['seller_lastname'] = $teacher->lastname;
             $invoiceData['seller_firstname'] = $teacher->firstname;
-            
+
             $invoiceData['payment_bank_iban'] = !empty($teacher->bank_iban) ? $teacher->bank_iban : null;
             $invoiceData['payment_bank_account'] = !empty($teacher->bank_account) ? $teacher->bank_account : null;
             $invoiceData['payment_bank_swift'] = !empty($teacher->bank_swift) ? $teacher->bank_swift : null;
@@ -96,7 +97,7 @@ class InvoiceDataMapper
             if (!empty($teacher->bank_country_code) && $teacher->bank_country_code != ' ') {
                 $invoiceData['payment_bank_country_code'] = !empty($teacher->bank_country_code) ? $teacher->bank_country_code : null;
             }
-            
+
         } else {
             if($user->isTeacherAdmin()) {
                 $professors = SchoolTeacher::active()->where('school_id',$schoolId);
@@ -118,7 +119,7 @@ class InvoiceDataMapper
                 $invoiceData['seller_gender_id'] = $teacher->gender_id;
                 $invoiceData['seller_lastname'] = $teacher->lastname;
                 $invoiceData['seller_firstname'] = $teacher->firstname;
-                
+
                 $invoiceData['payment_bank_iban'] = !empty($teacher->bank_iban) ? $teacher->bank_iban : null;
                 $invoiceData['payment_bank_account'] = !empty($teacher->bank_account) ? $teacher->bank_account : null;
                 $invoiceData['payment_bank_swift'] = !empty($teacher->bank_swift) ? $teacher->bank_swift : null;
@@ -129,7 +130,7 @@ class InvoiceDataMapper
                 if (!empty($teacher->bank_country_code) && $teacher->bank_country_code != ' ') {
                     $invoiceData['payment_bank_country_code'] = !empty($teacher->bank_country_code) ? $teacher->bank_country_code : null;
                 }
-            } elseif($user->isSchoolAdmin()) { 
+            } elseif($user->isSchoolAdmin()) {
                 $invoiceData['seller_id'] = $schoolId;
                 $invoiceData['seller_name'] = $school->school_name;
                 $invoiceData['seller_street'] = $school->street;
@@ -144,7 +145,7 @@ class InvoiceDataMapper
                 $invoiceData['seller_gender_id'] = $school->contact_gender_id;
                 $invoiceData['seller_lastname'] = $school->contact_lastname;
                 $invoiceData['seller_firstname'] = $school->contact_firstname;
-                $invoiceData['payment_bank_iban'] = !empty($school->bank_iban) ? $school->bank_iban : null;        
+                $invoiceData['payment_bank_iban'] = !empty($school->bank_iban) ? $school->bank_iban : null;
                 $invoiceData['payment_bank_account_name'] = !empty($school->bank_account_holder) ? $school->bank_account_holder : null;
                 $invoiceData['payment_bank_account'] = !empty($school->bank_account) ? $school->bank_account : null;
                 $invoiceData['payment_bank_swift'] = !empty($school->bank_swift) ? $school->bank_swift : null;
@@ -210,12 +211,12 @@ class InvoiceDataMapper
         $invoiceData['discount_percent_4'] = $school->discount_percent_4;
         $invoiceData['discount_percent_5'] = $school->discount_percent_5;
         $invoiceData['discount_percent_6'] = $school->discount_percent_6;
-        
+
         $invoiceData['category_invoiced_type'] = $invoice_type;
-        
+
         $invoiceData['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-        
+
         return $invoiceData;
     }
 }

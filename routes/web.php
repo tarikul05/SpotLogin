@@ -25,6 +25,8 @@ Route::get('/', [App\Http\Controllers\AuthController::class, 'index']);
 Route::post('stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handleWebhook'])->name('subscription.webhook');
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'loginSubmit'])->name('login.submit');
 Route::post('/forgot_password', [App\Http\Controllers\AuthController::class, 'forgotPassword'])->name('forgot_password.submit');
+Route::post('/forgot_username', [App\Http\Controllers\AuthController::class, 'forgotUsername'])->name('forgot_username.submit');
+
 Route::get('/reset-password/{token}', [App\Http\Controllers\AuthController::class, 'resetPasswordEmail'])->name('reset_password.email');
 Route::post('/reset-password', [App\Http\Controllers\AuthController::class, 'resetPasswordSubmit'])->name('reset_password.submit');
 Route::post('/signup', [App\Http\Controllers\UserController::class, 'create'])->name('signup.submit');
@@ -36,7 +38,7 @@ Route::post('/change_first_password', [App\Http\Controllers\AuthController::clas
 Route::get('/verify-user-account/{token}', 'UserController@verify_user_added')->name('add.verify.email');
 Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_verified_user'])->name('user.add')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
+Route::get('/retrieve-user-account/{token}', 'UserController@retrieve_user_added')->name('retrieve.verify.email');
 
 //Categories for faqs
 Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.list');
@@ -151,9 +153,6 @@ Route::get('setlang/{locale}', function ($locale) {
   session()->put('locale', $locale);
   return redirect()->back();
 });
-
-
-
 
 // auth
 Route::group(['middleware' => ['auth']], function () {

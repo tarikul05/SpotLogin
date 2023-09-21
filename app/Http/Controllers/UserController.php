@@ -451,6 +451,34 @@ class UserController extends Controller
         }
     }
 
+    public function retrieve_user_added($token)
+    {
+
+        $to = Carbon::now()->format("Y-m-d");
+        $verifyToken = VerifyToken::where([
+            ['expire_date', '>=', $to],
+            ['token', $token]
+        ])->first();
+        $timezones = config('global.timezones');
+        if(isset($verifyToken) ){
+        $user = User::where([
+                ['id', $verifyToken->user_id],
+                ['is_active', 1],
+                ['deleted_at', null],
+            ])->first();
+        $usernames = User::where([
+            ['email', $user->email],
+            ['is_active', 1],
+            ['deleted_at', null],
+        ])->get();
+
+        return view('pages.retrieve', compact('usernames'));
+
+        }else{
+            echo '<h1>Invalid activation Link.</h1>'; die;
+        }
+    }
+
      /**
      * after user add from admin verify it by user
      *
