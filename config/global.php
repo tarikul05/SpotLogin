@@ -1,5 +1,5 @@
-<?php 
-  
+<?php
+
   return [
     'app_debug' => env('APP_DEBUG', false),
     'mail_from_address' => env('MAIL_FROM_ADDRESS'),
@@ -82,7 +82,7 @@
         'code'     => 30,
         'drop_text'     => 'Foundation'
       ),
-     
+
     ),
     'user_default_password' => env('USER_DEFAULT_PASSWORD', 12345678),
     'gender'=>[
@@ -91,7 +91,7 @@
       3 => 'Prefer not to respond',
       4 => 'Non-binary',
     ],
-    
+
     'token_validity' => 2, //days
 
     'event_type' =>[
@@ -559,5 +559,5 @@
       'Pacific/Tongatapu' => '(UTC+13:00) Tongatapu',
       'Pacific/Kiritimati' => '(UTC+14:00) Kiritimati',
     ]
-    
+
   ];

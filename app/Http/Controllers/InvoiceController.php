@@ -85,7 +85,7 @@ class InvoiceController extends Controller
 
         }
 
-        $invoices->orderBy('id', 'desc');
+        $invoices->orderBy('date_invoice', 'desc');
         $results =  $invoices = $invoices->get();
 
         //dd($results);
@@ -395,7 +395,8 @@ class InvoiceController extends Controller
             $user = $request->user();
             $p_invoice_id = trim($data['p_invoice_id']);
 
-            $updateInvoice['date_invoice']=trim($data['date_invoice']);
+            $updateInvoice['date_invoice'] = Carbon::parse(trim($data['date_invoice']))->format('Y-m-d H:i:s');
+            $updateInvoice['date_due'] = Carbon::parse(trim($data['date_invoice_due']))->format('Y-m-d H:i:s');
             $updateInvoice['invoice_name']=trim($data['invoice_name']);
             $updateInvoice['invoice_header']=trim($data['invoice_header']);
             $updateInvoice['invoice_footer']=trim($data['invoice_footer']);
@@ -1750,6 +1751,7 @@ class InvoiceController extends Controller
                 'invoice_type' => $dataParam['p_invoice_type'],
                 'invoice_name' => $dataParam['p_invoice_name'],
                 'date_invoice' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
+                'date_due' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_due'])),
                 'period_starts' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'period_ends' => date("Y-m-d H:i:s", strtotime($dataParam['p_date_invoice'])),
                 'client_id' => $dataParam['p_client_id'],

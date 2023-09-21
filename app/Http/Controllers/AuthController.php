@@ -323,6 +323,102 @@ class AuthController extends Controller
     }
 
 
+    public function forgotUsername(Request $request)
+    {
+        $result = array(
+            'status' => false,
+            'message' => __('failed to send email'),
+        );
+        try {
+            $data = $request->all();
+            if ($data['type'] === "forgot_password_submit") {
+
+
+                $username=trim($_POST['forgot_password_username']);
+                $p_lang=trim($_POST['p_lang']);
+
+
+                $usernames = User::where([
+                    ['email', $username],
+                    ['is_active', 1],
+                    ['deleted_at', null],
+                ])->get();
+
+                $user = User::where([
+                    ['email', $username],
+                    ['is_active', 1],
+                    ['deleted_at', null],
+                ])->first();
+
+                if ($user) {
+                    //sending email for forgot password
+                    if (config('global.email_send') == 1) {
+
+                        try {
+                            $data = [];
+                            $data['email'] = $user->email;
+                            $data['name'] = $user->username;
+                            $data['usernames'] = $usernames;
+
+                            $verifyUser = [
+                                'user_id' => $user->id,
+                                'person_id' => $user->person_id,
+                                'token' => Str::random(25),
+                                'expire_date' => Carbon::now()->addMinutes(5)->toDateTimeString()
+                            ];
+
+
+                            $verifyUser = VerifyToken::create($verifyUser);
+
+                            $data['token'] = $verifyUser->token;
+                            $data['username'] = $user->username;
+                            $data['subject']='Find my username';
+                            $data['url'] = route('retrieve.verify.email',$data['token']);
+
+                            $data['p_lang'] = $p_lang;
+
+
+                            if ($this->emailSend($data,'forgot_username')) {
+                                $result = array(
+                                    'status' => true,
+                                    'message' => __('We sent you an activation link. Check your email and click on the link to choose your account Login ID.'),
+                                );
+                            }  else {
+                                $result = array(
+                                    "status"     => false,
+                                    'message' =>  __('Internal server error')
+                                );
+                            }
+                            return response()->json($result);
+                        } catch (\Exception $e) {
+                            $result = array(
+                                'status' => true,
+                                'message' => __('Maybe an error occurend. we sent you an activation code. Check your email and click on the link to verify.'),
+                            );
+                            $user->is_active = 1;
+                            $user->save();
+                            return response()->json($result);
+                        }
+                    } else{
+                        $result = array('status'=>true,'msg'=>__('email sent'));
+                    }
+                }   else {
+                    $result = array('status'=>false,'msg'=>__('Email address is not registered'));
+                }
+
+
+            }
+
+            return response()->json($result);
+
+        } catch (Exception $e) {
+            //return error message
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+    }
+
 
      /**
      * signup virification

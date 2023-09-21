@@ -224,7 +224,7 @@
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
                             <div class="dropdown-menu header">
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
-                               <a class="dropdown-item" href="/admin/email_template">
+                               <a class="dropdown-item" href="/admin/email-template">
                                     Email Template
                                 </a>
                                 @endif

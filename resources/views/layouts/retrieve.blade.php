@@ -16,8 +16,10 @@
   <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4@5.0.15/bootstrap-4.min.css" rel="stylesheet">
+
   <!-- Theme style -->
   <link rel="stylesheet" type="text/css" href="{{ asset('css/main_style.css') }}">
 
@@ -64,17 +66,7 @@
                 <a style="line-height:21px; margin-top:3px;" class=" nav-link active login_btn text-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">{{ __('Login Account') }}</a>
             </div>
           </li>
-          <select id="setLan" class="selectpicker pt-1 d-none d-sm-block" data-width="fit">
-            @foreach ($language as $key => $lan)
-                <option
-                value="{{ $lan->language_code }}"
-                @if ($lan->language_code == app()->getLocale())
-                    selected="selected"
-                @endif
-                data-icon="{{ $lan->flag_class}}"
-                >  {{ $lan->title }}</option>
-            @endforeach
-          </select>
+
         </ul>
         <div class="alert alert-info mt-4 d-block d-sm-none m-2 text-center" style="opacity:.8;" data-bs-toggle="modal" data-bs-target="#schoolsignupModal">
           <h6><i class="fa-solid fa-bell fa-beat-fade"></i> <b>NEW</b> <small>in your subscription</small></h6>
@@ -95,40 +87,6 @@
 
 
   @yield('content')
-  <div id="pageloader">
-      <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
-  </div>
-
-  <footer>
-    <select id="setLan2" class="selectpicker ms-auto" data-width="fit" >
-        @foreach ($language as $key => $lan)
-            <option
-            value="{{ $lan->language_code }}"
-            @if ($lan->language_code == app()->getLocale())
-                selected="selected"
-            @endif
-            data-icon="{{ $lan->flag_class}}"
-            >  {{ $lan->title }}</option>
-        @endforeach
-      </select>
-
-      <div class="d-flex justify-content-center">
-        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Privacy policy</a>
-        <span class="nav-link text-center" style="padding:3px;">|</span>
-        <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">Terms & conditions</a>
-      </div>
-
-    <h3 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h3>
-    <p class="mb-0"><a href="#" class="txtdarkblue"><img src="{{ asset('img/email.svg') }}" alt=""> contact@sportlogin.ch</a></p>
-  </footer>
-
-
-  @include('layouts.elements.modal_login')
-  @include('layouts.elements.modal_reset_login')
-  @include('layouts.elements.modal_school_sign_up')
-  @include('layouts.elements.modal_forgot_password')
-  @include('layouts.elements.modal_forgot_username')
-  @include('layouts.elements.modal_loader')
 
 
   <!--common script for all pages-->
