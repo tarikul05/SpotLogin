@@ -278,13 +278,18 @@
     $(document).ready( function () {
 
 
-    var table = $('#example1').DataTable({
-        dom: '<"top">rt<"bottom"lip><"clear">',
-    });
+        var table = $('#example1').DataTable({
+    dom: '<"top"i>rt<"bottom"flp><"clear">', // Hide all elements except the search input
+    ordering: false, // Disable column sorting
+    searching: true, // Enable searching with the search input
+    paging: false, // Disable pagination
+    info: false, // Disable information display
+});
     $('#search_text').on('keyup change', function () {
         table.search($(this).val()).draw();
     });
-    $("#example_filter").hide();
+    $("#example1_filter").hide();
+
     } );
 
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {

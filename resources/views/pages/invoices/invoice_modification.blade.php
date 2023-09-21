@@ -48,9 +48,11 @@
                                     <i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Issue invoice')}}</span>
                                 </a>
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block">{{__('Print Preview')}}</span></a>
-                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
-                                <!--<a id="save_btn" name="save_btn" class="btn btn-theme-success">{{__('Save')}}</a>-->
+
                             @endif
+
+                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
+                            <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Save')}}</span></a>
 
 
                         </div>
@@ -90,6 +92,7 @@
                                         $total_min = 0;
                                         $total = 0;
                                         $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->date_due = Helper::formatDateTimeZone($invoice->date_due, 'long','UTC',$zone);
                                         $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
                                         $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
 
@@ -518,6 +521,15 @@
                                 <div class="col-sm-2">
                                     <div class="input-group" id="date_invoice1">
                                         <input id="date_invoice" name="date_invoice" type="text" class="form-control" value="{{$invoice->date_invoice ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_invoice))) :''}}">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label id="invoice_date_cap" class="col-lg-3 col-sm-3 text-right">Date due</label>
+                                <div class="col-sm-2">
+                                        <div class="input-group" id="date_invoice_due1">
+                                        <input id="date_invoice_due" name="date_invoice_due" type="text" class="form-control" value="{{$invoice->date_due ? date('Y-m-d', strtotime(str_replace('.', '-', $invoice->date_due))) :''}}">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -1024,7 +1036,17 @@ function extractExtraCharges($inputString) {
 
 <script type="text/javascript">
     $("#date_invoice").datetimepicker({
-		format: "dd/mm/yyyy",
+	format: "yyyy-mm-dd",
+		autoclose: true,
+		todayBtn: true,
+		minuteStep: 10,
+		minView: 3,
+		maxView: 3,
+		viewSelect: 3,
+		todayBtn:false,
+	});
+    $("#date_invoice_due").datetimepicker({
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		todayBtn: true,
 		minuteStep: 10,
@@ -1047,7 +1069,7 @@ function extractExtraCharges($inputString) {
         $('button[data-bs-toggle=tab]').click(function(e){
             var target = $(e.target).attr("data-bs-target_val") // activated tab
 
-            // document.getElementById("save_btn").style.display = "none";
+             //document.getElementById("save_btn").style.display = "none";
             // document.getElementById("delete_btn_inv").style.display = "none";
             // document.getElementById("issue_inv_btn").style.display = "none";
             // document.getElementById("print_preview_btn").style.display = "none";
@@ -1061,11 +1083,11 @@ function extractExtraCharges($inputString) {
 
             //invoice_status: 10 - issued, 1- create
             if (target == "tab_1") {
-
+                document.getElementById("save_btn").style.display = "none";
             } else if (target == "tab_2") {
-
+                document.getElementById("save_btn").style.display = "none";
             } else if (target == "tab_3") {
-
+                document.getElementById("save_btn").style.display = "block";
             }
 
         });
@@ -1421,6 +1443,10 @@ function extractExtraCharges($inputString) {
     });
 
     $('#save_btn').click(function (e) {
+
+        var formdata = $("#form_details").serializeArray();
+//return console.log(formdata);
+
         var x = document.getElementsByClassName("tab-pane active");
         //if (x[0].id == "pane_main") {
 
@@ -1432,8 +1458,9 @@ function extractExtraCharges($inputString) {
         //     //console.log('sss');
         //     UpdateInvoiceSummaryAmount();
         // }
-        executeAsynchronously(
-        [UpdateInvoiceInfo, UpdateInvoiceSummaryAmount], 10);
+        //executeAsynchronously(
+        //[UpdateInvoiceInfo, UpdateInvoiceSummaryAmount], 10);
+        UpdateInvoiceInfo();
     });
 
     function UpdateInvoiceSummaryAmount() {
@@ -1515,6 +1542,8 @@ function extractExtraCharges($inputString) {
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
 
+    //  return  console.log(form_data)
+
         // return false;
         $.ajax({
             url: BASE_URL+'/update_invoice_info',
@@ -1529,10 +1558,10 @@ function extractExtraCharges($inputString) {
                 //console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    //successModalCall('Invoice Updated successfully!');
+                    successModalCall('Invoice Updated successfully!');
                     var p_school_id = document.getElementById("p_school_id").value;
                     return true;
-                    //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {

@@ -28,6 +28,7 @@ class Invoice extends BaseModel
         'invoice_type',
         'invoice_status',
         'date_invoice',
+        'date_due',
         'period_starts',
         'period_ends',
         'fully_paid_date',
@@ -157,7 +158,7 @@ class Invoice extends BaseModel
 
     /**
      * getStudentInvoiceList for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -168,7 +169,7 @@ class Invoice extends BaseModel
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_student', 'school_student.student_id', '=', 'event_details.student_id')
             ->leftJoin('students', 'students.id', '=', 'event_details.student_id')
-            ->leftJoin('users', function($join) 
+            ->leftJoin('users', function($join)
              {
                 $join->on('users.person_id', '=', 'event_details.student_id')
                     ->where('users.person_type', '=' , 'App\Models\Student');
@@ -186,7 +187,7 @@ class Invoice extends BaseModel
                     'events.is_active' => 1
                 ]
             );
-        
+
         if ($user_role == 'admin_teacher' || $user_role == 'teacher_minimum' || $user_role == 'teacher') {
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
             $studentEvents->whereRaw($qq);
@@ -205,7 +206,7 @@ class Invoice extends BaseModel
         $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
         $studentEvents->whereRaw($qq);
         //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
-        
+
         $studentEvents->where('event_details.is_sell_invoiced', '=', 0);
         $studentEvents->whereNull('event_details.sell_invoice_id');
         $studentEvents->whereNull('events.deleted_at');
@@ -214,7 +215,7 @@ class Invoice extends BaseModel
         $dateActuelle = Carbon::now()->format('Y-m-d H:i:s');
 
         $studentEvents->where('events.date_start', '<=', $dateActuelle);
-        
+
 
         $studentEvents->distinct('events.id');
         //$studentEvents->groupBy('event_details.student_id');
@@ -235,7 +236,7 @@ class Invoice extends BaseModel
 
     /**
      * getTeacherInvoiceList for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -246,7 +247,7 @@ class Invoice extends BaseModel
             ->leftJoin('event_categories', 'event_categories.id', '=', 'events.event_category')
             ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
             ->leftJoin('teachers', 'teachers.id', '=', 'event_details.teacher_id')
-            ->leftJoin('users', function($join) 
+            ->leftJoin('users', function($join)
              {
                 $join->on('users.person_id', '=', 'event_details.teacher_id')
                     ->where('users.person_type', '=' , 'App\Models\Teacher');
@@ -289,7 +290,7 @@ class Invoice extends BaseModel
         $dateS = Carbon::now()->startOfMonth()->subMonth(1)->format('Y-m-d');
         $dateEnd = Carbon::now()->subMonth(0)->format('Y-m-d');
         $qq = "events.date_start BETWEEN '" . $dateS . "' AND '" . $dateEnd . "'";
-        
+
         $teacherEvents->whereRaw($qq);
         $teacherEvents->distinct('event_details.id');
         $teacherEvents->groupBy('event_details.event_id');
@@ -312,7 +313,7 @@ class Invoice extends BaseModel
 
     /**
      * getStudentEventLessonList for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -369,7 +370,7 @@ class Invoice extends BaseModel
                     ]
                 );
 
-            
+
 
             // dd($user);
             if ($user->isTeacherSchoolAdmin() && $invoice_type == 'T' ) {
@@ -390,7 +391,7 @@ class Invoice extends BaseModel
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
             $studentEvents->whereRaw($qq);
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
-            
+
 
             $school = School::active()->find($p_school_id);
             $timeZone = 'UTC';
@@ -406,7 +407,7 @@ class Invoice extends BaseModel
 
 
             //$studentEvents->where('events.date_start', '>=', $dateS);
-            
+
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             $studentEvents->distinct('event_details.id');
@@ -419,7 +420,7 @@ class Invoice extends BaseModel
 
     /**
      * getTeacherEventLessonList for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -457,17 +458,17 @@ class Invoice extends BaseModel
                 )
                 ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
                 ->selectRaw("ifnull(events.no_of_students,0) AS count_student")
-                
+
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_total")
                 ->selectRaw("ifnull(SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS buy_price")
                 ->selectRaw("ifnull(SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*),0) AS costs_1")
-                
+
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
                 ->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
-                
+
                 ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT_WS('', students.firstname, students.middlename, students.lastname) SEPARATOR ', ') AS student_name")
                 ->selectRaw("CONCAT_WS('', teachers.firstname, teachers.middlename, teachers.lastname) AS teacher_name")
                 ->selectRaw('DATE_FORMAT(str_to_date(concat("01/",month(events.date_start),"/",year(events.date_start)),"%d/%m/%Y"),"%d/%m/%Y") as FirstDay')
@@ -487,7 +488,7 @@ class Invoice extends BaseModel
                         'events.school_id' => $p_school_id
                     ]
                 );
-            
+
 
             // dd($user);
             if ($user->isTeacherSchoolAdmin() && $invoice_type == 'T' ) {
@@ -495,7 +496,7 @@ class Invoice extends BaseModel
                 $teacherEvents->whereRaw($qq);
                 $teacherEvents->where('events.teacher_id', $user->person_id);
             }else if ($user_role == 'admin_teacher') {
-                
+
                 $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
                 $teacherEvents->whereRaw($qq);
                 //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
@@ -548,7 +549,7 @@ class Invoice extends BaseModel
 
     /**
      * generateTeacherEvent for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -564,7 +565,7 @@ class Invoice extends BaseModel
                     'events.event_type as event_type',
                     'events.teacher_id as teacher_id',
                     //'event_details.student_id as student_id',
-                    
+
                     'events.duration_minutes as duration_minutes',
                     'events.title as title',
                     'event_details.participation_id as participation_id',
@@ -579,17 +580,17 @@ class Invoice extends BaseModel
                 )
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.id SEPARATOR ',') AS detail_id ")
                 ->selectRaw("GROUP_CONCAT(DISTINCT event_details.student_id SEPARATOR ',') AS student_id ")
-            
-                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")              
+
+                ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 ->selectRaw("COUNT(event_details.event_id) as count_name")
                 ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_total")
                 ->selectRaw("SUM(event_details.sell_total) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_total")
-                
+
                 ->selectRaw("SUM(event_details.costs_1) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_1")
                 ->selectRaw("SUM(event_details.costs_2) * COUNT(DISTINCT event_details.id) / COUNT(*) AS costs_2")
                 ->selectRaw("SUM(event_details.buy_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS buy_price")
                 ->selectRaw("SUM(event_details.sell_price) * COUNT(DISTINCT event_details.id) / COUNT(*) AS sell_price")
-                
+
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
                 ->where(
@@ -633,24 +634,24 @@ class Invoice extends BaseModel
                     //$teacherEvents->where('event_categories.invoiced_type', $invoice_type);
                 }
             }
-            
+
             $teacherEvents->where('event_details.is_buy_invoiced', '=', 0);
             $teacherEvents->whereNull('event_details.buy_invoice_id');
-            
+
             //$studentEvents->where('events.date_start', '>=', $dateS);
             $teacherEvents->orderBy('events.date_start', 'desc');
             //By
             //$teacherEvents->distinct('events.id');
 
             $teacherEvents->groupBy('event_details.event_id');
-            
+
             return $teacherEvents;
 
     }
 
     /**
      * generateStudentEvent for invoicing
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -662,7 +663,7 @@ class Invoice extends BaseModel
                     'events.event_type as event_type',
                     'events.teacher_id as teacher_id',
                     'event_details.student_id as student_id',
-                    
+
                     'events.duration_minutes as duration_minutes',
                     'events.title as title',
                     'event_details.participation_id as participation_id',
@@ -676,14 +677,14 @@ class Invoice extends BaseModel
                 )
                 ->selectRaw("ifnull(event_details.buy_total,0) AS buy_total")
                 ->selectRaw("ifnull(event_details.sell_total,0) AS sell_total")
-                
+
                 ->selectRaw("ifnull(event_details.costs_1,0) AS costs_1")
                 ->selectRaw("ifnull(event_details.costs_2,0) AS costs_2")
                 ->selectRaw("ifnull(events.extra_charges,0) AS extra_charges")
-                
+
                 ->selectRaw("ifnull(event_details.buy_price,0) AS buy_price")
                 ->selectRaw("ifnull(event_details.sell_price,0) AS sell_price")
-                
+
                 ->selectRaw("if((events.event_type = 100),'Event','Lesson') AS price_name")
                 //->selectRaw("ifnull(events.duration_minutes,0) AS duration_minutes")
                 ->selectRaw("ifnull(event_details.price_currency,'CAD') AS price_currency")
@@ -717,10 +718,10 @@ class Invoice extends BaseModel
            // $studentEvents->where('event_details.participation_id', '>', 198);
             //$studentEvents->where('events.date_start', '>=', $dateS);
             //$studentEvents->where('events.date_end', '<=', $dateEnd);
-            
+
             //dd($dateS);
-        /*  
-          
+        /*
+
           if ($user_role != 'superadmin') {
                 if ($user_role == 'teacher') {
                     $qq = " IF(`events`.`event_type` != 100, `event_categories`.`invoiced_type`, `events`.`event_invoice_type`) = '".$invoice_type."'";
@@ -734,17 +735,17 @@ class Invoice extends BaseModel
             }
             $qq = " IF(`events`.`event_type` != 100, `event_categories`.`s_std_pay_type`,1) != 2";
             $studentEvents->whereRaw($qq);
-            
+
         */
 
 
             //$studentEvents->where('event_categories.s_std_pay_type', '!=', 2);
-            
+
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
-            
-            
-            
+
+
+
             //$studentEvents->where('events.date_start', '>=', $dateS);
             $studentEvents->orderBy('events.date_start', 'desc');
             //By

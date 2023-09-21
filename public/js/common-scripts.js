@@ -8,8 +8,14 @@ jQuery(document).ready(function($) {
 });
 
 
-function successModalCall(title, desc = '') {
-  $('#successModal').remove();
+function successModalCall(title='', desc = '') {
+
+      Swal.fire(
+        title,
+        desc,
+        'success'
+      )
+ /* $('#successModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal modal_parameter" id="successModal">
   <div class="modal-dialog modal-dialog-centered">
@@ -27,11 +33,16 @@ function successModalCall(title, desc = '') {
 </div>
 `;
   $('body').append(modalHtml);
-  $("#successModal").modal('show');
+  $("#successModal").modal('show');*/
 }
 
 function errorModalCall(title, desc = '') {
-  $('#errorModal').remove();
+    Swal.fire(
+        title,
+        desc,
+        'error'
+        )
+  /*$('#errorModal').remove();
   var modalHtml = '';
   modalHtml = `<div class="modal" id="errorModal" name="errorModal">
             <div class="modal-dialog modal-dialog-centered mt-5">
@@ -46,7 +57,7 @@ function errorModalCall(title, desc = '') {
         </div>`;
   //alert(modalHtml);
   $('body').append(modalHtml);
-  $("#errorModal").modal('show');
+  $("#errorModal").modal('show');*/
 }
 
 
