@@ -457,4 +457,34 @@ class SubscriptionController extends Controller
 
 
 
+    public function checkAutorization(User $user)
+    {
+        $user = auth()->user();
+
+        try {
+            $customer = Customer::retrieve($user->stripe_id);
+
+            $is_subscribed = $user->subscribed('default');
+            if($is_subscribed) {
+            foreach ($customer->subscriptions->data as $subscription) {
+                if (in_array($subscription->status, ['active', 'trialing'])) {
+                    return true;
+                } else {
+                    return abort(403, 'Accès interdit');
+                }
+                }
+            }
+            else {
+                if ($user->trial_ends_at && $user->trial_ends_at->isFuture()) {
+                    return true;
+                } else {
+                    return abort(403, 'Accès interdit');
+                }
+            }
+        } catch (\Exception $e) {
+            // Gérez les exceptions ici (par exemple, enregistrez une erreur dans un journal)
+        }
+    }
+
+
 }
