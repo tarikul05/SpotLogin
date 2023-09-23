@@ -23,8 +23,8 @@
 					<div class="float-end btn-group">
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 		<div class="mb-3">
@@ -38,7 +38,7 @@
 					<label class="col-lg-3 col-sm-3 text-left"></label>
 					<div class="col-sm-5 search_area">
 						<div class="input-group">
-							<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+							<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 							<input class="form-control" id="email" placeholder="{{ __('email@domain.com') }}" value="{{$searchEmail}}" name="email" type="email">
 						</div>
 					</div>
@@ -60,16 +60,16 @@
 
 		<!-- Tabs content -->
 
-	
+
 
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{ route('student.createAction') }}"  name="add_student" role="form">
-
+            @csrf
 			<div class="row">
 				<div class="col-lg-10">
 
 		<input type="hidden" name="school_id" value="{{ $schoolId }}">
 		<input type="hidden" name="user_id" value="{{ !empty($exUser) ? $exUser->id : '' }}">
-		@csrf	
+
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
@@ -134,7 +134,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the student will receive an email with instructions to connect to his student account.')}}"></i> :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 											<input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
 										</div>
 									</div>
@@ -175,7 +175,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
+										<div class="input-group" id="birth_date_div">
 											<input id="birth_date" value="{{ $exStudent ? $exStudent->birth_date : '' }}" {{ $exStudent ? 'readonly' : '' }} name="birth_date" type="text" class="form-control" value="{{old('birth_date')}}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -226,7 +226,7 @@
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="level_date_arp" value="{{ $exStudent ? $exStudent->level_date_arp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_arp" type="text" class="form-control" value="{{old('level_date_arp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -259,7 +259,7 @@
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
-											<div class="input-group" id="date_last_level_usp_div"> 
+											<div class="input-group" id="date_last_level_usp_div">
 												<input id="level_date_usp" value="{{ $exStudent ? $exStudent->level_date_usp : '' }}" {{ $exStudent ? 'readonly' : '' }} name="level_date_usp" type="text" class="form-control" value="{{old('level_date_usp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -293,7 +293,7 @@
 									</div>
 								</div>
 							@endif
-					
+
 						</div>
 					</fieldset>
 				</div>
@@ -481,7 +481,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="email2" >{{__("Student's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" value="1" name="student_notify"></span> 
+										<span class="input-group-addon"><input type="checkbox" value="1" name="student_notify"></span>
 										<input class="form-control" id="email2" name="email2" value="{{$searchEmail}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
@@ -492,8 +492,8 @@
 					</div>
 				</div>
 		</div>
-		
-	
+
+
 				</div>
 
 				<div class="col-lg-2 btn_actions" style="position:fixed; right:0;">
@@ -508,10 +508,10 @@
 				</div>
 
 			</div>
-				
-	
+
+
 	</form>
-	{{-- @endif --}} 
+	{{-- @endif --}}
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -626,7 +626,7 @@ $(function() {
 	// if(b_country == 'CA'){
 	// 	$('#billing_province_id_div').show();
 	// }
-	
+
 	$("#birth_date").datetimepicker({
 		format: "dd/mm/yyyy",
 		autoclose: true,
@@ -688,14 +688,14 @@ $(function() {
 			"name": "_token",
 			"value": csrfToken,
 		});
-		if(error < 1){	
+		if(error < 1){
 			return true;
 		}else{
 			return false;
-		}	            
-	});  
+		}
+	});
 
-	
+
 $("#country_code, #billing_country_code").trigger('change')
 
 });
