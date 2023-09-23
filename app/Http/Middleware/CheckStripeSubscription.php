@@ -3,28 +3,40 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class CheckStripeSubscription
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
-            $user = Auth::user();
+        $user = Auth::user();
 
-            // Votre logique pour vérifier l'abonnement Stripe (vous pouvez appeler une méthode sur un contrôleur ou un service dédié)
-            app('App\Http\Controllers\SubscriptionController')->checkStripeSubscription($user);
+        // Check if the user is subscribed or if the trial end date is in the future
+        if ($this->isSubscribed($user) || $this->isTrialValid($user)) {
+            return $next($request);
         }
 
-        return $next($request);
+        // If the user doesn't have a valid subscription or trial, you can handle this as needed.
+        // For example, you can redirect them to a subscription page or show an error message.
+        return redirect()->route('subscription.upgradePlan')->with('error', 'You must subscribe to access this page.');
     }
+
+    protected function isSubscribed($user)
+    {
+        // Use Laravel Cashier to check if the user is subscribed
+        return $user->subscribed('default');
+    }
+
+    protected function isTrialValid($user)
+    {
+        // Check if the trial end date is in the future
+        if ($user->trial_ends_at) {
+            $trialEndDate = Carbon::parse($user->trial_ends_at);
+            return $trialEndDate->isFuture();
+        }
+
+        return false;
+    }
+
 }
