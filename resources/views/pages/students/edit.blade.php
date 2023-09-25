@@ -1601,7 +1601,7 @@ $('#save_btn').click(function (e) {
 					//Lesson Discount
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">Discount(%) on Lessons:</td>';
-					resultHtml += '<td style="text-align:right"><input type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></td>';
+					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
@@ -1615,6 +1615,17 @@ $('#save_btn').click(function (e) {
 					resultHtml += '</td>';
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
+
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<textarea type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></textarea>';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+
+
 
 
 					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Lessons</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td></td></tr>';
