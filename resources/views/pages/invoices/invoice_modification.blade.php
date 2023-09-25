@@ -195,7 +195,9 @@
 
                                                 <tr style="background-color: #EEE;">
                                                     @if ($invoice->invoice_type == 1)
-                                                    <td colspan="2" style="text-align:right">Discount(%) on Lessons:</td>
+                                                    <td colspan="2" style="text-align:right">Discount(%) on Lessons:<br>
+                                                    {{$invoice->lesson_discount_description ? $invoice->lesson_discount_description : ''}}
+                                                    </td>
                                                     @else
                                                     <td colspan="2" style="text-align:right">Commission(%) on Lessons:</td>
                                                     @endif
@@ -1337,7 +1339,7 @@ function extractExtraCharges($inputString) {
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    successModalCall('Invoice deleted');
 
                     var p_school_id = document.getElementById("p_school_id").value;
 
@@ -1427,7 +1429,8 @@ function extractExtraCharges($inputString) {
 
         console.log('list emails send', p_emails);
 
-        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id);
+        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id)
+
 
 
 
@@ -1510,7 +1513,7 @@ function extractExtraCharges($inputString) {
                 // console.log(result);
                 // return true;
                 //if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    successModalCall('Invoice issued');
                     var p_school_id = document.getElementById("p_school_id").value;
                     //return true;
                     //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
@@ -1562,7 +1565,7 @@ function extractExtraCharges($inputString) {
                 //console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice Updated successfully!');
+                    successModalCall('Invoice issued');
                     var p_school_id = document.getElementById("p_school_id").value;
                     return true;
 

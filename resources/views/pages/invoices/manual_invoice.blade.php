@@ -1000,6 +1000,7 @@ function get_client_seller_info(obj){
 	dataType: 'json',
 	async: false,
 	success: function(data) {
+        console.log('alors', data)
 		var resultHtml ='';
 		$.each(data, function(key,value){
 
@@ -1030,7 +1031,9 @@ function get_client_seller_info(obj){
 				document.getElementById("client_street2").value=value.street2;
 				document.getElementById("client_country_id").value=value.country_code
 
-               // document.getElementById("select2-client_country_id-container").textContent = getCountryName(value.country_code) + ' (' + value.country_code + ')';
+             //  document.getElementById("select2-client_country_id-container").textContent = value.country_code;
+               var selectElement = document.getElementById("select2-client_country_id-container").textContent = value.country_code;
+
 
 				if(value.country_code == 'CA'){
 					 $('#client_province_id_div').show();
