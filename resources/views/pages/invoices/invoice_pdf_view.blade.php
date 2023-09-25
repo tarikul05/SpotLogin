@@ -447,10 +447,10 @@
 
 
 
-                        <div style="position:absolute; max-width:350px; font-size:12px; color:#000000; border:#EEE solid 1px;">
+                        <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
                             <?php
                              if($invoice_data->lesson_discount_description){
-                                echo 'Description: ' . $invoice_data->lesson_discount_description;
+                                echo $invoice_data->lesson_discount_description;
                              }
                             ?>
                         </div>
