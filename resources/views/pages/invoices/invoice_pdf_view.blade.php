@@ -358,14 +358,11 @@
                             </tr>
 
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
-                                <tr class="extra_col_sub2">
+                                <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right">
                                         <?php
                                             if($invoice_data->invoice_type == 1){
                                                 echo '<b>Discount on lesson</b>';
-                                                if($invoice_data->lesson_discount_description){
-                                                    echo '<br>Description: ' . $invoice_data->lesson_discount_description;
-                                                }
                                             }else if($invoice_data->invoice_type == 2){
                                                 echo '<b>Commission amount</b>';
                                             }else{
@@ -449,6 +446,14 @@
                         <?php } ?>
 
 
+
+                        <div style="position:absolute; max-width:350px; font-size:12px; color:#000000; border:#EEE solid 1px;">
+                            <?php
+                             if($invoice_data->lesson_discount_description){
+                                echo 'Description: ' . $invoice_data->lesson_discount_description;
+                             }
+                            ?>
+                        </div>
 
 
                     <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
