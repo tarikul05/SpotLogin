@@ -31,8 +31,8 @@
                 @if($AppUI->isSchoolAdmin())
                 <span onclick="addFilter('Teacher')" class="filter-btn badge bg-info badge-btn">Teacher</span>
                 @endif
-                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Student</span>
-                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manuel (M)</span>
+                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Invoices</span>
+                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manual invoices</span>
             </div>
         @endif
     </header>
@@ -178,9 +178,11 @@
                                 <span class="small txt-grey pull-left">
                                       <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
                                 </span>-->
+                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
                             </td>
                             @else
-                            <td class="mobile-hide"></td>
+                            <td class="mobile-hide">
+                            </td>
                             @endif
                         @else
                             <td class="mobile-hide"></td>
@@ -224,52 +226,79 @@
 </div>
 
 <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
-    aria-labelledby="email_list_modal" name="email_list_modal">
-    <div class="modal-dialog mt-5" role="document">
-        <div class="modal-content">
-            <div class="modal-header text-center border-0">
-                <h4 class="light-blue-txt gilroy-bold">send it by email</h4>
-            </div>
-            <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
-                <div class="form-group col-md-12" id="father_email_div">
-                    <div class="btn-group text-left">
-                        <input type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                        <label for="father_email_chk" id="father_email_cap" name="father_email_cap">{{ __("Father's email")}}:</label>
-                    </div>
+        aria-labelledby="email_list_modal" name="email_list_modal">
+        <div class="modal-dialog modal-dialog-centered mt-5" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center border-0">
+                    <h4 class="light-blue-txt gilroy-bold">Send the invoice</h4>
                 </div>
-                <div class="form-group col-md-12" id="mother_email_div">
-                    <div class="btn-group text-left">
-                        <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                        <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap">{{ __("Mother's email")}}:</label>
-                    </div>
-                </div>
-                <div class="form-group col-md-12" id="student_email_div">
-                    <div class="btn-group text-left">
-                        <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 8px 5px;width: 20px;height: 20px;" checked>
-                        <label for="student_email_chk" id="student_email_cap" name="student_email_cap">{{ __("Student's email")}}:</label>
-                    </div>
-                </div>
-                <div class="form-group col-md-12">
-                    <div class="text-left">
-                        <div class="checked">
-                            <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="other email if any." value="" maxlength="100">
+                <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+                    <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
+                        <div class="alert alert-info">
+                            <div class="form-group col-md-12">
+                            <i class="fa-solid fa-file-pdf"></i> Format type file: PDF<br>
+                            <i class="fa-regular fa-envelope"></i> Send Type: By email
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-12 text-left">
-                        <div>
-                            <p></p>
+                        <div class="form-group row col-md-12" id="father_email_div">
+                            <div class="btn-group border-bottom col-md-9 text-left">
+                                <input  type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
+                                <label for="father_email_chk" id="father_email_cap" name="father_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Father's email")}})</div>
+                            </div>
+                            <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
+                                ({{ __("Father's email")}})
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group col-sm-12">
-                        <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+
+                        <div class="form-group row col-md-12" id="mother_email_div">
+                            <div class="btn-group col-md-9 border-bottom text-left">
+                                <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
+                                <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Mother's email")}})</div>
+                            </div>
+                            <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
+                                ({{ __("Mother's email")}})
+                            </div>
+                        </div>
+
+                        <div class="form-group row col-md-12" id="student_email_div">
+                            <div class="btn-group col-md-9 text-left">
+                                <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
+                                <label for="student_email_chk" id="student_email_cap" name="student_email_cap"></label>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Student's email")}})</div>
+                            </div>
+                            <div class="col-md-3 pt-2 text-right d-none d-sm-block">
+                                ({{ __("Student's email")}})
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <div class="text-left">
+                                <div class="checked">
+                                    <input class="form-control" style="display: block;" type="email" id="other_email" name="other_email" placeholder="Add another email adress here" value="" maxlength="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12 text-left">
+                                <div>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                        </div>
+
+                    <!-- </form> -->
+
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 
@@ -367,6 +396,44 @@
 
         $('#search_text').val(text).change()
     }
+
+
+    $('#email_send').click(function (e) {
+        var p_emails = '', p_attached_file = '';
+        var p_inv_auto_id = document.getElementById("invoice_id").value;
+        var p_seleted_invoice_type = document.getElementById("invoice_type").value;
+        var p_school_id = document.getElementById("p_school_id").value;
+
+        if (document.getElementById("father_email_chk").checked) {
+            if (document.getElementById("father_email_cap").textContent != '') {
+                p_emails = document.getElementById("father_email_cap").textContent + "|";
+            }
+        }
+        if (document.getElementById("mother_email_chk").checked) {
+            if (document.getElementById("mother_email_cap").textContent != '') {
+                p_emails += document.getElementById("mother_email_cap").textContent + "|";
+            }
+        }
+
+        if (document.getElementById("student_email_chk").checked) {
+            if (document.getElementById("student_email_cap").textContent != '') {
+                p_emails += document.getElementById("student_email_cap").textContent + "|";
+            }
+        }
+
+        if ($('#other_email').val() != '') {
+            p_emails += $('#other_email').val();
+        }
+
+
+        console.log('list emails send', p_emails);
+
+        SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id)
+
+
+
+
+    });
 
 
     $('.payment_btn').click(function (e) {

@@ -111,6 +111,7 @@ class Invoice extends BaseModel
         'payment_phone',
         'name_for_checks',
         'category_invoiced_type',
+        'lesson_discount_description',
         'created_at',
         'modified_at',
         'deleted_at',

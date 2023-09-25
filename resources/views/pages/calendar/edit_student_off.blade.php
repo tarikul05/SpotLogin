@@ -14,7 +14,7 @@
 	$zone = $timezone;
 	$start_date = Helper::formatDateTimeZone($studentOffData->date_start, 'long','UTC',$zone);
 	$date_end = Helper::formatDateTimeZone($studentOffData->date_end, 'long','UTC', $zone);
-	
+
 @endphp
 @section('content')
   <div class="content">
@@ -25,8 +25,8 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header">{{ __('Student time off') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -51,7 +51,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($studentOffData->title) ? old('title', $studentOffData->title) : old('title')}}">
 										</div>
 									</div>
@@ -74,27 +74,27 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="start_date_div"> 
+											<div class="input-group" id="start_date_div">
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($start_date) ? old('start_date', date('d/m/Y', strtotime($start_date))) : old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>		
+										</div>
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="end_date_div"> 
+											<div class="input-group" id="end_date_div">
 												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 									</div>
 								</div>
 								<!-- <div class="form-group row">
@@ -113,7 +113,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($studentOffData->description) ? old('description', $studentOffData->description) : old('description')}}</textarea>
 										</div>
 									</div>
@@ -181,8 +181,8 @@ $('#save_btn').click(function (e) {
 				$(this).removeClass('error');
 				error = 0;
 			}
-		});            
-});  
+		});
+});
 
 function delete_event(event_id){
         var data='type=delete_events'+'&event_id='+event_id;
@@ -196,7 +196,7 @@ function delete_event(event_id){
 					window.location.href = BASE_URL+'/agenda';
 				}
 			},   //success
-			error: function(ts) { 
+			error: function(ts) {
 				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
 			}
 		}); //ajax-type
@@ -211,7 +211,7 @@ function delete_event(event_id){
 		return false;
 	})
 
-	$(window).scroll(function() {    
+	$(window).scroll(function() {
 		var scroll = $(window).scrollTop();
 		if (scroll >= 80) {
 				$("#student_off .btn_area").addClass("btn_area_fixed");

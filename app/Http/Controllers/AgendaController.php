@@ -591,12 +591,27 @@ class AgendaController extends Controller
 
             }else{ // lession and event type
 
-                $e['title']= $event_types[$e['event_type']].' '.$e['title'];
+                if ($fetch->event_type==100) {
+                    $e['title']= $event_types[$e['event_type']].' '.$e['title'];
+                } else {
+                    $e['title']= $e['title'];
+                }
+
 
                 if ($user->isTeacherAdmin()) {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                    if ($fetch->event_type==100) {
+                    //$e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                        $e['tooltip']='Students: '.$student_name;
+                    } else {
+                        $e['tooltip']='Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                    }
                 } else {
-                    $e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                    if ($fetch->event_type==100) {
+                    //$e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                        $e['tooltip']='Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'];
+                    } else {
+                        $e['tooltip']='Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                    }
                 }
 
                 // For add invopice type with tooltip
@@ -610,10 +625,12 @@ class AgendaController extends Controller
                 if ($fetch->duration_minutes > 60) {
                     if ($user->isTeacherAdmin()) {
 
-                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                        //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                     } else {
 
-                        $e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;
+                        $e['title_extend']= '<br/>Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
                     }
                     $e['title'] = $e['title'].' ('.$student_name. ')';
                 }

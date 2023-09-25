@@ -296,8 +296,18 @@
                         ?>
                         <tr>
                             <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
-                            <td><?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
-                            <br>
+                            <td>
+                            <?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
+                            <?php
+                            $event = \App\Models\Event::find($item->event_id);
+                            if ($event) {
+                                $description = $event->description;
+                                if($description){
+                                    echo '<br>Description: ' . $description;
+                                }
+                            }
+                           ?>
+                           <br>
                             @if ($invoice_data->invoice_type > 0)
                                 <?php
                                 if($item->no_of_students == 1) {
@@ -437,6 +447,14 @@
 
 
 
+                        <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                            <?php
+                             if($invoice_data->lesson_discount_description){
+                                echo $invoice_data->lesson_discount_description;
+                             }
+                            ?>
+                        </div>
+
 
                     <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
                     <tr class="total_col">
@@ -478,6 +496,12 @@
                         <?php if(!empty($invoice_data->payment_bank_name)){?>
                             <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                         <?php } ?>
+
+                        <?php if($invoice_data->seller_country_code === "CA"){?>
+                            <div class="txt">{{ $invoice_data->payment_bank_account }}</div>
+                            <div class="txt">{{ $invoice_data->payment_bank_iban }}</div>
+                        <?php } ?>
+
                         <?php if(!empty($invoice_data->payment_bank_address)){?>
                             <div class="txt"><b>Address : </b>{{ $invoice_data->payment_bank_address }}</div>
                         <?php } ?>
@@ -512,7 +536,9 @@
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_iban)){ ?>
+                            <?php if($invoice_data->seller_country_code != "CA") { ?>
                             <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
+                        <?php } ?>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_phone)){ ?>
                             <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->payment_bank_account }}</div>
