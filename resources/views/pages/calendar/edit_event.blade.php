@@ -18,7 +18,7 @@
 	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 	$current_time = Helper::formatDateTimeZone(now(), 'long','UTC', $zone);
 
-	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
+	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T'))
 @endphp
 @section('content')
   <div class="content">
@@ -29,9 +29,9 @@
 					<div class="page_header_class">
 						<label id="page_header" class="page_header bold" name="page_header"><i class="fa-solid fa-calendar-day"></i> {{ __('Event') }}</label>
 					</div>
-				</div>    
-			</div>          
-	
+				</div>
+			</div>
+
 		<!-- Tabs navs -->
 
 		<nav style="margin-bottom:0; padding-bottom:0;">
@@ -51,7 +51,7 @@
 		<!-- Tabs content -->
 		<div class="tab-content" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				
+
 					@csrf
 					<input id="redirect_url" name="redirect_url" type="hidden" class="form-control" value="{{$redirect_url}}">
 					<fieldset>
@@ -78,7 +78,7 @@
 								<div class="form-group row">
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<input id="Title" name="title" type="text" class="form-control" value="{{!empty($eventData->title) ? old('title', $eventData->title) : old('title')}}">
 										</div>
 									</div>
@@ -89,7 +89,7 @@
 									@endif
 									@if($AppUI->isTeacherAdmin())
 										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
-									@else	
+									@else
 									<div class="col-sm-7">
 										<div class="selectdiv">
 											<select class="form-control" id="teacher_select" name="teacher_select">
@@ -118,16 +118,16 @@
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="start_date_div"> 
+											<div class="input-group" id="start_date_div">
 												<input id="start_date" name="start_date" type="text" class="form-control" value="{{!empty($date_start) ? old('start_date', date('d/m/Y', strtotime($date_start))) : old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 										<!-- <div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="start_time" name="start_time" type="text" class="form-control timepicker1" value="{{old('start_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
@@ -140,15 +140,15 @@
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
 									<div class="col-sm-7 row">
 										<div class="col-sm-4">
-											<div class="input-group" id="end_date_div"> 
+											<div class="input-group" id="end_date_div">
 												<input id="end_date" name="end_date" type="text" class="form-control" value="{{!empty($date_end) ? old('end_date', date('d/m/Y', strtotime($date_end))) : old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
-										</div>	
+										</div>
 										<!-- <div class="col-sm-4 offset-md-1">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="end_time" name="end_time" type="text" class="form-control timepicker2" value="{{old('end_time')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-clock-o"></i>
@@ -194,7 +194,7 @@
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price (per event)') }} :</label>
 										<div class="col-sm-4">
-											<div class="input-group" id="sprice_amount_buy_div"> 
+											<div class="input-group" id="sprice_amount_buy_div">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar1"></i>
 												</span>
@@ -207,7 +207,7 @@
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student price (per student)') }} :</label>
 										<div class="col-sm-4">
-											<div class="input-group" id="sprice_amount_sell_div"> 
+											<div class="input-group" id="sprice_amount_sell_div">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar1"></i>
 												</span>
@@ -219,7 +219,7 @@
 									<div class="form-group row">
 										<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Extra Charges (per student)') }} :</label>
 										<div class="col-sm-4">
-											<div class="input-group" id="extra_charges_div"> 
+											<div class="input-group" id="extra_charges_div">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar1"></i>
 												</span>
@@ -247,7 +247,7 @@
 																	<span>{{ __('Student') }}</span>
 																</th>
 																<th width="15%" style="text-align:left">
-																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>	
+																	<button id="mark_present_btn" class="btn btn-xs btn-theme-success" type="button" style="display: block;">Mark all present</button>
 																</th>
 																@if($priceShow)
 																@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
@@ -263,7 +263,7 @@
 																	</th>
 																@endif
 															</tr>
-															
+
 															@foreach($studentOffList as $student)
 															<tr>
 																<!--<td>{{ $student->student_id }}</td>-->
@@ -285,7 +285,7 @@
 																	@if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ ($relationData->buy_price) }}</td>
 																	@endif
-																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>	
+																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ !empty($eventData->price_amount_sell) ? $eventData->price_amount_sell : ''; }} </td>
 																	<td style="text-align:right"> {{ ($relationData->price_currency) }} {{ $eventData->extra_charges }}  </td>
 																@endif
 															</tr>
@@ -307,12 +307,13 @@
 							</div>
 							<div class="section_header_class">
 								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
+                                <p style="font-size:11px;">(the description will be added on the invoice)</p>
 							</div>
 							<div class="col-md-12">
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
 									<div class="col-sm-7">
-										<div class="input-group"> 
+										<div class="input-group">
 											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{!empty($eventData->description) ? old('description', $eventData->description) : old('description')}}</textarea>
 										</div>
 									</div>
@@ -337,9 +338,9 @@
 							@endcan
 							@endif
 						@endif
-						
+
 					</div>-->
-				
+
 			</div>
 		</div>
 
@@ -352,7 +353,7 @@
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
 				<div class="card-body p-3 pb-3">
-					
+
 					<div class="row">
 						<div class="col-12">
 					<a class="btn btn-default w-100 mb-1" href="<?= $BASE_URL; ?>/agenda"><i class="fa-solid fa-arrow-left"></i> Back</a>
@@ -506,7 +507,7 @@ $('.student_attn').change(function (e) {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	
+
 	$.ajax({
 		url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$eventId}}',
 		data: { type:1, stuId:stuId, typeId:typeId },
@@ -515,17 +516,17 @@ $('.student_attn').change(function (e) {
 		beforeSend: function( xhr ) {
 			$("#pageloader").show();
 		},
-		success: function(response){	
+		success: function(response){
 			if(response.status == 1){
-				
+
 			}
 		},
 		complete: function( xhr ) {
 			$("#pageloader").hide();
 		}
 	})
-			            
-}); 
+
+});
 
 
 // save functionality
@@ -533,16 +534,16 @@ $('#mark_present_btn').click(function (e) {
 	//if (confirm("Mark all student as present ?")) {
 		var data = [];
 		$('.student_attn').val('200');
-		$('.student_attn').each(function(){ 
+		$('.student_attn').each(function(){
 			data.push({stuId : $(this).attr('data-id'), typeId : 200 })
-		});	
-		
+		});
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-		
+
 		$.ajax({
 			url: BASE_URL + '/{{$schoolId}}/student-attend-action/{{$eventId}}',
 			data: { type:2, data:data },
@@ -551,9 +552,9 @@ $('#mark_present_btn').click(function (e) {
 			beforeSend: function( xhr ) {
 				$("#pageloader").show();
 			},
-			success: function(response){	
+			success: function(response){
 				if(response.status == 1){
-					
+
 				}
 			},
 			complete: function( xhr ) {
@@ -561,7 +562,7 @@ $('#mark_present_btn').click(function (e) {
 			}
 		})
 	//}
-			            
+
 });
 
 // $("body").on('click', '#all_day', function(event) {
@@ -584,7 +585,7 @@ $('#edit_event').on('submit', function() {
 	var endDate = $('#end_date').val();
 
 	var errMssg = '';
-	
+
 	// if(title == ''){
 	// 	var errMssg = 'Title required';
 	// 	$('#Title').addClass('error');
@@ -623,7 +624,7 @@ $('#edit_event').on('submit', function() {
 	if(errMssg == ""){
 		return true;
 	}else{
-		return false;	
+		return false;
 	}
 
 });
@@ -660,10 +661,10 @@ $('#edit_event').on('submit', function() {
 // 		complete: function( xhr ) {
 // 			$("#pageloader").hide();
 // 		},
-// 		error: function (ts) { 
+// 		error: function (ts) {
 // 			ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
 // 		}
-// 	}); //ajax-type            
+// 	}); //ajax-type
 
 // }
 	function delete_event(event_id){
@@ -678,7 +679,7 @@ $('#edit_event').on('submit', function() {
 					window.location.href = BASE_URL+'/agenda';
 				}
 			},   //success
-			error: function(ts) { 
+			error: function(ts) {
 				errorModalCall('delete_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
 			}
 		}); //ajax-type
@@ -693,7 +694,7 @@ $('#edit_event').on('submit', function() {
 		return false;
 	})
 
-	$(window).scroll(function() {    
+	$(window).scroll(function() {
 		var scroll = $(window).scrollTop();
 		if (scroll >= 80) {
 				$("#edit_event .btn_area").addClass("btn_area_fixed");

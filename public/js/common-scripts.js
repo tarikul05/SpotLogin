@@ -36,6 +36,33 @@ function successModalCall(title='', desc = '') {
   $("#successModal").modal('show');*/
 }
 
+function successModalCallEmail(title='', desc = '') {
+    let timerInterval
+    Swal.fire({
+    title: title,
+    html: desc,
+    icon: 'success',
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+        Swal.showLoading()
+        const b = Swal.getHtmlContainer().querySelector('b')
+        timerInterval = setInterval(() => {
+        b.textContent = Swal.getTimerLeft()
+        }, 100)
+    },
+    willClose: () => {
+        clearInterval(timerInterval)
+    }
+    }).then((result) => {
+    /* Read more about handling dismissals below */
+    if (result.dismiss === Swal.DismissReason.timer) {
+        var p_school_id = $('#p_school_id').val();
+        window.location.replace('/admin/'+p_school_id+'/invoices');
+    }
+    })
+}
+
 function errorModalCall(title, desc = '') {
     Swal.fire(
         title,
@@ -341,7 +368,7 @@ function SendInvoiceEmail(p_template_code, p_inv_auto_id, p_inv_file, p_email,p_
             console.log(data);
             $("#email_list_modal").modal('hide');
             $("#pageloader").hide();
-            successModalCall("Email successfully sent to all selected addresses",'','120px','100px'); // suppress as requested by vanessa - on 9th Apr 2018
+            successModalCallEmail("Email successfully sent to all selected addresses",'','120px','100px');
             // $.each(data, function(key,value){
             //     email_subject=value.subject_text;
             //     email_body=value.body_text;

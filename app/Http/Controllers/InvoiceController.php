@@ -1077,6 +1077,7 @@ class InvoiceController extends Controller
             $p_event_ids=trim($data['p_event_ids']);
             $inv_type = trim($data['inv_type']);
             $data['p_discount_perc'] = $discountPercentage;
+            $data['lesson_discount_description'] = trim($data['lesson_discount_description']);
 
 
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();

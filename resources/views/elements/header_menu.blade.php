@@ -104,14 +104,14 @@
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
                         @if(!$AppUI->isStudent())
-                            <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoice's List") }}</a>
+                            <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){   ?>
                                 @if(!$AppUI->isTeacherReadOnly())
-                                    <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's Invoice") }}</a>
+                                    <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                                 @endif
                             <?php } ?>
                             @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
+                                <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Coach's Invoice") }}</a>
                             @endif
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
@@ -145,9 +145,9 @@
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice"></i> <span class="d-none d-sm-block"></span> {{ __('School Invoicing') }}</a>
                         <div class="dropdown-menu header">
-                            <a href="{{ $urlInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoice's List") }}</a>
-                            <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Student's Invoice") }}</a>
-                            <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Teacher's Invoice") }}</a>
+                            <a href="{{ $urlInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
+                            <a href="{{ $urlStudentInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                            <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Coach's Invoice") }}</a>
                         </div>
                     </div>
                     @endif

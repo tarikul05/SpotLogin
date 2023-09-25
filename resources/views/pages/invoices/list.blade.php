@@ -31,8 +31,8 @@
                 @if($AppUI->isSchoolAdmin())
                 <span onclick="addFilter('Teacher')" class="filter-btn badge bg-info badge-btn">Teacher</span>
                 @endif
-                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Student</span>
-                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manuel (M)</span>
+                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Invoices</span>
+                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manual invoices</span>
             </div>
         @endif
     </header>

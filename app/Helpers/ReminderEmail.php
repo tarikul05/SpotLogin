@@ -26,14 +26,14 @@ class ReminderEmail
             }
             $p_email = trim($data['p_email']);
             $p_school_id = trim($data['p_school_id']);
-            $school = School::active()->find($user->selectedSchoolId());
+            $school = School::active()->find($p_school_id);
             if ($user->isSuperAdmin()) {
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
                 $schoolName = $school->school_name;
             } else {
-                $schoolName = $user->selectedSchoolName();
+                $schoolName = $school->school_name;
             }
             $client_name = $result_data->client_name;
             $invoice_filename = $result_data->invoice_filename;

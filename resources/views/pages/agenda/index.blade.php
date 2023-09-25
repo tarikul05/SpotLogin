@@ -614,6 +614,7 @@
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
                                                         <div class="col-sm-7">
+                                                            <p style="font-size:11px;">(the description will be added on the invoice)</p>
                                                             <div class="input-group">
                                                                 <textarea class="form-control" cols="60" id="description" name="description" rows="3">{{old('description')}}</textarea>
                                                             </div>

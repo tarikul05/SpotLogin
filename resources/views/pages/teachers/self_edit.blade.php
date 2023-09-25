@@ -17,7 +17,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-12 col-xs-12 header-area pb-3">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Teacher Information') }}</label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Coach Information') }}</label>
 					</div>
 				</div>
 				<!--<div class="col-sm-6 col-xs-12 btn-area">
@@ -400,6 +400,28 @@
 												<span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
 												<input class="form-control" id="bank_name" name="bank_name" type="text"
 												value="{{!empty($teacher->bank_name) ? old('bank_name', $teacher->bank_name) : old('bank_name')}}">
+											</div>
+										</div>
+									</div>
+
+                                    <div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Payment preference 2') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+												<input class="form-control" id="bank_account" name="bank_account" type="text"
+												value="{{!empty($teacher->bank_account) ? old('bank_account', $teacher->bank_account) : old('bank_account')}}">
+											</div>
+										</div>
+									</div>
+
+                                    <div class="form-group row">
+										<label class="col-lg-3 col-sm-3 text-left" for="mobile" id="mobile_caption">{{__('Payment preference 3') }} :</label>
+										<div class="col-sm-5">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa-solid fa-money-check-dollar"></i></span>
+												<input class="form-control" id="bank_iban" name="bank_iban" type="text"
+												value="{{!empty($teacher->bank_iban) ? old('bank_iban', $teacher->bank_iban) : old('bank_iban')}}">
 											</div>
 										</div>
 									</div>
