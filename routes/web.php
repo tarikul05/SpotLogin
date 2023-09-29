@@ -308,6 +308,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Invoice
     Route::get('/invoices', [App\Http\Controllers\InvoiceController::class, 'index'])->name('invoiceList');
+    Route::get('/{school}/report', [App\Http\Controllers\InvoiceController::class, 'report'])->name('invoiceReport');
+    Route::post('report', [App\Http\Controllers\InvoiceController::class, 'getReport'])->name('getReport')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'index'])->name('adminInvoiceList');
     Route::get('/{school}/student-invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'student_invoice_list'])->name('studentInvoiceList.id')->middleware('checkStripeSubscription');
     Route::get('/{school}/teacher-invoices/{type?}', [App\Http\Controllers\InvoiceController::class, 'teacher_invoice_list'])->name('teacherInvoiceList.id');
@@ -317,6 +319,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('manualInvoice');
     Route::get('/{school}/manual-invoice', [App\Http\Controllers\InvoiceController::class, 'manualInvoice'])->name('adminmanualInvoice');
     Route::get('/{school}/manual-invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'updatemanualInvoice'])->name('adminupdatemanualInvoice');
+    Route::post('/getAbsentStudent', [App\Http\Controllers\AgendaController::class, 'getAbsentStudent'])->name('agenda.getAbsentStudent')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
   }); //Admin scope end
 

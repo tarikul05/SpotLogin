@@ -82,17 +82,50 @@ class InvoiceController extends Controller
                 $invoices->where('category_invoiced_type', $invoice_type);
             }
 
-
         }
 
         $invoices->orderBy('date_invoice', 'desc');
         $results =  $invoices = $invoices->get();
 
-        //dd($results);
-
         return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
+
+    public function report(Request $request, $schoolId = null,$type = null)
+    {
+        $user = $request->user();
+        return view('pages.invoices.report', compact('user'));
+    }
+
+
+    /**
+     *  AJAX action to get invoice report
+     *
+     * @return json
+     * @version 0.1 written in 2023-09-26
+     */
+    public function getReport(Request $request)
+    {
+        try {
+
+            $data = $request->all();
+            $user = $request->user();
+            $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+            $school = School::active()->find($this->schoolId);
+            $startDate = $request->input('billing_period_start_date');
+            $endDate = $request->input('billing_period_end_date');
+    
+            $invoices = Invoice::active()->where('school_id', $school->id)->whereBetween('date_invoice', [$startDate.' 00:00:00', $endDate.' 23:59:59']);
+            $invoices->orderBy('date_invoice', 'desc');
+            $results =  $invoices = $invoices->get();
+            return response()->json($results);
+
+        } catch (Exception $e) {
+
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+    }
 
     /**
      *  AJAX action to get email for pay reminder
