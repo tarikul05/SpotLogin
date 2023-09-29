@@ -300,6 +300,7 @@
     "invoice_duration_hours": " heures et ",
     "invoice_duration_minutes": "minutes",
     "invoice_duration_text": "Durée totale des cours : ",
+    "invoice_time": "Durée totale : ",
     "invoice_extra_charges": "Frais supplémentaires",
     "invoice_footer_Email": "Email : ",
     "invoice_footer_check_name": "Vérifier le nom : ",

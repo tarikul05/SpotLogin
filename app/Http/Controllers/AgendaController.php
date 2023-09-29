@@ -45,7 +45,42 @@ class AgendaController extends Controller
         // This part is copied from add lesson
         $eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
         $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
-        $studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
+
+        //$studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
+
+        $students = SchoolStudent::active()
+        ->where('school_id', $schoolId)
+        ->get();
+
+        $studentsbySchool = [];
+
+
+        foreach ($students as $student) {
+            $futureEventIds = EventDetails::where('student_id', $student->student_id)
+                ->pluck('event_id');
+
+            // Récupérer les détails de l'événement futur le plus proche de l'étudiant
+            $futureEvent = Event::whereIn('id', $futureEventIds)
+                ->where('event_type', 51)
+                ->where(function ($query) {
+                    $query->where('date_start', '>', now()) // Date de début future
+                        ->orWhere(function ($subQuery) {
+                            $subQuery->where('date_start', '<', now()) // Date de début passée
+                                ->where('date_end', '>', now()); // Date de fin future
+                        })->first();
+                })
+                ->orderBy('date_start', 'asc')
+                ->get(); // Obtenir le premier résultat
+
+            $student->dates = $futureEvent; // Stockez le premier événement futur ou null si aucun n'est trouvé
+            array_push($studentsbySchool, $student);
+        }
+
+
+
+
+
+
         $lessonPrice = LessonPrice::active()->get();
         $currency = [];
         // end the part
@@ -132,6 +167,55 @@ class AgendaController extends Controller
 
     }
 
+
+
+    public function getAbsentStudent(Request $request)
+    {
+        $user = Auth::user();
+        $data = $request->all();
+        $event_date = $request->input('startDate');
+        $date = \Carbon\Carbon::createFromFormat('d/m/Y',  $event_date);
+        $formattedDate = $date->format('Y-m-d');
+
+        $schoolId = $user->selectedSchoolId() ;
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            $schoolId = 0;
+        }
+        // This part is copied from add lesson
+        $eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
+        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+
+        //$studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
+        $students = SchoolStudent::active()
+        ->where('school_id', $schoolId)
+        ->get();
+
+    $studentsbySchool = [];
+
+    foreach ($students as $student) {
+        $futureEventIds = EventDetails::where('student_id', $student->student_id)
+            ->pluck('event_id');
+
+        // Récupérer le détail du premier événement futur
+        $futureEvent = Event::whereIn('id', $futureEventIds)
+    ->where('event_type', 51)
+    ->where(function ($query) use ($formattedDate) {
+        $query->where('date_start', '<=', $formattedDate) // Date de début inférieure ou égale
+            ->where('date_end', '>=', $formattedDate); // Date de fin supérieure ou égale
+    })
+    ->orderBy('date_start', 'asc')
+    ->first();
+
+        if (!empty($futureEvent)) {
+            $student->dates = $futureEvent;
+            array_push($studentsbySchool, $student);
+        }
+    }
+
+    return $studentsbySchool;
+
+    }
 
 
     /**
@@ -568,6 +652,8 @@ class AgendaController extends Controller
             }
 
 
+        //$e['title'] .= ' <i class="fa-solid fa-circle-info"></i> attention';
+
 			$format_title = '';
             $e['title_event'] = $e['title'];
             if (in_array($fetch->event_type, [50,51])) { // coach off an student off
@@ -615,11 +701,13 @@ class AgendaController extends Controller
                 }
 
                 // For add invopice type with tooltip
-                if ($fetch->event_type==100) { //if event
-                    $invoType =  ($fetch->event_invoice_type == 'S') ? 'School' : 'Teacher';
-                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
-                }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
-                    $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
+                if ($user->isSchoolAdmin()) {
+                    if ($fetch->event_type==100) { //if event
+                        $invoType =  ($fetch->event_invoice_type == 'S') ? 'School' : 'Teacher';
+                        $e['tooltip'] .= '<br/ > Invoice Type : '.  $invoType ;
+                    }elseif( $fetch->event_type==10 && !empty($e['event_category_type'])){
+                        $e['tooltip'] .= '<br/ > Invoice Type : '.  $e['event_category_type'] ;
+                    }
                 }
 
                 if ($fetch->duration_minutes > 60) {
@@ -642,6 +730,48 @@ class AgendaController extends Controller
                 } else {
                     $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
                 }
+
+
+
+
+
+                $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+                $eventDetailsStudentIdArray2 = explode(',', $eventDetailsStudentId);
+
+                foreach ($eventDetailsStudentIdArray2 as $studentId) {
+                    $student = Student::find($studentId);
+
+                    if ($student) {
+                        $futureEventIds = EventDetails::where('student_id', $studentId)
+                            ->pluck('event_id');
+
+                        $futureEvent = Event::whereIn('id', $futureEventIds)
+                            ->where('event_type', 51)
+                            ->where(function ($query) use ($fetch)  {
+                                $query->where('date_start', '=', $fetch->date_start)
+                                    ->orWhere(function ($subQuery) use ($fetch) {
+                                        $subQuery->where('date_start', '<', $fetch->date_start)
+                                            ->where('date_end', '>', $fetch->date_start);
+                                    });
+                            })
+                            ->orderBy('date_start', 'asc')
+                            ->first();
+
+                        $student->dates = $futureEvent;
+                        if($futureEvent) {
+                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-circle-info text-white" style="color:orange;"></i> '.$student->firstname.' is away</span>' ;
+                        }
+                        //array_push($studentsbySchool, $student);
+                    }
+                }
+
+
+               // $now = Carbon::now($fetch->school->timezone);
+               // if ($now > $fetch->date_start) {
+
+
+
+
             }
 
 
@@ -661,6 +791,38 @@ class AgendaController extends Controller
             $e['is_locked'] = $fetch->is_locked;
             $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
             $e['student_id_list'] = $eventDetailsStudentId;
+
+            $studentsbySchool = [];
+            $eventDetailsStudentIdArray = explode(',', $eventDetailsStudentId);
+
+
+            foreach ($eventDetailsStudentIdArray as $studentId) {
+                $student = Student::find($studentId);
+
+                if ($student) {
+                    $futureEventIds = EventDetails::where('student_id', $studentId)
+                        ->pluck('event_id');
+
+                    $futureEvent = Event::whereIn('id', $futureEventIds)
+                        ->where('event_type', 51)
+                        ->where(function ($query) use ($fetch)  {
+                            $query->where('date_start', '=', $fetch->date_start)
+                                ->orWhere(function ($subQuery) use ($fetch)  {
+                                    $subQuery->where('date_start', '<', $fetch->date_start)
+                                        ->where('date_end', '>', $fetch->date_start);
+                                });
+                        })
+                        ->orderBy('date_start', 'asc')
+                        ->first();
+
+                    $student->dates = $futureEvent;
+                    array_push($studentsbySchool, $student);
+                }
+            }
+
+            $e['studentsbySchool'] = $studentsbySchool;
+
+
             $e['event_auto_id'] = ($fetch->id);
             $e['event_mode'] = $fetch->event_mode;
 

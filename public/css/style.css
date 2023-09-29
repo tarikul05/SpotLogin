@@ -13,6 +13,7 @@
 	background-color: #152245 !important;
 }
 
+
 .navbar-light .navbar-nav .nav-link.active,
 .navbar-light .navbar-nav .show>.nav-link,
 .navbar-light .navbar-nav .nav-link,
@@ -930,7 +931,14 @@ button#save_btn_more i {
     outline: none;
     box-shadow: none;
 }
-
+.select-options-list {
+    list-style: none !important;
+    margin-left: 0px !important;
+    padding: 0 !important;
+}
+.multiselect optgroup {
+    font-size:11px;
+}
 @media only screen and (max-width: 992px) {
 
 	.btn_actions {
@@ -967,7 +975,16 @@ button#save_btn_more i {
     text-align: left;
 }
 
+#info_invoice_report,#download_btn_report {
+    display: none;
+}
+
+.report_action {
+    width: 110px;
+}
+
 @media (max-width: 767px) {
+
     .jQWCP-mobile {
       top: 50% !important;
       transform: translateY(-50%) !important;
@@ -979,6 +996,11 @@ button#save_btn_more i {
   }
 
 @media only screen and (max-width: 768px) {
+
+    #download_btn_report {
+        padding-top:25px;
+    }
+
 
 	span.admin_name {
 		font-size: 16px;

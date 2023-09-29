@@ -64,7 +64,9 @@
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
 				@if(!$AppUI->isStudent())
+                @if($invoice->invoice_status !== 10)
                 <button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
+                @endif
                 @endif
             </div>
 		</nav>
@@ -1311,8 +1313,25 @@ function extractExtraCharges($inputString) {
 
     $('#delete_btn_inv').click(function (e) {
         var x = document.getElementsByClassName("tab-pane active");
-        DeleteInvoice();
-        //window.history.back();
+
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "The lessons/events from that invoice will be available to invoice after you delete this invoice.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+            'Deleted!',
+            'Invoice has been deleted.',
+            'success'
+            )
+            DeleteInvoice();
+        }
+        })
         return false;
     });
 

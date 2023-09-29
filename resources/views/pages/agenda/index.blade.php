@@ -232,8 +232,13 @@
                                     <div class="text-center pt-5" id="loaderFilters">
                                         <i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>
                                     </div>
+
+
                                  <div id="allFilters" style="display:none;">
-                                    <div id="event_school_div" name="event_school_div" class="selectdiv">
+
+                                    <div id="datepicker_month"></div>
+
+                                    <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity:0;visibility:hidden;">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
                                                 <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }}
@@ -241,8 +246,8 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <!-- Datepicker -->
-                                    <div id="datepicker_month"></div>
+
+
                                     <div>
                                         <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;">
                                             <div id="event_location_div" name="event_location_div" class="selectdiv">
@@ -271,7 +276,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv" style="opacity:0;visibility:hidden;">
                                                 <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
                                                     @foreach($teachers as $key => $teacher)
                                                         <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
@@ -342,7 +347,7 @@
                             <div class="col-md-10 offset-md-1 p-l-n p-r-n">
                                 <div class="form-group row">
                                     <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}} :</label>
-                                    <div class="col-sm-7">
+                                    <div class="col-sm-9">
                                         <div class="selectdiv">
                                             <select class="form-control" id="agenda_select">
                                                 <option value="1">{{__('Lesson')}}</option>
@@ -366,7 +371,7 @@
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="category_select" name="category_select">
                                                                     @foreach($eventCategoryList as $key => $eventcat)
@@ -376,9 +381,10 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @if($AppUI->isSchoolAdmin())
                                                     <div class="form-group row event hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
                                                                     <option value="T">{{__('Teacher invoice')}}</option>
@@ -389,9 +395,12 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @else
+                                                    <input type="hidden" id="event_invoice_type" name="event_invoice_type"  value="T">
+                                                    @endif
                                                     <div class="form-group row hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="location" name="location">
 
@@ -404,7 +413,7 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="input-group">
                                                                 <input id="Title" name="title" type="text" class="form-control" value="">
                                                             </div>
@@ -417,7 +426,7 @@
                                                     @if($AppUI->isTeacherAdmin())
                                                         <input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id; }}" readonly>
                                                     @else
-                                                    <div class="col-sm-7">
+                                                    <div class="col-sm-9">
                                                         <div class="selectdiv">
                                                             <select class="form-control" id="teacher_select" name="teacher_select">
                                                                     <option value="">{{__('Select Professor') }}</option>
@@ -431,17 +440,17 @@
                                                     </div>
                                                     <div class="form-group row hide_coach_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv student_list">
-                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple" style="height: 300px; overflow-y: scroll;">>
+                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
                                                                     @foreach($studentsbySchool as $key => $student)
-                                                                        <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : ''}}>
+                                                                        <div style="position: relative; padding: 10px;">
+                                                                            <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
                                                                             @php
                                                                             $studentName = App\Models\Student::find($student->student_id);
                                                                             @endphp
-
-                                                                            {{$studentName->firstname}} {{$studentName->lastname}}
-                                                                        </option>
+                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }}</option>
+                                                                        </div>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -453,7 +462,7 @@
 
                                                     <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
-                                                        <div class="col-sm-7 row">
+                                                        <div class="col-sm-9 row">
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="start_date_div">
                                                                     <input id="start_date" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
@@ -475,7 +484,7 @@
                                                     </div>
                                                     <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
-                                                        <div class="col-sm-7 row">
+                                                        <div class="col-sm-9 row">
                                                             <div class="col-sm-6">
                                                                 <div class="input-group" id="end_date_div">
                                                                     <input type="text" class="form-control" readonly id="infoDateEnd" value="{{old('end_date')}}">
@@ -511,7 +520,7 @@
                                                     </div> -->
                                                     <div class="form-group row lesson hide_on_off" id="teacher_type_billing">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher type of billing') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sis_paying" name="sis_paying">
                                                                     <option value="0">{{__('Hourly rate') }}</option>
@@ -522,7 +531,7 @@
                                                     </div>
                                                     <div class="form-group row lesson hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student type of billing') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="student_sis_paying" name="student_sis_paying">
                                                                     <option value="0">{{__('Hourly rate') }}</option>
@@ -534,7 +543,7 @@
                                                     </div>
                                                     <div class="form-group row" id="hourly" style="display:none">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Number of students') }} :</label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="sevent_price" name="sevent_price">
                                                                     @foreach($lessonPrice as $key => $lessprice)
@@ -2226,6 +2235,22 @@ $('.search-icon').on('click', function() {
 
 
 
+
+                //Check if students are not away
+                var icon2 = '<i class="fa-solid fa-circle-info" style="position:absolute; right:2px; top:2px; color:orange;"></i>';
+                var hasStudentWithFutureDate = false;
+                for (var i = 0; i < event.studentsbySchool.length; i++) {
+                    var student = event.studentsbySchool[i];
+                    if (student.dates) {
+                        hasStudentWithFutureDate = true;
+                        break;
+                    }
+                }
+                if (hasStudentWithFutureDate) {
+                    $(el).find('.fc-time').after(icon2);
+                }
+
+                //if valid
                 if (flag == true){
                     stime=moment(event.start).format('HH:mm');
                     etime=moment(event.end).format('HH:mm');
@@ -2241,7 +2266,7 @@ $('.search-icon').on('click', function() {
                         // $(el).find('.fc-time').prepend(icon);
                         $(el).find('.fc-time').html(icon);
                     }
-                    var icon ='<span class="fa fa-lock txt-orange"></span>';
+                    var icon ='<span class="fa fa-lock txt-orange" style="padding:2px;"></span>';
                     if (event.is_locked == '1'){
                         $(el).find('div.fc-content').prepend(icon);
 
@@ -2741,6 +2766,8 @@ $('.search-icon').on('click', function() {
                     $('#end_time').val(endTime).trigger('change');
                     $('#agenda_select').trigger('change');
                     $('#Title').val('');
+                    resetStudentList();
+                    getAwayStudent();
                 }
                 @endif
 
@@ -3142,12 +3169,6 @@ $('.search-icon').on('click', function() {
                             resultHtml_cc+='<td>'+JSON.parse(json_events)[key].teacher_name+'</td>';
                         }
                         resultHtml_cc+='</tr>';
-
-
-
-
-
-
 
                 });
                 let resultHtml_rows_cc=resultHtml_cc;
@@ -3576,6 +3597,12 @@ $(function() {
   });
 
 
+  $('#start_date').on('change', function(e) {
+    resetStudentList();
+    getAwayStudent();
+});
+
+
 $('#student').on('change', function(event) {
 	var cnt = $('#student option:selected').length;
 	var price=document.getElementById("sis_paying").value;
@@ -3883,6 +3910,8 @@ $('#add_lesson').on('submit', function(e) {
         }
     }
 
+
+
     if(errMssg == ""){
 
 
@@ -3897,7 +3926,7 @@ $('#add_lesson').on('submit', function(e) {
                 if(response.status == 1){
                     $('#add_lesson_success').modal('show');
 
-                    $('#student').multiselect('deselectAll', false);
+                   // $('#student').multiselect('deselectAll', false);
                     $('#student').multiselect('updateButtonText');
 
                     // $("#add_lesson")[0].reset();
@@ -4351,11 +4380,75 @@ $( document ).ready(function() {
             $('#end_time').val(endTime).trigger('change');
             $('#agenda_select').trigger('change');
             $('#Title').val('');
+            resetStudentList();
+            getAwayStudent();
         }
 
     });
 });
 
+function getAwayStudent() {
+
+    var startDate = $('#start_date').val();
+        $.ajax({
+        type: "POST",
+        url: "/admin/getAbsentStudent",
+        data: {
+            startDate: startDate
+        },
+        success: function(response) {
+        response.forEach(function (item) {
+            var studentId = item.student_id;
+            var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + studentId + '"])');
+
+            if (studentButton.length > 0) {
+
+                var labelElement = studentButton.find('.form-check-label');
+
+                if (labelElement.length > 0) {
+                    var labelText = labelElement.text();
+
+                    labelElement.html(item.full_name + ' <span class="text-warning"><i class="fa-solid fa-circle-info"></i> is away this day</span>');
+                } else {
+                    console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
+                }
+            } else {
+                console.log('Élément <button> non trouvé pour studentId=' + studentId);
+            }
+        });
+        }
+    });
+
+}
+
+function resetStudentList() {
+
+  // Générer un tableau JSON des étudiants côté serveur
+  var students = @json($studentsbySchool);
+    console.log('students', students)
+  var studentSelect = $('#student');
+
+
+    // Parcourir le tableau JSON côté client
+    students.forEach(function(student) {
+        var studentName = student.full_name;
+        var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + student.student_id + '"])');
+        if (studentButton.length > 0) {
+
+        var labelElement = studentButton.find('.form-check-label');
+
+        if (labelElement.length > 0) {
+            var labelText = labelElement.text();
+
+            labelElement.html(student.full_name);
+        } else {
+            console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
+        }
+        } else {
+        console.log('Élément <button> non trouvé pour studentId=' + studentId);
+        }
+    });
+}
 
 function showMessage(messageText, messageType) {
 
