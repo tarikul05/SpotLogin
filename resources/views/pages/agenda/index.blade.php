@@ -2585,7 +2585,7 @@ $('.search-icon').on('click', function() {
                 lockRecords=0;
 
                 var view = $('#calendar').fullCalendar('getView');
-                if ((foundRecords == 0) && (document.getElementById("copy_date_from").value.length != 0)
+                if ( (document.getElementById("copy_date_from").value.length != 0)
                     && (document.getElementById("copy_view_mode").value == view.name) )
                 {
 

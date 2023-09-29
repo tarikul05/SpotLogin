@@ -539,7 +539,7 @@
                 <table class="table table-stripped table-hover">
                   <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
                   <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
-                  <tr><td><b>School timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                  <tr><td><b>Account timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
                     <tr class="mt-2"><td><b class="text-danger">Delete my account</b></td> <td>
                         <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">Delete my account</a></td></tr>
                   <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->

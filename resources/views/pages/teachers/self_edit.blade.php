@@ -513,12 +513,16 @@
 												<?php
 												if ($lessionPrice->divider == 1) {
 													$textForTypeBilling = 'Private session';
+                                                    $textTooltip = "student";
 												} elseif ($lessionPrice->divider == 9999) {
 													$textForTypeBilling = 'Student more than 10';
+                                                    $textTooltip = "each of the students";
 												} elseif ($lessionPrice->divider == -1) {
 													$textForTypeBilling = 'Fixed price';
+                                                    $textTooltip = "each student";
 												} else {
-													$textForTypeBilling = "Group lessons for {$lessionPrice->divider} students";
+													$textForTypeBilling = "Group lessons for $lessionPrice->divider students";
+                                                    $textTooltip = "each of the  $lessionPrice->divider  students";
 												}
 
 												$studentPrice = $category->s_std_pay_type;
@@ -533,7 +537,7 @@
 													// Add condition here if needed for other cases
 												}
 												?>
-												<tr>
+											<tr>
 													<td>
 														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">
 														<input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][lesson_price_student]" value="{{$lessionPrice->lesson_price_student}}">
@@ -542,9 +546,10 @@
 													<td>{{__('Lessons/Events')}}</td>
 													<td>{{ __($textForTypeBilling) }}</td>
 													<td>
-														<input type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
+														<input data-toggle="tooltip" title="For 15 mn. {{  $textTooltip }}  will pay ${{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/4) : '0.00' }}<hr>For 30 mn. {{  $textTooltip }} will pay ${{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? ($ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell']/2) : '0.00' }}" type="text" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][price_sell]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['price_sell'] : '0.00' }}" style="text-align:right" class="form-control numeric float <?= ($studentPrice == 1) && ($lessionPrice->divider != -1) ? 'd-none' : '' ?>">
 													</td>
 												</tr>
+
 											@endforeach
 											@endforeach
 										</tbody>
@@ -601,7 +606,7 @@
 									<div class="form-group row">
 										<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
 										<div class="col-sm-7">
-											<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
+											<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="6">
 										</div>
 									</div>
 								</div>
@@ -673,6 +678,10 @@
 
 <script type="text/javascript">
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({html:true,placement:"right"})
+})
+
 	//var isInEurope = {{ $isInEurope ? 'true' : 'false' }};
 
 	$(document).on('click','#add_more_tax_btnn',function(){
@@ -691,7 +700,7 @@
 					<div class="form-group row">
 						<label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
 						<div class="col-sm-7">
-							<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
+							<input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="6">
 						</div>
 					</div>
 				</div>

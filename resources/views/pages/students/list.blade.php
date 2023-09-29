@@ -41,7 +41,7 @@
         <tbody>
             @foreach($students as $student)
 
-            <tr>
+            <tr id="row_{{ $student->id }}">
                 <!--<td>{{ $student->id; }} </td>-->
                 <td class="pt-3"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
                 <td class="pt-2 d-none d-sm-table-cell">
@@ -65,7 +65,7 @@
                             <!--<button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
                             </button>-->
-                            <a href="javascript:void(0)" role="button" class="btn btn-primary btn-md send-invite-btn" style="width: 120px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <a href="javascript:void(0)" role="button" class="badge  send-invite-btn" style="width: 120px; size:11px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
                             </a>
                         @endcan
@@ -93,11 +93,9 @@
                                 <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
                                 @endcan
                                 @can('teachers-delete')
-                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to delete ?")}}')" action="{{route('studentDelete',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
-                                    @method('delete')
-                                    @csrf
-                                    <button  class="dropdown-item" type="submit" ><i class="fa fa-trash txt-grey"></i> {{__('Delete')}}</button>
-                                </form>
+                                <button class="dropdown-item delete-student-btn" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
+                                    <i class="fa fa-trash txt-grey"></i> {{ __('Delete') }}
+                                </button>
                                 @endcan
                                 @can('students-activate')
                                 <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
@@ -148,6 +146,73 @@
 @endsection
 @include('layouts.elements.modal_csv_import')
 @section('footer_js')
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.delete-student-btn', function(event) {
+            event.preventDefault();
+
+            var schoolId = $(this).attr('data-school');
+            var studentId = $(this).attr('data-student');
+
+            Swal.fire({
+            title: 'Are you sure to delete this student ?',
+            text: "Be carreful, this student still have lessons/events to be invoiced !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+                )
+
+                var deleteUrl = '{{ route('studentDeleteDestroy', ['school' => ':school', 'student' => ':student']) }}';
+                deleteUrl = deleteUrl.replace(':school', schoolId).replace(':student', studentId);
+
+                // Sending an AJAX request to delete the student
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                    console.log(response);
+                        $("#pageloader").fadeOut("fast");
+                        if (response.status === "success") {
+                            Swal.fire(
+                                'Deleted!',
+                                'The student has been deleted successfully.',
+                                'success'
+                            )
+                            $("#row_" + studentId).fadeOut();
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while deleting the student.',
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(error) {
+                        $("#pageloader").fadeOut("fast");
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the student.',
+                            'error'
+                        )
+                    }
+                });
+
+                }
+                })
+        });
+    });
+    </script>
 <script>
 $(document).ready(function() {
     $(document).on('click', '.send-invite-btn', function(event) {
@@ -232,6 +297,7 @@ $(document).ready(function() {
     $(document).ready( function () {
         $('#example').DataTable({
             language: { search: "" },
+            theme: 'bootstrap4',
             lengthMenu: [
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, 'All']

@@ -530,6 +530,26 @@ class StudentsController extends Controller
     }
 
 
+    /**
+     *  AJAX action to send email to school admin
+     *
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
+     */
+    public function destroyStudent(Request $request)
+    {
+        $schoolId = $request->route('school');
+        $studentId = $request->route('student');
+        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
+        $result = array(
+            "status"     => 'success',
+            'message' => __('Successfully deleted student')
+          );
+          return response()->json($result);
+    }
+
+
     public function delete(Request $request)
     {
         $selectedStudents = $request->input('selected_students', []);
