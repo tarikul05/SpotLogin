@@ -412,7 +412,7 @@ class Invoice extends BaseModel
             $studentEvents->whereNull('events.deleted_at');
             $studentEvents->whereNull('event_details.deleted_at');
             $studentEvents->distinct('event_details.id');
-            $studentEvents->orderBy('events.event_type', 'asc'); //old order by date // $studentEvents->orderBy('events.date_start', 'desc');
+            $studentEvents->orderBy('events.date_start', 'asc'); //old order by date // $studentEvents->orderBy('events.date_start', 'desc');
             //dd($studentEvents->toSql());
 
             return $studentEvents;

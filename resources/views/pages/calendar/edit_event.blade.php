@@ -88,7 +88,7 @@
 									<label class="col-lg-4 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Professor') }} :</label>
 									@endif
 									@if($AppUI->isTeacherAdmin())
-										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->id; }}" readonly>
+										<input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id; }}" readonly>
 									@else
 									<div class="col-sm-7">
 										<div class="selectdiv">
