@@ -114,7 +114,7 @@ class InvoiceController extends Controller
             $school = School::active()->find($this->schoolId);
             $startDate = $request->input('billing_period_start_date');
             $endDate = $request->input('billing_period_end_date');
-    
+
             $invoices = Invoice::active()->where('school_id', $school->id)->whereBetween('date_invoice', [$startDate.' 00:00:00', $endDate.' 23:59:59']);
             $invoices->orderBy('date_invoice', 'desc');
             $results =  $invoices = $invoices->get();
@@ -681,6 +681,7 @@ class InvoiceController extends Controller
             }
             //dd($studentEvents->toSql());
             $dataFetched = $studentEvents->get();
+
 
 
             foreach ($dataFetched as $key => $value) {

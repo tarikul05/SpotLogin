@@ -236,9 +236,9 @@
 
                                  <div id="allFilters" style="display:none;">
 
-                                    <div id="datepicker_month"></div>
+                                    <div style="margin-top:40px;" id="datepicker_month"></div>
 
-                                    <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity:0;visibility:hidden;">
+                                    <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity: 0; visibility: hidden;">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
                                                 <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }}
@@ -258,31 +258,32 @@
                                                 </select>
                                             </div>
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 15px;" >
+                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 0px; opacity: 0; visibility: hidden;">
                                                     @foreach($event_types as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                                 </select>
-                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 15px;" >
+                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 0px; opacity: 0; visibility: hidden;" >
                                                     @foreach($event_types_all as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div id="event_student_div" name="event_student_div" class="selectdiv">
-                                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 15px;">
-                                                    @foreach($students as $key => $student)
-                                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv" style="opacity:0;visibility:hidden;">
-                                                <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 15px;">
+                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                                <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 0px;">
                                                     @foreach($teachers as $key => $teacher)
                                                         <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div id="event_student_div" name="event_student_div" class="selectdiv" style="opacity: 0; visibility: hidden;">
+                                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 0px;">
+                                                    @foreach($students as $key => $student)
+                                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                             <div id="list-button" class="pull-right form-inline">
                                                 <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
                                             </div>
@@ -396,7 +397,7 @@
                                                         </div>
                                                     </div>
                                                     @else
-                                                    <input type="hidden" id="event_invoice_type" name="event_invoice_type"  value="T">
+                                                        <input style="opacity: 0; visibility: hidden;" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
                                                     @endif
                                                     <div class="form-group row hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
@@ -424,7 +425,7 @@
                                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                                     @endif
                                                     @if($AppUI->isTeacherAdmin())
-                                                        <input style="display:none" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id; }}" readonly>
+                                                    <input style="opacity: 0 !important; visibility: hidden !important;" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id }}" readonly>
                                                     @else
                                                     <div class="col-sm-9">
                                                         <div class="selectdiv">
@@ -4001,6 +4002,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var datainvoiced = $("#category_select option:selected").data('invoice');
+
     var s_thr_pay_type = $("#category_select option:selected").data('s_thr_pay_type');
     var s_std_pay_type = $("#category_select option:selected").data('s_std_pay_type');
     var t_std_pay_type = $("#category_select option:selected").data('t_std_pay_type');
@@ -4052,7 +4054,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         //$('#price_per_student').hide();
 	}else if(s_thr_pay_type == 1 || s_std_pay_type == 1 ){
         $('#hourly').hide();
-		$('#price_per_student').show();
+		$('#price_per_student').fadeIn();
 	}
 
     if($('#sis_paying').val() == 0){
@@ -4070,9 +4072,9 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     }
 
     if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
-       $("#price_per_student").show();
+       $("#price_per_student").fadeIn();
     }else{
-        $("#price_per_student").hide();
+        $("#price_per_student").fadeOut();
     }
     getLatestPrice();
 
@@ -4186,9 +4188,9 @@ $("body").on('click', '#student_empty', function(event) {
 $('#agenda_select').on('change', function() {
     var agendaSelectpriceEventOptions = $("#agenda_select").val();
     if(agendaSelectpriceEventOptions == 2) {
-        $('#priceEventOptions').show();
+        $('#priceEventOptions').fadeIn();
     } else {
-        $('#priceEventOptions').hide();
+        $('#priceEventOptions').fadeOut();
     }
 
 
@@ -4327,7 +4329,14 @@ $('#agenda_select').on('change', function() {
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var datainvoiced = $("#category_select option:selected").data('invoice');
-    var event_invoice_type = $("#event_invoice_type option:selected").val();
+    var event_invoice_type = "";
+
+    @if($AppUI->isSchoolAdmin())
+    event_invoice_type = $("#event_invoice_type option:selected").val();
+    @endif
+    @if($AppUI->isTeacherAdmin())
+    event_invoice_type = $("#event_invoice_type").val();
+    @endif
 
     if(this.value == 1){
         if( ((isSchoolAdmin || isTeacherAdmin) && datainvoiced == 'S') || (isTeacher &&  datainvoiced == 'T') ){
@@ -4352,7 +4361,14 @@ $('#event_invoice_type').on('change', function() {
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
-    var event_invoice_type = $("#event_invoice_type option:selected").val();
+    var event_invoice_type = "";
+
+    @if($AppUI->isSchoolAdmin())
+    event_invoice_type = $("#event_invoice_type option:selected").val();
+    @endif
+    @if($AppUI->isTeacherAdmin())
+    event_invoice_type = $("#event_invoice_type").val();
+    @endif
 
     if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
         $("#price_per_student").show();
