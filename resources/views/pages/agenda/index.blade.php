@@ -4089,11 +4089,11 @@ function getLatestPrice() {
     var categoryId = +$("#category_select").val();
     var teacherSelect = +$("#teacher_select").val();
     var stdSelected = $("#student :selected").map((_, e) => e.value).get().length;
-    if (agendaSelect != 1) {
-        $("#sprice_amount_buy").val(0)
-        $("#sprice_amount_sell").val(0)
-        return
-    }
+   // if (agendaSelect != 1) {
+        //$("#sprice_amount_buy").val(0)
+        //$("#sprice_amount_sell").val(0)
+        //return
+   // }
     var formData = $('#edit_lesson').serializeArray();
     var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
     formData.push({
