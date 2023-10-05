@@ -275,7 +275,7 @@
 
                                                 <tr>
                                                     <td colspan="2" style="text-align:right">Total events: </td>
-                                                    <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
+                                                    <td style="text-align:right"><!--{{ number_format($sub_total_min_event,'2') }} minutes--></td>
                                                     @if ($invoice->invoice_type == 1)
                                                     <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)),'2') }}</td>
                                                     @else
@@ -409,15 +409,15 @@
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
                                         <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
-                                        <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
+tyle="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
                             </table>
 
 
 
-                            <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
-                            <input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
+                                                 <?php $grandTotalFinal = number_format($totaux) + number_format($countAllTaxes) + number_format($invoice->extra_expenses); ?>
+input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
                             <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                             <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice->id}}">
                             <input type="hidden" id="invoice_type" name="invoice_type" value="{{$invoice->invoice_type}}">

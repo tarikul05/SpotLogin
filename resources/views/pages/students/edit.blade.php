@@ -1000,16 +1000,18 @@ $("#country_code, #billing_country_code").trigger('change')
 			discountAmountage2 = parseFloat(sdiscountAmountInput2.value);
 		}
 
-		var finaltaxess = document.getElementById('total-taxes')
-		var finaltotaltaxes = finaltaxess.textContent
-		var totalAmountGet = document.getElementById('grand_total_amount')
-		var totalAmountGet = parseFloat(totalAmountGet.textContent);
+		var finaltaxess = document.getElementById('total-taxes');
+		var finaltotaltaxes = finaltaxess.textContent;
+		var totalAmountGet = document.getElementById('grand_total_amount');
+		var totalAmountGet = parseFloat(totalAmountGet.textContent).toFixed(2); //normal amount
+		var totalAmountToSend = totalAmountGet.toString();
         var lesson_discount_description_get = document.getElementById('lesson_discount_description');
-        var lesson_discount_description = lesson_discount_description_get.value
+        var lesson_discount_description = lesson_discount_description_get ? lesson_discount_description_get.value : "";
 		var lesson_discount_description_get2 = document.getElementById('lesson_event_description');
-        var lesson_discount_description2 = lesson_discount_description_get2.value
+        var lesson_discount_description2 = lesson_discount_description_get2 ? lesson_discount_description_get2.value : "";
         //return console.log('yo', 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet)
-	    data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2;
+
+        data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -2665,7 +2667,7 @@ $('#save_btn').click(function (e) {
                         disc1_amt_event = $("#samount_discount_2").val();
                         samount_discount_2 = Number((subTotalEvent * checkPercentForDiscountEvent) / 100)
                         $("#samount_discount_2").val(parseFloat(samount_discount_2).toFixed(2));
-                        $("#stotal_amount_with_discount_event").text(subTotalEvent-parseFloat(samount_discount_2));
+                        $("#stotal_amount_with_discount_event").text(parseFloat(subTotalEvent-samount_discount_2).toFixed(2));
 						$('#errorModal').modal('hide')
 						$("#btn_convert_invoice").removeAttr("disabled");
             			CalculateDiscount('discount');
@@ -2683,7 +2685,7 @@ $('#save_btn').click(function (e) {
                     var $amount2 = $('#samount_discount_2').val();
                     var $percentage = (($amount2 / maxPossible2) * 100);
                     $('#sdiscount_percent_2').val(parseFloat($percentage).toFixed(2));
-                    $("#stotal_amount_with_discount_event").text(maxPossible2-parseFloat($amount2));
+                    $("#stotal_amount_with_discount_event").text(parseFloat(maxPossible2-$amount2).toFixed(2));
 
 					if($amount2>maxPossible2){
 						$('#errorModal').modal('hide')
