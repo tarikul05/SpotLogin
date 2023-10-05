@@ -1085,17 +1085,27 @@ class InvoiceController extends Controller
             $data = $request->all();
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
-            $discountPercentage = $data['discountPercentage'];
+            $discountPercentage = intval(trim($data['discountPercentage']));
             if($discountPercentage > 100) {
                 return false;
             }
-            $discountPercentage2 = $data['discountPercentage2'];
+            $discountPercentage2 = intval(trim($data['discountPercentage2']));
             if($discountPercentage2 > 100) {
                 return false;
             }
-            $amountDiscount_2 = $data['discountAmountage2'];
-            $totalAllTaxesAmount = $data['finaltotaltaxes'];
-            $totalAmountGet = $data['totalAmountGet'];
+            $amountDiscount_2 = intval(trim($data['discountAmountage2']));
+            $totalAllTaxesAmount = intval(trim($data['finaltotaltaxes']));
+            $totalAmountGetInit = trim(trim($data['totalAmountGet']));
+            $totalAmountGet = intval($totalAmountGetInit);
+
+            /*$result = array(
+                'status' => "success",
+                'truc' => $totalAmountGet,
+                'message' => $data,
+            );
+            return response()->json($result);*/
+
+
             $p_person_id = trim($data['p_person_id']);
             $p_student_id = trim($data['p_person_id']);
             $schoolId = $p_school_id = trim($data['school_id']);
@@ -1115,7 +1125,7 @@ class InvoiceController extends Controller
             $p_invoice_id=trim($data['p_invoice_id']);
             $p_event_ids=trim($data['p_event_ids']);
             $inv_type = trim($data['inv_type']);
-            $data['p_discount_perc'] = $discountPercentage;
+            $data['p_discount_perc'] = number_format($discountPercentage, 2);
             $data['lesson_discount_description'] = trim($data['lesson_discount_description']);
             $data['event_discount_description'] = trim($data['event_discount_description']);
 
@@ -1130,10 +1140,10 @@ class InvoiceController extends Controller
                 $invoice_type = ($inv_type == 'school') ? 'S' : 'T';
             }
 
+
             $dataMap = new InvoiceDataMapper();
             $invoiceData = $dataMap->setInvoiceData($data,$school,$invoice_type,$user);
             $invoiceData['created_by'] = $user->id;
-
 
             $invoiceData = Invoice::create($invoiceData);
             //$invoiceDataGet = Invoice::active()->find($invoiceData->id);
@@ -1291,7 +1301,9 @@ class InvoiceController extends Controller
 
                 } catch (Exception $e) {
                     echo $e->getMessage();
-
+                    $result['status'] = false;
+                    $result['message'] = $e->getMessage();
+                    return response()->json($result);
                 }
 
             }
@@ -1302,7 +1314,7 @@ class InvoiceController extends Controller
             $detail_id =  explode(',',$tax_ids);
             $mytaxes = InvoicesTaxes::whereIn('id', $detail_id)->get();
             $tructotal = number_format($totalsubwithdiscountwithoutextra * $discountPercentage /100, 2);
-            $totaltruc = number_format($totalsubwithdiscountwithoutextra - $tructotal, 2);
+            $totaltruc = number_format(floatval($totalsubwithdiscountwithoutextra) - floatval($tructotal), 2);
             if (!empty($mytaxes)) {
                 foreach ($mytaxes as $tax) {
                     $taxData = [
@@ -1310,11 +1322,11 @@ class InvoiceController extends Controller
                         'tax_name' => $tax->tax_name,
                         'tax_percentage' => $tax->tax_percentage,
                         'tax_number' => $tax->tax_number,
-                        'tax_amount' => number_format($totaltruc * $tax['tax_percentage'] / 100, 2),
+                        'tax_amount' => number_format(floatval($totaltruc) * floatval($tax['tax_percentage']) / 100, 2),
                     ];
 
                     $total_tax_perc += $tax->tax_percentage;
-                    $total_tax_amount += number_format($v_subtotal_amount_all * $tax['tax_percentage'] / 100, 2);
+                    $total_tax_amount += floatval($v_subtotal_amount_all) * floatval($tax['tax_percentage']) / 100;
                     $InvoiceTax = InvoicesTaxes::create($taxData);
                 }
 
@@ -1324,7 +1336,7 @@ class InvoiceController extends Controller
 
             $updateInvoiceCalculation = [
                'discount_percent_1' => $discountPercentage,
-               'discount_percent_2' => $discountPercentage2,
+               'discount_percent_2' => number_format($discountPercentage2, 2),
                'amount_discount_1' => number_format(($total_amount_extra*$discountPercentage)/100,2),
                'subtotal_amount_all' => $subtotal_amount_all,
                'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
@@ -1338,7 +1350,7 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> $totalAmountGet, //number_format($total_amount_with_discount+$totalAllTaxesAmount,2),
+               'total_amount'=> number_format($totalAmountGet,2), //number_format($total_amount_with_discount+$totalAllTaxesAmount,2),
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
                'tax_amount'=> number_format($totalAllTaxesAmount,2),
@@ -1371,7 +1383,8 @@ class InvoiceController extends Controller
             echo $e->getMessage();
             //return error message
             $result['status'] = false;
-            $result['message'] = __('Internal server error');
+            $result['message'] = $e->getMessage();
+            $result['line'] = $e->getLine();
             return response()->json($result);
         }
     }

@@ -486,8 +486,11 @@
                         <?php } ?>
 
 
-                        <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
+                        <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description || !empty($invoice_data->invoice_footer)){ ?>
                             <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                                <?php if(!empty($invoice_data->invoice_footer)){ ?>
+                                    <div class="text"><small>Note:</small> {{ $invoice_data->invoice_footer }}</div>
+                                <?php } ?>
                                 <?php
                                     if($invoice_data->lesson_discount_description){
                                         echo $invoice_data->lesson_discount_description;
@@ -576,9 +579,7 @@
                         <?php if(!empty($invoice_data->name_for_checks)){ ?>
                             <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->invoice_footer)){ ?>
-                            <div class="text"><b>Note:</b> {{ $invoice_data->invoice_footer }}</div>
-                        <?php } ?>
+
                         <?php if(!empty($invoice_data->cheque_payee)){ ?>
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>

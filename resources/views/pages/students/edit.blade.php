@@ -1002,9 +1002,8 @@ $("#country_code, #billing_country_code").trigger('change')
 
 		var finaltaxess = document.getElementById('total-taxes');
 		var finaltotaltaxes = finaltaxess.textContent;
-		var totalAmountGet = document.getElementById('grand_total_amount');
-		var totalAmountGet = parseFloat(totalAmountGet.textContent).toFixed(2); //normal amount
-		var totalAmountToSend = totalAmountGet.toString();
+		var totalAmountGetInit = document.getElementById('grand_total_amount');
+		var totalAmountGet = parseFloat(totalAmountGetInit.textContent).toFixed(2); //normal amount
         var lesson_discount_description_get = document.getElementById('lesson_discount_description');
         var lesson_discount_description = lesson_discount_description_get ? lesson_discount_description_get.value : "";
 		var lesson_discount_description_get2 = document.getElementById('lesson_event_description');
@@ -1024,7 +1023,7 @@ $("#country_code, #billing_country_code").trigger('change')
 			success: function(result) {
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
-
+                    console.log(result)
 					successModalCall("{{ __('invoice generated')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.
