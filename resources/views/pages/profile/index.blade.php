@@ -540,6 +540,13 @@
                   <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
                   <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
                   <tr><td><b>Account timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                  @php
+                    $countryCode = $AppUI->related_school->country_code; // Vous pouvez remplacer "FR" par la valeur souhaitée
+                    $countryName = DB::table('countries')->where('code', $countryCode)->value('name');
+                  @endphp
+
+                  <tr><td><b>Country</b></td> <td>{{  $countryName }}</td></tr>
+                  <tr><td><b>Currency</b></td> <td>{{  $AppUI->related_school->default_currency_code }}</td></tr>
                     <tr class="mt-2"><td><b class="text-danger">Delete my account</b></td> <td>
                         <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">Delete my account</a></td></tr>
                   <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->

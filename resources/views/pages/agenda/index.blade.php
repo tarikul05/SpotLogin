@@ -205,7 +205,7 @@
                                                     <button class="dropdown-item calendar_buttons badge-warning" id="btn_delete_events_mobile" type="button"><i class="fas fa-trash"></i> {{__('Delete All')}}</button>
                                                 </div>
                                             @else
-                                                <a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-sm-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
+                                                <a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
                                                 <div id="btn_copy_events_mobile" style="display: none;"></div>
                                                 <div id="btn_goto_planning_mobile" style="display: none;"></div>
                                                 <div id="btn_validate_events_mobile" style="display: none;"></div>

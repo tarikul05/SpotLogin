@@ -405,6 +405,46 @@
                 <tfoot>
 
 
+                    <?php if($invoice_data->amount_discount_2 != 0){ ?>
+                        <tr class="extra_col">
+                            <td colspan="2" style="text-align:right; font-size:12px;" class="text">
+                                <?php
+                                    if($invoice_data->invoice_type == 1){
+                                        echo '<b>Discount on Event</b>';
+                                    }else if($invoice_data->invoice_type == 2){
+                                        echo '<b>Discount on Event</b>';
+                                    }else{
+                                        echo '<b>Discount on Event</b>';
+                                    }
+                                ?>
+                            </td>
+                            <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_2 .' %' }}</b></span></td>
+                            <td class="price" style="text-align:right; font-size:12px;">
+                                <?php $EventDiscountAmout = number_format((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2'); ?>
+                                - <b>{{ number_format((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2') }}</b></td>
+                            <?php $totalDiscountEvent = number_format(($sub_total_event*$invoice_data->discount_percent_2)/100,'2'); ?>
+                        </tr>
+                        <?php } else { $totalDiscountEvent = 0; }?>
+
+                        <?php if($invoice_data->amount_discount_2 != 0){ ?>
+                            <tr class="extra_col">
+                            <td colspan="3" style="text-align:right; font-size:12px;"><b>Total Event:</b></td>
+                            <td style="text-align:right" class="text">
+                                    <?php
+                                        $sub_total_event = $sub_total_event - $EventDiscountAmout;
+                                    ?>
+                                    <span id="stotal_amount_with_discount_event"
+                                    class="form-control-static numeric"
+                                    style="text-align:right; font-size:12px;">{{number_format($sub_total_event,'2')}}</span>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
+                        <tr class="extra_col">
+                            <td colspan="4" style="text-align:right; font-size:12px;"></td>
+                        </tr>
+
+
                     <?php
                     $totalTaxesSupp=0;
                     if($invoice_data->tax_amount > 0){ ?>
@@ -446,14 +486,24 @@
                         <?php } ?>
 
 
-
-                        <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
-                            <?php
-                             if($invoice_data->lesson_discount_description){
-                                echo $invoice_data->lesson_discount_description;
-                             }
-                            ?>
-                        </div>
+                        <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description || !empty($invoice_data->invoice_footer)){ ?>
+                            <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                                <?php if(!empty($invoice_data->invoice_footer)){ ?>
+                                    <div class="text"><small>Note:</small> {{ $invoice_data->invoice_footer }}</div>
+                                <?php } ?>
+                                <?php
+                                    if($invoice_data->lesson_discount_description){
+                                        echo $invoice_data->lesson_discount_description;
+                                    }
+                                    if($invoice_data->lesson_discount_description && $invoice_data->event_discount_description){
+                                        echo'<br><br>';
+                                    }
+                                    if($invoice_data->event_discount_description){
+                                        echo $invoice_data->event_discount_description;
+                                    }
+                                ?>
+                            </div>
+                        <?php } ?>
 
 
                     <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
@@ -529,9 +579,7 @@
                         <?php if(!empty($invoice_data->name_for_checks)){ ?>
                             <div class="txt"><b>{{ __('invoice_footer_check_name') }}</b>{{ $invoice_data->name_for_checks }}</div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->invoice_footer)){ ?>
-                            <div class="text"><b>Note:</b> {{ $invoice_data->invoice_footer }}</div>
-                        <?php } ?>
+
                         <?php if(!empty($invoice_data->cheque_payee)){ ?>
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>

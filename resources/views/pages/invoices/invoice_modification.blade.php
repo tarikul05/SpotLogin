@@ -25,6 +25,7 @@
 				<div class="col-sm-6 col-6 btn-area" style="text-align: right;">
 					    <div class="pull-right btn-group save-button" id="invoice_modification">
 
+                        <div id="otherButtons">
                             @if($invoice->invoice_status ==10)
 
                             @if(!$AppUI->isStudent())
@@ -52,7 +53,10 @@
                             @endif
 
                             <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
-                            <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Save')}}</span></a>
+
+                        </div>
+
+                            <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Update invoice')}}</span></a>
 
 
                         </div>
@@ -257,11 +261,27 @@
                                             @else
                                                 <p style="display: none;" id="stotal_amount_with_discount_event">{{ number_format($sub_total_event,'2') }}</p>
 
+
+
+
+                                                @if($invoice->discount_percent_2 > 0)
                                                 <tr>
-                                                    <td colspan="2" style="text-align:right">Total events: </td>
+                                                <td colspan="2" style="text-align:right">Discount(%) on Event: {{ $invoice->discount_percent_2 }}%
+                                                    <br>{{$invoice->event_discount_description ? $invoice->event_discount_description : ''}}</td>
                                                     <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
                                                     @if ($invoice->invoice_type == 1)
-                                                    <td style="text-align:right">{{ number_format($sub_total_event-$invoice->extra_expenses,'2') }}</td>
+                                                    <td style="text-align:right"><b>-{{ number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100),'2') }}</b></td>
+                                                    @else
+                                                    <td style="text-align:right"></td>
+                                                    @endif
+                                                </tr>
+                                                @endif
+
+                                                <tr>
+                                                    <td colspan="2" style="text-align:right">Total events: </td>
+                                                    <td style="text-align:right"></td>
+                                                    @if ($invoice->invoice_type == 1)
+                                                    <td style="text-align:right">{{ number_format((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)),'2') }}</td>
                                                     @else
                                                     <td style="text-align:right">{{ number_format($sub_total_event,'2') }}</td>
                                                     @endif
@@ -277,7 +297,7 @@
                                     <td style="text-align:right"></td>
                                     <td style="text-align:right">
                                         @if ($invoice->invoice_type == 1)
-                                        <b><?php echo  $totaux = number_format((($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount),2); ?></b>
+                                        <b><?php echo  $totaux = number_format((((($sub_total_event-$invoice->extra_expenses)) - number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)))+$totalWithDiscount),2); ?></b>
                                         @else
                                         <b><?php echo  $totaux = number_format((($sub_total_event)+$totalWithDiscount),2); ?></b>
                                         @endif
@@ -301,7 +321,7 @@
                                     Discount : <?php echo $discount = $sub_total_lesson*$invoice->discount_percent_1/100 ?>
                                     <br>TOTAL LESSON => <?php echo $totalWithDiscount = $sub_total_lesson-$discount; ?>
                                     <br>TOTAL EVENTS => <?php echo $sub_total_event; ?>
-                                    <br>TOTAUX => <?php echo  $totaux = $invoice->invoice_type == 0 ? (($sub_total_event)+$totalWithDiscount) : (($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount); ?>-->
+                                    <br>TOTAUX => <?php echo  $totaux = $invoice->invoice_type == 0 ? ((($sub_total_event-(($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)))+$totalWithDiscount) : ((($sub_total_event-$invoice->extra_expenses)-(($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100))+$totalWithDiscount); ?>-->
 
                                     <?php $countAllTaxes=0; ?>
 
@@ -338,7 +358,7 @@
                                     <tr>
                                         <td colspan="2" style="text-align:right"><b>Sub-Total:</b></td>
                                         <td style="text-align:right"><!--{{$sub_total_min_event}} minutes--></td>
-                                        <td style="text-align:right"><b>{{ $invoice->invoice_type == 0 ? number_format((($sub_total_event)+$totalWithDiscount+$totaltaxAmount),2) : number_format((($sub_total_event-$invoice->extra_expenses)+$totalWithDiscount+$totaltaxAmount),2) }}</b></td>
+                                        <td style="text-align:right"><b>{{ $invoice->invoice_type == 0 ? number_format((($sub_total_event)+$totalWithDiscount+$totaltaxAmount),2) : number_format(((($sub_total_event-$invoice->extra_expenses))-number_format((($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100))+$totalWithDiscount+$totaltaxAmount),2) }}</b></td>
                                     </tr>
 
 
@@ -382,7 +402,7 @@
                                         <td colspan="2" style="text-align:right">Tax:</td>
                                         <td></td>
                                         <td style="text-align:right">
-                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{$invoice->tax_amount ? number_format($invoice->tax_amount,'2') :0}}" placeholder="" style="margin-left: 0px;" disabled='disabled'>
+                                            <input type="text" class="form-control numeric" id="taxes" name="taxes" value="{{$invoice->tax_amount ? $invoice->tax_amount :0}}" placeholder="" style="margin-left: 0px;" disabled='disabled'>
                                         </td>
                                     </tr>-->
                                     @endif
@@ -392,15 +412,14 @@
                                     <tr class="alert alert-info">
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
-                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses ?>
-                                        <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
+                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
+                                        <td style="text-align: right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
                             </table>
 
+                            <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
 
-
-                            <input type="hidden" id="total_min" name="action" value="{{$total_min}}">
                             <input type="hidden" id="invoice_status" name="invoice_status" value="{{$invoice->invoice_status}}">
                             <input type="hidden" id="approved_flag" name="approved_flag" value="0">
                             <input type="hidden" id="invoice_id" name="invoice_id" value="{{$invoice->id}}">
@@ -1092,10 +1111,13 @@ function extractExtraCharges($inputString) {
             //invoice_status: 10 - issued, 1- create
             if (target == "tab_1") {
                 document.getElementById("save_btn").style.display = "none";
+                document.getElementById("otherButtons").style.display = "block";
             } else if (target == "tab_2") {
                 document.getElementById("save_btn").style.display = "none";
+                document.getElementById("otherButtons").style.display = "block";
             } else if (target == "tab_3") {
                 document.getElementById("save_btn").style.display = "block";
+                document.getElementById("otherButtons").style.display = "none";
             }
 
         });
@@ -1197,6 +1219,7 @@ function extractExtraCharges($inputString) {
             document.getElementById("print_preview_btn").style.display = "none";
             document.getElementById("delete_btn_inv").style.display = "none";
             document.getElementById("save_btn").style.display = "none";
+            document.getElementById("otherButtons").style.display = "block";
             document.getElementById("download_pdf_btn_a").style.display = "block";
 
             if ($("#approved_flag").val() == '0') {
@@ -1208,11 +1231,13 @@ function extractExtraCharges($inputString) {
         } else {
             if (p_tab == "tab_1") {
                 document.getElementById("save_btn").style.display = "none";
+                document.getElementById("otherButtons").style.display = "block";
                 document.getElementById("issue_inv_btn").style.display = "block";
                 document.getElementById("print_preview_btn").style.display = "block";
                 document.getElementById("delete_btn_inv").style.display = "block";
             } else {
                 document.getElementById("save_btn").style.display = "block";
+                document.getElementById("otherButtons").style.display = "none";
                 document.getElementById("print_preview_btn").style.display = "block";
                 document.getElementById("delete_btn_inv").style.display = "block";
 
