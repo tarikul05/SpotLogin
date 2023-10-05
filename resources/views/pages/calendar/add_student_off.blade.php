@@ -118,7 +118,7 @@
 							</div>
 						</div>
 					</fieldset>
-				<div class="btn_area2">
+				    <div class="btn_area2">
 						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
 						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
 					</div>

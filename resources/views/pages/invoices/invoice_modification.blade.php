@@ -408,7 +408,7 @@
                                     <tr class="alert alert-info">
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
-                                        <?php $grandTotalFinal = number_format($totaux) + number_format($countAllTaxes) + number_format($invoice->extra_expenses); ?>
+                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
                                         <td style="text-align:right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
