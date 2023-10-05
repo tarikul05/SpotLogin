@@ -49,6 +49,7 @@ class InvoiceDataMapper
         $dateS = $p_billing_period_start_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_start_date)));
         $dateEnd = $p_billing_period_end_date = date('Y-m-d', strtotime(str_replace('.', '-', $p_billing_period_end_date)));
         $lesson_discount_description = trim($data['lesson_discount_description']);
+        $event_discount_description = trim($data['event_discount_description']);
 
         $invoiceData =[
             'school_id' => $schoolId,
@@ -65,6 +66,7 @@ class InvoiceDataMapper
         }
 
         $invoiceData['lesson_discount_description'] = $lesson_discount_description;
+        $invoiceData['event_discount_description'] = $event_discount_description;
 
         if ($invoice_type == 'T') {
             $professors = SchoolTeacher::active()->where('school_id',$schoolId);

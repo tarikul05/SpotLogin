@@ -1089,6 +1089,11 @@ class InvoiceController extends Controller
             if($discountPercentage > 100) {
                 return false;
             }
+            $discountPercentage2 = $data['discountPercentage2'];
+            if($discountPercentage2 > 100) {
+                return false;
+            }
+            $amountDiscount_2 = $data['discountAmountage2'];
             $totalAllTaxesAmount = $data['finaltotaltaxes'];
             $totalAmountGet = $data['totalAmountGet'];
             $p_person_id = trim($data['p_person_id']);
@@ -1112,6 +1117,7 @@ class InvoiceController extends Controller
             $inv_type = trim($data['inv_type']);
             $data['p_discount_perc'] = $discountPercentage;
             $data['lesson_discount_description'] = trim($data['lesson_discount_description']);
+            $data['event_discount_description'] = trim($data['event_discount_description']);
 
 
             $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
@@ -1318,12 +1324,13 @@ class InvoiceController extends Controller
 
             $updateInvoiceCalculation = [
                'discount_percent_1' => $discountPercentage,
+               'discount_percent_2' => $discountPercentage2,
                'amount_discount_1' => number_format(($total_amount_extra*$discountPercentage)/100,2),
                'subtotal_amount_all' => $subtotal_amount_all,
                'subtotal_amount_with_discount'=> $subtotal_amount_with_discount,
                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
-               'amount_discount_2'=> $amount_discount_2,
+               'amount_discount_2'=> $amountDiscount_2,
                'amount_discount_3'=> $amount_discount_3,
                'amount_discount_4'=> $amount_discount_4 ,
                'amount_discount_5'=> $amount_discount_5,

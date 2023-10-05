@@ -112,6 +112,7 @@ class Invoice extends BaseModel
         'name_for_checks',
         'category_invoiced_type',
         'lesson_discount_description',
+        'event_discount_description',
         'created_at',
         'modified_at',
         'deleted_at',

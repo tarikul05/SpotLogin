@@ -528,7 +528,7 @@
                                 </div>
 
                                 <div class="col-12 col-sm-3">
-                                  <button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Rechercher') }}</button>
+                                  <button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
                                 </div>
 
                               </div>
@@ -987,14 +987,29 @@ $("#country_code, #billing_country_code").trigger('change')
 		if (sdiscountPercentInput) {
 			discountPercentage = parseFloat(sdiscountPercentInput.value);
 		}
+
+		var sdiscountPercentInput2 = document.getElementById('sdiscount_percent_2');
+		var discountPercentage2 = 0;
+		if (sdiscountPercentInput2) {
+			discountPercentage2 = parseFloat(sdiscountPercentInput2.value);
+		}
+
+        var sdiscountAmountInput2 = document.getElementById('samount_discount_2');
+		var discountAmountage2 = 0;
+		if (sdiscountAmountInput2) {
+			discountAmountage2 = parseFloat(sdiscountAmountInput2.value);
+		}
+
 		var finaltaxess = document.getElementById('total-taxes')
 		var finaltotaltaxes = finaltaxess.textContent
 		var totalAmountGet = document.getElementById('grand_total_amount')
 		var totalAmountGet = parseFloat(totalAmountGet.textContent);
         var lesson_discount_description_get = document.getElementById('lesson_discount_description');
         var lesson_discount_description = lesson_discount_description_get.value
+		var lesson_discount_description_get2 = document.getElementById('lesson_event_description');
+        var lesson_discount_description2 = lesson_discount_description_get2.value
         //return console.log('yo', 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet)
-	data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description;
+	    data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2;
 
 		$.ajax({
 			url: BASE_URL + '/generate_student_invoice',
@@ -1865,6 +1880,41 @@ $('#save_btn').click(function (e) {
 					});
 
 
+
+
+                    if(subTotalEvents > 0) {
+					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
+
+
+					resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Discount(%) on Events:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric2" id="sdiscount_percent_2" name="sdiscount_percent_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+					resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Discount Amount:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric_amount2" id="samount_discount_2" name="samount_discount_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<textarea type="text" class="form-control" id="lesson_event_description" name="lesson_event_description" placeholder="Description"></textarea>';
+					resultHtml += '</td>';
+					resultHtml += '<td></td>';
+					resultHtml += '</tr>';
+
+                    }
+
+
 					if(subTotalEvents > 0) {
 						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
 					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span>'; }
@@ -2318,7 +2368,6 @@ $('#save_btn').click(function (e) {
 							var newSubTotaux = (parseFloat((newTotalEvents+amount) + totalLessons))
 							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
 
-
 							var totalNewTaxes = 0;
 							var checkboxes = document.querySelectorAll('.taxe_class');
 							checkboxes.forEach(function(checkbox) {
@@ -2572,10 +2621,14 @@ $('#save_btn').click(function (e) {
 				});
 
 
+                var subtotal_amount_all_event = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+            var disc1_event = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
+            var disc1_amt_event = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
+
 				$(".numeric").keyup(function () {
 					var checkPercentForDiscount = $("#sdiscount_percent_1").val();
 					if(checkPercentForDiscount>100) {
-						document.getElementById("sdiscount_percent_1").textContent = 100
+						document.getElementById("sdiscount_percent_1").value = 100
 						$('#errorModal').modal('hide')
 						errorModalCall('The maximum of percentage discount is 100.');
 					} else {
@@ -2583,7 +2636,6 @@ $('#save_btn').click(function (e) {
             			CalculateDiscount('discount');
 					}
 				});
-
 				$(".numeric_amount").keyup(function () {
 					var checkboxesLessons = document.querySelectorAll('.lesson_class');
 					var maxPossible=0;
@@ -2599,6 +2651,46 @@ $('#save_btn').click(function (e) {
 						errorModalCall('The maximum amount of discount is ' + maxPossible)
 					} else {
 						$("#btn_convert_invoice").removeAttr("disabled");
+						CalculateDiscount('amount');
+					}
+				});
+
+                $(".numeric2").keyup(function () {
+                    var subTotalEvent = $("#stotal_amount_before_discount_event").text();
+					var checkPercentForDiscountEvent = $("#sdiscount_percent_2").val();
+
+					if(checkPercentForDiscountEvent>100) {
+						errorModalCall('The maximum of percentage discount is 100.');
+					} else {
+                        disc1_amt_event = $("#samount_discount_2").val();
+                        samount_discount_2 = Number((subTotalEvent * checkPercentForDiscountEvent) / 100)
+                        $("#samount_discount_2").val(parseFloat(samount_discount_2).toFixed(2));
+                        $("#stotal_amount_with_discount_event").text(subTotalEvent-parseFloat(samount_discount_2));
+						$('#errorModal').modal('hide')
+						$("#btn_convert_invoice").removeAttr("disabled");
+            			CalculateDiscount('discount');
+					}
+				});
+                $(".numeric_amount2").keyup(function () {
+					var checkboxesEvents = document.querySelectorAll('.event_class');
+					var maxPossible2=0;
+					checkboxesEvents.forEach(function(checkbox) {
+						if (checkbox.checked) {
+							var amount2 = parseFloat(checkbox.dataset.amount);
+							maxPossible2 += amount2;
+						};
+					})
+                    var $amount2 = $('#samount_discount_2').val();
+                    var $percentage = (($amount2 / maxPossible2) * 100);
+                    $('#sdiscount_percent_2').val(parseFloat($percentage).toFixed(2));
+                    $("#stotal_amount_with_discount_event").text(maxPossible2-parseFloat($amount2));
+
+					if($amount2>maxPossible2){
+						$('#errorModal').modal('hide')
+						errorModalCall('The maximum amount of discount is ' + maxPossible2)
+					} else {
+						$("#btn_convert_invoice").removeAttr("disabled");
+                        $('#errorModal').modal('hide')
 						CalculateDiscount('amount');
 					}
 				});
@@ -2681,6 +2773,17 @@ $('#save_btn').click(function (e) {
         }
 
             $("#ssubtotal_amount_with_discount").text(parseFloat(subtotal_amount_with_discount_lesson).toFixed(2));
+
+
+
+
+        var subtotal_amount_all_event = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+        var disc1_event = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
+        var disc1_amt_event = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
+
+
+
+
 
         if ($('#stotal_amount_with_discount_event').length > 0) {
             subtotal_amount_with_discount_event = Number($("#stotal_amount_with_discount_event").text());
