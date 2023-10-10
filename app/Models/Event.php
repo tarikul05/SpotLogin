@@ -396,13 +396,12 @@ class Event extends BaseModel
     {
 
         $query = $this->newQuery();
+
         if (empty($params) || !is_array($params)) {
             return $query;
         }
 
-
         $sortingParams = [];
-
 
         if (isset($params['sort'])) {
             $sortingParams = explode(',', $params['sort']);
@@ -489,6 +488,9 @@ class Event extends BaseModel
                       ->where('events.event_type', 50);
             });
         }
+        //if (!empty($params['schools'])) {
+            $query->whereIn('events.school_id', $params['schools']);
+        //}
         if ($user_role == 'teacher_minimum') {
             $query->where('events.teacher_id', $params['person_id']);
         }
