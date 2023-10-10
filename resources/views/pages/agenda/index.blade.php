@@ -269,7 +269,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv">
+                                            <div id="event_teacher_div" name="event_teacher_div" class="selectdiv" style="opacity: 0 !important; visibility: hidden !important;">
                                                 <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 0px;">
                                                     @foreach($teachers as $key => $teacher)
                                                         <option value="{{ $teacher->id }}">{{ $teacher->firstname }}</option>
@@ -1333,7 +1333,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 type: 'POST',
                 dataType: 'json',
-                async: false,
+                //async: false,
                 beforeSend: function( xhr ) {
                     $("#pageloader").show();
                 },
@@ -1376,7 +1376,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 type: 'POST',
                 dataType: 'json',
-                async: false,
+                //async: false,
                 beforeSend: function( xhr ) {
                    // $("#pageloader").show();
                 },
@@ -1419,7 +1419,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 type: 'POST',
                 dataType: 'json',
-                async: false,
+                //async: false,
                 beforeSend: function( xhr ) {
                   //  $("#pageloader").show();
                 },
@@ -1521,7 +1521,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 type: 'POST',
                 dataType: 'json',
-                async: false,
+                //async: false,
                 beforeSend: function( xhr ) {
                    // $("#pageloader").show();
                 },
@@ -1625,7 +1625,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 type: 'POST',
                 dataType: 'json',
-                async: false,
+                //async: false,
                 beforeSend: function( xhr ) {
                   //  $("#pageloader").show();
                 },
@@ -4076,12 +4076,12 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     }else{
         $("#price_per_student").fadeOut();
     }
-    getLatestPrice();
+   // getLatestPrice();
 
 
 });
 $("#student").on('change', function(event) {
-    getLatestPrice()
+   // getLatestPrice()
 });
 
 function getLatestPrice() {
@@ -4117,7 +4117,7 @@ function getLatestPrice() {
     if (categoryId > 0 && teacherSelect > 0) {
         $.ajax({
             url: BASE_URL + '/check-lesson-fixed-price',
-            async: false,
+            //async: false,
             data: formData,
             type: 'POST',
             dataType: 'json',
@@ -4353,7 +4353,7 @@ $('#agenda_select').on('change', function() {
         // }
     }
 
-    getLatestPrice();
+   // getLatestPrice();
 });
 
 $('#event_invoice_type').on('change', function() {
