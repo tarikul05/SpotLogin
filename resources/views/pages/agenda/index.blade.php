@@ -2840,7 +2840,7 @@ $('.search-icon').on('click', function() {
             url: BASE_URL + '/get_event',
             type: 'POST',
             data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            async: false,
+            //async: false,
             success: function(s){
                 SetEventCookies();
                 json_events = s;
@@ -3054,7 +3054,7 @@ $('.search-icon').on('click', function() {
             url: BASE_URL + '/get_event',
             type: 'POST',
             data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            async: false,
+            //async: false,
             success: function(s){
                 //SetEventCookies();
                 if (firstLoad =='firstLoad') {
