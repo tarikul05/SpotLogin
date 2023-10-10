@@ -76,7 +76,7 @@
         }, 500);
       }, 2500);
 
-      $('.select_two_defult_class').select2();
+      //$('.select_two_default_class').select2();
     });
   </script>
 

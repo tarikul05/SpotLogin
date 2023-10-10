@@ -116,6 +116,7 @@
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
                                     <a href="{{ $manualInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
+                                    <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-danger">beta</span></a>
                              <?php } ?>
                             @endif
                         @else

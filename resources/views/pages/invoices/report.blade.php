@@ -6,7 +6,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
-<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
 <style type="text/css">
 	input[readonly="readonly"] {
 	  border: none;
@@ -57,7 +56,7 @@
                             <a class="btn btn-primary w-100" id="billing_period_search_btn_2" style="display: none;"><i class="fa-solid fa-file-lines"></i> {{ __('Generate') }}</a>
                         </div>
                         <div class="col-md-2 md-12 p-2 text-center" id="download_btn_report">
-                            <a href="{{ route('generateReportPDF') }}" class="btn btn-success w-100" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download') }}</a>
+                            <a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>
                         </div>
 
                     </div>
@@ -78,7 +77,7 @@
                     <div class="card p-2 text-right"><b>Total Amount H.T</b><div class="text-lowercase" id="totalAmountLessonHT"></div></div>
                     <div class="card p-2 text-right"><b>Total Amount</b><div class="text-lowercase" id="totalAmount"></div></div>
                     <br>
-                    <a class="btn btn-success w-100" id="billing_period_download_btn2"><i class="fa-solid fa-file-pdf"></i> {{ __('Download') }}</a>
+                    <a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn2"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>
                 </div>
             </div>
             </div>
@@ -88,25 +87,6 @@
 @endsection
 
 @section('footer_js')
-<script>
-      var doc = new jsPDF();
-     $('#billing_period_download_btn').on('click', function() {
-
-var specialElementHandlers = {
-    '#table_container': function (element, renderer) {
-        return true;
-    }
-};
-
-$('#cmd').click(function () {
-doc.fromHTML($('#table_container').html(), 15, 15, {
-        'width': 170,
-            'elementHandlers': specialElementHandlers
-    });
-    doc.save('sample-file.pdf');
-});
-     });
-</script>
 <script>
     // Gérer le changement de sélection dans la liste déroulante
     document.getElementById('report_type').addEventListener('change', function () {
