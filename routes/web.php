@@ -445,6 +445,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/update_invoice_data', 'InvoiceController@invoiceDataUpdate')->name('invoiceDataUpdate');
 
     Route::get('/invoice-pdf', [App\Http\Controllers\InvoiceController::class, 'generateInvoicePDF'])->name('generateInvoicePDF');
+    Route::get('/report-pdf', [App\Http\Controllers\InvoiceController::class, 'generateReportPDF'])->name('generateReportPDF');
 
 });
 

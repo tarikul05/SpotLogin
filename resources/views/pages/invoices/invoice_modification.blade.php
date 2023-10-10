@@ -52,7 +52,9 @@
 
                             @endif
 
-                            <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
+                            @if(!$AppUI->isStudent())
+                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
+                            @endif
 
                         </div>
 

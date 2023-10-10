@@ -68,6 +68,10 @@ class InvoiceItem extends BaseModel
     {
         return $this->BelongsTo(Invoice::class, 'invoice_id');
     }
+    public function eventDetail()
+    {
+        return $this->belongsTo(EventDetails::class, 'event_id');
+    }
 
 }
 

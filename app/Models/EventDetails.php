@@ -52,7 +52,7 @@ class EventDetails extends BaseModel
       'modified_by'
     ];
 
- 
+
 
     /**
      * The attributes that should be casted to native types.
@@ -86,4 +86,5 @@ class EventDetails extends BaseModel
         }
         return $eventData;
     }
+
 }

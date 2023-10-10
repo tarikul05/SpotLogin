@@ -924,7 +924,24 @@ button#save_btn_more i {
 .alertMessages .alert {
 	min-height: 74px;
 }
+#resumeReport {
+    display: none;
+    text-align: right;
+    position: fixed;
+    right:6%;
+    width: 150px;
+}
+@media only screen and (max-width: 768px) {
+    #resumeReport {
+        display: none;
+        text-align: right;
+        position:static;
+        padding:10px;
+        margin:0;
+        width: 100%;
 
+    }
+}
 .navbar-toggler:focus,
 .navbar-toggler:active,
 .navbar-toggler-icon:focus {
@@ -980,9 +997,13 @@ button#save_btn_more i {
 }
 
 .report_action {
-    width: 110px;
+    width: 185px;
+    text-align: center;
 }
 
+#table_container table tbody tr {
+    margin-bottom: 25px;
+}
 @media (max-width: 767px) {
 
     .jQWCP-mobile {
