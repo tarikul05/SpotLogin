@@ -651,7 +651,7 @@ class AgendaController extends Controller
                 }
             }
 
-
+            $studentsbySchool = [];
         //$e['title'] .= ' <i class="fa-solid fa-circle-info"></i> attention';
 
 			$format_title = '';
