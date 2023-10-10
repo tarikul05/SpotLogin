@@ -2808,7 +2808,7 @@ $('.search-icon').on('click', function() {
 
 
     function getFreshEvents(p_view=getCookie("cal_view_mode")){
-
+        $("#pageloader").fadeIn();
         if (document.getElementById("view_mode").value == 'CurrentListView'){
             return;
         }
@@ -3005,10 +3005,12 @@ $('.search-icon').on('click', function() {
                     $('#calendar').fullCalendar().find('.fc-day-header').parents('table').show();
                 }
                 hideExtraRowInMonthView();
+                $("#pageloader").fadeOut();
             },
             error: function(ts) {
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText)
+                $("#pageloader").fadeOut();
                 console.error(ts.responseText);
             }
         });
