@@ -1185,8 +1185,9 @@ $('.search-icon').on('click', function() {
     if ((firstload == "0") && (getCookie("date_from") != "")) {
         var sdt = getCookie("date_from");
         $('#calendar').fullCalendar( 'gotoDate', sdt);
+        firstload ='1';
     }
-    firstload ='1';
+
 
     // if ((user_auth == "MIN"))
     // {
@@ -2729,6 +2730,7 @@ $('.search-icon').on('click', function() {
 
                 SetEventCookies();
 
+
                 if  (firstload != '0'){
                     if($('#calendar').fullCalendar('getView').name !='CurrentListView'){
                         getFreshEvents();
@@ -2840,7 +2842,7 @@ $('.search-icon').on('click', function() {
             url: BASE_URL + '/get_event',
             type: 'POST',
             data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            //async: false,
+            async: true,
             success: function(s){
                 SetEventCookies();
                 json_events = s;
@@ -3007,7 +3009,7 @@ $('.search-icon').on('click', function() {
             error: function(ts) {
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText)
-                console.log(ts.responseText);
+                console.error(ts.responseText);
             }
         });
     }
