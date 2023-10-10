@@ -121,15 +121,15 @@
                         }
                         $invoice_name = $invoice->invoice_name;
                         if($invoice->invoice_type ==1){
-                            $invoice_name .= '-'.$invoice->client_name;
+                            $invoice_name .= '-'.$invoice->client_name. '-ID#' . $invoice->id;
                         } else {
-                            $invoice_name .= '-'.$invoice->client_name;
+                            $invoice_name .= '-'.$invoice->client_name. '-ID#' . $invoice->id;
                         }
                         @endphp
                         <td class="responsive-td mobile-hide">{{ $invoice_name}}</td>
 
                         @if ($invoice->invoice_type == 0)
-                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ $invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses }}</b></td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b></td>
                         @else
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ $invoice->total_amount }}</b></td>
                         @endif

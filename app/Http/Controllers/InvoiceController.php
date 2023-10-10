@@ -115,14 +115,33 @@ class InvoiceController extends Controller
             $startDate = $request->input('billing_period_start_date');
             $endDate = $request->input('billing_period_end_date');
 
-            $invoices = Invoice::active()->where('school_id', $school->id)->whereBetween('date_invoice', [$startDate.' 00:00:00', $endDate.' 23:59:59']);
-            $invoices->orderBy('date_invoice', 'desc');
-            $results =  $invoices = $invoices->get();
-            return response()->json($results);
+            $invoices = Invoice::active()
+            ->with('invoice_items')
+            ->where('school_id', $school->id)
+            ->whereBetween('date_invoice', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->where('total_amount', '>', 0)
+            ->orderBy('date_invoice', 'desc')
+            ->get();
+
+        // Loop through invoices and load the eventDetail for each invoice_item
+        $invoices->each(function ($invoice) {
+            $invoice->invoice_items->each(function ($item) {
+                $eventDetail = DB::table('event_details')
+                    ->where('event_id', $item->event_id)
+                    ->first();
+                $item->eventDetail = $eventDetail;
+            });
+        });
+
+        return response()->json($invoices);
 
         } catch (Exception $e) {
 
-            $result['message'] = __('Internal server error');
+            $result = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+            );
             return response()->json($result);
         }
     }
@@ -1085,18 +1104,18 @@ class InvoiceController extends Controller
             $data = $request->all();
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
-            $discountPercentage = intval(trim($data['discountPercentage']));
-            if($discountPercentage > 100) {
+            $discountPercentage = floatval(trim($data['discountPercentage']));
+            if ($discountPercentage > 100) {
                 return false;
             }
-            $discountPercentage2 = intval(trim($data['discountPercentage2']));
+            $discountPercentage2 = floatval(trim($data['discountPercentage2']));
             if($discountPercentage2 > 100) {
                 return false;
             }
             $amountDiscount_2 = intval(trim($data['discountAmountage2']));
             $totalAllTaxesAmount = intval(trim($data['finaltotaltaxes']));
             $totalAmountGetInit = trim(trim($data['totalAmountGet']));
-            $totalAmountGet = intval($totalAmountGetInit);
+            $totalAmountGet = floatval($totalAmountGetInit);
 
             /*$result = array(
                 'status' => "success",
@@ -1350,7 +1369,7 @@ class InvoiceController extends Controller
                'total_amount_discount'=>$total_amount_discount,
                'total_amount_no_discount'=> $total_amount_no_discount,
                'total_amount_with_discount'=> $total_amount_with_discount,
-               'total_amount'=> number_format($totalAmountGet,2), //number_format($total_amount_with_discount+$totalAllTaxesAmount,2),
+               'total_amount'=> $totalAmountGet, //number_format($total_amount_with_discount+$totalAllTaxesAmount,2),
                'tax_desc'=> $tax_desc,
                'tax_perc'=> $tax_perc,
                'tax_amount'=> number_format($totalAllTaxesAmount,2),
@@ -1992,6 +2011,36 @@ class InvoiceController extends Controller
         }
     }
 
+
+    public function generateReportPDF(Request $request, $type = 'stream')
+    {
+        try{
+            $reqData = $request->all();
+
+            $invoice_name = 'invoice-report.pdf';
+            $pdf = PDF::loadView('pages.invoices.report');
+            $pdf->set_option('isHtml5ParserEnabled', true);
+            $pdf->set_option('isRemoteEnabled', true);
+            $pdf->set_option('DOMPDF_ENABLE_CSS_FLOAT', true);
+            // print and save data
+            if ($type == 'stream') {
+                // save invoice name if invoice_filename is empty
+                $file_upload = Storage::put('pdf/'. $invoice_name, $pdf->output());
+                if($file_upload){
+                    $invoice_pdf_path = URL::to("").'/uploads/pdf/'.$invoice_name;
+                    $invoice_data->invoice_filename = $invoice_pdf_path;
+                    $invoice_data->save();
+                }
+                return $pdf->stream( $invoice_name );
+            }
+            // only print view without save invoice and upload
+            if ($type == 'print_view') {
+                return $pdf->stream( $invoice_name );
+            }
+        }catch( Exception $e){
+            // throw error
+        }
+    }
 
      /**
      *  AJAX delete Invoice
