@@ -651,7 +651,7 @@ class AgendaController extends Controller
                 }
             }
 
-            $studentsbySchool = [];
+
         //$e['title'] .= ' <i class="fa-solid fa-circle-info"></i> attention';
 
 			$format_title = '';
@@ -736,36 +736,55 @@ class AgendaController extends Controller
 
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
-                $eventDetailsStudentIdArray2 = explode(',', $eventDetailsStudentId);
-                $studentsbySchool = [];
+$eventDetailsStudentIdArray = explode(',', $eventDetailsStudentId);
 
-                foreach ($eventDetailsStudentIdArray2 as $studentId) {
-                    $student = Student::find($studentId);
+$studentsbySchool = [];
+$futureEventIdsByStudent = [];
 
-                    if ($student) {
-                        $futureEventIds = EventDetails::where('student_id', $studentId)
-                            ->pluck('event_id');
+// Créez un tableau associatif pour stocker les futurs événements par étudiant
+foreach ($eventDetailsStudentIdArray as $studentId) {
+    $futureEventIdsByStudent[$studentId] = [];
+}
 
-                        $futureEvent = Event::whereIn('id', $futureEventIds)
-                            ->where('event_type', 51)
-                            ->where(function ($query) use ($fetch)  {
-                                $query->where('date_start', '=', $fetch->date_start)
-                                    ->orWhere(function ($subQuery) use ($fetch) {
-                                        $subQuery->where('date_start', '<', $fetch->date_start)
-                                            ->where('date_end', '>', $fetch->date_start);
-                                    });
-                            })
-                            ->orderBy('date_start', 'asc')
-                            ->first();
+// Récupérez les futurs événements en une seule requête
+$futureEvents = Event::whereIn('event_details.student_id', $eventDetailsStudentIdArray)
+    ->where('event_type', 51)
+    ->where(function ($query) use ($fetch) {
+        $query->where('date_start', '=', $fetch->date_start)
+            ->orWhere(function ($subQuery) use ($fetch) {
+                $subQuery->where('date_start', '<', $fetch->date_start)
+                    ->where('date_end', '>', $fetch->date_start);
+            });
+    })
+    ->orderBy('date_start', 'asc')
+    ->join('event_details', 'events.id', '=', 'event_details.event_id')
+    ->get(['event_details.student_id', 'events.*']);
 
-                        $student->dates = $futureEvent;
-                        if($futureEvent) {
-                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-circle-info text-white" style="color:orange;"></i> '.$student->firstname.' is away</span>' ;
-                        }
-                        array_push($studentsbySchool, $student);
-                        //array_push($studentsbySchool, $student);
-                    }
-                }
+// Associez les futurs événements aux étudiants dans le tableau associatif
+foreach ($futureEvents as $futureEvent) {
+    $studentId = $futureEvent->student_id;
+    $futureEventIdsByStudent[$studentId][] = $futureEvent->id;
+}
+
+// Mettez à jour les dates des étudiants avec leurs futurs événements
+foreach ($eventDetailsStudentIdArray as $studentId) {
+    $student = Student::find($studentId);
+
+    if ($student) {
+        $futureEventIds = $futureEventIdsByStudent[$studentId];
+
+        if (!empty($futureEventIds)) {
+            // Utilisez la méthode whereIn pour récupérer les futurs événements
+            $futureEvent = $futureEvents->whereIn('id', $futureEventIds)->first();
+
+            $student->dates = $futureEvent;
+            if ($futureEvent) {
+                $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-circle-info text-white" style="color:orange;"></i> ' . $student->firstname . ' is away</span>';
+            }
+            array_push($studentsbySchool, $student);
+        }
+    }
+}
 
 
                // $now = Carbon::now($fetch->school->timezone);
@@ -791,36 +810,55 @@ class AgendaController extends Controller
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            //$eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
             $e['student_id_list'] = $eventDetailsStudentId;
 
-            /*$studentsbySchool = [];
             $eventDetailsStudentIdArray = explode(',', $eventDetailsStudentId);
 
+            $studentsbySchool = [];
+            $futureEventIdsByStudent = [];
 
+            // Créez un tableau associatif pour stocker les futurs événements par étudiant
+            foreach ($eventDetailsStudentIdArray as $studentId) {
+                $futureEventIdsByStudent[$studentId] = [];
+            }
+
+            // Récupérez les futurs événements en une seule requête
+            $futureEvents = Event::whereIn('event_details.student_id', $eventDetailsStudentIdArray)
+                ->where('event_type', 51)
+                ->where(function ($query) use ($fetch) {
+                    $query->where('date_start', '=', $fetch->date_start)
+                        ->orWhere(function ($subQuery) use ($fetch) {
+                            $subQuery->where('date_start', '<', $fetch->date_start)
+                                ->where('date_end', '>', $fetch->date_start);
+                        });
+                })
+                ->orderBy('date_start', 'asc')
+                ->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->get(['event_details.student_id', 'events.*']);
+
+            // Associez les futurs événements aux étudiants dans le tableau associatif
+            foreach ($futureEvents as $futureEvent) {
+                $studentId = $futureEvent->student_id;
+                $futureEventIdsByStudent[$studentId][] = $futureEvent->id;
+            }
+
+            // Mettez à jour les dates des étudiants avec leurs futurs événements
             foreach ($eventDetailsStudentIdArray as $studentId) {
                 $student = Student::find($studentId);
 
                 if ($student) {
-                    $futureEventIds = EventDetails::where('student_id', $studentId)
-                        ->pluck('event_id');
+                    $futureEventIds = $futureEventIdsByStudent[$studentId];
 
-                    $futureEvent = Event::whereIn('id', $futureEventIds)
-                        ->where('event_type', 51)
-                        ->where(function ($query) use ($fetch)  {
-                            $query->where('date_start', '=', $fetch->date_start)
-                                ->orWhere(function ($subQuery) use ($fetch)  {
-                                    $subQuery->where('date_start', '<', $fetch->date_start)
-                                        ->where('date_end', '>', $fetch->date_start);
-                                });
-                        })
-                        ->orderBy('date_start', 'asc')
-                        ->first();
+                    if (!empty($futureEventIds)) {
+                        // Utilisez la méthode whereIn pour récupérer les futurs événements
+                        $futureEvent = $futureEvents->whereIn('id', $futureEventIds)->first();
 
-                    $student->dates = $futureEvent;
-                    array_push($studentsbySchool, $student);
+                        $student->dates = $futureEvent;
+                        array_push($studentsbySchool, $student);
+                    }
                 }
-            }*/
+            }
 
             $e['studentsbySchool'] = $studentsbySchool;
 

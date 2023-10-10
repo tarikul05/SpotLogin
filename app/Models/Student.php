@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\SchoolStudent;
+use App\Models\EventDetails;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends BaseModel
@@ -94,7 +95,7 @@ class Student extends BaseModel
         'modified_by'
     ];
 
-  
+
 
     /**
      * The attributes that should be casted to native types.
@@ -106,7 +107,7 @@ class Student extends BaseModel
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-   
+
     protected $appends = ['full_name'];
 
 
@@ -119,6 +120,12 @@ class Student extends BaseModel
                     ->withPivot('id', 'nickname', 'billing_method', 'has_user_account', 'level_id', 'licence_arp', 'level_skating_arp', 'level_date_arp','licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at','deleted_at');
     }
 
+
+    public function eventDetails()
+    {
+        // Relation one-to-many : Un étudiant peut avoir plusieurs détails d'événements futurs
+        return $this->hasMany(EventDetails::class, 'student_id', 'id');
+    }
 
     /**
      * Get the user for the News.
@@ -151,7 +158,7 @@ class Student extends BaseModel
      */
     public function schoolData()
     {
-        
+
         return $this->hasMany(SchoolStudent::class)
             ->join('schools as u', 'u.id', '=', 'school_students.school_id')
             ->select(['u.*']);

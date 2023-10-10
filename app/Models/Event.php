@@ -54,7 +54,7 @@ class Event extends BaseModel
       'modified_by'
     ];
 
- 
+
 
     /**
      * The attributes that should be casted to native types.
@@ -66,7 +66,7 @@ class Event extends BaseModel
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-    
+
 
     /**
      * The attributes that are partially match filterable.
@@ -136,7 +136,7 @@ class Event extends BaseModel
 
     /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -151,15 +151,15 @@ class Event extends BaseModel
         $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
-        
-        
+
+
         $fromFilterDate = null;
         $toFilterDate = null;
 
         if (isset($params['p_from_date'])) {
             $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
-        } 
-        
+        }
+
         if (isset($params['p_to_date'])) {
             $toFilterDate = str_replace('/', '-', $params['p_to_date']);
         }
@@ -168,15 +168,15 @@ class Event extends BaseModel
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
-        
+
         $query->select(['events.*'])
             ->where('events.deleted_at', null)
             ->where('events.is_locked', 0);
 
-        foreach ($params as $key => $value) { 
+        foreach ($params as $key => $value) {
             if (!empty($value)) {
-                
-                if (in_array($key, $this->arrayFilterable)) { 
+
+                if (in_array($key, $this->arrayFilterable)) {
                     if (isset($value) && strpos($value, '|') !== false){
                         $value = explode('|', $value);
                     }
@@ -190,16 +190,16 @@ class Event extends BaseModel
                         });
                         //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
-                    }  else { 
+                    }  else {
                         $query->where("events.$key", '=', $value);
-                    } 
-                    
+                    }
+
                     // $query->where($key, 'LIKE', "%{$value}%");
-                } 
+                }
                 // else {
                 //     $query->where($key, '=', $value);
                 // }
-                
+
             }
         }
         $user_role = $params['user_role'];
@@ -245,7 +245,7 @@ class Event extends BaseModel
                 $query->whereRaw($qq);
             }
         } catch (\Exception $e) {
-            
+
         }
         return $query;
     }
@@ -253,7 +253,7 @@ class Event extends BaseModel
 
     /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -268,33 +268,33 @@ class Event extends BaseModel
         $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
-        
-        
-        
-        
-        
+
+
+
+
+
         $fromFilterDate = null;
         $toFilterDate = null;
 
         if (isset($params['p_from_date'])) {
             $fromFilterDate = str_replace('/', '-',$params['p_from_date']);
-            
+
             if (!$toFilterDate) {
                 $toFilterDate = now();
             }
             unset($params['p_from_date']);
-        } 
-        
+        }
+
         if (isset($params['p_to_date'])) {
             $toFilterDate = str_replace('/', '-', $params['p_to_date']);
-            
+
             if (!$fromFilterDate) {
                 $fromFilterDate = now();
             }
             unset($params['p_to_date']);
         }
 
-        
+
 
         if ($user_role == 'student') {
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -304,10 +304,10 @@ class Event extends BaseModel
             ->where('events.deleted_at', null)
             ->where('events.is_locked', 0);
 
-        foreach ($params as $key => $value) { 
+        foreach ($params as $key => $value) {
             if (!empty($value)) {
-                
-                if (in_array($key, $this->arrayFilterable)) { 
+
+                if (in_array($key, $this->arrayFilterable)) {
                     if (isset($value) && strpos($value, '|') !== false){
                         $value = explode('|', $value);
                     }
@@ -321,16 +321,16 @@ class Event extends BaseModel
                         });
                         //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
-                    }  else { 
+                    }  else {
                         $query->where("events.$key", '=', $value);
-                    } 
-                    
+                    }
+
                     // $query->where($key, 'LIKE', "%{$value}%");
-                } 
+                }
                 // else {
                 //     $query->where($key, '=', $value);
                 // }
-                
+
             }
         }
         $user_role = $params['user_role'];
@@ -343,7 +343,7 @@ class Event extends BaseModel
                 $query->where(function($query){
                     $query->where('events.event_invoice_type', 'S')
                             ->orWhere('event_categories.invoiced_type', 'S');
-                });       
+                });
         }
 
         if ($user_role == 'teacher_all' || $user_role == 'teacher') {
@@ -368,7 +368,7 @@ class Event extends BaseModel
                         $timeZone = $school->timezone;
                     }
                 }
-                
+
                 $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
 
                 $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
@@ -376,15 +376,19 @@ class Event extends BaseModel
                 $query->whereRaw($qq);
             }
         } catch (\Exception $e) {
-            
+
         }
         return $query;
     }
 
+    public function eventDetails()
+    {
+        return $this->hasMany(EventDetails::class);
+    }
 
      /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -396,18 +400,18 @@ class Event extends BaseModel
             return $query;
         }
 
-        
-        $sortingParams = [];
-        
 
-        if (isset($params['sort'])) { 
+        $sortingParams = [];
+
+
+        if (isset($params['sort'])) {
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
-        if (isset($params['type'])) { 
+        if (isset($params['type'])) {
             unset($params['type']);
         }
-        if (isset($params['zone'])) { 
+        if (isset($params['zone'])) {
             unset($params['zone']);
         }
         if (isset($params['start_date'])) {
@@ -415,22 +419,22 @@ class Event extends BaseModel
             if ($params['p_view'] =='CurrentListView') {
                 $fromFilterDate = now();
             }
-          
+
             //   if (!$toFilterDate) {
             //       $toFilterDate = now();
             //   }
             unset($params['start_date']);
-        } 
-      
+        }
+
         if (isset($params['end_date'])) {
            // $fromFilterDate = null;
             //$toFilterDate = null;
-            
+
             $toFilterDate = $params['end_date'];
             if ($params['p_view'] =='CurrentListView') {
                 $toFilterDate = str_replace('/', '-', $params['end_date']);
             }
-          
+
             //   if (!$fromFilterDate) {
             //       $fromFilterDate = now();
             //   }
@@ -441,12 +445,12 @@ class Event extends BaseModel
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
-        
+
         //$query->where('deleted_at', null);
-        foreach ($params as $key => $value) { 
+        foreach ($params as $key => $value) {
             if (!empty($value)) {
-                
-                if (in_array($key, $this->arrayFilterable)) { 
+
+                if (in_array($key, $this->arrayFilterable)) {
                     if (isset($value) && strpos($value, '|') !== false){
                         $value = explode('|', $value);
                     }
@@ -454,29 +458,29 @@ class Event extends BaseModel
                         //dd($value);
                     }
                     if (is_array($value)) {
-                        
+
                         $query->where(function ($query) use($key,$value) {
                             $query->whereIn($key, $value)
                                 ->orWhereNull($key);
                         });
-                        
+
                         //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
-                    }  else { 
+                    }  else {
                         $query->where($key, '=', $value);
-                    } 
-                    
+                    }
+
                     // $query->where($key, 'LIKE', "%{$value}%");
-                } 
+                }
                 // else {
                 //     $query->where($key, '=', $value);
                 // }
-                
+
             }
         }
 
         $schoolIdsArray = $params['schools'];
-        
+
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id'])
@@ -489,8 +493,8 @@ class Event extends BaseModel
             $query->where('events.teacher_id', $params['person_id']);
         }
 
-        if (!empty($sortingParams)) { 
-            
+        if (!empty($sortingParams)) {
+
             $column = null;
             $direction = null;
 
@@ -514,10 +518,10 @@ class Event extends BaseModel
                 }
             }
 
-        } 
+        }
 
 
-        
+
         try {
           if ($fromFilterDate && $toFilterDate) {
                 $timeZone = 'UTC';
@@ -534,7 +538,7 @@ class Event extends BaseModel
                 $query->whereRaw($qq);
           }
         } catch (\Exception $e) {
-          
+
         }
         //dd($query->toSql());
         return $query;
@@ -547,7 +551,7 @@ class Event extends BaseModel
 
      /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -560,18 +564,18 @@ class Event extends BaseModel
             return $query;
         }
 
-        
-        $sortingParams = [];
-        
 
-        if (isset($params['sort'])) { 
+        $sortingParams = [];
+
+
+        if (isset($params['sort'])) {
             $sortingParams = explode(',', $params['sort']);
             unset($params['sort']);
         }
-        if (isset($params['type'])) { 
+        if (isset($params['type'])) {
             unset($params['type']);
         }
-        if (isset($params['zone'])) { 
+        if (isset($params['zone'])) {
             unset($params['zone']);
         }
         $request = request();
@@ -579,19 +583,19 @@ class Event extends BaseModel
         $user_role = self::checkUserRoesforQuery($user);
         $params['user_role'] = $user_role;
         $params['person_id'] = $user->person_id;
-        
+
        //dd($params);
         if ($user_role == 'student') {
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
         $query->where('deleted_at', null);
-        
+
         //$query->where('deleted_at', null);
-        foreach ($params as $key => $value) { 
+        foreach ($params as $key => $value) {
             if (!empty($value)) {
-                
-                if (in_array($key, $this->arrayFilterable)) { 
+
+                if (in_array($key, $this->arrayFilterable)) {
                     if (isset($value) && strpos($value, '|') !== false){
                         $value = explode('|', $value);
                     }
@@ -605,16 +609,16 @@ class Event extends BaseModel
                         });
                         //$query->whereIn($key, $value);
                        // unset($params['authority:in']);
-                    }  else { 
+                    }  else {
                         $query->where($key, '=', $value);
-                    } 
-                    
+                    }
+
                     // $query->where($key, 'LIKE', "%{$value}%");
-                } 
+                }
                 // else {
                 //     $query->where($key, '=', $value);
                 // }
-                
+
             }
         }
         $user_role = $params['user_role'];
@@ -625,8 +629,8 @@ class Event extends BaseModel
             $query->where('events.teacher_id', $params['person_id']);
         }
 
-        if (!empty($sortingParams)) { 
-            
+        if (!empty($sortingParams)) {
+
             $column = null;
             $direction = null;
 
@@ -650,25 +654,25 @@ class Event extends BaseModel
                 }
             }
 
-        } 
+        }
 
 
         if (!empty($params['source_start_date'])) {
             //$fromFilterDate = null;
             // $toFilterDate = null;
-        
+
             $fromFilterDate = $params['source_start_date'];
-          
+
             // if (!$toFilterDate) {
             //     $toFilterDate = now();
             // }
-        } 
-      
+        }
+
         if (!empty($params['source_end_date'])) {
             // $fromFilterDate = null;
             // $toFilterDate = null;
             $toFilterDate = $params['source_end_date'];
-          
+
             // if (!$fromFilterDate) {
             //     $fromFilterDate = now();
             // }
@@ -689,7 +693,7 @@ class Event extends BaseModel
                 $query->whereRaw($qq);
           }
         } catch (\Exception $e) {
-          
+
         }
         //dd($query->toSql());
         return $query;
@@ -705,7 +709,7 @@ class Event extends BaseModel
 
     /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -783,7 +787,7 @@ class Event extends BaseModel
       $priceFixed = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>'price_fix'])->first();
 
       $prices = LessonPriceTeacher::active()->where(['event_category_id'=>$data['event_category_id'],'teacher_id'=>$data['teacher_id'],'lesson_price_student'=>$priceKey])->first();
- // dd($priceKey,$prices);     
+ // dd($priceKey,$prices);
 
       $buyPrice = $sellPrice = 0;
       if ($evtCategory->invoiced_type == 'S') {
@@ -806,7 +810,7 @@ class Event extends BaseModel
         if ($evtCategory->s_std_pay_type == 2) {
           $sellPrice = 0;
         }
-        
+
       }else if ($evtCategory->invoiced_type == 'T') {
         if ($evtCategory->t_std_pay_type == 1) {
           $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
@@ -861,7 +865,7 @@ class Event extends BaseModel
 
         $attendSellPrice = round($attendSellPrice,2);
         $attendBuyPrice = round($attendBuyPrice,2);
-        
+
         foreach($eventDetais as $evDtail){
             $dataDetails = [
                 'buy_total' => $attendBuyPrice,
@@ -871,7 +875,7 @@ class Event extends BaseModel
             ];
             $eventDetails = EventDetails::where('id', $evDtail->id)->update($dataDetails);
         }
-        
+
     }
 
     public function validate($data=[], $lockStatus=1)
@@ -883,7 +887,7 @@ class Event extends BaseModel
             $eventUpdate = [
                 'is_locked' => $lockStatus
             ];
-            
+
             $eventData = Event::where('id', $event_id)->update($eventUpdate);
             $currentEvent = Event::find($event_id);
 
@@ -891,7 +895,7 @@ class Event extends BaseModel
             $eventDetail = [
                 'is_locked' => $lockStatus,
             ];
-            
+
             $eventdetails = EventDetails::where('event_id', $event_id)->get();
             if (!empty($eventdetails)) {
                 foreach ($eventdetails as $key => $eventdetail) {
@@ -899,7 +903,7 @@ class Event extends BaseModel
                         'is_locked' => $lockStatus,
                         'participation_id' => 200,
                     ];
-                    
+
                     $eventDetailAbsent = [
                         'is_locked' => $lockStatus,
                         // 'participation_id' => 199,
@@ -909,12 +913,12 @@ class Event extends BaseModel
                     } else {
                         $eventdetail = $eventdetail->update($eventDetailAbsent);
                     }
-                    
+
                 }
                 if ($lockStatus && $currentEvent->event_type !== 100) {
                     Event::updateLatestPrice($event_id);
                 }
-                
+
 
                 return true;
             }
@@ -942,13 +946,13 @@ class Event extends BaseModel
         if ($user->isTeacherAll()) {
             $userRole = 'teacher_all';
         }
-        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $userRole =='teacher'|| $user->isTeacherSchoolAdmin()) { 
+        if ($user->isTeacherMedium() || $user->isTeacherMinimum() || $userRole =='teacher'|| $user->isTeacherSchoolAdmin()) {
             $userRole = 'teacher';
         }
 
         return $userRole;
-        
+
     }
 
-    
+
 }

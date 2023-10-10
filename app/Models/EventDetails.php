@@ -64,6 +64,13 @@ class EventDetails extends BaseModel
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
+
+    public function event()
+    {
+        // Relation many-to-one : Un détail d'événement appartient à un événement
+        return $this->belongsTo(Event::class, 'event_id', 'id');
+    }
+
     public function updateEventDetail($id, $invoice_id, $buy_invoice_id = 'buy_invoice_id', $student_id = null)
     {
         if ($buy_invoice_id == 'buy_invoice_id') {
