@@ -238,7 +238,7 @@
 
                                     <div style="margin-top:40px;" id="datepicker_month"></div>
 
-                                    <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity: 0; visibility: hidden;">
+                                    <div id="event_school_div" name="event_school_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
                                                 <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }}
@@ -258,12 +258,12 @@
                                                 </select>
                                             </div>
                                             <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" style="margin-bottom: 0px; opacity: 0; visibility: hidden;">
+                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" >
                                                     @foreach($event_types as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
                                                 </select>
-                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 0px; opacity: 0; visibility: hidden;" >
+                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 0px;" >
                                                     @foreach($event_types_all as $key => $event_type)
                                                         <option value="{{ $key }}">{{ $event_type }}</option>
                                                     @endforeach
@@ -2840,7 +2840,7 @@ $('.search-icon').on('click', function() {
             url: BASE_URL + '/get_event',
             type: 'POST',
             data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            async: true,
+            async: false,
             success: function(s){
                 SetEventCookies();
                 json_events = s;
@@ -3054,7 +3054,7 @@ $('.search-icon').on('click', function() {
             url: BASE_URL + '/get_event',
             type: 'POST',
             data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
-            async: true,
+            async: false,
             success: function(s){
                 //SetEventCookies();
                 if (firstLoad =='firstLoad') {
