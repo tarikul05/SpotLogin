@@ -737,6 +737,7 @@ class AgendaController extends Controller
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
                 $eventDetailsStudentIdArray2 = explode(',', $eventDetailsStudentId);
+                $studentsbySchool = [];
 
                 foreach ($eventDetailsStudentIdArray2 as $studentId) {
                     $student = Student::find($studentId);
@@ -761,6 +762,7 @@ class AgendaController extends Controller
                         if($futureEvent) {
                             $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-circle-info text-white" style="color:orange;"></i> '.$student->firstname.' is away</span>' ;
                         }
+                        array_push($studentsbySchool, $student);
                         //array_push($studentsbySchool, $student);
                     }
                 }
@@ -789,10 +791,10 @@ class AgendaController extends Controller
             $e['duration_minutes'] = $fetch->duration_minutes;
             $e['no_of_students'] = $fetch->no_of_students;
             $e['is_locked'] = $fetch->is_locked;
-            $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
+            //$eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
             $e['student_id_list'] = $eventDetailsStudentId;
 
-            $studentsbySchool = [];
+            /*$studentsbySchool = [];
             $eventDetailsStudentIdArray = explode(',', $eventDetailsStudentId);
 
 
@@ -818,7 +820,7 @@ class AgendaController extends Controller
                     $student->dates = $futureEvent;
                     array_push($studentsbySchool, $student);
                 }
-            }
+            }*/
 
             $e['studentsbySchool'] = $studentsbySchool;
 
