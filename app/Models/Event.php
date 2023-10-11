@@ -482,11 +482,7 @@ class Event extends BaseModel
 
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
-            $query->where('event_details.student_id', $params['person_id'])
-            ->orWhere(function (Builder $query) use ($schoolIdsArray) {
-                $query->whereIn('events.school_id', $schoolIdsArray)
-                      ->where('events.event_type', 50);
-            });
+            $query->where('event_details.student_id', $params['person_id']);
         }
         //if (!empty($params['schools'])) {
             $query->whereIn('events.school_id', $params['schools']);
