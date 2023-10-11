@@ -3035,6 +3035,8 @@ $('.search-icon').on('click', function() {
         $('#q').append('third <br>');
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
+        $("#pageloader").fadeIn();
+
         document.getElementById("agenda_list").style.display = "none";
 
         console.log('go to current view')
@@ -3268,9 +3270,10 @@ $('.search-icon').on('click', function() {
                 $('#calendar').fullCalendar().find('.fc-day-header').parents('table').hide();
                 //document.getElementById("agenda_list_current").style.display = "block";
                 document.getElementById("agenda_list").style.display = "none";
-
+                $("#pageloader").fadeOut();
             },
             error: function(ts) {
+                $("#pageloader").fadeOut();
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText)
                 console.log(ts.responseText);
