@@ -1739,23 +1739,28 @@ $('.search-icon').on('click', function() {
     //capture events criteria
         $(document).on('click', '#btn_copy_events,#btn_copy_events_mobile', function() {
 
-        document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
-        document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
-		document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
-
-
-        document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
-        document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
-
-		document.getElementById("copy_school_id").value = getSchoolIDs();
-        document.getElementById("copy_event_id").value = getEventIDs();
-		document.getElementById("copy_student_id").value = getStudentIDs();
-        document.getElementById("copy_teacher_id").value = getTeacherIDs();
-
-        console.log('copy start',  document.getElementById("copy_date_from").value)
-        console.log('copy end',  document.getElementById("copy_date_to").value)
-
         var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
+
+        if(cal_view_mode_for_copy.name !== "month") {
+
+            document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
+            document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
+            document.getElementById("copy_view_mode").value =document.getElementById("view_mode").value;
+
+
+            document.getElementById("copy_week_day").value =document.getElementById("week_day").value;
+            document.getElementById("copy_month_day").value =document.getElementById("month_day").value;
+
+            document.getElementById("copy_school_id").value = getSchoolIDs();
+            document.getElementById("copy_event_id").value = getEventIDs();
+            document.getElementById("copy_student_id").value = getStudentIDs();
+            document.getElementById("copy_teacher_id").value = getTeacherIDs();
+
+            console.log('copy start',  document.getElementById("copy_date_from").value)
+            console.log('copy end',  document.getElementById("copy_date_to").value)
+
+        }
+
 		console.log("current view for copy="+cal_view_mode_for_copy.name);
         if(cal_view_mode_for_copy.name === "agendaWeek") {
 		    successModalCall('Copied with success', 'Schedule of current week view is copied ! You can past it in other week.');
@@ -1766,8 +1771,8 @@ $('.search-icon').on('click', function() {
             showMessage('Schedule of current day view is copied!', 'success')
         }
         if(cal_view_mode_for_copy.name === "month") {
-		    successModalCall('Copied with success', 'Schedule of current month view is copied ! You can past it in other month.');
-            showMessage('Schedule of current month view is copied!', 'success')
+		    errorModalCall('You cannot copy your month view at this time. Please copy by day or week.');
+            //showMessage('Schedule of current month view is copied!', 'success')
         }
 
         return false;
@@ -3531,7 +3536,7 @@ $('.search-icon').on('click', function() {
     }
 
 
-    window.addEventListener( "pageshow", function ( event ) {
+   /* window.addEventListener( "pageshow", function ( event ) {
         var historyTraversal = event.persisted ||
                             ( typeof window.performance != "undefined" &&
                                 window.performance.navigation.type === 2 );
@@ -3548,7 +3553,7 @@ $('.search-icon').on('click', function() {
                 window.location.reload(false);
                 //}
         }
-    });
+    });*/
 
     // window.addEventListener('focus', function (event) {
     //     console.log('has focus');

@@ -23,9 +23,25 @@
         </div>
     </header>
 
+    @if(session('locked') == true)
+        <div class="alert alert-warning">One or more students are locked with lessons to be invoiced.
+            <ul>
+                @foreach(session('lockedStudent') as $studentId)
+                    @php
+                        $student = $students->where('id', $studentId)->first();
+                    @endphp
+                    @if($student)
+                        <li>{{ $student->full_name }}</li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+    @endif
+  
     <form action="{{ route('students.delete') }}" method="POST">
         @method('delete')
         @csrf
+        <input name="schoolId" type="hidden" value="{{$schoolId}}">
    <table id="example" class="table table-stripped table-hover" style="width:100%">
         <thead>
             <tr>
@@ -164,11 +180,7 @@
             confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-                )
+                
 
                 var deleteUrl = '{{ route('studentDeleteDestroy', ['school' => ':school', 'student' => ':student']) }}';
                 deleteUrl = deleteUrl.replace(':school', schoolId).replace(':student', studentId);
@@ -191,11 +203,20 @@
                             )
                             $("#row_" + studentId).fadeOut();
                         } else {
-                            Swal.fire(
+                            if(response.isFuturInvoice) {
+                                Swal.fire(
+                                'Student is locked',
+                                'This student has lessons to invoice.',
+                                'error'
+                            )
+                            } else {
+                                Swal.fire(
                                 'Error!',
                                 'An error occurred while deleting the student.',
                                 'error'
                             )
+                            }
+                            
                         }
                     },
                     error: function(error) {

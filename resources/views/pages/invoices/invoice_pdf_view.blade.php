@@ -540,11 +540,18 @@
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->payment_bank_account_name)){?>
-                            <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account_name }}</div>
+                        <?php if(!empty($invoice_data->payment_bank_account && $invoice_data->seller_country_code !== 'CA')){ ?>
+                            <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account }}</div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->payment_bank_name)){?>
-                            <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
+                        <?php if($invoice_data->seller_country_code === "CA"){?>
+                            <?php if(!empty($invoice_data->payment_bank_account_name)){?>
+                                <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_account_name }}</div>
+                            <?php } ?>
+                        <?php } ?>
+                        <?php if($invoice_data->seller_country_code !== "CA"){?>
+                            <?php if(!empty($invoice_data->payment_bank_name)){?>
+                                <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
+                            <?php } ?>
                         <?php } ?>
 
                         <?php if($invoice_data->seller_country_code === "CA"){?>
@@ -565,7 +572,7 @@
                             <div class="txt"><b>Bank Country Code : <b>{{ $invoice_data->payment_bank_country_code }}</div>
                         <?php } ?>-->
                         <?php if(!empty($invoice_data->etransfer_acc)){ ?>
-                            <div class="txt"><b>{{ __('invoice_ac_no') }}</b>{{ $invoice_data->etransfer_acc }}</div>
+                            <div class="txt"><b>{{ __('E-transfer') }}:</b> {{ $invoice_data->etransfer_acc }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->e_transfer_email)){?>
                             <div class="txt"><b>{{ __('invoice_footer_Email') }}</b>{{ $invoice_data->e_transfer_email }}</div>

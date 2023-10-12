@@ -155,6 +155,7 @@
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
+                                                            <option value="USA">Choose a country</option>
                                                             @foreach($countries as $country)
                                                                 <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach

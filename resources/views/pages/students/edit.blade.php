@@ -1544,9 +1544,9 @@ $('#save_btn').click(function (e) {
 
 							if (eventStart.isBefore(now)) {
 								if (value.event_type == 100) {
-									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
 								} else {
-									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
 								}
 							} else {
 								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);

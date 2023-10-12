@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\Level;
 use App\Models\InvoicesTaxes;
+use App\Models\Invoice;
 use App\Models\Province;
 use App\Models\EmailTemplate;
 use App\Models\SchoolTeacher;
@@ -539,24 +540,87 @@ class StudentsController extends Controller
      */
     public function destroyStudent(Request $request)
     {
+        $user = $request->user();
         $schoolId = $request->route('school');
         $studentId = $request->route('student');
-        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
-        $result = array(
-            "status"     => 'success',
-            'message' => __('Successfully deleted student')
-          );
+
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+
+        $timezoneInvoiceList = $school->timezone;
+
+        $query = new Invoice;
+        $allEvents = $query->getStudentInvoiceList($user,$schoolId,'teacher','S',$timezoneInvoiceList);
+
+        $isFuturInvoice = false;
+        foreach ($allEvents as $key => $value) {
+            if($value->person_id == $studentId) {
+                $isFuturInvoice = true;
+            }
+        }
+
+        if(!$isFuturInvoice) {
+            SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->delete();
+            $result = array(
+                "status"     => 'success',
+                'message' => __('Successfully deleted student')
+              );
+        } else {
+            $result = array(
+                "status"     => 'error',
+                "isFuturInvoice" => $isFuturInvoice,
+                'message' => __('Successfully deleted student')
+              );
+        }
+
           return response()->json($result);
     }
 
 
     public function delete(Request $request)
     {
+        $user = $request->user();
+        $schoolId = $request->input('schoolId');
+
+        $school = School::active()->find($schoolId);
+        if (empty($school)) {
+            return redirect()->route('schools')->with('error', __('School is not selected'));
+        }
+        $invoice_type_all = config('global.invoice_type');
+        $payment_status_all = config('global.payment_status');
+        $invoice_status_all = config('global.invoice_status');
+
+        $timezoneInvoiceList = $school->timezone;
+
+        $query = new Invoice;
+        $allEvents = $query->getStudentInvoiceList($user,$schoolId,'teacher','S',$timezoneInvoiceList);
+
         $selectedStudents = $request->input('selected_students', []);
 
         if (empty($selectedStudents)) {
             return redirect()->back()->with('error', 'Please select at least 1 student to delete.');
         }
+
+        $someStudentLocked = false;
+        $lockedStudent = [];
+        
+        foreach ($selectedStudents as $studentId) {
+            $filteredEvents = $allEvents->filter(function ($event) use ($studentId) {
+                return $event->person_id == $studentId;
+            });
+            if ($filteredEvents->isNotEmpty()) {
+                $someStudentLocked = true;
+                $lockedStudent[] = $studentId;
+                $selectedStudents = array_diff($selectedStudents, [$studentId]);
+            }
+        }
+
+        //dd($someStudentLocked);
 
         try {
             DB::beginTransaction();
@@ -566,8 +630,14 @@ class StudentsController extends Controller
             Student::whereIn('id', $selectedStudents)->delete();
 
             DB::commit();
-
-            return redirect()->back()->with('success', 'The selected students have been deleted.');
+            if ($someStudentLocked) {
+                $redirect = redirect()->back()->with('warning', 'Some students have been deleted but one or more students are locked with lessons to be invoiced.');
+                return $redirect->with('locked', true)->with('lockedStudent', $lockedStudent);
+            } else {
+                $redirect = redirect()->back()->with('success', 'The selected students have been deleted.');
+                return $redirect->with('locked', false)->with('lockedStudent', null);
+            }
+            
         } catch (\Exception $e) {
             DB::rollback();
 
