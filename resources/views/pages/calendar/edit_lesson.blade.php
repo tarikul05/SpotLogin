@@ -324,7 +324,11 @@
 																@php
 																$studentName = App\Models\Student::find($student->student_id);
 																@endphp
+                                                                @if(!empty($studentName))
 																{{$studentName->firstname}} {{$studentName->lastname}}
+                                                                @else
+                                                                Student not found (deleted)
+                                                                @endif
 																</td>
 																<td>
 																	<div class="selectdiv">

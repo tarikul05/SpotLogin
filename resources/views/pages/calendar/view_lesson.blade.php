@@ -22,9 +22,9 @@
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area">
-		
-				</div>   
-			</div>          
+
+				</div>
+			</div>
 
 		<!-- Tabs navs -->
 
@@ -37,12 +37,12 @@
 
 	</header>
 
-	
+
 	<div class="row">
 		<div class="col-lg-10">
 
 		<input type="hidden" name="confirm_event_id" id="confirm_event_id" value="{{ !empty($lessonlId) ? $lessonlId : ''; }}">
-							
+
 		<!-- Tabs content -->
 		<div class="tab-content view_part" id="ex1-content">
 			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
@@ -57,7 +57,7 @@
 							</div>
 						@endif
 
-			
+
 						@php
 							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->value('invoice_id');
 						@endphp
@@ -92,7 +92,7 @@
 										{{ !empty($lessonCategory->title) ? $lessonCategory->title : ''; }}
 									</div>
 								</div>
-	
+
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Professor') }} :</label>
 									<div class="col-sm-7">
@@ -103,17 +103,24 @@
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Student') }} :</label>
 									<div class="col-sm-7">
 
-									<?php $i=1; $count = count($studentOffList); 
+									<?php $i=1; $count = count($studentOffList);
 										foreach($studentOffList as $student){
 											//echo $student->nickname;
 											$studentName = App\Models\Student::find($student->student_id);
-											echo $studentName->firstname . ' ' . $studentName->lastname;
-											if($i != $count){
-												echo ', ';
-											}
+                                            if(!empty($studentName)) {
+                                                echo $studentName->firstname . ' ' . $studentName->lastname;
+                                                if($i != $count){
+                                                    echo ', ';
+                                                }
+                                            } else {
+                                                echo 'Student not found (deleted)';
+                                                if($i != $count){
+                                                    echo ', ';
+                                                }
+                                            }
 										$i++;
 										}
-									?>	
+									?>
 									</div>
 								</div>
 								<div class="form-group row">
@@ -162,7 +169,7 @@
 							<div class="card">
 								<div class="card-body bg-tertiary">
 							<div class="row">
-								
+
 							<div class="col-md-12">
 								<div class="form-group row">
 									<div class="col-sm-12">
@@ -198,7 +205,11 @@
 																@php
 																$studentName = App\Models\Student::find($student->student_id);
 																@endphp
+                                                                @if(!empty($studentName))
 																{{$studentName->firstname}} {{$studentName->lastname}}
+                                                                @else
+                                                                Student not found (deleted)
+                                                                @endif
 																</td>
 																<td><?php if(!empty($student->participation_id)){ if($student->participation_id == 0 ){ echo 'scheduled'; }elseif($student->participation_id == 199 ){ echo 'Absent'; }elseif($student->participation_id == 200 ){ echo 'Present'; } }  ?></td>
 																@if($showPrice)
@@ -246,7 +257,7 @@
 
 							</div>
 						</div>
-						
+
 					</fieldset>
 					<!--<button id="save_btn" class="btn btn-theme-back">{{ __('Back') }} </button>-->
 			</div>
@@ -262,11 +273,11 @@
 			</div>
 			<div class="card" style="border-radius: 8px 0 0 8px; background-color: #EEE;">
 				<div class="card-body p-3 pb-3 text-center">
-					<a class="btn btn-sm btn-info w-100 text-white mb-2" href="<?= $BASE_URL;?>/agenda" id="back_btn"> 
+					<a class="btn btn-sm btn-info w-100 text-white mb-2" href="<?= $BASE_URL;?>/agenda" id="back_btn">
 						<i class="fa-solid fa-arrow-left"></i>
 						{{ __('Back')}}
 					</a>
-					
+
 					@if((($AppUI->person_id == $lessonData->teacher_id) || (($lessonData->eventcategory->invoiced_type == 'S') && ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()))) && ($lessonData->is_locked ==1))
 
 						<button class="btn btn-sm btn-warning w-100" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>
@@ -340,23 +351,23 @@
 									window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
 								}
 								})
-							
+
 						}
 						else {
 							errorModalCall('{{ __("Event validation error ")}}');
 						}
-					},  
+					},
 					complete: function( xhr ) {
 					},
-					error: function (ts) { 
+					error: function (ts) {
 						$("#pageloader").fadeOut();
 						ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
 					}
-				});  
+				});
 			}
 			})
     	}
-        
+
         var status = '';
         $.ajax({
             url: BASE_URL + '/confirm_event',
@@ -374,14 +385,14 @@
                 else {
                     errorModalCall('{{ __("Event validation error ")}}');
                 }
-            },  
+            },
             complete: function( xhr ) {
             },
-            error: function (ts) { 
+            error: function (ts) {
 				$("#pageloader").fadeOut();
                 ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
-        });           
+        });
 
     }
 </script>
