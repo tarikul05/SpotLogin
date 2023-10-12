@@ -648,6 +648,19 @@ class AgendaController extends Controller
                     // $student_name .= $student->firstname;
                     $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname;
                     $i++;
+                } else {
+                    if ($i!=0) {
+                        if ($i==count($eventDetailsStudentId)) {
+                            $student_name .='';
+                        } else {
+                            $student_name .=', ';
+                        }
+                    }else{
+                        $first_student_name = 'Student not found (deleted)';
+                    }
+                    // $student_name .= $student->firstname;
+                    $student_name .= 'Student not found (deleted)';
+                    $i++;
                 }
             }
 
@@ -710,7 +723,7 @@ class AgendaController extends Controller
                     }
                 }
 
-                if ($fetch->duration_minutes > 60) {
+                if ($fetch->duration_minutes > 5) {
                     if ($user->isTeacherAdmin()) {
 
                         //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
@@ -722,7 +735,7 @@ class AgendaController extends Controller
                     }
                     $e['title'] = $e['title'].' ('.$student_name. ')';
                 }
-                elseif($fetch->duration_minutes > 44){
+                elseif($fetch->duration_minutes > 5){
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
                 if($fetch->event_type != 100) {

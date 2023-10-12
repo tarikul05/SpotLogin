@@ -2842,6 +2842,7 @@ $('.search-icon').on('click', function() {
         var p_event_location_id=getLocationIDs();
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
+        $("#pageloader").fadeIn();
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
@@ -3040,7 +3041,7 @@ $('.search-icon').on('click', function() {
         $('#q').append('third <br>');
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
-        $("#pageloader").fadeIn();
+
 
         document.getElementById("agenda_list").style.display = "none";
 
@@ -3071,9 +3072,7 @@ $('.search-icon').on('click', function() {
                 if (firstLoad =='firstLoad') {
                     $("#agenda_table tr:gt(0)").remove();
                 } else {
-
                     first();
-
                 }
                 json_events = s;
                 var selected_ids = [];
