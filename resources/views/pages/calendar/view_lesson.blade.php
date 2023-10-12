@@ -56,6 +56,20 @@
 								<!--<button class="btn btn-sm btn-warning" onclick="confirm_event(true)"><i class="fa-solid fa-lock-open"></i> Unlock</button>-->
 							</div>
 						@endif
+
+			
+						@php
+							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->value('invoice_id');
+						@endphp
+
+						@if ($invoiceId)
+						<div class="alert alert-warning">
+							<label>This lessons have an invoice attached to it. <a href="{{ route('adminmodificationInvoice',[$schoolId,$invoiceId]) }}">See invoice #{{$invoiceId}}</a></label>
+						</div>
+						@endif
+
+
+
 						<div class="card">
 							<div class="card-body bg-tertiary">
 						<div class="row">
@@ -273,12 +287,75 @@
 @section('footer_js')
 <script type="text/javascript">
 	function confirm_event(unlock=false){
+		var invoiceId = {{ json_encode($invoiceId) }};
         var p_event_auto_id=document.getElementById('confirm_event_id').value;
         console.log(p_event_auto_id);
         var data = 'p_event_auto_id=' + p_event_auto_id;
         if (unlock) {
             var data = 'unlock=1&p_event_auto_id=' + p_event_auto_id;
         }
+
+		if (unlock && invoiceId) {
+        	return Swal.fire({
+			title: 'Are you sure?',
+			text: "Be carrefull, this lessons already as an invoice attached to it. If you unlock it, the lesson will show in the lessons to be invoiced again and might be invoiced twice, please check",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, unlock it!'
+			}).then((result) => {
+			if (result.isConfirmed) {
+				var status = '';
+				$.ajax({
+					url: BASE_URL + '/confirm_event',
+					data: data,
+					type: 'POST',
+					dataType: 'json',
+					beforeSend: function( xhr ) {
+						$("#pageloader").fadeIn();
+					},
+					success: function (result) {
+						status = result.status;
+						if (status == 'success') {
+							$("#pageloader").fadeOut();
+							let timerInterval
+								Swal.fire({
+								title: 'Invoice has been unlocked!',
+								timer: 2000,
+								timerProgressBar: true,
+								didOpen: () => {
+									Swal.showLoading()
+									const b = Swal.getHtmlContainer().querySelector('b')
+									timerInterval = setInterval(() => {
+									b.textContent = Swal.getTimerLeft()
+									}, 100)
+								},
+								willClose: () => {
+									clearInterval(timerInterval)
+								}
+								}).then((result) => {
+								/* Read more about handling dismissals below */
+								if (result.dismiss === Swal.DismissReason.timer) {
+									window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
+								}
+								})
+							
+						}
+						else {
+							errorModalCall('{{ __("Event validation error ")}}');
+						}
+					},  
+					complete: function( xhr ) {
+					},
+					error: function (ts) { 
+						$("#pageloader").fadeOut();
+						ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
+					}
+				});  
+			}
+			})
+    	}
         
         var status = '';
         $.ajax({
@@ -292,26 +369,19 @@
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    // if (unlock) {
-                    //     successModalCall('{{ __("Event has been unlocked ")}}');
-                    // } else{
-                    //     successModalCall('{{ __("Event has been validated ")}}');
-                    // }
-					// window.location.reload();
 					window.location.href = '/{{$schoolId}}/edit-lesson/{{$lessonlId}}'
                 }
                 else {
                     errorModalCall('{{ __("Event validation error ")}}');
                 }
-            },   //success
+            },  
             complete: function( xhr ) {
-                //$("#pageloader").fadeOut();
             },
             error: function (ts) { 
 				$("#pageloader").fadeOut();
                 ts.responseText+'-'+errorModalCall('{{ __("Event validation error ")}}');
             }
-        }); //ajax-type            
+        });           
 
     }
 </script>

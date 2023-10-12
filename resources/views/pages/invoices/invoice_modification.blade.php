@@ -656,11 +656,10 @@
                                 <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-right">Country :</label>
                                 <div class="col-sm-5">
                                     <div class="selectdiv">
-                                        <select class="form-control" id="client_country_id" name="client_country_id">
-                                            <option value="CA">Canada</option>
-                                            <option value="FR">France</option>
-                                            <option value="CH">Switzerland</option>
-                                            <option value="US">United States</option>
+                                        <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
+                                            @foreach($countries as $country)
+                                                    <option value="{{ $country->code }}" {{!empty($invoice->client_country_code) ? (old('country_code', $invoice->client_country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -733,11 +732,10 @@
                                 <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-right">Country :</label>
                                 <div class="col-sm-5">
                                     <div class="selectdiv">
-                                        <select class="form-control" id="seller_country_id" name="seller_country_id">
-                                            <option value="CA">Canada</option>
-                                            <option value="FR">France</option>
-                                            <option value="CH">Switzerland</option>
-                                            <option value="US">United States</option>
+                                        <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
+                                            @foreach($countries as $country)
+                                                    <option value="{{ $country->code }}" {{!empty($invoice->seller_country_code) ? (old('country_code', $invoice->seller_country_code) == $country->code ? 'selected' : '') : (old('country_code') == $country->code ? 'selected' : '')}}>{{ $country->name }} ({{ $country->code }})</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -784,9 +782,43 @@
                                     <div class="form-group row">
                                         <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference:</label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="etransfer_acc" name="etransfer_acc" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}">
+                                            @if($invoice->seller_country_code == 'CA')
+                                            <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}">
+                                            @else
+                                            <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_name ? $invoice->payment_bank_name :''}}">
+                                            @endif
                                         </div>
                                     </div>
+
+                                    @if($invoice->seller_country_code == 'CA')
+                                        <div class="form-group row">
+                                            <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference 2:</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="spayment_bank_account" name="spayment_bank_account" value="{{$invoice->payment_bank_account ? $invoice->payment_bank_account :''}}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference 3:</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="spayment_bank_iban" name="spayment_bank_iban" value="{{$invoice->payment_bank_iban ? $invoice->payment_bank_iban :''}}">
+                                            </div>
+                                        </div>
+                                    @else
+                                    <div class="form-group row" style="display:none;">
+                                        <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Bank Account:</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="spayment_bank_account" name="spayment_bank_account" value="{{$invoice->payment_bank_account ? $invoice->payment_bank_account :''}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">IBAN No:</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="spayment_bank_iban" name="spayment_bank_iban" value="{{$invoice->payment_bank_iban ? $invoice->payment_bank_iban :''}}">
+                                        </div>
+                                    </div>
+                                    @endif
+
+
                                     <div class="form-group row">
                                         <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">To pay by e-transfer:</label>
                                         <div class="col-sm-6">
@@ -803,18 +835,18 @@
                                     <div class="form-group row">
                                         <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="spayment_bank_account_name" class="col-lg-3 col-sm-3 text-right">Payment Bank Account Name</label>
                                         <div class="col-sm-7">
-                                            <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}" placeholder="" maxlength="150">
+                                            <input type="text" class="form-control" id="spayment_bank_account_name2" name="spayment_bank_account_name2" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}" placeholder="" maxlength="150">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label id="iban_caption" name="iban_caption" for="spayment_bank_iban" class="col-lg-3 col-sm-3 text-right">IBAN No</label>
                                         <div class="col-sm-5">
-                                            <input type="text" class="form-control" id="spayment_bank_iban" name="spayment_bank_iban" value="{{$invoice->payment_bank_iban ? $invoice->payment_bank_iban :''}}" placeholder="" maxlength="50"> </div>
+                                            <input type="text" class="form-control" id="spayment_bank_iban2" name="spayment_bank_iban2" value="{{$invoice->payment_bank_iban ? $invoice->payment_bank_iban :''}}" placeholder="" maxlength="50"> </div>
                                     </div>
                                     <div class="form-group row">
                                         <label id="account_number" name="account_number" for="spayment_bank_account" class="col-lg-3 col-sm-3 text-right">Account No</label>
                                         <div class="col-sm-3">
-                                            <input type="text" class="form-control" id="spayment_bank_account" name="spayment_bank_account" value="{{$invoice->payment_bank_account ? $invoice->payment_bank_account :''}}" placeholder="" maxlength="30">
+                                            <input type="text" class="form-control" id="spayment_bank_account2" name="spayment_bank_account2" value="{{$invoice->payment_bank_account ? $invoice->payment_bank_account :''}}" placeholder="" maxlength="30">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -1595,7 +1627,7 @@ function extractExtraCharges($inputString) {
         form_data.append('type', 'update_invoice_info');
         form_data.append('p_invoice_id', p_invoice_id);
 
-    //  return  console.log(form_data)
+      //return  console.log(form_data)
 
         // return false;
         $.ajax({
@@ -1608,7 +1640,7 @@ function extractExtraCharges($inputString) {
             cache: false,
             processData: false,
             success: function (result) {
-                //console.log(result);
+                console.log(result);
                 var status = result.status;
                 if (status == 'success') {
                     successModalCall('Invoice issued');

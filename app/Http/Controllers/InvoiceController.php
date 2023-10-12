@@ -480,7 +480,7 @@ class InvoiceController extends Controller
 
             $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account_name']);
             $updateInvoice['payment_bank_iban']=trim($data['spayment_bank_iban']);
-            $updateInvoice['payment_bank_account_name']=trim($data['spayment_bank_account']);
+            $updateInvoice['payment_bank_account']=trim($data['spayment_bank_account']);
             $updateInvoice['payment_bank_swift']=trim($data['spayment_bank_swift']);
             $updateInvoice['payment_bank_name']=trim($data['spayment_bank_name']);
             $updateInvoice['payment_bank_address']=trim($data['spayment_bank_address']);
@@ -501,7 +501,7 @@ class InvoiceController extends Controller
             return response()->json($result);
         } catch (Exception $e) {
             //return error message
-            $result['message'] = __('Internal server error');
+            $result['message'] = $e->getMessage();
             return response()->json($result);
         }
     }
@@ -1158,6 +1158,8 @@ class InvoiceController extends Controller
             if ($user->isTeacherSchoolAdmin()) {
                 $invoice_type = ($inv_type == 'school') ? 'S' : 'T';
             }
+
+            $data['currency'] = $school->default_currency_code;
 
 
             $dataMap = new InvoiceDataMapper();
