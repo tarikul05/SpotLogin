@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\TestBatch::class,
-        Commands\SendEmailInvitation::class
+        Commands\SendEmailInvitation::class,
+        Commands\CheckEventTable::class,
     ];
     /**
      * Define the application's command schedule.
@@ -32,6 +33,7 @@ class Kernel extends ConsoleKernel
         //     //->everyThirtyMinutes()
         //     // ->runInBackground()
         // ;
+        $schedule->command('events:check')->everyFiveMinutes();
     }
 
     /**
