@@ -52,7 +52,6 @@ class School extends BaseModel
         'bank_place',
         'bank_country_code',
         'bank_province_id',
-
         'contact_gender_id',
         'contact_lastname',
         'contact_firstname',
@@ -78,12 +77,13 @@ class School extends BaseModel
         'cheque_payee',
         'tax_number',
         'invoice_opt_activated',
+        'discipline',
         'is_active',
         'created_by',
         'modified_by'
     ];
 
-  
+
 
     /**
      * The attributes that should be casted to native types.
@@ -104,7 +104,7 @@ class School extends BaseModel
     public function teachers()
     {
         return $this->belongsToMany(Teacher::class)
-                    ->whereNull('school_teacher.deleted_at') 
+                    ->whereNull('school_teacher.deleted_at')
                     ->withPivot( 'nickname', 'licence_js', 'role_type', 'is_teacher', 'has_user_account', 'bg_color_agenda', 'comment', 'is_active', 'created_at','deleted_at');
     }
 
@@ -115,7 +115,7 @@ class School extends BaseModel
     public function students()
     {
         return $this->belongsToMany(Student::class)
-                    ->whereNull('school_student.deleted_at') 
+                    ->whereNull('school_student.deleted_at')
                     ->withPivot( 'nickname', 'email', 'billing_method', 'level_id', 'has_user_account', 'licence_arp', 'level_skating_arp', 'level_date_arp', 'licence_usp', 'level_skating_usp', 'level_date_usp', 'comment', 'is_active', 'created_at','deleted_at');
     }
 
@@ -145,11 +145,11 @@ class School extends BaseModel
     {
         return $this->belongsTo(AttachedFile::class, 'logo_image_id', 'id');
     }
-   
+
 
      /**
      * filter data based request parameters
-     * 
+     *
      * @param array $params
      * @return $query
      */
@@ -162,12 +162,12 @@ class School extends BaseModel
         if (isset($params['sort']) && !empty($params['sort'])) {
             $sortExplode = explode('-', $params['sort']);
             $query->orderBy($sortExplode[0],$sortExplode[1]);
-        } else { 
+        } else {
             $query->orderBy('id', 'desc');
         }
         return $query;
     }
-    
+
 
 }
 

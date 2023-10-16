@@ -311,7 +311,7 @@
                             @if ($invoice_data->invoice_type > 0)
                                 <?php
                                 if($item->no_of_students == 1) {
-                                    echo 'Private Lesson';
+                                    echo 'Private';
                                 } else {
                                     echo 'Group of ' . $item->no_of_students . ' students';
                                 } ?>

@@ -37,7 +37,7 @@
             </ul>
         </div>
     @endif
-  
+
     <form action="{{ route('students.delete') }}" method="POST">
         @method('delete')
         @csrf
@@ -81,7 +81,7 @@
                             <!--<button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
                             </button>-->
-                            <a href="javascript:void(0)" role="button" class="badge  send-invite-btn" style="width: 120px; size:11px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <a href="javascript:void(0)" role="button" class="badge  send-invite-btn" style="width: 130px; size:11px; background-color:#17a2b8; border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                 <i class="fa-solid fa-envelope"></i> Send invite
                             </a>
                         @endcan
@@ -90,7 +90,7 @@
                         <!--<button class="send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                             <i class="fa-solid fa-envelope"></i> Re-send password
                         </button>-->
-                        <a href="javascript:void(0)" role="button" class="btn btn-primary btn-md send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                        <a href="javascript:void(0)" role="button" class="badge send-invite-btn send-password-btn" style="width: 130px; size:11px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                             <i class="fa-solid fa-envelope"></i> Resend password
                         </a>
                     @endif
@@ -180,7 +180,7 @@
             confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
             if (result.isConfirmed) {
-                
+
 
                 var deleteUrl = '{{ route('studentDeleteDestroy', ['school' => ':school', 'student' => ':student']) }}';
                 deleteUrl = deleteUrl.replace(':school', schoolId).replace(':student', studentId);
@@ -216,7 +216,7 @@
                                 'error'
                             )
                             }
-                            
+
                         }
                     },
                     error: function(error) {

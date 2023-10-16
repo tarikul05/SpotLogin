@@ -956,6 +956,9 @@ button#save_btn_more i {
 .multiselect optgroup {
     font-size:11px;
 }
+.hide-custom-price {
+    display: none;
+}
 @media only screen and (max-width: 992px) {
 
 	.btn_actions {

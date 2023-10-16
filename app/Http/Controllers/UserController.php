@@ -60,14 +60,22 @@ class UserController extends Controller
             $roleType = ($school_type=='COACH') ? 'teachers_admin' : 'school_admin';
             $scType = ($school_type=='COACH') ? 'C' : 'S';
             $school_code = strtolower($data['username']);
+            $selectedDiscipline = trim($data['discipline']);
+
+            if ($selectedDiscipline === "other-discipline") {
+                $discipline = trim($data['discipline2']);
+            } else {
+                $discipline = trim($selectedDiscipline);
+            }
 
             $schoolData = [
                 'school_code' => $school_code,
-                'school_name' => $data['fullname'],
+                'school_name' => trim($data['fullname']),
                 'incorporation_date'=> now(),
                 'country_code' => $data['country_code'],
-                'email'=>$data['email'],
-                'sender_email'=>$data['email'],
+                'email'=>trim($data['email']),
+                'sender_email'=>trim($data['email']),
+                'discipline'=>$discipline,
                 'school_type'=>$scType,
                 'max_students'=>0,
                 'max_teachers'=>0,
@@ -87,13 +95,14 @@ class UserController extends Controller
             $school = School::create($schoolData);
             $school->save();
 
+
             $teacherData = [
-                'lastname' => '',
-                'middlename'=>'',
-                'firstname'=>$data['fullname'],
-                'email'=>$data['email'],
+                'middlename'=>trim($data['firstname']) . ' ' . trim(strtoupper(ucfirst($data['lastname']))),
+                'firstname'=>trim($data['firstname']),
+                'lastname'=>trim($data['lastname']),
+                'email'=>trim($data['email']),
                 'country_code'=>$data['country_code'],
-                'is_active' =>1
+                'is_active' => 1
             ];
 
 
@@ -108,20 +117,20 @@ class UserController extends Controller
                 'person_id' => $teacher->id,
                 'person_type' =>'App\Models\Teacher',
                 'school_id' => $school->id,
-                'username' =>$data['username'],
-                'lastname' => '',
-                'middlename'=>'',
-                'firstname'=>$data['fullname'],
-                'email'=>$data['email'],
-                'password'=>$data['password'],
-                'is_mail_sent'=>0,
-                'is_active'=>1,
-                'is_firstlogin'=>0,
+                'username' =>trim($data['username']),
+                'lastname' => trim($data['lastname']),
+                'middlename'=> trim($data['firstname']) . ' ' . trim(strtoupper(ucfirst($data['lastname']))),
+                'firstname'=> trim($data['firstname']),
+                'email'=> trim($data['email']),
+                'password'=> trim($data['password']),
+                'is_mail_sent'=> 0,
+                'is_active'=> 1,
+                'is_firstlogin'=> 0,
                 'trial_ends_at' => $trialEndsAt,
             ];
             $strip_userdata = [
-                'email'=> $data['email'],
-                'name' => $data['fullname'],
+                'email'=> trim($data['email']),
+                'name' => trim($data['fullname']),
             ];
             $user = User::create($usersData);
             $user->save();

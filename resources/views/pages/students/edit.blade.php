@@ -435,6 +435,15 @@
 						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_1" >{{__("Parent 1") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
+										<input class="form-control" id="parent_name_1" name="parent_name_1" value="{{!empty($student->parent_name_1) ? old('parent_name_1', $student->parent_name_1) : old('parent_name_1')}}" type="text">
+									</div>
+								</div>
+							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" >{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
@@ -464,6 +473,15 @@
 							</div>
 						</div>
 						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_2" id="parent_name_2">{{__("Parent 2") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox" name="parent_name_2" value="1" {{ !empty($student->parent_name_2) ? 'checked' : '' }} ></span>
+										<input class="form-control" id="parent_name_2" name="parent_name_2" value="{{!empty($student->parent_name_2) ? old('parent_name_2', $student->parent_name_2) : old('parent_name_2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father's email") }} :</label>
 								<div class="col-sm-7">

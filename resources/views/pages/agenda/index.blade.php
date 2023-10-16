@@ -2888,7 +2888,7 @@ $('.search-icon').on('click', function() {
                                     selected_validate_ids.push('<tr><td>Date</td><td><b>'+start+' to '+end_date+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                    selected_validate_ids.push('<tr><td><b>Date</b></td><td><b>'+start+' to '+end_date+'</td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                                    selected_validate_ids.push('<tr><td><b>Date</b></td><td><b>'+start+' to '+end_date+'</td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
                             }
                         }
                         else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
@@ -2897,14 +2897,14 @@ $('.search-icon').on('click', function() {
                                 selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
                             }
 
                         }
 
                         if (JSON.parse(json_events)[key].is_locked ==0) {
                              if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
-                                selected_non_validate_delete_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                                selected_non_validate_delete_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
                                 selected_non_validate_delete_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
@@ -2967,7 +2967,7 @@ $('.search-icon').on('click', function() {
                 //$("#agenda_table tr:gt(0)").remove();
                 //$("#agenda_table_current tr:gt(0)").remove();
                 $('#calendar').fullCalendar('removeEvents');
-                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
+                $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events));
                 $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
                 $('#calendar').fullCalendar('refetchEventSources',JSON.parse(json_events))
                 $('#calendar').fullCalendar('rerenderEvents' );
@@ -3258,9 +3258,9 @@ $('.search-icon').on('click', function() {
                 if (firstLoad =='firstLoad') {
                     $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
                     $('#calendar').fullCalendar('removeEvents');
-                    $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events) )
+                    $('#calendar').fullCalendar( 'removeEventSource', JSON.parse(json_events));
                     $('#calendar').fullCalendar('addEventSource', JSON.parse(json_events));
-                    $('#calendar').fullCalendar('refetchEventSources',JSON.parse(json_events))
+                    $('#calendar').fullCalendar('refetchEventSources', JSON.parse(json_events));
                     $('#calendar').fullCalendar('rerenderEvents' );
                     $('#calendar').fullCalendar('refetchEvents');
                     $('#calendar').fullCalendar({ events: JSON.parse(json_events) });
