@@ -1,24 +1,19 @@
-@extends('layouts.main')
+@extends('layouts.navbar')
 
 @section('content')
 
     <div class="content">
-        <div class="container-fluid body pt-3">
 
-                <header class="panel-heading" style="border: none;">
-                    <div class="row pt-2" style="margin:0;">
-                        <div class="col-lg-6 col-12 header-area">
-                                <div class="page_header_class pt-1">
-                                    <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
-                                        {{ isset($category) ? 'Edit Category' : 'Create a new category' }}
-                                    </h1>
-                                </div>
-                        </div>
-                        <div class="col-lg-6 col-12" style="text-align: right;">
-                            <a class="btn btn-default" href="{{ route('categories.list') }}">Return</a>
-                        </div>
+        <br><br><br>
+        <div class="container-fluid">
+            <div class="row">
+                <h3 class="col-lg-6 col-md-6 col-xs-12">{{ isset($category) ? 'Edit Category' : 'Create a new category' }}</h3>
+                    <div class="col-lg-6 col-md-6 col-xs-12 text-right">
+                        <a class="btn btn-primary btn-sm" href="{{ route('categories.list') }}">
+                            <i class="fa-solid fa-arrow-left"></i> Back
+                        </a>
                     </div>
-                </header>
+                    </div>
 
 
 <div class="card">

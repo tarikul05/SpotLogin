@@ -131,7 +131,7 @@
                         @if ($invoice->invoice_type == 0)
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b></td>
                         @else
-                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ $invoice->total_amount }}</b></td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b></td>
                         @endif
 
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>

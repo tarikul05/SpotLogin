@@ -341,6 +341,8 @@ class StudentsController extends Controller
                     'billing_street_number' => $alldata['billing_street_number'],
                     'billing_zip_code' => $alldata['billing_zip_code'],
                     'billing_place' => $alldata['billing_place'],
+                    'parent_name_1' => $alldata['parent_name_1'],
+                    'parent_name_2' => $alldata['parent_name_2'],
                     'billing_country_code' => $alldata['billing_country_code'],
                     'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id']: null,
                     'father_phone' => $alldata['father_phone'],
@@ -608,7 +610,7 @@ class StudentsController extends Controller
 
         $someStudentLocked = false;
         $lockedStudent = [];
-        
+
         foreach ($selectedStudents as $studentId) {
             $filteredEvents = $allEvents->filter(function ($event) use ($studentId) {
                 return $event->person_id == $studentId;
@@ -637,7 +639,7 @@ class StudentsController extends Controller
                 $redirect = redirect()->back()->with('success', 'The selected students have been deleted.');
                 return $redirect->with('locked', false)->with('lockedStudent', null);
             }
-            
+
         } catch (\Exception $e) {
             DB::rollback();
 

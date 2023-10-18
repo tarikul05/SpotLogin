@@ -58,7 +58,11 @@ class AuthController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            return redirect(RouteServiceProvider::HOME);
+            if (!$user->isSuperAdmin()) {
+                return redirect(RouteServiceProvider::HOME);
+            } else {
+                return redirect(RouteServiceProvider::SUPERADMIN);
+            }
         }
 
         $template = TermConditionLang::where([
@@ -79,7 +83,13 @@ class AuthController extends Controller
     public function login(){
         if (Auth::check()) {
             $user = Auth::user();
-            return redirect(RouteServiceProvider::HOME);
+
+            if (!$user->isSuperAdmin()) {
+                return redirect(RouteServiceProvider::HOME);
+            } else {
+                return redirect(RouteServiceProvider::SUPERADMIN);
+            }
+
         }
         return view('pages.auth.login', ['title' => 'User Login','pageInfo'=>['siteTitle'=>'']]);
     }

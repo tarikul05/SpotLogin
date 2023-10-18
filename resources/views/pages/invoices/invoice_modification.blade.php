@@ -1549,8 +1549,8 @@ function extractExtraCharges($inputString) {
     });
 
     function UpdateInvoiceSummaryAmount() {
-        var p_invoice_id = document.getElementById("invoice_id").value;
-
+         var p_invoice_id = document.getElementById("invoice_id").value;
+        return p_invoice_id;
         if (p_invoice_id == '') {
             errorModalCall(GetAppMessage('Invalid_invoice'));
 

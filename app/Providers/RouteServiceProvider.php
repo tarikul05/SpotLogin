@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    
+
     /**
      * The path to the "home" route for your application.
      *
@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/agenda';
-    public const SUPERADMIN = '/admin/schools';
+    public const SUPERADMIN = '/admin/dashboard';
     public const ROOT = '/';
     public const LOGIN = '/';
 

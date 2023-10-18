@@ -538,6 +538,9 @@
                <div class="h5 pt-2" style="color:#0075bf;">My account</div>
                 <table class="table table-stripped table-hover">
                   <tr><td width="250"><b>Connected to school</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
+                  @if($AppUI->related_school->discipline != null)
+                  <tr><td width="250"><b>Activity</b></td> <td>{{  $AppUI->related_school->discipline }}</td></tr>
+                  @endif
                   <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
                   <tr><td><b>Account timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
                   @php

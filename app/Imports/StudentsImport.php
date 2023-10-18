@@ -23,7 +23,7 @@ class StudentsImport implements ToModel, WithHeadingRow
     private $recordUpdated = 0;
     private $recordInserted = 0;
 
-    public function __construct(int $school_id) 
+    public function __construct(int $school_id)
     {
         $this->school_id = $school_id;
     }
@@ -55,6 +55,9 @@ class StudentsImport implements ToModel, WithHeadingRow
             'billing_street_number' => !empty($row['billing_street_no']) ? $row['billing_street_no'] : '',
             'billing_zip_code' => !empty($row['billing_postal_code']) ? $row['billing_postal_code'] : '',
             'billing_place' => !empty($row['billing_city']) ? $row['billing_city'] : '',
+
+            'parent_name_1' => !empty($row['parent_name_1']) ? $row['parent_name_1'] : '',
+            'parent_name_2' => !empty($row['parent_name_2']) ? $row['parent_name_2'] : '',
 
             'father_phone' => !empty($row['fathers_phone']) ? $row['fathers_phone'] : '',
             'father_email' => !empty($row['fathers_email']) ? $row['fathers_email'] : '',
@@ -127,36 +130,36 @@ Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
                 $teacher =Student::create($studentData);
                 $schoolStudentData['student_id'] = $teacher->id;
                 $teacherSchool = SchoolStudent::create($schoolStudentData);
-               DB::commit(); 
+               DB::commit();
                ++$this->recordInserted;
                Log::info("student and school_student new entry");
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Student email: ".$data['email']." failed 1st condtions in schoolId=".$this->school_id);
             }
-                
+
         }elseif (empty($schoolStdExist) && !empty($stdExist)) {
             DB::beginTransaction();
             try {
                 $schoolStudentData['student_id'] = $stdExist->id;
                 $teacherSchool = SchoolStudent::create($schoolStudentData);
                 $teacher =Student::where('id', $stdExist->id)->update($studentData);
-               DB::commit(); 
+               DB::commit();
                ++$this->recordInserted;
-               
+
                Log::info("student update and school_student new entry");
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error("import Student email: ".$data['email']." failed 2nd condtions in schoolId=".$this->school_id);
             }
-            
+
         }elseif (!empty($schoolStdExist) && !empty($stdExist)) {
             DB::beginTransaction();
             // dd('OMG');
             try {
                 $teacher =Student::where('id', $stdExist->id)->update($studentData);
                 $teacherSchool = SchoolStudent::where(['student_id'=> $stdExist->id, 'school_id'=> $this->school_id])->update($schoolStudentData);
-                DB::commit(); 
+                DB::commit();
                 ++$this->recordUpdated;
                 Log::info("both exist and updated");
             } catch (Exception $e) {
@@ -164,7 +167,7 @@ Log::info("Import Student ".$data['email']." in schoolId=".$this->school_id);
                 Log::error("import Student email: ".$data['email']." failed 3rd condtions in schoolId=".$this->school_id);
             }
         }else{
-           Log::info("Not updated Student ".$data['email']." in schoolId=".$this->school_id); 
+           Log::info("Not updated Student ".$data['email']." in schoolId=".$this->school_id);
         }
     }
 

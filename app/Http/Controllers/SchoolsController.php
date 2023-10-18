@@ -10,10 +10,14 @@ use App\Models\Country;
 use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\User;
+use App\Models\ContactForm;
 use App\Models\MonthlyInvoiceRun;
 use App\Models\EventCategory;
 use App\Models\Location;
 use App\Models\Level;
+use App\Models\Task;
+use App\Models\Alert;
+use App\Models\Event;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -29,7 +33,7 @@ use DB;
 
 class SchoolsController extends Controller
 {
-
+    protected $stripe;
 
     /**
      * create a new instance of the class
@@ -39,6 +43,7 @@ class SchoolsController extends Controller
     function __construct()
     {
         parent::__construct();
+        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $this->middleware('permission:schools-list|schools-udpate|schools-user-udpate|schools-delete', ['only' => ['index']]);
         $this->middleware('permission:schools-udpate', ['only' => ['edit','update','logoUpdate','logoDelete']]);
         $this->middleware('permission:schools-user-udpate', ['only' => ['schoolEmailSend','userUpdate']]);
@@ -62,8 +67,59 @@ class SchoolsController extends Controller
             $params = $request->all();
             $query = $school->filter($params);
             $schools = $query->get();
+
+            //Count Schools
+            $countSchools = $query->count();
+
+            $thirtyDaysAgo = now()->subDays(30);
+            $events = Event::where('date_start', '>=', $thirtyDaysAgo)->get();
+
+            $subsriptions = $this->stripe->subscriptions->all();
+            $subTrial = 0;
+            $subActive = 0;
+            $subCanceled = 0;
+            $subPastDue = 0;
+            $totalAmountActivePlans = 0;
+            $totalAmountActivePlans = 0;
+            foreach ($subsriptions as $sub) {
+                if ($sub->status == 'active') {
+                    // Obtenez le montant de l'abonnement actif
+                    $totalAmountActivePlans += $sub->items->data[0]->plan->amount;
+                }
+            }
+            $totalAmountActivePlans = $totalAmountActivePlans / 100;
+            $stats['totalAmountActivePlans'] = $totalAmountActivePlans;
+
+            foreach ($subsriptions as $sub) {
+                if ($sub->status == 'trialing') {
+                    $subTrial++;
+                } else if ($sub->status == 'active') {
+                    $subActive++;
+                } else if ($sub->status == 'canceled') {
+                    $subCanceled++;
+                } else if ($sub->status == 'past_due') {
+                    $subPastDue++;
+                }
+            }
+
+            $taskCount = Task::count();
+            $alertCount = Alert::count();
+            $ContactFormCount = ContactForm::count();
+
+            $stats['subTrial'] = $subTrial;
+            $stats['subActive'] = $subActive;
+            $stats['subCanceled'] = $subCanceled;
+            $stats['subPastDue'] = $subPastDue;
+            $stats['countSchools'] = $countSchools;
+            $stats['subsriptions'] = $subsriptions;
+            $stats['schools'] = $schools;
+            $stats['totalAmountActivePlans'] = $totalAmountActivePlans;
+            $stats['taskCount'] = $taskCount;
+            $stats['alertCount'] = $alertCount;
+            $stats['ContactFormCount'] = $ContactFormCount;
+
             return view('pages.schools.list')
-            ->with(compact('schools'));
+            ->with(compact('schools', 'events', 'stats'));
         } catch(\Exception $e){
             echo $e->getMessage(); exit;
         }

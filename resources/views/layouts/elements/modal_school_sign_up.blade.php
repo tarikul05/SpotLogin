@@ -17,25 +17,51 @@
 
                     <div class="form-group custom-selection">
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
-                            <option value="COACH">{{ __('Single coach') }}</option>
+                            <option value="COACH">{{ __('I am a Single coach') }}</option>
                             <!--<option value="SCHOOL">{{ __('School') }} (for testing)</option>-->
                             <option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>
                         </select>
                     </div>
+                    <div class="form-group custom-selection">
+                        <select class="selectpicker selectDiscipline" id="disciplineSelect" name="discipline" onchange="changeInputVisibility()">
+                            <option value="">Choose an activity</option>
+                            <option value="ice-skating">Ice-skating</option>
+                            <option value="hockey">Hockey</option>
+                            <option value="soccer">Soccer</option>
+                            <option value="other-discipline">Other</option>
+                        </select>
+                        <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput" style="display: none;">
+                    </div>
 
-                    <div class="alert alert-warning">This sign-up form is only for Coachs and Schools. If you are a <b>student</b> invited by your school or your teacher, please
-                        <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">click here</a></div>
+
+
+                    <div class="card bg-tertiary p-2 mb-3">
+                        <small class="pb-2 light-blue-txt">Personnal information</small>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="{{ __('Account name (full name / Name of the school)') }}" id="fullname" name="fullname" required>
+                        <label for="email">{{ __('Firstname') }}</label>
+                        <input type="text" class="form-control" placeholder="{{ __('Your firstname') }}" id="firstname" name="firstname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">{{ __('Lastname') }}</label>
+                        <input type="text" class="form-control" placeholder="{{ __('Your lastname') }}" id="lastname" name="lastname" required>
+                    </div>
+                    <div id="welcome-message"></div>
+
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="fullname" name="fullname" required>
                     </div>
 
                     <div class="form-group">
+                        <label for="email">{{ __('Email') }}</label>
                         <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                     </div>
 
                     <div class="form-group">
+                        <label for="email">{{ __('Confirm Email') }}</label>
                         <input type="email" class="form-control" placeholder="Confirm Email Address" id="email_confirm" name="email_confirm" required>
+                    </div>
+
                     </div>
 
 
@@ -93,16 +119,18 @@
                 <div class="col-lg-6 bg-tertiary text-center p-3">
                 <div class="d-none d-sm-block"><br><br></div>
                 <h5 class="d-none d-sm-block">{{ __('Free Trial') }}</h5>
-                <h4 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h4>
+                <h5 class="d-none d-sm-block light-blue-txt">{{ __('Sign up now and take advantage of a 30-free-day trial period') }}</h5>
                 <div class="d-none d-sm-block"><br><br></div>
                     <small id="" class="password_hint bg-tartiary card pt-1 mt-2 pb-2">
-                        <strong>{{ __('Password Must') }}:</strong></br>
+                        <strong>{{ __('Password Must') }}:</strong>
                         > {{ __('Be more than 7 Characters') }}</br>
-                        > {{ __('An Uppercase Character') }}</br>
                         > {{ __('A Lowercase Character') }}</br>
                         > {{ __('A Number') }}</br>
-                        > {{ __('A Special character') }}</br>
                     </small>
+
+                    <div class="alert alert-warning">This sign-up form is only for Coachs and Schools. If you are a <b>student</b> invited by your school or your teacher, please
+                        <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">click here</a>
+                    </div>
 
                         <br>
                         <div class="checkbox text-center">
@@ -127,6 +155,62 @@
       </div>
   </div>
 </div>
+
+<script>
+    function changeInputVisibility() {
+        var selectElement = document.getElementById("disciplineSelect");
+        var inputElement = document.getElementById("disciplineInput");
+
+        if (selectElement.value === "other-discipline") {
+            inputElement.style.display = "block";
+            inputElement.placeholder = "Enter a discipline";
+        } else {
+            inputElement.style.display = "none";
+            //selectElement.placeholder = "Choose a discipline";
+        }
+    }
+</script>
+
+
+
+<script>
+// Sélectionnez les éléments "firstname" et "lastname" par leur ID
+var firstnameInput = document.getElementById('firstname');
+var lastnameInput = document.getElementById('lastname');
+var fullnameInput = document.getElementById('fullname');
+var username = document.getElementById('username');
+var welcomeMessage = document.getElementById('welcome-message');
+
+// Ajoutez un gestionnaire d'événements "input" aux champs "firstname" et "lastname"
+firstnameInput.addEventListener('input', updateFullName);
+lastnameInput.addEventListener('input', updateFullName);
+
+// Fonction pour mettre à jour le champ "fullname"
+function updateFullName() {
+    var firstnameValue = firstnameInput.value.trim();
+    var lastnameValue = lastnameInput.value.trim();
+
+    // Concaténez les valeurs de "firstname" et "lastname" pour obtenir le nom complet
+    var fullNameValue = firstnameValue + ' ' + lastnameValue.trim();
+
+    // Mettez à jour la valeur du champ "fullname"
+    fullnameInput.value = fullNameValue.trim();
+
+    if(fullNameValue.length > 2) {
+        setTimeout(() => {
+            welcomeMessage.innerHTML = 'Fullname : <b>' + fullNameValue.trim()+'</b>';
+            var newUsername = fullNameValue.trim();
+            username.value = newUsername.replace(/[^a-zA-Z0-9]/g, '');
+            checkUsername(newUsername.replace(/[^a-zA-Z0-9]/g, ''));
+        }, 500);
+    } else {
+        welcomeMessage.textContent = '';
+    }
+}
+
+// Appelez la fonction initiale pour remplir "fullname" si les champs "firstname" et "lastname" ont déjà des valeurs
+updateFullName();
+    </script>
 
 <script>
     function checkUsername(username) {
@@ -178,7 +262,13 @@ function checkUsernameIfExist(username) {
 }
 </script>
 
+<script>
 
+document.getElementById('email_confirm').onpaste = function(){
+    //alert('Merci de ne pas copier/coller');
+    return false;
+};
+</script>
 
 
 <script>
@@ -200,8 +290,9 @@ function checkUsernameIfExist(username) {
 
 <script>
 
-$(document).ready(function () {
 
+
+$(document).ready(function () {
     $("#signup_form").submit(function(e) {
     e.preventDefault();
 }).validate({

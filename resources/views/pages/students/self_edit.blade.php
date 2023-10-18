@@ -23,8 +23,8 @@
 						<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
 						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -36,12 +36,12 @@
 		</nav>
 		<!-- Tabs navs -->
 
-		<!-- Tabs content -->	
+		<!-- Tabs content -->
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="POST" action="{{ route('updateStudentAction') }}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 		<input type="hidden" id="active_tab" name="active_tab" value="">
-		@csrf	
+		@csrf
 		<div class="tab-content" id="ex1-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 					<fieldset>
@@ -77,7 +77,7 @@
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
 										<div class="input-group">
-											<span class="input-group-addon"><i class="fa fa-envelope"></i></span> 
+											<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 											<input class="form-control" id="email" value="{{!empty($student->email) ? old('email', $student->email) : old('email')}}" name="email" type="text">
 										</div>
 									</div>
@@ -110,7 +110,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
 									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div"> 
+										<div class="input-group" id="birth_date_div">
 											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : '' }}">
 											<span class="input-group-addon">
 												<i class="fa fa-calendar"></i>
@@ -162,7 +162,7 @@
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
 										<div class="col-sm-7">
-											<div class="input-group"> 
+											<div class="input-group">
 												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="{{!empty($relationalData->level_date_arp) ? old('level_date_arp', $relationalData->level_date_arp) : old('level_date_arp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -195,7 +195,7 @@
 									<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
 										<div class="col-sm-7">
-											<div class="input-group" id="date_last_level_usp_div"> 
+											<div class="input-group" id="date_last_level_usp_div">
 												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="{{!empty($relationalData->level_date_usp) ? old('level_date_usp', $relationalData->level_date_usp) : old('level_date_usp')}}">
 												<span class="input-group-addon">
 													<i class="fa fa-calendar"></i>
@@ -206,7 +206,7 @@
 									@endif
 								</div>
 							</div>
-							
+
 						</div>
 					</fieldset>
 				</div>
@@ -336,11 +336,20 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_1" >{{__("Parent 1") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
+										<input class="form-control" id="parent_1" name="parent_1" value="{{!empty($student->parent_1) ? old('parent_1', $student->parent_1) : old('parent_1')}}" type="text">
+									</div>
+								</div>
+							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" >{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 										<input class="form-control" id="father_phone" name="father_phone" value="{{!empty($student->father_phone) ? old('father_phone', $student->father_phone) : old('father_phone')}}" type="text">
 									</div>
 								</div>
@@ -349,7 +358,7 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 										<input class="form-control" id="mother_phone" name="mother_phone" value="{{!empty($student->mother_phone) ? old('mother_phone', $student->mother_phone) : old('mother_phone')}}" type="text">
 									</div>
 								</div>
@@ -358,18 +367,27 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> 
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 										<input class="form-control" id="mobile" name="mobile" value="{{!empty($student->mobile) ? old('mobile', $student->mobile) : old('mobile')}}" type="text">
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_1" id="parent_2">{{__("Parent 2") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox" name="parent_2" value="1" {{ !empty($student->parent_2) ? 'checked' : '' }} ></span>
+										<input class="form-control" id="parent_2" name="parent_2" value="{{!empty($student->parent_2) ? old('parent_2', $student->parent_2) : old('parent_2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span> 
+										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span>
 										<input class="form-control" id="father_email" name="father_email" value="{{!empty($student->father_email) ? old('father_email', $student->father_email) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
@@ -378,7 +396,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span> 
+										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span>
 										<input class="form-control" id="mother_email" name="mother_email" value="{{!empty($student->mother_email) ? old('mother_email', $student->mother_email) : old('mother_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
@@ -387,7 +405,7 @@
 								<label class="col-lg-3 col-sm-3 text-left" for="student_email" >{{__("Student's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="student_notify" value="1" {{ !empty($student->student_notify) ? 'checked' : '' }} ></span> 
+										<span class="input-group-addon"><input type="checkbox" name="student_notify" value="1" {{ !empty($student->student_notify) ? 'checked' : '' }} ></span>
 										<input class="form-control" id="email2" name="email2" value="{{!empty($student->email2) ? old('email2', $student->email2) : $student->email}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
@@ -576,7 +594,7 @@ $(document).ready(function(){
 		defaultDate: moment()
 	});
 	$('#billing_period_end_date').val(moment().format('DD/MM/YYYY'));
-	
+
 
 	$('#billing_period_start_date').datetimepicker().on('dp.change', function (e) {
 			var incrementDay = moment(new Date(e.date));
@@ -593,7 +611,7 @@ $(document).ready(function(){
 	});
 
 
-	
+
 
 	$("#send_email_btn").click(function (e) {
 		var user_id = $("#user_id").val();
@@ -609,7 +627,7 @@ $(document).ready(function(){
 		var formdata = $("#studentUserForm").serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
-		
+
 		formdata.push({
 				"name": "_token",
 				"value": csrfToken
@@ -649,8 +667,8 @@ $(document).ready(function(){
 					errorModalCall('error_message_text');
 				}
 		});
-	
-	});    //contact us button click 
+
+	});    //contact us button click
 });
 
 $(function() {
@@ -676,7 +694,7 @@ $(function() {
 
 	var saction= getUrlVarsO()["action"];
 	console.log(saction)
-	
+
 	//For fetching the student details
 	//document.getElementById("sperson_id").value=getUrlVarsO()["person_id"];
 	//document.getElementById("saction").value=saction;
@@ -684,7 +702,7 @@ $(function() {
 	//PopulateMonthYearList();
 	//PopulateMonthYearListForInv();
 	//Fetch_student_info();
-	//PopulateDiscountPerc();			
+	//PopulateDiscountPerc();
 
 	var vtab=getUrlVarsO()["tab"];
 	if (typeof vtab === "undefined") {
@@ -692,7 +710,7 @@ $(function() {
 	}
 	if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
-		document.getElementById("save_btn").style.display="none";					
+		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {
 		if (vtab != '') {
@@ -702,15 +720,15 @@ $(function() {
 
 	// if (document.getElementById("find_flag").value== "0"){
 	// 	document.getElementById("delete_btn").style.display="none";
-	// 	document.getElementById("save_btn").style.display="none";                
-	// }            
-	
-
-	
+	// 	document.getElementById("save_btn").style.display="none";
+	// }
 
 
 
-	$('#billing_period_search_btn').on('click', function() {   
+
+
+
+	$('#billing_period_search_btn').on('click', function() {
 		// document.getElementById("smonth").value = data_month;
 		// document.getElementById("syear").value = data_year;
 		populate_student_lesson(); // refresh lesson details for billing
@@ -738,8 +756,8 @@ $('#save_btn').click(function (e) {
 		"name": "_token",
 		"value": csrfToken,
 	});
-	
-	if(error < 1){	
+
+	if(error < 1){
 		var x = document.getElementsByClassName("tab-pane active");
 		$('#active_tab').val(x[0].id);
 		$('#active_tab_user').val(x[0].id);
@@ -760,11 +778,11 @@ $('#save_btn').click(function (e) {
 			};
 			return true;
 			//
-		} 
+		}
 	}else{
 		return false;
-	}	            
-}); 
+	}
+});
 
 
 	$('#profile_image_file').change(function(e) {
@@ -802,7 +820,7 @@ $('#save_btn').click(function (e) {
 		//alert('populate_student_lesson method');
 		// var user_role = document.getElementById("user_role").value;
 		// //alert(user_role);
-		// //(user_role =='teacher') || 
+		// //(user_role =='teacher') ||
 		// if ((user_role == 'student')) {
 		// 		return false;
 		// }
@@ -873,8 +891,8 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 									resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
 									// alert('no_of_teachers='+no_of_teachers);
-									
-		
+
+
 									resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 									resultHtml += '</tr>'
 									week_total_buy = 0;
@@ -891,10 +909,10 @@ $('#save_btn').click(function (e) {
 									resultHtml += '<b><td colspan="1">Type</td>';
 									resultHtml += '<b><td colspan="1">Coach</td>';
 									resultHtml += '<b><td colspan="1">Lesson</td>';
-									
-									
-		
-		
+
+
+
+
 									resultHtml += '<td style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
 
 							}
@@ -939,8 +957,8 @@ $('#save_btn').click(function (e) {
 									resultHtml += "<td></td>";
 									resultHtml += "<td><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
 							} else {
-									
-															
+
+
 									resultHtml += '<td style="text-align:right">' + value.price_currency + ' ' + value.sell_total + '</td>';
 							}
 
@@ -965,7 +983,7 @@ $('#save_btn').click(function (e) {
 
 							if (person_type == 'student_lessons') {
 									if (value.is_sell_invoiced != 0) {
-											//invoice_already_generated=1;  //commented by soumen to display items which has been generated already    
+											//invoice_already_generated=1;  //commented by soumen to display items which has been generated already
 									} else {
 
 									}
@@ -978,16 +996,16 @@ $('#save_btn').click(function (e) {
 			}
 		}); // Ajax
 
-		
+
 		if (record_found > 0) {
 
 				// summary for last week of course records
 				if ((week_total_buy > 0) || (week_total_sell > 0)) {
-					
+
 						resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 						resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + week_caption + ' </td>';
 
-						
+
 
 						resultHtml += '<td style="text-align:right">' + week_total_sell.toFixed(2) + '</td>';
 						resultHtml += '</tr>'
@@ -999,7 +1017,7 @@ $('#save_btn').click(function (e) {
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 				resultHtml += '<td colspan="2">' + sub_total_caption + ' ' + month_caption + ': </td>';
 
-			
+
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
@@ -1124,8 +1142,8 @@ $('#save_btn').click(function (e) {
 
 								/*var str1 = disc_caption_disp.split('[~~SYSTEM_RANGE_FROM~~]');
 								if (str1.length > 1) {
-										disc_caption_disp=str1[0]+' 1201.00+ '+str1[2];    
-								}                        
+										disc_caption_disp=str1[0]+' 1201.00+ '+str1[2];
+								}
 								*/
 								resultHtml += '<tr><td colspan="8">' + disc_caption_disp + '</tr>';
 								//resultHtml+='<tr><td colspan="8">Réduction de '+disc6_perc+'% sur tranche 1200 plus -'+disc6_amt.toFixed(2)+'</tr>';
@@ -1144,8 +1162,8 @@ $('#save_btn').click(function (e) {
 				// display grand total
 				resultHtml += '<tr style="font-weight: bold;"><td colspan="6">';
 				resultHtml += '<td colspan="2">Total ' + month_caption + '</td>';
-				
-				
+
+
 
 				resultHtml += '<td style="text-align:right">' + total_sell.toFixed(2) + '</td>';
 				resultHtml += '</tr>'
@@ -1185,7 +1203,7 @@ $('#save_btn').click(function (e) {
 	}
 
 
-	
+
 
 
 	$('.box_img i.fa.fa-close').click(function (e) {
@@ -1217,11 +1235,11 @@ $('#save_btn').click(function (e) {
 
 <script>
 $(function() {
-   
+
     var vtab = '{!! Session::get('vtab') !!}';
     if (vtab == 'tab_3') {
 		document.getElementById("delete_btn").style.display="none";
-		document.getElementById("save_btn").style.display="none";					
+		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {
 		if (vtab != '') {

@@ -90,6 +90,8 @@ class Student extends BaseModel
         'cheque_payee',
         'tax_number',
         'invoice_opt_activated',
+        'parent_name_1',
+        'parent_name_2',
         'is_active',
         'created_by',
         'modified_by'
