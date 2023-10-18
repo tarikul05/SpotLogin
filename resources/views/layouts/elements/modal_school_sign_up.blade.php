@@ -23,15 +23,14 @@
                         </select>
                     </div>
                     <div class="form-group custom-selection">
-                        <small class="pb-2 light-blue-txt">Choose a discipline</small>
-                        <select class="selectpicker selectDiscipline" id="disciplineSelect" name="discipline" required onchange="changeInputVisibility()">
-                            <option value="">Choose a discipline</option>
+                        <select class="selectpicker selectDiscipline" id="disciplineSelect" name="discipline" onchange="changeInputVisibility()">
+                            <option value="">Choose an activity</option>
                             <option value="ice-skating">Ice-skating</option>
                             <option value="hockey">Hockey</option>
                             <option value="soccer">Soccer</option>
                             <option value="other-discipline">Other</option>
                         </select>
-                        <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput" required style="display: none;">
+                        <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput" style="display: none;">
                     </div>
 
 

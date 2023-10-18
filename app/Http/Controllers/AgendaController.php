@@ -169,6 +169,24 @@ class AgendaController extends Controller
 
 
 
+
+
+
+
+    public function calendar(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return view('pages.agenda.calendar');
+    }
+
+
+
+
+
+
+
+
+
     public function getAbsentStudent(Request $request)
     {
         $user = Auth::user();

@@ -40,6 +40,9 @@ Route::post('/add-user', [App\Http\Controllers\UserController::class, 'create_ve
 Route::post('/user_active_school', [App\Http\Controllers\UserController::class, 'active_school'])->name('user.active_school')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::get('/retrieve-user-account/{token}', 'UserController@retrieve_user_added')->name('retrieve.verify.email');
 
+//ADMIN
+Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+
 //Categories for faqs
 Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.list');
 Route::get('/admin/categories/add', [App\Http\Controllers\CategoryController::class, 'add'])->name('categories.add');
@@ -49,9 +52,36 @@ Route::post('/admin/categories/create', [App\Http\Controllers\CategoryController
 Route::put('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
 Route::delete('/admin/categories/remove/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.remove');
 
+//Coupons
+Route::get('/admin/coupons', [App\Http\Controllers\CouponController::class, 'index'])->name('coupon.index');
+Route::get('/admin/create-coupon', [App\Http\Controllers\CouponController::class, 'showCreateForm'])->name('coupons.create');
+Route::post('/admin/create-coupon', [App\Http\Controllers\CouponController::class, 'store'])->name('coupons.store');
+
+//Plans
+Route::get('/admin/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index');
+Route::get('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'showCreateForm'])->name('plans.create');
+Route::post('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'store'])->name('plans.store');
+
+//Tasks
+Route::get('/admin/tasks', [App\Http\Controllers\TaskController::class, 'index'])->name('task.index');
+Route::get('/admin/create-task', [App\Http\Controllers\TaskController::class, 'showCreateForm'])->name('tasks.create');
+Route::post('/admin/create-task', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
+
+//Alerts
+Route::get('/admin/alerts', [App\Http\Controllers\AlertController::class, 'index'])->name('alert.index');
+Route::get('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'showCreateForm'])->name('alerts.create');
+Route::post('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store');
+
+//Contacts Form
+Route::get('/admin/contacts', [ContactFormController::class, 'index'])->name('contacts.index');
+
 //Faqs
 Route::get('/faqs-tutos', [App\Http\Controllers\FaqController::class, 'tutos'])->name('faqs.tutos'); //for users
 Route::get('/faqs-tutos/show/{faq}', [App\Http\Controllers\FaqController::class, 'tutosShow'])->name('faqs.tutos.show'); //for users
+
+//Subscriptions
+Route::get('/admin/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'getSubscription'])->name('subscriptions.getSubscription'); //for users
+
 //for admins
 Route::get('/admin/faqs', [App\Http\Controllers\FaqController::class, 'index'])->name('faqs.list');
 Route::get('/admin/faqs/add', [App\Http\Controllers\FaqController::class, 'add'])->name('faqs.add');
@@ -338,6 +368,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
     Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
+
+    Route::get('/agenda-v2', [App\Http\Controllers\AgendaController::class, 'calendar'])->name('agenda');
 
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);

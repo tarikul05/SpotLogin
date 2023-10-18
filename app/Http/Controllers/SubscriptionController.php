@@ -89,6 +89,12 @@ class SubscriptionController extends Controller
     }
 
 
+   public function getSubscription(Request $request){
+        $user = auth()->user();
+        $subscriptions = $this->stripe->subscriptions->all();
+        return view('pages.admin.subscriptions', compact('subscriptions'));
+    }
+
     /** Function return all invoice customer Stripe */
     public function invoicesCustomer(Request $request){
         try{

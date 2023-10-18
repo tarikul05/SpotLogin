@@ -5,12 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SchoolStudent;
 use App\Models\User;
+use App\Models\ContactForm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormMailable;
 
 class ContactFormController extends Controller
 {
+
+    public function index()
+    {
+        $ContactFormCount = ContactForm::count();
+        $contactForm = ContactForm::all();
+        return view('pages.admin.contacts', compact('ContactFormCount', 'contactForm'));
+    }
+
+    public function countAlerts()
+    {
+        $alertCount = ContactForm::count();
+        return view('pages.admin.alerts', compact('alertCount'));
+    }
+
     public function showForm(Request $request)
     {
         $authUser = $request->user();
@@ -34,6 +49,7 @@ class ContactFormController extends Controller
 
         $data = $request->all();
         $authUser = $request->user();
+        $person_id = $request->input('person_id');
         $subject = $request->input('subject');
         $headerMessage = $request->input('headerMessage');
         $emailTo = $data['emailTo'];
@@ -41,6 +57,16 @@ class ContactFormController extends Controller
             $emailTo = config('services.mail.from_address');
         }
         $messageBody = $request->input('message');
+
+        $contactForm = new ContactForm();
+        $contactForm->sujet = $subject;
+        $contactForm->email_expediteur = $authUser->email;
+        $contactForm->email_destinataire = $emailTo;
+        $contactForm->id_expediteur = $authUser->id;
+        $contactForm->id_destinataire = $person_id;
+        $contactForm->message = $messageBody;
+        $contactForm->save();
+
         Mail::send(new ContactFormMailable($subject, $emailTo, $headerMessage, $messageBody));
         if($data['emailTo'] === "staff") {
             return redirect()->route('contact.staff')->with('success', 'Message sent successfully!');

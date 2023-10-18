@@ -50,6 +50,7 @@
         @else
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from your student {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
         @endif
+        <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
         <button type="submit" class="btn btn-primary">Send</button>
     </form>
 </div>
