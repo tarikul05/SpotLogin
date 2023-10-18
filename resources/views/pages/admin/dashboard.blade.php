@@ -150,7 +150,100 @@
                 <canvas id="myChart2" style="max-height: 350px"></canvas>
             </div>
         </div>
-    </div>s
+    </div>
+
+    <h3>Liste des Événements Stripe</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Reçu le</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($events_stripe as $event)
+            <tr>
+
+                <td> @if ($event['type'] === 'invoice.upcoming')
+                    {{ $event['data']['object']['customer_email'] }} a une facture à venir d'un montant de  {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} (avec paiement automatique prévu) le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['next_payment_attempt'])->format('j M.') }}
+                @elseif ($event['type'] === 'payout.paid')
+                    Un virement de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} devrait apparaître sur votre relevé bancaire
+                @elseif ($event['type'] === 'payout.reconciliation_completed')
+                    Le rapport de rapprochement d'un virement de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} est prêt
+                @elseif ($event['type'] === 'coupon.created')
+                    Un nouveau bon de réduction doté de l'ID {{ $event['data']['object']['id'] }} a été créé
+                @elseif ($event['type'] === 'customer.created')
+                    {{ $event['data']['object']['name'] }} est un nouveau client
+
+                    @elseif ($event['type'] === 'payout.created')
+                    Un nouveau virement de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été créé et sera versé le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['arrival_date'])->format('j M.') }}
+                    @elseif ($event['type'] === 'customer.subscription.trial_will_end')
+                    La période d'essai dont bénéficié le client {{ $event['data']['object']['metadata']['note'] }} se termine le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['trial_end'])->format('j M.') }}
+                    @elseif ($event['type'] === 'customer.subscription.deleted')
+                    L'abonnement de {{ $event['data']['object']['metadata']['note'] }} à {{ $event['data']['object']['items']['data'][0]['plan']['id'] }} a été annulé
+                    @elseif ($event['type'] === 'invoice.finalized')
+                    Un brouillon de facture de {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été finalisé pour {{ $event['data']['object']['customer_email'] }}
+                    @elseif ($event['type'] === 'invoice.payment_succeeded')
+                    Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} d'un montant de {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été effectué
+                    @elseif ($event['type'] === 'invoice.paid')
+                    La facture de {{ $event['data']['object']['customer_email'] }} d'un montant de  {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été payée
+                    @elseif ($event['type'] === 'invoice.updated')
+                    La facture de {{ $event['data']['object']['customer_email'] }} a été modifiée
+                    @elseif ($event['type'] === 'payment_intent.created')
+                    Une nouvelle tentative de paiement {{ $event['data']['object']['id'] }} de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été créee
+                    @elseif ($event['type'] === 'payment_intent.succeeded')
+                    Un montant de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été débité à {{ $event['data']['object']['receipt_email'] }}
+                    @elseif ($event['type'] === 'payment_method.attached')
+                    Un nouveau moyen de paiement {{ $event['data']['object']['id'] }} a été ajouté
+                    @elseif ($event['type'] === 'payment_method.updated')
+                    Un moyen de paiement {{ $event['data']['object']['id'] }} a été modifié
+                    @elseif ($event['type'] === 'payment_method.deleted')
+                    Un moyen de paiement {{ $event['data']['object']['id'] }} a été supprimé
+                    @elseif ($event['type'] === 'customer.subscription.created')
+                    L'abonnement de {{ $event['data']['object']['metadata']['note'] }} à {{ $event['data']['object']['items']['data'][0]['plan']['id'] }} a été créé
+                    @elseif ($event['type'] === 'customer.subscription.updated')
+                    L'abonnement de {{ $event['data']['object']['metadata']['note'] }} à {{ $event['data']['object']['items']['data'][0]['plan']['id'] }} a été mis à jour
+                    @elseif ($event['type'] === 'invoice.payment_failed')
+                    Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} a échoué
+                    @elseif ($event['type'] === 'customer.subscription.deleted')
+                    L'abonnement de {{ $event['data']['object']['metadata']['note'] }} à {{ $event['data']['object']['items']['data'][0]['plan']['id'] }} a été annulé
+                    @elseif ($event['type'] === 'invoice.payment_action_required')
+                    Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} est requis
+                    @elseif ($event['type'] === 'customer.subscription.trial_started')
+                    La période d'essai de {{ $event['data']['object']['metadata']['note'] }} a démarré
+                    @elseif ($event['type'] === 'customer.subscription.trial_ended')
+                    La période d'essai de {{ $event['data']['object']['metadata']['note'] }} a terminé
+                    @elseif ($event['type'] === 'customer.subscription.updated')
+                    L'abonnement de {{ $event['data']['object']['metadata']['note'] }} à {{ $event['data']['object']['items']['data'][0]['plan']['id'] }} a été mis à jour
+
+                    @elseif ($event['type'] === 'invoice.voided')
+                    La facture de {{ $event['data']['object']['customer_email'] }} a été annulée
+                    @elseif ($event['type'] === 'charge.succeeded')
+                    Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} a été effectué
+                    @elseif ($event['type'] ===  'invoice.created')
+                    La facture de {{ $event['data']['object']['customer_email'] }} d'un montant de {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été créée
+                    @elseif ($event['type'] === 'invoice.updated')
+                    La facture de {{ $event['data']['object']['customer_email'] }} a été modifiée
+                    @elseif ($event['type'] === 'invoice.payment_action_required')
+                    La facture de {{ $event['data']['object']['customer_email'] }} est requise
+                    @elseif ($event['type'] === 'invoice.payment_succeeded')
+                    Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} a été effectué
+                    @elseif ($event['type'] === 'balance.available')
+                    Votre solde a des nouvelles opérations disponibles
+
+                @else
+                    Description non gérée pour le type {{ $event['type'] }}
+                @endif
+                </td>
+                <td>{{ \Carbon\Carbon::createFromTimestamp($event['created'])->format('Y-m-d H:i:s') }}</td>
+
+                <td>{{ $event['id'] }}</td>
+
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
   </div>
 </div>

@@ -36,7 +36,7 @@ class AdminController extends Controller
 
         $thirtyDaysAgo = now()->subDays(30);
         $events = Event::where('date_start', '>=', $thirtyDaysAgo)->get();
-
+        $events_stripe = $this->stripe->events->all(['limit' => 50]);
         $subsriptions = $this->stripe->subscriptions->all();
         $subTrial = 0;
         $subActive = 0;
@@ -80,7 +80,7 @@ class AdminController extends Controller
         $stats['alertCount'] = $alertCount;
         $stats['ContactFormCount'] = $ContactFormCount;
 
-        return view('pages.admin.dashboard')->with(compact('events', 'stats', 'subsriptions'));
+        return view('pages.admin.dashboard')->with(compact('events', 'stats', 'subsriptions', 'events_stripe'));
     } catch(\Exception $e){
         echo $e->getMessage(); exit;
     }
