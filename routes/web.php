@@ -369,7 +369,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda');
     Route::get('/{school}/agenda', [App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.id');
 
-    Route::get('/agenda-v2', [App\Http\Controllers\AgendaController::class, 'calendar'])->name('agenda');
+    Route::get('/agenda-v2', [App\Http\Controllers\AgendaController::class, 'calendar'])->name('agenda.v2');
 
     Route::get('/teachers', [App\Http\Controllers\TeachersController::class, 'index'])->name('teacherHome');
     Route::get('/add-teacher', [App\Http\Controllers\TeachersController::class, 'create']);
