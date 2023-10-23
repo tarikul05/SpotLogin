@@ -231,7 +231,7 @@
                                                         <?php
                                                         $disc1_amt = $invoice->total_amount_discount ? $invoice->total_amount_discount :0;
                                                         ?>
-                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? $sub_total_lesson*$invoice->discount_percent_1/100 : 0; ?>
+                                                        <?php $discount = $invoice->discount_percent_1 > 0 ? round($sub_total_lesson*$invoice->discount_percent_1/100) : 0; ?>
                                                         <?php $totalWithDiscount = $sub_total_lesson-$discount; ?>
                                                         <!-- <p id="samount_discount_1" class="form-control-static numeric"
                                                                                                 style="text-align:right;">0.00</p> -->
@@ -321,7 +321,7 @@
                                     Subtotal Lesson <?php echo $sub_total_lesson ; ?>
                                     <br>
                                     Discount : <?php echo $discount = $sub_total_lesson*$invoice->discount_percent_1/100 ?>
-                                    <br>TOTAL LESSON => <?php echo $totalWithDiscount = $sub_total_lesson-$discount; ?>
+                                    <br>TOTAL LESSON => <?php /*echo $totalWithDiscount = $sub_total_lesson-$discount;*/ ?>
                                     <br>TOTAL EVENTS => <?php echo $sub_total_event; ?>
                                     <br>TOTAUX => <?php echo  $totaux = $invoice->invoice_type == 0 ? ((($sub_total_event-(($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100)))+$totalWithDiscount) : ((($sub_total_event-$invoice->extra_expenses)-(($sub_total_event-$invoice->extra_expenses) * $invoice->discount_percent_2/100))+$totalWithDiscount); ?>-->
 

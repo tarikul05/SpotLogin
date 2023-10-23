@@ -1979,6 +1979,7 @@ class InvoiceController extends Controller
                 $path_name =  $request->user()->profileImage->path_name;
                 $file = str_replace(URL::to('').'/uploads/','',$path_name);
                 $invoice_data['logo'] = 'uploads/'.$file;
+                //$invoice_data['logo'] = $request->user()->profileImage->path_name;
             } else {
                 $invoice_data['logo'] = null;
             }

@@ -241,8 +241,7 @@
         <div class="logo_area">
             <div class="left_part">
                 <?php if ($invoice_data->logo !== null): ?>
-               <img class="img_logo" src="{{ $invoice_data->logo }}" alt="" style="height: 50px;">
-                <!--<img class="img_logo" src="{{ $AppUI->profileImage->path_name }}" style="height: 50px;">-->
+                <img class="img_logo" src="{{ public_path($invoice_data->logo) }}" alt="" style="height: 50px;">
                 <?php endif; ?>
             </div>
             <div class="right_part">
@@ -357,7 +356,15 @@
                                 <td style="text-align:right">{{$sub_total_min_lesson}} minutes</td>
                                 <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
                             </tr>
-
+                            <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
+                                <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                                    <?php
+                                        if($invoice_data->lesson_discount_description){
+                                            echo $invoice_data->lesson_discount_description;
+                                        }
+                                    ?>
+                                </div>
+                            <?php } ?>
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
                                 <tr class="extra_col_sub">
                                     <td colspan="2" style="text-align:right">
@@ -372,16 +379,17 @@
                                         ?>
                                     </td>
                                     <td style="text-align:right"><span style="font-size:12px;"><b>{{ $invoice_data->discount_percent_1 .' %' }}</b></span></td>
-                                    <td class="price" style="text-align:right">- <b>{{ number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2') }}</b></td>
+                                    <td class="price" style="text-align:right">- <b>{{ number_format(round(($sub_total_lesson*$invoice_data->discount_percent_1)/100),'2') }}</b></td>
                                     <?php $totalDiscount = number_format(($sub_total_lesson*$invoice_data->discount_percent_1)/100,'2'); ?>
                                 </tr>
+
                                 <?php } else { $totalDiscount = 0; }?>
 
                             <tr class="extra_col_sub">
                                 <td colspan="3" style="text-align:right">Total Lesson:</td>
                                 <td style="text-align:right">
                                     <?php
-                                        $total_lesson = $sub_total_lesson-$totalDiscount;
+                                        $total_lesson = $sub_total_lesson - round($totalDiscount);
                                     ?>
                                     <span id="stotal_amount_with_discount_lesson"
                                     class="form-control-static numeric"
@@ -407,6 +415,15 @@
 
 
                     <?php if($invoice_data->amount_discount_2 != 0){ ?>
+                        <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
+                            <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                                <?php
+                                    if($invoice_data->event_discount_description){
+                                        echo $invoice_data->event_discount_description;
+                                    }
+                                ?>
+                            </div>
+                        <?php } ?>
                         <tr class="extra_col">
                             <td colspan="2" style="text-align:right; font-size:12px;" class="text">
                                 <?php
@@ -425,6 +442,7 @@
                                 - <b>{{ number_format((($sub_total_event-$invoice_data->extra_expenses)*$invoice_data->discount_percent_2)/100,'2') }}</b></td>
                             <?php $totalDiscountEvent = number_format(($sub_total_event*$invoice_data->discount_percent_2)/100,'2'); ?>
                         </tr>
+
                         <?php } else { $totalDiscountEvent = 0; }?>
 
                         <?php if($invoice_data->amount_discount_2 != 0){ ?>
@@ -487,22 +505,11 @@
                         <?php } ?>
 
 
-                        <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description || !empty($invoice_data->invoice_footer)){ ?>
+                        <?php if(!empty($invoice_data->invoice_footer)){ ?>
                             <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
                                 <?php if(!empty($invoice_data->invoice_footer)){ ?>
                                     <div class="text"><small>Note:</small> {{ $invoice_data->invoice_footer }}</div>
                                 <?php } ?>
-                                <?php
-                                    if($invoice_data->lesson_discount_description){
-                                        echo $invoice_data->lesson_discount_description;
-                                    }
-                                    if($invoice_data->lesson_discount_description && $invoice_data->event_discount_description){
-                                        echo'<br><br>';
-                                    }
-                                    if($invoice_data->event_discount_description){
-                                        echo $invoice_data->event_discount_description;
-                                    }
-                                ?>
                             </div>
                         <?php } ?>
 
@@ -541,9 +548,7 @@
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->payment_bank_account && $invoice_data->seller_country_code !== 'CA')){ ?>
-                            <div class="txt"><b>Account Name : </b>{{ $invoice_data->payment_bank_account }}</div>
-                        <?php } ?>
+
                         <?php if($invoice_data->seller_country_code === "CA"){?>
                             <?php if(!empty($invoice_data->payment_bank_account_name)){?>
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_account_name }}</div>
@@ -554,7 +559,9 @@
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                             <?php } ?>
                         <?php } ?>
-
+                        <?php if(!empty($invoice_data->payment_bank_account && $invoice_data->seller_country_code !== 'CA')){ ?>
+                            <div class="txt"><b>Account name : </b>{{ $invoice_data->payment_bank_account }}</div>
+                        <?php } ?>
                         <?php if($invoice_data->seller_country_code === "CA"){?>
                             <div class="txt">{{ $invoice_data->payment_bank_account }}</div>
                             <div class="txt">{{ $invoice_data->payment_bank_iban }}</div>
