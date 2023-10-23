@@ -91,8 +91,55 @@ class SubscriptionController extends Controller
 
    public function getSubscription(Request $request){
         $user = auth()->user();
-        $subscriptions = $this->stripe->subscriptions->all();
+        $subscriptions = [];
+        $subscriptionsInit = $this->stripe->subscriptions->all();
+        foreach ($subscriptionsInit as $subscription) {
+            $price = $this->stripe->products->retrieve($subscription->items->data[0]->plan->product);
+            $subscription->price_name = $price->name;
+            $subscriptions[] = $subscription;
+          }
+          usort($subscriptions, function ($a, $b) {
+            $statusOrder = ['active', 'trialing', 'incomplete', 'past_due', 'unpaid', 'canceled'];
+            $statusA = array_search($a->status, $statusOrder);
+            $statusB = array_search($b->status, $statusOrder);
+            return $statusA - $statusB;
+        });
         return view('pages.admin.subscriptions', compact('subscriptions'));
+    }
+
+    public function getActiveSubscriptions(Request $request) {
+        $user = auth()->user();
+        $subscriptions = [];
+        $totalAmount = 0;
+        $discountAmount = 0; // Pour stocker le montant total de la remise
+
+    $subscriptionsInit = $this->stripe->subscriptions->all(["status"=>"active"]);
+
+        foreach ($subscriptionsInit as $subscription) {
+            $price = $this->stripe->products->retrieve($subscription->items->data[0]->plan->product);
+            $subscription->price_name = $price->name;
+
+            if ($subscription->status === 'active') {
+                $subscriptions[] = $subscription;
+                // Calculez le montant total de l'abonnement actif
+                $totalAmount += $subscription->items->data[0]->plan->amount;
+
+                // Si un code promo a été utilisé, ajoutez le montant de la remise
+                if ($subscription->discount) {
+                    $discountAmount += $subscription->discount->amount_off;
+                }
+            }
+        }
+
+        // Triez les abonnements actifs (si nécessaire)
+        usort($subscriptions, function ($a, $b) {
+            $statusOrder = ['active', 'trialing', 'incomplete', 'past_due', 'unpaid', 'canceled'];
+            $statusA = array_search($a->status, $statusOrder);
+            $statusB = array_search($b->status, $statusOrder);
+            return $statusA - $statusB;
+        });
+
+        return view('pages.admin.revenues', compact('subscriptions', 'totalAmount', 'discountAmount'));
     }
 
     /** Function return all invoice customer Stripe */

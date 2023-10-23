@@ -44,13 +44,13 @@ Route::get('/retrieve-user-account/{token}', 'UserController@retrieve_user_added
 Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
 
 //Categories for faqs
-Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.list');
-Route::get('/admin/categories/add', [App\Http\Controllers\CategoryController::class, 'add'])->name('categories.add');
+Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.list')->middleware('permission:superadmin');
+Route::get('/admin/categories/add', [App\Http\Controllers\CategoryController::class, 'add'])->name('categories.add')->middleware('permission:superadmin');
 Route::get('/admin/categories/show/{category}', [App\Http\Controllers\CategoryController::class, 'show'])->name('categories.show');
-Route::get('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
-Route::post('/admin/categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
-Route::put('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
-Route::delete('/admin/categories/remove/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.remove');
+Route::get('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit')->middleware('permission:superadmin');
+Route::post('/admin/categories/create', [App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create')->middleware('permission:superadmin');
+Route::put('/admin/categories/update/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update')->middleware('permission:superadmin');
+Route::delete('/admin/categories/remove/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.remove')->middleware('permission:superadmin');
 
 //Coupons
 Route::get('/admin/coupons', [App\Http\Controllers\CouponController::class, 'index'])->name('coupon.index');
@@ -58,9 +58,9 @@ Route::get('/admin/create-coupon', [App\Http\Controllers\CouponController::class
 Route::post('/admin/create-coupon', [App\Http\Controllers\CouponController::class, 'store'])->name('coupons.store');
 
 //Plans
-Route::get('/admin/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index');
-Route::get('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'showCreateForm'])->name('plans.create');
-Route::post('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'store'])->name('plans.store');
+Route::get('/admin/plans', [App\Http\Controllers\PlanController::class, 'index'])->name('plan.index')->middleware('permission:superadmin');
+Route::get('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'showCreateForm'])->name('plans.create')->middleware('permission:superadmin');
+Route::post('/admin/create-plan', [App\Http\Controllers\PlanController::class, 'store'])->name('plans.store')->middleware('permission:superadmin');
 
 //Tasks
 Route::get('/admin/tasks', [App\Http\Controllers\TaskController::class, 'index'])->name('task.index');
@@ -68,28 +68,32 @@ Route::get('/admin/create-task', [App\Http\Controllers\TaskController::class, 's
 Route::post('/admin/create-task', [App\Http\Controllers\TaskController::class, 'store'])->name('tasks.store');
 
 //Alerts
-Route::get('/admin/alerts', [App\Http\Controllers\AlertController::class, 'index'])->name('alert.index');
-Route::get('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'showCreateForm'])->name('alerts.create');
-Route::post('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store');
+Route::get('/admin/alerts', [App\Http\Controllers\AlertController::class, 'index'])->name('alert.index')->middleware('permission:superadmin');
+Route::get('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'showCreateForm'])->name('alerts.create')->middleware('permission:superadmin');
+Route::post('/admin/create-alert', [App\Http\Controllers\AlertController::class, 'store'])->name('alerts.store')->middleware('permission:superadmin');
 
 //Contacts Form
-Route::get('/admin/contacts', [ContactFormController::class, 'index'])->name('contacts.index');
+Route::get('/admin/contacts', [ContactFormController::class, 'index'])->name('contacts.index')->middleware('permission:superadmin');
 
 //Faqs
 Route::get('/faqs-tutos', [App\Http\Controllers\FaqController::class, 'tutos'])->name('faqs.tutos'); //for users
 Route::get('/faqs-tutos/show/{faq}', [App\Http\Controllers\FaqController::class, 'tutosShow'])->name('faqs.tutos.show'); //for users
 
 //Subscriptions
-Route::get('/admin/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'getSubscription'])->name('subscriptions.getSubscription'); //for users
+Route::get('/admin/subscriptions', [App\Http\Controllers\SubscriptionController::class, 'getSubscription'])->name('subscriptions.getSubscription')->middleware('permission:superadmin'); //for users
+Route::get('/admin/revenues', [App\Http\Controllers\SubscriptionController::class, 'getActiveSubscriptions'])->name('subscriptions.getActiveSubscriptions')->middleware('permission:superadmin'); //for users
+
+
+
 
 //for admins
-Route::get('/admin/faqs', [App\Http\Controllers\FaqController::class, 'index'])->name('faqs.list');
-Route::get('/admin/faqs/add', [App\Http\Controllers\FaqController::class, 'add'])->name('faqs.add');
+Route::get('/admin/faqs', [App\Http\Controllers\FaqController::class, 'index'])->name('faqs.list')->middleware('permission:superadmin');
+Route::get('/admin/faqs/add', [App\Http\Controllers\FaqController::class, 'add'])->name('faqs.add')->middleware('permission:superadmin');
 Route::get('/admin/faqs/show/{faq}', [App\Http\Controllers\FaqController::class, 'show'])->name('faqs.show');
-Route::get('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'edit'])->name('faqs.edit');
-Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'create'])->name('faqs.create');
-Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update');
-Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove');
+Route::get('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'edit'])->name('faqs.edit')->middleware('permission:superadmin');
+Route::post('/admin/faqs/create', [App\Http\Controllers\FaqController::class, 'create'])->name('faqs.create')->middleware('permission:superadmin');
+Route::put('/admin/faqs/update/{faq}', [App\Http\Controllers\FaqController::class, 'update'])->name('faqs.update')->middleware('permission:superadmin');
+Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::class, 'destroy'])->name('faqs.remove')->middleware('permission:superadmin');
 
 Route::get('contact-form', [ContactFormController::class, 'showForm'])->name('contact.form');
 Route::get('contact-staff', [ContactFormController::class, 'showFormStaff'])->name('contact.staff');
@@ -270,7 +274,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('delete-profile-photo', ['as' =>'profile.delete_photo','uses' =>'ProfileController@profilePhotoDelete' ])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
     // School update
-    Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools');
+    Route::get('/schools', [App\Http\Controllers\SchoolsController::class, 'index'])->name('schools')->middleware('permission:superadmin');
     Route::get('school-update/{school}', ['as' =>'school.update_by_id','uses' =>'SchoolsController@edit' ]);
 
 

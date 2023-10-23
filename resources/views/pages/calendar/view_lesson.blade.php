@@ -60,9 +60,10 @@
 
 						@php
 							$invoiceId = DB::table('invoice_items')->where('event_id', $lessonlId)->value('invoice_id');
+                            $invoiceExists = DB::table('invoices')->where('id', $invoiceId)->whereNull('invoices.deleted_at')->exists();
 						@endphp
 
-						@if ($invoiceId)
+						@if ($invoiceExists)
 						<div class="alert alert-warning">
 							<label>This lessons have an invoice attached to it. <a href="{{ route('adminmodificationInvoice',[$schoolId,$invoiceId]) }}">See invoice #{{$invoiceId}}</a></label>
 						</div>
