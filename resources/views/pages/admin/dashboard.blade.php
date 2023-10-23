@@ -52,7 +52,7 @@
                     <div class="circle-tile-number text-faded">
                         ${{ $stats['totalAmountActivePlans'] }}
                     </div>
-                    <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+                    <a href="{{ route('subscriptions.getActiveSubscriptions') }}" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
                     @elseif ($event['type'] === 'payment_intent.succeeded')
                     Un montant de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été débité à {{ $event['data']['object']['receipt_email'] }}
                     @elseif ($event['type'] === 'payment_method.attached')
-                    Un nouveau moyen de paiement {{ $event['data']['object']['id'] }} a été ajouté
+                    Un nouveau moyen de paiement {{ $event['data']['object']['type'] }} a été ajouté pour le client {{ $event['data']['object']['customer'] }}
                     @elseif ($event['type'] === 'payment_method.updated')
                     Un moyen de paiement {{ $event['data']['object']['id'] }} a été modifié
                     @elseif ($event['type'] === 'payment_method.deleted')
@@ -231,9 +231,13 @@
                     Le paiement de la facture de {{ $event['data']['object']['customer_email'] }} a été effectué
                     @elseif ($event['type'] === 'balance.available')
                     Votre solde a des nouvelles opérations disponibles
+                    @elseif ($event['type'] === 'customer.discount.created')
+                    Le bon de réduction {{ $event['data']['object']['coupon']['name'] }} a été utilisé
+                    @elseif ($event['type'] === 'customer.updated')
+                    Les détails du client {{ $event['data']['object']['email'] }} ont été mise à jour
 
                 @else
-                    Description non gérée pour le type {{ $event['type'] }}
+                    <!--Description non gérée pour le type {{ $event['type'] }}-->
                 @endif
                 </td>
                 <td>{{ \Carbon\Carbon::createFromTimestamp($event['created'])->format('Y-m-d H:i:s') }}</td>

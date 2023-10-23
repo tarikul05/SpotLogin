@@ -18,6 +18,7 @@ class CouponController extends Controller
     {
         parent::__construct();
         $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+        $this->middleware('permission:superadmin');
     }
 
     public function index()

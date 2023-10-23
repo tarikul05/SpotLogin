@@ -1460,7 +1460,11 @@ class InvoiceController extends Controller
         $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
         $school = School::active()->find($this->schoolId);
         if (empty($school)) {
+            if($user->isSuperAdmin()) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
+            } else {
+                return back()->with('error', 'School is not selected. Please reconnect to your account.');
+            }
         }
         $timeZone = 'UTC';
         if (!empty($school->timezone)) {
@@ -1468,7 +1472,8 @@ class InvoiceController extends Controller
         }
         $invoice = Invoice::active()->find($invoice);
         if (empty($invoice)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
+            //return redirect()->route('schools')->with('error', __('School is not selected'));
+            return back()->with('error', 'This invoice has been deleted');
         }
         //dd($invoice);
         $invoice_type_all = config('global.invoice_type');

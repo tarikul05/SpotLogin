@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->middleware('permission:superadmin');
+    }
     public function index()
     {
         $taskCount = Task::count();
