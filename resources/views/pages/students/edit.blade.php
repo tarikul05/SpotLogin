@@ -213,7 +213,7 @@
 												<select class="form-control m-bot15" id="level_id" name="level_id">
 													<option value="">Select level</option>
 													@foreach($levels as $key => $level)
-														<option value="{{ $level->id }}"  {{ ($relationalData->level_id == $level->id) ? 'selected' : ''}}>{{ $level->title }}</option>
+                                                    <option value="{{ $level->id }}" {{ ($relationalData->level_id ?? '') == $level->id ? 'selected' : '' }}>{{ $level->title }}</option>
 													@endforeach
 												</select>
 											</div>

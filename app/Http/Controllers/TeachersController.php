@@ -40,9 +40,12 @@ use App\Exports\TeachersExport;
 class TeachersController extends Controller
 {
 
+    protected $stripe;
+
     public function __construct()
     {
         parent::__construct();
+        $this->stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
         $this->middleware('permission:teachers-list|teachers-create|teachers-update|teachers-view|teachers-users-update|teachers-delete', ['only' => ['index']]);
         $this->middleware('permission:teachers-create', ['only' => ['create','AddTeacher']]);
         $this->middleware('permission:teachers-view|teachers-update', ['only' => ['edit']]);
@@ -70,7 +73,7 @@ class TeachersController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
         $teachers = $school->teachers;
-        
+
         return view('pages.teachers.list',compact('teachers','schoolId'));
     }
 
@@ -142,7 +145,7 @@ class TeachersController extends Controller
                 $sentInvite = isset($alldata['is_sent_invite']) ? $alldata['is_sent_invite'] : 0 ;
                 // dd($alldata);
                 if (!empty($alldata['user_id'])) {
-                    
+
                     $user = User::find($alldata['user_id']);
                     $teacher = $user->personable;
                     $exist = SchoolTeacher::where(['school_id' => $schoolId, 'teacher_id' => $teacher->id ])->first();
@@ -175,7 +178,7 @@ class TeachersController extends Controller
                             $verifyUser = VerifyToken::create($verifyUser);
                             $data['token'] = $verifyUser->token;
                             $data['school_name'] = $schoolName;
-                            $data['url'] = route('add.verify.email',$data['token']); 
+                            $data['url'] = route('add.verify.email',$data['token']);
                             if (!$this->emailSend($data,'sign_up_confirmation_email_exist')) {
                                 return $result = array(
                                     "status"     => 0,
@@ -252,7 +255,7 @@ class TeachersController extends Controller
                         ];
                         $verifyUser = VerifyToken::create($verifyUser);
                         $data['token'] = $verifyUser->token;
-                        $data['url'] = route('add.verify.email',$data['token']); 
+                        $data['url'] = route('add.verify.email',$data['token']);
 
                         if ($this->emailSend($data,'sign_up_confirmation_email')) {
                             $msg = __('We sent you an activation link. Check your email and click on the link to verify.');
@@ -399,7 +402,7 @@ class TeachersController extends Controller
         }
 
         $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();
-        
+
         $lessonPriceTeachers = LessonPriceTeacher::active()
                               ->where(['teacher_id' => $teacher->id])
                               ->whereIn('event_category_id',$eventCategory->pluck('id'))
@@ -471,7 +474,7 @@ class TeachersController extends Controller
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
             $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
-                
+
             $relationalData = [
                 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
@@ -548,20 +551,59 @@ class TeachersController extends Controller
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         $school = School::find($schoolId);
         $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
-        
+
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
 
+
+
+
+
+    $invoice_url = '';
+    $product_object = null;
+    $invoices = null;
+    $subscriber = null;
+    $last_past_subscription = null;
+    if($user->stripe_id){
+        $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
+
+        foreach($subscription_info['data'] as $subs) {
+            if($subs['status'] == 'active' || $subs['status'] == 'trialing') {
+                $subscription = $subs;
+                $subscriber = (object) $subs;
+                $product_object = $this->stripe->products->retrieve(
+                    $subs['plan']['product'],
+                    []
+                );
+                $invoice_url = $this->stripe->invoices->retrieve(
+                    $subscriber->latest_invoice,
+                    []
+                );
+            } elseif($subs['status'] == 'canceled' || $subs['status'] == 'inactive') {
+                $last_past_subscription = $subs;
+            }
+        }
+
+        $invoices = $this->stripe->invoices->all(
+        ['customer' => $user->stripe_id],
+        );
+
+    }
+
+
+
         // dd($relationalData);
-        return view('pages.teachers.self_edit')->with(compact('levels',
+        return view('pages.account.index')->with(compact('levels',
         'eventLastLevelId',
         'locations',
         'school',
         'eventLastLocaId',
         'eventCat',
         'InvoicesTaxData',
-        'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope'));
+        'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope',
+        'subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices', 'last_past_subscription'
+    ));
     }
 
 
@@ -611,6 +653,12 @@ class TeachersController extends Controller
             ];
             Teacher::where('id', $teacher->id)->update($teacherData);
             // $schoolTeacherData =SchoolTeacher::where(['teacher_id'=>$teacher->id, 'school_id'=>$schoolId])->first();
+
+            //update user firstname and lastname
+            $user->firstname = $alldata['firstname'];
+            $user->lastname = $alldata['lastname'];
+            $user->save();
+
             $relationalData = [
                 // 'role_type'=>$alldata['role_type'],
                 // 'has_user_account'=> isset($alldata['has_user_account'])? $alldata['has_user_account'] : null ,
@@ -676,7 +724,7 @@ class TeachersController extends Controller
         try {
             $schoolTeacher = SchoolTeacher::where(['school_id'=>$schoolId, 'teacher_id'=>$teacherId])->first();
             //->update(['is_sent_invite'=>$is_sent_invite]);
-            
+
             $school = School::find($schoolId);
             $teacher = Teacher::find($teacherId);
             if ($teacher && !empty($teacher->email)) {
@@ -716,7 +764,7 @@ class TeachersController extends Controller
                     $data = [];
                     $data['is_sent_invite'] = 1;
                     $alldata->update($data);
-                    
+
                     //$msg = __('We sent you an activation link. Check your email and click on the link to verify.');
                 } else {
                     return false;
@@ -822,6 +870,25 @@ class TeachersController extends Controller
 
 
     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeTax($id)
+    {
+        $location = InvoicesTaxes::find($id)->delete();
+
+        if($location==1){
+            return $result = array(
+                "status"     => 1,
+                'message' => __('Successfully Deleted')
+            );
+        }
+    }
+
+
+    /**
      * Check users .
      *
      * @param  int  $id
@@ -854,7 +921,7 @@ class TeachersController extends Controller
                     ];
                     $InvoiceTax = InvoicesTaxes::create($taxData);
                 }
-            }  
+            }
 
 
             DB::commit();

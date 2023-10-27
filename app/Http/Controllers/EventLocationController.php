@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventLocationController extends Controller
 {
-    
+
     /**
      * Create a new controller instance
      *
@@ -29,14 +29,14 @@ class EventLocationController extends Controller
      * @return Response
     */
     public function index($schoolId = null)
-    {   
+    {
         $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
         }
@@ -45,26 +45,26 @@ class EventLocationController extends Controller
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
 
         return view('pages.event_location.index',compact('locations','eventLastLocaId','schoolId'));
-    }   
-   
+    }
+
     /**
      * Remove the specified resource from storage.
      * @return Response
     */
- 
+
     public function addLocation(Request $request)
     {
         try{
             if ($request->isMethod('post')){
-                
+
                 $locationData = $request->all();
                 $user = Auth::user();
                 if ($user->isSuperAdmin()) {
-                    $userSchoolId = $locationData['school_id']; 
+                    $userSchoolId = $locationData['school_id'];
                 }else {
                     $userSchoolId = $user->selectedSchoolId();
                 }
-                
+
                 foreach($locationData['location'] as $location){
                     if(isset($location['id']) && !empty($location['id'])){
                         $answers = [
@@ -85,7 +85,9 @@ class EventLocationController extends Controller
                     "status"     => 1,
                     'message' => __('Successfully Registered')
                 );
-                
+
+                return redirect()->route('calendar.settings')->with('success', 'Paramètres des locations enregistrés avec succès.');
+
             }
         }catch (Exception $e) {
             DB::rollBack();
@@ -93,7 +95,7 @@ class EventLocationController extends Controller
                 'status' => 0,
                 'message' =>  __('Internal server error')
             ];
-        }   
+        }
 
         return $result;
     }
@@ -108,7 +110,7 @@ class EventLocationController extends Controller
     public function removeLocation($id)
     {
         $location = Location::find($id)->delete();
-        
+
         if($location==1){
             return $result = array(
                 "status"     => 1,
@@ -116,6 +118,6 @@ class EventLocationController extends Controller
             );
         }
     }
- 
- 
+
+
 }

@@ -612,7 +612,7 @@
 
                                 <div id="add_more_tax_div"></div>
                                 <div class="row col-md-12 mt-3 mb-5">
-                                    <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
+                                    <button id="add_more_tax_btn" type="button" class="btn btn-theme-success"><em class="glyphicon glyphicon-plus"></em>Add Tax</button>
                                 </div>
                             </div>
 

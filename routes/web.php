@@ -217,6 +217,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/add-event-level', 'EventLevelController@addLevel')->name('event_level.create');
   Route::delete('/remove-event-level/{key}', 'EventLevelController@removeLevel')->name('event_level.destroy');
 
+  //taxes
+  Route::delete('/remove-event-tax/{key}', 'TeachersController@removeTax')->name('event_taxes.destroy');
+
+
   // payment routes
   Route::get('/subscriber-list', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscriber_list');
 
@@ -399,6 +403,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
+
+    Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'index'] )->name('calendar.settings');
+    Route::post('/settings', [App\Http\Controllers\SettingsController::class, 'store'])->name('calendar.settings.store');
 
     //AJAX action
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

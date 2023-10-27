@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EventLevelController extends Controller
 {
-    
+
     /**
      * Create a new controller instance
      *
@@ -26,14 +26,14 @@ class EventLevelController extends Controller
      * @return Response
     */
     public function index($schoolId = null)
-    {   
+    {
         $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);
             if (empty($school)) {
                 return redirect()->route('schools')->with('error', __('School is not selected'));
             }
-            $schoolId = $school->id; 
+            $schoolId = $school->id;
         }else {
             $schoolId = $user->selectedSchoolId();
         }
@@ -41,7 +41,7 @@ class EventLevelController extends Controller
         $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         return view('pages.event_level.index',compact('levels','eventLastLevelId','schoolId'));
-    }   
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -51,11 +51,11 @@ class EventLevelController extends Controller
     {
         try{
             if ($request->isMethod('post')){
-                
+
                 $levelData = $request->all();
                 $user = Auth::user();
                 if ($user->isSuperAdmin()) {
-                    $userSchoolId = $levelData['school_id']; 
+                    $userSchoolId = $levelData['school_id'];
                 }else {
                     $userSchoolId = $user->selectedSchoolId();
                 }
@@ -80,6 +80,9 @@ class EventLevelController extends Controller
                     "status"     => 1,
                     'message' => __('Successfully Registered')
                 );
+
+                return redirect()->route('calendar.settings')->with('success', 'Paramètres des levels enregistrés avec succès.');
+
             }
         }catch (Exception $e) {
             DB::rollBack();
@@ -87,7 +90,7 @@ class EventLevelController extends Controller
                 'status' => 0,
                 'message' =>  __('Internal server error')
             ];
-        }   
+        }
 
         return $result;
     }
@@ -101,7 +104,7 @@ class EventLevelController extends Controller
     public function removeLevel($id)
     {
         $location = level::find($id)->delete();
-        
+
         if($location==1){
             return $result = array(
                 "status"     => 1,
@@ -109,6 +112,6 @@ class EventLevelController extends Controller
             );
         }
     }
- 
- 
+
+
 }

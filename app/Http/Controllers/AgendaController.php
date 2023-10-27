@@ -718,9 +718,10 @@ class AgendaController extends Controller
                 if ($user->isTeacherAdmin()) {
                     if ($fetch->event_type==100) {
                     //$e['tooltip']=$e['event_type_name'].' <br/>  Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
-                        $e['tooltip']='Students: '.$student_name;
+                       // $e['tooltip']='Students: '.$student_name;
                     } else {
                         $e['tooltip']='Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                        //$e['tooltip']='Duration: '.$fetch->duration_minutes . ' Mn.';
                     }
                 } else {
                     if ($fetch->event_type==100) {
@@ -745,7 +746,8 @@ class AgendaController extends Controller
                     if ($user->isTeacherAdmin()) {
 
                         //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes;
-                        $e['title_extend']= '<br/>Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                       // $e['title_extend']= '<br/>Students: '.$student_name.' <br /> Duration: '.$fetch->duration_minutes . ' Mn.';
+                        $e['title_extend'] = '<br/><span style="font-size:11px; padding:3px;"><i class="fa-regular fa-clock"></i> Duration: '.$fetch->duration_minutes . ' Mn.</span>';
                     } else {
 
                         //$e['title_extend']= '<br/>'.$e['event_type_name'].' <br/> Students: '.$student_name.' <br /> Teacher: '.$e['teacher_name'].' <br /> Duration: '.$fetch->duration_minutes;

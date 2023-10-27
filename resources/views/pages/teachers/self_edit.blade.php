@@ -490,7 +490,6 @@
 					<div class="row">
 					<div class="col-lg-10">
 
-
                                 <div class="accordion" id="accordionExample">
 
                                     @foreach($eventCategory as $key => $category)
@@ -646,7 +645,7 @@
 						</div>
 						<div class="card" style="border-radius:8px 0 0 8px; background-color:#EEE;">
 							<div class="card-body">
-								<button id="add_more_tax_btnn" type="button" class="btn bg-info text-white w-100"><em class="glyphicon glyphicon-plus"></em>Add Another Tax</button>
+								<button id="add_more_tax_btnn" type="button" class="btn bg-info text-white w-100"><em class="glyphicon glyphicon-plus"></em>Add Tax</button>
 								<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success w-100 mt-1">{{ __('Save') }}</button>
 							</div>
 						</div>

@@ -35,6 +35,7 @@
 <div class="content agenda_page">
 	<div class="container-fluid area-container">
 		<form method="POST" action="{{route('add.email_template')}}" id="agendaForm" name="agendaForm" class="form-horizontal" role="form">
+            @csrf
             <header class="panel-heading" style="border: none;">
 				<div class="row panel-row pt-2" style="margin:0;">
 					<div class="col-md-5 col-xs-12 header-area">
@@ -166,7 +167,6 @@
             <div class="clearfix"></div>
             <div class="row" style="margin:0;">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    @csrf
                     <section class="panel cal_area" style="border: 0;box-shadow: none;">
                         <label id="loading" style="display:none;">Loading....</label>
                         <form action="#" method="post">
@@ -233,12 +233,15 @@
                                         <i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>
                                     </div>
 
+                                    <div style="position: absolute;" id="loadingSearch"></div>
+                                    <div id="resultSearch"></div>
+                                    <ul id="listEventsSearch"></ul>
 
                                  <div id="allFilters" style="display:none;">
 
                                     <div style="margin-top:40px;" id="datepicker_month"></div>
 
-                                    <div id="event_school_div" name="event_school_div" class="selectdiv">
+                                    <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity: 0 !important; visibility: hidden !important;">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
                                                 <option {{ ( !empty($schoolId) && $schoolId == $this_school->id ? 'selected' : '') }}
@@ -735,7 +738,14 @@
 <!-- starting calendar related jscript -->
 <!-- ================================= -->
 
-
+<script>
+    let foundedSearchItems = [];
+    $('#search_text').on('keydown', function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+    }
+});
+</script>
 
 @if(session('firstConnexion') === true)
     <script>
@@ -1051,16 +1061,83 @@ $('.search-icon').on('click', function() {
         }); //ajax-type
 
     }
-    $('#search_text').on('input', function(){
-		var search_text=$(this).val();
+
+    var typingTimer;
+    var doneTypingInterval = 1000;
+
+    $('#search_text').on('input', function() {
+        var search_text = $(this).val();
+        if (search_text.length > 0) {
+            var loadingSearch = document.getElementById('loadingSearch');
+            loadingSearch.innerHTML = '<i class="fa-solid fa-magnifying-glass fa-spin fa-spin-reverse"></i>';
+            $('#calendar').fullCalendar('rerenderEvents');
+        }
+        if (search_text.length == 0) {
+            $('#calendar').fullCalendar('rerenderEvents');
+        }
+
+        if (search_text.length < 2) {
+            $("#resultSearch").hide();
+            $("#allFilters").show();
+            $("#listEventsSearch").hide();
+        }
+
+        if (search_text.length > 2) {
+            // Effacer le délai précédent s'il y en a un
+            clearTimeout(typingTimer);
+
+            // Définir un nouveau délai
+            typingTimer = setTimeout(function() {
+                toastr.options = {
+                    "positionClass": "toast-bottom-full-width",
+                    "timeOut": "3000",
+                }
+
+                var eventCount = $('.fc-event').length || $('.fc-list-item').length;
+                if (eventCount > 0) {
+                    toastr.info(eventCount + ' results according to your criteria');
+                    $("#allFilters").hide();
+                    $("#listEventsSearch").show();
+                    $("#resultSearch").show();
+                    resultSearch.style.display = 'block';
+                    resultSearch.innerHTML = '<br><b><i class="fa-solid fa-arrow-right"></i> Your search result</b><br><br><div class="alert alert-primary"><b>' + eventCount + '</b> results for your search <i>' + search_text + '</i>.</div>';
+                    var cal_view_mode = $('#calendar').fullCalendar('getView');
+                    var ulElement = document.getElementById("listEventsSearch");
+                    while (ulElement.firstChild) {
+                    ulElement.removeChild(ulElement.firstChild);
+                    }
+                    if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+                        $('.fc-list-item-title a').each(function() {
+                            console.log($(this).text());
+                            var text = $(this).text();
+                            if (text.indexOf('all-day') > -1) {
+                                text = text.replace('all-day', 'all-day ');
+                            }
+                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                        });
+                    }
+                    else {
+                        $('.fc-event').each(function() {
+                            console.log(foundedSearchItems);
+                            var text = $(this).text();
+                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                        });
+                    }
 
 
-		if (search_text.length > 0){
-			$('#calendar').fullCalendar('rerenderEvents');
-		}
-        if (search_text.length == 0){
-			$('#calendar').fullCalendar('rerenderEvents');
-		}
+
+                } else {
+                    toastr.info('No results according to your criteria');
+                    $("#allFilters").show();
+                }
+                if (search_text.length < 2) {
+                    toastr.info('No results according to your criteria');
+                    $("#resultSearch").hide();
+                    $("#allFilters").show();
+                }
+            }, doneTypingInterval);
+        }
+        loadingSearch.innerHTML = "";
     });
     $("#datepicker_month").datetimepicker()
     .on('changeDate', function(ev){
@@ -1994,8 +2071,8 @@ $('.search-icon').on('click', function() {
 			slotDuration: '00:15:00',
 			slotLabelFormat: timeFormat,
             defaultView: defview,
-            minTime: '05:00:00',
-            maxTime: '23:59:00',
+            minTime: '00:00:01',
+            maxTime: '23:59:59',
             scrollTime: scrollTimeInit + ':00',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false,
@@ -2212,9 +2289,10 @@ $('.search-icon').on('click', function() {
                 if ((school_found == 1) && (event_found == 1) && (student_found == 1) && (teacher_found == 1) && (date_found == 1) && (location_found == 1) ) {
                     if (search_text.length > 2){
                         search_found=0;
+                        var finalSearch = event.text_for_search + ' ' + event.text_for_search.toLowerCase() + ' ' + event.title + ' ' + event.title.toLowerCase();
                         //if ((event.tooltip.toLowerCase().indexOf(search_text) >= 0) || (event.tooltip.toLowerCase().indexOf(search_text) >= 0)) {
                         //if (event.tooltip.toLowerCase().indexOf(search_text) >= 0) {
-                        if (event.text_for_search.indexOf(search_text) >= 0) {
+                        if (finalSearch.indexOf(search_text) >= 0) {
                             //if (event.tooltip.indexOf(search_text) >= 0) {
                             search_found=1;
                             //flag=true;
@@ -2241,8 +2319,6 @@ $('.search-icon').on('click', function() {
                 }
 
 
-
-
                 //Check if students are not away
                 var icon2 = '<i class="fa-solid fa-circle-info" style="position:absolute; right:2px; top:2px; color:orange;"></i>';
                 var hasStudentWithFutureDate = false;
@@ -2267,6 +2343,8 @@ $('.search-icon').on('click', function() {
                     foundRecords=1; //found valid record;
                     //event.allDay = true;
                     //console.log(event)
+
+
                     if (event.allDay) {
                         $(el).find('div.fc-content').prepend(icon);
                     } else {
@@ -2868,6 +2946,15 @@ $('.search-icon').on('click', function() {
                         let teacher_id = JSON.parse(json_events)[key].teacher_id;
                         let invoice_type = JSON.parse(json_events)[key].invoice_type;
 
+                        let startDisplay = moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM HH:mm");
+                        let endDisplay = moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM HH:mm");
+
+                        if(moment(JSON.parse(json_events)[key].start.toString()).format("DD/MM/YYYY") == moment(JSON.parse(json_events)[key].end.toString()).format("DD/MM/YYYY")) {
+                            endDisplay = '';
+                        } else {
+                            endDisplay = ' to ' + endDisplay;
+                        }
+
                         let loggedin_teacher_id = <?= $AppUI->person_id; ?>
 
                         let duration_minutes = JSON.parse(json_events)[key].duration_minutes;
@@ -2885,19 +2972,19 @@ $('.search-icon').on('click', function() {
                         var curdate=new Date();
                         if (JSON.parse(json_events)[key].is_locked ==1) {
                             if((invoice_type == 'S') && ((user_role == 'admin_teacher') || user_role == ('school_admin_teacher'))){
-                                    selected_validate_ids.push('<tr><td>Date</td><td><b>'+start+' to '+end_date+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                                    selected_validate_ids.push('<tr><td>Date</td><td><b>'+startDisplay+' '+endDisplay+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                    selected_validate_ids.push('<tr><td><b>Date</b></td><td><b>'+start+' to '+end_date+'</td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
+                                    selected_validate_ids.push('<tr><td><b>Date</b></td><td><b>'+startDisplay+' '+endDisplay+'</td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
                             }
                         }
                         else if(moment(JSON.parse(json_events)[key].end) < moment(curdate)){
 
                             if((invoice_type == 'S') && (user_role == 'admin_teacher') ){
-                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
+                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+startDisplay+' '+endDisplay+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr><tr><td>Teacher</td><td>with '+teacher_name + '</td></tr>');
                             }
                             if((invoice_type == 'T') && (loggedin_teacher_id == teacher_id)){
-                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+start+' to '+end+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
+                                selected_non_validate_ids.push('<tr><td width="45"><b>Date</b></td><td><b>'+startDisplay+' '+endDisplay+'</b></td></tr><tr><td>Title</td><td>'+JSON.parse(json_events)[key].title+'</td></tr><tr><td>Type</td><td>'+cours_name+'</td></tr><tr><td>Duration</td><td>'+duration_minutes+' Mn.</td></tr>');
                             }
 
                         }
@@ -3531,6 +3618,7 @@ $('.search-icon').on('click', function() {
             }
 
 			document.cookie = "prevnext="+document.getElementById("prevnext").value+";path=/";
+
 		//}
     }
 

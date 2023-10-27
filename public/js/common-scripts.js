@@ -217,7 +217,7 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
-        <div class="modal-dialog modal-dialog-centered mt-5">
+        <div class="modal-dialog modal-lg modal-dialog-centered mt-5">
             <div class="modal-content">
                 <div class="modal-body text-center p-4">
                     <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
@@ -226,14 +226,14 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
                     </div>-->
                     <br>
                     <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
-                    <button id="confirm_cancel_btn" type="button" class="btn btn-danger gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                    <br><br>`;
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-default gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
+                    <br><br><div class="row">`;
                     if (p_event_id.length!=0) {
                         p_event_id.forEach((element) => {
-                            modalHtml += `<table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table>`;
+                            modalHtml += `<div class="col-md-6"><table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table></div>`;
                         });
                     }
-                modalHtml +=`</div>
+                modalHtml +=`</div></div>
             </div>
         </div>
     </div>`;
