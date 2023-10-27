@@ -565,6 +565,7 @@ class TeachersController extends Controller
     $invoices = null;
     $subscriber = null;
     $last_past_subscription = null;
+    $subscription = null;
     if($user->stripe_id){
         $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id])->toArray();
 
