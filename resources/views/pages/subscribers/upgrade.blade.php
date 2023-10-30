@@ -195,11 +195,7 @@
                             @endif
                           <?php } ?>
 
-                            <?php
-                            if ($isCancelled) { ?>
-                                You cancelled your subscription.
-                            <?php }
-                            ?>
+
 
 
                           <table class="table table-stripped table-hover">

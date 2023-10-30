@@ -177,7 +177,6 @@ class SubscriptionController extends Controller
                 }
             }
             $is_subscribed = $user->subscribed('default');
-            $isCancelled = $user->subscription('default')->onGracePeriod() || $user->subscription('default')->canceled();
             $today_date = new DateTime();
             if (!$is_subscribed) {
                 $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
