@@ -1,5 +1,5 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-3">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">Prices by category</div>
             <div class="card-body">
@@ -8,6 +8,8 @@
                         {{ session('success') }}
                     </div>
                 @endif-->
+
+                @if(!empty($eventCategory) && $eventCategory->count() > 0)
 
                 <form method="POST" action="{{ route('selfUpdatePriceAction') }}">
                     @csrf
@@ -96,6 +98,9 @@
                     <br>
                     <button type="submit" class="btn btn-primary">{{ __('Save Prices by category') }}</button>
                 </form>
+                @else
+                <i class="fa-solid fa-circle-info"></i> Please create your first category for setup your prices.
+                @endif
             </div>
         </div>
     </div>

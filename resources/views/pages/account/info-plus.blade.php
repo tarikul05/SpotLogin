@@ -1,5 +1,5 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-3">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">Account information</div>
             <div class="card-body">
@@ -11,13 +11,16 @@
 
 
 
-                <table class="table table-stripped table-hover">
-                    <tr><td width="250"><b>Connected with Login ID</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
+                <table class="table table-bordered table-hover">
+                    <tr><td><b>School name</b></td> <td>{{  $AppUI->related_school->school_name }}</td></tr>
                     @if($AppUI->related_school->discipline != null)
-                    <tr><td width="250"><b>Activity</b></td> <td>{{  $AppUI->related_school->discipline }}</td></tr>
+                    <tr><td><b>Activity</b></td> <td>{{  $AppUI->related_school->discipline }}</td></tr>
                     @endif
-                    <tr><td><b>Account created date</b></td> <td>{{  $AppUI->created_at }}</td></tr>
-                    <tr><td><b>Account timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                    <tr><td><b>Created at</b></td> <td>{{  $AppUI->created_at }}</td></tr>
+                    <tr><td><b>Account Timezone</b></td> <td>{{  $AppUI->related_school->timezone }}</td></tr>
+                    @if(!empty($settingUser))
+                    <tr><td><b>Setting Timezone</b> <span class="badge bg-info">current</span></td> <td>{{  $settingUser->timezone }}</td></tr>
+                    @endif
                     @php
                       $countryCode = $AppUI->related_school->country_code; // Vous pouvez remplacer "FR" par la valeur souhaitée
                       $countryName = DB::table('countries')->where('code', $countryCode)->value('name');
@@ -25,12 +28,11 @@
 
                     <tr><td><b>Country</b></td> <td>{{  $countryName }}</td></tr>
                     <tr><td><b>Currency</b></td> <td>{{  $AppUI->related_school->default_currency_code }}</td></tr>
-                      <tr class="mt-2"><td><b class="text-danger">Delete my account</b></td> <td>
-                          <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">Delete my account</a></td></tr>
-                    <!--<tr><td><b>Acces</b></td> <td>{{  $AppUI->role_type }}</td></tr>-->
+
                   </table>
 
-
+                  <br>
+                  <a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#delete_user">Delete my account</a>
 
 
             </div>

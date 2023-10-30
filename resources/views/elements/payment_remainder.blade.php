@@ -4,7 +4,7 @@
         <div class="d-none d-sm-block">
                 <div class="text-success">
                     <p class="text">
-                        <span class="day_count"><?php echo $day_diff ?></span> days remaining in your trial period <a class="custom-link" href="{{ route('profile.plan') }}"> Upgrade now!</a>
+                        <span class="day_count"><?php echo $day_diff ?></span> days remaining in your trial period <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> Upgrade now!</a>
                     </p>
                     </div>
                 </div>
@@ -38,8 +38,8 @@
             </div>
         </div>
 
-    <?php 
+    <?php
             }
-        } 
+        }
     ?>
 @endif

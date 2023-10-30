@@ -1,4 +1,5 @@
 
+
 //Display more prices
 $(document).on('click','#add_new_price',function(){
     $('.hide-custom-price').slideToggle('slow');
@@ -62,11 +63,7 @@ $(document).on('click','.delete_event',function(){
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire(
-            'Deleted!',
-            'Your category has been deleted.',
-            'success'
-          )
+
           var lst_id = $('#add_more_event_category_btn').attr('data-last_event_cat_id');
           var incre = (parseInt(lst_id)-1);
           $('#add_more_event_category_btn').attr('data-last_event_cat_id',incre);
@@ -87,6 +84,34 @@ $(document).on('click','.delete_event',function(){
                       if(response.status == 1){
                         $(this).parents('.add_more_event_category_row').remove();
                       }
+
+                      let timerInterval
+                        Swal.fire({
+                        title: 'Category has deleted !',
+                        html: 'Reload categories...',
+                        icon: 'success',
+                        timer: 2500,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                            }, 100)
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                        }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log('I was closed by the timer')
+                            //reload the page
+                            location.reload();
+                        }
+                        })
+
+
                   }
               })
               $(this).parents('.add_more_event_category_row').fadeOut();
@@ -102,6 +127,7 @@ $(document).on('click','.delete_event',function(){
         var rows = table.querySelectorAll("tr");
         if (rows.length === 1) {
             table.style.display = "none";
+            $('#btnSaveCategories').hide();
         }
     }
 });
@@ -109,6 +135,7 @@ $(document).on('click','.delete_event',function(){
 //Add category
 $(document).ready(function(){
 	$(document).on('click','#add_more_event_category_btn',function(){
+        $('#btnSaveCategories').show();
         $('#add_more_event_category_div').fadeIn();
 		var lst_id = $(this).attr('data-last_event_cat_id');
 		var incre = (parseInt(lst_id)+1);

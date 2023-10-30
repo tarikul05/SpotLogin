@@ -1,5 +1,5 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-3">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">Categories</div>
             <div class="card-body">
@@ -13,6 +13,7 @@
                     @csrf
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
+                    @if(!empty($eventCat) && $eventCat->count() > 0)
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <th width="30%">Name</th>
@@ -66,6 +67,10 @@
                             </tbody>
                         </table>
 
+                        @else
+                        <i class="fa-solid fa-circle-info"></i> Please create your first category<br><br>
+                        @endif
+
                         <table class="table table-bordered" id="add_more_event_category_div" style="display: none;">
                             <thead>
                                 <th width="30%">Name</th>
@@ -84,7 +89,7 @@
                       </div>
 
                     <br>
-                    <button type="submit" class="btn btn-success">{{ __('Save Categories') }}</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveCategories">{{ __('Save Categories') }}</button>
                 </form>
             </div>
         </div>

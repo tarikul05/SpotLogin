@@ -2046,6 +2046,8 @@ $('.search-icon').on('click', function() {
         // }
 
         var myTimezone = "{{ $myCurrentTimeZone }}";
+        var mySetting = @json($settingUser);
+        console.log('mySetting', mySetting)
 
         var timeFormat;
 
@@ -2071,8 +2073,8 @@ $('.search-icon').on('click', function() {
 			slotDuration: '00:15:00',
 			slotLabelFormat: timeFormat,
             defaultView: defview,
-            minTime: '00:00:01',
-            maxTime: '23:59:59',
+            minTime: mySetting === null ? '00:00:01' : mySetting.min_time,
+            maxTime: mySetting === null ? '23:59:59' : mySetting.max_time,
             scrollTime: scrollTimeInit + ':00',
             defaultDate: (getCookie("date_from")) ? getCookie("date_from") : p_from_date,
             utc: false,

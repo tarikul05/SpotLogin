@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\EmailTemplate;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
+use App\Models\CalendarSetting;
 use App\Models\InvoicesTaxes;
 use App\Models\SchoolTeacher;
 use App\Models\VerifyToken;
@@ -555,9 +556,9 @@ class TeachersController extends Controller
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
+      
 
-
-
+        $settingUser = CalendarSetting::where('user_id', $user->id)->first();
 
 
     $invoice_url = '';
@@ -599,6 +600,7 @@ class TeachersController extends Controller
         'eventLastLevelId',
         'locations',
         'school',
+        'settingUser',
         'eventLastLocaId',
         'eventCat',
         'InvoicesTaxData',

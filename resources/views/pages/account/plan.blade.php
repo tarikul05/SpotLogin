@@ -1,5 +1,5 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-3">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">My plan</div>
             <div class="card-body">
@@ -24,47 +24,56 @@
 
 
 
-            <div class="card p-2 mb-2">
+
               <?php if($product_object){?>
+                <div class="card p-2 mb-2">
                 @if($subscriber->cancel_at_period_end)
                 <?php
                 if($subscription['status'] === 'trialing') {
-                  echo '<span class="text-danger">Your subscription is canceled and will stop the' . date('M j, Y', $subscription['billing_cycle_anchor']).'</span>';
+                  echo '<span class="text-danger">Your subscription is canceled and will stop the ' . date('M j, Y', $subscription['billing_cycle_anchor']).'</span>';
                 }
                 if($subscription['status'] === 'active') {
-                  echo '<span class="text-danger">Your subscription is canceled and will stop the' . date('M j, Y', $subscription['current_period_end']).'</span>';
+                  echo '<span class="text-danger">Your subscription is canceled and will stop the ' . date('M j, Y', $subscription['current_period_end']).'</span>';
                 }
                 ?>
-                  <span class="text-danger">Your subscription is canceled and will stop the <?php echo date('M j, Y', $subscription['current_period_end']); ?>.</span><br>
+                <?php if($subscription['status'] != 'trialing' && $subscription['status'] != 'active') {?>
+                    <span class="text-danger">Your subscription is canceled and will stop the <?php echo date('M j, Y', $subscription['current_period_end']); ?>.</span><br>
+                    <?php } ?>
                 @endif
 
                 @if($subscriber->status === 'trialing')
                   Your trial period is valid until <?= date('M j, Y', $subscriber->trial_end) ?>.
-                  <?php if($product_object){ ?>
+                  <?php if($product_object && !$subscriber->cancel_at_period_end){ ?>
                     <br>
                     <small>(you will not be charged until the end of your trial period)</small>
                   <?php } ?>
-                  <hr>
+
                 @endif
                 @if($subscriber->status === 'active')
+                <hr>
                 <span class="text-success"><i class="fa-solid fa-check"></i> Premium Plan is active on your account.</span>
                     Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
                 @endif
-              <?php } else {
-
-              if($last_past_subscription) {
-                  if($last_past_subscription['status'] === 'canceled'){
-                      echo 'Your subscription has been canceled since the ' . date('M j, Y', $last_past_subscription['billing_cycle_anchor']);
-                  }
-              }
-
-              }?>
             </div>
+              <?php } else { ?>
+
+              <?php
+                if($last_past_subscription) {
+                    if($last_past_subscription['status'] === 'canceled'){
+                        echo '<div class="card p-2 mb-2">';
+                        echo 'Your subscription has been canceled since the ' . date('M j, Y', $last_past_subscription['billing_cycle_anchor']);
+                        echo '</div>';
+                    }
+                }
+                ?>
+
+              <?php }?>
 
 
 
 
-<table class="table table-stripped table-hover">
+
+<table class="table table-bordered table-hover">
 
     <tr>
       <td><b>Plan Type</b></td>

@@ -1,8 +1,8 @@
 <form class="form-horizontal" id="add_teacher" action="{{ route('updateTeacherAction') }}"  method="POST" enctype="multipart/form-data" name="add_teacher" role="form">
     @csrf
 
-    <div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+    <div class="row justify-content-center pt-3">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-header">{{ __('Coach information') }}</div>
             <div class="card-body">
@@ -20,7 +20,7 @@
                     @endif
 
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-md-5 col-xs-12">
                             <div class="form-group custom-form-group">
                                 <label for="lastname" id="family_name_label_id">{{__('Family Name') }}<span style="color:red; font-size:13px;">*</span></label>
                                 <div class="input-group">
@@ -47,8 +47,8 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-2"></div>
-                        <div class="col-5">
+                        <div class="col-md-2 col-xs-12"></div>
+                        <div class="col-md-5 col-xs-12">
                             <div class="form-group custom-form-group">
                                 <label id="slicence_js_caption">{{__('License number') }}</label>
                                 <div class="input-group">
@@ -73,13 +73,13 @@
     </div>
 
     <div class="row justify-content-center pt-4">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Coach Address') }} <span style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                <div class="card-header">{{ __('Coach Address') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
                 <div class="card-body">
 
 							<div class="row">
-								<div class="col-5">
+								<div class="col-md-5 col-xs-12">
 									<div class="form-group custom-form-group">
 										<label for="street" id="street_caption">{{__('Street') }}</label>
                                             <div class="input-group">
@@ -105,8 +105,8 @@
 
 									</div>
 								</div>
-                                <div class="col-2"></div>
-								<div class="col-5">
+                                <div class="col-md-2 col-xs-12"></div>
+								<div class="col-md-5 col-xs-12">
 									<div class="form-group custom-form-group">
 										<label for="place" id="locality_caption">{{__('City') }}</label>
                                             <div class="input-group">
@@ -147,20 +147,19 @@
                 </div>
 
                 <div class="row justify-content-center pt-4">
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ __('Contact information') }} <span style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                            <div class="card-header">{{ __('Contact information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
                             <div class="card-body">
 
 							<div class="row">
-								<div class="col-5">
+								<div class="col-md-5 col-xs-12">
 									<div class="form-group custom-form-group">
 										<label  for="phone" id="phone_caption">{{__('Phone') }}</label>
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
 												<input class="form-control" value="{{!empty($teacher->phone) ? old('phone', $teacher->phone) : old('phone')}}" id="phone" name="phone" type="text">
 											</div>
-
 									</div>
 
 									<div class="form-group custom-form-group">
@@ -169,18 +168,16 @@
 												<span class="input-group-addon"><i class="fa-solid fa-mobile-screen-button"></i></span>
 												<input class="form-control" value="{{!empty($teacher->mobile) ? old('mobile', $teacher->mobile) : old('mobile')}}" id="mobile" name="mobile" type="text">
 											</div>
-
 									</div>
 								</div>
-                                <div class="col-2"></div>
-								<div class="col-5">
+                                <div class="col-md-2 col-xs-12"></div>
+								<div class="col-md-5 col-xs-12">
 									<div class="form-group custom-form-group">
 										<label  for="email2" id="email_caption">{{__('Email') }}</label>
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 												<input class="form-control" value="{{!empty($teacher->email2) ? old('email2', $teacher->email2) : old('email2')}}" id="email2" name="email2" type="text">
 											</div>
-
 									</div>
 								</div>
 							</div>
@@ -191,15 +188,15 @@
                 </div>
 
                 <div class="row justify-content-center pt-4">
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} <span style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                            <div class="card-header">{{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
                             <div class="card-body">
 
 							@if ($isInEurope)
 
 							<div class="row">
-								<div class="col-5">
+								<div class="col-md-5 col-xs-12">
 									<div class="form-group custom-form-group">
 										<label for="sstreet" id="street_caption">{{ __('Bank Name')}}</label>
 											<input class="form-control" id="bank_name" name="bank_name" type="text"
@@ -237,8 +234,8 @@
 
 									</div>
 								</div>
-                                <div class="col-2"></div>
-								<div class="col-5">
+                                <div class="col-md-2 col-xs-12"></div>
+								<div class="col-md-5 col-xs-12">
 
 									<div class="form-group custom-form-group">
 										<label for="sstreet" id="street_caption">{{ __('Account No')}}</label>
@@ -318,7 +315,7 @@
 
 
     <div class="row justify-content-center pt-4">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="card">
                 @if($AppUI->isStudent())
                 <div class="card-header">{{ __('Profile picture') }}</div>
@@ -383,7 +380,7 @@
     </div>
 
     <div class="row justify-content-center pt-2">
-        <div class="col-md-9">
+        <div class="col-md-8">
         <br>
         <button type="submit" class="btn btn-success">{{ __('Update coach informations') }}</button>
         </div>

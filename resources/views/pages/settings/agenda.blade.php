@@ -14,9 +14,12 @@
 
                     <div class="form-group">
                         <label for="timezone">Timezone</label>
-                        <select id="timezone" name="timezone" class="form-control">
-                            <option value="UTC" @if($calendarSettings->timezone === 'UTC') selected @endif>UTC</option>
-                            <option value="America/New_York" @if($calendarSettings->timezone === 'America/New_York') selected @endif>America/New_York</option>
+     
+                        <select class="select2  form-control" id="timezone" name="timezone" data-live-search="true">
+                            <option value="">{{ __('Select Timezone')}}</option>
+                            @foreach ($allTimezones as $key => $value)
+                            <option value="{{ $key }}" @if($calendarSettings->timezone === $key) selected @endif>  {{ $value }}</option>
+                            @endforeach
                         </select>
                     </div>
 

@@ -1358,7 +1358,7 @@ $('#save_btn').click(function (e) {
 		var subTotalEvents = 0;
 		var subTotalEventsExtra = 0;
 		var totalMinutesLessons = 0;
-		var currencyTotal = 'USD';
+		var currencyTotal = "{{$school->default_currency_code}}";
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
 		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
@@ -1590,7 +1590,7 @@ $('#save_btn').click(function (e) {
 
 									}
 								}
-								currencyTotal = value.price_currency;
+								//currencyTotal = value.price_currency;
 								resultHtml += '<td style="text-align:right">' + value.price_currency + ' <b>' + value.sell_price.toFixed(2) + '</b></td>';
 								//total_buy += value.buy_price;
 								//total_sell += value.sell_price + value.extra_charges;

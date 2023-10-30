@@ -43,6 +43,15 @@
 
 @section('footer_js')
 
+    <script>
+        $(document).ready(function() {
+        $('#timezone').select2({
+            width: '100%',
+            placeholder: '{{ __('Select Timezone')}}',
+            allowClear: false, 
+        });
+    });
+    </script>
     <script src="{{ asset('js/pages/settings/index.js') }}"></script>
     @if (session('success_new_cat'))
     <script>
@@ -50,5 +59,13 @@
     </script>
     <script src="{{ asset('js/pages/settings/categories.js') }}"></script>
     @endif
+
+    <script>
+    var categories = @json($eventCat);
+    if(categories.length === 0) {
+        $('#btnSaveCategories').hide();
+    }
+    </script>
+
 
 @endsection

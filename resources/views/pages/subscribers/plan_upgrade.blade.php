@@ -52,7 +52,7 @@
                                 <label class="form-check-label">Pay by new card</label>
                             </div> -->
                         </div>
-                        <div class="new_card_enable">
+                        <div class="new_card_enables">
                           <div class="form-group">
                               <label for="card_number">Card number</label>
                               <div id="card_number"></div>
@@ -139,7 +139,15 @@
         };
         const stripe = Stripe('<?= env('STRIPE_KEY') ?>', { locale: 'en' }); // Create a Stripe client.
         const elements = stripe.elements();
+
+        const options = {
+        layout: {
+            type: 'tabs',
+            defaultCollapsed: false,
+        }
+        };
         var cardNumber = elements.create('cardNumber', {
+            options,
             style: elementStyles,
             classes: elementClasses,
         });

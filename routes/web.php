@@ -235,7 +235,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('single-invoice-payment/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'singlePayment'])->name('subscription.payment');
   Route::post('single-subscription/{payment_id}', [App\Http\Controllers\SubscriptionController::class, 'storeSinglePayment'])->name('subscription.singleCharge');
 
-  Route::get('/my-subscription', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription');
+  Route::get('/congratulations', [App\Http\Controllers\SubscriptionController::class, 'mySubscription'])->name('mySubscription.congratulations');
 
   Route::get('/subscription/cancel-plan', [App\Http\Controllers\SubscriptionController::class, 'cancelPlan'])->name('subscription.cancelPlan');
 
@@ -269,7 +269,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'index'])->name('view.term_cond_cms');
     Route::post('/term_cond/term_cond_cms', [App\Http\Controllers\TermCondController::class, 'addUpdate'])->name('add.term_cond_cms');
 
-    Route::get('/profile-plan', [App\Http\Controllers\ProfileController::class, 'userDetailUpdate'])->name('profile.plan');
 
     // profile update
     Route::get('profile-update', 'ProfileController@userDetailUpdate');
@@ -401,11 +400,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{school}/teacher_email_send/{teacher}', [App\Http\Controllers\TeachersController::class, 'teacherInvitation'])->name('teacherInvitation');
 
 
-    Route::get('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
+    Route::get('/account', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('updateTeacher');
     Route::post('/update-teacher', [App\Http\Controllers\TeachersController::class, 'self_update'])->name('updateTeacherAction');
 
     Route::get('/settings', [App\Http\Controllers\SettingsController::class, 'index'] )->name('calendar.settings');
     Route::post('/settings', [App\Http\Controllers\SettingsController::class, 'store'])->name('calendar.settings.store');
+
+    Route::get('/account/subscription', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('profile.plan');
+
 
     //AJAX action
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);

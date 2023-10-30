@@ -81,10 +81,12 @@ class SettingsController extends Controller
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
+        $allTimezones = config('global.timezones');
 
         // dd($relationalData);
         return view('pages.calendar.settings')->with(compact('levels',
         'eventLastLevelId',
+        'allTimezones',
         'locations',
         'school',
         'eventLastLocaId',
