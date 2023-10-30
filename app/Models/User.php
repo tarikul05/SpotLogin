@@ -122,6 +122,10 @@ class User extends Authenticatable
         return $this->hasAnyRole(['school_admin']);
     }
 
+    public function calendarSetting()
+    {
+        return $this->hasOne(CalendarSetting::class);
+    }
 
     /**
      * Check user has Teachers and school Admin authority

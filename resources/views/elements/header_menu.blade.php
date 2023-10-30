@@ -8,35 +8,38 @@
 
 
 
-                <a class="user_profile d-block d-sm-none" href="<?= $BASE_URL;?>/admin/profile-update">
+                <a class="user_profile d-block d-sm-none" href="#">
 
-                    <div style="position: relative; width:48px; font-size:10px; display:inline;">
+                    <div style="position: relative; width:48px; font-size:11px; display:inline;">
                             @if( $is_subscribed )
                             @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                            <span class="badge bg-success p-1" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">premium</span>
+                            <span class="badge bg-success p-1" style="position: absolute; right:-12px; top:5px; padding:2px!important;">premium</span>
                             @else
-                            <span class="badge bg-info p-1" style="position: absolute; right:-1px; top:-18px; padding:2px!important;">basic</span>
+                            <span class="badge bg-info p-1" style="position: absolute; right:-1px; top:5px; padding:2px!important;">basic</span>
                             @endif
                             @endif
                             @if( !$is_subscribed )
                                 <?php if( !empty($user->trial_ends_at) && ($today_date <= $ends_at) ){ ?>
-                                    <span class="badge bg-info p-1" style="position: absolute; right:0px; top:-15px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-info p-1" style="position: absolute; right:0px; top:5px; padding:2px!important;">basic</span>
                                 <?php } else { ?>
-                                    <span class="badge bg-warning p-1" style="position: absolute; right:0px; top:-15px; padding:2px!important;">basic</span>
+                                    <span class="badge bg-warning p-1" style="position: absolute; right:0px; top:5px; padding:2px!important;">basic</span>
                                 <?php } ?>
                             @endif
                         <?php if (!empty($AppUI->profileImage->path_name)): ?>
-                            <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                            <img src="{{ $AppUI->profileImage->path_name }}" class="admin_logo" id="admin_logo_mobile"  alt="globe">
                         <?php else: ?>
-                            <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                            <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo_mobile" alt="globe">
                         <?php endif; ?>
                     </div>
+                </a>
 
-                        <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : 'Admin';?>
+            <div class="d-block d-sm-none" style="margin-top:13px; position:absolute; left:58px;">
+                    <span class="admin_name pt-2" style="font-size:14px;">
+                            <?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : 'Admin';?>
+                    </span>
+                </div>
 
-                        </span>
 
-                    </a>
 
                 <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -80,6 +83,10 @@
 
                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
                         <a href="{{ route('updateTeacher') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a>
+                    @endif
+
+                    @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
+                        <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('My Settings') }}</a>
                     @endif
 
                     @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
@@ -174,14 +181,12 @@
 
                     <?php if (!empty($AppUI['id'])): ?>
                     <div class="d-flex align-items-center">
-                        <a class="user_profile" href="<?= $BASE_URL;?>/admin/profile-update">
 
-
-                            <div style="position: relative; width:48px; font-size:10px; display:inline;">
+                            <div style="position: relative; width:58px; font-size:10px; display:inline;">
                                 @if(!$AppUI->isStudent())
                                     @if( $is_subscribed )
                                     @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
-                                    <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:0px;">premium</span>
+                                    <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">premium</span>
                                     @else
                                     <span class="badge bg-info p-1 d-none d-sm-block" style="position: absolute; right:0px;">basic</span>
                                     @endif
@@ -202,7 +207,7 @@
                             </div>
 
 
-                            <span class="admin_name"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] : $AppUI['nickname'];?>
+                            <span class="admin_name" style="padding-left:2px; font-size:15px;"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
                                 @if( $is_subscribed )
                                 @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                                     <span class="badge bg-success d-sm-none">premium</span>
@@ -219,10 +224,10 @@
                                 @endif
                             </span>
 
-                        </a>
+
 
                         <div class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><img class="dro_set" src="{{ asset('img/setting.svg') }}" width="36px" alt="globe"></a>
+                            <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical fa-lg"></i></a>
                             <div class="dropdown-menu header">
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
                                <a class="dropdown-item" href="/admin/email-template">

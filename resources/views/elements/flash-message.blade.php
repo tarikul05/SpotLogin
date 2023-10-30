@@ -2,7 +2,7 @@
 
 @if ($message = Session::get('success'))
 
-<div id="alert-container-success" class="alert alert-dismissible alert-success alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0;">
+<div id="alert-container-success" class="alert alert-dismissible alert-success text-success alert-block" style="position:fixed; top:0; z-index:99999; font-size:18px; text-align:center; width:100%; height:66px; border-radius: 0; bakground-color:#333; color:green;">
     <strong>{{ $message }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>    
 </div>
@@ -75,5 +75,5 @@
         if (alertContainer) {
             alertContainer.style.display = 'none';
         }
-    }, 2000);
+    }, 3000);
 </script>

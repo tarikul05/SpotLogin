@@ -166,6 +166,8 @@ class SubscriptionController extends Controller
             $user = auth()->user();
             $user_per = $request->user();
             $subscription = null;
+            $school = $user->related_school;
+            $foundMatchingPlan = false;
             $has_subscriber = null;
             if($user->stripe_id){
                 $subscription_info = $this->stripe->subscriptions->all(['customer' => $user->stripe_id]);
@@ -194,23 +196,56 @@ class SubscriptionController extends Controller
             }
             if($prod_id){
                 $get_plans = $this->stripe->prices->search(['query' => 'product:"'.$prod_id.'"']);
+
                 foreach ( $get_plans as $get_plan) {
                     $product_object = $this->stripe->products->retrieve(
                         $get_plan->product,
                         []
                     );
-                    $plans[] = [
-                        'id' => $get_plan->id,
-                        'nickname' => $get_plan->nickname,
-                        'amount' => $get_plan->unit_amount_decimal / 100,
-                        'interval' => $get_plan->recurring->interval,
-                        'interval_count' => $get_plan->recurring->interval_count,
-                        'metadata' => $get_plan->metadata,
-                        'nickname' => $get_plan->nickname,
-                        'plan_name' => $product_object,
-                    ];
+
+                   if(strtolower($school->default_currency_code) === $get_plan->currency) {
+
+                        $plans[] = [
+                            'id' => $get_plan->id,
+                            'nickname' => $get_plan->nickname,
+                            'currency' => $get_plan->currency,
+                            'amount' => $get_plan->unit_amount_decimal / 100,
+                            'interval' => $get_plan->recurring->interval,
+                            'interval_count' => $get_plan->recurring->interval_count,
+                            'metadata' => $get_plan->metadata,
+                            'nickname' => $get_plan->nickname,
+                            'plan_name' => $product_object,
+                        ];
+
+                        $foundMatchingPlan = true;
+                    }
                 }
             }
+
+            if (!$foundMatchingPlan) {
+                foreach ( $get_plans as $get_plan) {
+                    $product_object = $this->stripe->products->retrieve(
+                        $get_plan->product,
+                        []
+                    );
+
+               if($get_plan->currency === "usd") {
+                        $plans[] = [
+                            'id' => $get_plan->id,
+                            'nickname' => $get_plan->nickname,
+                            'amount' => $get_plan->unit_amount_decimal / 100,
+                            'interval' => $get_plan->recurring->interval,
+                            'interval_count' => $get_plan->recurring->interval_count,
+                            'metadata' => $get_plan->metadata,
+                            'nickname' => $get_plan->nickname,
+                            'plan_name' => $product_object,
+                        ];
+
+                        $foundMatchingPlan = true;
+                    }
+                }
+            }
+
             $intent = $request->user()->createSetupIntent();
             return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
@@ -221,7 +256,7 @@ class SubscriptionController extends Controller
     public function hasSubscriberInfo($subsciberinfo = null, $plan_id = null){
         $subs_info = [];
         if($subsciberinfo){
-            if($subsciberinfo['plan']['id'] == $plain_id){
+            if($subsciberinfo['plan']['id'] == $plan_id){
                 $subs_info= [
                     'subscribed' => true,
                     'billing_cycle_anchor' => $subsciberinfo['billing_cycle_anchor']
@@ -280,6 +315,7 @@ class SubscriptionController extends Controller
 
     public function supscribePlanStore(Request $request)
     {
+
         try {
             $user = $request->user();
             $ends_at = auth()->user()->trial_ends_at;
@@ -289,6 +325,8 @@ class SubscriptionController extends Controller
             if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
             }
+
+            $school = $user->related_school;
 
             $paymentMethod = $request->paymentMethod;
             $user->createOrGetStripeCustomer();
@@ -310,8 +348,9 @@ class SubscriptionController extends Controller
                 $subscription->create($paymentMethod, [
                     'email' => $user->email,
                     'name' => $request->card_holder_name,
+                    'currency' => strtolower($school->default_currency_code),
                 ], [
-                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
+                'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name, 'email' => $user->email, 'name' => $request->card_holder_name, 'userID' => $user->id, 'schoolID' => $school->id],
                 ]);
             } else {
                 // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
@@ -325,15 +364,17 @@ class SubscriptionController extends Controller
                 $subscription->create($paymentMethod, [
                     'email' => $user->email,
                     'name' => $request->card_holder_name,
+                    'currency' => strtolower($school->default_currency_code),
                 ], [
-                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name],
+                    'metadata' => ['note' => $user->email . ', ' . $request->card_holder_name, 'email' => $user->email, 'name' => $request->card_holder_name, 'userID' => $user->id, 'schoolID' => $school->id],
                 ]);
             }
 
             $user->trial_ends_at = null;
             $user->save();
 
-            return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
+            //return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
+            return redirect()->route('mySubscription.congratulations');
         } catch (InvalidRequestException $e) {
             if (strpos($e->getMessage(), 'No such coupon:') !== false) {
                 // L'erreur est liée à un coupon invalide
