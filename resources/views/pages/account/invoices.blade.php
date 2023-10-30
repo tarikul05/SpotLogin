@@ -3,11 +3,13 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 My invoices
+                @if(!empty($invoices) && count($invoices) > 0)
                 <select id="invoiceFilter">
                     <?php foreach($invoices as $invoice): ?>
                       <option value="<?= $invoice['hosted_invoice_url'] ?>"><?php echo date('M j, Y', $invoice['created']); ?></option>
                     <?php endforeach;?>
                   </select>
+                @endif
                 </div>
             <div class="card-body">
 
