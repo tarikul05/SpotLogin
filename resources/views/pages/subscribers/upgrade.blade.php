@@ -168,7 +168,7 @@
 
                           <div class="h4 pt-2" style="color:#0075bf;">My current plan</div>
 
-                          <?php if($is_subscribed){?>
+                          <?php if($is_subscribed && (!empty($subscription)) ){?>
                             @if($subscription['cancel_at_period_end'])
                             <?php
                             if($subscription['status'] === 'trialing') {
@@ -194,6 +194,12 @@
                                 Period in process : <?php echo date('M j, Y', $subscription['current_period_start']); ?> - <?php echo date('M j, Y', $subscription['current_period_end']); ?>
                             @endif
                           <?php } ?>
+
+                            <?php
+                            if ($isCancelled) { ?>
+                                You cancelled your subscription.
+                            <?php }
+                            ?>
 
 
                           <table class="table table-stripped table-hover">
@@ -280,7 +286,7 @@
 
 
                           <div class="mt-2 btns-plan">
-                            <?php if($is_subscribed) { ?>
+                            <?php if($is_subscribed && (!empty($subscription))) { ?>
                               <a class="btn btn-success btn-md disabled" href="{{ route('subscription.upgradePlan') }}">Congratulations ! you already have a premium plan !</a>
                               <br><br>
                              <?php if($subscription['cancel_at_period_end'] === true || $subscription['cancel_at_period_end'] === "true") { ?>
@@ -369,7 +375,7 @@
                             <li class="submit-button"><a href="#" id="choose-plan" class="button">Choose this plan</a></li>
                             <li class="info-txt text-warning">you will not be the charged until the end of your trial period</li>
                         <?php } else {
-                            if($subscription['plan']['id'] == $plan['id']){
+                            if((!empty($subscription)) && $subscription['plan']['id'] == $plan['id']){
                         ?>
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Your current plan</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>

@@ -177,6 +177,7 @@ class SubscriptionController extends Controller
                 }
             }
             $is_subscribed = $user->subscribed('default');
+            $isCancelled = $user->subscription('default')->onGracePeriod() || $user->subscription('default')->canceled();
             $today_date = new DateTime();
             if (!$is_subscribed) {
                 $trial_ends_date = date('F j, Y, g:i a', strtotime($user->trial_ends_at));
@@ -245,7 +246,7 @@ class SubscriptionController extends Controller
             }
 
             $intent = $request->user()->createSetupIntent();
-            return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
+            return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'isCancelled', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
             // throw error message
         }
