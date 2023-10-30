@@ -203,7 +203,7 @@
                             <tr>
 
                               <?php
-                                  if($is_subscribed){
+                                  if($is_subscribed && (!empty($subscription))){
                                       echo '<td><b>Plan Type</b><br><span class="badge bg-success"><i class="fa-solid fa-check"></i> Premium</span></td>';
                                   }else{
                                       if($AppUI->isSchoolAdmin()){
@@ -302,11 +302,30 @@
 
                 <?php sort($plans); ?>
                 @foreach($plans as $plan)
+                @php
+                $symbolesDevises = [
+                    'eur' => '€',
+                    'usd' => '$',
+                    'cad' => '$',
+                    'ch' => 'CHF',
+                    // Ajoutez d'autres devises et symboles ici
+                ];
+
+                $codeDevise = $plan['currency'];
+                $symbole = $symbolesDevises[$codeDevise] ?? '$';
+                @endphp
                 <div class="columns premium-plan">
                     <ul class="price">
                         <li>
                             <div class="plan_name">{{ $plan['plan_name']->name }}</div>
-                            <div class="plan_interval">${{ number_format($plan['amount'], 2) }}<span class="plan_type"> /{{ $plan['interval'] }}</span></div>
+                            <div class="plan_interval">
+                                @if ($plan['currency'] === 'usd' || $plan['currency'] === 'cad')
+                                    {{ $symbole }} {{ number_format($plan['amount'], 2) }}
+                                @else
+                                    {{ number_format($plan['amount'], 2) }} {{ $symbole }}
+                                @endif
+                                <span class="plan_type"> /{{ $plan['interval'] }}</span>
+                            </div>
                         </li>
 
                             <li>

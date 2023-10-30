@@ -556,7 +556,7 @@ class TeachersController extends Controller
         $timezone = $school->timezone;
         $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
         $isInEurope = in_array($timezone, $europeanTimezones);
-      
+
 
         $settingUser = CalendarSetting::where('user_id', $user->id)->first();
 

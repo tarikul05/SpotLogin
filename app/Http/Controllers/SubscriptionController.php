@@ -204,9 +204,11 @@ class SubscriptionController extends Controller
                     );
 
                    if(strtolower($school->default_currency_code) === $get_plan->currency) {
+
                         $plans[] = [
                             'id' => $get_plan->id,
                             'nickname' => $get_plan->nickname,
+                            'currency' => $get_plan->currency,
                             'amount' => $get_plan->unit_amount_decimal / 100,
                             'interval' => $get_plan->recurring->interval,
                             'interval_count' => $get_plan->recurring->interval_count,
