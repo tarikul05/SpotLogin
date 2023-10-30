@@ -301,16 +301,16 @@
 
 
                 <?php sort($plans); ?>
-                @foreach($plans as $plan)
                 @php
                 $symbolesDevises = [
                     'eur' => '€',
                     'usd' => '$',
                     'cad' => '$',
-                    'ch' => 'CHF',
-                    // Ajoutez d'autres devises et symboles ici
+                    'chf' => 'CHF',
                 ];
-
+                @endphp
+                @foreach($plans as $plan)
+                @php
                 $codeDevise = $plan['currency'];
                 $symbole = $symbolesDevises[$codeDevise] ?? '$';
                 @endphp
@@ -449,13 +449,24 @@
                                     <div class="text-center">
                                         <span style="font-size:11px; display:block; padding:5px;">
                                             <hr>
-                                            Your subscription will renew automatically every month as one paypent of ${{ number_format($plans[0]['amount'], 2) }}.
+                                            Your subscription will renew automatically every month as one paypent of
+                                            @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
+                                                {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
+                                            @else
+                                                {{ number_format($plans[0]['amount'], 2) }} {{ $symbole }}
+                                            @endif
                                             You may cancel your subscription anytime from My plan section in your profile.
 
                                             By clicking "Proceed payment" you agree to the Terms and Conditions.
                                         </span>
                                         <br>
-                                        <a id="payment-button" class="btn btn-success btn-md">Proceed payment ${{ number_format($plans[0]['amount'], 2) }}</a>
+                                        <a id="payment-button" class="btn btn-success btn-md">Proceed payment
+                                            @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
+                                                {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
+                                            @else
+                                                {{ number_format($plans[0]['amount'], 2) }} {{ $symbole }}
+                                            @endif
+                                        </a>
                                         <br><br>
                                         <img src="https://www.eposhybrid.uk/ihybridnew//upload/ck/2035148938.png" width="110">
                                     </div>
