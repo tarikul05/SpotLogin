@@ -436,10 +436,10 @@
 					<div class="row">
 						<div class="col-md-6">
                             <div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_1" >{{__("Parent 1") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_1" >{{__("Parent's name 1") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
+										<span class="input-group-addon"><i class="fa fa-user"></i></span>
 										<input class="form-control" id="parent_name_1" name="parent_name_1" value="{{!empty($student->parent_name_1) ? old('parent_name_1', $student->parent_name_1) : old('parent_name_1')}}" type="text">
 									</div>
 								</div>
@@ -474,11 +474,11 @@
 						</div>
 						<div class="col-md-6">
                             <div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_2" id="parent_name_2">{{__("Parent 2") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_2" id="parent_name_2">{{__("Parent's name 2") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="parent_name_2" value="1" {{ !empty($student->parent_name_2) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="parent_name_2" name="parent_name_2" value="{{!empty($student->parent_name_2) ? old('parent_name_2', $student->parent_name_2) : old('parent_name_2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+										<input class="form-control" id="parent_name_2" name="parent_name_2" value="{{!empty($student->parent_name_2) ? old('parent_name_2', $student->parent_name_2) : old('parent_name_2')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -1524,7 +1524,7 @@ $('#save_btn').click(function (e) {
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								if (value.count_name > 1) {
-									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+									resultHtml += '<td>Event</td>'; //'<td>Group Event for '+value.count_name+' Student(s)</td>';
 								}
 								else{
 									resultHtml += '<td>Event</td>';
@@ -1800,7 +1800,7 @@ $('#save_btn').click(function (e) {
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								if (value.count_name > 1) {
-									resultHtml += '<td>Group Event for '+value.count_name+' Student(s)</td>';
+									resultHtml += '<td>Event</td>'; //'<td>Group Event for '+value.count_name+' Student(s)</td>';
 								}
 								else{
 									resultHtml += '<td>Event</td>';
@@ -1837,10 +1837,10 @@ $('#save_btn').click(function (e) {
 							const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
 
 							if (eventStart.isBefore(now)) {
-								if (value.event_type == 100) {
-									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+                                if (value.event_type == 100) {
+									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
 								} else {
-									resultHtml += "<td><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' class='btn btn-xs btn-info'> <em class='glyphicon glyphicon-pencil'></em>" + correct_btn_text + "</a>";
+									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
 								}
 							} else {
 								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);

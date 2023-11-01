@@ -82,7 +82,7 @@
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
                         <fieldset class="section_header_class">
-                            @if ($invoice->seller_country_id != 'CA')
+                            @if ($invoice->seller_country_id != 'CA' && $invoice->seller_country_id != 'US')
                                 <label>{{ $invoice->invoice_header }}</label>
                             @endif
                             <table class="table table-stripped table-hover" id="invoice_list_item" name="invoice_list_item" style="font-size:1em;">
@@ -782,15 +782,15 @@
                                     <div class="form-group row">
                                         <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference:</label>
                                         <div class="col-sm-6">
-                                            @if($invoice->seller_country_code == 'CA')
-                                            <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_account_name ? $invoice->payment_bank_account_name :''}}">
+                                            @if($invoice->seller_country_code == 'CA' || $invoice->seller_country_code == 'US')
+                                            <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_name ? $invoice->payment_bank_name :''}}">
                                             @else
                                             <input type="text" class="form-control" id="spayment_bank_account_name" name="spayment_bank_account_name" value="{{$invoice->payment_bank_name ? $invoice->payment_bank_name :''}}">
                                             @endif
                                         </div>
                                     </div>
 
-                                    @if($invoice->seller_country_code == 'CA')
+                                    @if($invoice->seller_country_code == 'CA' || $invoice->seller_country_code == 'US')
                                         <div class="form-group row">
                                             <label id="etransfer_acc_cap" class="col-lg-3 col-sm-3 text-right">Payment Preference 2:</label>
                                             <div class="col-sm-6">

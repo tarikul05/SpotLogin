@@ -311,9 +311,13 @@
                             @if ($invoice_data->invoice_type > 0)
                                 <?php
                                 if($item->no_of_students == 1) {
-                                    echo 'Private';
+                                    if($event_key == 10){
+                                        echo 'Private';
+                                    }
                                 } else {
-                                    echo 'Group of ' . $item->no_of_students . ' students';
+                                    if($event_key == 10){
+                                     echo 'Group of ' . $item->no_of_students . ' students';
+                                    }
                                 } ?>
                             @endif
                             </td>
@@ -549,20 +553,20 @@
                             </div>
                         <?php } ?>
 
-                        <?php if($invoice_data->seller_country_code === "CA"){?>
+                        <?php if($invoice_data->seller_country_code === "CA" || $invoice_data->seller_country_code === "US"){?>
                             <?php if(!empty($invoice_data->payment_bank_account_name)){?>
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_account_name }}</div>
                             <?php } ?>
                         <?php } ?>
-                        <?php if($invoice_data->seller_country_code !== "CA"){?>
+                        <?php if($invoice_data->seller_country_code !== "CA" || $invoice_data->seller_country_code === "US"){?>
                             <?php if(!empty($invoice_data->payment_bank_name)){?>
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                             <?php } ?>
                         <?php } ?>
-                        <?php if(!empty($invoice_data->payment_bank_account && $invoice_data->seller_country_code !== 'CA')){ ?>
+                        <?php if(!empty($invoice_data->payment_bank_account && $invoice_data->seller_country_code !== 'CA' && $invoice_data->seller_country_code !== 'US')){ ?>
                             <div class="txt"><b>Account name : </b>{{ $invoice_data->payment_bank_account }}</div>
                         <?php } ?>
-                        <?php if($invoice_data->seller_country_code === "CA"){?>
+                        <?php if($invoice_data->seller_country_code === "CA" || $invoice_data->seller_country_code === "US"){?>
                             <div class="txt">{{ $invoice_data->payment_bank_account }}</div>
                             <div class="txt">{{ $invoice_data->payment_bank_iban }}</div>
                         <?php } ?>
@@ -599,7 +603,7 @@
                             <div class="txt"><b>{{ __('invoice_pay_by') }}</b>{{ $invoice_data->cheque_payee }}</div>
                         <?php } ?>
                         <?php if(!empty($invoice_data->payment_bank_iban)){ ?>
-                            <?php if($invoice_data->seller_country_code != "CA") { ?>
+                            <?php if($invoice_data->seller_country_code !== "CA" && $invoice_data->seller_country_code !== "US") { ?>
                             <div class="txt"><b>{{ __('invoice_iban_no') }}</b>{{ $invoice_data->payment_bank_iban }}</div>
                         <?php } ?>
                         <?php } ?>

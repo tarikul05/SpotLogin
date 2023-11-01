@@ -218,7 +218,7 @@ class LessonsController extends Controller
                 if (empty($school)) {
                     return redirect()->route('schools')->with('error', __('School is not selected'));
                 }
-
+                $redirectUrl = $request->input('redirect_url');
                 $eventId = $request->route('event');
                 $eventData = $request->all();
                 $start_date = str_replace('/', '-', $eventData['start_date']);
@@ -278,7 +278,12 @@ class LessonsController extends Controller
 
                 if(isset($eventData['validate']) && !empty($eventData['validate'])){
                     Event::validate(['event_id'=>$eventId],1);
-                    return Redirect::to($schoolId.'/view-event/'.$eventId);
+
+                    if (!empty($redirectUrl)) {
+                        return redirect($redirectUrl);
+                    } else {
+                        return Redirect::to($schoolId.'/view-event/'.$eventId);
+                    }
                 }else{
                  //return back()->with('success', __('Successfully Registered'));
                  return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));
@@ -675,7 +680,7 @@ class LessonsController extends Controller
                         return Redirect::to($schoolId.'/view-lesson/'.$lessonlId);
                     }
 
-                    
+
                 }else{
                     //return back()->with('success', __('Successfully Registered'));
                     return redirect()->route('agenda',['school'=> $schoolId])->with('success', __('Successfully Updated !'));

@@ -58,8 +58,8 @@ class InvoiceDataMapper
             'invoice_name' => 'Invoice '.Carbon::now()->format('F').' '.Carbon::now()->year,
             'period_starts' => $dateS,
             'period_ends' => $dateEnd,
-            'date_invoice' => Carbon::now()->format('Y-m-d H:i:s'),
-            'date_due' => Carbon::now()->addDays(7)->format('Y-m-d H:i:s'),
+            'date_invoice' => Carbon::now($school->timezone)->format('Y-m-d H:i:s'),
+            'date_due' => Carbon::now($school->timezone)->addDays(7)->format('Y-m-d H:i:s'),
         ];
         if ($p_invoice_id != '') {
             $invoiceData['invoice_no'] = $p_invoice_id;
