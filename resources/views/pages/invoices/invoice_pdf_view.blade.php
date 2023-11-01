@@ -311,9 +311,13 @@
                             @if ($invoice_data->invoice_type > 0)
                                 <?php
                                 if($item->no_of_students == 1) {
-                                    echo 'Private';
+                                    if($event_key == 10){
+                                        echo 'Private';
+                                    }
                                 } else {
-                                    echo 'Group of ' . $item->no_of_students . ' students';
+                                    if($event_key == 10){
+                                     echo 'Group of ' . $item->no_of_students . ' students';
+                                    }
                                 } ?>
                             @endif
                             </td>
