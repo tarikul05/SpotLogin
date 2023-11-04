@@ -612,6 +612,17 @@ class AgendaController extends Controller
             }
             $e['event_category_name'] = '';
             $eventCategory = EventCategory::find($fetch->event_category);
+            if(empty($eventCategory)) {
+                $e['event_category'] = '(deleted)';
+                $e['event_category_name'] = '(deleted)';
+                $e['event_category_type'] = '(deleted)';
+
+                $eventCategory = new EventCategory;
+                $eventCategory->title = '(deleted)';
+                $eventCategory->bg_color_agenda = '#AAAAAA';
+                $eventCategory->invoiced_type = 'T';
+
+            }
 
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
