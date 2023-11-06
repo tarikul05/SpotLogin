@@ -203,12 +203,6 @@ class InvoiceController extends Controller
                 'data' => $data
             );
 
-            $newInvoiceSended = new InvoiceSended();
-            $newInvoiceSended->invoice_id = $p_auto_id;
-            $newInvoiceSended->user_id = $result_data->seller_id;
-            $newInvoiceSended->student_id = $result_data->client_id;
-            $newInvoiceSended->save();
-
             return response()->json($result);
         } catch (Exception $e) {
             //echo $e->getMessage();
@@ -262,6 +256,13 @@ class InvoiceController extends Controller
             } else {
                 $result = array('status' => true, 'msg' => __('email sent'));
             }
+
+            $newInvoiceSended = new InvoiceSended();
+            $newInvoiceSended->invoice_id = $p_inv_auto_id;
+            $newInvoiceSended->user_id = $result_data->seller_id;
+            $newInvoiceSended->student_id = $result_data->client_id;
+            $newInvoiceSended->save();
+
             return response()->json($result);
         } catch (Exception $e) {
             // echo $e->getMessage();
