@@ -58,7 +58,7 @@ function successModalCallEmail(title='', desc = '') {
     /* Read more about handling dismissals below */
     if (result.dismiss === Swal.DismissReason.timer) {
         var p_school_id = $('#p_school_id').val();
-        window.location.replace('/admin/'+p_school_id+'/invoices');
+        window.location.replace('/'+p_school_id+'/invoices');
     }
     })
 }

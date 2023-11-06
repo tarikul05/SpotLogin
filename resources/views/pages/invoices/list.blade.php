@@ -28,11 +28,12 @@
         </div>
         @if(!$AppUI->isStudent())
             <div class="invoice_list_button">
+                <span onclick="addFilter('')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> All</span>
                 @if($AppUI->isSchoolAdmin())
                 <span onclick="addFilter('Teacher')" class="filter-btn badge bg-info badge-btn">Teacher</span>
                 @endif
-                <span onclick="addFilter('Student')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> Invoices</span>
-                <span onclick="addFilter('Manuel(M)')" class="filter-btn badge bg-success btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manual invoices</span>
+                <span onclick="addFilter('Student')" class="filter-btn badge bg-info btn-sm badge-btn"><i class="fa-solid fa-list"></i> Invoices</span>
+                <span onclick="addFilter('Manuel')" class="filter-btn badge bg-info btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manual invoices</span>
             </div>
         @endif
     </header>
@@ -80,7 +81,7 @@
                                     $edit_view_url = route('modificationInvoice',[$invoice->id]);
                                 }
                             }else{
-                                $edit_view_url = '/admin/'.$schoolId.'/manual-invoice/'.$invoice->id;
+                                $edit_view_url = '/'.$schoolId.'/modification-invoice/'.$invoice->id;
                             }
                         } else {
                             if(!empty($schoolId)){
@@ -89,8 +90,8 @@
                                 $edit_view_url = route('modificationInvoice',[$invoice->id]);
                             }
                         }
-                        $zone = $timeZone;
-                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                        //$zone = $timeZone;
+                        //$invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
 
                     @endphp
 
@@ -101,11 +102,17 @@
                         <!--<td class="txt-grey text-left">{{ $i }} </td>-->
 
                         <td class="responsive-td mobile-hide">
-                            {{ date('d M Y', strtotime($invoice->date_invoice)); }}
+                            @php
+                            $date = new DateTime($invoice->date_invoice);
+                            @endphp
+                            {{ $date->format('d M Y') }}
                         </td>
                         <td class="sp_only responsive-td">
                             <span class="d-block d-sm-none">
-                                <b>{{ date('d M Y', strtotime($invoice->date_invoice)); }}</b>
+                            @php
+                            $date = new DateTime($invoice->date_invoice);
+                            @endphp
+                            <b>{{ $date->format('d M Y') }}</b>
                             </span>
                          <?= $invoice->client_name ?>
                         </td>
@@ -178,7 +185,15 @@
                                 <span class="small txt-grey pull-left">
                                       <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
                                 </span>-->
+                                @php
+                                    $existingEntry = DB::table('invoice_sended')->where('invoice_id', $invoice->id)->first();
+                                @endphp
+
+                                @if($existingEntry)
+                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
+                                @else
                                 <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
+                                @endif
                             </td>
                             @else
                             <td class="mobile-hide">
@@ -305,9 +320,7 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-
-
-        var table = $('#example1').DataTable({
+    var table = $('#example1').DataTable({
     dom: '<"top"i>rt<"bottom"flp><"clear">', // Hide all elements except the search input
     ordering: false, // Disable column sorting
     searching: true, // Enable searching with the search input
