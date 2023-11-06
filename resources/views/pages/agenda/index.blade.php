@@ -344,7 +344,12 @@
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div id="infoLesson" class="text-center alert alert-info">
+                        <b>-- Create a lesson --</b><br>
                         <i class="fa-solid fa-circle-info"></i> Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day.
+                    </div>
+                    <div id="infoLessonEvent" class="text-center alert alert-info">
+                        <b>-- Create an event --</b><br>
+                        <i class="fa-solid fa-circle-warning"></i> Create an event for 1 or more complete days.
                     </div>
                     <div class="modal-content">
                         <div class="modal-body">
@@ -374,7 +379,7 @@
                                             <div class="row">
                                                 <div class="col-md-10 offset-md-1">
                                                     <div class="form-group row lesson hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Category') }} :</label>
+                                                        <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }} :</label>
                                                         <div class="col-sm-9">
                                                             <div class="selectdiv">
                                                                 <select class="form-control" id="category_select" name="category_select">
@@ -2697,7 +2702,7 @@ $('.search-icon').on('click', function() {
                 }
 
                 target_start_date=document.getElementById("date_from").value;
-        target_end_date=document.getElementById("date_to").value;
+                target_end_date=document.getElementById("date_to").value;
 
                 foundRecords=0;
 
@@ -2826,6 +2831,14 @@ $('.search-icon').on('click', function() {
                 }
             },
             dayClick: function(date, jsEvent, view, resource) {
+
+
+                if (date._ambigTime) {
+                $('#agenda_select').val('2');
+                } else {
+                   $('#agenda_select').val('1');
+                }
+
                 // $('#start_date').val('');
                 // $('#end_date').val('');
                 // $("#addAgendaModal").modal('show');
@@ -2836,6 +2849,14 @@ $('.search-icon').on('click', function() {
                 // console.log('xxx',date,jsEvent,view,resource)
             },
             select: function(startDate, endDate, jsEvent, view, resource) {
+
+                if (startDate._ambigTime) {
+                $('#agenda_select').val('2');
+                } else {
+                   $('#agenda_select').val('1');
+                }
+
+
                 @if(!$AppUI->isStudent())
                 $('#start_date').val('');
                 $('#end_date').val('');
@@ -3783,6 +3804,14 @@ $( document ).ready(function() {
 		el_end = $('#end_time'),
 		el_duration = $('#duration');
 
+        if (el_end.val() == el_start.val()) {
+            $('#start_time').addClass('error');
+            $('#end_time').addClass('error');
+        } else {
+                $('#start_time').removeClass('error');
+                $('#end_time').removeClass('error');
+            }
+
 			if (el_end.val() < el_start.val()) {
 				$('#end_time').val(recalculate_end_time(el_start.val(),15));
 				el_duration.val(recalculate_duration(el_start.val(), el_end.val()));
@@ -3892,12 +3921,15 @@ $('#add_lesson').on('submit', function(e) {
     e.preventDefault();
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
+    var agendaSelect = +$("#agenda_select").val();
     var evetCat = $('#category_select option:selected').val();
     var evetLoc = $('#location option:selected').val();
     var emptyStdchecked = $("#student_empty").prop('checked')
 	var selected = $("#student :selected").map((_, e) => e.value).get();
 	var startDate = $('#start_date').val();
 	var endDate = $('#end_date').val();
+    var startTime = $('#start_time').val();
+	var endTime = $('#end_time').val();
 	var errMssg = '';
 	var type = $("#agenda_select").val();
 
@@ -3966,7 +3998,7 @@ $('#add_lesson').on('submit', function(e) {
         if ($("#student_empty").prop('checked') == false){
             if (!emptyStdchecked) {
                 if( selected < 1){
-                    var errMssg = 'Select student';
+                    var errMssg = 'Please select at least one student to continue';
                     $('.student_list').addClass('error');
                 }else{
                     //var errMssg = '';
@@ -3976,6 +4008,12 @@ $('#add_lesson').on('submit', function(e) {
         }else{
             // var errMssg = '';
             $('.student_list').removeClass('error');
+        }
+
+        if((agendaSelect == 1) && (startTime == endTime)){
+            var errMssg = 'Please select a start and end time to continue';
+            $('#start_time').addClass('error');
+            $('#end_time').addClass('error');
         }
 
         if(startDate == ''){
@@ -3993,7 +4031,7 @@ $('#add_lesson').on('submit', function(e) {
     }else if(type == 3){
         if ($("#student_empty").prop('checked') == false){
             if( selected < 1){
-                var errMssg = 'Select student';
+                var errMssg = 'Please select at least one student to continue';
                 $('.student_list').addClass('error');
             }else{
                 var errMssg = '';
@@ -4047,6 +4085,11 @@ $('#add_lesson').on('submit', function(e) {
             }
         })
     }else{
+        Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errMssg,
+        });
         return false;
     }
 });
@@ -4257,11 +4300,17 @@ $("body").on('click', '#student_empty', function(event) {
             $("#end_date").val($("#start_date").val());
             $("#end_date").prop("hidden", true);
             $("#infoLesson").fadeIn();
+            $("#infoLessonEvent").fadeOut();
             $("#infoDateEnd").fadeIn();
             $("#infoDateEnd").val($("#start_date").val());
         } else {
             $("#end_date").prop("hidden", false);
             $("#infoLesson").fadeOut();
+                if(agendaSelectdates == 2) {
+                    $("#infoLessonEvent").fadeIn();
+                } else {
+                    $("#infoLessonEvent").fadeIn();
+                }
             $("#infoDateEnd").fadeOut();
         }
     });
