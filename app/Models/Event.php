@@ -401,6 +401,9 @@ class Event extends BaseModel
             return $query;
         }
 
+        //query where end_date est different de start_date
+        $query->whereColumn('events.date_end', '!=', 'events.date_start');
+
         $sortingParams = [];
 
         if (isset($params['sort'])) {

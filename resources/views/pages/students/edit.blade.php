@@ -1062,7 +1062,7 @@ $("#country_code, #billing_country_code").trigger('change')
 
 		if (auto_id > 0) {
 			//admin/1/modification-invoice/42
-			var url = "/admin/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
+			var url = "/"+document.getElementById("school_id").value+"/modification-invoice/"+auto_id;
 			setTimeout(function(){
 				window.location = BASE_URL+ url;
 			}, 1500);

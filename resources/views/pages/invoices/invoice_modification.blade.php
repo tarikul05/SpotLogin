@@ -1421,7 +1421,7 @@ function extractExtraCharges($inputString) {
 
                     var p_school_id = document.getElementById("p_school_id").value;
 
-                    setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
+                    setTimeout(function(){ window.location.replace('/'+p_school_id+'/invoices'); }, 1000);
                 }
                 else {
                     errorModalCall(GetAppMessage('error_message_text'));

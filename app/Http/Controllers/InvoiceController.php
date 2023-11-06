@@ -13,6 +13,7 @@ use App\Models\Student;
 use App\Models\Event;
 use App\Models\Teacher;
 use App\Models\Province;
+use App\Models\InvoiceSended;
 use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
@@ -201,6 +202,13 @@ class InvoiceController extends Controller
                 'message' => __('We sent an email.'),
                 'data' => $data
             );
+
+            $newInvoiceSended = new InvoiceSended();
+            $newInvoiceSended->invoice_id = $p_auto_id;
+            $newInvoiceSended->user_id = $result_data->seller_id;
+            $newInvoiceSended->student_id = $result_data->client_id;
+            $newInvoiceSended->save();
+
             return response()->json($result);
         } catch (Exception $e) {
             //echo $e->getMessage();

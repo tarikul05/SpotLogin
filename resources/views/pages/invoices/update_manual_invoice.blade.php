@@ -1241,7 +1241,7 @@ function UpodateInvStatusIssue(p_invoice) {
 
             if (status == 'success') {
 
-                window.location.href = BASE_URL + '/admin/{{$schoolId}}/modification-invoice/'+p_invoice
+                window.location.href = BASE_URL + '/{{$schoolId}}/modification-invoice/'+p_invoice
                 $("#invoice_status_id").text('Emise');
                 //document.getElementById("invoice_status").text='Emise';
                 document.getElementById("invoice_status_id").value = '10';
