@@ -46,7 +46,7 @@
 
                             @else
                                 <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                    <i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Issue invoice')}}</span>
+                                    <i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Generate invoice')}}</span>
                                 </a>
                                 <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block">{{__('Print Preview')}}</span></a>
 

@@ -567,7 +567,7 @@
 						<div class="alert alert-default" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 								<br><br>
-								<button style="position: absolute;right: 0px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Generate invoice</button>
+								<button style="position: absolute;right: 0px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Draft invoice</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
