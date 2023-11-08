@@ -615,7 +615,7 @@
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="extra_charges" name="extra_charges" type="number" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
+                                                                    <input id="extra_charges" name="extra_charges" type="number" step="0.01" class="form-control" value="{{old('extra_charges')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
