@@ -294,8 +294,11 @@
                             foreach($invoice_item as $key => $item){
                                 $total_min += $item->unit;
                         ?>
+                        @php
+                        $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$school->timezone);
+                        @endphp
                         <tr>
-                            <td>{{ Carbon\Carbon::parse($item->item_date)->format('d.m.Y');}}</td>
+                            <td>{{ !empty($item->item_date) ? Carbon\Carbon::parse($item->item_date)->format('d.m.Y') : ''; }}</td>
                             <td>
                             <?php echo htmlspecialchars_decode(!empty($item->caption) ? $item->caption : ''); ?>
                             <?php
@@ -558,7 +561,7 @@
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_account_name }}</div>
                             <?php } ?>
                         <?php } ?>
-                        <?php if($invoice_data->seller_country_code !== "CA" || $invoice_data->seller_country_code === "US"){?>
+                        <?php if($invoice_data->seller_country_code !== "CA" && $invoice_data->seller_country_code !== "US"){?>
                             <?php if(!empty($invoice_data->payment_bank_name)){?>
                                 <div class="txt"><!--<b>Bank Name : </b>-->{{ $invoice_data->payment_bank_name }}</div>
                             <?php } ?>
