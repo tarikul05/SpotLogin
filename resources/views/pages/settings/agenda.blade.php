@@ -14,7 +14,7 @@
 
                     <div class="form-group">
                         <label for="timezone">Timezone</label>
-     
+
                         <select class="select2  form-control" id="timezone" name="timezone" data-live-search="true">
                             <option value="">{{ __('Select Timezone')}}</option>
                             @foreach ($allTimezones as $key => $value)
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="min_time">Start time</label>
+                        <label for="min_time">Start time (you can decide what the time range display on your calendar)</label>
                         <select id="min_time" name="min_time" class="form-control">
                             <option value="00:00:00" @if($calendarSettings->min_time === '00:00:00') selected @endif>00:00</option>
                             <option value="01:00:00" @if($calendarSettings->min_time === '01:00:00') selected @endif>01:00</option>

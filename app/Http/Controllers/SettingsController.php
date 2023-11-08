@@ -95,6 +95,9 @@ class SettingsController extends Controller
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope', 'calendarSettings'));
     }
 
+
+
+
     public function store(Request $request)
     {
 
@@ -105,7 +108,9 @@ class SettingsController extends Controller
         $calendarSettings = $user->calendarSetting ?? new CalendarSetting;
 
         // Remplissez les propriétés avec les données du formulaire
-        $calendarSettings->timezone = $request['timezone'];
+        if(!empty($request['timezone'])) {
+            $calendarSettings->timezone = $request['timezone'];
+        }
         $calendarSettings->min_time = $request['min_time'];
         $calendarSettings->max_time = $request['max_time'];
 
