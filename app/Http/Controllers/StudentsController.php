@@ -455,6 +455,15 @@ class StudentsController extends Controller
         $provinces = Province::active()->get()->toArray();
 
         $student = Student::find($studentId);
+        if(empty($student)) {
+            $student = new Student;
+            $student->birth_date = "1970-01-01 00:00:00";
+            $student->id = $studentId;
+            $student->gender_id = "3";
+            $student->email = "no-mail@sportlogin.app";
+            $student->lastname = "(deleted student)";
+            $student->firstname = "(deleted student)";
+        }
 
         if ($user->isSuperAdmin()) {
             $school = School::active()->find($schoolId);

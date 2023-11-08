@@ -1303,6 +1303,11 @@ class InvoiceController extends Controller
                     //$total_amount += $v_total_amount;
                     $total_amount_extra += $v_subtotal_amount_all;
                     $student = Student::find($value->student_id);
+                    if(empty($student)) {
+                        $student = new Student;
+                        $student->firstname = "(Deleted student)";
+                        $student->lastname = "(Deleted student)";
+                    }
                     $student_fullname = $student->firstname.' '.$student->lastname;
                     if ($value->event_type == 10) { //lesson
 
