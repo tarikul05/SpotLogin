@@ -604,7 +604,7 @@
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="number" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
+                                                                    <input id="sprice_amount_sell" name="sprice_amount_sell" type="number" step="0.01" class="form-control" value="{{old('sprice_amount_sell')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
