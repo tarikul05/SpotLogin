@@ -162,7 +162,7 @@ class AgendaController extends Controller
         $myCurrentTimeZone = $user->isSuperAdmin() || $user->isStudent() ? date_default_timezone_get() : $school->timezone;
 
         $settingUser = CalendarSetting::where('user_id', $user->id)->first();
-        if(!empty($settingUser)){
+        if(!empty($settingUser->timezone)){
             $myCurrentTimeZone = $settingUser->timezone;
         }
 

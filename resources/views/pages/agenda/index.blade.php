@@ -2050,7 +2050,7 @@ $('.search-icon').on('click', function() {
         //     p_from_date = getCookie("date_from");
         // }
 
-        var myTimezone = "{{ $myCurrentTimeZone }}";
+        let myTimezone = "{{ $myCurrentTimeZone }}";
         var mySetting = @json($settingUser);
         console.log('mySetting', mySetting)
 
@@ -2066,7 +2066,6 @@ $('.search-icon').on('click', function() {
         } else {
         timeFormat = 'h:mm A'; // Format par défaut pour les fuseaux horaires non européens
         }
-
 
         afficherHeureActuelle(myTimezone);
         const scrollTimeInit = moment().tz(myTimezone).format("HH");
