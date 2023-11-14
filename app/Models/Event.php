@@ -425,7 +425,7 @@ class Event extends BaseModel
             //   if (!$toFilterDate) {
             //       $toFilterDate = now();
             //   }
-            unset($params['start_date']);
+            //unset($params['start_date']);
         }
 
         if (isset($params['end_date'])) {
@@ -532,16 +532,16 @@ class Event extends BaseModel
                         $timeZone = $school->timezone;
                     }
                 }
-                $fromFilterDate = $this->formatDateTimeZone($params['start_date'].' 00:00:00', 'long',$timeZone,'UTC');
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
 
                 //$toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
                 //$qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
                 //$query->whereRaw($qq);
 
-                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long', $timeZone, 'UTC');
+                $fromFilterDate = $this->formatDateTimeZone($params['start_date'].' 00:00:00', 'long', $timeZone, 'UTC');
                 $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long', $timeZone, 'UTC');
 
-                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."' OR events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "')";
+                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."')";
 
                 $query->whereRaw($qq);
           }
