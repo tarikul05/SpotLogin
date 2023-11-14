@@ -448,7 +448,7 @@ class Event extends BaseModel
                 ->select(['events.*']);
         }
 
-        //$query->where('deleted_at', null);
+        $query->where('deleted_at', null);
         foreach ($params as $key => $value) {
             if (!empty($value)) {
 
