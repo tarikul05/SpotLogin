@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
 use App\Models\EventCategory;
+use App\Models\Availability;
 use App\Models\LessonPrice;
 use App\Models\LessonPriceTeacher;
 use Illuminate\Support\Facades\Auth;
@@ -60,6 +61,9 @@ class AgendaController extends Controller
             $futureEventIds = EventDetails::where('student_id', $student->student_id)
                 ->pluck('event_id');
 
+                $availabilities = Availability::where('student_id', $student->student_id)->get();
+                $student->availabilities = $availabilities;
+
             // Récupérer les détails de l'événement futur le plus proche de l'étudiant
             $futureEvent = Event::whereIn('id', $futureEventIds)
                 ->where('event_type', 51)
@@ -79,9 +83,6 @@ class AgendaController extends Controller
 
 
 
-
-
-
         $lessonPrice = LessonPrice::active()->get();
         $currency = [];
         // end the part
@@ -93,8 +94,9 @@ class AgendaController extends Controller
         }
 
         $alllanguages = Language::orderBy('sort_order')->get();
-        $locations = Location::orderBy('id')->get();
-        $students = Student::orderBy('id')->get();
+        $locations = Location::where('school_id', $schoolId)->orderBy('id')->get();
+
+        $students = $school->students;
         $teachers = Teacher::orderBy('id')->get();
 
         $eventCategories = EventCategory::active()->where('school_id', $schoolId)->orderBy('id')->get();
@@ -206,8 +208,8 @@ class AgendaController extends Controller
             $schoolId = 0;
         }
         // This part is copied from add lesson
-        $eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
-        $professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
+        //$eventCategoryList = EventCategory::active()->where('school_id',$schoolId)->get();
+        //$professors = SchoolTeacher::active()->where('school_id',$schoolId)->get();
 
         //$studentsbySchool = SchoolStudent::active()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()
@@ -220,15 +222,19 @@ class AgendaController extends Controller
         $futureEventIds = EventDetails::where('student_id', $student->student_id)
             ->pluck('event_id');
 
+            $availabilities = Availability::where('student_id', $student->student_id)->get();
+            $student->availabilities = $availabilities;
+
+
         // Récupérer le détail du premier événement futur
         $futureEvent = Event::whereIn('id', $futureEventIds)
-    ->where('event_type', 51)
-    ->where(function ($query) use ($formattedDate) {
-        $query->where('date_start', '<=', $formattedDate) // Date de début inférieure ou égale
-            ->where('date_end', '>=', $formattedDate); // Date de fin supérieure ou égale
-    })
-    ->orderBy('date_start', 'asc')
-    ->first();
+        ->where('event_type', 51)
+        ->where(function ($query) use ($formattedDate) {
+            $query->where('date_start', '<=', $formattedDate) // Date de début inférieure ou égale
+                ->where('date_end', '>=', $formattedDate); // Date de fin supérieure ou égale
+        })
+        ->orderBy('date_start', 'asc')
+        ->first();
 
         if (!empty($futureEvent)) {
             $student->dates = $futureEvent;
@@ -1132,6 +1138,8 @@ class AgendaController extends Controller
         $studentInfo = Student::whereIn('id', $studentIds)->get(['id', 'firstname', 'lastname'])->keyBy('id');
 
         $students = $students->map(function ($student) use ($studentInfo) {
+            $availabilities = Availability::where('student_id', $student->student_id)->get();
+            $student->availabilities = $availabilities;
             $student->firstname = $studentInfo[$student->student_id]->firstname;
             $student->lastname = $studentInfo[$student->student_id]->lastname;
             return $student;

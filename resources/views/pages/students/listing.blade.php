@@ -1,47 +1,152 @@
-@extends('layouts.main')
-
-@section('head_links')
-    <link href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet">
-    <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <link href="//cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
-    <link href="//cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" rel="stylesheet">
-    <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
-    <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="{{ asset('js/bootstrap-datetimepicker.min.js')}}"></script>
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
-    <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
-    <link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
-@endsection
-
-@section('content')
-    <div class="container">
-
-        <h5>{{ __('Student\'s List') }}</h5>
-
-        @include('pages.students.navbar')
-
-        <div class="tab-content" id="ex1-content">
 
 
+  <div class="container-fluid body students_list mb-3">
 
-            <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-                @include('pages.students.listing2')
+    <header class="panel-heading" style="border: none;">
+        <div class="row panel-row" style="margin:0;">
+            <div class="col-sm-12 col-xs-12 header-area pb-3">
+                <div class="page_header_class">
+                    <label id="page_header" name="page_header">{{ __('Student\'s List') }}</label>
+                </div>
             </div>
+        </div>
+    </header>
 
-            <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-                @include('pages.students.import_export')
+    @if(session('locked') == true)
+        <div class="alert alert-warning">One or more students are locked with lessons to be invoiced.
+            <ul>
+                @foreach(session('lockedStudent') as $studentId)
+                    @php
+                        $student = $students->where('id', $studentId)->first();
+                    @endphp
+                    @if($student)
+                        <li>{{ $student->full_name }}</li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('students.delete') }}" method="POST">
+        @method('delete')
+        @csrf
+        <input name="schoolId" type="hidden" value="{{$schoolId}}">
+   <table id="example" class="table table-stripped table-hover" style="width:100%">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th class="d-none d-sm-table-cell">&nbsp;</th>
+                <th>{{ __('Name of the Student') }}</th>
+                <th>{{ __('Email Address') }}</th>
+                <th>{{ __('User Account') }}</th>
+                <th>{{ __('Status') }}</th>
+                <th>{{ __('Action') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($students as $student)
+
+            <tr id="row_{{ $student->id }}">
+                <!--<td>{{ $student->id; }} </td>-->
+                <td class="pt-3"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
+                <td class="pt-2 d-none d-sm-table-cell">
+                    <?php if (!empty($student->profileImageStudent->path_name)): ?>
+                        <img src="{{ $student->profileImageStudent->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php elseif (!empty($student->user->profileImage->path_name)): ?>
+                        <img src="{{ $student->user->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
+                    <?php else: ?>
+                        <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo" alt="globe">
+                    <?php endif; ?>
+                </td>
+                <td class="pt-3">
+                    <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"> {{ $student->full_name; }}</a>
+                </td>
+                <td class="pt-3">{{ $student->email; }} </td>
+                <td class="pt-3">
+                    @if(!$student->user)
+                        <div class="d-block d-sm-none"><br></div>
+                        <a disabled style="border:1px solid #EEE; font-size:12px;margin:0; width:150px;">{{ __('Not yet registered') }}</a><br>
+                        @can('students-sent-mail')
+                            <!--<button class="send-invite-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i> Send invite
+                            </button>-->
+                            <a href="javascript:void(0)" role="button" class="badge  send-invite-btn" style="width: 130px; size:11px; background-color:#17a2b8; border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                <i class="fa-solid fa-envelope"></i> Send invite
+                            </a>
+                        @endcan
+                    @else
+                    <a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;">{{ __('Registered') }}</a><br>    <!--<span class="">{{$student->user->username}}</span>-->
+                        <!--<button class="send-password-btn" style="width: 150px; background-color:#17a2b8;  border:none; font-size:12px;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <i class="fa-solid fa-envelope"></i> Re-send password
+                        </button>-->
+                        <a href="javascript:void(0)" role="button" class="badge send-invite-btn send-password-btn" style="width: 130px; size:11px; background-color:#17a2b8;  border:none; font-size:12px; heigth:20px!important;" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                            <i class="fa-solid fa-envelope"></i> Resend password
+                        </a>
+                    @endif
+                </td>
+                <td class="pt-3">{{ !empty($student->pivot->is_active) ? 'Active' : 'Inactive'; }}</td>
+                @if($student->pivot->deleted_at)
+                    <td>{{__('Deleted')}}</td>
+                @else
+                    <td class="pt-3">
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h txt-grey"></i>
+                            </a>
+                            <div class="dropdown-menu list action text-left">
+                                @can('students-view')
+                                <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"><i class="fa fa-pencil txt-grey" aria-hidden="true"></i> {{ __('Edit Info')}}</a>
+                                @endcan
+                                <a class="dropdown-item" href="{{ route('students.availabilities', $student) }}"><i class="fa fa-calendar txt-grey" aria-hidden="true"></i> {{ __('Availabilities')}}</a>
+                                @can('teachers-delete')
+                                <button class="dropdown-item delete-student-btn" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
+                                    <i class="fa fa-trash txt-grey"></i> {{ __('Delete') }}
+                                </button>
+                                @endcan
+                                @can('students-activate')
+                                <form method="post" onsubmit="return confirm('{{ __("Are you sure want to change the status ?")}}')" action="{{route('studentStatus',['school'=>$student->pivot->school_id,'student'=>$student->id])}}">
+                                    @method('post')
+                                    @csrf
+                                    <input type="hidden" name="status" value="{{ $student->pivot->is_active }}">
+                                    @if($student->pivot->is_active)
+                                        <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to inactive')}}</button>
+                                    @else
+                                        <button  class="dropdown-item" type="submit" ><i class="fa fa-envelope txt-grey"></i> {{__('Switch to active')}}</button>
+                                    @endif
+                                </form>
+                                @endcan
+                            </div>
+                        </div>
+                    </td>
+                @endif
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    <div class="delete_studentList">
+        <button type="submit" id="delete-selected" onclick="return confirm('Are you sure you want to delete the selected students?')">Delete the selected students</button>
+    </div>
+    </form>
+  </div>
+
+
+
+<!-- success modal-->
+<div class="modal modal_parameter" id="sendMailOk">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border:4px solid #97cc04;">
+            <div class="modal-body text-center">
+                <h1 class="text-success"><i class="fa-solid fa-check"></i></h1>
+                <h3 class="text-success">{{__('Successfully sended') }}</h3>
+                <p>{{__('Your student will receive an email with instructions.') }}</p>
             </div>
-
-            <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-                @include('pages.students.add_new')
+            <div class="modal-footer">
+                <button type="button" id="modalClose" class="btn btn-primary" data-bs-dismiss="modal">{{ __('Ok') }}</button>
             </div>
-
-
         </div>
     </div>
+</div>
 
-@endsection
 
 
 @include('layouts.elements.modal_csv_import')
@@ -118,72 +223,6 @@
         });
     });
     </script>
-    <script>
-        $(document).ready(function() {
-            $(document).on('click', '.switch-student-btn', function(event) {
-                event.preventDefault();
-
-                var schoolId = $(this).attr('data-school');
-                var studentId = $(this).attr('data-student');
-                var currentStatus = $(this).attr('data-status');
-
-                Swal.fire({
-                title: currentStatus === '1' ? 'Are you sure to switch this student to inactive status ?' : 'Are you sure to switch this student to active status ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, change it!'
-                }).then((result) => {
-                if (result.isConfirmed) {
-
-                    var urlzz = BASE_URL + '/'+schoolId+'/student/'+studentId+'';
-                    var formData = new FormData();
-                    formData.append('status', currentStatus);
-
-                    $.ajax({
-                    url: urlzz,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        $("#pageloader").fadeOut("fast");
-                        if (response.status === "success") {
-                            Swal.fire(
-                                'Status updated!',
-                                'The student has been updated successfully.',
-                                'success'
-                            )
-
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                'An error occurred while updating the status.',
-                                'error'
-                            )
-                        }
-                    },
-                    error: function (error) {
-                        console.log(error);
-                        $("#pageloader").fadeOut("fast");
-                        Swal.fire(
-                            'Error!',
-                            'An error occurred while updating the status.',
-                            'error'
-                        )
-                    }
-                });
-
-                    }
-                    })
-            });
-        });
-        </script>
 <script>
 $(document).ready(function() {
     $(document).on('click', '.send-invite-btn', function(event) {
@@ -266,15 +305,14 @@ $(document).ready(function() {
 </script>
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#studentList').DataTable({
+        $('#example').DataTable({
             language: { search: "" },
             theme: 'bootstrap4',
-            /* start resultat to 10 results */
-            pageLength: -1,
             lengthMenu: [
-                [-1, 10, 25, 50, 100],
-                ['All', 10, 25, 50, 100]
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
             ],
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
             "responsive": true,
             "oLanguage": {
                 "sLengthMenu": "Show _MENU_",
@@ -341,195 +379,5 @@ $(document).ready(function() {
             }
         });
     });
-</script>
-
-
-<script type="text/javascript">
-	/*
-	* student province list
-	* function @billing province
-	*/
-	$(document).ready(function(){
-		var country_code = $('#country_code option:selected').val();
-		get_province_lists(country_code);
-	});
-
-	$('#country_code').change(function(){
-		var country_code = $(this).val();
-		get_province_lists(country_code);
-	})
-
-	function get_province_lists(country_code){
-		$.ajax({
-			url: BASE_URL + '/get_province_by_country',
-			data: 'country_name=' + country_code,
-			type: 'POST',
-			dataType: 'json',
-			async: false,
-			success: function(response) {
-					if(response.data.length > 0){
-						var html = '';
-						$.each(response.data, function(i, item) {
-							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
-						});
-						$('#province_id').html(html);
-						$('#province_id_div').show();
-				}else{
-					$('#province_id').html('');
-					$('#province_id_div').hide();
-				}
-			},
-			error: function(e) {
-				//error
-			}
-		});
-	}
-
-	/*
-	* Billing province list
-	* function @billing province
-	*/
-	$('#billing_country_code').change(function(){
-		var country_code = $(this).val();
-		get_billing_province_lists(country_code);
-	})
-
-	$(document).ready(function(){
-		var billing_country_code = $('#billing_country_code option:selected').val();
-		get_billing_province_lists(billing_country_code);
-	});
-
-	function get_billing_province_lists(country_code){
-		$.ajax({
-			url: BASE_URL + '/get_province_by_country',
-			data: 'country_name=' + country_code,
-			type: 'POST',
-			dataType: 'json',
-			async: false,
-			success: function(response) {
-					if(response.data.length > 0){
-						var html = '';
-						$.each(response.data, function(i, item) {
-							html += '<option value="'+ item.id +'">' + item.province_name + '</option>';
-						});
-						$('#billing_province_id').html(html);
-						$('#billing_province_id_div').show();
-				}else{
-					$('#billing_province_id').html('');
-					$('#billing_province_id_div').hide();
-				}
-			},
-			error: function(e) {
-				//error
-			}
-		});
-	}
-
-</script>
-
-<script type="text/javascript">
-$(function() {
-
-	// var b_country = $('#billing_country_code option:selected').val();
-	// var country_code = $('#country_code option:selected').val();
-	// if(country_code == 'CA'){
-	// 	$('#province_id_div').show();
-	// }
-	// if(b_country == 'CA'){
-	// 	$('#billing_province_id_div').show();
-	// }
-
-	$("#birth_date").datetimepicker({
-		format: "dd/mm/yyyy",
-		autoclose: true,
-		todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
-	$("#level_date_arp").datetimepicker({
-		format: "yyyy-mm-dd",
-		autoclose: true,
-		todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
-	$("#level_date_usp").datetimepicker({
-		format: "yyyy-mm-dd",
-		autoclose: true,
-		todayBtn: true,
-		minuteStep: 10,
-		minView: 3,
-		maxView: 3,
-		viewSelect: 3,
-		todayBtn:false,
-	});
-
-	$('#bill_address_same_as').click(function(){
-		if($(this).is(':checked')){
-			$('#billing_place').val( $('#place').val() );
-			$('#billing_street').val( $('#street').val() );
-			// $('#billing_street2').val( $('#street2').val() );
-			$('#billing_street_number').val( $('#street_number').val() );
-			$('#billing_zip_code').val( $('#zip_code').val() );
-			$('#billing_country_code').val( $('#country_code option:selected').val() );
-			$('#billing_province_id').val( $('#province_id option:selected').val() );
-		}
-	});
-
-	$('#save_btn').click(function (e) {
-		var formData = $('#add_student').serializeArray();
-		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-		var error = '';
-		$( ".form-control.require" ).each(function( key, value ) {
-			var lname = $(this).val();
-			if(lname=='' || lname==null || lname==undefined){
-				$(this).addClass('error');
-				error = 1;
-			}else{
-				$(this).removeClass('error');
-				error = 0;
-			}
-		});
-		formData.push({
-			"name": "_token",
-			"value": csrfToken,
-		});
-		if(error < 1){
-			return true;
-		}else{
-			return false;
-		}
-	});
-
-
-$("#country_code, #billing_country_code").trigger('change')
-
-});
-$(function() { $('.colorpicker').wheelColorPicker({ sliders: "whsvp", preview: true, format: "css" }); });
-
-
-$('#profile_image_file').change(function(e) {
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById("frame").src = e.target.result;
-  };
-  reader.readAsDataURL(this.files[0]);
-  	$('#profile_image i.fa.fa-plus').hide();
-	$('#profile_image i.fa.fa-close').show();
-});
-
-
-$('.box_img i.fa.fa-close').click(function (e) {
-	 document.getElementById("frame").src = BASE_URL +"/img/default_profile_image.png";
-	$('#profile_image i.fa.fa-plus').show();
-	$('#profile_image i.fa.fa-close').hide();
-})
-
 </script>
 @endsection

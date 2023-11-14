@@ -133,6 +133,11 @@
                                                 <span id ="btn_export_events_cap">Excel</span></a>
                                             @endif
 
+                                            @if($AppUI->isStudent())
+                                                <a style="display:inline-block; min-width: 190px;" href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success m-1 mb-2"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
+                                                <a style="display:inline-block; min-width: 190px;" href="{{ route('student.availabilities') }}" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-calendar"></i> <span id ="btn_validate_events_cap">{{__('Availability')}}</span></a>
+                                            @endif
+
                                         </div>
                                         </div>
                                 </div>
@@ -239,7 +244,38 @@
 
                                  <div id="allFilters" style="display:none;">
 
+                                    <div id="event_type_div" name="event_type_div" class="selectdiv mt-0">
+                                        <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" >
+                                            @foreach($event_types as $key => $event_type)
+                                                <option value="{{ $key }}">{{ $event_type }}</option>
+                                            @endforeach
+                                        </select>
+                                        <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 0px;" >
+                                            @foreach($event_types_all as $key => $event_type)
+                                                <option value="{{ $key }}">{{ $event_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div id="event_student_div" name="event_student_div" class="selectdiv">
+                                        <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 0px;">
+                                            @foreach($students as $key => $student)
+                                                <option value="{{ $student->id }}">{{ $student->firstname }} {{ $student->lastname }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
                                     <div style="margin-top:40px;" id="datepicker_month"></div>
+
+                                    <div id="event_location_div" name="event_location_div" class="selectdiv">
+                                        <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                            @foreach($locations as $key => $location)
+                                                <option value="{{ $location->id }}">{{ $location->title }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
 
                                     <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity: 0 !important; visibility: hidden !important;">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
@@ -253,25 +289,8 @@
 
                                     <div>
                                         <div class="btn-group btn-xs pull-left" style="padding:0;width:100%;">
-                                            <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                                <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
-                                                    @foreach($locations as $key => $location)
-                                                        <option value="{{ $location->id }}">{{ $location->title }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div id="event_type_div" name="event_type_div" class="selectdiv">
-                                                <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" >
-                                                    @foreach($event_types as $key => $event_type)
-                                                        <option value="{{ $key }}">{{ $event_type }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <select style="display:none;" class="form-control" multiple="multiple" id="event_types_all" name="event_types_all[]" style="margin-bottom: 0px;" >
-                                                    @foreach($event_types_all as $key => $event_type)
-                                                        <option value="{{ $key }}">{{ $event_type }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+
+
                                             <div id="event_teacher_div" name="event_teacher_div" class="selectdiv" style="opacity: 0 !important; visibility: hidden !important;">
                                                 <select class="form-control" multiple="multiple" id="event_teacher" name="event_teacher[]" style="margin-bottom: 0px;">
                                                     @foreach($teachers as $key => $teacher)
@@ -279,13 +298,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div id="event_student_div" name="event_student_div" class="selectdiv" style="opacity: 0; visibility: hidden;">
-                                                <select class="form-control" multiple="multiple" id="event_student" name="event_student[]" style="margin-bottom: 0px;">
-                                                    @foreach($students as $key => $student)
-                                                        <option value="{{ $student->id }}">{{ $student->firstname }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+
 
                                             <div id="list-button" class="pull-right form-inline">
                                                 <button id="list_button" style="height:27px;display: none;" class="btn btn-primary btn-sm" type="button">list</button>
@@ -333,6 +346,9 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+            @csrf
+            <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
+
             <div class="modal-header text-white" style="background-color: #152245;">
                 <h6 class="modal-title page_header_class">
                   <i class="fa-regular fa-calendar-plus"></i>  Add an event / lesson
@@ -355,41 +371,117 @@
                         <div class="modal-body">
                             <div class="col-md-10 offset-md-1 p-l-n p-r-n">
                                 <div class="form-group row">
-                                    <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}} :</label>
+                                    <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
-                                            <select class="form-control" id="agenda_select">
-                                                <option value="1">{{__('Lesson')}}</option>
-                                                <option value="2">{{__('Event')}}</option>
-                                                @if(!$AppUI->isTeacherMediumMinimum())
-                                                <option value="3">{{__('Student Off')}}</option>
-                                                @endif
-                                                <option value="4">{{__('Coach off')}}</option>
-                                            </select>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="fa-solid fa-list-ul"></i>
+                                                </span>
+                                                <select class="form-control" id="agenda_select">
+                                                    <option value="1">{{__('Lesson')}}</option>
+                                                    <option value="2">{{__('Event')}}</option>
+                                                    @if(!$AppUI->isTeacherMediumMinimum())
+                                                    <option value="3">{{__('Student Off')}}</option>
+                                                    @endif
+                                                    <option value="4">{{__('Coach off')}}</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group row">
+                                <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }}</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa-regular fa-file-lines"></i>
+                                            </span>
+                                            <input id="Title" name="title" type="text" class="form-control" placeholder="Title here" value="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row lesson hide_on_off">
+                                    <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
+                                    <div class="col-sm-9">
+                                        <div class="selectdiv">
+                                            <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa-solid fa-list-ul"></i>
+                                            </span>
+                                            <select class="form-control" id="category_select" name="category_select">
+                                                @foreach($eventCategoryList as $key => $eventcat)
+                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row hide_on_off">
+                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }}</label>
+                                    <div class="col-sm-9">
+                                        <div class="selectdiv">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="fa-solid fa-list-ul"></i>
+                                                </span>
+                                            <select class="form-control" id="location" name="location">
+
+                                                @foreach($locations as $key => $location)
+                                                    <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="tab-content" id="agenda_form_area" style="display:none">
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-                                        @csrf
-                                        <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
-                                        <fieldset>
+
+
+
                                             <div class="row">
-                                                <div class="col-md-10 offset-md-1">
-                                                    <div class="form-group row lesson hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="selectdiv">
-                                                                <select class="form-control" id="category_select" name="category_select">
-                                                                    @foreach($eventCategoryList as $key => $eventcat)
-                                                                        <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                <div class="col-md-10 offset-md-1 mt-4">
+
+
+                                                    <div class="card form-group p-3 row hide_coach_off">
+                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
+                                                            <h6><small>{{__('Student') }}</small></h6>
+                                                           <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students\'s availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                                        </label>
+
+                                                            <div class="student_list pt-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <i class="fa-solid fa-users"></i>
+                                                                    </span>
+                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
+                                                                    @foreach($studentsbySchool as $key => $student)
+                                                                        <div>
+                                                                            <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
+                                                                            @php
+                                                                            $studentName = App\Models\Student::find($student->student_id);
+                                                                            @endphp
+                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }}</option>
+                                                                        </div>
                                                                     @endforeach
                                                                 </select>
+                                                                </div>
+                                                                <br><br>
                                                             </div>
+
+                                                        <div class="col-sm-2 p-l-n p-r-n">
+                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i> </span>
                                                         </div>
                                                     </div>
+
                                                     @if($AppUI->isSchoolAdmin())
                                                     <div class="form-group row event hide_on_off">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
@@ -407,29 +499,10 @@
                                                     @else
                                                         <input style="opacity: 0; visibility: hidden;" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
                                                     @endif
-                                                    <div class="form-group row hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="selectdiv">
-                                                                <select class="form-control" id="location" name="location">
 
-                                                                    @foreach($locations as $key => $location)
-                                                                        <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <input id="Title" name="title" type="text" class="form-control" value="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row show_coach_off hide_on_off">
+
                                                     @if(!$AppUI->isTeacherAdmin())
+                                                    <div class="form-group row show_coach_off hide_on_off">
                                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                                     @endif
                                                     @if($AppUI->isTeacherAdmin())
@@ -445,29 +518,10 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    </div>
                                                     @endif
-                                                    </div>
-                                                    <div class="form-group row hide_coach_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="selectdiv student_list">
-                                                                <select class="multiselect" id="student" name="student[]" multiple="multiple">
-                                                                    @foreach($studentsbySchool as $key => $student)
-                                                                        <div style="position: relative; padding: 10px;">
-                                                                            <option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : '' }}>
-                                                                            @php
-                                                                            $studentName = App\Models\Student::find($student->student_id);
-                                                                            @endphp
-                                                                            {{ $studentName->firstname }} {{ $studentName->lastname }}</option>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-2 p-l-n p-r-n">
-                                                           <span class="no_select" id="std-check-div"> <input type="checkbox" name="student_empty" id="student_empty"> {{__('do not select') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you wish to not select any students for the lesson, for ’school invoiced’ lesson with a many students for example. Remember that if no students are selected, no invoice will be generated for them for that lesson.')}}"></i> </span>
-                                                        </div>
-                                                    </div>
+
+
 
                                                     <div class="form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
@@ -640,7 +694,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </fieldset>
+
 
 
                                 </div>
@@ -744,6 +798,7 @@
 <!-- ================================= -->
 
 <script>
+    $('#pageloader').show();
     let foundedSearchItems = [];
     $('#search_text').on('keydown', function(e) {
     if (e.key === "Enter") {
@@ -965,7 +1020,7 @@ $('.search-icon').on('click', function() {
         //user_role = 'student';
         //console.log(value.value);
         if (user_role == 'student'){
-            menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
+            //menuHtml+= '<a href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>';
         }
         $("#event_types_all option").each(function(key,value)
         {
@@ -1495,9 +1550,9 @@ $('.search-icon').on('click', function() {
         if (school_id !=null) {
             var menuHtml='';
             var data = 'school_id='+school_id;
-            $('#event_location').html('');
+            //$('#event_location').html('');
 
-            $.ajax({
+            /*$.ajax({
                 url: BASE_URL + '/get_locations',
                 data: data,
                 type: 'POST',
@@ -1530,7 +1585,7 @@ $('.search-icon').on('click', function() {
                     // alert(ts.responseText)
                     errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
                 }
-            }); // Ajax
+            }); */
         }
         $('#event_location').multiselect({
             includeSelectAllOption:true,
@@ -1698,7 +1753,7 @@ $('.search-icon').on('click', function() {
     }
     // populate student
     function PopulateStudentDropdown(school_id=null){
-        if (school_id !=null) {
+        /*if (school_id !=null) {
             var menuHtml='';
             var data = 'school_id='+school_id;
             $('#event_student').html('');
@@ -1717,13 +1772,20 @@ $('.search-icon').on('click', function() {
                     if (data.length >0) {
 
                     }
-                    var resultHtml ='';
+                    var resultHtml = "";
                     var i='0';
                     $.each(data, function(key,value){
                         resultHtml+='<option value="'+value.id+'">'+value.firstname+' '+value.lastname+'</option>';
                     });
-                    //$('#event_student, #student').html(resultHtml);
-                    //$("#event_student").multiselect('destroy');
+
+                    setTimeout(() => {
+                        $('#event_student').html(resultHtml);
+                        $("#event_student").multiselect('destroy');
+                        $('#event_student').multiselect('refresh');
+                        $('#event_student').change();
+                    }, 500);
+
+                   // $("#event_student").multiselect('destroy');
                     //$('#student').multiselect({ search: true })
 
                 },   //success
@@ -1735,7 +1797,7 @@ $('.search-icon').on('click', function() {
                     errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
                 }
             }); // Ajax
-        }
+        }*/
         $('#event_student').multiselect({
             includeSelectAllOption:true,
             selectAllText: 'All Students',
@@ -1746,7 +1808,7 @@ $('.search-icon').on('click', function() {
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
-            filterPlaceholder: 'Search',
+            filterPlaceholder: '{{ __("Search") }}',
             numberDisplayed: 3,
             buttonWidth: '100%',
             // possible options: 'text', 'value', 'both'
@@ -1757,7 +1819,7 @@ $('.search-icon').on('click', function() {
                 document.getElementById("event_student_all_flag").value='0';
                 SetEventCookies();
                 RerenderEvents();
-                //getFreshEvents();
+                getFreshEvents();
             },
             onSelectAll: function (options,checked) {
                 if (options){
@@ -1773,7 +1835,7 @@ $('.search-icon').on('click', function() {
                 }
                 SetEventCookies();
                 RerenderEvents();
-                //getFreshEvents();
+                getFreshEvents();
 
             },
             onDeselectAll: function() {
@@ -1840,6 +1902,8 @@ $('.search-icon').on('click', function() {
 
             console.log('copy start',  document.getElementById("copy_date_from").value)
             console.log('copy end',  document.getElementById("copy_date_to").value)
+            console.log('list all copied events', getEventIDs())
+            console.log('list all students', getStudentIDs())
 
         }
 
@@ -2937,6 +3001,9 @@ $('.search-icon').on('click', function() {
             var end_date=document.getElementById("date_to").value;
         }
 
+        console.log('get envent start date',start_date);
+        console.log('get envent end date',end_date);
+
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id=getLocationIDs();
@@ -3424,10 +3491,10 @@ $('.search-icon').on('click', function() {
         if (count == 'count') return selected_ids.length
         if (count == 'is_multi') return !!(selected_ids.length > 1)
 
-        if (selected_ids.length > 1) {
-            $('#event_location_div').hide();
+        if (selected_ids.length > 0) {
+            $('#event_location_div').show();
             $('#event_teacher_div').hide();
-            $('#event_student_div').hide();
+            //$('#event_student_div').show();
         } else {
             if ($("#event_location option").length > 0 ) {
                 $('#event_location_div').show();
@@ -3918,6 +3985,11 @@ $("body").on('click', '#all_day', function(event) {
 
 $('#add_lesson').on('submit', function(e) {
     e.preventDefault();
+
+    $('#pageloader').fadeIn();
+
+    setTimeout(() => {
+
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
     var agendaSelect = +$("#agenda_select").val();
@@ -4063,7 +4135,15 @@ $('#add_lesson').on('submit', function(e) {
             dataType: 'json',
             success: function(response){
                 if(response.status == 1){
-                    $('#add_lesson_success').modal('show');
+
+                    //$('#add_lesson_success').modal('show');
+                    $('#pageloader').fadeOut(100);
+
+                    Swal.fire({
+                    title: "{{__('Successfully added') }}",
+                    text: "{{__('You can add now another lesson or event') }}",
+                    icon: "success"
+                    });
 
                    // $('#student').multiselect('deselectAll', false);
                     $('#student').multiselect('updateButtonText');
@@ -4078,12 +4158,43 @@ $('#add_lesson').on('submit', function(e) {
                     // const endresult = moment().subtract(1, 'seconds').format('DD/MM/YYYY');
                     // $('#end_date').val(endresult);
                     // $('#end_time').val(endTime).trigger('change');
+
+
                 }else{
-                    location.reload();
+
+                    $('#pageloader').fadeOut(100);
+                    $('#addAgendaModal').hide();
+
+                    let timerInterval;
+                    Swal.fire({
+                    icon: "success",
+                    title: agendaSelect === 1 ? "New Lesson Added" : "New Event Added",
+                    html: "Please wait few seconds...",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                    }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        location.reload();
+                    }
+                    });
+
+
                 }
             }
         })
     }else{
+        $('#pageloader').fadeOut(100);
         Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -4091,6 +4202,8 @@ $('#add_lesson').on('submit', function(e) {
         });
         return false;
     }
+
+    }, 1000);
 });
 
 
@@ -4552,9 +4665,29 @@ $( document ).ready(function() {
     });
 });
 
+$( document ).ready(function() {
+// if checked check-students-availability show all class .studentAvailabilities if not hide it
+    $("#check-students-availability").click(function() {
+        if (this.checked) {
+            $(".studentAvailabilities").fadeIn();
+        } else {
+            $(".studentAvailabilities").hide();
+        }
+    })
+});
+
+
 function getAwayStudent() {
 
     var startDate = $('#start_date').val();
+    var days = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
+    var momentDate = moment(startDate, 'DD/MM/YYYY');
+
+    var formattedDate = momentDate.format('YYYY-MM-DD');
+    var date = new Date(formattedDate);
+    var dayName = days[date.getDay()];
+
+
         $.ajax({
         type: "POST",
         url: "/admin/getAbsentStudent",
@@ -4564,10 +4697,9 @@ function getAwayStudent() {
         success: function(response) {
         response.forEach(function (item) {
             var studentId = item.student_id;
+            console.log(item);
             var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + studentId + '"])');
-
             if (studentButton.length > 0) {
-
                 var labelElement = studentButton.find('.form-check-label');
 
                 if (labelElement.length > 0) {
@@ -4576,10 +4708,23 @@ function getAwayStudent() {
                     labelElement.html(item.full_name + ' <span class="text-warning"><i class="fa-solid fa-circle-info"></i> is away this day</span>');
                 } else {
                     console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
+                    labelElement.html(item.full_name);
                 }
             } else {
                 console.log('Élément <button> non trouvé pour studentId=' + studentId);
             }
+
+            if(item.availabilities.length > 0) {
+                //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
+                item.availabilities.forEach(function (availability) {
+                    if(availability.day_of_week === dayName) {
+                        var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
+                        console.log('available on ' + availability.day_of_week + " on " +  $time);
+                        labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available on ' + availability.day_of_week + ' in the ' + $time + ')</span>');
+                    }
+                });
+            }
+
         });
         }
     });
@@ -4592,6 +4737,14 @@ function resetStudentList() {
   var students = @json($studentsbySchool);
     console.log('students', students)
   var studentSelect = $('#student');
+
+  var startDate = $('#start_date').val();
+    var days = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
+    var momentDate = moment(startDate, 'DD/MM/YYYY');
+
+    var formattedDate = momentDate.format('YYYY-MM-DD');
+    var date = new Date(formattedDate);
+    var dayName = days[date.getDay()];
 
 
     // Parcourir le tableau JSON côté client
@@ -4612,6 +4765,18 @@ function resetStudentList() {
         } else {
         console.log('Élément <button> non trouvé pour studentId=' + studentId);
         }
+
+        if(student.availabilities.length > 0) {
+                //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
+                student.availabilities.forEach(function (availability) {
+                    if(availability.day_of_week === dayName) {
+                        var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
+                        console.log('available on ' + availability.day_of_week + " on " +  $time);
+                        labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available on ' + availability.day_of_week + ' in the ' + $time + ')</span>');
+                    }
+                });
+            }
+
     });
 }
 
