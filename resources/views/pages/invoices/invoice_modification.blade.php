@@ -1591,7 +1591,7 @@ function extractExtraCharges($inputString) {
                 // console.log(result);
                 // return true;
                 //if (status == 'success') {
-                    successModalCall('Invoice issued');
+                    successModalCall('Invoice generated');
                     var p_school_id = document.getElementById("p_school_id").value;
                     //return true;
                     //setTimeout(function(){ window.location.replace('/admin/'+p_school_id+'/invoices'); }, 1000);
@@ -1643,7 +1643,7 @@ function extractExtraCharges($inputString) {
                 console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice issued');
+                    successModalCall('Invoice generated');
                     var p_school_id = document.getElementById("p_school_id").value;
                     return true;
 

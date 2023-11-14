@@ -1047,7 +1047,7 @@ $(document).ready(function(){
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
 
-					successModalCall("{{ __('invoice generated')}}");
+					successModalCall("{{ __('invoice drafted')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.
 				} else {

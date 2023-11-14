@@ -57,7 +57,7 @@ class StudentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($schoolId = null)
+public function index(Request $request, $schoolId = null)
     {
 
         $user = Auth::user();
@@ -67,7 +67,41 @@ class StudentsController extends Controller
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
         $students = $school->students;
-        return view('pages.students.list',compact('students','schoolId'));
+
+
+        if ($user->isSuperAdmin()) {
+            $school = School::active()->find($schoolId);
+            if (empty($school)) {
+                return redirect()->route('schools')->with('error', __('School is not selected'));
+            }
+            $schoolId = $school->id;
+        }else {
+            $schoolId = $user->selectedSchoolId();
+            $school = School::active()->find($schoolId);
+        }
+
+        $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
+        $genders = config('global.gender');
+        $provinces = Province::active()->get()->toArray();
+        $exStudent = $exUser = $searchEmail = null;
+        if ($request->isMethod('post')){
+            $searchEmail = $request->email;
+            $exUser = User::where(['email'=> $searchEmail, 'person_type' =>'App\Models\Student' ])->first();
+            // $exStudent = !empty($exUser) ? $exUser->personable : null;
+            $exStudent = Student::where(['email'=> $searchEmail])->first();
+            $alreadyFlag =null;
+            if ($exStudent) {
+                $alreadyFlag = SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $exStudent->id ])->first();
+                if ($alreadyFlag) {
+                    return back()->with('warning', __('This user already have in your school with "'.$searchEmail.'" email'));
+                }
+            }
+            // echo "<pre>";
+            // print_r($exStudent); exit;
+        }
+
+            return view('pages.students.list',compact('students','schoolId', 'countries', 'exStudent','searchEmail' ,'genders', 'levels','provinces','school'));
     }
 
     /**
@@ -600,7 +634,7 @@ class StudentsController extends Controller
 
         $school = School::active()->find($schoolId);
         if (empty($school)) {
-            return redirect()->route('schools')->with('error', __('School is not selected'));
+            return redirect()->route('agenda')->with('error', __('School is not selected'));
         }
         $invoice_type_all = config('global.invoice_type');
         $payment_status_all = config('global.payment_status');
@@ -656,22 +690,24 @@ class StudentsController extends Controller
         }
     }
 
-    /**
-     * change status.
+ /**
+     *  AJAX action to send email to school admin
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return json
+     * @author Mamun <lemonpstu09@gmail.com>
+     * @version 0.1 written in 2022-03-10
      */
     public function changeStatus(Request $request)
     {
         $schoolId = $request->route('school');
         $studentId = $request->route('student');
         $alldata = $request->all();
-        $status = isset($alldata['status']) && ($alldata['status'] == 1 ) ? 0 : 1 ;
-        // dd($schoolId,$studentId);
-        SchoolStudent::where(['school_id'=>$schoolId, 'student_id'=>$studentId])->update(['is_active'=>$status]);
-        return redirect()->back()
-            ->with('success', 'status updated successfully');
+        $status = isset($alldata['status']) && ($alldata['status'] == 1) ? 0 : 1;
+
+        SchoolStudent::where(['school_id' => $schoolId, 'student_id' => $studentId])->update(['is_active' => $status]);
+
+        // Retournez une réponse JSON avec le statut mis à jour
+        return response()->json(['status' => 'success', 'message' => 'Status updated successfully']);
     }
 
     /**

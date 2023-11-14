@@ -1045,7 +1045,7 @@ $("#country_code, #billing_country_code").trigger('change')
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
                     console.log(result)
-					successModalCall("{{ __('invoice generated')}}");
+					successModalCall("{{ __('invoice drafted')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.
 				} else {

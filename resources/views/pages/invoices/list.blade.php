@@ -190,9 +190,9 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
+                                <button id="approved_btn" target="" href="" class="btn btn-info w-100" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
                                 @else
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
+                                <button id="approved_btn" target="" href="" class="btn btn-info w-100" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
                                 @endif
                             </td>
                             @else
@@ -226,7 +226,7 @@
                                     @endif
 
                                     @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0) && (!$AppUI->isStudent()))
-                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send Invoice')}}</a>
+                                        <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send reminder email')}}</a>
                                     @endif
                                 </div>
                             </div>

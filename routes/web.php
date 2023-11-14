@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ContactFormController;
-
+use App\Http\Controllers\AvailabilityController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -410,6 +410,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/account/subscription', [App\Http\Controllers\TeachersController::class, 'self_edit'])->name('profile.plan');
 
+
+    Route::get('/student/availabilities', [AvailabilityController::class, 'index'])->name('student.availabilities');
+    Route::get('/student/{student}/availabilities', [AvailabilityController::class, 'indexByStudent'])->name('students.availabilities');
+    Route::post('/student/availabilities', [AvailabilityController::class, 'store'])->name('student.availability.store');
+    Route::delete('/student/availabilities/{availability}', [AvailabilityController::class, 'destroy'])->name('student.availability.destroy');
 
     //AJAX action
     Route::post('/{school}/add-teacher-action', [App\Http\Controllers\TeachersController::class, 'AddTeacher'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
