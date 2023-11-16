@@ -444,11 +444,14 @@ class Event extends BaseModel
         }
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
+            $query->where('events.deleted_at', null);
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
                 ->select(['events.*']);
         }
-
+        else {
         $query->where('deleted_at', null);
+        }
+
         foreach ($params as $key => $value) {
             if (!empty($value)) {
 
