@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-5">
     <div class="col-md-9">
         <div class="card">
-            <div class="card-header">List all</div>
+            <div class="card-header">{{ __('List all') }}</div>
             <div class="card-body">
 
                 <form method="POST" action="{{ route('students.delete') }}">
@@ -13,12 +13,12 @@
                             <th colspan="2" width="10px">
                                 <div style="display:flex;">
                                   <input type="checkbox" id="select-all">
-                                  <small style="font-size:11px; padding-left:4px;">check all</small>
+                                  <small style="font-size:11px; padding-left:4px;">{{ __('check all') }}</small>
                                 </div>
                               </th>
-                            <th>Name</th>
+                            <th>{{ __('Name') }}</th>
                             <th>Status</th>
-                            <th width="110px" class="text-center">Action</th>
+                            <th width="110px" class="text-center">{{ __('Action') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,7 +45,7 @@
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a><br>
-                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? 'Switch to inative' : 'Switch to active'; }}</a>
+                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
 
                                     </td>
                                     <td class="text-center align-middle">
@@ -71,13 +71,13 @@
                                             @can('students-sent-mail')
                                                 <a href="javascript:void(0)"  style="display: none; display:inline-block; min-width: 150px;"
                                                 class="btn btn-sm btn-default m-1 mb-2 send-invite-btn"  data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
-                                                    <i class="fa-solid fa-envelope"></i> Send invite
+                                                    <i class="fa-solid fa-envelope"></i> {{ __('Send invite') }}
                                                 </a>
                                             @endcan
                                             @else
                                                 <a href="javascript:void(0)"  style="display: none; display:inline-block; min-width: 150px;"
                                                  class="btn btn-sm btn-default m-1 mb-2 send-password-btn" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
-                                                    <i class="fa-solid fa-envelope"></i> Resend password
+                                                    <i class="fa-solid fa-envelope"></i> {{ __('Resend password') }}
                                                 </a>
                                             @endif
 
@@ -100,7 +100,7 @@
                     </table>
 
                     <br>
-                    <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('Are you sure you want to delete the selected students?')">Delete selected students</button>
+            <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
                 </form>
             </div>
         </div>

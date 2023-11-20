@@ -42,8 +42,8 @@
         <input id="p_school_id" name="p_school_id" style="display: none;" value="<?php echo $school->id;?>">
         <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">
         <select style="display:none;" class="form-control" id="inv_payment_status" name="inv_payment_status">
-            <option value="1">Paid</option>
-            <option value="0">Unpaid</option>
+            <option value="1">{{ __('Paid') }}</option>
+            <option value="0">{{ __('Unpaid') }}</option>
         </select>
         <table id="example1" class="table table-stripped table-hover" style="width:100%">
             <thead>
@@ -148,13 +148,13 @@
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                     @endif
                                     @if($AppUI->isStudent())
                                         <span class="small txt-grey pull-left">
                                             <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                            {{$payment_status_all[$invoice->payment_status]}}
+                                            {{__($payment_status_all[$invoice->payment_status])}}
                                         </span>
                                     @endif
                                 </div>
@@ -165,7 +165,7 @@
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                 @endif
                                 @if($AppUI->isStudent())
@@ -528,8 +528,8 @@
         $('#inv_payment_status').val(payment_status);
         //let payment_text_paid = '';
         //let payment_text_unpaid = '';
-        let payment_text_paid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Paid</span>";
-        let payment_text_unpaid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;>'>Unpaid</span>";
+        let payment_text_paid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;'>" + __('Paid') + "</span>";
+        let payment_text_unpaid = "<span class='gilroy-bold' id='" + v_status + "' style='color:" + ((payment_status == 0) ? '#FF8000' : '#97CC04') + ";text-align:center;'>" + __('Unpaid') + "</span>";
 
 
         //console.log('status='+((p_payment_status = 0) ? 1 : 0));

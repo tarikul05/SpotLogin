@@ -2,7 +2,7 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                My invoices
+                {{ __('My invoices') }}
                 @if(!empty($invoices) && count($invoices) > 0)
                 <select id="invoiceFilter">
                     <?php foreach($invoices as $invoice): ?>
@@ -34,10 +34,10 @@
                  <table class="table table-bordered table-hover">
                    <thead>
                      <tr>
-                       <th class="text-left">Date</th>
-                       <th class="text-left">Amount</th>
-                       <th class="text-left">Status</th>
-                       <th class="text-center">Action</th>
+                       <th class="text-left">{{ __('Date') }}</th>
+                       <th class="text-left">{{ __('Amount') }}</th>
+                       <th class="text-left">{{ __('Status') }}</th>
+                       <th class="text-center">{{ __('Action') }}</th>
                      </tr>
                    </thead>
                    <tbody>
@@ -56,7 +56,7 @@
                </div>
          </div>
          @else
-         No invoices found.
+         {{ __('No invoices found') }}.
     @endif
 
 

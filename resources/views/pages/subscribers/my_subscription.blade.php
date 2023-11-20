@@ -64,7 +64,7 @@
 
 <div class="container">
 
-    <h5>Coach Plan</h5>
+    <h5>{{ __('Coach Plan') }}</h5>
 
 
 
@@ -73,7 +73,7 @@
     <div class="row justify-content-center pt-3">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Congratulations !</div>
+                <div class="card-header">{{ __('Congratulations') }} !</div>
                 <div class="card-body">
                     <!--@if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -108,7 +108,7 @@
 
                             <?php
                                 if($subscription){
-                            echo '<p><span class="text-success">Congratulations !<br>You subscribed to '.$product_object->name.'</span></p>';
+                            echo '<p><span class="text-success">'.__('Congratulations').' !<br>'.__('You subscribed to').' '.$product_object->name.'</span></p>';
                                 }else{
                                     echo '<span class="">--/--/----</span>';
                                 }
@@ -121,15 +121,15 @@
                                     //echo '<span class="plan_type_p">'.$product_object->name.'</span>';
                                 }else{
                                     if($AppUI->isSchoolAdmin()){
-                                        echo '<span class="plan_type_f">Trial period</span>';
+                                        echo '<span class="plan_type_f">'.__('Trial period').'</span>';
                                     }else{
-                                        echo '<span class="plan_type_f">Basic</span>';
+                                        echo '<span class="plan_type_f">'.__('Basic').'</span>';
                                     }
                                 }
                             ?>
                         </p>
 
-                        <a class="btn btn-primary" href="{{ route('agenda') }}">
+                        <a class="btn btn-success" href="{{ route('agenda') }}">
                             <span class="action_icon">OK</span>
                         </a>
 

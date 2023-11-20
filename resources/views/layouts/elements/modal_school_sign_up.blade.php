@@ -19,16 +19,16 @@
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
                             <option value="COACH">{{ __('I am a Single coach') }}</option>
                             <!--<option value="SCHOOL">{{ __('School') }} (for testing)</option>-->
-                            <option value="SCHOOL" disabled="true">{{ __('School') }} (coming soon)</option>
+                            <option value="SCHOOL" disabled="true">{{ __('School') }} ({{ __('Coming Soon') }})</option>
                         </select>
                     </div>
                     <div class="form-group custom-selection">
                         <select class="selectpicker selectDiscipline" id="disciplineSelect" name="discipline" onchange="changeInputVisibility()">
-                            <option value="">Choose an activity</option>
+                            <option value="">{{ __('Choose an activity') }}</option>
                             <option value="ice-skating">Ice-skating</option>
                             <option value="hockey">Hockey</option>
                             <option value="soccer">Soccer</option>
-                            <option value="other-discipline">Other</option>
+                            <option value="other-discipline">{{ __('Other') }} ?</option>
                         </select>
                         <input type="text" class="form-control inputDiscipline" placeholder="Enter a discipline" name="discipline2" id="disciplineInput" style="display: none;">
                     </div>
@@ -36,15 +36,15 @@
 
 
                     <div class="card bg-tertiary p-2 mb-3">
-                        <small class="pb-2 light-blue-txt">Personnal information</small>
+                        <small class="pb-2 light-blue-txt">{{ __('Personnal information') }}</small>
 
                     <div class="form-group">
                         <label for="email">{{ __('Firstname') }}</label>
-                        <input type="text" class="form-control" placeholder="{{ __('Your firstname') }}" id="firstname" name="firstname" required>
+                        <input type="text" class="form-control" placeholder="{{ __('Firstname') }}" id="firstname" name="firstname" required>
                     </div>
                     <div class="form-group">
                         <label for="email">{{ __('Lastname') }}</label>
-                        <input type="text" class="form-control" placeholder="{{ __('Your lastname') }}" id="lastname" name="lastname" required>
+                        <input type="text" class="form-control" placeholder="{{ __('Lastname') }}" id="lastname" name="lastname" required>
                     </div>
                     <div id="welcome-message"></div>
 
@@ -66,7 +66,7 @@
 
 
                     <div class="card bg-tertiary p-2 mb-3">
-                        <small class="pb-2 light-blue-txt">Login credentials</small>
+                        <small class="pb-2 light-blue-txt">{{ __('Login credentials') }}</small>
                         <div class="form-group">
                             <small>{{ __('Choose an username as your login ID') }}</small>
                             <input type="text" class="form-control" placeholder="{{ __('Username') }}" id="username" name="username" required onkeyup="checkUsername(this.value)">
@@ -128,8 +128,8 @@
                         > {{ __('A Number') }}</br>
                     </small>
 
-                    <div class="alert alert-warning">This sign-up form is only for Coachs and Schools. If you are a <b>student</b> invited by your school or your teacher, please
-                        <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">click here</a>
+                    <div class="alert alert-warning">{{ __('This sign-up form is only for Coachs and Schools. If you are a') }} <b>{{ __('student') }}</b> {{ __('invited by your school or your teacher, please') }}
+                        <a class="login_btn" href="#modalStudent" data-bs-toggle="modal" data-bs-target="#modalStudent">{{ __('click here') }}</a>
                     </div>
 
                         <br>
@@ -254,7 +254,7 @@ function checkUsernameIfExist(username) {
             document.getElementById("username_available").innerHTML = "Username available";
             document.getElementById("username_already_exist").innerHTML = "";
             } else {
-                document.getElementById("username_already_exist").innerHTML = "Username already registered";
+                document.getElementById("username_already_exist").innerHTML = "{{ __('Username already registered') }}";
                 document.getElementById("username_available").innerHTML = "";
             }
         });

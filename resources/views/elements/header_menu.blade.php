@@ -112,18 +112,29 @@
                         <div class="dropdown-menu header">
                         @if(!$AppUI->isStudent())
                             <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
+
+
+
+
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){   ?>
                                 @if(!$AppUI->isTeacherReadOnly())
                                     <a href="{{ $urlStudentInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
                                 @endif
+                            <?php } else { ?>
+                                <span class="mt-2 badge bg-danger w-100">Only with Premium Access</span>
+                                <a href="{{ $urlStudentInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __("To be invoiced") }}</a>
+                                <a href="{{ $manualInvoice }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
+                                <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item text-danger"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-info">beta</span></a>
                             <?php } ?>
+
+
                             @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                                 <a href="{{ $urlTeacherInvoice.'/school' }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Coach's Invoice") }}</a>
                             @endif
                             @if(!$AppUI->isTeacherReadOnly())
                             <?php if(($is_subscribed && ($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')) || (!empty($user->trial_ends_at) && ($today_date <= $ends_at))){  ?>
                                     <a href="{{ $manualInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Manual Invoice') }}</a>
-                                    <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-danger">beta</span></a>
+                                    <a href="{{ route('invoiceReport', $schoolId) }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __('Report') }} <span class="badge bg-info">beta</span></a>
                              <?php } ?>
                             @endif
                         @else

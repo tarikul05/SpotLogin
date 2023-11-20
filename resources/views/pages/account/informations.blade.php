@@ -75,7 +75,7 @@
     <div class="row justify-content-center pt-4">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Coach Address') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                <div class="card-header">{{ __('Coach Address') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span></div>
                 <div class="card-body">
 
 							<div class="row">
@@ -149,7 +149,7 @@
                 <div class="row justify-content-center pt-4">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ __('Contact information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                            <div class="card-header">{{ __('Contact information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span></div>
                             <div class="card-body">
 
 							<div class="row">
@@ -190,7 +190,7 @@
                 <div class="row justify-content-center pt-4">
                     <div class="col-md-8">
                         <div class="card">
-                            <div class="card-header">{{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">Optional - this information will appear on the invoice </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ Optional - this information will appear on the invoice ]</span></div>
+                            <div class="card-header">{{ $isInEurope ? __('Coach Bank Information') :  __('Payment Information') }} <span class="d-block d-sm-none" style="color:red; font-size:11px;">{{ __('Optional - this information will appear on the invoice') }} </span> <span class="d-none d-sm-inline" style="padding-left: 10px; color:red; font-size:11px;">[ {{ __('Optional - this information will appear on the invoice') }} ]</span></div>
                             <div class="card-body">
 
 							@if ($isInEurope)
@@ -326,7 +326,7 @@
 
                     @if(!$AppUI->isStudent())
                     <span id="page_header" class="page_title text-black"></span>
-                    <div class="mb-3">Your logo will be added to the invoices you can issue with premium access</div>
+                    <div class="mb-3">{{ __('Your logo will be added to the invoices you can issue with premium access') }}</div>
                     @endif
 
 
@@ -382,7 +382,7 @@
     <div class="row justify-content-center pt-2">
         <div class="col-md-8">
         <br>
-        <button type="submit" class="btn btn-success">{{ __('Update coach informations') }}</button>
+        <button type="submit" class="btn btn-primary">{{ __('Update coach informations') }}</button>
         </div>
     </div>
 

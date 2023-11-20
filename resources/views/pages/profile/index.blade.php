@@ -568,7 +568,7 @@
                     @endif
                     @if(!$AppUI->isStudent())
                     <span id="page_header" class="page_title text-black"></span>
-                    <div class="mb-3">Your logo will be added to the invoices you can issue with premium access</div>
+                    <div class="mb-3">{{ __('Your logo will be added to the invoices you can issue with premium access') }}</div>
                     @endif
                   </div>
                 </div>

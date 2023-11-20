@@ -166,7 +166,7 @@
 
                         <div class="card-body p-4 bg-tertiary">
 
-                          <div class="h4 pt-2" style="color:#0075bf;">My current plan</div>
+                          <div class="h4 pt-2" style="color:#0075bf;">{{ __('My current plan') }}</div>
 
                           <?php if($is_subscribed && (!empty($subscription)) ){?>
                             @if($subscription['cancel_at_period_end'])
@@ -204,17 +204,17 @@
 
                               <?php
                                   if($is_subscribed && (!empty($subscription))){
-                                      echo '<td><b>Plan Type</b><br><span class="badge bg-success"><i class="fa-solid fa-check"></i> Premium</span></td>';
-                                  }else{
+                                    echo '<td><b>' . __('Plan Type') . '</b><br><span class="badge bg-success"><i class="fa-solid fa-check"></i> '.__('Premium Plan') .'</span></td>';
+                                }else{
                                       if($AppUI->isSchoolAdmin()){
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info">Trial period</span></td>';
+                                          echo '<td><b>' . __('Plan Type') . '</b><br><span class="badge bg-info">' . __('Trial period') .'</span></td>';
                                       }else{
                                         $today_date = new DateTime();
                                         $trial_ends_at = new DateTime($user->trial_ends_at);
                                         if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-info">Basic</span> <small>(Trial period)</small></td>';
+                                      echo '<td><b>' . __('Plan Type') . '</b><br><span class="badge bg-info">Basic</span> <small>(' . __('Trial period') .')</small></td>';
                                         } else {
-                                          echo '<td><b>Plan Type</b><br><span class="badge bg-warning">Basic (Trial ended)</span></td>';
+                                          echo '<td><b>' . __('Plan Type') . '</b><br><span class="badge bg-warning">Basic (' . __('Trial ended') . ')</span></td>';
                                         }
                                       }
                                   }
@@ -225,9 +225,9 @@
                               <tr>
                                   <?php
                                     if($AppUI->isSchoolAdmin()){
-                                        $until = '<b>Trail Valid Until</b>';
+                                    $until = '<b>' . __('Trial Valid Until') . '</b>';
                                     }else{
-                                        $until = '<b>Basic Valid Until</b>';
+                                    $until = '<b>' . __('Basic Valid Until') . '</b>';
                                     }
                                   ?>
                                   <td>
@@ -241,10 +241,10 @@
                                 <tr>
                                   <?php {
                                     if($subscription['status'] === 'trialing') {
-                                      echo '<td><b>Next payment</b><br>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
+                                      echo '<td><b>' . __('Next payment') . '</b><br>' . date('M j, Y', $subscription['billing_cycle_anchor']).'</td>';
                                     }
                                     if($subscription['status'] === 'active') {
-                                      echo '<td><b>Next payment</b><br>' . date('M j, Y', $subscription['current_period_end']).'</td>';
+                                      echo '<td><b>' . __('Next payment') . '</b><br>' . date('M j, Y', $subscription['current_period_end']).'</td>';
                                     }
                                     }
                                   ?>
@@ -257,7 +257,7 @@
                                       <td><b>Price</b><br><span class="price"><?= '$'.($subscription['plan']['amount_decimal'])/100 ?></span>
                                       <span class="interval"><?= '/'.$subscription['plan']['interval'] ?></span></td>
                                   <?php }else{ ?>
-                                      <td><b>Price</b><br><span class="price">Free</span></td>
+                                      <td><b>Price</b><br><span class="price">{{ __('Free') }}</span></td>
                                   <?php } ?>
                               </tr>
 
@@ -271,7 +271,7 @@
                                 $today_date = new DateTime();
                                 $trial_ends_at = new DateTime($user->trial_ends_at);
                                 if (!empty($user->trial_ends_at) && $today_date <= $trial_ends_at) {
-                                  echo '<h5 class="pt-5"><small>Get your Premium Plan before the end of your trial period</small></h5>';
+                              echo '<h5 class="pt-5"><small>' . __('Get your Premium Plan before the end of your trial period') . '</small></h5>';
                                 } else {
                                     echo '<h5>Get your Premium since your trial period is ended.<p><br></p><small>Continue to access all features now !</small></h5>';
                                 }
@@ -334,7 +334,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Manage your Unlimited <b>students</b></span>
+                                <span class="text-area">{{ __('Manage your Unlimited') }} <b>{{ __('students') }}</b></span>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -342,7 +342,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Manage and share your <b>schedule</b></span>
+                                <span class="text-area">{{ __('Manage and share your') }} <b>{{ __('schedule') }}</b></span>
                             </li>
                             <!--<li>
                                 <span class="svg_img">
@@ -358,7 +358,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Automatic system invoice <!--based on the <b>Schedule</b>--></span>
+                                <span class="text-area">{{ __('Automatic system invoice') }} <!--based on the <b>Schedule</b>--></span>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -366,7 +366,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Manual invoices</span>
+                                <span class="text-area">{{ __('Manual invoices') }}</span>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -374,7 +374,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Create final financial statement<!-- (for taxes)--></span>
+                                <span class="text-area">{{ __('Create final financial statement') }}<!-- (for taxes)--></span>
                             </li>
                             <li>
                                 <span class="svg_img">
@@ -382,17 +382,17 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99991 16.9093C10.1216 16.9093 12.1565 16.0664 13.6568 14.5662C15.1571 13.0659 15.9999 11.031 15.9999 8.9093C15.9999 6.78757 15.1571 4.75274 13.6568 3.25245C12.1565 1.75216 10.1216 0.909302 7.99991 0.909302C5.87818 0.909302 3.84335 1.75216 2.34305 3.25245C0.842763 4.75274 -9.15527e-05 6.78757 -9.15527e-05 8.9093C-9.15527e-05 11.031 0.842763 13.0659 2.34305 14.5662C3.84335 16.0664 5.87818 16.9093 7.99991 16.9093ZM11.8569 7.1003C11.9148 7.02059 11.9565 6.93025 11.9795 6.83444C12.0025 6.73864 12.0064 6.63924 11.991 6.54192C11.9755 6.44461 11.9411 6.35128 11.8896 6.26727C11.8381 6.18326 11.7706 6.11021 11.6909 6.0523C11.6112 5.99439 11.5209 5.95274 11.4251 5.92974C11.3292 5.90674 11.2298 5.90284 11.1325 5.91825C11.0352 5.93367 10.9419 5.9681 10.8579 6.01958C10.7739 6.07106 10.7008 6.13859 10.6429 6.2183L7.15991 11.0083L5.27991 9.1283C5.21069 9.0567 5.1279 8.99961 5.03638 8.96034C4.94486 8.92108 4.84644 8.90044 4.74685 8.89962C4.64727 8.8988 4.54852 8.91782 4.45636 8.95558C4.36421 8.99333 4.2805 9.04906 4.21011 9.11951C4.13973 9.18997 4.08407 9.27373 4.04641 9.36592C4.00874 9.45811 3.98981 9.55688 3.99072 9.65646C3.99163 9.75605 4.01237 9.85445 4.05172 9.94593C4.09107 10.0374 4.14824 10.1201 4.21991 10.1893L6.71991 12.6893C6.79654 12.766 6.88887 12.8251 6.99055 12.8627C7.09224 12.9002 7.20085 12.9153 7.30892 12.9068C7.41699 12.8984 7.52193 12.8666 7.61654 12.8137C7.71114 12.7608 7.79315 12.688 7.85691 12.6003L11.8569 7.1003Z" fill="white"/>
                                     </svg>
                                 </span>
-                                <span class="text-area">Access the mobile app</span>
+                                <span class="text-area">{{ __('Access the mobile app') }}</span>
                             </li>
 
                         <?php if(!$is_subscribed && empty($subscription)){ ?>
                             <!--<li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose this plan</a></li>-->
-                            <li class="submit-button"><a href="#" id="choose-plan" class="button">Choose this plan</a></li>
-                            <li class="info-txt text-warning">you will not be the charged until the end of your trial period</li>
+                            <li class="submit-button"><a href="#" id="choose-plan" class="button">{{ __('Choose this plan') }}</a></li>
+                            <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php } else {
                             if((!empty($subscription)) && $subscription['plan']['id'] == $plan['id']){
                         ?>
-                            <li class="submit-button disabled"><a href="javascript:void(0)" class="button">Your current plan</a></li>
+                            <li class="submit-button disabled"><a href="javascript:void(0)" class="button">{{ __('Your current plan') }}</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
                             <li class="submit-button"><a href="{{ route('subscribe.upgradeNewPlan', ['payment_id'=>$plan['id']]) }}" class="button">Upgrade plan</a></li>
@@ -412,7 +412,7 @@
 
                         <div class="subscription-form-wrapper2">
                             <div class="payment-info-top text-center">
-                                Enter your payment details below to subscribe your Coach Premium Plan
+                                {{ __('Enter your payment details below to subscribe your Coach Premium Plan') }}
                                 <hr>
                             </div>
 
@@ -423,12 +423,12 @@
                                 <input type="hidden" name="paymentMethod" id="paymentMethod" value="" />
 
                                 <div class="form-group">
-                                    <label style="font-size:11px;" for="coupon_code">Coupon Code</label>
-                                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter Coupon Code">
+                                    <label style="font-size:11px;" for="coupon_code">{{ __('Coupon code') }}</label>
+                                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="{{ __('Enter Coupon Code') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label style="font-size:11px;" for="cardholder_name">Cardholder's full name</label>
-                                    <input type="text" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="Enter Cardholder's full name" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
+                                    <label style="font-size:11px;" for="cardholder_name">{{ __('Cardholder full name') }}</label>
+                                    <input type="text" class="form-control" id="card_holder_name" name="card_holder_name" placeholder="{{ __('Enter Cardholder full name') }}" value="{{ Auth::user()->firstname .' ' . Auth::user()->lastname }}" required>
                                 </div>
                                 <br>
 
@@ -449,18 +449,16 @@
                                     <div class="text-center">
                                         <span style="font-size:11px; display:block; padding:5px;">
                                             <hr>
-                                            Your subscription will renew automatically every month as one paypent of
+                                            {{ __('Your subscription will renew automatically every month as one paypent of') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
                                                 {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
                                             @else
                                                 {{ number_format($plans[0]['amount'], 2) }} {{ $symbole }}
                                             @endif
-                                            You may cancel your subscription anytime from My plan section in your profile.
-
-                                            By clicking "Proceed payment" you agree to the Terms and Conditions.
+                                            {{ __('You may cancel your subscription anytime from My plan section in your profile. By clicking Proceed payment you agree to the Terms and Conditions') }}
                                         </span>
                                         <br>
-                                        <a id="payment-button" class="btn btn-success btn-md">Proceed payment
+                                        <a id="payment-button" class="btn btn-success btn-md">{{ __('Proceed payment') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
                                                 {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
                                             @else
@@ -490,7 +488,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Cancel Subscription</h5>
+                <h5 class="modal-title">{{ __('Cancel Subscription') }}</h5>
                 <span type="button" class="close" data-dismiss="modal"><i class="fa-solid fa-question fa-beat"></i></span>
             </div>
             <div class="modal-body">
@@ -498,14 +496,14 @@
                 <div class="text-center">
                     <i class="fas fa-exclamation-circle fa-5x text-danger"></i> <!-- Utilisez l'icône d'alerte ou d'information souhaité -->
                 </div>
-                <p class="text-center mt-3">Do you really want to cancel your subscription?<br>
-                <small>(Your premium access will be valid until <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>)</small>
+                <p class="text-center mt-3">{{ __('Do you really want to cancel your subscription?') }}<br>
+                <small>({{ __('Your premium access will be valid until') }} <?php echo date('M j, Y', $subscription['billing_cycle_anchor']); ?>)</small>
                 </p>
               <?php } ?>
             </div>
             <div class="modal-footer">
-                <a href="<?= $BASE_URL;?>/admin/profile-update" class="btn btn-secondary close"  data-dismiss="modal">No</a>
-                <a class="btn btn-danger" href="{{ route('subscription.cancelPlan') }}">Yes, Cancel</a>
+                <a href="<?= $BASE_URL;?>/admin/profile-update" class="btn btn-secondary close"  data-dismiss="modal">{{ __('No') }}</a>
+                <a class="btn btn-danger" href="{{ route('subscription.cancelPlan') }}">{{ __('Yes, Cancel') }}</a>
             </div>
         </div>
     </div>
@@ -528,7 +526,7 @@
 $("#choose-plan").click(function(){
     $("#current-plan").hide();
     $("#payment-form").show();
-    document.getElementById("choose-plan").innerText = "Waiting payment method...";
+    document.getElementById("choose-plan").innerText = "{{ __('Waiting payment method...') }}";
 });
 
 
@@ -598,10 +596,9 @@ card.on('change', function(event) {
         }).then(function(result) {
         if (result.error) {
             $('#pageloader').hide();
-            console.error('la carte est pas ok', result)
             Swal.fire({
             icon: 'error',
-            title: 'Payment error',
+            title: "{{ __('Payment error') }}",
             text:result.error.message,
             });
         } else {

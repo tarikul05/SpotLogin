@@ -14,7 +14,7 @@
             {{ __('My invoices')}}
         </button>
         <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
-        {{ __('Info Plus')}}
+        {{ __('My account')}}
         </button>
         @endif
 
