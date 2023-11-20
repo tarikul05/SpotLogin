@@ -598,10 +598,10 @@ class Event extends BaseModel
        //dd($params);
         if ($user_role == 'student') {
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->select(['events.*']);
+                ->select(['events.*'])->where('event_details.student_id', $params['student_id']);
 
         }
-        $query->where('deleted_at', null);
+
 
 
 
@@ -650,6 +650,8 @@ class Event extends BaseModel
         if ($user_role == 'teacher') {
             $query->where('events.teacher_id', $params['person_id']);
         }
+
+
 
         if (!empty($sortingParams)) {
 
@@ -900,7 +902,7 @@ class Event extends BaseModel
 
     }
 
-    public function validate($data=[], $lockStatus=1)
+    public static function validate($data=[], $lockStatus=1)
     {
       // dd($lockStatus, $data);
 

@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-3">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">Prices by category</div>
+            <div class="card-header">{{ __('Prices by category') }}</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -30,7 +30,7 @@
                                         <tr>
                                             <th>{{__('Type of course')}}</th>
                                             <th>{{__('Type of billing')}}</th>
-                                            <th class="sell" style="text-align: right;"><span>{{__('Per student /hour')}}</span></th>
+                                            <th class="sell" style="text-align: right; font-size:12px;"><span>({{__('per student /hour')}})</span></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,7 +99,7 @@
                     <button type="submit" class="btn btn-primary">{{ __('Save Prices by category') }}</button>
                 </form>
                 @else
-                <i class="fa-solid fa-circle-info"></i> Please create your first category for setup your prices.
+                <i class="fa-solid fa-circle-info"></i> {{ __('Please create your first category for setup your prices') }}.
                 @endif
             </div>
         </div>

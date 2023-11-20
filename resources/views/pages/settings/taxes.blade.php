@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-5">
     <div class="col-md-9">
         <div class="card">
-            <div class="card-header">Taxes</div>
+            <div class="card-header">{{__('Taxes')}}</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -13,10 +13,10 @@
                     @csrf
                     <table class="table table-bordered table-hover">
                         <thead>
-                            <th width="30%">Name</th>
-                            <th>Purcentage</th>
-                            <th>Number</th>
-                            <th width="40" class="text-center">Action</th>
+                            <th width="30%">{{__('Name')}}</th>
+                            <th>{{__('Purcentage')}}</th>
+                            <th>{{__('Number')}}</th>
+                            <th width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
                         <tbody>
                             @foreach($InvoicesTaxData as $tax)
@@ -43,10 +43,10 @@
 
                         <table class="table table-bordered" id="add_more_tax_div" style="display: none;">
                             <thead>
-                                <th width="30%">Name</th>
-                                <th>Purcentage</th>
-                                <th>Number</th>
-                                <th width="40" class="text-center">Action</th>
+                                <th width="30%">{{__('Name')}}</th>
+                                <th>{{__('Purcentage')}}</th>
+                                <th>{{__('Number')}}</th>
+                                <th width="40" class="text-center">{{__('Action')}}</th>
                             </thead>
                             <tbody>
                         </table>
@@ -54,12 +54,12 @@
 
                     <div class="d-flex justify-content-end">
                         <button id="add_more_tax_btn" type="button" class="btn btn-outline-primary">
-                          <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add Taxe') }}
+                          <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add taxe') }}
                         </button>
                       </div>
 
                     <br>
-                    <button type="submit" class="btn btn-success">{{ __('Save Taxes') }}</button>
+                    <button type="submit" class="btn btn-success">{{ __('Save taxes') }}</button>
                 </form>
             </div>
         </div>

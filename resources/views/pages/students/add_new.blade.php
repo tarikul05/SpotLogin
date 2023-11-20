@@ -7,7 +7,7 @@
     <div class="col-md-9">
 
         <div class="card">
-            <div class="card-header">Add new student</div>
+        <div class="card-header">{{ __('Add New Student') }}</div>
             <div class="card-body">
 
                         <input type="hidden" name="school_id" value="{{ $schoolId }}">
@@ -123,7 +123,7 @@
             </div>
         </div>
         <div class="card mt-4">
-            <div class="card-header">Student Informations</div>
+            <div class="card-header">{{__('Student informations')}}</div>
             <div class="card-body">
 
 							<div class="row">
@@ -131,7 +131,7 @@
 									<div class="form-group ">
 										<label class="text-left" for="level_id">{{__('Level') }} :</label>
                                         <select class="form-control m-bot15" id="level_id" name="level_id">
-                                            <option selected value="">Select level</option>
+                                            <option selected value="">{{ __('Select level') }}</option>
                                             @foreach($levels as $key => $level)
                                                 <option value="{{ $level->id }}">{{ $level->title }}</option>
                                             @endforeach
@@ -249,7 +249,7 @@
 							<div class="form-group ">
 								<label class="text-left" for="country_code" id="pays_caption">{{__('Country') }} :</label>
 										<select class="form-control select_two_defult_class" id="country_code" name="country_code">
-											<option value="">{{ 'Select Country' }}</option>
+											<option value="">{{ __('Select Country') }}</option>
 											@foreach($countries as $country)
 												<option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
 											@endforeach
@@ -305,7 +305,7 @@
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
 									<select class="form-control select_two_defult_class" id="billing_country_code" name="billing_country_code">
-											<option value="">{{ 'Select Country' }}</option>
+											<option value="">{{ __('Select Country') }}</option>
 										@foreach($countries as $country)
 											<option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
 										@endforeach
@@ -354,7 +354,7 @@
 
 							</div>
 							<div class="form-group">
-								<label class="text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
+								<label class="text-left" for="student_phone" id="student_phone">{{__("Student's phone") }} :</label>
 
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span> <input class="form-control" id="mobile" name="mobile" value="{{ $exStudent ? $exStudent->mobile : '' }}" {{ $exStudent ? 'readonly' : '' }} type="text">
@@ -406,7 +406,7 @@
 
 
 		<div class="col-lg-12 mt-4">
-			<button type="submit" id="save_btn" name="save_btn" class="btn btn-success"><i class="fa fa-save"></i> {{ __('Save') }}</button>
+			<button type="submit" id="save_btn" name="save_btn" class="btn btn-success">{{ __('Save') }}</button>
 			</div>
 
     </div>

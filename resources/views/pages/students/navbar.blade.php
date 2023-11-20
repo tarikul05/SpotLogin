@@ -9,7 +9,7 @@
             {{ __('Export/Import') }}
         </button>
 
-        <button class="nav-link" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+        <button class="nav-link" style="background-color:#EEE; padding-left:10px;" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
             {{ __('Add new') }}
         </button>
 

@@ -16,9 +16,9 @@
                     @if(!empty($eventCat) && $eventCat->count() > 0)
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <th width="30%">Name</th>
-                                <th width="60" class="text-center">Color</th>
-                                <th>Billing</th>
+                                <th width="30%"> {{ __('Name')}}</th>
+                                <th width="60" class="text-center"> {{ __('Color')}}</th>
+                                <th>{{ __('Billing')}}</th>
                                 <th width="40" class="text-center">Action</th>
                             </thead>
                             <tbody>
@@ -38,16 +38,16 @@
                                         </td>
                                         <td>
                                             @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
-                                                <label class="titl">Students</label>
+                                                <label class="titl">{{ __('Students')}}</label>
                                                 @endif
                                                 <div class="form-check">
                                                     <label class="form-check-label" for="sradio2{{$count}}">
-                                                        <input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="0" <?php if($cat->s_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
+                                                        <input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="0" <?php if($cat->s_std_pay_type == 0){ echo 'checked'; }  ?>>{{ __('Hourly rate')}}
                                                     </label>
                                                 </div>
                                                 <div class="form-check">
                                                     <label class="form-check-label" for="sradio{{$count}}">
-                                                        <input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price<span class="d-none d-sm-inline"> (per student /hour)</span>
+                                                        <input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>{{ __('Fixed price')}}<span class="d-none d-sm-inline"> ({{ __('per studen /hour')}})</span>
                                                     </label>
                                                 </div>
                                                 @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())

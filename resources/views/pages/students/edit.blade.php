@@ -18,7 +18,7 @@
 			<div class="row panel-row" style="margin:0;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-inline">{{ __('Student Information:') }}</span> <small>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</small></label>
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-inline">{{ __('Student Information') }}:</span> <small>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</small></label>
 					</div>
 				</div>
 				<div class="col-sm-6 col-xs-12 btn-area pt-1">
@@ -540,12 +540,12 @@
                               <input class="form-control" name="billing_period_end_date" id="billing_period_end_date" placeholder="Period End Date" type="text">
                                 </div>
 
-                                <div id="show_only_pend_div" class="col-12 col-sm-3 text-right" style="padding-left:9px;">
+                                <div id="show_only_pend_div" class="col-12 col-sm-4 text-right" style="padding-left:9px;">
                                   <input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
                                   <label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
                                 </div>
 
-                                <div class="col-12 col-sm-3">
+                                <div class="col-12 col-sm-2">
                                   <button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
                                 </div>
 
@@ -567,7 +567,7 @@
 						<div class="alert alert-default" id="lesson_footer_div" style="display: none;">
 								<label id="verify_label_id">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 								<br><br>
-								<button style="position: absolute;right: 0px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">Draft invoice</button>
+								<button style="position: absolute;right: 0px;top: 20px;" class="btn btn-primary pull-right" id="btn_convert_invoice">{{ __('Draft invoice') }}</button>
 						</div>
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
@@ -1348,9 +1348,9 @@ $('#save_btn').click(function (e) {
 		var amount_for_disc=0.00;
 		var disc_caption = 'DESC';
 		var disc_caption_disp = '';
-		var week_caption = 'Weekly';
-		var month_caption = 'Monthly';
-		var sub_total_caption = 'Sub Total';
+		var week_caption = "{{ __('Weekly') }}";
+		var month_caption = "{{ __('Monthly') }}";
+		var sub_total_caption = "{{ __('Sub Total') }}";
 		var isTeacher = +"{{$AppUI->isTeacher()}}";
 		var inv_type=getUrlVarsO()["inv_type"]
 
@@ -1417,12 +1417,12 @@ $('#save_btn').click(function (e) {
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
 									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Date</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Time</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Duration</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Category</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Teacher</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Lesson</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Date') }}</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Time') }}</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Duration') }}</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Category') }}</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Teacher') }}</b></td>';
+									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Lesson') }}</b></td>';
 
 
 
@@ -1432,13 +1432,13 @@ $('#save_btn').click(function (e) {
 										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Price</b></td>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
+											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>{{ __('Teacher  price') }}</b></td>';
 										}
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Student Price</b></td>';
+										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>{{ __('Student price') }}</b></td>';
 									}
 
 
-									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">{{ __('Extra Charges') }}</td></tr></b>';
 								} else {
 
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
@@ -1633,11 +1633,11 @@ $('#save_btn').click(function (e) {
 
 
 					if(totalMinutesLessons>0) {
-						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>Total Lessons duration <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Lessons </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
 
 					//Lesson Discount
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Discount(%) on Lessons:</td>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="sdiscount_percent_1" name="sdiscount_percent_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
@@ -1645,7 +1645,7 @@ $('#save_btn').click(function (e) {
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Discount Amount:</td>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount Amount') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric_amount" id="samount_discount_1" name="samount_discount_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
@@ -1665,7 +1665,7 @@ $('#save_btn').click(function (e) {
 
 
 
-					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Lessons</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td></td></tr>';
+					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td></td></tr>';
 
 					} else { resultHtml += '<span style="display:none;" id="ssubtotal_amount_with_discount_lesson">0</span>' }
 
@@ -2187,9 +2187,9 @@ $('#save_btn').click(function (e) {
                 }
 
                 if($(window).width() < 768){
-                    resultHtml += '<tr><td colspan="9" style="text-align:right;"><br>Sub-Total:  '+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b><br><br></td><td></td></tr>';
+                    resultHtml += '<tr><td colspan="9" style="text-align:right;"><br>'+sub_total_caption+':  '+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b><br><br></td><td></td></tr>';
                 } else {
-                    resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>Sub-Total</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
+                    resultHtml += '<tr><td colspan="8" style="text-align:right;"><br><b>'+sub_total_caption+'</td><td colspan="1" style="text-align:right;"><br>'+currencyTotal+' <b><span id="sub-total-before-charges">'+(subTotalLessons + subTotalEvents + totalTaxAmount).toFixed(2)+'</span></b></td><td></td></tr>';
                 }
 
 				if(subTotalEventsExtra > 0) {

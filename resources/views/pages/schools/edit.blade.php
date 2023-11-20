@@ -12,7 +12,7 @@
 @section('content')
   <div class="content">
 	<div class="container-fluid body">
-		
+
 			<header class="panel-heading" style="border: none;">
 				<div class="row panel-row" style="margin:0;">
 					<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
@@ -26,12 +26,12 @@
 								<i class="fa fa-save"></i> {{ __('Save')}}
 							</button>
 						</div>
-					</div>    
-				</div>          
+					</div>
+				</div>
 			</header>
 			<!-- Tabs navs -->
 
-			
+
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
 					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
@@ -45,12 +45,12 @@
 						{{ __('User Account')}}
 						</button>
 					@endcan -->
-					
+
 					@can('parameters-list')
 						<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
 						{{ __('Parameters')}}
 						</button>
-						
+
 					@endcan
 					<!-- </button> -->
 				</div>
@@ -98,9 +98,9 @@
 													*:</label>
 											<div class="col-sm-7">
 												<input type="text" class="form-control" id="school_code"
-														name="school_code" maxlength="30" 
+														name="school_code" maxlength="30"
 														value="{{!empty($school->school_code) ? old('school_code', $school->school_code) : old('school_code')}}">
-												
+
 											</div>
 									</div> -->
 									<div class="form-group row">
@@ -116,7 +116,7 @@
 													</span>
 												@endif
 										</div>
-										
+
 									</div>
 
 									@if($AppUI->isSuperAdmin())
@@ -129,7 +129,7 @@
 													<option value="">Select</option>
 													@foreach ($legal_status as $key => $value)
 														<option value="{{ $value['code'] }}" {{!empty($school->legal_status) ? (old('legal_status', $school->legal_status) == $value['code'] ? 'selected' : '') : (old('legal_status') == $value['code'] ? 'selected' : '')}}>
-															
+
 														{{ __($value['drop_text']) }}
 														</option>
 													@endforeach
@@ -150,18 +150,18 @@
 										</label>
 									</div> -->
 									<div class="form-group row">
-										<label id="sender_email_label" name="sender_email_label" 
+										<label id="sender_email_label" name="sender_email_label"
 										class="col-lg-3 col-sm-3 text-left">{{ __('Sender email address')}} :</label>
 										<div class="col-sm-7">
 												<input type="email" id="sender_email"
-												name="sender_email" size="100" class="form-control" 
+												name="sender_email" size="100" class="form-control"
 												value="{{!empty($school->sender_email) ? old('sender_email', $school->sender_email) : old('sender_email')}}">
 										</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{ __('Incorporation Date')}}:</label>
 										<div class="col-sm-7">
-											<div class="input-group" id="sbirth_date_div"> 
+											<div class="input-group" id="sbirth_date_div">
 												<input id="incorporation_date" name="incorporation_date" type="text" class="form-control date_picker"
 												value="{{!empty($school->incorporation_date) ? old('incorporation_date', $school->incorporation_date) : old('incorporation_date')}}">
 												<span class="input-group-addon">
@@ -180,7 +180,7 @@
 													<option value="">Select</option>
 													@foreach ($timezones as $key => $value)
 														<option value="{{ $key }}" {{!empty($school->timezone) ? (old('timezone', $school->timezone) == $key ? 'selected' : '') : (old('timezone') == $key ? 'selected' : '')}}>
-															
+
 														{{ $value }}
 														</option>
 													@endforeach
@@ -188,8 +188,8 @@
 											</div>
 										</div>
 									</div>
-									
-								
+
+
 								</div>
 							</div>
 
@@ -208,7 +208,7 @@
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
 															<option value="">Select</option>
 																@foreach ($currency as $key => $value)
-																		<option 
+																		<option
 																		value="{{ $value->currency_code }}" {{!empty($school->default_currency_code) ? (old('default_currency_code', $school->default_currency_code) == $value->currency_code ? 'selected' : '') : (old('default_currency_code') == $value->currency_code ? 'selected' : '')}}
 																		>  {{ $value->currency_code }}</option>
 																@endforeach
@@ -234,7 +234,7 @@
 										<div class="col-sm-4">
 											<input type="number" min="0" max="5000" class="form-control right" id="max_students" name="max_students"
 											value="{{!empty($school->max_students) ? old('max_students', $school->max_students) : old('max_students')}}">
-											
+
 										</div>
 									</div>
 								</div>
@@ -248,7 +248,7 @@
 									</div>
 								</div>
 							</div>
-							@endrole	
+							@endrole
 							@unlessrole('superadmin')
 						<!-- 	<div class="clearfix"></div>
 							<div class="section_header_class">
@@ -263,7 +263,7 @@
 															class="col-md-4 col-sm-4">{{ __('Billing Method')}}:</label>
 													<div class="col-sm-4">
 															<div class="selectdiv">
-																<select class="form-control" 
+																<select class="form-control"
 																			id="billing_method_list"
 																			name="billing_method">
 																	<option value="">Select</option>
@@ -311,7 +311,7 @@
 																			name="billing_currency">
 																	<option value="">Select</option>
 																	@foreach ($currency as $key => $value)
-																		<option 
+																		<option
 																		value="{{ $value->currency_code }}" {{!empty($school->billing_currency) ? (old('billing_currency', $school->billing_currency) == $value->currency_code ? 'selected' : '') : (old('billing_currency') == $value->currency_code ? 'selected' : '')}}
 																		>  {{ $value->currency_code }}</option>
 																	@endforeach
@@ -322,7 +322,7 @@
 															<input name="billing_amount"
 																	id="billing_amount" class="form-control numeric"
 																	type="text" data-force-required="true"
-																	data-isrequired="true" maxlength="5" 
+																	data-isrequired="true" maxlength="5"
 																	value="{{!empty($school->billing_amount) ? old('billing_amount', $school->billing_amount) : old('billing_amount')}}">
 													</div>
 											</div>
@@ -334,7 +334,7 @@
 													<div class="col-sm-4 col-xs-4">
 															<div class="input-group datetimepicker"
 																	id="billing_date_start_div">
-																	<input id="billing_date_start" name="billing_date_start" type="text" 
+																	<input id="billing_date_start" name="billing_date_start" type="text"
 																	class="form-control date_picker"
 																	value="{{!empty($school->billing_date_start) ? old('billing_date_start', $school->billing_date_start) : old('billing_date_start')}}">
 																	<span class="input-group-addon">
@@ -345,10 +345,10 @@
 													<div class="col-sm-4 col-xs-4">
 															<div class="input-group datetimepicker"
 																	id="billing_date_end_div">
-																	<input id="billing_date_end" name="billing_date_end" type="text" 
+																	<input id="billing_date_end" name="billing_date_end" type="text"
 																	class="form-control date_picker"
 																	value="{{!empty($school->billing_date_end) ? old('billing_date_end', $school->billing_date_end) : old('billing_date_end')}}">
-																	
+
 																	<span class="input-group-addon">
 																		<i class="fa fa-calendar"></i>
 																	</span>
@@ -391,7 +391,7 @@
 												<span id="" class="error">
 														<strong>{{ $errors->first('contact_firstname') }}.</strong>
 												</span>
-											@endif					
+											@endif
 										</div>
 									</div>
 								</div>
@@ -405,7 +405,7 @@
 												<span id="" class="error">
 														<strong>{{ $errors->first('contact_lastname') }}.</strong>
 												</span>
-											@endif		
+											@endif
 										</div>
 									</div>
 									<div class="form-group row">
@@ -413,7 +413,7 @@
 										<div class="col-sm-7">
 											<input class="form-control" id="contact_position" name="contact_position" type="text"
 											value="{{!empty($school->contact_position) ? old('contact_position', $school->contact_position) : old('contact_position')}}">
-												
+
 										</div>
 									</div>
 								</div>
@@ -425,7 +425,7 @@
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{ __('School Address')}}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
@@ -436,7 +436,7 @@
 										<div class="col-sm-7">
 											<input class="form-control" id="street" name="street" type="text"
 											value="{{!empty($school->street) ? old('street', $school->street) : old('street')}}">
-												
+
 										</div>
 									</div>
 									<div class="form-group row">
@@ -467,7 +467,7 @@
 										<div class="col-sm-7">
 											<input class="form-control" id="place" name="place" type="text"
 											value="{{!empty($school->place) ? old('place', $school->place) : old('place')}}">
-										
+
 										</div>
 									</div>
 
@@ -478,7 +478,7 @@
 												<select class="form-control select_two_defult_class" name="country_code" id="country_code">
 													<option value="">Select</option>
 													@foreach ($country as $key => $value)
-														<option 
+														<option
 														value="{{ $value->code }}" {{!empty($school->country_code) ? (old('country_code', $school->country_code) == $value->code ? 'selected' : '') : (old('country_code') == $value->code ? 'selected' : '')}}
 														>  {{ $value->name }} ({{ $value->code }})</option>
 													@endforeach
@@ -494,7 +494,7 @@
 												</select>
 											</div>
 										</div>
-									</div>										
+									</div>
 								</div>
 							</div>
 
@@ -504,7 +504,7 @@
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact Information')}}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
@@ -516,7 +516,7 @@
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-phone-square"></i>
-												</span> 
+												</span>
 												<input class="form-control" id="phone" name="phone" type="text"
 												value="{{!empty($school->phone) ? old('phone', $school->phone) : old('phone')}}">
 											</div>
@@ -530,7 +530,7 @@
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-phone"></i>
-												</span> 
+												</span>
 												<input class="form-control" id="phone2" name="phone2" type="text"
 												value="{{!empty($school->phone2) ? old('phone2', $school->phone2) : old('phone2')}}">
 											</div>
@@ -543,13 +543,13 @@
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-mobile"></i>
-												</span> 
+												</span>
 												<input class="form-control" id="mobile" name="mobile" type="text"
 												value="{{!empty($school->mobile) ? old('mobile', $school->mobile) : old('mobile')}}">
 											</div>
 										</div>
 									</div> -->
-								
+
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -558,7 +558,7 @@
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-envelope"></i>
-												</span> 
+												</span>
 												<input class="form-control" id="email" name="email" type="text"
 												value="{{!empty($school->email) ? old('email', $school->email) : old('email')}}">
 											</div>
@@ -572,7 +572,7 @@
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-envelope"></i>
-												</span> 
+												</span>
 												<input class="form-control" id="email2" name="email2" type="text"
 												value="{{!empty($school->email2) ? old('email2', $school->email2) : old('email2')}}">
 											</div>
@@ -580,7 +580,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 								</div>
 							</div>
 
@@ -588,7 +588,7 @@
 							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
@@ -629,7 +629,7 @@
 												<select class="form-control" name="bank_country_code" id="bank_country_code">
 													<option value="">Select</option>
 													@foreach ($country as $key => $value)
-														<option 
+														<option
 														value="{{ $value->code }}" {{!empty($school->bank_country_code) ? (old('bank_country_code', $school->bank_country_code) == $value->code ? 'selected' : '') : (old('bank_country_code') == $value->code ? 'selected' : '')}}
 														>  {{ $value->name }}</option>
 													@endforeach
@@ -680,18 +680,18 @@
 										<div class="col-sm-7">
 											<input class="form-control" id="etransfer_acc" name="etransfer_acc" type="text"
 												value="{{!empty($school->etransfer_acc) ? old('etransfer_acc', $school->etransfer_acc) : old('etransfer_acc')}}">
-												<span class="etransfer_acc"></span>	
+												<span class="etransfer_acc"></span>
 										</div>
 									</div>
-								</div>	
-							</div>
-							@endif	
-							
 								</div>
 							</div>
-							
+							@endif
+
+								</div>
+							</div>
+
 							<div class="clearfix"></div>
-							
+
 						</fieldset>
 					</form>
 				</div>
@@ -709,7 +709,7 @@
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($school_admin->username) ? old('admin_username', $school_admin->username) : old('admin_username')}}" disabled="disabled">      
+								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($school_admin->username) ? old('admin_username', $school_admin->username) : old('admin_username')}}" disabled="disabled">
 							</div>
 						</div>
 						<div class="form-group row">
@@ -722,7 +722,7 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
 							<div class="col-sm-7">
 								<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
-                      
+
 							</div>
 						</div>
 						<div class="form-group row">
@@ -745,14 +745,14 @@
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? $school_admin->email : old('email_to_id')}}">
-							
+
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
-							
+
 							</div>
 						</div>
 						<div class="row">
@@ -773,7 +773,7 @@
 															</div>
 														</span>
 													</div>
-													
+
 												</td>
 											</tr>
 										</tbody>
@@ -793,7 +793,7 @@
 								<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
 							</div>
 						</div>
-					
+
 						<div class="col-md-6">
 							<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
 								<div class="form-group row">
@@ -810,7 +810,7 @@
 														style="margin-right:10px;">
 											<?php endif; ?>
 
-												
+
 												<div style="display:flex;flex-direction: column;">
 													<div style="margin:5px;">
 														<span class="btn btn-theme-success">
@@ -848,7 +848,7 @@
 				</div>
 				<!--End of Tab 5-->
 			</div>
-		
+
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
@@ -889,16 +889,16 @@ $(document).ready(function(){
 	console.log(x[0].id);
 	if (x[0].id == "tab_5") {
 		document.getElementById("update_btn").style.display = "none";
-	} 
+	}
 	else  {
 		document.getElementById("update_btn").style.display = "block";
-	} 
+	}
 	var vtab=getUrlVarsO()["tab"];
 	if (typeof vtab === "undefined") {
 		vtab='';
 	}
 	if (vtab == 'tab_5') {//?action=edit&tab=tab_5
-		document.getElementById("update_btn").style.display = "none";					
+		document.getElementById("update_btn").style.display = "none";
 		activaTab('tab_5');
 	} else {
 		document.getElementById("update_btn").style.display = "block";
@@ -908,10 +908,10 @@ $(document).ready(function(){
 		console.log(e.target.id) // activated tab
 		if (e.target.id == 'nav-parameters-tab') {
 			document.getElementById("update_btn").style.display = "none";
-		} 
+		}
 		else  {
 			document.getElementById("update_btn").style.display = "block";
-		} 
+		}
 	})
 
 	// CKEDITOR.replace( "body_text", {
@@ -937,18 +937,18 @@ $(document).ready(function(){
 		var schoolUserForm = document.getElementById("schoolUserForm");
 
 		if (x[0].id == "tab_1") {
-			
+
 			if (validateSchoolForm()) {
 				schoolForm.submit();
 				return false;
 			} else {
-				e.preventDefault(e); 
+				e.preventDefault(e);
 			}
-			
-		} 
+
+		}
 		else if (x[0].id == "tab_2") {
 			schoolUserForm.submit();
-		} 
+		}
 	});
 
 	$('#delete_profile_image').click(function (e) {
@@ -971,7 +971,7 @@ $(document).ready(function(){
 		var formdata = $("#schoolUserForm").serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
 
-		
+
 		formdata.push({
 				"name": "_token",
 				"value": csrfToken
@@ -1011,10 +1011,10 @@ $(document).ready(function(){
 					errorModalCall('error_message_text');
 				}
 		});
-	
-	});    //contact us button click 
 
-	
+	});    //contact us button click
+
+
 
 })
 
@@ -1049,7 +1049,7 @@ function ChangeImage() {
 	formData.append('profile_image_file', file_data);
 	formData.append('type', 'upload_image');
 	formData.append('school_id', school_id);
-	
+
 	let loader = $('#pageloader');
 	loader.show("fast");
 	$.ajax({
@@ -1074,7 +1074,7 @@ function ChangeImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -1103,7 +1103,7 @@ function DeleteProfileImage() {
 				$("#delete_profile_image").hide();
 				successModalCall(response.message);
 			}
-						
+
 		},
 		error: function (reject) {
 			loader.hide("fast");
@@ -1111,7 +1111,7 @@ function DeleteProfileImage() {
 			errors = errors.errors;
 			$.each(errors, function (key, val) {
 				//$("#" + key + "_error").text(val[0]);
-				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text')); 
+				errorModalCall(val[0]+ ' '+GetAppMessage('error_message_text'));
 			});
 		},
 		complete: function() {
@@ -1142,14 +1142,14 @@ function validateSchoolForm() {
 	// 		error = true;
 	// }
 	// if (max_teachers.trim() == 0) {
-	// 		//alert("nombre max invalide");	
+	// 		//alert("nombre max invalide");
 	// 		errorModalCall("{{ __('Maximum teacher required') }}");
 	// 		document.getElementById("max_teachers").focus();
 	// 		error = true;
 	// }
 	// if (error) {
 	// 	return false;
-	// }            			
+	// }
 	// else
 	// {
 	// 	return true;
@@ -1167,7 +1167,7 @@ $('#etransfer_acc').on('input', function() {
 
 });
 
- 
+
 	$('#country_code').change(function(){
 		var country_code = $(this).val();
 		var set_province = '<?= $school->province_id ?>';
