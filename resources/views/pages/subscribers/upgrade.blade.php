@@ -395,8 +395,8 @@
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">{{ __('Your current plan') }}</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
-                            <li class="submit-button"><a href="{{ route('subscribe.upgradeNewPlan', ['payment_id'=>$plan['id']]) }}" class="button">Upgrade plan</a></li>
-                            <li class="info-txt text-warning">you will not be the charged until the end of your trial period</li>
+                            <li class="submit-button"><a href="#" id="choose-plan" class="button" class="button">{{ __('Choose this plan') }}</a></li>
+                            <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php
                                 }
                             }
