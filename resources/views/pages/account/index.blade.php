@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
 
-        <h5>Coach Account</h5>
+        <h5>{{ __('Coach Account') }}</h5>
 
         @include('pages.account.navbar')
 

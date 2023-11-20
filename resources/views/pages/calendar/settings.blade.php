@@ -7,7 +7,7 @@
 @section('content')
     <div class="container">
 
-        <h5>Coach Settings</h5>
+        <h5>{{ __('Coach Settings') }}</h5>
 
         @include('pages.settings.navbar')
 
@@ -48,7 +48,7 @@
         $('#timezone').select2({
             width: '100%',
             placeholder: '{{ __('Select Timezone')}}',
-            allowClear: false, 
+            allowClear: false,
         });
     });
     </script>

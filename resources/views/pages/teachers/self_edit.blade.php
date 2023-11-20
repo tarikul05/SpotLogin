@@ -191,7 +191,7 @@
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Address') }}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
@@ -253,7 +253,7 @@
 							<div class="clearfix"></div>
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Contact information') }}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">
@@ -309,7 +309,7 @@
 							@if ($isInEurope)
 							<div class="section_header_class">
 								<label id="contact_info_caption">{{ __('Teacher Bank Information')}}</label>
-								<p style="color:red; font-size:14px;">Optional - this information will appear on the invoice</p>
+								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
 							</div>
 							<div class="card">
 								<div class="card-body bg-tertiary">

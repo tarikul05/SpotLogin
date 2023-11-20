@@ -47,7 +47,7 @@
                   <?php endif; ?>
                 </td>
 
-                <td>{{ $school->school_name }}</td>
+                <td><b>{{ $school->school_name }}</b><br>[Login ID : {{ $school->school_code }}]</td>
                 <td>{{ ($school->school_type == 'S')? 'School': 'Coach' }}</td>
                 <td>{{ $school->incorporation_date }}</td>
                 <!--<td>{{ $school->contact_firstname }}</td>-->

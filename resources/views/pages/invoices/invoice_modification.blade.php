@@ -1374,18 +1374,18 @@ function extractExtraCharges($inputString) {
         var x = document.getElementsByClassName("tab-pane active");
 
         Swal.fire({
-        title: 'Are you sure?',
-        text: "The lessons/events from that invoice will be available to invoice after you delete this invoice.",
+        title: "{{ __('Are you sure?') }}",
+        text: "{{ __('The lessons/events from that invoice will be available to invoice after you delete this invoice.') }}",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: "{{ __('Yes, delete it!') }}"
         }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire(
-            'Deleted!',
-            'Invoice has been deleted.',
+            "{{ __('Invoice deleted') }}",
+            "{{ __('Invoice has been deleted.') }}",
             'success'
             )
             DeleteInvoice();
@@ -1417,7 +1417,7 @@ function extractExtraCharges($inputString) {
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice deleted');
+                    successModalCall({{ __('Invoice deleted') }});
 
                     var p_school_id = document.getElementById("p_school_id").value;
 

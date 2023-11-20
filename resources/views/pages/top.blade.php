@@ -51,8 +51,8 @@
         </div>
         <h4 class="gilroy-bold">{{ __('Communication') }}</h4>
 
-        <p class="gilroy-light txtdarkblue">{{ __('Manage your students (import/export)') }} <br>
-        <!--<h4 class="gilroy-bold">{{ __('Cooming Soon')}}</h4>-->
+        <p class="gilroy-light txtdarkblue">{{ __('Manage your students') }} {{ __('Import/Export') }}<br>
+        <!--<h4 class="gilroy-bold">{{ __('Coming Soon')}}</h4>-->
         </p>
 
       </div>
@@ -61,8 +61,8 @@
           <img src="{{ asset('img/payment.svg') }}" alt="" class="mx-auto">
         </div>
         <h4 class="gilroy-bold">{{ __('Payment') }} </h4>
-        <p class="gilroy-light txtdarkblue">{{ __('Allow your students to pay online in a click') }} <span class="badge bg-light text-dark">Coming Soon</span>
-        <!--<h4 class="gilroy-bold">{{ __('Cooming Soon') }} </h4>-->
+        <p class="gilroy-light txtdarkblue">{{ __('Allow your students to pay online in a click') }} <span class="badge bg-light text-dark">{{ __('Coming Soon') }}</span>
+        <!--<h4 class="gilroy-bold">{{ __('Coming Soon') }} </h4>-->
         </p>
       </div>
     </div>
@@ -173,14 +173,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header text-white" style="background-color: #152245;">
-          <h5 class="modal-title" id="exampleModalLabel">Privacy policy</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ __('Privacy policy') }}</h5>
             <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
         </div>
         <div class="modal-body">
             {!! $template->tc_text !!}
         </div>
         <div class="modal-footer">
-          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">I understand</button>
+          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">{{ __('I understand') }}</button>
         </div>
       </div>
     </div>
@@ -189,14 +189,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header text-white" style="background-color: #152245;">
-          <h5 class="modal-title" id="exampleModalLabel">General Terms and conditions</h5>
+          <h5 class="modal-title" id="exampleModalLabel">{{ __('Terms & conditions') }}</h5>
             <i class="fa-solid fa-circle-xmark fa-lg text-light close" data-bs-dismiss="modal" style="margin-top:-7px; border:none; cursor:pointer; font-size:25px;"></i>
         </div>
         <div class="modal-body">
             {!! $template->spp_text !!}
         </div>
         <div class="modal-footer">
-          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">I understand</button>
+          <button type="button" id="switchModalBtn" class="btn btn-primary close" data-bs-dismiss="modal" aria-label="Close">{{ __('I understand') }}</button>
         </div>
       </div>
     </div>

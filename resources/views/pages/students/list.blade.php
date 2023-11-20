@@ -17,7 +17,7 @@
 @section('content')
     <div class="container">
 
-        <h5>{{ __('Student\'s List') }}</h5>
+        <h5>{{ __("Student\"s List") }}</h5>
 
         @include('pages.students.navbar')
 

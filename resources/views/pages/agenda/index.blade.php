@@ -193,8 +193,8 @@
                                                 <button class="dropdown-item calendar_buttons" id="btn_day" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Day')}}</button>
                                                 <button class="dropdown-item calendar_buttons" id="btn_week" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Week')}}</button>
                                                 <button class="dropdown-item calendar_buttons" id="btn_month" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Month')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('List')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Current List')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Monthly schedule')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Daily schedule')}}</button>
                                             </div>
                                         </div>
                                         <div class="btn-group ml-2 text-right">
@@ -351,7 +351,7 @@
 
             <div class="modal-header text-white" style="background-color: #152245;">
                 <h6 class="modal-title page_header_class">
-                  <i class="fa-regular fa-calendar-plus"></i>  Add an event / lesson
+                  <i class="fa-regular fa-calendar-plus"></i>  {{ __('Add an event / lesson') }}
                 </h6>
                 <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
                     <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
@@ -360,12 +360,12 @@
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
                     <div id="infoLesson" class="text-center alert alert-info">
-                        <b>-- Create a lesson --</b><br>
-                        <i class="fa-solid fa-circle-info"></i> Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day.
+                        <b>-- {{ __('Create a lesson') }} --</b><br>
+                        <i class="fa-solid fa-circle-info"></i> {{ __('Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day') }}.
                     </div>
                     <div id="infoLessonEvent" class="text-center alert alert-info">
                         <b>-- Create an event --</b><br>
-                        <i class="fa-solid fa-circle-warning"></i> Create an event for 1 or more complete days.
+                        <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
                     </div>
                     <div class="modal-content">
                         <div class="modal-body">
@@ -398,7 +398,7 @@
                                             <span class="input-group-addon">
                                                 <i class="fa-regular fa-file-lines"></i>
                                             </span>
-                                            <input id="Title" name="title" type="text" class="form-control" placeholder="Title here" value="">
+                                            <input id="Title" name="title" type="text" class="form-control" placeholder="{{ __('Title here') }}" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -454,7 +454,7 @@
                                                     <div class="card form-group p-3 row hide_coach_off">
                                                         <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
                                                             <h6><small>{{__('Student') }}</small></h6>
-                                                           <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students\'s availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                                           <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
                                                         </label>
 
                                                             <div class="student_list pt-3">
@@ -1095,6 +1095,7 @@ $('.search-icon').on('click', function() {
                 $("#pageloader").show();
             },
             success: function (result) {
+                console.log(result);
                 status = result.status;
                 if (status == 'success') {
                     if (unlock) {
@@ -1998,6 +1999,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 dataType: "JSON",
                 success:function(result){
+                    console.log(result);
                     document.getElementById("btn_validate_events").style.display = "none";
                     document.getElementById("btn_validate_events_mobile").style.display = "none";
                     var status =  result.status;
@@ -3780,7 +3782,8 @@ $(function() {
     includeSelectAllOption: true,
     includeFilterClearBtn: true,
     search: true,
-    selectAllText: '{{__("All Students") }}',
+    noneSelected: "{{__("None selected") }}",
+    selectAllText: "{{__("All Students") }}",
     enableCaseInsensitiveFiltering: true,
     enableFullValueFiltering: false,
   });

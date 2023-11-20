@@ -267,7 +267,7 @@ class AgendaController extends Controller
 
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            $dta =  Event::validate(['event_id'=>$p_event_auto_id],$locStatus);
+            $dta = Event::validate(['event_id'=>$p_event_auto_id], $locStatus);
             if ($dta) {
                 $result = array(
                     "status"     => 'success',

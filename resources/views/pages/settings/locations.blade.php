@@ -1,7 +1,7 @@
 <div class="row justify-content-center pt-5">
     <div class="col-md-9">
         <div class="card">
-            <div class="card-header">Locations</div>
+            <div class="card-header">{{__('Locations')}}</div>
             <div class="card-body">
                 <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -15,9 +15,9 @@
 
                     <table class="table table-bordered table-hover">
                         <thead>
-                            <th width="30%">Name</th>
+                            <th width="30%">{{__('Name')}}</th>
                             <th></th>
-                            <th width="40" class="text-center">Action</th>
+                            <th width="40" class="text-center">{{__('Action')}}</th>
                         </thead>
                         <tbody>
                             @foreach($locations as $loca)
@@ -40,9 +40,9 @@
 
                         <table class="table table-bordered" id="add_more_location_div" style="display: none;">
                             <thead>
-                                <th width="30%">Name</th>
+                                <th width="30%">{{__('Name')}}</th>
                                 <th></th>
-                                <th width="40" class="text-center">Action</th>
+                                <th width="40" class="text-center">{{__('Action')}}</th>
                             </thead>
                             <tbody>
                         </table>
@@ -50,7 +50,7 @@
 
                     <div class="d-flex justify-content-end">
                         <button id="add_more_location_btn" data-last_location_id="{{$countLocation}}" type="button" class="btn btn-outline-primary">
-                          <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add Location') }}
+                          <i class="fa fa-plus" aria-hidden="true"></i> {{ __('Add location') }}
                         </button>
                       </div>
 

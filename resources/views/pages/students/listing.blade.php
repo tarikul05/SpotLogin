@@ -6,7 +6,7 @@
         <div class="row panel-row" style="margin:0;">
             <div class="col-sm-12 col-xs-12 header-area pb-3">
                 <div class="page_header_class">
-                    <label id="page_header" name="page_header">{{ __('Student\'s List') }}</label>
+                    <label id="page_header" name="page_header">{{ __("Student\"s List") }}</label>
                 </div>
             </div>
         </div>

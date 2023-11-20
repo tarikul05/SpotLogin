@@ -23,7 +23,7 @@
 				</div>
                 <div class="col-sm-6 col-xs-12 btn-area pt-1">
                     <div class="float-end btn-group save-button ">
-                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">Save</button>
+                       <button id="save_btn" style="display: block;" name="save_btn" class="btn btn-sm btn-primary invoice_save_btn">{{ __('Save') }}</button>
                     </div>
                 </div>
 			</div>
@@ -61,19 +61,19 @@
                                             <label id="payment_status_text"></label>
                                         </td>
                                         <td colspan="1" align="center"> <span>
-                                            <label id="invoice_status" class="gilroy-semibold light-blue-txt">Invoice Status: New</label>
+                                            <label id="invoice_status" class="gilroy-semibold light-blue-txt">{{ __('Invoice Status') }}: {{ __('New') }}</label>
                                             <button style="display: none;" id="button_unlock" class="btn btn-xs btn-warning">Unlock</button>
                                             </span> </td>
                                     </tr>
                                     <tr>
                                         <td class="row_hdr_invoice_name">
-                                            <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">Invoice Name</label>
+                                            <label id="row_hdr_invoice_name" class="txtdarkblue gilroy-semibold text-right">{{ __('Invoice Name') }}</label>
                                         </td>
                                         <td class="invoice_name">
-                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="Invoice Name" tabindex="0" maxlength="150">
+                                            <input id="invoice_name" name="invoice_name" type="text" class="form-control" placeholder="{{ __('Invoice Name') }}" tabindex="0" maxlength="150">
                                         </td>
                                         <td class="lbl_date_invoice" align="center">
-                                            <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">Date of invoice</label>
+                                            <label id="lbl_date_invoice" class="txtdarkblue gilroy-semibold text-right">{{ __('Date of invoice') }}</label>
                                         </td>
                                         <td class="date_invoice_div">
                                             <div class="input-group datepicker" id="date_invoice_div">
@@ -119,17 +119,17 @@
                                                     <input type="text" class="form-control" id="client_name" name="client_name" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="first_name_label_id" name="first_name_label_id" for="client_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
+                                                <label id="first_name_label_id" name="first_name_label_id" for="client_firstname" class="col-lg-3 col-sm-3 text-left">{{ __('Firstname') }} : *</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_firstname" name="client_firstname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="street_caption" name="street_caption" for="client_street" class="col-lg-3 col-sm-3 text-left">Street</label>
+                                                <label id="street_caption" name="street_caption" for="client_street" class="col-lg-3 col-sm-3 text-left">{{ __('Street') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_street" name="client_street" value="" placeholder="" maxlength="120"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="street_number_caption" name="street_number_caption" for="client_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
+                                                <label id="street_number_caption" name="street_number_caption" for="client_street_number" class="col-lg-3 col-sm-3 text-left">{{ __('Street No') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_street_number" name="client_street_number" value="" placeholder="" maxlength="20"> </div>
                                             </div>
@@ -139,23 +139,23 @@
                                                     <input type="text" class="form-control" id="client_street2" name="client_street2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="postal_code_caption" name="postal_code_caption" for="client_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
+                                                <label id="postal_code_caption" name="postal_code_caption" for="client_zip_code" class="col-lg-3 col-sm-3 text-left">{{ __('Postal Code') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_zip_code" name="client_zip_code" value="" placeholder="" maxlength="8"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="family_name_label_id" name="family_name_label_id" for="client_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
+                                                <label id="family_name_label_id" name="family_name_label_id" for="client_lastname" class="col-lg-3 col-sm-3 text-left">{{ __('Lastname') }} :*</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_lastname" name="client_lastname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
+                                                <label id="pays_caption" name="pays_caption" for="client_country_id" class="col-lg-3 col-sm-3 text-left"> {{ __('Country') }} :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control select_two_defult_class" id="client_country_id" name="client_country_id">
-                                                            <option value="USA">Choose a country</option>
+                                                            <option value="USA">{{ __('Select Country') }}</option>
                                                             @foreach($countries as $country)
                                                                 <option value="{{ $country->code }}">{{ $country->name }} ({{ $country->code }})</option>
                                                             @endforeach
@@ -164,7 +164,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row" id="client_province_id_div" style="display:none;">
-                                                <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
+                                                <label id="province_caption" for="client_province_id" class="col-lg-3 col-sm-3 text-left">{{ __('Province') }}</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control select_two_defult_class" id="client_province_id" name="client_province_id">
@@ -173,7 +173,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="locality_caption" name="locality_caption" for="client_place" class="col-lg-3 col-sm-3 text-left">City :</label>
+                                                <label id="locality_caption" name="locality_caption" for="client_place" class="col-lg-3 col-sm-3 text-left">{{ __('City') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="client_place" name="client_place" value="" placeholder="" maxlength="150"> </div>
                                             </div>
@@ -220,17 +220,17 @@
                                                     <input type="text" class="form-control" id="seller_name" name="seller_name" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="first_name_label_id" name="first_name_label_id" for="seller_firstname" class="col-lg-3 col-sm-3 text-left">First Name : *</label>
+                                                <label id="first_name_label_id" name="first_name_label_id" for="seller_firstname" class="col-lg-3 col-sm-3 text-left">{{ __('Firstname') }} : *</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_firstname" name="seller_firstname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="street_caption" name="street_caption" for="seller_street" class="col-lg-3 col-sm-3 text-left">Street</label>
+                                                <label id="street_caption" name="street_caption" for="seller_street" class="col-lg-3 col-sm-3 text-left">{{ __('street') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_street" name="seller_street" value="" placeholder="" maxlength="120"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="street_number_caption" name="street_number_caption" for="seller_street_number" class="col-lg-3 col-sm-3 text-left">Street No :</label>
+                                                <label id="street_number_caption" name="street_number_caption" for="seller_street_number" class="col-lg-3 col-sm-3 text-left">{{ __('Street No') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_street_number" name="seller_street_number" value="" placeholder="" maxlength="15"> </div>
                                             </div>
@@ -240,24 +240,24 @@
                                                     <input type="text" class="form-control" id="seller_street2" name="seller_street2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="postal_code_caption" name="postal_code_caption" for="seller_zip_code" class="col-lg-3 col-sm-3 text-left">Postal Code :</label>
+                                                <label id="postal_code_caption" name="postal_code_caption" for="seller_zip_code" class="col-lg-3 col-sm-3 text-left">{{ __('Postal Code') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_zip_code" name="seller_zip_code" value="" placeholder="" maxlength="8"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="phone_caption" name="phone_caption" for="seller_phone" class="col-lg-3 col-sm-3 text-left">Téléphone</label>
+                                                <label id="phone_caption" name="phone_caption" for="seller_phone" class="col-lg-3 col-sm-3 text-left">{{ __('phone') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_phone" name="seller_phone" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="family_name_label_id" name="family_name_label_id" for="seller_lastname" class="col-lg-3 col-sm-3 text-left">Family Name :*</label>
+                                                <label id="family_name_label_id" name="family_name_label_id" for="seller_lastname" class="col-lg-3 col-sm-3 text-left">{{ __('Lastname') }} :*</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_lastname" name="seller_lastname" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">Country :</label>
+                                                <label id="pays_caption" name="pays_caption" for="seller_country_id" class="col-lg-3 col-sm-3 text-left">{{ __('Country') }} :</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control select_two_defult_class" id="seller_country_id" name="seller_country_id">
@@ -269,7 +269,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row" id="seller_province_id_div" style="display:none">
-                                                <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">Province</label>
+                                                <label id="province_caption" for="seller_province_id" class="col-lg-3 col-sm-3 text-left">{{ __('Province') }}</label>
                                                 <div class="col-sm-7">
                                                     <div class="selectdiv">
                                                         <select class="form-control select_two_defult_class" id="seller_province_id" name="seller_province_id">
@@ -278,12 +278,12 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="locality_caption" name="locality_caption" for="seller_place" class="col-lg-3 col-sm-3 text-left">City :</label>
+                                                <label id="locality_caption" name="locality_caption" for="seller_place" class="col-lg-3 col-sm-3 text-left">{{ __('City') }} :</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" id="seller_place" name="seller_place" value="" placeholder="" maxlength="150"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="email_caption" name="email_caption" for="seller_email" class="col-lg-3 col-sm-3 text-left">email</label>
+                                            <label id="email_caption" name="email_caption" for="seller_email" class="col-lg-3 col-sm-3 text-left">{{ __('Email') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="email" class="form-control" id="seller_email" name="seller_strseller_emaileet2" value="" placeholder="" maxlength="100"> </div>
                                             </div>
@@ -412,7 +412,7 @@
                                 <div class="row" id="payment_bank_info">
                                     <div class="col-md-12">
                                         <div class="form-group row">
-                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">Payment preference</label>
+                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-12 col-sm-12 text-left">{{ __('Payment preference') }}</label>
                                             <div class="col-sm-12">
                                                 <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100">
                                             </div>
@@ -467,7 +467,7 @@
                                                 <label id="item_particular_caption" name="item_particular_caption" class="gilroy-semibold light-blue-txt">Description/Detail</label>
                                             </th>
                                             <th width="10%" style="text-align:center;">
-                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">Currency</label>
+                                                <label id="row_hdr_amount" name="row_hdr_amount" class="gilroy-semibold light-blue-txt">{{ __('Currency') }}</label>
                                                 <div class="selectdiv">
                                                     <select class="form-control" id="price_currency" name="price_currency">
                                                        @foreach($currency as $key => $curr)
@@ -506,7 +506,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" class="txtdarkblue gilroy-semibold" style="text-align:right">Grand Total:</th>
+                                            <th colspan="2" class="txtdarkblue gilroy-semibold" style="text-align:right">{{ __('Grand Total') }}:</th>
                                             <th colspan="1" style="text-align:right">
                                                 <label name="grand_total" id="grand_total" class="txtdarkblue gilroy-semibold" style="text-align: right;">0.00</label>
                                             </th>
@@ -514,7 +514,7 @@
                                         </tr>
                                         <tr>
                                             <th colspan="5" style="text-align:right;">
-                                                <button type="button" class="btn btn-theme-success add-row"><em class="glyphicon glyphicon-plus"></em>Add invoice item</button>
+                                                <button type="button" class="btn btn-theme-success add-row"><em class="glyphicon glyphicon-plus"></em>{{ __('Add invoice item') }}</button>
                                             </th>
                                         </tr>
                                     </tfoot>
@@ -530,10 +530,18 @@
                                 <div class="section_header_class">
                                     <label class="invoice_subtitle">{{__('Taxes') }}:</label>
                                 </div>
-                                You have <?php echo $count; ?> pre-registered {{$count > 1 ? __('taxes') : __('tax')}}
+
+
+                                {{ __('You have') }}
+
+                                <?php echo $count; ?>
+
+                                {{ __('pre-registered') }}
+
+                                {{$count > 1 ? __('taxes') : __('tax')}}
                                 <?php } else { ?>
                                     <div class="section_header_class">
-                                        <label class="invoice_subtitle">{{__('Add Taxes') }}:</label>
+                                        <label class="invoice_subtitle">{{__('Add taxes') }}:</label>
                                     </div>
                                     <div class="card mb-2">
                                     <div class="card-body bg-tertiary">
@@ -541,21 +549,21 @@
                                     <div class="add_more_tax_row row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">{{ __('Name of Tax') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255"> </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">{{ __('% of Tax') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5"> </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">{{ __('Tax Number') }}</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255"> </div>
+                                                    <input type="text" class="form-control" name="tax_number[]" value="" placeholder="{{ __('Tax Number') }}" maxlength="255"> </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
@@ -574,30 +582,30 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                                                <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">{{ __('Name of Tax') }}</label>
                                                 <div class="col-sm-7">
                                                     <input type="text" class="form-control" name="tax_name[]" value="<?= $tax['tax_name'] ?>" placeholder="Tax Name" maxlength="255">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                                                <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">{{ __('% of Tax') }}</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="Tax Percentage" maxlength="5">
+                                                    <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="<?= $tax['tax_percentage'] ?>" placeholder="{{ __('Tax Percentage') }}" maxlength="5">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                                                <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">{{ __('Tax Number') }}</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="Tax Number" maxlength="255">
+                                                    <input type="text" class="form-control" name="tax_number[]" value="<?= $tax['tax_number'] ?>" placeholder="{{ __('Tax Number') }}" maxlength="255">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">Price</label>
+                                                <label id="tax_amount_caption" for="tax_amount" class="col-lg-3 col-sm-3 text-left">{{ __('Price') }}</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="Tax Amount" maxlength="100">
+                                                    <input type="text" class="form-control tax_amount" name="tax_amount[]" value="" placeholder="{{ __('Tax Amount') }}" maxlength="100">
                                                 </div>
                                                 <div class="col-sm-1">
                                                     <button type="button" class="btn btn-theme-warn delete_tax"><i class="fa-solid fa-trash"></i></button>
@@ -623,20 +631,20 @@
                                 </div>
                                 <div class="card mb-2">
                                     <div class="card-body bg-tertiary">
-                                        <span class="badge bg-info">new</span>
+                                        <span class="badge bg-info">{{ __('new') }}</span>
                                 <div class="add_more_expense_row row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">Name of Expense</label>
+                                            <label id="expense_name_caption" for="expense_name" class="col-lg-3 col-sm-3 text-left">{{ __('Name of Expense') }}</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="expense_name[]" value="" placeholder="Expense Name" maxlength="255"> </div>
+                                                <input type="text" class="form-control" name="expense_name[]" value="" placeholder="{{ __('Name of Expense') }}" maxlength="255"> </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">Amount</label>
+                                            <label id="expense_amount_caption" for="expense_amount" class="col-lg-3 col-sm-3 text-left">{{ __('Amount') }}</label>
                                             <div class="col-sm-7">
-                                                <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="Expense Amount" maxlength="100"> </div>
+                                                <input type="text" class="form-control" name="expense_amount[]" value="" placeholder="{{ __('Expense Amount') }}" maxlength="100"> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -674,13 +682,13 @@ $(document).on('click','#add_more_tax_btn',function(){
                     <div class="row">
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">Name of Tax</label>
+                    <label id="tax_name_caption" for="tax_name" class="col-lg-3 col-sm-3 text-left">{{ __('Name of Tax') }}</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control" name="tax_name[]" value="" placeholder="Tax Name" maxlength="255">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">% of Tax</label>
+                    <label id="tax_percentage_caption" for="tax_percentage" class="col-lg-3 col-sm-3 text-left">{{ __('% of Tax') }}</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control tax_percentage" name="tax_percentage[]" value="" placeholder="Tax Percentage" maxlength="5">
                     </div>
@@ -689,9 +697,9 @@ $(document).on('click','#add_more_tax_btn',function(){
 
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">Tax Number</label>
+                    <label id="tax_number_caption" for="tax_number" class="col-lg-3 col-sm-3 text-left">{{ __('Tax Number') }}</label>
                     <div class="col-sm-7">
-                        <input type="text" class="form-control" name="tax_number[]" value="" placeholder="Tax Number" maxlength="255">
+                        <input type="text" class="form-control" name="tax_number[]" value="" placeholder="{{ __('Tax Number') }}" maxlength="255">
                     </div>
                 </div>
                 <div class="form-group row">
