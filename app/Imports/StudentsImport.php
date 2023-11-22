@@ -56,9 +56,6 @@ class StudentsImport implements ToModel, WithHeadingRow
             'billing_zip_code' => !empty($row['billing_postal_code']) ? $row['billing_postal_code'] : '',
             'billing_place' => !empty($row['billing_city']) ? $row['billing_city'] : '',
 
-            'parent_name_1' => !empty($row['parent_name_1']) ? $row['parent_name_1'] : '',
-            'parent_name_2' => !empty($row['parent_name_2']) ? $row['parent_name_2'] : '',
-
             'father_phone' => !empty($row['fathers_phone']) ? $row['fathers_phone'] : '',
             'father_email' => !empty($row['fathers_email']) ? $row['fathers_email'] : '',
             'mother_phone' => !empty($row['mothers_phone']) ? $row['mothers_phone'] : '',
@@ -67,6 +64,9 @@ class StudentsImport implements ToModel, WithHeadingRow
 
             'mobile' => !empty($row['students_phone']) ? $row['students_phone'] : '',
             'email2' => !empty($row['students_2nd_email']) ? $row['students_2nd_email'] : '',
+
+            'parent_name_1' => !empty($row['parent_name_1']) ? $row['parent_name_1'] : '',
+            'parent_name_2' => !empty($row['parent_name_2']) ? $row['parent_name_2'] : '',
         ];
 
             if (empty($row['email'])) {
@@ -106,8 +106,12 @@ class StudentsImport implements ToModel, WithHeadingRow
             'mother_phone' => $data['mother_phone'],
             'mother_email' => $data['mother_email'],
 
+
             'mobile' => $data['mobile'],
             'email2' => $data['email2'],
+
+            'parent_name_1' => $data['parent_name_1'],
+            'parent_name_2' => $data['parent_name_2'],
         ];
         $schoolStudentData = [
             'school_id' => $this->school_id,

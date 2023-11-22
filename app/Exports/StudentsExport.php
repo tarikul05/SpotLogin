@@ -23,7 +23,7 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
 	private $school_id;
 
-    public function __construct(int $school_id) 
+    public function __construct(int $school_id)
     {
         $this->school_id = $school_id;
     }
@@ -72,7 +72,7 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     	$bg_color_agenda = isset($schoolStd->bg_color_agenda) ? $schoolStd->bg_color_agenda : null;
     	$comment = isset($schoolStd->comment) ? $schoolStd->comment : null;
     	$gender = ($schoolStd->student->gender_id ==1) ? 'Male' : (($schoolStd->student->gender_id ==2) ? 'Female' : 'Not specified' );
-    	
+
         return [
             $schoolStd->student->email,
             $schoolStd->student->lastname,
@@ -96,6 +96,8 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $schoolStd->student->mother_email,
             $schoolStd->student->mobile,
             $schoolStd->student->email2,
+            $schoolStd->student->parent_name_1,
+            $schoolStd->student->parent_name_2
         ];
     }
 
@@ -124,6 +126,8 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             "Mother's email",
             "Student's Phone",
             "Student's 2nd Email",
+            "parent_name_1",
+            "parent_name_2",
         ];
         return $headerRow;
     }

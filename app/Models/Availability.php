@@ -12,6 +12,8 @@ class Availability extends Model
         'student_id', // Ajoutez le champ student_id ici
         'day_of_week',
         'time_of_day',
+        'start_time',
+        'end_time',
         // Ajoutez d'autres champs si nécessaire
     ];
 

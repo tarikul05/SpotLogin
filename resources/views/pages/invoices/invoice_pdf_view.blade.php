@@ -170,6 +170,9 @@
             border: 0;
             font-weight: bold;
         }
+        .table-bordered .extra_col_sub2 td{
+            border: 0;
+        }
         .extra_col_h{
             height: 10px;
         }
@@ -403,6 +406,18 @@
                                     style="text-align:right;">{{number_format($total_lesson,'2')}}</span>
                                 </td>
                             </tr>
+
+                            <?php if($invoice_data->extra_1 > 0){ ?>
+                                <tr class="extra_col_sub2" style="text-decoration: none!important;">
+                                    <td colspan="3" style="text-align:right">Extra Lesson:
+                                    <br>{{ $invoice_data->extra_1_description }}
+                                    </td>
+                                    <td style="text-align:right;" class="small">
+                                        {{number_format($invoice_data->extra_1, '2')}}
+                                    </td>
+                                </tr>
+                            <?php } ?>
+
                             <tr class="extra_col_sub extra_col_h">
                                 <td colspan="4"></td>
                             </tr>
@@ -521,7 +536,7 @@
                         <?php } ?>
 
 
-                    <?php $total = $sub_total_event + $total_lesson + $totalTaxesSupp ; ?>
+                    <?php $total = $sub_total_event + $total_lesson + $invoice_data->extra_1 + $totalTaxesSupp ; ?>
                     <tr class="total_col">
                          <td style="text-align:right" colspan="2" class="text">{{ __('invoice_total') }} <?php echo $invoice_data->invoice_currency ? ' ('.$invoice_data->invoice_currency .') ':''; ?> </td>
                         <td colspan="2" class="price">{{ number_format($total, '2') }}</td>

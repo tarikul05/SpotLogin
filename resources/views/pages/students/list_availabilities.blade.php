@@ -17,8 +17,8 @@
                     @endif
                     @foreach($availabilities as $availability)
                     <tr>
-                        <td>{{ $availability->day_of_week }}</td>
-                        <td>{{ $availability->time_of_day }}</td>
+                        <td>{{ \Carbon\Carbon::parse($availability->day_of_week)->format('d M, Y') }}</td>
+                        <td>{{ date('H:i', strtotime($availability->start_time)) }} - {{ date('H:i', strtotime($availability->end_time)) }}</td>
                         <td width="100px" class="text-right">
                             <form action="{{ route('student.availability.destroy', $availability) }}" method="post" style="display:inline;">
                                 @csrf

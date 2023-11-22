@@ -36,10 +36,10 @@ class AvailabilityController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        /*$request->validate([
             'day_of_week' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'time_of_day' => 'required|in:AM,PM',
-        ]);
+        ]);*/
 
 
         $user = $request->user();
@@ -47,13 +47,14 @@ class AvailabilityController extends Controller
         $availability = new Availability([
             'student_id' => $user->person_id,
             'day_of_week' => $request->input('day_of_week'),
-            'time_of_day' => $request->input('time_of_day'),
-            // Ajoutez d'autres champs si nécessaire
+            'time_of_day' => $request->input('start_time'),
+            'start_time' => $request->input('start_time'),
+            'end_time' => $request->input('end_time'),
         ]);
 
         $availability->save();
 
-        return redirect()->route('student.availabilities')->with('success', 'Availability added successfully!');
+        return response()->json(['success' => true]);
     }
 
     public function destroy(Availability $availability)

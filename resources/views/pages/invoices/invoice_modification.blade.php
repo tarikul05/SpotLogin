@@ -397,7 +397,13 @@
                                     </tr>
                                     @endif
 
-
+                                    @if ($invoice->extra_1 > 0)
+                                    <tr>
+                                        <td colspan="2" style="text-align:right"><b>Extra Lesson:</b><br><span class="small">{{ $invoice->extra_1_description }}</span></td>
+                                        <td style="text-align:right"></td>
+                                        <td style="text-align:right"><b>{{ number_format($invoice->extra_1,'2') }}</b></td>
+                                    </tr>
+                                    @endif
 
 
                                     <!--<tr>
@@ -414,7 +420,7 @@
                                     <tr class="alert alert-info">
                                         <td colspan="2" style="text-align:right"><b>Total</b></td>
                                         <td></td>
-                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_expenses; ?>
+                                        <?php $grandTotalFinal = $totaux + $countAllTaxes + $invoice->extra_1 + $invoice->extra_expenses; ?>
                                         <td style="text-align: right"><span id="grand_total_cap"><b>{{ number_format($grandTotalFinal,'2') }}</b></span></td>
                                     </tr>
                                 </tbody>
@@ -1383,11 +1389,6 @@ function extractExtraCharges($inputString) {
         confirmButtonText: "{{ __('Yes, delete it!') }}"
         }).then((result) => {
         if (result.isConfirmed) {
-            Swal.fire(
-            "{{ __('Invoice deleted') }}",
-            "{{ __('Invoice has been deleted.') }}",
-            'success'
-            )
             DeleteInvoice();
         }
         })
@@ -1401,7 +1402,6 @@ function extractExtraCharges($inputString) {
 
         if (p_invoice_id == '') {
             errorModalCall(GetAppMessage('Invalid_invoice'));
-
             return false;
         }
         var status = '';
@@ -1417,7 +1417,7 @@ function extractExtraCharges($inputString) {
             success: function (result) {
                 status = result.status;
                 if (status == 'success') {
-                    successModalCall({{ __('Invoice deleted') }});
+                   successModalCall("{{ __('Invoice deleted') }}");
 
                     var p_school_id = document.getElementById("p_school_id").value;
 

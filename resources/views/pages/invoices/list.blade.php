@@ -186,13 +186,18 @@
                                       <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="change_button">{{ __('Change')}}</span>
                                 </span>-->
                                 @php
-                                    $existingEntry = DB::table('invoice_sended')->where('invoice_id', $invoice->id)->first();
+                                    $existingEntry = DB::table('invoice_sended')
+                                    ->where('invoice_id', $invoice->id)
+                                    ->latest()
+                                    ->first();
                                 @endphp
 
                                 @if($existingEntry)
-                                <button id="approved_btn" target="" href="" class="btn btn-info w-100" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
+                                <span style="font-size:11px;">{{ __('sent by email') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->format('d M, Y => H:i') }}</span></span><br>
+                                <button id="approved_btn" target="" href="" class="btn btn-info" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
                                 @else
-                                <button id="approved_btn" target="" href="" class="btn btn-info w-100" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
+                                <span style="font-size:11px;">{{ __('Invoice not sent') }}</span><br>
+                                <button id="approved_btn" target="" href="" class="btn btn-info" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
                                 @endif
                             </td>
                             @else
@@ -225,7 +230,7 @@
                                         </a>
                                     @endif
 
-                                    @if (($invoice->invoice_status > 1) && ($invoice->payment_status == 0) && (!$AppUI->isStudent()))
+                                    @if (($invoice->payment_status == 0) && (!$AppUI->isStudent()))
                                         <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send reminder email')}}</a>
                                     @endif
                                 </div>
