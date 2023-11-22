@@ -1113,6 +1113,10 @@ class InvoiceController extends Controller
         //echo Carbon::now()->format('F'); exit();
         try {
             $data = $request->all();
+
+            $extra_1 = floatval(trim($data['extra_1']));
+            $extra_1_description = trim($data['extra_1_description']);
+
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
             $discountPercentage = floatval(trim($data['discountPercentage']));
@@ -1376,7 +1380,7 @@ class InvoiceController extends Controller
                'subtotal_amount_no_discount'=> $subtotal_amount_no_discount,
                'amount_discount_2'=> $amountDiscount_2,
                'amount_discount_3'=> $amount_discount_3,
-               'amount_discount_4'=> $amount_discount_4 ,
+               'amount_discount_4'=> $amount_discount_4,
                'amount_discount_5'=> $amount_discount_5,
                'amount_discount_6'=> $amount_discount_6,
                'total_amount_discount'=>$total_amount_discount,
@@ -1388,7 +1392,9 @@ class InvoiceController extends Controller
                'tax_amount'=> number_format($totalAllTaxesAmount,2),
                'etransfer_acc'=>$school->etransfer_acc,
                'cheque_payee' =>$school->cheque_payee,
-               'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses
+               'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses,
+               'extra_1' => $extra_1,
+               'extra_1_description' => $extra_1_description
 
             ];
             if (!empty($price_currency)) {

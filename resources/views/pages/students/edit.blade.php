@@ -1028,9 +1028,11 @@ $("#country_code, #billing_country_code").trigger('change')
         var lesson_discount_description2 = lesson_discount_description_get2 ? lesson_discount_description_get2.value : "";
         //return console.log('yo', 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet)
 
+        var extra_1 = $("#extra_1").val();
+        var extra_1_description = $("#extra_1_description").val();
 
 
-        data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2;
+        data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2 + '&extra_1='+extra_1+'&extra_1_description='+extra_1_description;
         //return console.log(data)
 
 		$.ajax({
@@ -1603,7 +1605,9 @@ $('#save_btn').click(function (e) {
 									amount_for_disc=amount_for_disc+value.sell_price;
 									subTotalLessons = subTotalLessons + value.sell_price;
 								}
+
 							}
+
 
 							costs_1 = value.extra_charges;
 							if (value.extra_charges != 0) {
@@ -1636,6 +1640,14 @@ $('#save_btn').click(function (e) {
 						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="5" style="text-align:right;"><br><b>{{ __('Total Lessons duration') }} <i class="fa-solid fa-arrow-right"></i></b> <b>'+totalMinutesLessons+' minutes</b></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Sub-Total Lessons') }} </b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b id="ssubtotal_amount_with_discount_lesson">'+subTotalLessons.toFixed(2)+'</b><br><br></td><td></td></tr>';
 
 					//Lesson Discount
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric" id="extra_1" name="extra_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
+					resultHtml += '</tr>';
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
@@ -1665,7 +1677,7 @@ $('#save_btn').click(function (e) {
 
 
 
-					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td></td></tr>';
+				    resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>{{ __('Total Lessons') }}</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="ssubtotal_amount_with_discount">'+subTotalLessons.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_1_display"></span></td></tr>';
 
 					} else { resultHtml += '<span style="display:none;" id="ssubtotal_amount_with_discount_lesson">0</span>' }
 
@@ -1909,7 +1921,7 @@ $('#save_btn').click(function (e) {
 
 
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Discount(%) on Events:</td>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric2" id="sdiscount_percent_2" name="sdiscount_percent_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
@@ -1917,7 +1929,7 @@ $('#save_btn').click(function (e) {
 					resultHtml += '<td></td>';
 					resultHtml += '</tr>';
 					resultHtml += '<tr>';
-					resultHtml += '<td colspan="7" style="text-align:right">Discount Amount:</td>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount Amount') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric_amount2" id="samount_discount_2" name="samount_discount_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
@@ -2377,6 +2389,11 @@ $('#save_btn').click(function (e) {
 							var newTotalEvents =  parseFloat(oldSubTotalEvent.textContent);
 							$("#stotal_amount_with_discount_event").text((parseFloat(newTotalEvents+amount)).toFixed(2));
 
+
+                            var oldSubTotalEvent2 = document.getElementById("stotal_amount_before_discount_event");
+							var newTotalEvents2 =  parseFloat(oldSubTotalEvent2.textContent);
+                            $("#stotal_amount_before_discount_event").text((parseFloat(newTotalEvents2+amount)).toFixed(2));
+
 							if(totalLessons>0) {
 								if ($('#sdiscount_percent_1').length > 0) {
 									var newDiscount = $("#sdiscount_percent_1").val();
@@ -2421,7 +2438,9 @@ $('#save_btn').click(function (e) {
 							$("#extras").text(parseFloat(totalExtraSupp).toFixed(2));
 							}
 
+
 							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+                            CalculateDiscount('amount');
 
 
 						} else {
@@ -2430,11 +2449,26 @@ $('#save_btn').click(function (e) {
 							var oldtotalLessons = document.getElementById("ssubtotal_amount_with_discount_lesson");
 							var totalLessons = parseFloat(oldtotalLessons.textContent)
 							var newTotalEvents= 0;
+                            var newTotalEvents2= 0;
 
 							var amount = parseFloat(checkbox.dataset.amount);
 							var oldSubTotalEvent = document.getElementById("stotal_amount_with_discount_event");
 							var newTotalEvents =  parseFloat(oldSubTotalEvent.textContent);
 							$("#stotal_amount_with_discount_event").text((parseFloat(newTotalEvents-amount)).toFixed(2));
+
+                            var detectNoEvent = $("#stotal_amount_before_discount_event");
+                            if(detectNoEvent.length > 0) {
+                                var newTotalEvents2 =  parseFloat(detectNoEvent.textContent);
+                                $("#stotal_amount_before_discount_event").text((parseFloat(newTotalEvents2-amount)).toFixed(2));
+                                $('#sdiscount_percent_2').val(0);
+                                $('#samount_discount_2').val(0);
+                                errorModalCall('You unchecked all events for this invoice. So your Event discount is now reset. Please add again your discount if you need it and if you check an event.');
+                            }
+
+                            var oldSubTotalEvent2 = document.getElementById("stotal_amount_before_discount_event");
+							var newTotalEvents2 =  parseFloat(oldSubTotalEvent2.textContent);
+                            $("#stotal_amount_before_discount_event").text((parseFloat(newTotalEvents2-amount)).toFixed(2));
+
 
 							if(totalLessons>0) {
 								if ($('#sdiscount_percent_1').length > 0) {
@@ -2445,6 +2479,8 @@ $('#save_btn').click(function (e) {
 									$('#samount_discount_1').val(parseFloat(totalDiscount).toFixed(2));
 								}
 							}
+
+
 
 							var newSubTotaux = (parseFloat((newTotalEvents-amount) + totalLessons))
 							$("#stotal_amount_with_discount").text(parseFloat(newSubTotaux).toFixed(2));
@@ -2483,7 +2519,7 @@ $('#save_btn').click(function (e) {
 
 
 							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
-
+                            CalculateDiscount('amount');
 
 						}
 					});
@@ -2565,7 +2601,10 @@ $('#save_btn').click(function (e) {
 							}
 
 
+
+
 							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
+                            CalculateDiscount('amount');
 
 
 
@@ -2633,7 +2672,7 @@ $('#save_btn').click(function (e) {
 
 							document.getElementById('grand_total_amount').textContent = (totalExtraSupp+newSubTotaux+totalNewTaxes).toFixed(2);
 
-
+                            CalculateDiscount('amount');
 
 
 
@@ -2643,7 +2682,7 @@ $('#save_btn').click(function (e) {
 				});
 
 
-                var subtotal_amount_all_event = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
+            var subtotal_amount_all_event = 0.0, amt_for_disc = 0.0, total_amount_discount = 0.0, total_commission = 0.0, total_amount = 0.0, subtotal_amount_no_discount = 0.0;
             var disc1_event = 0.0, disc2 = 0.0, disc3 = 0.0, disc4 = 0.0, disc5 = 0.0, disc6 = 0.0;
             var disc1_amt_event = 0.0, disc2_amt = 0.0, disc3_amt = 0.0, disc4_amt = 0.0, disc5_amt = 0.0, disc6_amt = 0.0, tax_amount = 0.0;
 
@@ -2716,6 +2755,14 @@ $('#save_btn').click(function (e) {
 						CalculateDiscount('amount');
 					}
 				});
+
+
+                $("#extra_1").keyup(function () {
+                    //get extra_1 value and display it in html in extra_1_display
+                    var extra_1 = $("#extra_1").val();
+                    $("#extra_1_display").text('+ ' + parseFloat(extra_1).toFixed(2));
+                });
+
 
 
 				//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
@@ -2882,8 +2929,14 @@ $('#save_btn').click(function (e) {
 		console.log(contenuValeurNumerique);
 		}
 
-
-		document.getElementById('grand_total_amount').textContent = (totalExtraSupp+totalNewTaxes+total_amount).toFixed(2);
+        if(subtotal_amount_all > 0) {
+        var extra_1_add_total = $("#extra_1").val();
+        console.log(parseFloat(extra_1_add_total).toFixed(2));
+            var extra_1_add_total2 = parseFloat(extra_1_add_total).toFixed(2);
+        } else {
+            extra_1_add_total2 = 0;
+        }
+		document.getElementById('grand_total_amount').textContent = (totalExtraSupp+totalNewTaxes+total_amount + Number(extra_1_add_total2)).toFixed(2);
 
 
     }

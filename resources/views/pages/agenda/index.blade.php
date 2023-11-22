@@ -4685,10 +4685,12 @@ function getAwayStudent() {
     var startDate = $('#start_date').val();
     var days = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     var momentDate = moment(startDate, 'DD/MM/YYYY');
+    var verifDate = moment(startDate, 'DD/MM/YYYY');
 
     var formattedDate = momentDate.format('YYYY-MM-DD');
     var date = new Date(formattedDate);
     var dayName = days[date.getDay()];
+
 
 
         $.ajax({
@@ -4720,10 +4722,11 @@ function getAwayStudent() {
             if(item.availabilities.length > 0) {
                 //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
                 item.availabilities.forEach(function (availability) {
-                    if(availability.day_of_week === dayName) {
-                        var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
-                        console.log('available on ' + availability.day_of_week + " on " +  $time);
-                        labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available on ' + availability.day_of_week + ' in the ' + $time + ')</span>');
+                    console.log('test');
+                    if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
+                        //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
+                        //console.log('available on ' + availability.day_of_week + " on " +  $time);
+                    labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available betw. ' + availability.start_time + ' and ' + availability.end_time + ')</span>');
                     }
                 });
             }
@@ -4744,6 +4747,7 @@ function resetStudentList() {
   var startDate = $('#start_date').val();
     var days = ['sunday', 'monday','tuesday','wednesday','thursday','friday','saturday'];
     var momentDate = moment(startDate, 'DD/MM/YYYY');
+    var verifDate = moment(startDate, 'DD/MM/YYYY');
 
     var formattedDate = momentDate.format('YYYY-MM-DD');
     var date = new Date(formattedDate);
@@ -4772,10 +4776,13 @@ function resetStudentList() {
         if(student.availabilities.length > 0) {
                 //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
                 student.availabilities.forEach(function (availability) {
-                    if(availability.day_of_week === dayName) {
-                        var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
-                        console.log('available on ' + availability.day_of_week + " on " +  $time);
-                        labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available on ' + availability.day_of_week + ' in the ' + $time + ')</span>');
+                    console.log(moment(availability.day_of_week).format('YYYY-MM-DD'));
+                    console.log('the day', moment(startDate).format('YYYY-MM-DD'));
+                    if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
+                        //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
+                        //console.log('available on ' + availability.day_of_week + " on " +  $time);
+                        labelElement.append('<span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + ')</span>');
+
                     }
                 });
             }
