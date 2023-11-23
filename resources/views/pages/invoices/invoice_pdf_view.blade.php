@@ -367,20 +367,23 @@
                                 <td style="text-align:right">{{ number_format($sub_total_lesson,'2') }}</td>
                             </tr>
                             <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
-                                <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                                <!--<div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;"> test
                                     <?php
                                         if($invoice_data->lesson_discount_description){
                                             echo $invoice_data->lesson_discount_description;
                                         }
                                     ?>
-                                </div>
+                                </div>-->
                             <?php } ?>
                             <?php if($invoice_data->amount_discount_1 != 0){ ?>
-                                <tr class="extra_col_sub">
+                                <tr class="extra_col_sub2">
                                     <td colspan="2" style="text-align:right">
                                         <?php
                                             if($invoice_data->invoice_type == 1){
                                                 echo '<b>Discount on lesson</b>';
+                                                if($invoice_data->lesson_discount_description){
+                                                    echo '<br><span style="font-size:12px;">' . $invoice_data->lesson_discount_description . '</span>';
+                                                }
                                             }else if($invoice_data->invoice_type == 2){
                                                 echo '<b>Commission amount</b>';
                                             }else{
@@ -409,11 +412,11 @@
 
                             <?php if($invoice_data->extra_1 > 0){ ?>
                                 <tr class="extra_col_sub2" style="text-decoration: none!important;">
-                                    <td colspan="3" style="text-align:right">Extra Lesson:
-                                    <br>{{ $invoice_data->extra_1_description }}
+                                    <td colspan="3" style="text-align:right"><b>Extra Lesson:</b>
+                                    <br><span>{{ $invoice_data->extra_1_description }}</span>
                                     </td>
                                     <td style="text-align:right;" class="small">
-                                        {{number_format($invoice_data->extra_1, '2')}}
+                                        + {{number_format($invoice_data->extra_1, '2')}}
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -438,19 +441,22 @@
 
                     <?php if($invoice_data->amount_discount_2 != 0){ ?>
                         <?php if($invoice_data->lesson_discount_description || $invoice_data->event_discount_description){ ?>
-                            <div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
+                            <!--<div style="position:absolute; max-width:350px; font-size:12px; padding:5px; color:#000000; border:#EEE solid 1px;">
                                 <?php
                                     if($invoice_data->event_discount_description){
                                         echo $invoice_data->event_discount_description;
                                     }
                                 ?>
-                            </div>
+                            </div>-->
                         <?php } ?>
                         <tr class="extra_col">
                             <td colspan="2" style="text-align:right; font-size:12px;" class="text">
                                 <?php
                                     if($invoice_data->invoice_type == 1){
                                         echo '<b>Discount on Event</b>';
+                                        if($invoice_data->event_discount_description){
+                                            echo '<br><span style="font-size:12px;">' . $invoice_data->event_discount_description . '</span>';
+                                        }
                                     }else if($invoice_data->invoice_type == 2){
                                         echo '<b>Discount on Event</b>';
                                     }else{
