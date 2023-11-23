@@ -397,14 +397,6 @@
                                     </tr>
                                     @endif
 
-                                    @if ($invoice->extra_1 > 0)
-                                    <tr>
-                                        <td colspan="2" style="text-align:right"><b>Extra Lesson:</b><br><span class="small">{{ $invoice->extra_1_description }}</span></td>
-                                        <td style="text-align:right"></td>
-                                        <td style="text-align:right"><b>{{ number_format($invoice->extra_1,'2') }}</b></td>
-                                    </tr>
-                                    @endif
-
 
                                     <!--<tr>
                                         <td colspan="2" style="text-align:right">Tax:</td>
@@ -414,6 +406,15 @@
                                         </td>
                                     </tr>-->
                                     @endif
+
+                                    @if ($invoice->extra_1 > 0)
+                                    <tr>
+                                        <td colspan="2" style="text-align:right"><b>Extra Lesson:</b><br><span class="small">{{ $invoice->extra_1_description }}</span></td>
+                                        <td style="text-align:right"></td>
+                                        <td style="text-align:right"><b>{{ number_format($invoice->extra_1,'2') }}</b></td>
+                                    </tr>
+                                    @endif
+
                                     @php
                                         $grand_total = $sub_total_event +$sub_total_lesson + $invoice->extra_expenses-$invoice->total_amount_discount + $invoice->tax_amount;
                                     @endphp
