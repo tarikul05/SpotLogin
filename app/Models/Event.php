@@ -632,7 +632,7 @@ class Event extends BaseModel
                     }*/
 
 
-                    $query->where($key, '=', $value);
+                   // $query->whereIn($key, '=', $value);
 
 
                     // $query->where($key, 'LIKE', "%{$value}%");
