@@ -620,7 +620,7 @@ class Event extends BaseModel
                         //dd($value);
                     }
 
-                    if (is_array($value)) {
+                    /*if (is_array($value)) {
                         $query->where(function ($query) use($key,$value) {
                             $query->whereIn($key, $value)
                                 ->orWhereNull($key);
@@ -629,7 +629,7 @@ class Event extends BaseModel
                         unset($params['authority:in']);
                     }  else {
                         $query->where($key, '=', $value);
-                    }
+                    }*/
 
 
                     $query->where($key, '=', $value);
@@ -637,9 +637,9 @@ class Event extends BaseModel
 
                     // $query->where($key, 'LIKE', "%{$value}%");
                 }
-                 else {
-                     $query->where($key, '=', $value);
-                 }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
 
             }
         }
