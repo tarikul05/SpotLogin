@@ -13,15 +13,17 @@ class CreateAvailabilitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('availabilities', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->string('day_of_week');
-            // Ajoutez d'autres colonnes si nécessaire
+        if (!Schema::hasTable('availabilities')) {
+            Schema::create('availabilities', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('student_id');
+                $table->string('day_of_week');
+                // Ajoutez d'autres colonnes si nécessaire
 
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->timestamps();
-        });
+                $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

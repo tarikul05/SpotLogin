@@ -9,12 +9,13 @@ use App\Models\Student;
 class Availability extends Model
 {
     protected $fillable = [
-        'student_id', // Ajoutez le champ student_id ici
+        'student_id',
         'day_of_week',
         'time_of_day',
         'start_time',
         'end_time',
-        // Ajoutez d'autres champs si nécessaire
+        'is_special',
+        'day_special'
     ];
 
     use HasFactory;

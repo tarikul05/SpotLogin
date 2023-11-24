@@ -4179,7 +4179,7 @@ $('#add_lesson').on('submit', function(e) {
                         Swal.showLoading();
                         const timer = Swal.getPopup().querySelector("b");
                         timerInterval = setInterval(() => {
-                        timer.textContent = `${Swal.getTimerLeft()}`;
+                        //timer.textContent = `${Swal.getTimerLeft()}`;
                         }, 100);
                     },
                     willClose: () => {
@@ -4774,7 +4774,6 @@ function resetStudentList() {
         }
 
         if(student.availabilities.length > 0) {
-                //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
                 student.availabilities.forEach(function (availability) {
                     console.log(moment(availability.day_of_week).format('YYYY-MM-DD'));
                     console.log('the day', moment(startDate).format('YYYY-MM-DD'));
