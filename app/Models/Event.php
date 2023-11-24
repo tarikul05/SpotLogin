@@ -620,7 +620,7 @@ class Event extends BaseModel
                         //dd($value);
                     }
 
-                    if (is_array($value)) {
+                    /*if (is_array($value)) {
                         $query->where(function ($query) use($key,$value) {
                             $query->whereIn($key, $value)
                                 ->orWhereNull($key);
@@ -629,7 +629,7 @@ class Event extends BaseModel
                         unset($params['authority:in']);
                     }  else {
                         $query->where($key, '=', $value);
-                    }
+                    }*/
 
 
                     $query->where($key, '=', $value);
@@ -637,9 +637,9 @@ class Event extends BaseModel
 
                     // $query->where($key, 'LIKE', "%{$value}%");
                 }
-                 else {
-                     $query->where($key, '=', $value);
-                 }
+                // else {
+                //     $query->where($key, '=', $value);
+                // }
 
             }
         }
@@ -710,9 +710,9 @@ class Event extends BaseModel
                         $timeZone = $school->timezone;
                     }
                 }
-                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate, 'long',$timeZone,'UTC');
 
-                $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                $toFilterDate = $this->formatDateTimeZone($toFilterDate, 'long',$timeZone,'UTC');
                 $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
                 $query->whereRaw($qq);
           }
