@@ -47,14 +47,20 @@ class AvailabilityController extends Controller
         $availability = new Availability([
             'student_id' => $user->person_id,
             'day_of_week' => $request->input('day_of_week'),
-            'time_of_day' => $request->input('start_time'),
+            'time_of_day' => $request->input('start_time') . ' - ' . $request->input('end_time'),
             'start_time' => $request->input('start_time'),
             'end_time' => $request->input('end_time'),
+            'day_special' => $request->input('day_special'),
+            'is_special' => $request->input('is_special') == 'true' ? true : false,
         ]);
 
         $availability->save();
 
-        return response()->json(['success' => true]);
+        if($request->input('is_special')) {
+            return response()->json(['success' => true, 'is_special' => $request->input('is_special')]);
+        } else {
+            return redirect()->route('student.availabilities')->with('success', 'Availability added successfully!');
+        }
     }
 
     public function destroy(Availability $availability)

@@ -710,7 +710,7 @@ class Event extends BaseModel
                         $timeZone = $school->timezone;
                     }
                 }
-                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+                $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 02:00:00', 'long',$timeZone,'UTC');
 
                 $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
                 $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
