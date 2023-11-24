@@ -3608,6 +3608,8 @@ $('.search-icon').on('click', function() {
         view_mode = document.getElementById("view_mode").value;
         var p_event_location_id=getLocationIDs();
 
+        console.log('view_mode', view_mode);
+
         var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
         //return false;
