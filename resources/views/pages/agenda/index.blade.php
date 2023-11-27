@@ -3875,10 +3875,10 @@ $( document ).ready(function() {
 		el_end = $('#end_time'),
 		el_duration = $('#duration');
 
-        if (el_end.val() == el_start.val()) {
-            $('#start_time').addClass('error');
-            $('#end_time').addClass('error');
-        } else {
+            if (el_end.val() == el_start.val()) {
+                $('#start_time').addClass('error');
+                $('#end_time').addClass('error');
+             } else {
                 $('#start_time').removeClass('error');
                 $('#end_time').removeClass('error');
             }
@@ -4441,9 +4441,11 @@ $("body").on('click', '#student_empty', function(event) {
         })
 
         $('#end_date').on('change', function(e) {
-        if ($("#end_date").val() < $("#start_date").val()) {
+            console.log('alors ?', $("#start_date").val());
+            var agendaSelectdates2 = $("#agenda_select").val();
+        if ($("#end_date").val() < $("#start_date").val() && agendaSelectdates2 == 1) {
             $("#end_date").val($("#start_date").val());
-            errorModalCall('Information', '{{ __("Please ensure that the end date comes after the start date ")}}');
+            errorModalCall('Information', '{{ __("Please ensure that the end date comes after the start date")}}');
             setTimeout(() => {
                 $("#end_date").val($("#start_date").val());
             }, "200")
