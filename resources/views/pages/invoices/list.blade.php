@@ -193,7 +193,7 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <span style="font-size:11px;">{{ __('sent by email') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->format('d M, Y => H:i') }}</span></span><br>
+                                <span style="font-size:11px;">{{ __('sent by email') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y => H:i') }}</span></span><br>
                                 <button id="approved_btn" target="" href="" class="btn btn-info" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
                                 @else
                                 <span style="font-size:11px;">{{ __('Invoice not sent') }}</span><br>

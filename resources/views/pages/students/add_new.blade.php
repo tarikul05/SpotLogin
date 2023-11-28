@@ -68,7 +68,7 @@
 							<div class="col-md-5 col-xs-12">
 
                                 <div class="form-group custom-form-group">
-									<label class="text-left" for="nickname" id="nickname_label_id">{{__('Login ID') }} : *</label>
+									<label class="text-left" for="nickname" id="nickname_label_id">{{__('Pseudo') }} : *</label>
                                         <div class="input-group">
                                         <span class="input-group-addon"><i class="fa-solid fa-lock"></i></span>
                                         <input class="form-control require" required="true" id="nickname" maxlength="50" name="nickname" type="text" value="{{old('nickname')}}">
