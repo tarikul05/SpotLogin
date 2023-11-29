@@ -90,14 +90,16 @@ class InvoiceController extends Controller
         //$invoices = Invoice::orderByRaw('DATE_FORMAT(date_invoice, "%Y-%m-%d %H:%i:%s") DESC');
         $results =  $invoices = $invoices->where('school_id', $schoolId)->get();
 
-        return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
+    return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
 
     public function report(Request $request, $schoolId = null,$type = null)
     {
         $user = $request->user();
-        return view('pages.invoices.report', compact('user'));
+        $school = School::active()->find($schoolId);
+        $currency = $school->default_currency_code;
+        return view('pages.invoices.report', compact('user','currency'));
     }
 
 
@@ -134,6 +136,15 @@ class InvoiceController extends Controller
                     ->first();
                 $item->eventDetail = $eventDetail;
             });
+        });
+
+        $invoices->each(function ($invoice) {
+
+                $invoiceTaxes = DB::table('invoices_taxes')
+                    ->where('invoice_id', $invoice->id)
+                    ->get();
+                $invoice->invoiceTaxes = $invoiceTaxes;
+
         });
 
         return response()->json($invoices);
