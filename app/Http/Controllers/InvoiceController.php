@@ -49,8 +49,8 @@ class InvoiceController extends Controller
     public function index(Request $request, $schoolId = null,$type = null)
     {
         $user = $request->user();
-        $this->schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
-        $school = School::active()->find($this->schoolId);
+        $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+        $school = School::active()->find($schoolId);
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
@@ -64,7 +64,7 @@ class InvoiceController extends Controller
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
 // dd($invoice_type);
         $invoices = Invoice::active()
-                    ->where('school_id', $this->schoolId);
+                    ->where('school_id', $schoolId);
 
         if ($user_role != 'superadmin') {
             if ($user->isTeacherSchoolAdmin()) {
@@ -87,7 +87,7 @@ class InvoiceController extends Controller
 
        // $invoices->orderBy('date_invoice', 'desc');
         $invoices = Invoice::orderByRaw('DATE_FORMAT(date_invoice, "%Y-%m-%d %H:%i:%s") DESC');
-        $results =  $invoices = $invoices->get();
+        $results =  $invoices = $invoices->where('school_id', $schoolId)->get();
 
         return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
