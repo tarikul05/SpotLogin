@@ -462,23 +462,26 @@ $('#billing_period_search_btn_2').on('click', function() {
         async: false,
         success: function(result) {
             var summary = {};
+            var totalTaxesDisplay = 0;
             result.forEach(function(rowData) {
             rowData['invoiceTaxes'].forEach(function(cellData) {
                 const taxName = cellData.tax_name;
                 const taxAmount = parseFloat(cellData.tax_amount);
                     if (summary[taxName]) {
                         summary[taxName] += taxAmount;
+                        totalTaxesDisplay += taxAmount;
                     } else {
                         summary[taxName] = taxAmount;
                     }
                 });
             });
-
+            var totalTaxesElement = document.getElementById("totalTaxes");
+            totalTaxesElement.innerHTML = totalTaxesDisplay;
             var detailTaxesElement = document.getElementById("detailTaxes");
 
             var resultString = "" + Object.keys(summary).map(function(taxName) {
                 return taxName + " = " + summary[taxName];
-        }).join("<br>");
+            }).join("<br>");
 
             detailTaxesElement.innerHTML = resultString;
 
@@ -670,7 +673,7 @@ $('#billing_period_search_btn_2').on('click', function() {
 
                 divTotalAmount.innerHTML = grandTotal.toLocaleString(2) + ' '+schoolCurrency+'';
                 divTotalAmountLessonHT.innerHTML = grandTotalHT.toLocaleString(2) + ' '+schoolCurrency+'';
-                divTotalTaxes.innerHTML = grandTotalTaxes.toLocaleString(2) + ' '+schoolCurrency+'';
+                //divTotalTaxes.innerHTML = grandTotalTaxes.toLocaleString(2) + ' '+schoolCurrency+'';
                 divTotalDiscount.innerHTML = grandTotalDiscount.toLocaleString(2) + ' '+schoolCurrency+'';
                 divTotalExtra.innerHTML = grandTotalExtra.toLocaleString(2) + ' '+schoolCurrency+'';
 
