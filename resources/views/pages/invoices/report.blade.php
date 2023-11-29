@@ -472,13 +472,15 @@ $('#billing_period_search_btn_2').on('click', function() {
                         totalTaxesDisplay += taxAmount;
                     } else {
                         summary[taxName] = taxAmount;
+                        totalTaxesDisplay += taxAmount;
                     }
                 });
             });
-            var totalTaxesElement = document.getElementById("totalTaxes");
-            totalTaxesElement.innerHTML = totalTaxesDisplay;
-            var detailTaxesElement = document.getElementById("detailTaxes");
 
+            var totalTaxesElement = document.getElementById("totalTaxes");
+            totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';;
+
+            var detailTaxesElement = document.getElementById("detailTaxes");
             var resultString = "" + Object.keys(summary).map(function(taxName) {
                 return taxName + " = " + summary[taxName];
             }).join("<br>");
@@ -665,7 +667,7 @@ $('#billing_period_search_btn_2').on('click', function() {
                 //Resume
                 var divTotalAmount = document.getElementById('totalAmount');
                 var divTotalAmountLessonHT = document.getElementById('totalAmountLessonHT');
-                var divTotalTaxes = document.getElementById('totalTaxes');
+                //var divTotalTaxes = document.getElementById('totalTaxes');
                 var divTotalDiscount = document.getElementById('totalDiscount');
                 var divTotalExtra = document.getElementById('totalExtra');
                 //Display Resume
