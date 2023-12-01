@@ -21,7 +21,7 @@ class CheckEventTable extends Command
         $eventCount = Event::where('created_at', '>=', now()->subHour())
             ->count();
 
-        if ($eventCount >= 100) {
+        if ($eventCount >= 1000) {
             Mail::to('j.steeve@free.fr')->send(new \App\Mail\OverloadedEventAlert($eventCount));
         }
     }
