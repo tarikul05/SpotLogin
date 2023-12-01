@@ -1269,6 +1269,7 @@ class AgendaController extends Controller
            // $data['teacher_id']= trim($dataParam['p_teacher_id']);
             $data['student_id']= trim($dataParam['p_student_id']);
 
+
             $data['location_id']= trim($dataParam['location_id']);
             $p_user_id=Auth::user()->id;
             $data['is_locked']=0;
@@ -1350,9 +1351,9 @@ class AgendaController extends Controller
             $param['location_id']= trim($data['location_id']);
 
             $param['school_id']= trim($data['p_event_school_id']);
-            //$param['event_type']= trim($data['p_event_type_id']);
+            $param['event_type']= trim($data['p_event_type_id']);
             //$param['teacher_id']= trim($data['p_teacher_id']);
-            //$param['student_id']= trim($data['p_student_id']);
+            $param['student_id']= trim($data['p_student_id']);
             //$p_user_id=Auth::user()->id;
 
             if (isset($param['p_from_date'])) {

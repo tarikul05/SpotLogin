@@ -478,7 +478,7 @@ $('#billing_period_search_btn_2').on('click', function() {
             });
 
             var totalTaxesElement = document.getElementById("totalTaxes");
-            totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';;
+            totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';
 
             var detailTaxesElement = document.getElementById("detailTaxes");
             var resultString = "" + Object.keys(summary).map(function(taxName) {

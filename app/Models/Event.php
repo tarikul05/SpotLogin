@@ -164,14 +164,17 @@ class Event extends BaseModel
             $toFilterDate = str_replace('/', '-', $params['p_to_date']);
         }
 
-        if ($user_role == 'student') {
+        $studentIds1 = explode('|', $params['student_id']);
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->select(['events.*']);
-        }
+                ->select(['events.*'])
+                ->whereIn('event_details.student_id', $studentIds1);
+
 
         $query->select(['events.*'])
             ->where('events.deleted_at', null)
             ->where('events.is_locked', 0);
+
+
 
         foreach ($params as $key => $value) {
             if (!empty($value)) {
@@ -296,10 +299,24 @@ class Event extends BaseModel
 
 
 
-        if ($user_role == 'student') {
+        $studentIds1 = explode('|', $params['student_id']);
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->select(['events.*']);
-        }
+                ->select(['events.*'])
+                ->whereIn('event_details.student_id', $studentIds1);
+
+                if (isset($params['event_type']) && !empty($params['event_type'])) {
+                    $event_typeIds = explode('|', $params['event_type']);
+
+                    // Utilisez array_map pour appliquer substr à chaque élément du tableau
+                    $event_typeIds = array_map(function ($value) {
+                        // Supprimez la partie avant "10-" et gardez le reste
+                        return substr($value, 3);
+                    }, $event_typeIds);
+
+                    $query->whereIn('events.event_category', $event_typeIds);
+                }
+
+
         $query->select(['events.*'])
             ->where('events.deleted_at', null)
             ->where('events.is_locked', 0);
@@ -445,11 +462,35 @@ class Event extends BaseModel
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('events.deleted_at', null);
+            if(isset($params['list_student_id'])) {
+            $studentIds1 = explode('|', $params['list_student_id']);
             $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-                ->select(['events.*']);
+            ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+            $query->distinct()->select(['events.*']);
+            $query->groupBy('events.id');
+            }
         }
         else {
-        $query->where('deleted_at', null);
+        $query->where('events.deleted_at', null);
+        if(isset($params['list_student_id'])) {
+        $studentIds1 = explode('|', $params['list_student_id']);
+        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+        ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+        $query->distinct()->select(['events.*']);
+        $query->groupBy('events.id');
+        }
+        }
+
+        if (isset($params['event_type']) && !empty($params['event_type'])) {
+            $event_typeIds = explode('|', $params['event_type']);
+
+            // Utilisez array_map pour appliquer substr à chaque élément du tableau
+            $event_typeIds = array_map(function ($value) {
+                // Supprimez la partie avant "10-" et gardez le reste
+                return substr($value, 3);
+            }, $event_typeIds);
+
+            $query->whereIn('events.event_category', $event_typeIds);
         }
 
         foreach ($params as $key => $value) {
@@ -570,6 +611,66 @@ class Event extends BaseModel
     {
 
         $query = $this->newQuery();
+        $studentIds1 = explode('|', $params['student_id']);
+        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+        ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+
+        //Filter by students
+        if (isset($params['student_id']) && !empty($params['student_id'])) {
+            $studentIds = explode('|', $params['student_id']);
+            $query->whereIn('event_details.student_id', $studentIds);
+        }
+
+        //Filter by locations
+        if (isset($params['location_id']) && !empty($params['location_id'])) {
+            $locationIds = explode('|', $params['location_id']);
+            $query->whereIn('events.location_id', $locationIds);
+        }
+
+        //Filter by category
+        if (isset($params['event_type']) && !empty($params['event_type'])) {
+            $event_typeIds = explode('|', $params['event_type']);
+
+            // Utilisez array_map pour appliquer substr à chaque élément du tableau
+            $event_typeIds = array_map(function ($value) {
+                // Supprimez la partie avant "10-" et gardez le reste
+                return substr($value, 3);
+            }, $event_typeIds);
+
+            $query->whereIn('events.event_category', $event_typeIds);
+        }
+
+        $query->distinct()->select(['events.*']);
+        $query->groupBy('events.id');
+
+
+        $fromFilterDate = $params['source_start_date'];
+        $toFilterDate = $params['source_end_date'];
+
+        try {
+            if ($fromFilterDate && $toFilterDate) {
+                  $timeZone = 'UTC';
+                  if (!empty($params['school_id'])) {
+                      $school = School::active()->find($params['school_id']);
+                      if (!empty($school->timezone)) {
+                          $timeZone = $school->timezone;
+                      }
+                  }
+                  $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
+
+                  $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
+                  $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                  $query->whereRaw($qq);
+            }
+          } catch (\Exception $e) {
+
+          }
+          //dd($query->toSql());
+          return $query;
+
+
+        /*
+
         //$request = request();
         if (empty($params) || !is_array($params)) {
             return $query;
@@ -721,6 +822,7 @@ class Event extends BaseModel
         }
         //dd($query->toSql());
         return $query;
+        */
     }
 
 
