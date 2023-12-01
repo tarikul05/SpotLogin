@@ -462,13 +462,6 @@ class Event extends BaseModel
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('events.deleted_at', null);
-            if(isset($params['list_student_id'])) {
-            $studentIds1 = explode('|', $params['list_student_id']);
-            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
-            $query->distinct()->select(['events.*']);
-            $query->groupBy('events.id');
-            }
         }
         else {
         $query->where('events.deleted_at', null);
@@ -529,6 +522,8 @@ class Event extends BaseModel
 
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
+            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->select(['events.*'])->whereIn('event_details.student_id', [$params['person_id']]);
             $query->where('event_details.student_id', $params['person_id']);
         }
         //if (!empty($params['schools'])) {

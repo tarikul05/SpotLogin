@@ -345,7 +345,7 @@
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+            <form class="form-horizontal" id="add_lesson" method="post"  name="add_lesson" role="form">
             @csrf
             <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 
