@@ -345,7 +345,7 @@
 <div class="modal fade login-event-modal" id="addAgendaModal" name="addAgendaModal" tabindex="-1" aria-hidden="true" aria-labelledby="addAgendaModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="add_lesson" method="post" action="{{ route('lesson.createAction',[$schoolId]) }}"  name="add_lesson" role="form">
+            <form class="form-horizontal" id="add_lesson" method="post"  name="add_lesson" role="form">
             @csrf
             <input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="0">
 
@@ -2019,7 +2019,8 @@ $('.search-icon').on('click', function() {
 
     function delete_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id){
         var p_event_location_id=getLocationIDs();
-        var data='location_id='+p_event_location_id+'&type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
+        var p_event_student_id=getStudentIDs();
+        var data='location_id='+p_event_location_id+'&student_id='+p_event_student_id+'&type=delete_multiple_events'+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id;
 
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -3006,9 +3007,13 @@ $('.search-icon').on('click', function() {
         console.log('get envent start date',start_date);
         console.log('get envent end date',end_date);
 
+        var list_student_id = getStudentIDs();
+        console.log('list des students for delete', list_student_id);
+
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id=getLocationIDs();
+        var p_event_type = getEventIDs();
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $("#pageloader").fadeIn();
@@ -3016,7 +3021,7 @@ $('.search-icon').on('click', function() {
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
             type: 'POST',
-            data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
                 SetEventCookies();
@@ -3233,17 +3238,20 @@ $('.search-icon').on('click', function() {
         var start_date=document.getElementById("date_from").value;
         var end_date=document.getElementById("date_to").value;
 
+        var list_student_id = getStudentIDs();
+        console.log('first list student', list_student_id);
 
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id=getLocationIDs();
+        var p_event_type = getEventIDs();
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
             type: 'POST',
-            data: 'type=fetch&location_id='+p_event_location_id+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view,
+            data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view + '&list_student_id='+list_student_id,
             //async: false,
             success: function(s){
                 //SetEventCookies();
@@ -3420,7 +3428,7 @@ $('.search-icon').on('click', function() {
                 document.getElementById("get_non_validate_event_id").value = selected_non_validate_ids;
                 document.getElementById("get_non_validate_event_delete_id").value = selected_non_validate_delete_ids;
 
-                get_non_validate_event_delete_id
+               // get_non_validate_event_delete_id
                 //$('#calendar').fullCalendar('removeEvents', function () { return true; });
 
                 // var eventsToPut = [];
@@ -3600,7 +3608,7 @@ $('.search-icon').on('click', function() {
         var source_start_date=document.getElementById("copy_date_from").value,
         source_end_date=document.getElementById("copy_date_to").value,
         event_school=document.getElementById("copy_school_id").value,
-        event_type=document.getElementById("copy_event_id").value,
+        event_type= document.getElementById("copy_event_id").value,
         student_id=document.getElementById("copy_student_id").value,
         teacher_id=document.getElementById("copy_teacher_id").value,
         target_start_date=document.getElementById("date_from").value,

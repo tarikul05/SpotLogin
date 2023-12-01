@@ -19,82 +19,67 @@
 @section('content')
 <div class="content">
 	<div class="container-fluid body">
-
-
-
-        <div class="row justify-content-center pt-5">
-            <div class="col-md-9">
-
-                <div class="card">
-                <div class="card-header">{{ __('Report for:') }} {{!empty($user->username) ? $user->username : ''}}</div>
-                    <div class="card-body">
-
+		<header class="panel-heading" style="border: none;">
+			<div class="row panel-row" style="margin:0;">
+				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
+					<div class="page_header_class">
+						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> {{ __('Report for:') }} {{!empty($user->username) ? $user->username : ''}}</label>
+					</div>
+				</div>
+				<div class="col-sm-6 col-xs-12 btn-area">
+					<div class="float-end btn-group">
+						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete')}}</a>
+					</div>
+				</div>
+			</div>
+		</header>
 
 		<!-- Formulaires -->
 		<div class="row">
 			<div class="col-md-12">
 				<form enctype="multipart/form-data" role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
                     <div class="form-group row">
-                        <div class="col-md-5 p-2 md-12">
+                        <div class="col-md-4 p-2 md-12">
                             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                                 <i class="fa fa-calendar"></i>&nbsp;
-                                <span></span>
+                                <span></span> <i class="fa fa-caret-down float-end"></i>
                             </div>
                         </div>
-                        <input type='hidden' name="report_type" id="report_type" value="details">
-                        <!--<div class="col-md-2 text-center md-12 p-2 text-center">
+                        <div class="col-md-2 text-center md-12 p-2 text-center">
                             <select class="form-control" id="report_type" aria-label="report_type">
                                 <option value="details" selected>Complete report</option>
                                 <option value="create" disabled>Custom report (soon)</option>
                             </select>
-                        </div>-->
-                        <div class="col-md-2 md-12 p-2 text-right">
+                        </div>
+                        <div class="col-md-2 md-12 p-2 text-center">
                             <a class="btn btn-primary w-100" id="billing_period_search_btn_2"><i class="fa-solid fa-file-lines"></i> {{ __('Generate') }}</a>
                             <a class="btn btn-primary w-100" id="billing_period_search_btn_2" style="display: none;"><i class="fa-solid fa-file-lines"></i> {{ __('Generate') }}</a>
                         </div>
                         <div class="col-md-2 md-12 p-2 text-center" id="download_btn_report">
-                            <!--<a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>-->
+                            <a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>
                         </div>
 
                     </div>
                 </form>
 			</div>
 
+            <div id="info_invoice_report" class="md-12 mt-4 mb-2 card bg-tertiary p-2 text-center mb-3"></div>
 
             <br>
-            <div class="card mb-4">
-                <div class="card-body p-3 text-right">
-                <b id="info_invoice_report" class="text-right"></b>
-                <b>Amount of the total invoiced that is an extra or refund:</b>
-                <b class="text-lowercase text-primary" id="totalExtra"></b>
-                <hr>
-                <b>Total Taxes:</b> <span class="text-lowercase" id="totalTaxes"></span><br>
-                <span class="text-lowercase" id="detailTaxes"></span>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="card-body p-3 text-right">
-                <b>Total Discount</b><div class="text-lowercase" id="totalDiscount"></div>
-                <b>Total Amount H.T</b><div class="text-lowercase" id="totalAmountLessonHT"></div>
-                <b>Total Amount</b><div class="text-lowercase" id="totalAmount"></div>
-                </div>
-            </div>
-
+            <div class="container">
             <div class="row pb-4">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="table_container"></div>
+                <div class="col-lg-10 col-md-9 col-sm-12 col-xs-12" id="table_container"></div>
+                <div id="editor"></div>
                 <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12 text-right" id="resumeReport">
+                    <div class="card p-2 text-right"><b>Total Taxes</b><div class="text-lowercase" id="totalTaxes"></div></div>
+                    <div class="card p-2 text-right"><b>Total Extras</b><div class="text-lowercase" id="totalExtra"></div></div>
+                    <div class="card p-2 text-right"><b>Total Discount</b><div class="text-lowercase" id="totalDiscount"></div></div>
+                    <div class="card p-2 text-right"><b>Total Amount H.T</b><div class="text-lowercase" id="totalAmountLessonHT"></div></div>
+                    <div class="card p-2 text-right"><b>Total Amount</b><div class="text-lowercase" id="totalAmount"></div></div>
                     <br>
-                    <!--<a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn2"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>-->
+                    <a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn2"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>
                 </div>
             </div>
-
-
-        </div>
-    </div>
-</div>
-</div>
-
             </div>
 		</div>
 	</div>
@@ -265,7 +250,7 @@
             var resumeReport = document.getElementById('resumeReport');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
-                infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' '+schoolCurrency+'';
+                infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' €';
                 download_btn_report.style.display = 'block';
                 resumeReport.style.display = 'block';
             } else {
@@ -381,9 +366,9 @@ $('#billing_period_search_btn_22').on('click', function() {
                     // Ajoutez chaque invoice à la liste avec les détails
                     var invoiceItem = document.createElement('li');
                     //invoiceItem.textContent = 'Invoice #' + invoice.id + ' : ' + invoice.total_amount + ' €';
-                    invoiceItem.textContent = invoice.client_name + ' : ' + invoice.total_amount + ' '+schoolCurrency+'';
-                    invoiceItem.textContent += invoice.extra_expenses > 0 ? ' | Extra: ' + invoice.extra_expenses + ' '+schoolCurrency+'' : '';
-                    invoiceItem.textContent += invoice.tax_amount > 0 ? ' | TAX: ' + invoice.tax_amount + ' '+schoolCurrency+'' : '';
+                    invoiceItem.textContent = invoice.client_name + ' : ' + invoice.total_amount + ' €';
+                    invoiceItem.textContent += invoice.extra_expenses > 0 ? ' | Extra: ' + invoice.extra_expenses + ' €' : '';
+                    invoiceItem.textContent += invoice.tax_amount > 0 ? ' | TAX: ' + invoice.tax_amount + ' €' : '';
                     invoiceList.appendChild(invoiceItem);
                 });
 
@@ -419,7 +404,7 @@ $('#billing_period_search_btn_22').on('click', function() {
             var download_btn_report = document.getElementById('download_btn_report');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
-                infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' '+schoolCurrency+'';
+                infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' €';
                 download_btn_report.style.display = 'block';
             } else {
                 infoInvoiceReport.style.display = 'none';
@@ -442,7 +427,7 @@ $('#billing_period_search_btn_22').on('click', function() {
 $('#billing_period_search_btn_2').on('click', function() {
     var selectedStartDate = $('#reportrange').data('daterangepicker').startDate.format('YYYY-MM-DD');
     var selectedEndDate = $('#reportrange').data('daterangepicker').endDate.format('YYYY-MM-DD');
-    var schoolCurrency = "{{ $currency }}";
+
     // Vous pouvez maintenant utiliser selectedStartDate et selectedEndDate pour vos opérations de recherche.
     console.log('Start Date:', selectedStartDate);
     console.log('End Date:', selectedEndDate);
@@ -461,34 +446,11 @@ $('#billing_period_search_btn_2').on('click', function() {
         dataType: 'json',
         async: false,
         success: function(result) {
-            var summary = {};
-            var totalTaxesDisplay = 0;
-            result.forEach(function(rowData) {
-            rowData['invoiceTaxes'].forEach(function(cellData) {
-                const taxName = cellData.tax_name;
-                const taxAmount = parseFloat(cellData.tax_amount);
-                    if (summary[taxName]) {
-                        summary[taxName] += taxAmount;
-                        totalTaxesDisplay += taxAmount;
-                    } else {
-                        summary[taxName] = taxAmount;
-                        totalTaxesDisplay += taxAmount;
-                    }
-                });
-            });
-
-            var totalTaxesElement = document.getElementById("totalTaxes");
-            totalTaxesElement.innerHTML = totalTaxesDisplay.toLocaleString(2) + ' '+schoolCurrency+'';
-
-            var detailTaxesElement = document.getElementById("detailTaxes");
-            var resultString = "" + Object.keys(summary).map(function(taxName) {
-                return taxName + " = " + summary[taxName];
-            }).join("<br>");
-
-            detailTaxesElement.innerHTML = resultString;
-
+            console.log(result)
+            // Créez un objet pour regrouper les invoices par date
             var invoicesByDate = {};
 
+            // Parcourez les invoices et regroupez-les par date
             result.forEach(function(rowData) {
                 var date = rowData.date_invoice.split(' ')[0]; // Récupérez la date (jour + mois + année)
                 if (!invoicesByDate[date]) {
@@ -564,9 +526,9 @@ $('#billing_period_search_btn_2').on('click', function() {
                     var cellInvoiceTaxes = invoiceRow.insertCell(2); // Cellule pour les taxes
 
                     // Remplissez les cellules avec les détails de l'invoice
-                    cellInvoiceAmount.innerHTML = '<b>B.T:</b> ' + (invoice.total_amount-invoice.tax_amount).toLocaleString(2) + ' '+schoolCurrency+'';
-                    cellInvoiceAmount.innerHTML += '<br><b>Total</b>: <span class="text-primary">' + invoice.total_amount.toLocaleString(2) + ' '+schoolCurrency+'</span>';
-                    cellInvoiceTaxes.innerHTML = 'Taxes ==> ' + invoice.tax_amount.toLocaleString(2) + ' '+schoolCurrency+'';
+                    cellInvoiceAmount.innerHTML = '<b>B.T:</b> ' + (invoice.total_amount-invoice.tax_amount).toLocaleString(2) + '€';
+                    cellInvoiceAmount.innerHTML += '<br><b>Total</b>: <span class="text-primary">' + invoice.total_amount.toLocaleString(2) + '€</span>';
+                    cellInvoiceTaxes.innerHTML = 'Taxes ==> ' + invoice.tax_amount.toLocaleString(2) + '€';
 
 
                     var textInvoiceDetails = '<b>Before Tax</b>';
@@ -575,27 +537,27 @@ $('#billing_period_search_btn_2').on('click', function() {
                     if (item.caption.startsWith("Event :")) {
                         if(item.eventDetail.costs_1 > 0) {
                             totalExtra = totalExtra + item.eventDetail.costs_1;
-                            cellInvoiceName.innerHTML += '<br/>Event ==> ' + (item.price-item.eventDetail.costs_1).toLocaleString(2) + ' '+schoolCurrency+'';
-                            cellInvoiceTaxes.innerHTML += '<br>Extra ==> ' + item.eventDetail.costs_1.toLocaleString(2) + ' '+schoolCurrency+'';
+                            cellInvoiceName.innerHTML += '<br/>Event ==> ' + (item.price-item.eventDetail.costs_1).toLocaleString(2) + '€';
+                            cellInvoiceTaxes.innerHTML += '<br>Extra ==> ' + item.eventDetail.costs_1.toLocaleString(2) + '€';
                         } else {
-                            cellInvoiceName.innerHTML += '<br/>Event ==> ' + item.price.toLocaleString(2) + ' '+schoolCurrency+'';
+                            cellInvoiceName.innerHTML += '<br/>Event ==> ' + item.price.toLocaleString(2) + '€';
                         }
                         if(invoice.discount_percent_2 > 0) {
                             var eventDiscountAmount = ((item.price-item.eventDetail.costs_1) * invoice.discount_percent_2 / 100);
-                            cellInvoiceTaxes.innerHTML += '<br/>Discount on Event ==> ' + (eventDiscountAmount).toFixed(2).toLocaleString() + ' '+schoolCurrency+'' + ' (' + (invoice.discount_percent_2).toLocaleString(2) + '%)';
+                            cellInvoiceTaxes.innerHTML += '<br/>Discount on Event ==> ' + (eventDiscountAmount).toFixed(2).toLocaleString() + '€' + ' (' + (invoice.discount_percent_2).toLocaleString(2) + '%)';
                         }
                     } else {
                             var lessonPrice = (item.price) - (item.price * invoice.discount_percent_1 / 100);
-                            cellInvoiceName.innerHTML += '<br/>Lesson ==> ' + (lessonPrice).toLocaleString(2) + ' '+schoolCurrency+'';
+                            cellInvoiceName.innerHTML += '<br/>Lesson ==> ' + (lessonPrice).toLocaleString(2) + '€';
                             if(invoice.discount_percent_1 > 0) {
-                                cellInvoiceTaxes.innerHTML += '<br/>Discount on Lesson ==> ' + (invoice.amount_discount_1).toFixed(2).toLocaleString() + ' '+schoolCurrency+'' + ' (' + (invoice.discount_percent_1).toLocaleString(2) + '%)';
+                                cellInvoiceTaxes.innerHTML += '<br/>Discount on Lesson ==> ' + (invoice.amount_discount_1).toFixed(2).toLocaleString() + '€' + ' (' + (invoice.discount_percent_1).toLocaleString(2) + '%)';
                             }
                     }
                     });
 
 
                     // Ajoutez les cellules à la ligne de tableau <tr>
-                    //invoiceRow.appendChild(cellInvoiceName);
+                    invoiceRow.appendChild(cellInvoiceName);
                     invoiceRow.appendChild(cellInvoiceTaxes);
                     invoiceRow.appendChild(cellInvoiceAmount);
 
@@ -617,11 +579,11 @@ $('#billing_period_search_btn_2').on('click', function() {
 
                 // Ajoutez la cellule des détails au tableau <table>
                 cellDate.appendChild(invoiceList);
-                cellTaxes.innerHTML = '<b>Total Taxes</b>: ' + totalTaxes.toLocaleString(2)+ ' '+schoolCurrency+'';
-                cellTaxes.innerHTML += totalExtra > 0 ? '<br><b>Total Extras</b>: ' + totalExtra.toLocaleString(2)+ ' '+schoolCurrency+'' : '';
-                cellTaxes.innerHTML += totalDiscount > 0 ? '<br><b>Total Discount</b>: ' + totalDiscount.toLocaleString(2)+ ' '+schoolCurrency+'' : '';
-                cellTotalAmount.innerHTML = 'Total B.T: <b>' + totalAmountLessonHT.toLocaleString(2)+ ' '+schoolCurrency+'</b>'; // Formatez le total à deux décimales
-                cellTotalAmount.innerHTML += '<br>Total Amount: <b>' + totalAmount.toLocaleString(2)+ ' '+schoolCurrency+'</b>'; // Formatez le total à deux décimales
+                cellTaxes.innerHTML = '<b>Total Taxes</b>: ' + totalTaxes.toLocaleString(2)+ '€';
+                cellTaxes.innerHTML += totalExtra > 0 ? '<br><b>Total Extras</b>: ' + totalExtra.toLocaleString(2)+ '€' : '';
+                cellTaxes.innerHTML += totalDiscount > 0 ? '<br><b>Total Discount</b>: ' + totalDiscount.toLocaleString(2)+ '€' : '';
+                cellTotalAmount.innerHTML = 'Total B.T: <b>' + totalAmountLessonHT.toLocaleString(2)+ '€</b>'; // Formatez le total à deux décimales
+                cellTotalAmount.innerHTML += '<br>Total Amount: <b>' + totalAmount.toLocaleString(2)+ '€</b>'; // Formatez le total à deux décimales
 
                 grandTotal += totalAmount; // Mettez à jour le grand total
                 grandTotalTaxes += totalTaxes; // Mettez à jour le grand total des taxes
@@ -639,7 +601,7 @@ $('#billing_period_search_btn_2').on('click', function() {
             cellTotalLabel.textContent = ''; //'=>'; //Grand Total
             cellTotalLabel.style.textAlign = 'right';
             cellTotalTaxesLabel.textContent = ''; //'Total Taxes: ' + grandTotalTaxes.toLocaleString(2) + '€';
-            cellGrandTotal.innerHTML = '<b>Grand Total</b>: ' + grandTotal.toLocaleString(2) + ' '+schoolCurrency+'';
+            cellGrandTotal.innerHTML = '<b>Grand Total</b>: ' + grandTotal.toLocaleString(2) + ' €';
             cellGrandTotal.style.fontWeight = 'bold';
             cellGrandTotal.style.textAlign = 'center';
 
@@ -652,32 +614,31 @@ $('#billing_period_search_btn_2').on('click', function() {
             // Sélectionnez l'élément où vous souhaitez afficher le tableau
             var tableContainer = document.getElementById('table_container');
             tableContainer.innerHTML = ''; // Assurez-vous que le conteneur est vide
-            //tableContainer.appendChild(table);
+            tableContainer.appendChild(table);
 
             var infoInvoiceReport = document.getElementById('info_invoice_report');
             var download_btn_report = document.getElementById('download_btn_report');
             var resumeReport = document.getElementById('resumeReport');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
-                infoInvoiceReport.innerHTML = '<span class="text-primary">' + result.length + ' invoices</span><br>Total invoiced during the period: <span class="text-primary">' + grandTotal.toLocaleString() + ' '+schoolCurrency+'</span>';
-                //infoInvoiceReport.innerHTML = result.length + ' invoices <br>Period : ' + selectedStartDate + ' - ' + selectedEndDate + ' <br>Total: <span class="text-primary">' + grandTotal.toLocaleString() + '€</span>';
-                //infoInvoiceReport.classList.add('h5');
+                infoInvoiceReport.innerHTML = result.length + ' invoices <br>Period : ' + selectedStartDate + ' - ' + selectedEndDate + ' <br>Total: <span class="text-primary">' + grandTotal.toLocaleString() + '€</span>';
+                infoInvoiceReport.classList.add('h5');
                 download_btn_report.style.display = 'block';
 
                 //Resume
                 var divTotalAmount = document.getElementById('totalAmount');
                 var divTotalAmountLessonHT = document.getElementById('totalAmountLessonHT');
-                //var divTotalTaxes = document.getElementById('totalTaxes');
+                var divTotalTaxes = document.getElementById('totalTaxes');
                 var divTotalDiscount = document.getElementById('totalDiscount');
                 var divTotalExtra = document.getElementById('totalExtra');
                 //Display Resume
                 resumeReport.style.display = 'block';
 
-                divTotalAmount.innerHTML = grandTotal.toLocaleString(2) + ' '+schoolCurrency+'';
-                divTotalAmountLessonHT.innerHTML = grandTotalHT.toLocaleString(2) + ' '+schoolCurrency+'';
-                //divTotalTaxes.innerHTML = grandTotalTaxes.toLocaleString(2) + ' '+schoolCurrency+'';
-                divTotalDiscount.innerHTML = grandTotalDiscount.toLocaleString(2) + ' '+schoolCurrency+'';
-                divTotalExtra.innerHTML = grandTotalExtra.toLocaleString(2) + ' '+schoolCurrency+'';
+                divTotalAmount.innerHTML = grandTotal.toLocaleString(2) + '€';
+                divTotalAmountLessonHT.innerHTML = grandTotalHT.toLocaleString(2) + '€';
+                divTotalTaxes.innerHTML = grandTotalTaxes.toLocaleString(2) + '€';
+                divTotalDiscount.innerHTML = grandTotalDiscount.toLocaleString(2) + '€';
+                divTotalExtra.innerHTML = grandTotalExtra.toLocaleString(2) + '€';
 
             } else {
                 infoInvoiceReport.style.display = 'none';
