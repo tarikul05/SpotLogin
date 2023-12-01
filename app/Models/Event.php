@@ -462,6 +462,13 @@ class Event extends BaseModel
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('events.deleted_at', null);
+            if(isset($params['list_student_id'])) {
+            $studentIds1 = explode('|', $params['list_student_id']);
+            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+            ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+            $query->distinct()->select(['events.*']);
+            $query->groupBy('events.id');
+            }
         }
         else {
         $query->where('events.deleted_at', null);
@@ -522,8 +529,6 @@ class Event extends BaseModel
 
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
-            $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-            ->select(['events.*'])->whereIn('event_details.student_id', [$params['person_id']]);
             $query->where('event_details.student_id', $params['person_id']);
         }
         //if (!empty($params['schools'])) {
@@ -716,7 +721,7 @@ class Event extends BaseModel
                         //dd($value);
                     }
 
-                    /*if (is_array($value)) {
+                    if (is_array($value)) {
                         $query->where(function ($query) use($key,$value) {
                             $query->whereIn($key, $value)
                                 ->orWhereNull($key);
@@ -725,7 +730,7 @@ class Event extends BaseModel
                         unset($params['authority:in']);
                     }  else {
                         $query->where($key, '=', $value);
-                    }*/
+                    }
 
 
                    // $query->whereIn($key, '=', $value);
@@ -738,7 +743,7 @@ class Event extends BaseModel
                 // }
 
             }
-
+        }
         $user_role = $params['user_role'];
         if ($user_role == 'student') {
             $query->where('event_details.student_id', $params['person_id']);
@@ -818,45 +823,15 @@ class Event extends BaseModel
         //dd($query->toSql());
         return $query;
         */
-    }
+))) ."'";
+                $query->whereRaw($qq);
+          }
+        } catch (\Exception $e) {
 
-
-
-
-
-
-
-
-
-    /**
-     * filter data based request parameters
-     *
-     * @param array $params
-     * @return $query
-     */
-    public function filter_for_iCal($params)
-    {
-        //dd($params);
-        $query = $this->newQuery();
-        //$request = request();
-        if (empty($params) || !is_array($params)) {
-            return $query;
         }
-
-
-
-
-
-        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-        ->leftJoin('school_teacher', 'school_teacher.teacher_id', '=', 'event_details.teacher_id')
-        ->leftJoin('event_categories', 'events.event_category', '=', 'event_categories.id')
-        ->leftJoin('locations', 'locations.id', '=', 'events.location_id');
-        //->leftJoin('users', 'users.person_id', '=', 'event_details.student_id')
-
-        $query->select(
-            'events.id as event_id',
-            'school_teacher.nickname as teacher_name',
-            'events.fullday_flag as fullday_flag',
+        //dd($query->toSql());
+        return $query;
+ag as fullday_flag',
             'events.date_start as date_start',
             'events.date_end as date_end',
             'events.title as event_title',
