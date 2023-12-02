@@ -469,7 +469,7 @@ class Event extends BaseModel
         $studentIds1 = explode('|', $params['list_student_id']);
         $query->join('event_details', 'events.id', '=', 'event_details.event_id')
         ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
-        $query->where('events.teacher_id', $params['person_id']);
+        //$query->where('events.teacher_id', $params['person_id']);
         $query->distinct()->select(['events.*']);
         $query->groupBy('events.id');
         }
