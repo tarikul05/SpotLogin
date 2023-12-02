@@ -543,8 +543,8 @@ class AgendaController extends Controller
         $data = $request->all();
 
         $user = Auth::user();
-        // $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId() ;
-        // $school = School::active()->find($schoolId);
+         $schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId();
+         $school = School::active()->find($schoolId);
         // if (empty($school)) {
         //     return redirect()->route('schools')->with('error', __('School is not selected'));
         // }
@@ -574,6 +574,7 @@ class AgendaController extends Controller
 
         $data['user_role'] = $user_role;
         $data['person_id'] = $user->person_id;
+        $data['school_id'] = $schoolId;
         $data['schools'] = [$schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId()];
 
         //$query1 = new Event;

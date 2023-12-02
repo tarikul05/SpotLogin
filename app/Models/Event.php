@@ -469,21 +469,17 @@ class Event extends BaseModel
         $studentIds1 = explode('|', $params['list_student_id']);
         $query->join('event_details', 'events.id', '=', 'event_details.event_id')
         ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+        //$query->where('events.teacher_id', $params['person_id']);
         $query->distinct()->select(['events.*']);
         $query->groupBy('events.id');
         }
         }
+        //error_log($_POST['event_type']);
 
         /*if (isset($params['event_type']) && !empty($params['event_type'])) {
-            $event_typeIds = explode('|', $params['event_type']);
-
-            // Utilisez array_map pour appliquer substr à chaque élément du tableau
-            $event_typeIds = array_map(function ($value) {
-                // Supprimez la partie avant "10-" et gardez le reste
-                return substr($value, 3);
-            }, $event_typeIds);
-
-            $query->whereIn('events.event_category', $event_typeIds);
+            $truc = str_replace('10-', '', $params['event_type']);
+            $event_typeIds = explode('|',  $truc);
+            $query->whereIn('event_category', $event_typeIds);
         }*/
 
         foreach ($params as $key => $value) {
@@ -526,9 +522,9 @@ class Event extends BaseModel
             ->select(['events.*'])->whereIn('event_details.student_id', [$params['person_id']]);
             $query->where('event_details.student_id', $params['person_id']);
         }
-        //if (!empty($params['schools'])) {
+       // if (!empty($params['school_id'])) {
             $query->whereIn('events.school_id', $params['schools']);
-        //}
+       // }
         if ($user_role == 'teacher_minimum') {
             $query->where('events.teacher_id', $params['person_id']);
         }
@@ -580,7 +576,9 @@ class Event extends BaseModel
                 $fromFilterDate = $this->formatDateTimeZone($params['start_date'].' 00:00:00', 'long', $timeZone, 'UTC');
                 $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long', $timeZone, 'UTC');
 
-                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."')";
+              //  $query->whereIn('events.school_id', $params['schools']);
+
+                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') AND events.school_id = " . $params['school_id'];
 
                 $query->whereRaw($qq);
           }
@@ -654,7 +652,7 @@ class Event extends BaseModel
                   $fromFilterDate = $this->formatDateTimeZone($fromFilterDate.' 00:00:00', 'long',$timeZone,'UTC');
 
                   $toFilterDate = $this->formatDateTimeZone($toFilterDate.' 23:59:59', 'long',$timeZone,'UTC');
-                  $qq = "events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."'";
+                  $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."')  AND events.school_id = " . $params['school_id'];
                   $query->whereRaw($qq);
             }
           } catch (\Exception $e) {
