@@ -989,9 +989,9 @@ $('.search-icon').on('click', function() {
         loading=0;
 
         RerenderEvents();
-        getFreshEvents();
         PopulateSchoolDropdown();
         PopulateEventTypeDropdown();
+        getFreshEvents();
         var selected_school_ids = [];
         $.each($("#event_school option:selected"), function(){
             selected_school_ids.push($(this).val());
@@ -1095,7 +1095,7 @@ $('.search-icon').on('click', function() {
                 $("#pageloader").show();
             },
             success: function (result) {
-                console.log(result);
+                //console.log(result);
                 status = result.status;
                 if (status == 'success') {
                     if (unlock) {
@@ -1169,7 +1169,7 @@ $('.search-icon').on('click', function() {
                     }
                     if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
                         $('.fc-list-item-title a').each(function() {
-                            console.log($(this).text());
+                            //console.log($(this).text());
                             var text = $(this).text();
                             if (text.indexOf('all-day') > -1) {
                                 text = text.replace('all-day', 'all-day ');
@@ -1179,7 +1179,7 @@ $('.search-icon').on('click', function() {
                     }
                     else {
                         $('.fc-event').each(function() {
-                            console.log(foundedSearchItems);
+                            //console.log(foundedSearchItems);
                             var text = $(this).text();
                             $('#listEventsSearch').append('<li>' + text + '</li>');
                         });
@@ -1352,7 +1352,7 @@ $('.search-icon').on('click', function() {
             filterBehavior: 'text',
             onChange: function(option, checked) {
                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    console.log('School changed triggered!');
+                    //console.log('School changed triggered!');
                     document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='0';
 
@@ -1376,12 +1376,12 @@ $('.search-icon').on('click', function() {
             onSelectAll: function (options,checked) {
 
                 if (options){
-                    console.log('school onSelectAll triggered!'+options);
+                    //console.log('school onSelectAll triggered!'+options);
                     document.getElementById("event_school_id").value=getSchoolIDs();
                     document.getElementById("event_school_all_flag").value='1';
                 }
                 else {
-                    console.log('school onDeSelectAll triggered!');
+                    //console.log('school onDeSelectAll triggered!');
                     document.getElementById("event_school_id").value='';
                     document.getElementById("event_school_all_flag").value='0';
 
@@ -1391,7 +1391,7 @@ $('.search-icon').on('click', function() {
                 //getFreshEvents();
             },
             onDeselectAll: function(option,checked) {
-                console.log('school onDeSelectAll triggered!');
+                //console.log('school onDeSelectAll triggered!');
                 document.getElementById("event_school_id").value='';
                 document.getElementById("event_school_all_flag").value='0';
                 SetEventCookies();
@@ -1428,7 +1428,7 @@ $('.search-icon').on('click', function() {
             filterBehavior: 'text',
             onChange: function(option, checked) {
                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
-                    console.log('Event changed triggered!');
+                    //console.log('Event changed triggered!');
                     document.getElementById("event_type_id").value=getEventIDs();
                     document.getElementById("event_type_all_flag").value='0';
                     SetEventCookies();
@@ -1443,7 +1443,7 @@ $('.search-icon').on('click', function() {
                     getFreshEvents();
             },
             onDeselectAll: function(option,checked) {
-                console.log('Event onDeSelectAll triggered!');
+                //console.log('Event onDeSelectAll triggered!');
                     //alert(option.length + ' options ' + (checked ? 'selected' : 'deselected'));
                     document.getElementById("event_type_id").value=getEventIDs();
                     document.getElementById("event_type_all_flag").value='0';
@@ -1604,7 +1604,7 @@ $('.search-icon').on('click', function() {
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
             onChange: function(option, checked) {
-                console.log('onChange location triggered!');
+                //('onChange location triggered!');
                 document.getElementById("event_location_id").value=getLocationIDs();
                 document.getElementById("event_location_all_flag").value='0';
                 //SetEventCookies();
@@ -1613,12 +1613,12 @@ $('.search-icon').on('click', function() {
             },
             onSelectAll: function (options,checked) {
                 if (options){
-                    console.log('location onSelectAll triggered!'+options);
+                    //console.log('location onSelectAll triggered!'+options);
                     document.getElementById("event_location_id").value='0';
                     document.getElementById("event_location_all_flag").value='1';
                 }
                 else {
-                    console.log('location onDeSelectAll triggered!');
+                    //console.log('location onDeSelectAll triggered!');
                     document.getElementById("event_location_id").value='';
                     document.getElementById("event_location_all_flag").value='0';
 
@@ -1628,7 +1628,7 @@ $('.search-icon').on('click', function() {
                 getFreshEvents();
             },
             onDeselectAll: function() {
-                console.log('NOT WORKING location onDeSelectAll triggered!');
+                //console.log('NOT WORKING location onDeSelectAll triggered!');
                 document.getElementById("event_location_id").value='';
                 document.getElementById("event_location_all_flag").value='0';
                 //SetEventCookies();
@@ -1713,7 +1713,7 @@ $('.search-icon').on('click', function() {
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
             onChange: function(option, checked) {
-                console.log('onChange teacher triggered!');
+               // console.log('onChange teacher triggered!');
                 document.getElementById("event_teacher_id").value=getTeacherIDs();
                 document.getElementById("event_teacher_all_flag").value='0';
                 SetEventCookies();
@@ -1722,12 +1722,12 @@ $('.search-icon').on('click', function() {
             },
             onSelectAll: function (options,checked) {
                 if (options){
-                    console.log('teacher onSelectAll triggered!'+options);
+                   // console.log('teacher onSelectAll triggered!'+options);
                     document.getElementById("event_teacher_id").value='0';
                     document.getElementById("event_teacher_all_flag").value='1';
                 }
                 else {
-                    console.log('teacher onDeSelectAll triggered!');
+                   // console.log('teacher onDeSelectAll triggered!');
                     document.getElementById("event_teacher_id").value='';
                     document.getElementById("event_teacher_all_flag").value='0';
 
@@ -1737,7 +1737,7 @@ $('.search-icon').on('click', function() {
                 //getFreshEvents();
             },
             onDeselectAll: function() {
-                console.log('NOT WORKING teacher onDeSelectAll triggered!');
+               // console.log('NOT WORKING teacher onDeSelectAll triggered!');
                 document.getElementById("event_teacher_id").value='';
                 document.getElementById("event_teacher_all_flag").value='0';
                 SetEventCookies();
@@ -1815,7 +1815,7 @@ $('.search-icon').on('click', function() {
             // possible options: 'text', 'value', 'both'
             filterBehavior: 'text',
             onChange: function(option, checked) {
-                console.log('onChange student triggered!');
+               // console.log('onChange student triggered!');
                 document.getElementById("event_student_id").value=getStudentIDs();
                 document.getElementById("event_student_all_flag").value='0';
                 SetEventCookies();
@@ -1824,12 +1824,12 @@ $('.search-icon').on('click', function() {
             },
             onSelectAll: function (options,checked) {
                 if (options){
-                     console.log('student onSelectAll triggered!'+options);
+                   //  console.log('student onSelectAll triggered!'+options);
                      document.getElementById("event_student_id").value='0';
                      document.getElementById("event_student_all_flag").value='1';
                 }
                 else {
-                    console.log('student onDeSelectAll triggered!');
+                   // console.log('student onDeSelectAll triggered!');
                     document.getElementById("event_student_id").value='';
                     document.getElementById("event_student_all_flag").value='0';
 
@@ -1840,7 +1840,7 @@ $('.search-icon').on('click', function() {
 
             },
             onDeselectAll: function() {
-                console.log('NOT WORKING student onDeSelectAll triggered!');
+               // console.log('NOT WORKING student onDeSelectAll triggered!');
                 document.getElementById("event_student_id").value='';
                 document.getElementById("event_student_all_flag").value='0';
                 SetEventCookies();
@@ -1886,7 +1886,7 @@ $('.search-icon').on('click', function() {
 
         var cal_view_mode_for_copy=$('#calendar').fullCalendar('getView');
 
-        if(cal_view_mode_for_copy.name !== "month") {
+        if(cal_view_mode_for_copy.name === "agendaDay" || cal_view_mode_for_copy.name === "agendaWeek") {
 
             document.getElementById("copy_date_from").value = document.getElementById("date_from").value;
             document.getElementById("copy_date_to").value = document.getElementById("date_to").value;
@@ -1901,14 +1901,14 @@ $('.search-icon').on('click', function() {
             document.getElementById("copy_student_id").value = getStudentIDs();
             document.getElementById("copy_teacher_id").value = getTeacherIDs();
 
-            console.log('copy start',  document.getElementById("copy_date_from").value)
-            console.log('copy end',  document.getElementById("copy_date_to").value)
-            console.log('list all copied events', getEventIDs())
-            console.log('list all students', getStudentIDs())
+          // console.log('copy start',  document.getElementById("copy_date_from").value)
+          // console.log('copy end',  document.getElementById("copy_date_to").value)
+          // console.log('list all copied events', getEventIDs())
+          // console.log('list all students', getStudentIDs())
 
         }
 
-		console.log("current view for copy="+cal_view_mode_for_copy.name);
+		//console.log("current view for copy="+cal_view_mode_for_copy.name);
         if(cal_view_mode_for_copy.name === "agendaWeek") {
 		    successModalCall('Copied with success', 'Schedule of current week view is copied ! You can past it in other week.');
             showMessage('Schedule of current week view is copied!', 'success')
@@ -1919,6 +1919,14 @@ $('.search-icon').on('click', function() {
         }
         if(cal_view_mode_for_copy.name === "month") {
 		    errorModalCall('You cannot copy your month view at this time. Please copy by day or week.');
+            //showMessage('Schedule of current month view is copied!', 'success')
+        }
+        if(cal_view_mode_for_copy.name === "listMonth") {
+		    errorModalCall('You cannot copy your monthly schedule view at this time. Please copy by day or week.');
+            //showMessage('Schedule of current month view is copied!', 'success')
+        }
+        if(cal_view_mode_for_copy.name === "timeGridThreeDay") {
+		    errorModalCall('You cannot copy your daily schedule view at this time. Please copy by day or week.');
             //showMessage('Schedule of current month view is copied!', 'success')
         }
 
@@ -1971,7 +1979,7 @@ $('.search-icon').on('click', function() {
             const date = moment(p_to_date);
             const newDate = date.subtract(1, 'days');
             p_to_date = newDate.format('YYYY-MM-DD');
-            console.log('new date-1', p_to_date); // Day-1
+           // console.log('new date-1', p_to_date); // Day-1
         }
 
         var p_event_school_id=getSchoolIDs();
@@ -1999,7 +2007,7 @@ $('.search-icon').on('click', function() {
                 data: data,
                 dataType: "JSON",
                 success:function(result){
-                    console.log(result);
+                   // console.log(result);
                     document.getElementById("btn_validate_events").style.display = "none";
                     document.getElementById("btn_validate_events_mobile").style.display = "none";
                     var status =  result.status;
@@ -2075,7 +2083,7 @@ $('.search-icon').on('click', function() {
     }
 
     function CallListView(){
-        console.log(document.getElementById("view_mode").value);
+      //  console.log(document.getElementById("view_mode").value);
         if (document.getElementById("view_mode").value != 'CurrentListView')
         {
             document.getElementById("view_mode").value = 'CurrentListView';
@@ -2108,7 +2116,7 @@ $('.search-icon').on('click', function() {
 
 
     function RenderCalendar(){
-        console.log('RenderCalendar: defview'+defview);
+       // console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
         let curdate=new Date();
@@ -2119,7 +2127,7 @@ $('.search-icon').on('click', function() {
 
         let myTimezone = "{{ $myCurrentTimeZone }}";
         var mySetting = @json($settingUser);
-        console.log('mySetting', mySetting)
+       // console.log('mySetting', mySetting)
 
         var timeFormat;
 
@@ -2553,12 +2561,12 @@ $('.search-icon').on('click', function() {
                     if (eventStart.isBefore(now) && eventEnd.isAfter(now)) {
                     var timeBetween = timeDifference(eventEndTimeStamp, nowTimeStamp);
                     var phrase = "event in progress - ends in "+timeBetween+"";
-                    console.log(phrase);
+                  //  console.log(phrase);
                     }
 
                     if (eventEnd.isSame(now)) {
                     var phrase = "ends soon - in few seconds";
-                    console.log(phrase);
+                  //  console.log(phrase);
                     }
 
                     var titleEvent = ''
@@ -3004,16 +3012,17 @@ $('.search-icon').on('click', function() {
             var end_date=document.getElementById("date_to").value;
         }
 
-        console.log('get envent start date',start_date);
-        console.log('get envent end date',end_date);
+       // console.log('get envent start date',start_date);
+      //  console.log('get envent end date',end_date);
 
         var list_student_id = getStudentIDs();
-        console.log('list des students for delete', list_student_id);
+       // console.log('list des students for delete', list_student_id);
 
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id=getLocationIDs();
         var p_event_type = getEventIDs();
+       // console.log('p_event_type' + p_event_type + 'toutcollé');
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $("#pageloader").fadeIn();
@@ -3024,6 +3033,7 @@ $('.search-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
+               // console.log(JSON.parse(s));
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
@@ -3144,7 +3154,7 @@ $('.search-icon').on('click', function() {
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
-                console.log('test', eventsToPut);
+              //console.log('test', eventsToPut);
 
                 $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
                 //$("#agenda_table tr:gt(0)").remove();
@@ -3228,7 +3238,7 @@ $('.search-icon').on('click', function() {
 
         document.getElementById("agenda_list").style.display = "none";
 
-        console.log('go to current view')
+       // console.log('go to current view')
         $('#calendar').fullCalendar('changeView', 'CurrentListView');
         var dt = new Date();
         let CurrentListViewDate = new Date(new Date().getTime()+(2*24*60*60*1000)) //2 days
@@ -3239,7 +3249,7 @@ $('.search-icon').on('click', function() {
         var end_date=document.getElementById("date_to").value;
 
         var list_student_id = getStudentIDs();
-        console.log('first list student', list_student_id);
+       // console.log('first list student', list_student_id);
 
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
@@ -3369,7 +3379,7 @@ $('.search-icon').on('click', function() {
 
                 });
                 let resultHtml_rows_cc=resultHtml_cc;
-                console.log(resultHtml_rows_cc);
+               // console.log(resultHtml_rows_cc);
                 let resultHtmlHeader_cc = '';
                 resultHtmlHeader_cc+='<table id="agenda_table" name="agenda_table" cellpadding="0" cellspacing="0" width="99%" class="agenda_table_class tablesorter">';
                 resultHtmlHeader_cc+='<thead>';
@@ -3437,7 +3447,7 @@ $('.search-icon').on('click', function() {
                 //     // OBJECT is created when processing response
                 //     eventsToPut.push(v);
                 // });
-                console.log(JSON.parse(json_events));
+               // console.log(JSON.parse(json_events));
                 //
 
 
@@ -3466,7 +3476,7 @@ $('.search-icon').on('click', function() {
                 $("#pageloader").fadeOut();
                 //errorModalCall('getFreshEvents:'+ts.responseText+' '+GetAppMessage('error_message_text'));
                 // alert(ts.responseText)
-                console.log(ts.responseText);
+               // console.log(ts.responseText);
             }
         });
     }
@@ -3525,6 +3535,7 @@ $('.search-icon').on('click', function() {
 		//console.log('selected='+selected_ids.join("|"));
 		return selected_ids.join("|");
 	}
+
 
 
     function getStudentIDs(){
@@ -3616,7 +3627,7 @@ $('.search-icon').on('click', function() {
         view_mode = document.getElementById("view_mode").value;
         var p_event_location_id=getLocationIDs();
 
-        console.log('view_mode', view_mode);
+       // console.log('view_mode', view_mode);
 
         var data='location_id='+p_event_location_id+'&view_mode='+view_mode+'&source_start_date='+source_start_date+'&source_end_date='+source_end_date+'&target_start_date='+target_start_date+'&target_end_date='+target_end_date+'&school_id='+event_school+'&event_type='+event_type+'&student_id='+student_id+'&teacher_id='+teacher_id+'&zone='+zone;
         //console.log(data);
@@ -3701,7 +3712,7 @@ $('.search-icon').on('click', function() {
 			document.cookie = "timezone_user="+document.getElementById("zone").value+";path=/";
 
 			var cal_view_mode=$('#calendar').fullCalendar('getView');
-			console.log("cal_view_mode="+cal_view_mode.name);
+			//console.log("cal_view_mode="+cal_view_mode.name);
 
           /*  if(cal_view_mode.name === "agendaWeek") {
                 const scrollTime = moment().format("HH:mm");
@@ -4281,10 +4292,10 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
     return teacher.teacher_id === teacherSelect;
     });
 
-    console.log('teachers', teachersList)
+    //console.log('teachers', teachersList)
 
     if (selectedTeacher) {
-    console.log('Teacher ID:', selectedTeacher.id);
+    //console.log('Teacher ID:', selectedTeacher.id);
     if(selectedTeacher.lesson_price_teachers.length > 0) {
         isTeacherHasPrices = true
     } else {
@@ -4294,7 +4305,7 @@ $("body").on('change', '#category_select, #teacher_select', function(event) {
         }
     }
     } else {
-    console.log('No teacher found with ID ', teacherSelect, '.');
+    //console.log('No teacher found with ID ', teacherSelect, '.');
     }
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
@@ -4449,7 +4460,7 @@ $("body").on('click', '#student_empty', function(event) {
         })
 
         $('#end_date').on('change', function(e) {
-            console.log('alors ?', $("#start_date").val());
+           // console.log('alors ?', $("#start_date").val());
             var agendaSelectdates2 = $("#agenda_select").val();
         if ($("#end_date").val() < $("#start_date").val() && agendaSelectdates2 == 1) {
             $("#end_date").val($("#start_date").val());
@@ -4714,7 +4725,7 @@ function getAwayStudent() {
         success: function(response) {
         response.forEach(function (item) {
             var studentId = item.student_id;
-            console.log(item);
+           // console.log(item);
             var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + studentId + '"])');
             if (studentButton.length > 0) {
                 var labelElement = studentButton.find('.form-check-label');
@@ -4724,17 +4735,17 @@ function getAwayStudent() {
 
                     labelElement.html(item.full_name + ' <span class="text-warning"><i class="fa-solid fa-circle-info"></i> is away this day</span>');
                 } else {
-                    console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
+                   // console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
                     labelElement.html(item.full_name);
                 }
             } else {
-                console.log('Élément <button> non trouvé pour studentId=' + studentId);
+               // console.log('Élément <button> non trouvé pour studentId=' + studentId);
             }
 
             if(item.availabilities.length > 0) {
                 //faire une boucle savoir si startDate est monday ou tuesday etc... et voir si il est dans la liste des availabilities day_of_week
                 item.availabilities.forEach(function (availability) {
-                    console.log('test');
+                   // console.log('test');
                     if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
                         //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
                         //console.log('available on ' + availability.day_of_week + " on " +  $time);
@@ -4753,7 +4764,7 @@ function resetStudentList() {
 
   // Générer un tableau JSON des étudiants côté serveur
   var students = @json($studentsbySchool);
-    console.log('students', students)
+   // console.log('students', students)
   var studentSelect = $('#student');
 
   var startDate = $('#start_date').val();
@@ -4779,16 +4790,16 @@ function resetStudentList() {
 
             labelElement.html(student.full_name);
         } else {
-            console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
+          //  console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
         }
         } else {
-        console.log('Élément <button> non trouvé pour studentId=' + studentId);
+       // console.log('Élément <button> non trouvé pour studentId=' + studentId);
         }
 
         if(student.availabilities.length > 0) {
                 student.availabilities.forEach(function (availability) {
-                    console.log(moment(availability.day_of_week).format('YYYY-MM-DD'));
-                    console.log('the day', moment(startDate).format('YYYY-MM-DD'));
+                  //  console.log(moment(availability.day_of_week).format('YYYY-MM-DD'));
+                   // console.log('the day', moment(startDate).format('YYYY-MM-DD'));
                     if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
                         //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
                         //console.log('available on ' + availability.day_of_week + " on " +  $time);
