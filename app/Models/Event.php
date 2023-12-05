@@ -626,13 +626,13 @@ class Event extends BaseModel
         }
 
         //Filter by locations
-        if (isset($params['location_id']) && !empty($params['location_id'])) {
+        /*if (isset($params['location_id']) && !empty($params['location_id'])) {
             $locationIds = explode('|', $params['location_id']);
             $query->whereIn('events.location_id', $locationIds);
-        }
+        }*/
 
         //Filter by category
-        if (isset($params['event_type']) && !empty($params['event_type'])) {
+        /*if (isset($params['event_type']) && !empty($params['event_type'])) {
             $event_typeIds = explode('|', $params['event_type']);
 
             // Utilisez array_map pour appliquer substr à chaque élément du tableau
@@ -642,7 +642,7 @@ class Event extends BaseModel
             }, $event_typeIds);
 
             $query->whereIn('events.event_category', $event_typeIds);
-        }
+        }*/
 
         $query->distinct()->select(['events.*']);
         $query->groupBy('events.id');
