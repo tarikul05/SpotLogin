@@ -1130,6 +1130,9 @@ class InvoiceController extends Controller
             $extra_1 = floatval(trim($data['extra_1']));
             $extra_1_description = trim($data['extra_1_description']);
 
+            $extra_2 = floatval(trim($data['extra_2']));
+            $extra_2_description = trim($data['extra_2_description']);
+
             //dd($data);
             $tax_ids = $data['selectedTaxIds'];
             $discountPercentage = floatval(trim($data['discountPercentage']));
@@ -1407,7 +1410,9 @@ class InvoiceController extends Controller
                'cheque_payee' =>$school->cheque_payee,
                'extra_expenses' => $invoiceData->invoice_type == 1 ? $totalExtras : $extra_expenses,
                'extra_1' => $extra_1,
-               'extra_1_description' => $extra_1_description
+               'extra_1_description' => $extra_1_description,
+               'extra_2' => $extra_2,
+               'extra_2_description' => $extra_2_description
 
             ];
             if (!empty($price_currency)) {

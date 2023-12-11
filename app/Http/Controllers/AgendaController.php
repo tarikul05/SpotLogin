@@ -12,6 +12,7 @@ use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
+use App\Models\InvoiceItem;
 use App\Models\EventCategory;
 use App\Models\Availability;
 use App\Models\LessonPrice;
@@ -915,6 +916,13 @@ class AgendaController extends Controller
                     }
                 }
             }
+
+
+            if ($fetch->is_locked == 1) {
+                $invoiceItemsCount = InvoiceItem::where('event_id', $fetch->id)->count();
+                $e['isInvoice'] = ($invoiceItemsCount > 0);
+            }
+
 
             $e['studentsbySchool'] = $studentsbySchool;
 

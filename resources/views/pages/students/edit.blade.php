@@ -1031,8 +1031,11 @@ $("#country_code, #billing_country_code").trigger('change')
         var extra_1 = $("#extra_1").val();
         var extra_1_description = $("#extra_1_description").val();
 
+        var extra_2 = $("#extra_2").val();
+        var extra_2_description = $("#extra_2_description").val();
 
-        data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2 + '&extra_1='+extra_1+'&extra_1_description='+extra_1_description;
+
+    data = 'type=generate_student_invoice&school_id=' + school_id +'&p_person_id=' + p_person_id + '&p_invoice_id=' + p_invoice_id + '&p_from_date=' + from_date + '&p_to_date=' + to_date + '&p_event_ids=' + p_event_ids+'&inv_type=' + inv_type+'&selectedTaxIds=' + tax_ids+'&discountPercentage='+discountPercentage+'&discountPercentage2='+discountPercentage2+'&discountAmountage2='+discountAmountage2+'&finaltotaltaxes='+finaltotaltaxes + '&totalAmountGet=' + totalAmountGet + '&lesson_discount_description='+lesson_discount_description+ '&event_discount_description='+lesson_discount_description2 + '&extra_1='+extra_1+'&extra_1_description='+extra_1_description + '&extra_2='+extra_2+'&extra_2_description='+extra_2_description;
         //return console.log(data)
 
 		$.ajax({
@@ -1919,6 +1922,14 @@ $('#save_btn').click(function (e) {
                     if(subTotalEvents > 0) {
 					resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Sub-Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_before_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
 
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Extras Charges') }}:</td>';
+					resultHtml += '<td style="text-align:right"></td>';
+					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<input type="text" class="form-control numeric" id="extra_2" name="extra_2" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
+					resultHtml += '</td>';
+					resultHtml += '<td><textarea type="text" class="form-control" id="extra_2_description" name="extra_2_description" placeholder="Description"></textarea></td>';
+					resultHtml += '</tr>';
 
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Events') }}:</td>';
@@ -1950,7 +1961,7 @@ $('#save_btn').click(function (e) {
 
 
 					if(subTotalEvents > 0) {
-						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td></td></tr>';
+						resultHtml += '<tr style="background-color:#EEE; height:80px;"><td colspan="4" style="text-align:right;"></td><td style="text-align:left;"></td><td colspan="4" style="text-align:right;"><br><b>Total Events</b> <i class="fa-solid fa-arrow-right"></i> '+currencyTotal+' <b><span id="stotal_amount_with_discount_event">'+subTotalEvents.toFixed(2)+'</span></b></td><td style="text-align:right;"><br><span id="extra_2_display"></span></td></tr>';
 					} else { resultHtml += '<span style="display:none;" id="stotal_amount_with_discount_event">0</span>'; }
 
 
@@ -2763,6 +2774,12 @@ $('#save_btn').click(function (e) {
                     $("#extra_1_display").text('+ ' + parseFloat(extra_1).toFixed(2));
                 });
 
+                $("#extra_2").keyup(function () {
+                    //get extra_1 value and display it in html in extra_1_display
+                    var extra_2 = $("#extra_2").val();
+                    $("#extra_2_display").text('+ ' + parseFloat(extra_2).toFixed(2));
+                });
+
 
 
 				//alert('all_ready='+all_ready+', invoice_already_generated='+invoice_already_generated);
@@ -2936,7 +2953,16 @@ $('#save_btn').click(function (e) {
         } else {
             extra_1_add_total2 = 0;
         }
-		document.getElementById('grand_total_amount').textContent = (totalExtraSupp+totalNewTaxes+total_amount + Number(extra_1_add_total2)).toFixed(2);
+
+        if(subtotal_amount_with_discount_event > 0) {
+        var extra_2_add_total = $("#extra_2").val();
+        console.log(parseFloat(extra_2_add_total).toFixed(2));
+            var extra_2_add_total2 = parseFloat(extra_2_add_total).toFixed(2);
+        } else {
+            extra_2_add_total2 = 0;
+        }
+
+		document.getElementById('grand_total_amount').textContent = (totalExtraSupp+totalNewTaxes+total_amount + Number(extra_1_add_total2) + Number(extra_2_add_total2)).toFixed(2);
 
 
     }

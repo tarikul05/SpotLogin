@@ -16,10 +16,10 @@
 @section('content')
 <div class="container">
 
-    <h3>Availability : <small>Coming soon</small></h3>
+<h3>Availability</h3>
 
-<div class="row justify-content-center pt-5" style="display: none;">
-    <div class="col-md-8">
+<div class="row justify-content-center pt-5">
+    <div class="col-md-7">
         <div class="card">
             <div class="card-header">Add Weekly Availabilities</div>
             <div class="card-body">
@@ -34,16 +34,34 @@
                     <div class="form-group">
                         <label for="day_of_week">Choose a Day:</label>
                         <select name="day_of_week" class="form-control">
+                            <?php /*
+                            @php
+                                $hasAvailableDays = false;
+                            @endphp
                             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
                                 @if(!$availabilities->contains('day_of_week', $day))
+                                @php
+                                    $hasAvailableDays = true;
+                                @endphp
                                     <option value="{{ $day }}">{{ ucfirst($day) }}</option>
                                 @endif
-                            @endforeach
+                            @endforeach*/
+                            ?>
+                            @php
+                            $hasAvailableDays = false;
+                            @endphp
+                            @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                            @php
+                                $hasAvailableDays = true;
+                            @endphp
+                            <option value="{{ $day }}">{{ ucfirst($day) }}</option>
+                        @endforeach
                         </select>
                     </div>
 
+
                     <div class="row">
-                        <div class="col-md-6 col-lg-6 col-xs-12">
+                        <div class="col-md-12 col-lg-12 col-xs-12">
                             <div class="form-group">
                                 <label for="time_of_day">Choose Start time:</label>
                                 <select name="start_time" id="start_time" class="form-control">
@@ -67,7 +85,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-6 col-xs-12">
+                        <div class="col-md-12 col-lg-12 col-xs-12">
                             <div class="form-group">
                                 <label for="time_of_day">Choose End time:</label>
                                 <select name="end_time" id="end_time" class="form-control">
@@ -126,7 +144,8 @@
         }
     @endphp
 
-    <div class="col-md-4">
+
+    <div class="col-md-5">
         <div class="card">
             <div class="card-header">Weekly Availabilities</div>
             <div class="card-body">
@@ -136,24 +155,43 @@
                         <td colspan="3">No availabilities found</td>
                     </tr>
                     @endif
-                    @foreach($availabilities as $availability)
-                    @if($availability->is_special == 0)
-                    <tr>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($availability->day_of_week)->format('l') }}
-                    <br>
-                    <a href="#">[ Add hours ]</a>
-                    </td>
-                    <td class="text-center">{{ date('H:i', strtotime($availability->start_time)) }} - {{ date('H:i', strtotime($availability->end_time)) }}</td>
-                    <td width="60px" class="text-center">
-                            <form action="{{ route('student.availability.destroy', $availability) }}" method="post" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-md"><i class="fa fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
+
+                    @php
+    $groupedAvailabilities = [];
+
+    // Group availabilities by day
+    foreach($availabilities as $availability) {
+        if ($availability->is_special == 0) {
+            $dayOfWeek = \Carbon\Carbon::parse($availability->day_of_week)->format('l');
+            $groupedAvailabilities[$dayOfWeek][] = $availability;
+        }
+    }
+@endphp
+
+@foreach($groupedAvailabilities as $dayOfWeek => $availabilitiesByDay)
+    <tr>
+        <td class="text-center">
+            {{ $dayOfWeek }}
+            <br>
+            <a href="#" class="add-availability" data-day="{{ $dayOfWeek }}">[ Add hours ]</a>
+        </td>
+        <td class="text-center">
+            @foreach($availabilitiesByDay as $availability)
+                {{ date('H:i', strtotime($availability->start_time)) }} - {{ date('H:i', strtotime($availability->end_time)) }}<br>
+            @endforeach
+        </td>
+        <td width="60px" class="text-center">
+            @foreach($availabilitiesByDay as $availability)
+                <form action="{{ route('student.availability.destroy', $availability) }}" method="post" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+        <button type="submit" class="btn btn-default btn-md" style="border:none!important; width: 16px; margin:0!important; padding:0!important; top:0!important; min-height: 16px!important;"><i class="fa fa-trash text-danger"></i></button><br>
+                </form>
+            @endforeach
+        </td>
+    </tr>
+@endforeach
+
                 </table>
             </div>
         </div>
@@ -171,8 +209,8 @@
 
 
 
-<div class="row justify-content-center pt-5 mb-5" style="display: none;">
-    <div class="col-md-8">
+<div class="row justify-content-center pt-5 mb-5">
+    <div class="col-md-7">
         <div class="card">
             <div class="card-header">Add Dates Availabilities</div>
             <div class="card-body p-3">
@@ -184,31 +222,48 @@
     </div>
 
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="card">
             <div class="card-header">Dates Availabilities</div>
             <div class="card-body">
                 <table class="table table-bordered">
                     @if($availabilities->isEmpty())
-                    <tr>
-                        <td colspan="3">No availabilities found</td>
-                    </tr>
+                        <tr>
+                            <td colspan="3">No availabilities found</td>
+                        </tr>
+                    @else
+                        @php
+                            $groupedAvailabilities = [];
+
+                            // Group availabilities by date
+                            foreach($availabilities as $availability) {
+                                if ($availability->is_special == 1) {
+                                    $date = \Carbon\Carbon::parse($availability->day_special)->format('d M, Y');
+                                    $groupedAvailabilities[$date][] = $availability;
+                                }
+                            }
+                        @endphp
+
+                        @foreach($groupedAvailabilities as $date => $availabilitiesByDate)
+                            <tr>
+                                <td class="text-center">{{ $date }}</td>
+                                <td class="text-center">
+                                    @foreach($availabilitiesByDate as $availability)
+                                        {{ date('H:i', strtotime($availability->start_time)) }} - {{ date('H:i', strtotime($availability->end_time)) }}<br>
+                                    @endforeach
+                                </td>
+                                <td width="60px" class="text-center">
+                                    @foreach($availabilitiesByDate as $availability)
+                                        <form action="{{ route('student.availability.destroy', $availability) }}" method="post" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-default btn-md" style="border:none!important; width: 16px; margin:0!important; padding:0!important; top:0!important; min-height: 16px!important;"><i class="fa fa-trash text-danger"></i></button><br>
+                                        </form>
+                                    @endforeach
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
-                    @foreach($availabilities as $availability)
-                    @if($availability->is_special == 1)
-                    <tr>
-                        <td class="text-center">{{ \Carbon\Carbon::parse($availability->day_special)->format('d M, Y') }}</td>
-                        <td class="text-center">{{ date('H:i', strtotime($availability->start_time)) }} - {{ date('H:i', strtotime($availability->end_time)) }}</td>
-                        <td width="60px" class="text-center">
-                            <form action="{{ route('student.availability.destroy', $availability) }}" method="post" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-md"><i class="fa fa-trash"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
                 </table>
             </div>
         </div>
@@ -225,6 +280,12 @@
 @section('footer_js')
 <script type="text/javascript">
     $(function() {
+
+        $('.add-availability').on('click', function() {
+            var day = $(this).data('day');
+            addHours(day);
+        });
+
 
     var events = [];
 
@@ -358,5 +419,91 @@
     return html;
 }
 
-        </script>
+function addHours(day) {
+
+    const timeOptions = {
+            '06:00': '6:00 AM',
+            '07:00': '7:00 AM',
+            '08:00': '8:00 AM',
+            '09:00': '9:00 AM',
+            '10:00': '10:00 AM',
+            '11:00': '11:00 AM',
+            '12:00': '12:00 PM',
+            '13:00': '1:00 PM',
+            '14:00': '2:00 PM',
+            '15:00': '3:00 PM',
+            '16:00': '4:00 PM',
+            '17:00': '5:00 PM',
+            '18:00': '6:00 PM',
+            '19:00': '7:00 PM',
+            '20:00': '8:00 PM',
+            '21:00': '9:00 PM',
+            '22:00': '10:00 PM',
+        };
+
+    Swal.fire({
+        title: 'Add Availability for ' + day,
+        html: `
+            <div class="swal-container">
+                <div class="swal-column">
+                    <label for="start-time2">Choose Start time:</label><br>
+                    <select id="start-time2" class="swal-select">
+                        ${generateSelectOptions(timeOptions)}
+                    </select>
+                </div>
+                <br>
+                <div class="swal-column">
+                    <label for="end-time2">Choose End time:</label><br>
+                    <select id="end-time2" class="swal-select">
+                        ${generateSelectOptions(timeOptions)}
+                    </select>
+                </div>
+            </div>
+        `,
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Save',
+        cancelButtonText: 'Cancel',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            const startTime = $('#start-time2').val();
+            const endTime = $('#end-time2').val();
+
+            if (!startTime || !endTime) {
+                Swal.showValidationMessage('Please choose both start and end times');
+            }
+
+            return { startTime, endTime };
+        },
+    }).then((result) => {
+        if (!result.dismiss) {
+            const { startTime, endTime } = result.value;
+
+            $.ajax({
+                url: "{{ route('student.availability.store') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    day_of_week: day.toLowerCase(),
+                    start_time: startTime,
+                    end_time: endTime,
+                    is_special:false
+                },
+                success: function(data) {
+                    console.log('Success', data);
+                    if(data.success){
+                       location.reload();
+                    }
+                },
+                error: function(error) {
+                    console.log('Error', error);
+                },
+            });
+        }
+    });
+}
+
+</script>
 @endsection
