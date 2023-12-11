@@ -2432,6 +2432,12 @@ $('.search-icon').on('click', function() {
                         // $(el).find('.fc-time').prepend(icon);
                         $(el).find('.fc-time').html(icon);
                     }
+
+                    if (event.isInvoice){
+                        var icon ='<span class="fa fa-solid fa-file-pdf txt-orange" style="padding:2px;"></span>';
+                        $(el).find('div.fc-content').prepend(icon);
+                    }
+
                     var icon ='<span class="fa fa-lock txt-orange" style="padding:2px;"></span>';
                     if (event.is_locked == '1'){
                         $(el).find('div.fc-content').prepend(icon);
@@ -4779,6 +4785,7 @@ function resetStudentList() {
 
     // Parcourir le tableau JSON côté client
     students.forEach(function(student) {
+        console.log(student);
         var studentName = student.full_name;
         var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + student.student_id + '"])');
         if (studentButton.length > 0) {
@@ -4798,12 +4805,17 @@ function resetStudentList() {
 
         if(student.availabilities.length > 0) {
                 student.availabilities.forEach(function (availability) {
+
+                    if(dayName === availability.day_of_week) {
+                        labelElement.append('<span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + ')</span>');
+                    }
+
                   //  console.log(moment(availability.day_of_week).format('YYYY-MM-DD'));
                    // console.log('the day', moment(startDate).format('YYYY-MM-DD'));
-                    if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
+                    if(availability.is_special === 1 && moment(availability.day_special).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
                         //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
                         //console.log('available on ' + availability.day_of_week + " on " +  $time);
-                        labelElement.append('<span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + ')</span>');
+                        labelElement.append('<span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available just this day betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + ')</span>');
 
                     }
                 });
