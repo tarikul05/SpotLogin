@@ -16,16 +16,17 @@
                                   <small style="font-size:11px; padding-left:4px;">{{ __('check all') }}</small>
                                 </div>
                               </th>
-                            <th>{{ __('Name') }}</th>
-                            <th>Status</th>
-                            <th width="110px" class="text-center">{{ __('Action') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('Name') }}</th>
+                            <th class="d-none d-lg-table-cell">Status</th>
+                            <th width="110" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
+
                         </tr>
                         </thead>
                         <tbody>
                             @foreach($students as $student)
-                                <tr class="add_more_level_row" id="row_{{ $student->id }}">
+                                <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
                                     <td style="width: 10px;" class="vertical-align"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                                    <td class="text-center" style="width:45px; text-align: center;">
+                                    <td class="text-center d-none d-lg-table-cell" style="width:45px; text-align: center;">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                         <?php if (!empty($student->profileImageStudent->path_name)): ?>
                                         <img src="{{ $student->profileImageStudent->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
@@ -43,7 +44,7 @@
                                            {{ $student->email; }}
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a><br>
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
 
@@ -52,8 +53,9 @@
 
                                         <div class="btn-group">
                                             <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
-                                            <span class="btn btn-theme-outline">Actions <i class="fa fa-caret-down"></i></span>
-                                            <div class="dropdown-content">
+                                            <span class="btn btn-theme-outline d-none d-lg-table-cell">Actions <i class="fa fa-caret-down"></i></span>
+                                            <span class="btn btn-theme-outline d-inline-block d-sm-none" style="border:none!important;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
+                                            <div class="dropdown-content" style="bottom:0;">
 
                                                 <a style="display: none; display:inline-block; min-width: 150px;" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}"
                                                     class="btn btn-sm btn-info m-1 mb-2">
@@ -67,7 +69,7 @@
                                                 </a>
 
                                                 @if(!$student->user)
-                                            <div class="d-block d-sm-none"><br></div>
+
                                             @can('students-sent-mail')
                                                 <a href="javascript:void(0)"  style="display: none; display:inline-block; min-width: 150px;"
                                                 class="btn btn-sm btn-default m-1 mb-2 send-invite-btn"  data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
@@ -81,13 +83,15 @@
                                                 </a>
                                             @endif
 
+                                            <div class="d-table-cell d-md-none">
+                                                <a href="#" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a><br>
+                                                <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn btn btn-sm btn-default m-1 mb-2" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
+                                            </div>
 
-                                                <a style="display: none; display:inline-block; min-width: 150px;"
-                                                href="javascript:void(0)"
-                                                class="btn btn-sm btn-danger delete-student-btn m-1 mb-2" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
-                                                    <i class="fa fa-trash"></i> {{ __('Delete') }}
-                                                </a>
-
+                                            <a style="display: none; display:inline-block; min-width: 150px;" href="javascript:void(0)" class="btn btn-sm btn-danger delete-student-btn m-1 mb-2"
+                                            data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
+                                                <i class="fa fa-trash"></i> {{ __('Delete') }}
+                                            </a>
 
                                             </div>
                                             </div>

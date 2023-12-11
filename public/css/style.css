@@ -1027,7 +1027,16 @@ button#save_btn_more i {
     }
   }
 
+  .mobile_list_student {
+    font-size:15px;
+  }
+
 @media only screen and (max-width: 768px) {
+
+    .mobile_list_student {
+        font-size:11px;
+      }
+
 
     #download_btn_report {
         padding-top:25px;
