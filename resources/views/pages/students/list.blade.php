@@ -268,7 +268,6 @@ $(document).ready(function() {
     $(document).ready( function () {
         $('#studentList').DataTable({
             language: { search: "" },
-            theme: 'bootstrap4',
             /* start resultat to 10 results */
             pageLength: -1,
             lengthMenu: [
