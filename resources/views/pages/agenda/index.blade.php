@@ -1590,11 +1590,11 @@ $('.search-icon').on('click', function() {
         }
         $('#event_location').multiselect({
             includeSelectAllOption:true,
-            selectAllText: 'All Location',
+            selectAllText: "{{ __('All Location') }}",
             maxHeight:true,
             enableFiltering:false,
             nSelectedText  : 'Selected Location',
-            allSelectedText: 'All Location',
+            allSelectedText: "{{ __('All Location') }}",
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
@@ -1801,11 +1801,11 @@ $('.search-icon').on('click', function() {
         }*/
         $('#event_student').multiselect({
             includeSelectAllOption:true,
-            selectAllText: 'All Students',
+            selectAllText: "{{__("All Students") }}",
             maxHeight:true,
             enableFiltering:false,
             nSelectedText  : 'Selected Student',
-            allSelectedText: 'All Students',
+            allSelectedText: "{{__("All Students") }}",
             enableCaseInsensitiveFiltering:false,
             // enables full value filtering
             enableFullValueFiltering:false,
@@ -2116,30 +2116,44 @@ $('.search-icon').on('click', function() {
 
 
     function RenderCalendar(){
-       // console.log('RenderCalendar: defview'+defview);
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
         let curdate=new Date();
         let p_from_date=moment(curdate).format("YYYY-MM-DD");
-        // if (getCookie("date_from")){
-        //     p_from_date = getCookie("date_from");
-        // }
 
         let myTimezone = "{{ $myCurrentTimeZone }}";
         var mySetting = @json($settingUser);
-       // console.log('mySetting', mySetting)
-
         var timeFormat;
-
-        // Vérifier si le fuseau horaire est européen
-        var europeanTimezones = ['Europe/Paris', 'Europe/Berlin', 'Europe/London'];
+        var columnHeaderText;
+        let weekends;
+        var europeanTimezones = ['Europe/Paris', 'Europe/Berlin', 'Europe/London', 'Europe/Moscow', 'Europe/Minsk', 'Europe/Warsaw', 'Europe/Rome',  'Europe/Brussels', 'Europe/Zurich'];
         var isEuropeanTimezone = europeanTimezones.includes(myTimezone);
 
-        // Définir le format d'affichage de l'heure en fonction du fuseau horaire
+        //Init Hours Format
         if (isEuropeanTimezone) {
-        timeFormat = 'HH:mm'; // Fuseau horaire européen
+        timeFormat = 'HH:mm';
         } else {
-        timeFormat = 'h:mm A'; // Format par défaut pour les fuseaux horaires non européens
+        timeFormat = 'h:mm A';
+        }
+
+        var dayNamesShortArray;
+        if (isEuropeanTimezone) {
+            dayNamesShortArray = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+        } else {
+            dayNamesShortArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
+        if(mySetting && mySetting.timezone !== ""){
+            myTimezone = mySetting.timezone;
+            var isEuropeanTimezoneForSetting = europeanTimezones.includes(myTimezone);
+            if (isEuropeanTimezoneForSetting) {
+            dayNamesShortArray = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+        } else {
+            dayNamesShortArray = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
+        }
+        //weekends = true;
+        if(mySetting && mySetting.weekends !== ""){
+            weekends = mySetting.weekends == "0" ? false : true;
         }
 
         afficherHeureActuelle(myTimezone);
@@ -2149,8 +2163,10 @@ $('.search-icon').on('click', function() {
             eventLimitText: "More", // Default is `more` (or "more" in the lang you pick in the option)
             timeFormat: timeFormat,
             axisFormat: timeFormat,
+            weekends: weekends,
 			slotDuration: '00:15:00',
 			slotLabelFormat: timeFormat,
+            dayNamesShort: dayNamesShortArray,
             defaultView: defview,
             minTime: mySetting === null ? '00:00:01' : mySetting.min_time,
             maxTime: mySetting === null ? '23:59:59' : mySetting.max_time,
@@ -3021,17 +3037,19 @@ $('.search-icon').on('click', function() {
        // console.log('get envent start date',start_date);
       //  console.log('get envent end date',end_date);
 
-        var list_student_id = getStudentIDs();
+        var list_student_id = ""; //getStudentIDs();
        // console.log('list des students for delete', list_student_id);
 
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
-        var p_event_location_id=getLocationIDs();
+        var p_event_location_id= getLocationIDs();
         var p_event_type = getEventIDs();
        // console.log('p_event_type' + p_event_type + 'toutcollé');
         document.getElementById("prevnext").value = '';
         var json_events = @json($events);
         $("#pageloader").fadeIn();
+        //console.log('typessss', p_event_type);
+        //console.log('p_event_location_id', p_event_location_id);
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
@@ -3039,7 +3057,7 @@ $('.search-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
-               // console.log(JSON.parse(s));
+                //console.log(JSON.parse(s));
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];

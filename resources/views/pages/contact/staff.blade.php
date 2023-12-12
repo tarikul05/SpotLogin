@@ -12,9 +12,9 @@
         <label id="page_header" name="page_header">
             <i class="fa-solid fa-envelope"></i> {{__('Contact Sportlogin Staff')}}<br>
             <p style="font-size:14px;">@if(!$AppUI->isStudent())
-                Send a message to the Sportlogin's Team
+                {{ __('Send a message to the Sportlogins Team') }}
                 @else
-                Send a message to the Sportlogin's Team
+                {{ __('Send a message to the Sportlogins Team') }}
                 @endif
             </p>
         </label>
@@ -22,14 +22,14 @@
     <form action="{{ route('contact.form.submit') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="subject" class="form-label">Subject</label>
+            <label for="subject" class="form-label">{{ __('Subject') }}</label>
             <select class="form-control" id="subject" name="subject" required>
-                <option value="">choose a subject</option>
-                <option value="question">I have a question</option>
-                <option value="probleme_technique">Technical problem</option>
-                <option value="bug_report">Bug report</option>
-                <option value="amelioration_suggestion">Suggestion for improvement</option>
-                <option value="autre">Other</option>
+                <option value="">{{ __('choose a subject') }}</option>
+                <option value="question">{{ __('I have a question') }}</option>
+                <option value="probleme_technique">{{ __('Technical problem') }}</option>
+                <option value="bug_report">{{ __('Bug report') }}</option>
+                <option value="amelioration_suggestion">{{ __('Suggestion for improvement') }}</option>
+                <option value="autre">{{ __('Other') }}</option>
             </select>
         </div>
 
@@ -45,7 +45,7 @@
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from the student {{ $AppUI->firstname . ' ' . $AppUI->lastname }} of the school #{{ $AppUI->school_id }}">
         @endif
         <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
-        <button type="submit" class="btn btn-primary">Send</button>
+        <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
     </form>
 </div>
 @endsection
