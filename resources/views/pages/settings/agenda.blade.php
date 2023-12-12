@@ -47,6 +47,14 @@
                         </select>
                     </div>
                     <br>
+                    <div class="form-group">
+                    <label for="weekends">{{ __('Weekends')}}</label>
+                        <select id="weekends" name="weekends" class="form-control">
+                           <option value="1" @if($calendarSettings->weekends === 1) selected @endif>{{ __('Yes')}}</option>
+                           <option value="0" @if($calendarSettings->weekends === 0) selected @endif>{{ __('No')}}</option>
+                        </select>
+                    </div>
+                    <br>
                     <button type="submit" class="btn btn-primary">{{ __('Save Schedule Settings') }}</button>
                 </form>
             </div>

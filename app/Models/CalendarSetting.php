@@ -9,5 +9,5 @@ class CalendarSetting extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['timezone', 'min_time', 'max_time', 'user'];
+    protected $fillable = ['timezone', 'min_time', 'max_time', 'user', 'weekends'];
 }

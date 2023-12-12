@@ -12,9 +12,9 @@
         <label id="page_header" name="page_header">
             <i class="fa-solid fa-envelope"></i> {{__('Contact Form')}}<br>
             <p style="font-size:14px;">@if(!$AppUI->isStudent())
-                Send a message that your student directly receive by mail :
+                {{ __('Send a message that your student directly receive by mail') }} :
                 @else
-                Send a message that your teacher directly receive by mail :
+                {{ __('Send a message that your teacher directly receive by mail') }} :
                 @endif
             </p>
         </label>
@@ -22,11 +22,11 @@
     <form action="{{ route('contact.form.submit') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="subject" class="form-label">Subject</label>
+            <label for="subject" class="form-label">{{ __('Subject') }}</label>
             <input type="text" class="form-control" id="subject" name="subject" required>
         </div>
         <div class="mb-3">
-        <label for="emailTo" class="form-label">Send To {{ $AppUI->isStudent() ? '' : '(choose in students list)' }}</label>
+        <label for="emailTo" class="form-label">{{ __('Send To') }} {{ $AppUI->isStudent() ? '' : '' }}</label>
             @if(!$AppUI->isStudent())
             <select class="form-select" id="emailTo" name="emailTo" required>
                 @foreach($students as $student)
@@ -51,7 +51,7 @@
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from your student {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
         @endif
         <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
-        <button type="submit" class="btn btn-primary">Send</button>
+        <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
     </form>
 </div>
 @endsection

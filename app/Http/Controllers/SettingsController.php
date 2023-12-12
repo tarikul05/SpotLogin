@@ -42,11 +42,11 @@ class SettingsController extends Controller
         $relationalData = SchoolTeacher::where([
             ['teacher_id',$teacher->id],
             ['school_id',$schoolId]
-        ])->first();
-        $lanCode = 'en';
-        if (Session::has('locale')) {
-            $lanCode = Session::get('locale');
-        }
+            ])->first();
+            $lanCode = 'en';
+            if (Session::has('locale')) {
+                $lanCode = Session::get('locale');
+            }
 
 
         if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
@@ -113,6 +113,7 @@ class SettingsController extends Controller
         }
         $calendarSettings->min_time = $request['min_time'];
         $calendarSettings->max_time = $request['max_time'];
+        $calendarSettings->weekends = $request['weekends'];
 
         // Enregistrez les paramètres de calendrier
         $user->calendarSetting()->save($calendarSettings);
