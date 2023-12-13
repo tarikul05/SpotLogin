@@ -298,7 +298,7 @@ class InvoiceController extends Controller
         $result = array(
             'status' => false,
             'payment_status' => 0,
-            'invoice_status' =>0,
+            'invoice_status' => 0,
             'message' => __('failed to send email'),
         );
         // $result = array(
