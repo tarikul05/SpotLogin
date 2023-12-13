@@ -8,36 +8,61 @@
     <script src="//cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+
+    <style type="text/css">
+    #example1 {
+        font-size:13px;
+    }
+    </style>
 @endsection
 
 @section('content')
-<div class="content">
-  <div class="container-fluid body">
-    <header class="panel-heading invoice_list_header" style="border: none;">
-        <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-9 m-12 header-area" style="padding-bottom:25px;">
-                <div class="page_header_class">
-                    <label id="page_header_id" class="page_header" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('My invoices')}}</label>
-                </div>
-            </div>
-            <div class="col-lg-3 m-12 btn-area">
-                <div class="invoice_search_box">
+  <div class="container">
+
+    <h5>{{ __("Invoices List") }}</h5>
+
+    @if(!$AppUI->isStudent())
+    <nav class="subNav">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
+            <button onclick="addFilter('')" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                {{ __('List all') }}
+            </button>
+
+            <button onclick="addFilter('Student')" class="nav-link" id="nav-import_export-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                {{ __('Invoices') }}
+            </button>
+
+            @if($AppUI->isSchoolAdmin())
+            <button onclick="addFilter('Teacher')" class="nav-link" id="nav-import_export-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                {{ __('Teacher invoices') }}
+            </button>
+            @endif
+
+            <button onclick="addFilter('Manuel')" class="nav-link" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                {{ __('Manual invoices') }}
+            </button>
+
+        </div>
+    </nav>
+    @endif
+
+
+
+    <div class="row justify-content-center pt-5 mb-5">
+        <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">{{ __('Invoices List') }}</div>
+            <div class="card-body">
+
+            <div class="row mb-2">
+                <div class="col-md-9 col-xs-12 col-lg-9"></div>
+                <div class="col-md-3 col-xs-12 col-lg-3">
                     <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
                 </div>
             </div>
-        </div>
-        @if(!$AppUI->isStudent())
-            <div class="invoice_list_button">
-                <span onclick="addFilter('')" class="filter-btn badge bg-primary btn-sm badge-btn"><i class="fa-solid fa-list"></i> All</span>
-                @if($AppUI->isSchoolAdmin())
-                <span onclick="addFilter('Teacher')" class="filter-btn badge bg-info badge-btn">Teacher</span>
-                @endif
-                <span onclick="addFilter('Student')" class="filter-btn badge bg-info btn-sm badge-btn"><i class="fa-solid fa-list"></i> Invoices</span>
-                <span onclick="addFilter('Manuel')" class="filter-btn badge bg-info btn-sm badge-btn"><i class="fa-solid fa-list"></i> Manual invoices</span>
-            </div>
-        @endif
-    </header>
-    <div class="table-responsive1">
+
+    <div class="table-responsive11">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
         <input id="p_school_id" name="p_school_id" style="display: none;" value="<?php echo $school->id;?>">
         <input id="seleted_invoice_type" name="seleted_invoice_type" style="display: none;">
@@ -48,18 +73,14 @@
         <table id="example1" class="table table-stripped table-hover" style="width:100%">
             <thead>
                 <tr>
-                    <!-- <th style="display: none">{{ __('#') }}</th>
-                    <th style="display: none">{{ __('#') }}</th> -->
-                    <!--<th>&nbsp;</th>-->
-                    <!--<th>{{ __('#') }}</th>-->
-                    <th class="mobile-hide">{{ __('Date') }}</th>
-                    <th class="sp_only">{{ __('Client') }}</th>
-                    <th class="mobile-hide">{{ __('Type') }}</th>
-                    <th class="mobile-hide">{{ __('Invoice Name') }}</th>
-                    <th>{{ __('Amount') }}</th>
-                    <th class="mobile-hide">{{ __('Status') }}</th>
-                    <th class="mobile-hide"></th>
-                    <th></th>
+                <th class="mobile-hide">{{ __('Date') }}</th>
+                <th class="sp_only">{{ __('Client') }}</th>
+                <th class="mobile-hide">{{ __('Type') }}</th>
+                <th class="mobile-hide">{{ __('Invoice Name') }}</th>
+                <th>{{ __('Amount') }}</th>
+                <th class="mobile-hide">{{ __('Status') }}</th>
+                <th class="mobile-hide"></th>
+                <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -147,30 +168,30 @@
                                 <div id="status_{{$invoice->id}}">
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
-                                        <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                     @endif
                                     @if($AppUI->isStudent())
                                         <span class="small txt-grey pull-left">
-                                            <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                            <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                             {{__($payment_status_all[$invoice->payment_status])}}
                                         </span>
                                     @endif
                                 </div>
                             </td>
                         @else
-                            <td class="responsive-td mobile-hide text-left">
+                            <td class="responsive-td mobile-hide text-left" width="150">
                                 <div id="status_{{$invoice->id}}">
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
-                                        <i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                 @endif
                                 @if($AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
-                                        <i class="fa fa-credit-card fa-lg text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        <i class="fa fa-credit-card text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
                                     </span>
                                 @endif
@@ -193,11 +214,11 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <span style="font-size:11px;">{{ __('sent by email') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y => H:i') }}</span></span><br>
-                                <button id="approved_btn" target="" href="" class="btn btn-info" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
+                                <span style="font-size:11px;">{{ __('sent') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span>
+                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
                                 @else
-                                <span style="font-size:11px;">{{ __('Invoice not sent') }}</span><br>
-                                <button id="approved_btn" target="" href="" class="btn btn-info" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
+                                <span style="font-size:11px;">{{ __('Invoice not sent') }}</span>
+                                <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Send by email')}}</span></button>
                                 @endif
                             </td>
                             @else
@@ -242,6 +263,12 @@
             </tbody>
         </table>
     </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
   </div>
 </div>
 
@@ -250,14 +277,14 @@
         <div class="modal-dialog modal-dialog-centered mt-5" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">Send the invoice</h4>
+                    <h4 class="light-blue-txt gilroy-bold">{{ __('Send the invoice') }}</h4>
                 </div>
                 <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
                     <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
                         <div class="alert alert-info">
                             <div class="form-group col-md-12">
-                            <i class="fa-solid fa-file-pdf"></i> Format type file: PDF<br>
-                            <i class="fa-regular fa-envelope"></i> Send Type: By email
+                            <i class="fa-solid fa-file-pdf"></i> {{ __('Format type file') }}: PDF<br>
+                            <i class="fa-regular fa-envelope"></i> {{ __('Send Type') }}: {{ __('By email') }}
                             </div>
                         </div>
                         <div class="form-group row col-md-12" id="father_email_div">
@@ -289,7 +316,7 @@
                                 <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Student's email")}})</div>
                             </div>
                             <div class="col-md-3 pt-2 text-right d-none d-sm-block">
-                                ({{ __("Student's email")}})
+                                <small>({{ __("Student's email")}})</small>
                             </div>
                         </div>
 
@@ -310,7 +337,7 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">Send</button>
+                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">{{ __('Send') }}</button>
                         </div>
 
                     <!-- </form> -->
@@ -318,7 +345,6 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 
 
@@ -326,10 +352,10 @@
 <script type="text/javascript">
     $(document).ready( function () {
     var table = $('#example1').DataTable({
-    dom: '<"top"i>rt<"bottom"flp><"clear">', // Hide all elements except the search input
+        dom: '<"top"f>rt<"bottom"lp><"clear">',
     ordering: false, // Disable column sorting
     searching: true, // Enable searching with the search input
-    paging: false, // Disable pagination
+    paging: true, // Disable pagination
     info: false, // Disable information display
 });
     $('#search_text').on('keyup change', function () {
@@ -337,7 +363,7 @@
     });
     $("#example1_filter").hide();
 
-    } );
+    });
 
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
 
@@ -448,30 +474,91 @@
 
         SendInvoiceEmail('send_approve_pdf_invoice', p_inv_auto_id, p_attached_file, p_emails,p_school_id)
 
-
-
-
     });
 
-
+    $(document).ready( function () {
     $('.payment_btn').click(function (e) {
+
+        e.preventDefault();
+
+        if($(this).data('invoice-status') == 1 || $(this).data('invoice-status') == 2) {
+            loading();
+            return setTimeout(() => {
+                 actionpaid('paid', $(this).data('invoice-id'), 1);
+            }, 800);
+        }
+            Swal.fire({
+            title: "{{ __('Choose payment status') }}",
+                text: "{{ __('How student paid this invoice ?') }}",
+                icon: "question",
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "{{ __('actionPaid') }}",
+                denyButtonText: "{{ __('actionCashPaid') }}"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                loading();
+                setTimeout(() => {
+                    actionpaid('paid', $(this).data('invoice-id'), $(this).data('invoice-status'));
+                }, 1100);
+            } else if (result.isDenied) {
+                loading();
+                setTimeout(() => {
+                    actionpaid('cash', $(this).data('invoice-id'), $(this).data('invoice-status'));
+                }, 800);
+            }
+            })
+    });
+});
+
+
+    function loading() {
+        let timerInterval;
+        Swal.fire({
+        html: "{{ __('ongoing treatment') }}",
+        timer: 2000,
+        timerProgressBar: false,
+        didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+        }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+        });
+    }
+
+
+    function actionpaid(type,invoiceId,invoiceState) {
 
         document.getElementById("loadercreditCardPayment").style.display = "none";
         document.getElementById("loaderStatusPayment").style.display = "block";
 
             var paymentStatusAll = @json($payment_status_all);
-            var p_invoice_id = $(this).data('invoice-id');
-            var payment_status = ''; /* 0=unpaid, 1=paid*/
+            var p_invoice_id = invoiceId;
+            var payment_status = '';
+            var payment_success_modal = "";
 
             if (p_invoice_id == '') {
                 errorModalCall('Invalid_invoice');
                 return false;
             }
 
-            if ($(this).data('invoice-status') == '1') {
+            if (invoiceState == '1') {
                 payment_status = '0';
+                payment_success_modal = "{{ __('invoice payment updated to unpaid') }}";
             } else {
                 payment_status = '1';
+                payment_success_modal = "{{ __('invoice payment updated to paid') }}";
+                if(type === "cash") {
+                    payment_status = '2';
+                    payment_success_modal = "{{ __('invoice payment updated to cash paid') }}";
+                }
+
             }
             //alert('payment_status='+payment_status);
             var status = '';
@@ -485,34 +572,37 @@
                 dataType: 'json',
                 async: false,
                 success: function (result) {
-
+                $('#pageloader').fadeOut('fast');
                     status = result.status;
                     if (status == 'success') {
-				        successModalCall('invoice payment paid');
+				        successModalCall(payment_success_modal);
                         if (payment_status == '1') {
-                            document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-suces gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
+                            //document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-suces gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
                         } else {
-                            document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-warn gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
+                            //document.getElementById("status_" + p_invoice_id).innerHTML = '<span class="small txt-grey pull-left"><i class="fa fa-credit-card fa-lg" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i> <span class="text-warn gilroy-semibold">' + paymentStatusAll[payment_status] + '</span></span>';
                         }
                         setTimeout(function() {
                             var redirectUrl = './invoices';
                             window.location.href = redirectUrl;
-                        }, 1200);
+                        }, 800);
 
                     }
                     else {
+                        $('#pageloader').fadeOut('fast');
                         errorModalCall('error_message_text');
                     }
                 },   //success
                 error: function (ts) {
+                    $('#pageloader').fadeOut('fast');
                     errorModalCall('error_message_text');
 
                 }
             }); //ajax-type
 
-    });
+    };
 
     function UpdatePaymentStatus(p_auto_id) {
+        $("#pageloader").fadeIn();
         var payment_status;
         var v_status = "status_" + p_auto_id;
         var v_status_id = "status_id_" + p_auto_id;
