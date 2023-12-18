@@ -148,8 +148,7 @@
 
 <div class="container">
 
-    <h5>Coach Plan</h5>
-
+        <h5>{{ __('Upgrade Plan') }}</h5>
 
         <div class="pricing-title text-center pt-3">
             <!--<h3 class="h3 text-default text-center">Choose a plan and enable all features</h3>-->
@@ -318,15 +317,93 @@
                     <ul class="price">
                         <li>
                             <div class="plan_name">{{ $plan['plan_name']->name }}</div>
+                            @if($plan['tiers'])
+
+                          <div class="card bg-tertiary text-center p-2 m-2">
+                            <small>How many coach account you need ?</small>
+                            <select  name="chooseCoaches" id="chooseCoaches">
+                                 <option value="1">1 coach</option>
+                                 <option value="3">3 coaches</option>
+                                 <option value="5">5 coaches</option>
+                                 <option value="10">10 coaches</option>
+                                 <option value="15">15 coaches</option>
+                             </select>
+                            </div>
+                            @endif
                             <div class="plan_interval">
                                 @if ($plan['currency'] === 'usd' || $plan['currency'] === 'cad')
-                                    {{ $symbole }} {{ number_format($plan['amount'], 2) }}
+                                    {{ $symbole }} <span id="amount">{{ number_format($plan['amount'], 2) }}</span>
                                 @else
-                                    {{ number_format($plan['amount'], 2) }} {{ $symbole }}
+                                    <span id="amount">{{ number_format($plan['amount'], 2) }}</span> {{ $symbole }}
                                 @endif
                                 <span class="plan_type"> /{{ $plan['interval'] }}</span>
                             </div>
                         </li>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var selectElement = document.getElementById('chooseCoaches');
+                                var amountElement = document.getElementById('amount');
+                                var amountRenewElement = document.getElementById('renewInformationAmount');
+                                var amountButtonElement = document.getElementById('buttonPaymentAmount');
+                                var quantityInput = document.getElementById('quantity');
+
+                                selectElement.addEventListener('change', function () {
+                                    var selectedOption = parseInt(selectElement.value, 10);
+                                    var updatedAmount;
+
+                                    switch (selectedOption) {
+                                        case 3:
+                                            updatedAmount = 75.00;
+                                            break;
+                                        case 5:
+                                            updatedAmount = 125.00;
+                                            break;
+                                        case 10:
+                                            updatedAmount = 250.00;
+                                            break;
+                                        case 15:
+                                            updatedAmount = 375.00;
+                                            break;
+                                        default:
+                                            updatedAmount = 50.00;
+                                            break;
+                                    }
+
+                                    amountElement.textContent = updatedAmount.toFixed(2);
+                                    amountRenewElement.textContent = updatedAmount.toFixed(2);
+                                    amountButtonElement.textContent = updatedAmount.toFixed(2);
+                                    quantityInput.value = selectElement.value;
+                                });
+
+                                // Initialisez la valeur avec la sélection par défaut
+                                var initialSelectedOption = parseInt(selectElement.value, 10);
+                                var initialAmount;
+
+                                switch (initialSelectedOption) {
+                                    case 3:
+                                        initialAmount = 75.00;
+                                        break;
+                                    case 5:
+                                        initialAmount = 125.00;
+                                        break;
+                                    case 10:
+                                        initialAmount = 250.00;
+                                        break;
+                                    case 15:
+                                        initialAmount = 375.00;
+                                        break;
+                                    default:
+                                        initialAmount = 50.00;
+                                        break;
+                                }
+
+                                amountElement.textContent = initialAmount.toFixed(2);
+                                amountRenewElement.textContent = updatedAmount.toFixed(2);
+                                amountButtonElement.textContent = updatedAmount.toFixed(2);
+                                quantityInput.value = selectElement.value;
+                            });
+                        </script>
 
                             <li>
                                 <span class="svg_img">
@@ -421,6 +498,7 @@
                                 <input type="hidden" name="plan" value="{{ $plans[0]['id'] }}" />
                                 <input type="hidden" name="plan_name" value="{{ $plans[0]['plan_name']->name }}" />
                                 <input type="hidden" name="paymentMethod" id="paymentMethod" value="" />
+                                <input type="hidden" name="quantity" id="quantity" value="1" />
 
                                 <div class="form-group">
                                     <label style="font-size:11px;" for="coupon_code">{{ __('Coupon code') }}</label>
@@ -451,18 +529,18 @@
                                             <hr>
                                             {{ __('Your subscription will renew automatically every month as one paypent of') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
-                                                {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
+                                                {{ $symbole }} <span id="renewInformationAmount">{{ number_format($plans[0]['amount'], 2) }}</span>
                                             @else
-                                                {{ number_format($plans[0]['amount'], 2) }} {{ $symbole }}
+                                            <span id="renewInformationAmount">{{ number_format($plans[0]['amount'], 2) }}</span> {{ $symbole }}
                                             @endif
                                             {{ __('You may cancel your subscription anytime from My plan section in your profile. By clicking Proceed payment you agree to the Terms and Conditions') }}
                                         </span>
                                         <br>
                                         <a id="payment-button" class="btn btn-success btn-md">{{ __('Proceed payment') }}
                                             @if ($plans[0]['currency'] === 'usd' || $plans[0]['currency'] === 'cad')
-                                                {{ $symbole }} {{ number_format($plans[0]['amount'], 2) }}
+                                                {{ $symbole }} <span id="buttonPaymentAmount">{{ number_format($plans[0]['amount'], 2) }}</span>
                                             @else
-                                                {{ number_format($plans[0]['amount'], 2) }} {{ $symbole }}
+                                            <span id="buttonPaymentAmount">{{ number_format($plans[0]['amount'], 2) }}</span> {{ $symbole }}
                                             @endif
                                         </a>
                                         <br><br>

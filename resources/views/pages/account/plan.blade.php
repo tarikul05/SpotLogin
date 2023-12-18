@@ -9,8 +9,6 @@
                     </div>
                 @endif-->
 
-
-
                 <!--@if(!$AppUI->isStudent())
                 <span id="page_header" class="page_title text-black"></span>
                 <?php if(!empty($subscription)) { ?>
@@ -105,6 +103,13 @@
           }
       ?>
     </tr>
+
+    @if ($subscription['plan']['billing_scheme'] === 'tiered' && $subscription['plan']['tiers_mode'] === 'volume')
+    <tr>
+<td>{{ __('Number of teachers') }}</td>
+        <td>{{ $subscription['quantity'] }} teachers available</td>
+    </tr>
+    @endif
 
     <?php if(!empty($user->trial_ends_at)){ ?>
       <tr>

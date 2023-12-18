@@ -3,11 +3,12 @@
         <div class="card">
             <div class="card-header">{{ __('Schedule Settings') }}</div>
             <div class="card-body">
-                @if (session('success'))
+
+                <!--@if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
                     </div>
-                @endif
+                @endif-->
 
                 <form method="POST" action="{{ route('calendar.settings.store') }}">
                     @csrf
@@ -46,7 +47,7 @@
                             @endfor
                         </select>
                     </div>
-                    <br>
+
                     <div class="form-group">
                     <label for="weekends">{{ __('Weekends')}}</label>
                         <select id="weekends" name="weekends" class="form-control">

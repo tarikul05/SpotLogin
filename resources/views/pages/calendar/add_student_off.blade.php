@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
 <script src="{{ asset('js/jquery.multiselect.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/jquery.multiselect.css') }}">
+<script src="{{ asset('js/lib/moment.min.js')}}"></script>
 
 @endsection
 
@@ -165,7 +166,7 @@ $('#student').multiselect({
 $('#start_date').on('change', function(e) {
 if ($("#end_date").val() < $("#start_date").val()) {
 	$("#end_date").val($("#start_date").val());
-	errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+	//errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
 	setTimeout(() => {
 		$("#end_date").val($("#start_date").val());
 	}, "200")
@@ -173,13 +174,16 @@ if ($("#end_date").val() < $("#start_date").val()) {
 })
 
 $('#end_date').on('change', function(e) {
-if ($("#end_date").val() < $("#start_date").val()) {
-	$("#end_date").val($("#start_date").val());
-	errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
-	setTimeout(() => {
-		$("#end_date").val($("#start_date").val());
-	}, "200")
-}
+    var startDate = moment($("#start_date").val(), "DD/MM/YYYY");
+    var endDate = moment($("#end_date").val(), "DD/MM/YYYY");
+
+    if (endDate.isBefore(startDate)) {
+        $("#end_date").val($("#start_date").val());
+        errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
+        setTimeout(() => {
+            $("#end_date").val($("#start_date").val());
+        }, 200);
+    }
 });
 
 // save functionality

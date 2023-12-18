@@ -195,7 +195,7 @@ class SubscriptionController extends Controller
                 $prod_id = '';
             }
             if($prod_id){
-                $get_plans = $this->stripe->prices->search(['query' => 'product:"'.$prod_id.'"']);
+                $get_plans = $this->stripe->prices->search(['query' => 'active:\'true\' AND product:"'.$prod_id.'"']);
 
                 foreach ( $get_plans as $get_plan) {
                     $product_object = $this->stripe->products->retrieve(
@@ -204,6 +204,11 @@ class SubscriptionController extends Controller
                     );
 
                    if(strtolower($school->default_currency_code) === $get_plan->currency) {
+
+                    $tiers = false;
+                    if ($get_plan->type === 'recurring' && $get_plan->tiers_mode === 'volume') {
+                        $tiers = true;
+                    }
 
                         $plans[] = [
                             'id' => $get_plan->id,
@@ -215,6 +220,7 @@ class SubscriptionController extends Controller
                             'metadata' => $get_plan->metadata,
                             'nickname' => $get_plan->nickname,
                             'plan_name' => $product_object,
+                            'tiers' => $tiers,
                         ];
 
                         $foundMatchingPlan = true;
@@ -229,6 +235,11 @@ class SubscriptionController extends Controller
                         []
                     );
 
+                    $tiers = false;
+                    if ($get_plan->type === 'recurring' && $get_plan->tiers_mode === 'volume') {
+                        $tiers = true;
+                    }
+
                if($get_plan->currency === "usd") {
                         $plans[] = [
                             'id' => $get_plan->id,
@@ -239,6 +250,7 @@ class SubscriptionController extends Controller
                             'metadata' => $get_plan->metadata,
                             'nickname' => $get_plan->nickname,
                             'plan_name' => $product_object,
+                            'tiers' => $tiers,
                         ];
 
                         $foundMatchingPlan = true;
@@ -321,6 +333,7 @@ class SubscriptionController extends Controller
             $ends_at = auth()->user()->trial_ends_at;
             $plan_id = $request->plan;
             $plan_name = $request->plan_name;
+            $quantity = $quantity = $request->filled('quantity') ? $request->input('quantity') : 1;
 
             if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
@@ -339,7 +352,8 @@ class SubscriptionController extends Controller
 
             if ($trialEndsAt->isPast()) {
                 // Si la date de fin du trial est dans le passé, on démarre le plan premium immédiatement
-                $subscription = $user->newSubscription('default', $plan_id);
+                $subscription = $user->newSubscription('default', $plan_id)
+                ->quantity($quantity);
 
                 if (!empty($coupon_code)) {
                     $subscription->withCoupon($coupon_code); // Appliquer le coupon
@@ -355,6 +369,7 @@ class SubscriptionController extends Controller
             } else {
                 // Sinon, on utilise la période d'essai jusqu'à la date de fin du trial
                 $subscription = $user->newSubscription('default', $plan_id)
+                ->quantity($quantity)
                 ->trialUntil($trialEndsAt->endOfDay());
 
                 if (!empty($coupon_code)) {
