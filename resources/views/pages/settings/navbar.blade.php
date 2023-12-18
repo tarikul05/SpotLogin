@@ -7,7 +7,7 @@
                 <span class="text-warning"><i class="fa-solid fa-circle-info"></i></span>
             @endif
         </button>
-        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacher() || $AppUI->isSchoolAdmin())
          <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
             {{ __('Prices by category')}}
             @if(!empty($eventCat) && $eventCat->count() > 0)
@@ -25,13 +25,13 @@
         <button class="nav-link" id="nav-levels-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
             {{ __('Levels') }}
         </button>
-        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacher() || $AppUI->isSchoolAdmin())
          <button class="nav-link" id="nav-taxes-tab" data-bs-toggle="tab" data-bs-target="#tab_taxes" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
             {{ __('Taxes')}}
         </button>
         @endif
         @can('parameters-list')
-        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+        @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacher() || $AppUI->isSchoolAdmin())
             <button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
             {{ __('Schedule Settings')}}
             </button>

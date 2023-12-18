@@ -19,7 +19,7 @@
                         <select class="selectpicker" id="school_type" name="school_type" required onchange="changePlaceholder()">
                             <option value="COACH">{{ __('I am a Single coach') }}</option>
                             <!--<option value="SCHOOL">{{ __('School') }} (for testing)</option>-->
-                            <option value="SCHOOL" disabled="true">{{ __('School') }} ({{ __('Coming Soon') }})</option>
+                            <!--<option value="SCHOOL" disabled="true">{{ __('School') }} ({{ __('Coming Soon') }})</option>-->
                         </select>
                     </div>
                     <div class="form-group custom-selection">
