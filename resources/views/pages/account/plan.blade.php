@@ -104,7 +104,7 @@
       ?>
     </tr>
 
-    @if ($subscription['plan']['billing_scheme'] === 'tiered' && $subscription['plan']['tiers_mode'] === 'volume')
+    @if ($subscription && ($subscription['plan']['billing_scheme'] === 'tiered' && $subscription['plan']['tiers_mode'] === 'volume'))
     <tr>
 <td>{{ __('Number of teachers') }}</td>
         <td>{{ $subscription['quantity'] }} teachers available</td>
