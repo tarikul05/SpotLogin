@@ -61,54 +61,107 @@
 
 
                     <div class="row">
-                        <div class="col-md-12 col-lg-12 col-xs-12">
+                        <div class="col-md-6 col-lg-6 col-xs-12">
                             <div class="form-group">
                                 <label for="time_of_day">Choose Start time:</label>
                                 <select name="start_time" id="start_time" class="form-control">
-                                    <option value="6:00 AM">6:00 AM</option>
-                                    <option value="7:00 AM">7:00 AM</option>
-                                    <option value="8:00 AM">8:00 AM</option>
-                                    <option value="9:00 AM">9:00 AM</option>
-                                    <option value="10:00 AM">10:00 AM</option>
-                                    <option value="11:00 AM">11:00 AM</option>
-                                    <option value="12:00 PM">12:00 PM</option>
-                                    <option value="1:00 PM">1:00 PM</option>
-                                    <option value="2:00 PM">2:00 PM</option>
-                                    <option value="3:00 PM">3:00 PM</option>
-                                    <option value="4:00 PM">4:00 PM</option>
-                                    <option value="5:00 PM">5:00 PM</option>
-                                    <option value="6:00 PM">6:00 PM</option>
-                                    <option value="7:00 PM">7:00 PM</option>
-                                    <option value="8:00 PM">8:00 PM</option>
-                                    <option value="9:00 PM">9:00 PM</option>
-                                    <option value="10:00 PM">10:00 PM</option>
+                                    <option value="03">3:00 AM</option>
+                                    <option value="04">4:00 AM</option>
+                                    <option value="05">5:00 AM</option>
+                                    <option value="06">6:00 AM</option>
+                                    <option value="07">7:00 AM</option>
+                                    <option value="08">8:00 AM</option>
+                                    <option value="09">9:00 AM</option>
+                                    <option value="10">10:00 AM</option>
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12">12:00 AM</option>
+                                    <option value="13">1:00 PM</option>
+                                    <option value="14">2:00 PM</option>
+                                    <option value="15">3:00 PM</option>
+                                    <option value="16">4:00 PM</option>
+                                    <option value="17">5:00 PM</option>
+                                    <option value="18">6:00 PM</option>
+                                    <option value="19">7:00 PM</option>
+                                    <option value="20">8:00 PM</option>
+                                    <option value="21">9:00 PM</option>
+                                    <option value="22">10:00 PM</option>
+                                    <option value="23">11:00 PM</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-12 col-lg-12 col-xs-12">
+
+                        <div class="col-md-6 col-lg-6 col-xs-12">
+                            <div class="form-group">
+                                <label for="time_of_day"></label>
+                                <select name="start_time_minute" id="start_time_minute" class="form-control">
+                                    <option value="00:00">00</option>
+                                    <option value="05:00">05</option>
+                                    <option value="10:00">10</option>
+                                    <option value="15:00">15</option>
+                                    <option value="20:00">20</option>
+                                    <option value="25:00">25</option>
+                                    <option value="30:00">30</option>
+                                    <option value="35:00">35</option>
+                                    <option value="40:00">40</option>
+                                    <option value="45:00">45</option>
+                                    <option value="50:00">50</option>
+                                    <option value="55:00">55</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="col-md-6 col-lg-6 col-xs-12">
                             <div class="form-group">
                                 <label for="time_of_day">Choose End time:</label>
                                 <select name="end_time" id="end_time" class="form-control">
-                                    <option value="6:00 AM">6:00 AM</option>
-                                    <option value="7:00 AM">7:00 AM</option>
-                                    <option value="8:00 AM">8:00 AM</option>
-                                    <option value="9:00 AM">9:00 AM</option>
-                                    <option value="10:00 AM">10:00 AM</option>
-                                    <option value="11:00 AM">11:00 AM</option>
-                                    <option value="12:00 PM">12:00 PM</option>
-                                    <option value="1:00 PM">1:00 PM</option>
-                                    <option value="2:00 PM">2:00 PM</option>
-                                    <option value="3:00 PM">3:00 PM</option>
-                                    <option value="4:00 PM">4:00 PM</option>
-                                    <option value="5:00 PM">5:00 PM</option>
-                                    <option value="6:00 PM">6:00 PM</option>
-                                    <option value="7:00 PM">7:00 PM</option>
-                                    <option value="8:00 PM">8:00 PM</option>
-                                    <option value="9:00 PM">9:00 PM</option>
-                                    <option value="10:00 PM">10:00 PM</option>
+                                    <option value="03">3:00 AM</option>
+                                    <option value="04">4:00 AM</option>
+                                    <option value="05">5:00 AM</option>
+                                    <option value="06">6:00 AM</option>
+                                    <option value="07">7:00 AM</option>
+                                    <option value="08">8:00 AM</option>
+                                    <option value="09">9:00 AM</option>
+                                    <option value="10">10:00 AM</option>
+                                    <option value="11">11:00 AM</option>
+                                    <option value="12">12:00 AM</option>
+                                    <option value="13">1:00 PM</option>
+                                    <option value="14">2:00 PM</option>
+                                    <option value="15">3:00 PM</option>
+                                    <option value="16">4:00 PM</option>
+                                    <option value="17">5:00 PM</option>
+                                    <option value="18">6:00 PM</option>
+                                    <option value="19">7:00 PM</option>
+                                    <option value="20">8:00 PM</option>
+                                    <option value="21">9:00 PM</option>
+                                    <option value="22">10:00 PM</option>
+                                    <option value="23">11:00 PM</option>
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-6 col-lg-6 col-xs-12">
+                            <div class="form-group">
+                                <label for="time_of_day"></label>
+                                <select name="end_time_minute" id="end_time_minute" class="form-control">
+                                    <option value="00:00">00</option>
+                                    <option value="05:00">05</option>
+                                    <option value="10:00">10</option>
+                                    <option value="15:00">15</option>
+                                    <option value="20:00">20</option>
+                                    <option value="25:00">25</option>
+                                    <option value="30:00">30</option>
+                                    <option value="35:00">35</option>
+                                    <option value="40:00">40</option>
+                                    <option value="45:00">45</option>
+                                    <option value="50:00">50</option>
+                                    <option value="55:00">55</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
 
 
@@ -317,42 +370,74 @@
 
         dayClick: function(date, jsEvent, view, resource) {
 
-
         const timeOptions = {
-            '06:00': '6:00 AM',
-            '07:00': '7:00 AM',
-            '08:00': '8:00 AM',
-            '09:00': '9:00 AM',
-            '10:00': '10:00 AM',
-            '11:00': '11:00 AM',
-            '12:00': '12:00 PM',
-            '13:00': '1:00 PM',
-            '14:00': '2:00 PM',
-            '15:00': '3:00 PM',
-            '16:00': '4:00 PM',
-            '17:00': '5:00 PM',
-            '18:00': '6:00 PM',
-            '19:00': '7:00 PM',
-            '20:00': '8:00 PM',
-            '21:00': '9:00 PM',
-            '22:00': '10:00 PM',
+            '03': '3:00 AM',
+            '04': '4:00 AM',
+            '05': '5:00 AM',
+            '06': '6:00 AM',
+            '07': '7:00 AM',
+            '08': '8:00 AM',
+            '09': '9:00 AM',
+            '10': '10:00 AM',
+            '11': '11:00 AM',
+            '12': '12:00 AM',
+            '13': '1:00 PM',
+            '14': '2:00 PM',
+            '15': '3:00 PM',
+            '16': '4:00 PM',
+            '17': '5:00 PM',
+            '18': '6:00 PM',
+            '19': '7:00 PM',
+            '20': '8:00 PM',
+            '21': '9:00 PM',
+            '22': '10:00 PM',
         };
+
+        const order = ['03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22'];
 
     Swal.fire({
         title: 'Add Availability for ' + date.format('DD/MM/YYYY'),
         html: `
             <div class="swal-container">
-                <div class="swal-column">
+                <div class="swal-column m-2">
                     <label for="start-time2">Choose Start time:</label><br>
-                    <select id="start-time2" class="swal-select">
-                        ${generateSelectOptions(timeOptions)}
+                    <select id="start-time2" class="swal-select form-control">
+                        ${generateSelectOptions(timeOptions, order)}
+                    </select>
+                    <select name="start_time_minute2" id="start_time_minute2" class="form-control">
+                        <option value="00:00">00</option>
+                        <option value="05:00">05</option>
+                        <option value="10:00">10</option>
+                        <option value="15:00">15</option>
+                        <option value="20:00">20</option>
+                        <option value="25:00">25</option>
+                        <option value="30:00">30</option>
+                        <option value="35:00">35</option>
+                        <option value="40:00">40</option>
+                        <option value="45:00">45</option>
+                        <option value="50:00">50</option>
+                        <option value="55:00">55</option>
                     </select>
                 </div>
                 <br>
-                <div class="swal-column">
+                <div class="swal-column m-2">
                     <label for="end-time2">Choose End time:</label><br>
-                    <select id="end-time2" class="swal-select">
-                        ${generateSelectOptions(timeOptions)}
+                    <select id="end-time2" class="swal-select form-control">
+                        ${generateSelectOptions(timeOptions, order)}
+                    </select>
+                    <select name="end_time_minute2" id="end_time_minute2" class="form-control">
+                        <option value="00:00">00</option>
+                        <option value="05:00">05</option>
+                        <option value="10:00">10</option>
+                        <option value="15:00">15</option>
+                        <option value="20:00">20</option>
+                        <option value="25:00">25</option>
+                        <option value="30:00">30</option>
+                        <option value="35:00">35</option>
+                        <option value="40:00">40</option>
+                        <option value="45:00">45</option>
+                        <option value="50:00">50</option>
+                        <option value="55:00">55</option>
                     </select>
                 </div>
             </div>
@@ -367,16 +452,18 @@
         preConfirm: () => {
             const startTime = $('#start-time2').val();
             const endTime = $('#end-time2').val();
+            const timestartminute = $('#start_time_minute2').val();
+            const timeendminute = $('#end_time_minute2').val();
 
             if (!startTime || !endTime) {
                 Swal.showValidationMessage('Please choose both start and end times');
             }
 
-            return { startTime, endTime };
+            return { startTime, endTime, timestartminute, timeendminute };
         },
     }).then((result) => {
         if (!result.dismiss) {
-            const { startTime, endTime } = result.value;
+            const { startTime, endTime, timestartminute, timeendminute } = result.value;
 
             $.ajax({
                 url: "{{ route('student.availability.store') }}",
@@ -386,6 +473,8 @@
                     day_special: date.format('YYYY-MM-DD'),
                     day_of_week: date.format('dddd'),
                     start_time: startTime,
+                    start_time_minute: timestartminute,
+                    end_time_minute: timeendminute,
                     end_time: endTime,
                     is_special:true
                 },
@@ -409,9 +498,9 @@
     });
 
 
-    function generateSelectOptions(options) {
+    function generateSelectOptions(options, order) {
     let html = '';
-    for (const key in options) {
+    for (const key of order) {
         if (options.hasOwnProperty(key)) {
             html += `<option value="${key}">${options[key]}</option>`;
         }
@@ -422,40 +511,73 @@
 function addHours(day) {
 
     const timeOptions = {
-            '06:00': '6:00 AM',
-            '07:00': '7:00 AM',
-            '08:00': '8:00 AM',
-            '09:00': '9:00 AM',
-            '10:00': '10:00 AM',
-            '11:00': '11:00 AM',
-            '12:00': '12:00 PM',
-            '13:00': '1:00 PM',
-            '14:00': '2:00 PM',
-            '15:00': '3:00 PM',
-            '16:00': '4:00 PM',
-            '17:00': '5:00 PM',
-            '18:00': '6:00 PM',
-            '19:00': '7:00 PM',
-            '20:00': '8:00 PM',
-            '21:00': '9:00 PM',
-            '22:00': '10:00 PM',
+        '03': '3:00 AM',
+        '04': '4:00 AM',
+        '05': '5:00 AM',
+        '06': '6:00 AM',
+        '07': '7:00 AM',
+        '08': '8:00 AM',
+        '09': '9:00 AM',
+        '10': '10:00 AM',
+        '11': '11:00 AM',
+        '12': '12:00 AM',
+        '13': '1:00 PM',
+        '14': '2:00 PM',
+        '15': '3:00 PM',
+        '16': '4:00 PM',
+        '17': '5:00 PM',
+        '18': '6:00 PM',
+        '19': '7:00 PM',
+        '20': '8:00 PM',
+        '21': '9:00 PM',
+        '22': '10:00 PM',
         };
+
+        const order = ['03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22'];
 
     Swal.fire({
         title: 'Add Availability for ' + day,
         html: `
-            <div class="swal-container">
-                <div class="swal-column">
+        <div class="swal-container">
+                <div class="swal-column m-2">
                     <label for="start-time2">Choose Start time:</label><br>
-                    <select id="start-time2" class="swal-select">
-                        ${generateSelectOptions(timeOptions)}
+                    <select id="start-time2" class="swal-select form-control">
+                        ${generateSelectOptions(timeOptions, order)}
+                    </select>
+                    <select name="start_time_minute2" id="start_time_minute2" class="form-control">
+                        <option value="00:00">00</option>
+                        <option value="05:00">05</option>
+                        <option value="10:00">10</option>
+                        <option value="15:00">15</option>
+                        <option value="20:00">20</option>
+                        <option value="25:00">25</option>
+                        <option value="30:00">30</option>
+                        <option value="35:00">35</option>
+                        <option value="40:00">40</option>
+                        <option value="45:00">45</option>
+                        <option value="50:00">50</option>
+                        <option value="55:00">55</option>
                     </select>
                 </div>
                 <br>
-                <div class="swal-column">
+                <div class="swal-column m-2">
                     <label for="end-time2">Choose End time:</label><br>
-                    <select id="end-time2" class="swal-select">
-                        ${generateSelectOptions(timeOptions)}
+                    <select id="end-time2" class="swal-select form-control">
+                        ${generateSelectOptions(timeOptions, order)}
+                    </select>
+                    <select name="end_time_minute2" id="end_time_minute2" class="form-control">
+                        <option value="00:00">00</option>
+                        <option value="05:00">05</option>
+                        <option value="10:00">10</option>
+                        <option value="15:00">15</option>
+                        <option value="20:00">20</option>
+                        <option value="25:00">25</option>
+                        <option value="30:00">30</option>
+                        <option value="35:00">35</option>
+                        <option value="40:00">40</option>
+                        <option value="45:00">45</option>
+                        <option value="50:00">50</option>
+                        <option value="55:00">55</option>
                     </select>
                 </div>
             </div>
@@ -470,16 +592,18 @@ function addHours(day) {
         preConfirm: () => {
             const startTime = $('#start-time2').val();
             const endTime = $('#end-time2').val();
+            const timestartminute = $('#start_time_minute2').val();
+            const timeendminute = $('#end_time_minute2').val();
 
             if (!startTime || !endTime) {
                 Swal.showValidationMessage('Please choose both start and end times');
             }
 
-            return { startTime, endTime };
+            return { startTime, endTime, timestartminute, timeendminute };
         },
     }).then((result) => {
         if (!result.dismiss) {
-            const { startTime, endTime } = result.value;
+            const { startTime, endTime, timestartminute, timeendminute } = result.value;
 
             $.ajax({
                 url: "{{ route('student.availability.store') }}",
@@ -488,6 +612,8 @@ function addHours(day) {
                     _token: "{{ csrf_token() }}",
                     day_of_week: day.toLowerCase(),
                     start_time: startTime,
+                    start_time_minute: timestartminute,
+                    end_time_minute: timeendminute,
                     end_time: endTime,
                     is_special:false
                 },

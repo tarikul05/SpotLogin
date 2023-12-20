@@ -191,6 +191,20 @@ $(document).ready(function() {
         $("#pageloader").fadeIn("fast");
         var schoolId = $(this).attr('data-school');
         var studentId = $(this).attr('data-student');
+        var email = $(this).attr('data-email');
+
+        if(email === null || email === "") {
+            $("#pageloader").fadeOut("fast");
+            Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "{{ __('Student needs to have an email to send the invitation.') }}",
+            allowOutsideClick: false
+
+            });
+            return false;
+        }
+
         //if (confirm('Are you sure want to send an invitation to this student ?')) {
             var redirectUrl = '{{ route('studentInvitationGet', ['school' => ':school', 'student' => ':student']) }}';
             redirectUrl = redirectUrl.replace(':school', schoolId).replace(':student', studentId);

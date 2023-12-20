@@ -779,10 +779,9 @@ table.dataTable.no-footer {
 	display: flex;
 	padding: 4px 10px;
 	align-items: center;
-	font-family: "Gilroy-SemiBold";
 	font-weight: normal;
-	font-size: 13px;
-	color: black;
+	font-size: 12px;
+	color: #333;
 }
 
 .dropdown-menu.action.header a:hover,

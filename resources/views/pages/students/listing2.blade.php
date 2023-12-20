@@ -51,7 +51,7 @@
                                     </td>
                                     <td class="text-center align-middle">
 
-                                        <div class="btn-group">
+                                        <!--<div class="btn-group">
                                             <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
                                             <span class="btn btn-theme-outline d-none d-lg-table-cell">Actions <i class="fa fa-caret-down"></i></span>
                                             <span class="btn btn-theme-outline d-inline-block d-sm-none" style="border:none!important;"><i class="fa-solid fa-ellipsis-vertical"></i></span>
@@ -72,13 +72,13 @@
 
                                             @can('students-sent-mail')
                                                 <a href="javascript:void(0)"  style="display: none; display:inline-block; min-width: 150px;"
-                                                class="btn btn-sm btn-default m-1 mb-2 send-invite-btn"  data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                class="btn btn-sm btn-default m-1 mb-2 send-invite-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                                     <i class="fa-solid fa-envelope"></i> {{ __('Send invite') }}
                                                 </a>
                                             @endcan
                                             @else
                                                 <a href="javascript:void(0)"  style="display: none; display:inline-block; min-width: 150px;"
-                                                 class="btn btn-sm btn-default m-1 mb-2 send-password-btn" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                 class="btn btn-sm btn-default m-1 mb-2 send-password-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
                                                     <i class="fa-solid fa-envelope"></i> {{ __('Resend password') }}
                                                 </a>
                                             @endif
@@ -95,6 +95,45 @@
 
                                             </div>
                                             </div>
+                                        </div>-->
+
+                                        <div class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-h txt-grey"></i>
+                                            </a>
+                                            <div class="dropdown-menu list action text-left">
+
+                                                    <a class="dropdown-item" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                        {{ __('Edit')}}
+                                                    </a>
+                                                    <a class="dropdown-item" href="{{ route('students.availabilities', $student) }}">
+                                                        <i class="fa-solid fa-calendar"></i>
+                                                        {{ __('Availabilities')}}
+                                                    </a>
+
+                                                    @if(!$student->user)
+
+                                                    <a href="javascript:void(0)" class="dropdown-item send-invite-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                        <i class="fa-solid fa-envelope"></i>
+                                                        {{ __('Send invite') }}
+                                                    </a>
+
+                                                    @else
+
+                                                    <a href="javascript:void(0)" class="dropdown-item send-password-btn" data-email="{{ $student->email }}" data-school="{{ $schoolId }}" data-student="{{ $student->id }}" title="{{ __("Send invitation") }}">
+                                                        <i class="fa-solid fa-envelope"></i>
+                                                        {{ __('Resend password') }}
+                                                    </a>
+
+                                                    @endif
+
+                                                    <a href="javascript:void(0)" class="dropdown-item delete-student-btn" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}">
+                                                        <i class="fa fa-trash"></i>
+                                                        {{ __('Delete') }}
+                                                    </a>
+
+                                            </div>
                                         </div>
 
                                     </td>
@@ -104,7 +143,7 @@
                     </table>
 
                     <br>
-            <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
+                    <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
                 </form>
             </div>
         </div>
