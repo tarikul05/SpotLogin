@@ -44,12 +44,20 @@ class AvailabilityController extends Controller
 
         $user = $request->user();
 
+        $selectedTime = $request->input('start_time');
+        $selectedMinutes = $request->input('start_time_minute');
+        $combinedStart = $selectedTime . ':' . $selectedMinutes;
+
+        $selectedTimeEnd = $request->input('end_time');
+        $selectedMinutesEnd = $request->input('end_time_minute');
+        $combinedEnd = $selectedTimeEnd . ':' . $selectedMinutesEnd;
+
         $availability = new Availability([
             'student_id' => $user->person_id,
             'day_of_week' => $request->input('day_of_week'),
-            'time_of_day' => $request->input('start_time') . ' - ' . $request->input('end_time'),
-            'start_time' => $request->input('start_time'),
-            'end_time' => $request->input('end_time'),
+            'time_of_day' => $combinedStart . ' - ' . $combinedEnd,
+            'start_time' => $combinedStart,
+            'end_time' => $combinedEnd,
             'day_special' => $request->input('day_special'),
             'is_special' => $request->input('is_special') == 'true' ? true : false,
         ]);

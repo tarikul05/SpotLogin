@@ -494,7 +494,8 @@
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: "{{ __('actionPaid') }}",
-                denyButtonText: "{{ __('actionCashPaid') }}"
+                denyButtonText: "{{ __('actionCashPaid') }}",
+                denyButtonColor: '#007bff',
             }).then((result) => {
                 if (result.isConfirmed) {
                 loading();

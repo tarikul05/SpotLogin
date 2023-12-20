@@ -53,21 +53,27 @@ class ContactFormController extends Controller
         $subject = $request->input('subject');
         $headerMessage = $request->input('headerMessage');
         $emailTo = $data['emailTo'];
+        $emailToConcatenated = implode(',', $data['emailTo']);
+
         if($emailTo === "staff") {
             $emailTo = config('services.mail.from_address');
         }
         $messageBody = $request->input('message');
 
+
         $contactForm = new ContactForm();
         $contactForm->sujet = $subject;
         $contactForm->email_expediteur = $authUser->email;
-        $contactForm->email_destinataire = $emailTo;
+        $contactForm->email_destinataire = $emailToConcatenated;
         $contactForm->id_expediteur = $authUser->id;
         $contactForm->id_destinataire = $person_id;
         $contactForm->message = $messageBody;
         $contactForm->save();
 
-        Mail::send(new ContactFormMailable($subject, $emailTo, $headerMessage, $messageBody));
+        foreach ($data['emailTo'] as $recipient) {
+            Mail::send(new ContactFormMailable($subject, $recipient, $headerMessage, $messageBody));
+        }
+
         if($data['emailTo'] === "staff") {
             return redirect()->route('contact.staff')->with('success', 'Message sent successfully!');
         } else {
