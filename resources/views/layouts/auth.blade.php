@@ -40,10 +40,17 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
+
+    <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
     <div class="container-fluid pl-4 pr-4">
+        <div class="position-relative pt-1">
+            <img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="22px" alt="SpotLogin" style="position:absolute; width:22px padding-left:5px; left:22px; top:4px;">
       <a class="navbar-brand" href="/">
-        <img src="{{ asset('img/logo.png') }}" width="50">
+        <img src="{{ asset('img/logo.png') }}" width="55">
       </a>
+        </div>
+
 
 
 
