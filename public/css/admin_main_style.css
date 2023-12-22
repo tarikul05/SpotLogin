@@ -1291,7 +1291,17 @@ label#currency_alert_text {
         padding-top: 10px !important; /* Adjust this value as needed */
     }
     .search_text_box {
-        display: none;
+       width: 100%!important;
+       margin:0 auto!important;
+       text-align: center!important;
+    }
+    .dataTables_length {
+        text-align: center;
+        margin:0 auto;
+    }
+    #example1_wrapper,#example1_length {
+        text-align: center;
+        margin:0 auto;
     }
     .searchForEvent {
         display: block;

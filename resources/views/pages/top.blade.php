@@ -7,7 +7,7 @@
   <div class="container-fluid h-100">
     <div class="row h-100 align-items-center">
       <div class="col-12 bloc-title">
-        <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}">Sportlogin</h1>
+        <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/christmas.png') }}">Sportlogin</h1>
         <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->

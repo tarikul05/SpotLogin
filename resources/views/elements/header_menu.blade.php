@@ -1,16 +1,17 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top pr-5">
+        <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="container-fluid paddingLogo">
-
+            <div class="position-relative d-none d-sm-block pt-1 pl-1">
+            <img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="25px" alt="SpotLogin" style="position:absolute; width:25px padding-left:3px; left:20px; top:6px;">
             <a href="{{  route('agenda') }}" class="navbar-brand d-none d-sm-block">
-                <img src="{{ asset('img/logo.png') }}" width="50px" alt="SpotLogin">
+                <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
             </a>
-
-
-
+            </div>
                 <a class="user_profile d-block d-sm-none" href="#">
-
+                <img src="{{ asset('img/merrychristmas.png') }}" width="23px" alt="SpotLogin" style="position:absolute; width:23px padding-left:25px; left:20px; top:2px; z-index:9999;">
                     <div style="position: relative; width:48px; font-size:11px; display:inline;">
+
                             @if( $is_subscribed )
                             @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                             <span class="badge bg-success p-1" style="position: absolute; right:-12px; top:5px; padding:2px!important;">premium</span>
@@ -41,7 +42,7 @@
 
 
 
-                <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <button type="button" class="navbar-toggler custom-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="z-index:99999!important;">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -50,6 +51,7 @@
 
          <div class="collapse navbar-collapse custom-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
+
                     @php
                     $url = route('agenda');
                     $urlInvoice = route('invoiceList');
