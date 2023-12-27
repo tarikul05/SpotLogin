@@ -247,11 +247,16 @@
             return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
         }
     };
-    if(isMobile.any())
-    $(".masthead-btn-area").fadeOut("fast");
-    else
-    $(".masthead-btn-area").fadeIn("fast");
-    // add class pt-2 to .masthead-btn-area
-    $(".bloc-title").addClass("pt-5");
+
+    if(isMobile.any()) {
+        $(".masthead-btn-area").fadeIn("fast");
+        $(".bloc-title").addClass("pt-2");
+    } else {
+        $(".masthead-btn-area").fadeIn("fast");
+        // add class pt-2 to .masthead-btn-area
+        $(".bloc-title").addClass("pt-0");
+    }
+
+
 </script>
 @endsection
