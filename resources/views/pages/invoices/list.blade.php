@@ -169,7 +169,7 @@
                                     @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                     @endif
                                     @if($AppUI->isStudent())
@@ -186,7 +186,7 @@
                                 @if(!$AppUI->isStudent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
-                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn change_button"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                 @endif
                                 @if($AppUI->isStudent())
@@ -476,15 +476,15 @@
 
     });
 
-    $(document).ready( function () {
-    $('.payment_btn').click(function (e) {
 
+    $(document).on('click', '.payment_btn', function (e) {
         e.preventDefault();
-
-        if($(this).data('invoice-status') == 1 || $(this).data('invoice-status') == 2) {
+        var invoiceId = $(this).data('invoice-id');
+        var invoiceStatus = $(this).data('invoice-status');
+        if(invoiceStatus == 1 || invoiceStatus == 2) {
             loading();
             return setTimeout(() => {
-                 actionpaid('paid', $(this).data('invoice-id'), 1);
+                 actionpaid('paid', invoiceId, 1);
             }, 800);
         }
             Swal.fire({
@@ -500,17 +500,16 @@
                 if (result.isConfirmed) {
                 loading();
                 setTimeout(() => {
-                    actionpaid('paid', $(this).data('invoice-id'), $(this).data('invoice-status'));
+                    actionpaid('paid', invoiceId, invoiceStatus);
                 }, 1100);
             } else if (result.isDenied) {
                 loading();
                 setTimeout(() => {
-                    actionpaid('cash', $(this).data('invoice-id'), $(this).data('invoice-status'));
+                    actionpaid('cash', invoiceId, invoiceStatus);
                 }, 800);
             }
             })
     });
-});
 
 
     function loading() {
