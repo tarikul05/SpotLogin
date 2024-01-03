@@ -414,6 +414,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/student/availabilities', [AvailabilityController::class, 'index'])->name('student.availabilities');
     Route::get('/student/{student}/availabilities', [AvailabilityController::class, 'indexByStudent'])->name('students.availabilities');
     Route::post('/student/availabilities', [AvailabilityController::class, 'store'])->name('student.availability.store');
+    Route::post('/student/availabilities/storeFromCoach', [AvailabilityController::class, 'storeFromCoach'])->name('student.availability.storeFromCoach');
     Route::delete('/student/availabilities/{availability}', [AvailabilityController::class, 'destroy'])->name('student.availability.destroy');
 
     //AJAX action

@@ -71,6 +71,42 @@ class AvailabilityController extends Controller
         }
     }
 
+    public function storeFromCoach(Request $request)
+    {
+
+        $student_id = $request->input('student_id');
+
+        $selectedTime = $request->input('start_time');
+        $selectedMinutes = $request->input('start_time_minute');
+        $combinedStart = $selectedTime . ':' . $selectedMinutes;
+
+        $selectedTimeEnd = $request->input('end_time');
+        $selectedMinutesEnd = $request->input('end_time_minute');
+        $combinedEnd = $selectedTimeEnd . ':' . $selectedMinutesEnd;
+
+        $availability = new Availability([
+            'student_id' => $student_id,
+            'day_of_week' => $request->input('day_of_week'),
+            'time_of_day' => $combinedStart . ' - ' . $combinedEnd,
+            'start_time' => $combinedStart,
+            'end_time' => $combinedEnd,
+            'day_special' => $request->input('day_special'),
+            'is_special' => $request->input('is_special') == 'true' ? true : false,
+        ]);
+
+        $availability->save();
+
+        $userStudent = Student::find($student_id);
+        $availabilities = $userStudent->availabilities;
+
+        if($request->input('is_special')) {
+            return response()->json(['success' => true, 'is_special' => $request->input('is_special')]);
+        } else {
+            return redirect()->route('students.availabilities', ['availabilities' => $availabilities, 'student' => $userStudent])->with('success', 'Availability deleted successfully');
+        }
+
+    }
+
     public function destroy(Availability $availability)
     {
 
