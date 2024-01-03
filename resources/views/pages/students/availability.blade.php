@@ -16,7 +16,7 @@
 @section('content')
 <div class="container">
 
-<h3>Availabilities</h3>
+<h3>Availability</h3>
 
 <div class="row justify-content-center pt-5">
     <div class="col-md-7">

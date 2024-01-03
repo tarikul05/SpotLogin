@@ -16,7 +16,7 @@
 @section('content')
 <div class="container">
 
-<h3>Student's availabilities</h3>
+<h3>Student availability</h3>
 <h6 style="color:#152245;"><i class="fa fa-user"></i> {{$student->firstname }} {{$student->lastname }}</h6>
 
 <div class="row justify-content-center pt-5">
