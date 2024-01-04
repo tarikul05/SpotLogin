@@ -1,6 +1,9 @@
-@extends('layouts.main')
+@extends('layouts.navbar')
 @section('content')
-<div class="container">
+<div class="content">
+    <br><br><br>
+<div class="container-fluid">
+    <h3>Edit role</h3>
     <div class="justify-content-center">
         <div class="card">
             <div class="card-header">Edit role
@@ -28,5 +31,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection

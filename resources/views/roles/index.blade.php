@@ -1,7 +1,11 @@
-@extends('layouts.main')
+@extends('layouts.navbar')
 @section('content')
-<div class="container">
-    <div class="justify-content-center">
+<div class="content">
+    <br><br><br>
+
+<div class="container-fluid">
+    <h3>Roles</h3>
+    <div class="justify-content-center mb-4">
         <div class="card">
             <div class="card-header">Roles
                 @can('role-create')
@@ -12,7 +16,7 @@
             </div>
             <div class="card-body">
                 <table class="table table-hover">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Name</th>
@@ -45,5 +49,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection

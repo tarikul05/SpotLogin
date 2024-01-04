@@ -199,7 +199,7 @@ Route::group(['middleware' => ['auth']], function () {
     'as' => 'check.permission'
   ));
   // Add edit language translations from json
-  Route::get('languages', 'LanguageTranslationController@index')->name('languages');
+
   Route::post('translations/create', 'LanguageTranslationController@store')->name('translations.create');
   Route::post('translations/updateKey', 'LanguageTranslationController@transUpdateKey')->name('translation.update.json.key');
   Route::post('translations/update', 'LanguageTranslationController@transUpdate')->name('translation.update.json');
@@ -246,7 +246,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('roles', "RoleController");
     Route::resource('permissions', "PermissionController");
-
+    Route::get('languages', 'LanguageTranslationController@index')->name('languages');
     // ical personal events
     Route::post('/{school}/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEventss')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/icalendar/personnel-events', [App\Http\Controllers\AgendaController::class, 'icalPersonalEvents'])->name('ical.personalEvents');
