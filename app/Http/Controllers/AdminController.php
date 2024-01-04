@@ -46,7 +46,7 @@ class AdminController extends Controller
         $totalAmountActivePlans = 0;
         $totalAmountActivePlans = 0;
         foreach ($subsriptions as $sub) {
-            if ($sub->status == 'active') {
+            if ($sub->status == 'active' && $sub->trial_end === null) {
                 // Obtenez le montant de l'abonnement actif
                 $totalAmountActivePlans += $sub->items->data[0]->plan->amount;
             }

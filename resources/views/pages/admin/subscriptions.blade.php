@@ -24,18 +24,22 @@
                 @foreach($subscriptions as $subscription)
                 <tr>
                     <!--<td>{{ $subscription['id'] }}</td>-->
-                    <td>{{ $subscription['metadata']['note'] }}</td>
+                    <td>{{ $subscription['metadata']['note'] }}<br>
+                    <!--<pre>{{ json_encode($subscription, JSON_PRETTY_PRINT) }}</pre></td>-->
                     <td>
-                        @if($subscription['status'] == 'active')
-                          <span class="badge badge-success">{{ $subscription['status'] }}</span>
-                        @elseif($subscription['status'] == 'trialing')
-                          <span class="badge badge-warning">{{ $subscription['status'] }}</span>
+                        @if($subscription['status'] == 'active' && $subscription['trial_end'] === null)
+                          <span class="badge badge-success">{{ __('Active') }}</span>
+                        @elseif($subscription['status'] == 'trialing' || $subscription['trial_end'] !== null)
+                        <span class="badge badge-success">{{ __('Active') }}</span><br>
+                        <span class="badge badge-warning">{{ __('Trial') }} until {{ date('M j, Y', $subscription['trial_end']) }}</span>
                         @elseif($subscription['status'] == 'canceled')
+                          <span class="badge badge-danger">{{ __('Cancelled') }}</span>
+                          @else
                           <span class="badge badge-danger">{{ $subscription['status'] }}</span>
                         @endif
                       </td>
                     <td>
-                        {{ $subscription['price_name'] }}<br>{{ $subscription['plan']['amount']/100 * $subscription['plan']['interval_count'] }}€ / {{ $subscription['plan']['interval'] }}
+                        {{ $subscription['price_name'] }}<br>{{ $subscription['plan']['amount']/100 * $subscription['plan']['interval_count'] }} ({{  $subscription['plan']['currency'] }}) / {{ $subscription['plan']['interval'] }}
                     </td>
                     <td>{{ date('j M Y, H:i', $subscription['created']) }}</td>
                 </tr>
