@@ -153,21 +153,26 @@
     </div>
 
     <br><br>
-    <h4>Liste des Événements Stripe</h4>
-    <table class="table">
+    <h5>    <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" width="120"> Liste des Événements</h5>
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>Description</th>
                 <th>Reçu le</th>
-                <th>ID</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach ($events_stripe as $event)
+            @if($event['type'])
             <tr>
 
-                <td> @if ($event['type'] === 'invoice.upcoming')
-                    {{ $event['data']['object']['customer_email'] }} a une facture à venir d'un montant de  {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} (avec paiement automatique prévu) le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['next_payment_attempt'])->format('j M.') }}
+                <td>
+                @if ($event['type'] === 'setup_intent.created')
+                    Une intention de paiement a
+                @if($event['data']['object']['status'] === "requires_payment_method") {{ "échouée" }} @else {{ "réussie" }} @endif
+               @elseif ($event['type'] === 'invoice.upcoming')
+                    {{ $event['data']['object']['customer_email'] }} a une facture à venir d'un montant de {{ number_format($event['data']['object']['total'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} (avec paiement automatique prévu) le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['next_payment_attempt'])->format('j M.') }}
                 @elseif ($event['type'] === 'payout.paid')
                     Un virement de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} devrait apparaître sur votre relevé bancaire
                 @elseif ($event['type'] === 'payout.reconciliation_completed')
@@ -176,7 +181,6 @@
                     Un nouveau bon de réduction doté de l'ID {{ $event['data']['object']['id'] }} a été créé
                 @elseif ($event['type'] === 'customer.created')
                     {{ $event['data']['object']['name'] }} est un nouveau client
-
                     @elseif ($event['type'] === 'payout.created')
                     Un nouveau virement de {{ number_format($event['data']['object']['amount'] / 100, 2) }} {{ strtoupper($event['data']['object']['currency']) }} a été créé et sera versé le {{ \Carbon\Carbon::createFromTimestamp($event['data']['object']['arrival_date'])->format('j M.') }}
                     @elseif ($event['type'] === 'customer.subscription.trial_will_end')
@@ -236,16 +240,14 @@
                     Le bon de réduction {{ $event['data']['object']['coupon']['name'] }} a été utilisé
                     @elseif ($event['type'] === 'customer.updated')
                     Les détails du client {{ $event['data']['object']['email'] }} ont été mise à jour
-
                 @else
-                    <!--Description non gérée pour le type {{ $event['type'] }}-->
+                    {{ $event['type'] }}
                 @endif
                 </td>
                 <td>{{ \Carbon\Carbon::createFromTimestamp($event['created'])->format('Y-m-d H:i:s') }}</td>
-
-                <td>{{ $event['id'] }}</td>
-
+                <td><a href="https://dashboard.stripe.com/test/events/{{ $event['id'] }}" target="_blank">voir sur Stripe</a></td>
             </tr>
+            @endif
             @endforeach
         </tbody>
     </table>

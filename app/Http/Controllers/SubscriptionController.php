@@ -119,7 +119,7 @@ class SubscriptionController extends Controller
             $price = $this->stripe->products->retrieve($subscription->items->data[0]->plan->product);
             $subscription->price_name = $price->name;
 
-            if ($subscription->status === 'active') {
+            if ($subscription->status === 'active' && $subscription->trial_end === null) {
                 $subscriptions[] = $subscription;
                 // Calculez le montant total de l'abonnement actif
                 $totalAmount += $subscription->items->data[0]->plan->amount;
