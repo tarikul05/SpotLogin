@@ -1,7 +1,10 @@
-@extends('layouts.main')
+@extends('layouts.navbar')
 @section('content')
-<div class="container">
-    <div class="justify-content-center">
+<div class="content">
+    <br><br><br>
+<div class="container-fluid">
+    <h3>Edit role</h3>
+    <div class="justify-content-center mb-4">
         <div class="card">
             <div class="card-header">Role
                 @can('role-create')
@@ -26,5 +29,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection

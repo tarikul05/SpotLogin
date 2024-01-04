@@ -19,7 +19,7 @@
     <br><br><br>
 	<div class="container-fluid">
     <div class="row">
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading dark-blue">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading green">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading blue">
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading orange">
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading red">
@@ -112,7 +112,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2 col-sm-6">
+        <div class="col-lg-2 col-sm-6 col-xs-12">
             <div class="circle-tile">
                 <a href="#">
                     <div class="circle-tile-heading purple">
@@ -133,14 +133,14 @@
         </div>
     </div>
 
-    <div cass="card">
+    <!--<div cass="card">
         <div class="row card-body">
             <div class="col-lg-12">
                 <canvas id="myChart3" style="max-height: 350px;"></canvas>
             </div>
         </div>
-    </div>
-
+    </div>-->
+    <br><br>
     <div cass="card">
         <div class="row card-body">
             <div class="col-lg-6">
@@ -152,7 +152,8 @@
         </div>
     </div>
 
-    <h3>Liste des Événements Stripe</h3>
+    <br><br>
+    <h4>Liste des Événements Stripe</h4>
     <table class="table">
         <thead>
             <tr>

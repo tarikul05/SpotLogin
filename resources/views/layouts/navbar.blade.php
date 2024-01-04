@@ -88,6 +88,15 @@
           <li class="nav-item @if(request()->is('admin/contacts')) active @endif">
             <a class="nav-link" href="{{ route('contacts.index') }}">Messages</a>
           </li>
+          <li class="nav-item @if(request()->is('admin/email-template')) active @endif">
+            <a class="nav-link" href="{{ route('view.email_template') }}">Templates</a>
+          </li>
+          <li class="nav-item @if(request()->is('admin/languages')) active @endif">
+            <a class="nav-link" href="{{ route('languages') }}">Langues</a>
+          </li>
+          <li class="nav-item @if(request()->is('admin/roles')) active @endif">
+            <a class="nav-link" href="/admin/roles">Roles</a>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <!--<input class="form-control mr-sm-2" type="text" placeholder="Search on app" aria-label="Search">

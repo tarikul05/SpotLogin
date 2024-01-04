@@ -1,18 +1,20 @@
-@extends('layouts.main')
+@extends('layouts.navbar')
 
 @section('head_links')
-
+<script src="{{ asset('js/jquery-3.5.1.js')}}"></script>
     <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <script src="//cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-
     <link href="{{ asset('dark-editable/dark-editable.css')}}" rel="stylesheet"/>
     <script src="{{ asset('dark-editable/dark-editable.js')}}"></script>
 @endsection
 
 
 @section('content')
-<div class="container">
-    
+<div class="content">
+    <br><br><br>
+
+<div class="container-fluid mb-4">
+    <h3>Translate</h3>
     <!-- <h1>New Translation key</h1> -->
     @can('translation-create')
     <form method="POST" action="{{ route('translations.create') }}">
@@ -22,7 +24,7 @@
                 <label>Key:</label>
                 <input type="text" name="key" class="form-control Key" placeholder="Enter Key......">
             </div>
- 
+
             <div class="col-md-4">
                 <label>Value (en):</label>
                 <input type="text" name="value" class="form-control Key" placeholder="Enter Value......">
@@ -34,8 +36,9 @@
         </div>
     </form>
     @endcan
- 
-    <h2>Translate key value pair</h2>
+
+    <br>
+    <h4>Translate key value pair</h4>
     <table id="lanTable" class="table table-hover table-bordered">
         <thead>
         <tr>
@@ -66,11 +69,11 @@
         </tbody>
     </table>
 </div>
-
+</div>
 @endsection
 
 
-@section('footer_js') 
+@section('footer_js')
 <script type="text/javascript">
 
     $.ajaxSetup({
@@ -78,7 +81,7 @@
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
         }
     });
- 
+
     // $('.translate').editable({
     //     params: function(params) {
     //         params.code = $(this).editable().data('code');
@@ -98,7 +101,7 @@
         event.preventDefault();
         const popover = new DarkEditable(this, {})
     });
- 
+
     // $('.translate-key').DarkEditable({
     //     validate: function(value) {
     //         if($.trim(value) == '') {
@@ -106,8 +109,8 @@
     //         }
     //     }
     // });
- 
- 
+
+
     $('body').on('click', '.remove-key', function(){
         var cObj = $(this);
         if (confirm("Are you sure want to remove this stuff?")) {
