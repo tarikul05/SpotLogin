@@ -50,7 +50,7 @@
 
 
     <div class="row justify-content-center pt-5 mb-5">
-        <div class="col-md-9">
+        <div class="col-md-12">
         <div class="card">
             <div class="card-header">{{ __('Invoices List') }}</div>
             <div class="card-body">
@@ -157,9 +157,48 @@
                         <td class="responsive-td mobile-hide">{{ $invoice_name}}</td>
 
                         @if ($invoice->invoice_type == 0)
-                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b></td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b>
+
+                            <div class="d-block d-sm-none">
+                                @if(!$AppUI->isStudent())
+                                <span class="small txt-grey pull-left">
+                                    <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                    <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                </span>
+                                @endif
+                                @if($AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
+                                        {{__($payment_status_all[$invoice->payment_status])}}
+                                    </span>
+                                @endif
+                            </div>
+
+                        </td>
                         @else
-                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b></td>
+                        <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b>
+
+                            <div class="d-block d-sm-none">
+                                @if(!$AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        @if($invoice->payment_status < 1)
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        @else
+                                        <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
+                                        @endif
+                                    </span>
+                                @endif
+                                @if($AppUI->isStudent())
+                                    <span class="small txt-grey pull-left">
+                                        @if($invoice->payment_status < 1)
+                                        <span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span>
+                                        @else
+                                        <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
+                                        @endif
+                                    </span>
+                                @endif
+                            </div></td>
+
                         @endif
 
                         <i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="loaderStatusPayment fa fa-spinner" aria-hidden="true"></i>
@@ -214,7 +253,7 @@
                                 @endphp
 
                                 @if($existingEntry)
-                                <span style="font-size:11px;">{{ __('sent') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span>
+                                <span style="font-size:11px;">{{ __('sent') }} <span class="text-success"> {{ \Carbon\Carbon::parse($existingEntry->created_at)->timezone($school->timezone)->format('d M, Y  H:i') }}</span></span><br>
                                 <button id="approved_btn" target="" href="" class="btn btn-link" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline" style="font-size:12px;">{{__('Re-Send by email')}}</span></button>
                                 @else
                                 <span style="font-size:11px;">{{ __('Invoice not sent') }}</span>
@@ -229,10 +268,10 @@
                             <td class="mobile-hide"></td>
                         @endif
 
-                        <td class="text-right">
+                        <td class="text-center pt-3">
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-h txt-grey"></i>
+                                    <i class="fa fa-ellipsis-h txt-dark fa-lg"></i>
                                 </a>
                                 <div class="dropdown-menu list action text-left">
                                     @if ($invoice->invoice_status > 1)
@@ -353,7 +392,7 @@
     $(document).ready( function () {
     var table = $('#example1').DataTable({
         dom: '<"top"f>rt<"bottom"lp><"clear">',
-    ordering: false, // Disable column sorting
+    ordering: true, // Disable column sorting
     searching: true, // Enable searching with the search input
     paging: true, // Disable pagination
     info: false, // Disable information display
