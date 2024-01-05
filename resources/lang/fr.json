@@ -291,6 +291,8 @@
     "Create a lesson":"Créer une leçon",
     "Add Expenses":"Ajouter des frais supplémentaires",
     "Show students availability":"Afficher la disponibilité des élèves",
+    "Create an event":"Créer un evenement",
+    "Show only students with availabilty":"Afficher uniquement les élèves qui ont des disponibilitées",
     "Title here":"Titre ici",
     "Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day":"Créer une leçon avec une presence minimale de 1 élève et une durée maximale de 1 jour",
     "Name of Expense":"Nom du frais",
