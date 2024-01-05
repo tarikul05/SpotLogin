@@ -4773,8 +4773,8 @@ function getAwayStudent() {
                 if (labelElement.length > 0) {
                     var labelText = labelElement.text();
 
-                    labelElement.html(item.full_name + ' <span class="text-warning"><i class="fa-solid fa-circle-info"></i> is away this day</span><br>');
-                    listAway.innerHTML += '<span class="text-warning"><i class="fa-solid fa-circle-info"></i> <span class="text-warning">' + item.full_name + ' is away this day</span>';
+                    labelElement.html(item.full_name + ' <span class="text-warning"><i class="fa-solid fa-circle-info"></i> is away this day</span>');
+                    listAway.innerHTML += '<span class="text-warning"><i class="fa-solid fa-circle-info"></i> <span class="text-warning">' + item.full_name + ' is away this day</span><br>';
                 } else {
                    // console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
                     labelElement.html(item.full_name);
