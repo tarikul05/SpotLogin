@@ -359,13 +359,14 @@
             </div>
             <div class="modal-body">
                 <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
-                    <div id="infoLesson" class="text-center alert alert-info">
+                    <div id="infoLesson" class="text-center alert alert-default">
                         <b>{{ __('Create a lesson') }}</b><br>
                         <h4 id="displayDate"></h4>
                         <i class="fa-solid fa-circle-info"></i> {{ __('Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day') }}.
                     </div>
-                    <div id="infoLessonEvent" class="text-center alert alert-info">
-                        <b>-- Create an event --</b><br>
+                    <div id="infoLessonEvent" class="text-center alert alert-default">
+                    <b>{{ __('Create an event') }}</b><br>
+                    <h4 id="displayDateEvent"></h4>
                         <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
                     </div>
                     <div class="modal-content">
@@ -452,10 +453,14 @@
                                                 <div class="col-md-10 offset-md-1 mt-4">
 
 
-                                                    <div class="card form-group p-3 row hide_coach_off">
+                                                    <div class="card form-group bg-tertiary p-3 row hide_coach_off">
                                                         <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
                                                             <h6><small>{{__('Student') }}</small></h6>
                                                            <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                                        </label>
+
+                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
+                                                           <input type="checkbox" name="check-students-availability2" id="check-students-availability2"> {{__('Show only students with availabilty') }}
                                                         </label>
 
                                                         <div id="studentListAvailabilities"></div>
@@ -839,7 +844,7 @@ $('.search-icon').on('click', function() {
 </script>
 
 <script>
-
+    let isOnlyAvailability = false;
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
     var resultHtml_cc='';      //for populate list - agenda_table
@@ -2936,6 +2941,9 @@ $('.search-icon').on('click', function() {
                 var listAvailabilities = document.getElementById('displayDate');
                 listAvailabilities.innerHTML = date.format('DD/MM/YYYY');
 
+                var listEvents = document.getElementById('displayDateEvent');
+                listEvents.innerHTML = date.format('DD/MM/YYYY');
+
                 if (date._ambigTime) {
                 $('#agenda_select').val('2');
                 } else {
@@ -2961,6 +2969,9 @@ $('.search-icon').on('click', function() {
 
                 var listAvailabilities = document.getElementById('displayDate');
                 listAvailabilities.innerHTML = startDate.format('DD/MM/YYYY');
+
+                var listEvents = document.getElementById('displayDateEvent');
+                listEvents.innerHTML = startDate.format('DD/MM/YYYY');
 
 
                 @if(!$AppUI->isStudent())
@@ -4730,6 +4741,19 @@ $( document ).ready(function() {
 
 $( document ).ready(function() {
 // if checked check-students-availability show all class .studentAvailabilities if not hide it
+    $("#check-students-availability2").click(function() {
+        if (this.checked) {
+            isOnlyAvailability = true;
+            resetStudentList();
+        } else {
+            isOnlyAvailability = false;
+            resetStudentList();
+        }
+    })
+});
+
+$( document ).ready(function() {
+// if checked check-students-availability show all class .studentAvailabilities if not hide it
     $("#check-students-availability").click(function() {
         if (this.checked) {
             $(".studentAvailabilities").fadeIn();
@@ -4790,7 +4814,7 @@ function getAwayStudent() {
                     if(moment(availability.day_of_week).format('YYYY-MM-DD') === verifDate.format('YYYY-MM-DD')) {
                         //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
                         //console.log('available on ' + availability.day_of_week + " on " +  $time);
-                    labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available betw. ' + availability.start_time + ' and ' + availability.end_time + ')</span>');
+                    labelElement.append(' <span class="text-success studentAvailabilities" style="font-size: 11px!important;padding-left: 4px!important;"> (Available ' + availability.start_time + ' and ' + availability.end_time + ')</span>');
                     }
                 });
             }
@@ -4802,7 +4826,8 @@ function getAwayStudent() {
 }
 
 function resetStudentList() {
-
+    isOnlyAvailability = document.getElementById("check-students-availability2").checked;
+    console.log('alors K', isOnlyAvailability);
   // Générer un tableau JSON des étudiants côté serveur
   var students = @json($studentsbySchool);
    // console.log('students', students)
@@ -4827,18 +4852,24 @@ function resetStudentList() {
         var studentName = student.full_name;
         var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + student.student_id + '"])');
         if (studentButton.length > 0) {
-
+        studentButton.show();
         var labelElement = studentButton.find('.form-check-label');
 
         if (labelElement.length > 0) {
             var labelText = labelElement.text();
-
             labelElement.html(student.full_name);
+            studentButton.show();
         } else {
+            if(isOnlyAvailability) {
+                studentButton.hide();
+            }
           //  console.log('Étiquette de texte non trouvée pour studentId=' + studentId);
         }
         } else {
        // console.log('Élément <button> non trouvé pour studentId=' + studentId);
+        if(isOnlyAvailability) {
+                studentButton.hide();
+            }
         }
 
         if(student.availabilities.length > 0) {
@@ -4847,7 +4878,7 @@ function resetStudentList() {
 
                     if(dayName === availability.day_of_week) {
                         countAvailabilityThisDay++;
-                        labelElement.append('<span class="badge bg-success studentAvailabilities" style="margin:1px!important; font-size: 11px!important;padding-left: 4px!important;">betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span>');
+                        labelElement.append('<span class="badge bg-success studentAvailabilities" style="margin:1px!important; font-size: 11px!important;padding-left: 4px!important;">' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span>');
                         listAvailabilities.innerHTML += '<span class="text-success studentAvailabilities" style="font-size: 12px!important;padding-left: 4px!important;"> <b>'+studentName+'</b> is usually available the '+dayName+' betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span><br>';
                     }
 
@@ -4857,11 +4888,15 @@ function resetStudentList() {
                         countAvailabilityThisDay++;
                         //var $time = availability.time_of_day === "AM" ? "morning" : "afternoon";
                         //console.log('available on ' + availability.day_of_week + " on " +  $time);
-                        labelElement.append('<span class="badge bg-success studentAvailabilities" style="margin:1px!important; font-size: 11px!important;padding-left: 4px!important;">betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span>');
+                        labelElement.append('<span class="badge bg-success studentAvailabilities" style="margin:1px!important; font-size: 11px!important;padding-left: 4px!important;">' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span>');
                         listAvailabilities.innerHTML += '<span class="text-success studentAvailabilities" style="font-size: 12px!important;padding-left: 4px!important;"> <b>'+studentName+'</b> is available this day betw. ' + moment(availability.start_time, 'HH:mm:ss').format('h:mm A') + ' and ' + moment(availability.end_time, 'HH:mm:ss').format('h:mm A') + '</span><br>';
 
                     }
                 });
+            } else {
+                if(isOnlyAvailability) {
+                studentButton.hide();
+            }
             }
 
     });
