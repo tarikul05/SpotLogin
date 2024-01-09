@@ -75,7 +75,7 @@
       <div class="col-lg-6 col-md-12 order-1 order-lg-2">
         <div class="about-us-cont-bg text-center">
           <h1 class="mb-0 gilroy-bold text-white text-center position-absolute" id="title_video"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="78">Sportlogin demo</h1>
-          <video controls class="img-thumbnail" style="border:none; width:100%; padding:0 margin:0; border-radius:8px 0 0 8px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto" autoplay>
+          <video controls class="img-thumbnail" style="border:none; width:100%; padding:0 margin:0; border-radius:8px 0 0 8px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
             <source src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
           </video>
         </div>
