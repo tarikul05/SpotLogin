@@ -53,25 +53,34 @@ class ContactFormController extends Controller
         $subject = $request->input('subject');
         $headerMessage = $request->input('headerMessage');
         $emailTo = $data['emailTo'];
-        $emailToConcatenated = implode(',', $data['emailTo']);
+        $isStaff = false;
 
         if($emailTo === "staff") {
-            $emailTo = config('services.mail.from_address');
+           // $emailTo = config('services.mail.from_address');
+        } else {
+            $emailToConcatenated = implode(',', $data['emailTo']);
         }
+
         $messageBody = $request->input('message');
-
-
         $contactForm = new ContactForm();
         $contactForm->sujet = $subject;
         $contactForm->email_expediteur = $authUser->email;
-        $contactForm->email_destinataire = $emailToConcatenated;
+        if($emailTo !== "staff") {
+            $contactForm->email_destinataire = $emailToConcatenated;
+        } else {
+            $contactForm->email_destinataire = config('services.mail.from_address');
+        }
         $contactForm->id_expediteur = $authUser->id;
         $contactForm->id_destinataire = $person_id;
         $contactForm->message = $messageBody;
         $contactForm->save();
 
-        foreach ($data['emailTo'] as $recipient) {
-            Mail::send(new ContactFormMailable($subject, $recipient, $headerMessage, $messageBody));
+        if($emailTo !== "staff") {
+            foreach ($data['emailTo'] as $recipient) {
+                Mail::send(new ContactFormMailable($subject, $recipient, $headerMessage, $messageBody));
+            }
+        } else {
+            Mail::send(new ContactFormMailable($subject, config('services.mail.from_address'), $headerMessage, $messageBody));
         }
 
         if($data['emailTo'] === "staff") {
