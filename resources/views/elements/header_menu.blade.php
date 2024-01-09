@@ -3,7 +3,7 @@
         <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="container-fluid paddingLogo">
             <div class="position-relative d-none d-sm-block pt-1 pl-1">
-            <img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="25px" alt="SpotLogin" style="position:absolute; width:25px padding-left:3px; left:20px; top:6px;">
+            <!--<img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="25px" alt="SpotLogin" style="position:absolute; width:25px padding-left:3px; left:20px; top:6px;">-->
             <a href="{{  route('agenda') }}" class="navbar-brand d-none d-sm-block">
                 <img src="{{ asset('img/logo.png') }}" width="45px" alt="SpotLogin">
             </a>
