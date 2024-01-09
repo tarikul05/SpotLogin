@@ -5,6 +5,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 <script src="{{ asset('js/lib/moment.min.js')}}"></script>
 <style type="text/css">
 	input[readonly="readonly"] {
@@ -35,7 +36,7 @@
 			<div class="col-md-12">
 				<form enctype="multipart/form-data" role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
                     <div class="form-group row">
-                        <div class="col-md-5 p-2 md-12">
+                        <div class="col-md-4 p-2 md-12">
                             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                                 <i class="fa fa-calendar"></i>&nbsp;
                                 <span></span>
@@ -48,20 +49,25 @@
                                 <option value="create" disabled>Custom report (soon)</option>
                             </select>
                         </div>-->
-                        <div class="col-md-2 md-12 p-2 text-right">
+                        <div class="col-md-3 md-12 p-2 text-right">
                             <a class="btn btn-primary w-100" id="billing_period_search_btn_2"><i class="fa-solid fa-file-lines"></i> {{ __('Generate') }}</a>
                             <a class="btn btn-primary w-100" id="billing_period_search_btn_2" style="display: none;"><i class="fa-solid fa-file-lines"></i> {{ __('Generate') }}</a>
                         </div>
-                        <div class="col-md-2 md-12 p-2 text-center" id="download_btn_report">
+                        <div class="col-md-3 md-12 p-2 text-center" id="download_btn_report">
                             <!--<a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>-->
+                            <a href="#" id="cmd" class="btn btn-success w-100"><i class="fa-solid fa-file-pdf"></i> {{ __('Export to PDF') }}</a>
                         </div>
-
+                        <div class="col-md-2 md-12 p-2 text-center" id="print_btn_report" style="display: none;">
+                            <!--<a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>-->
+                            <a href="#" class="btn btn-success w-100" id="printButton"><i class="fa-solid fa-file-pdf"></i> {{ __('Print') }}</a>
+                        </div>
                     </div>
                 </form>
 			</div>
 
 
             <br>
+            <div id="contentPDF">
             <div class="card mb-4">
                 <div class="card-body p-3 text-right">
                 <b id="info_invoice_report" class="text-right"></b>
@@ -76,8 +82,8 @@
             <div class="mb-4">
                 <div class="card-body p-3 text-right">
                 <b>Total Discount</b><div class="text-lowercase" id="totalDiscount"></div>
-                <b>Total Amount H.T</b><div class="text-lowercase" id="totalAmountLessonHT"></div>
-                <b>Total Amount</b><div class="text-lowercase" id="totalAmount"></div>
+                <b>Total amount invoiced (including taxes)</b> <div class="text-lowercase" id="totalAmountLessonHT"></div>
+                <b>Net total (after taxes)</b> <div class="text-lowercase" id="totalAmount"></div>
                 </div>
             </div>
 
@@ -87,6 +93,7 @@
                     <br>
                     <!--<a href="{{ route('generateReportPDF') }}" target="blank" class="btn btn-success w-100 disabled" id="billing_period_download_btn2"><i class="fa-solid fa-file-pdf"></i> {{ __('Download (soon)') }}</a>-->
                 </div>
+            </div>
             </div>
 
 
@@ -102,16 +109,48 @@
 @endsection
 
 @section('footer_js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js" integrity="sha512-5g2Nj3mqLOgClHi20oat1COW7jWvf7SyqnvwWUsMDwhjHeqeTl0C+uzjucLweruQxHbhDwiPLXlm8HBO0011pA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    // Gérer le changement de sélection dans la liste déroulante
+    $('#printButton').click(function () {
+        var contentDiv = document.getElementById('contentPDF');
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Imprimer le contenu</title></head><body>');
+        printWindow.document.write(contentDiv.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+    </script>
+
+<script>
+    window.jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF();
+    $('#cmd').click(function () {
+        var contentHTML = $('#contentPDF').get(0);
+        html2canvas(contentHTML).then(function(canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        var doc = new jsPDF();
+        var selectedStartDate = $('#reportrange').data('daterangepicker').startDate.format('YYYY-MM-DD');
+        var selectedEndDate = $('#reportrange').data('daterangepicker').endDate.format('YYYY-MM-DD');
+        doc.text('Rapport: ' + selectedStartDate + ' to ' + selectedEndDate, 10, 10);
+        doc.text('', 10, 10);
+        doc.addImage(imgData, 'PNG', 10, 15, 190, 0);
+        var date = new Date();
+        var timestamp = date.getTime();
+        doc.save('invoicing-rapport-' + timestamp + '.pdf');
+        });
+    })
+</script>
+
+<script>
     document.getElementById('report_type').addEventListener('change', function () {
         var selectedValue = this.value;
         if (selectedValue === 'details') {
-            // Si l'utilisateur choisit "Details", afficher le bouton billing_period_search_btn_2
             document.getElementById('billing_period_search_btn_2').style.display = 'inline-block';
             document.getElementById('billing_period_search_btn').style.display = 'none';
         } else {
-            // Sinon, afficher le bouton billing_period_search_btn
             document.getElementById('billing_period_search_btn_2').style.display = 'none';
             document.getElementById('billing_period_search_btn').style.display = 'inline-block';
         }
@@ -158,12 +197,8 @@
         $('#billing_period_search_btn').on('click', function() {
             var selectedStartDate = $('#reportrange').data('daterangepicker').startDate.format('YYYY-MM-DD');
             var selectedEndDate = $('#reportrange').data('daterangepicker').endDate.format('YYYY-MM-DD');
-
-            // Vous pouvez maintenant utiliser selectedStartDate et selectedEndDate pour vos opérations de recherche.
             console.log('Start Date:', selectedStartDate);
             console.log('End Date:', selectedEndDate);
-
-            // Si vous souhaitez envoyer les dates au serveur, vous pouvez les ajouter à un champ de formulaire caché et soumettre le formulaire.
             $('#billing_period_start_date').val(selectedStartDate);
             $('#billing_period_end_date').val(selectedEndDate);
             //$('#form_invoicing').submit(); // Soumettre le formulaire
@@ -262,15 +297,18 @@
 
             var infoInvoiceReport = document.getElementById('info_invoice_report');
             var download_btn_report = document.getElementById('download_btn_report');
+            var print_btn_report = document.getElementById('print_btn_report');
             var resumeReport = document.getElementById('resumeReport');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
                 infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' '+schoolCurrency+'';
                 download_btn_report.style.display = 'block';
+                print_btn_report.style.display = 'block';
                 resumeReport.style.display = 'block';
             } else {
                 infoInvoiceReport.style.display = 'none';
                 download_btn_report.style.display = 'none';
+                print_btn_report.style.display = 'none';
                 resumeReport.style.display = 'none';
             }
 
@@ -417,13 +455,16 @@ $('#billing_period_search_btn_22').on('click', function() {
 
             var infoInvoiceReport = document.getElementById('info_invoice_report');
             var download_btn_report = document.getElementById('download_btn_report');
+            var print_btn_report = document.getElementById('print_btn_report');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
                 infoInvoiceReport.textContent = 'Total: ' + result.length + ' invoices found for ' + grandTotal.toFixed(2) + ' '+schoolCurrency+'';
                 download_btn_report.style.display = 'block';
+                print_btn_report.style.display = 'block';
             } else {
                 infoInvoiceReport.style.display = 'none';
                 download_btn_report.style.display = 'none';
+                print_btn_report.style.display = 'none';
             }
         }
     });
@@ -656,6 +697,7 @@ $('#billing_period_search_btn_2').on('click', function() {
 
             var infoInvoiceReport = document.getElementById('info_invoice_report');
             var download_btn_report = document.getElementById('download_btn_report');
+            var print_btn_report = document.getElementById('print_btn_report');
             var resumeReport = document.getElementById('resumeReport');
             if (grandTotal > 0) {
                 infoInvoiceReport.style.display = 'block';
@@ -663,6 +705,7 @@ $('#billing_period_search_btn_2').on('click', function() {
                 //infoInvoiceReport.innerHTML = result.length + ' invoices <br>Period : ' + selectedStartDate + ' - ' + selectedEndDate + ' <br>Total: <span class="text-primary">' + grandTotal.toLocaleString() + '€</span>';
                 //infoInvoiceReport.classList.add('h5');
                 download_btn_report.style.display = 'block';
+                print_btn_report.style.display = 'block';
 
                 //Resume
                 var divTotalAmount = document.getElementById('totalAmount');
@@ -682,6 +725,7 @@ $('#billing_period_search_btn_2').on('click', function() {
             } else {
                 infoInvoiceReport.style.display = 'none';
                 download_btn_report.style.display = 'none';
+                print_btn_report.style.display = 'none';
                 resumeReport.style.display = 'none';
             }
         },

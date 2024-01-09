@@ -7,7 +7,7 @@
   <div class="container-fluid h-100">
     <div class="row h-100 align-items-center">
       <div class="col-12 bloc-title">
-        <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/christmas.png') }}">Sportlogin</h1>
+        <h1 class="mb-0 gilroy-bold text-white"><!--<img src="{{ asset('img/christmas.png') }}">-->Sportlogin</h1>
         <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
@@ -73,8 +73,11 @@
   <div class="container-fluid p-0" style="max-width: 100%;">
     <div class="row no-gutters">
       <div class="col-lg-6 col-md-12 order-1 order-lg-2">
-        <div class="about-us-cont-bg" style="background: url({{ asset('img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png') }}); background-size: cover;background-position: center;">
-          <h1 class="mb-0 gilroy-bold text-white"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="78">Sportlogin</h1>
+        <div class="about-us-cont-bg text-center">
+          <h1 class="mb-0 gilroy-bold text-white text-center position-absolute" id="title_video"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="78">Sportlogin demo</h1>
+          <video controls class="img-thumbnail" style="border:none; width:100%; padding:0 margin:0; border-radius:8px 0 0 8px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
+            <source src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
+          </video>
         </div>
       </div>
       <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
@@ -257,6 +260,34 @@
         $(".bloc-title").addClass("pt-0");
     }
 
-
+    const media = document.querySelector("video");
+    media.addEventListener("click", playPauseMedia);
+    function playPauseMedia() {
+        if (media.paused) {
+            media.play();
+        } else {
+            media.pause();
+        }
+    }
+    media.onpause = function() {
+        console.log("User Paused");
+        const titlevideo = document.getElementById("title_video");
+        titlevideo.style.display = "block";
+    };
+    media.onplay = function() {
+        console.log("User Started");
+        const titlevideo = document.getElementById("title_video");
+        titlevideo.style.display = "none";
+    };
+    media.addEventListener("ended", function() {
+        play.style.display = "block";
+        replay.style.display = "none";
+        media.currentTime = 0.0;
+    });
+    media.addEventListener("play", function() {
+        play.style.display = "none";
+        replay.style.display = "block";
+        end.style.display = "none";
+    });
 </script>
 @endsection

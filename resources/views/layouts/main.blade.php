@@ -14,6 +14,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4@5.0.15/bootstrap-4.min.css" rel="stylesheet">
+
 <!-- Links form inner page -->
 @section('head_links')
 
@@ -53,6 +54,7 @@
 </section>
 
 <!-- js comes form inner page start -->
+
 @section('footer_js')
 @show
 <!-- js comes form inner page end -->
