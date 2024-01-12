@@ -28,7 +28,7 @@ use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\SportloginEmail;
 use App\Models\Parents;
-use App\Models\parentStudent;
+use App\Models\ParentStudent;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentsImport;
@@ -72,7 +72,7 @@ public function index(Request $request, $schoolId = null)
 
         //check for each student if there is a relation with table parent_students where student_id
         foreach ($studentsList as $student) {
-            $parents = parentStudent::where('student_id',$student->id)->get();
+            $parents = ParentStudent::where('student_id',$student->id)->get();
             if(!empty($parents)){
                 $memberFamily = [];
                 foreach ($parents as $parent) {
@@ -80,7 +80,7 @@ public function index(Request $request, $schoolId = null)
                     $parent->name = $parentsName->firstname.' '.$parentsName->lastname;
 
                     //get all student with same parent_id from parent_students and get student->firstname of each student from students
-                    $allOthersMembers = parentStudent::where('parent_id', $parent->parent_id)->get();
+                    $allOthersMembers = ParentStudent::where('parent_id', $parent->parent_id)->get();
 
                     $parentMembers = [];
                     foreach ($allOthersMembers as $member) {
