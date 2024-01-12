@@ -74,7 +74,7 @@ class Parents extends BaseModel
         'modified_by'
     ];
 
-  
+
 
     /**
      * The attributes that should be casted to native types.
@@ -86,7 +86,7 @@ class Parents extends BaseModel
         'modified_at' => 'date:Y/m/d H:i',
     ];
 
-   
+
     protected $appends = [];
 
      /**
@@ -104,7 +104,7 @@ class Parents extends BaseModel
      */
     public function studentData()
     {
-        
+
         return $this->hasMany(ParentStudent::class)
             ->join('students as u', 'u.id', '=', 'parent_students.student_id')
             ->select(['u.*']);

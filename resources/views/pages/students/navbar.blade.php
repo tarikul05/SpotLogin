@@ -10,8 +10,14 @@
         </button>
 
         <button class="nav-link" style="background-color:#EEE; padding-left:10px;" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
-            {{ __('Add new') }}
+            {{ __('Add new student') }}
         </button>
+
+        @if($students)
+            <button class="nav-link" style="background-color:#EEE; padding-left:10px;" id="nav-family-tab" data-bs-toggle="tab" data-bs-target="#family" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+                {{ __('Create a family') }}
+            </button>
+        @endif
 
     </div>
 </nav>

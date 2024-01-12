@@ -464,16 +464,58 @@ class Event extends BaseModel
             $query->where('events.deleted_at', null);
         }
         else {
-        $query->where('events.deleted_at', null);
-        if(isset($params['list_student_id'])) {
-        $studentIds1 = explode('|', $params['list_student_id']);
-        $query->join('event_details', 'events.id', '=', 'event_details.event_id')
-        ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
 
-        //$query->where('events.teacher_id', $params['person_id']);
-        $query->distinct()->select(['events.*']);
-        $query->groupBy('events.id');
-        }
+
+
+
+            if ($user_role == 'parent') {
+                $query->where('events.deleted_at', null);
+                if (isset($params['list_student_id'])) {
+                    $studentIds1 = explode('|', $params['list_student_id']);
+                    $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+                        ->whereIn('event_details.student_id', $studentIds1);
+                    $query->select('events.*')->distinct();
+                    $query->groupBy('events.id');
+                }
+                
+                $query->orderBy('events.id', 'asc');
+
+                if ($fromFilterDate && $toFilterDate) {
+                    $timeZone = 'UTC';
+                
+                    if (!empty($params['school_id'])) {
+                        $school = School::active()->find($params['school_id']);
+                
+                        if (!empty($school->timezone)) {
+                            $timeZone = $school->timezone;
+                        }
+                    }
+                
+                    $fromFilterDate = $this->formatDateTimeZone($fromFilterDate . ' 00:00:00', 'long', $timeZone, 'UTC');
+                    $toFilterDate = $this->formatDateTimeZone($toFilterDate . ' 23:59:59', 'long', $timeZone, 'UTC');
+                    $liststudentsIDs = explode('|', $params['list_student_id']);
+                    $studentsIDsString = implode(',', $liststudentsIDs);
+                    $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) . "') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) . "') AND event_details.student_id IN (" . $studentsIDsString . ")";
+                    $query->whereRaw($qq);
+                }
+                $query->orderBy('events.date_start', 'asc');  // Tri par date (ascendant par défaut)
+                return $query;
+
+
+                
+            } else {
+
+                $query->where('events.deleted_at', null);
+                if(isset($params['list_student_id'])) {
+                $studentIds1 = explode('|', $params['list_student_id']);
+                $query->join('event_details', 'events.id', '=', 'event_details.event_id')
+                ->select(['events.*'])->whereIn('event_details.student_id', $studentIds1);
+
+                //$query->where('events.teacher_id', $params['person_id']);
+                $query->distinct()->select(['events.*']);
+                $query->groupBy('events.id');
+                }
+            }
         }
         //error_log($_POST['event_type']);
 
@@ -582,7 +624,7 @@ class Event extends BaseModel
 
               if ($user_role == 'student') {
 
-                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') AND event_details.student_id = " . $params['person_id'];
+                $qq = "(events.date_start BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') OR (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."') AND event_details.student_id IN (" . $params['person_id'] . ")";
 
               } else {
 

@@ -12,6 +12,7 @@ use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
+use App\Models\parentStudent;
 use App\Models\InvoiceItem;
 use App\Models\EventCategory;
 use App\Models\Availability;
@@ -90,9 +91,11 @@ class AgendaController extends Controller
         $user_role = 'superadmin';
         $schools = School::orderBy('id')->get();
 
-        if($user->person_id !=0 && $user->person_type !='SUPER_ADMIN'){
+        if($user->person_id !=0 && $user->person_type !='SUPER_ADMIN' && $user->person_type !== 'App\Models\Parents'){
             $schools = $user->schools();
         }
+
+
 
         $alllanguages = Language::orderBy('sort_order')->get();
         $locations = Location::where('school_id', $schoolId)->orderBy('id')->get();
@@ -137,6 +140,9 @@ class AgendaController extends Controller
         }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
+        }
+        if ($user->person_type == 'App\Models\Parents') {
+            $user_role = 'parent';
         }
         $coach_user ='';
         if ($user->isSchoolAdmin() || $user->isTeacherAdmin() || $user->isTeacherSchoolAdmin()) {
@@ -557,6 +563,9 @@ class AgendaController extends Controller
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
+        if ($user->person_type == 'App\Models\Parents') {
+            $user_role = 'parent';
+        }
         if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin() || $user->isTeacherAdmin()) {
             $user_role = 'admin_teacher';
         }
@@ -578,9 +587,17 @@ class AgendaController extends Controller
         $data['school_id'] = $schoolId;
         $data['schools'] = [$schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId()];
 
-        //$query1 = new Event;
+        if ($user->person_type == 'App\Models\Parents') {
+            $parents = parentStudent::where('parent_id', $user->person_id)->get();
+            $listStudentId = [];
+            foreach ($parents as $parent) {
+                $studentIds = $parent->student_id;
+                $listStudentId[] = $studentIds;
+            }
+            $data['list_student_id'] = implode('|', $listStudentId);
+        }
+
         $eventData = $event->filter($data);
-        //dd($eventData->count());
         $eventData = $eventData->get();
 
         $events = array();
@@ -972,7 +989,7 @@ class AgendaController extends Controller
                     $page_name='/'.$fetch->school_id.'/edit-student-off/'.$fetch->id;
                 }
 
-                if ($user_role == 'student'){
+                if ($user_role == 'student' || $user_role == 'parent'){
                     $action_type='view';
                     if ($fetch->event_type==10) { //lesson
                         $page_name='/'.$fetch->school_id.'/view-lesson/'.$fetch->id;

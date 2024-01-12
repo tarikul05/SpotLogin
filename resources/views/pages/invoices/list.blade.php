@@ -21,7 +21,7 @@
 
     <h5>{{ __("Invoices List") }}</h5>
 
-    @if(!$AppUI->isStudent())
+    @if(!$AppUI->isStudent() && !$AppUI->isParent())
     <nav class="subNav">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
@@ -160,13 +160,13 @@
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b>
 
                             <div class="d-block d-sm-none">
-                                @if(!$AppUI->isStudent())
+                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                 <span class="small txt-grey pull-left">
                                     <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                     <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                 </span>
                                 @endif
-                                @if($AppUI->isStudent())
+                                @if($AppUI->isStudent() || $AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         {{__($payment_status_all[$invoice->payment_status])}}
@@ -179,7 +179,7 @@
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount, 2) }}</b>
 
                             <div class="d-block d-sm-none">
-                                @if(!$AppUI->isStudent())
+                                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         @if($invoice->payment_status < 1)
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
@@ -188,7 +188,7 @@
                                         @endif
                                     </span>
                                 @endif
-                                @if($AppUI->isStudent())
+                                @if($AppUI->isStudent() || $AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         @if($invoice->payment_status < 1)
                                         <span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span>
@@ -205,13 +205,13 @@
                         @if ($invoice->payment_status == 0)
                             <td class="responsive-td mobile-hide text-left">
                                 <div id="status_{{$invoice->id}}">
-                                    @if(!$AppUI->isStudent())
+                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-warn gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                     @endif
-                                    @if($AppUI->isStudent())
+                                    @if($AppUI->isStudent() || $AppUI->isParent())
                                         <span class="small txt-grey pull-left">
                                             <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                             {{__($payment_status_all[$invoice->payment_status])}}
@@ -222,13 +222,13 @@
                         @else
                             <td class="responsive-td mobile-hide text-left" width="150">
                                 <div id="status_{{$invoice->id}}">
-                                @if(!$AppUI->isStudent())
+                                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span style="cursor: pointer;" id="payment_btn" data-invoice-id="{{$invoice->id}}"  data-invoice-status="{{ $invoice->payment_status }}" class="payment_btn"><span class="text-suces gilroy-semibold">{{__($payment_status_all[$invoice->payment_status])}}</span></span>
                                     </span>
                                 @endif
-                                @if($AppUI->isStudent())
+                                @if($AppUI->isStudent() || $AppUI->isParent())
                                     <span class="small txt-grey pull-left">
                                         <i class="fa fa-credit-card text-success" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
                                         <span class="text-suces gilroy-semibold">{{$payment_status_all[$invoice->payment_status]}}</span>
@@ -238,7 +238,7 @@
                             </td>
                         @endif
                         @if ($invoice->invoice_status > 1)
-                            @if(!$AppUI->isStudent())
+                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                             <td class="responsive-td text-center mobile-hide">
                                 <!--<i style="display: none; margin-right:5px; margin-top:3px;" id="loaderStatusPayment" class="fa fa-spinner fa-lg mr-1 light-blue-txt pull-left" aria-hidden="true"></i>
                                 <i class="fa fa-credit-card fa-lg mr-1 light-blue-txt pull-left" id="loadercreditCardPayment" style="margin-right:5px; margin-top:3px;"></i>
@@ -290,7 +290,7 @@
                                         </a>
                                     @endif
 
-                                    @if (($invoice->payment_status == 0) && (!$AppUI->isStudent()))
+                                    @if (($invoice->payment_status == 0) && (!$AppUI->isStudent()) && (!$AppUI->isParent()))
                                         <a class="dropdown-item txt-grey send_email" href="javascript:void(0)" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa fa-envelope txt-grey"></i> {{__('Send reminder email')}}</a>
                                     @endif
                                 </div>

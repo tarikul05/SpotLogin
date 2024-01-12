@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\BaseModel;
 use App\Models\User;
 use App\Models\SchoolStudent;
+use App\Models\ParentStudent;
 use App\Models\EventDetails;
 use App\Models\Availability;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -141,9 +142,13 @@ class Student extends BaseModel
     public function school()
     {
         return $this->hasMany(SchoolStudent::class);
-
-
     }
+
+    public function parentStudent()
+    {
+        return $this->hasMany(ParentStudent::class,'student_id','id');
+    }
+
 
     /**
      * Get the user account.

@@ -13,6 +13,7 @@ use App\Models\Currency;
 use App\Models\EmailTemplate;
 use App\Models\Country;
 use App\Models\SchoolTeacher;
+use App\Models\Parents;
 use App\Mail\SportloginEmail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -411,6 +412,10 @@ class UserController extends Controller
                     }
                     if ($verifyToken->person_type =='App\Models\Teacher') {
                         $exist = SchoolTeacher::where(['teacher_id'=>$verifyToken->person_id, 'school_id'=>$verifyToken->school_id])->first();
+
+                    }
+                    if ($verifyToken->person_type =='App\Models\Parents') {
+                        $exist = Parents::where(['id'=>$verifyToken->person_id])->first();
 
                     }
                     if ($exist) {

@@ -18,10 +18,13 @@ class ParentStudent extends BaseModel
      */
     protected $fillable = [
         'parent_id',
-        'student_id'
+        'student_id',
+        'created_by',
+        'modified_by',
+        'deleted_at',
     ];
 
-   
+
 
     /**
      * The attributes that should be casted to native types.

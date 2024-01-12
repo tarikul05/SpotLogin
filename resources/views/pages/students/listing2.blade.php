@@ -1,10 +1,11 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-1">
+    <div class="col-md-10">
+        <form method="POST" action="{{ route('students.delete') }}">
         <div class="card">
             <div class="card-header">{{ __('List all') }}</div>
             <div class="card-body">
 
-                <form method="POST" action="{{ route('students.delete') }}">
+
                     @csrf
                     <input name="schoolId" type="hidden" value="{{$schoolId}}">
                     <table class="table table-stripped table-hover" id="studentList">
@@ -39,8 +40,14 @@
                                     </td>
                                     <td style="position: relative;">
                                         <!--<a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; position:absolute; right:0; top:0; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>-->
+
+                                        @if(count($student->family) > 0)
+                                        <a href="#" data-toggle="modal" data-target="#student_family_{{ $student->id }}">
+                                        <i class="fa fa-users" aria-hidden="true" title="{{ $student->firstname }} is a member of a family"></i>
+                                        </a>
+                                        @endif
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
-                                           <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
+                                            <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
                                            {{ $student->email; }}
                                         </a>
                                     </td>
@@ -143,12 +150,56 @@
                     </table>
 
                     <br>
-                    <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
-                </form>
+
             </div>
         </div>
+
+        <button class="btn btn-danger btn-md mt-3" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
+    </form>
+
     </div>
 </div>
+
+
+
+@foreach($students as $student)
+
+    <div class="modal fade confirm-modal" id="student_family_{{ $student->id }}" tabindex="-1" aria-hidden="true"
+    aria-labelledby="student_family_{{ $student->id }}" name="student_family_{{ $student->id }}">
+
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Family members</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            @php $item = 1; @endphp
+            @foreach($student->family as $family)
+            @if($family->student_id === $student->id)
+                <div class="card-body">
+                    <div for="{{ $family->id }}">
+                    <b class="mt-2 text-dark"><i class="fa-solid fa-users"></i> Members of the family</b> <b class="text-primary h6">{{ $family->name }}</b><br>
+                     <ul>
+                    @foreach($family->members as $member)
+                     <li>{{ $member }}</li>
+                    @endforeach
+                     </ul>
+                    </div>
+                </div>
+                @endif
+            @endforeach
+        </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+@endforeach
 
 
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Models\User;
+use App\Models\School;
 use App\Models\VerifyToken;
 use App\Models\EmailTemplate;
 use App\Models\TermConditionLang;
@@ -529,6 +530,15 @@ class AuthController extends Controller
             $request->session()->put('selected_school', $user->schools()[0]);
             $request->session()->put('selected_role',$tRoleType);
             return redirect(RouteServiceProvider::HOME);
+        }elseif ($user->person_type == 'App\Models\Parents') {
+            // $read_only_role = $this->user_read_only($user);
+
+            $tRoleType = "parent";
+            $user->syncRoles([$tRoleType]);
+            $school = School::active()->find($user->school_id);
+            $request->session()->put('selected_school', $school);
+            $request->session()->put('selected_role',$tRoleType);
+            return redirect(RouteServiceProvider::HOME);
         }
 
         if ($request->isMethod('post')){
@@ -542,6 +552,8 @@ class AuthController extends Controller
                 }
             }
         }
+
+
 
         return view('pages.auth.permission_check', [
             'schools' => $user->schools(),

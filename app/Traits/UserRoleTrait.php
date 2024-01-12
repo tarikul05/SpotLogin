@@ -18,6 +18,9 @@ trait UserRoleTrait
         if ($user->person_type == 'App\Models\Student') {
             $user_role = 'student';
         }
+        if ($user->person_type == 'App\Models\Parents') {
+            $user_role = 'parent';
+        }
         if ($user->person_type == 'App\Models\Teacher') {
             $user_role = 'teacher';
         }
