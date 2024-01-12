@@ -182,16 +182,23 @@ public function index(Request $request, $schoolId = null)
         $alldata = $request->all();
         $parent = new Parents();
         //$parent->email = $request->principal_email;
+        $emailTo = null;
 
         if ($request->filled('principal_email')) {
-            $parent->email = $request->principal_email;
-            $emailTo = $request->principal_email;
-        } elseif ($request->filled('custom_email')) {
-            $parent->email = $request->custom_email;
-            $emailTo = $request->custom_email;
-        } else {
-            // Aucun email renseigné, renvoyer une erreur
-            return back()->withInput($request->all())->with('error', __('Veuillez renseigner au moins un email.'));
+            if($request->principal_email !== "custom"){
+                $parent->email = $request->principal_email;
+                $emailTo = $request->principal_email;
+            }
+        }
+
+        if($emailTo == null) {
+            if ($request->filled('custom_email')) {
+                $parent->email = $request->custom_email;
+                $emailTo = $request->custom_email;
+            } else {
+                // Aucun email renseigné, renvoyer une erreur
+                return back()->withInput($request->all())->with('error', __('Please add an email address to create the new family'));
+            }
         }
 
         $parent->firstname = $request->family_name;
@@ -237,9 +244,9 @@ public function index(Request $request, $schoolId = null)
         $data['url'] = route('add.verify.email',$data['token']);
 
         if ($this->emailSend($data,'sign_up_confirmation_email')) {
-            $msg = __('We sent an activation link to the new family\s email address.');
+            $msg = __('We sent an activation link to the new family email address.');
         }  else {
-            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+            return redirect()->back()->withInput($request->all())->with('error', __('The new Family is created but we could not send an activation link to the new family email address. Please re-send the email to the new family email address.'));
         }
 
         return back()->with('success', $msg);
