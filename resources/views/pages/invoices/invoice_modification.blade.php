@@ -342,7 +342,7 @@
 
 
                                     <?php $totaltaxAmount=0; ?>
-                                    @if ($invoice->tax_amount > 0)
+                                    @if ($invoice->tax_perc > 0)
 
                                     @foreach(DB::table('invoices_taxes')->where('invoice_id', $invoice->id)->get() as $item)
                                     <tr style="background-color: #EEE;">
