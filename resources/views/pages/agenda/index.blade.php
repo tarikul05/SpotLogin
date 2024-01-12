@@ -128,12 +128,12 @@
 
 
 
-                                            @if(!$AppUI->isStudent())
+                                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                             <a style="display: none; display:inline-block; min-width: 190px;" href="#" id="btn_export_events" target="_blank" class="btn btn-theme-outline m-1"><img src="{{ asset('img/excel_icon.png') }}"  width="17" height="auto"/>
                                                 <span id ="btn_export_events_cap">Excel</span></a>
                                             @endif
 
-                                            @if($AppUI->isStudent())
+                                            @if($AppUI->isStudent() || $AppUI->isParent())
                                                 <a style="display:inline-block; min-width: 190px;" href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success m-1 mb-2"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
                                                 <a style="display:inline-block; min-width: 190px;" href="{{ route('student.availabilities') }}" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-calendar"></i> <span id ="btn_validate_events_cap">{{__('Availability')}}</span></a>
                                             @endif
@@ -161,7 +161,7 @@
                         </div>
 
                     <div class="col-md-3 text-right  btn-area align-items-end text-center">
-                        @if(!$AppUI->isStudent())
+                        @if(!$AppUI->isStudent() && !$AppUI->isParent())
                         <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
                         @else
                         <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
@@ -198,7 +198,7 @@
                                             </div>
                                         </div>
                                         <div class="btn-group ml-2 text-right">
-                                            @if(!$AppUI->isStudent())
+                                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                                 <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     {{__('Actions')}} <i class="fa fa-caret-down"></i>
                                                 </button>
@@ -277,6 +277,7 @@
                                     </div>
 
 
+
                                     <div id="event_school_div" name="event_school_div" class="selectdiv" style="opacity: 0 !important; visibility: hidden !important;">
                                         <select class="form-control" multiple="multiple" id="event_school" name="event_school[]" style="margin-bottom: 15px;" >
                                             @foreach($schools as $key => $this_school)
@@ -285,6 +286,7 @@
                                             @endforeach
                                         </select>
                                     </div>
+
 
 
                                     <div>
@@ -957,7 +959,7 @@ $('.search-icon').on('click', function() {
     var foundRecords=0; // to store found valid records for rendering yes/no - default is 0.
     var lockRecords=1;
 
-    if ((no_of_teachers == 1) || (user_role == "student")){
+    if ((no_of_teachers == 1) || (user_role == "student") || (user_role == "parent")){
 		document.getElementById('event_teacher_div').style.display="none";
 	}
 	$('#datepicker_month').datetimepicker({
@@ -987,7 +989,7 @@ $('.search-icon').on('click', function() {
 
         setTimeout(() => {
 
-        if (user_role == "student") {
+        if (user_role == "student" || user_role == "parent") {
             document.getElementById('event_school').style.display="none";
 			document.getElementById('event_type').style.display="none";
 			document.getElementById('event_student_div').style.display="none";
@@ -1036,7 +1038,7 @@ $('.search-icon').on('click', function() {
         {
 
             // cours - events - PopulateButtonMenuList
-            if ((value.value == 10) && user_role != 'student'){
+            if ((value.value == 10) && user_role != 'student' && user_role != 'parent'){
                 menuHtml += '<button type="button" id="add_lesson_btn" class="btn btn-theme-success d-none d-md-block" style="border-radius: 4px!important; max-width: 80px; height: 35px;"><i class="fa-solid fa-plus"></i></button>';
                 // menuHtml+='<button title="" type="button" class="btn btn-theme-success dropdown-toggle" style="margin-left:0!important;height:35px;border-radius:0 4px 4px 0!important;" data-toggle="dropdown">';
                 // menuHtml+='<span class="caret"></span><span class="sr-only">Plus...</span></button>' ;
@@ -1948,7 +1950,7 @@ $('.search-icon').on('click', function() {
 
 
         var user_role=document.getElementById("user_role").value;
-        if (user_role == 'student') {
+        if (user_role == 'student' || user_role == 'parent') {
             //alert("You don't have permission to delete events");
             errorModalCall('permission_issue_common_text');
             return false;
@@ -1975,7 +1977,7 @@ $('.search-icon').on('click', function() {
         $(document).on('click', '#btn_validate_events,#btn_validate_events_mobile', function(e) {
 
         var user_role=document.getElementById("user_role").value;
-        if (user_role == 'student') {
+        if (user_role == 'student' || user_role == 'parent') {
             //alert("You don't have permission to delete events");
             errorModalCall('permission_issue_common_text');
             return false;
@@ -2625,7 +2627,7 @@ $('.search-icon').on('click', function() {
                         $('#event_modal_title').html('<span style="font-size: 22px; line-height: 2">' + event.event_type_name+'<p class="small">('+phrase+')</p></span><span style="color:#333;"></span><table style="width:100%;" class="table table-stripped table-hover">'+titleEvent+'<tr><td><i class="fa-solid fa-calendar-days"></i> Date :</td><td class="light-blue-txt gilroy-bold"> '+dayEvent+'</td></tr><tr><td><i class="fa-solid fa-clock"></i> Timer :</td><td class="light-blue-txt gilroy-bold"> '+stime+' - '+etime+'</td></tr>'+event.title_for_modal+'</table>');
                     }
 
-                if((user_role == 'student') ){
+                if((user_role == 'student' || user_role == 'parent') ){
                    if(event.event_type == 50) {
                     $("#btn_edit_view").fadeOut();
                    } else {
@@ -2706,7 +2708,7 @@ $('.search-icon').on('click', function() {
                 let selected_non_validate_delete_ids = document.getElementById("get_non_validate_event_delete_id").value;
                 if (foundRecords == 1)
                 {
-                    if (user_role == 'student') {
+                    if (user_role == 'student' || user_role == 'parent') {
                         document.getElementById("btn_copy_events").style.display = "none";
                         document.getElementById("btn_copy_events_mobile").style.display = "none";
                     } else {
@@ -2724,7 +2726,7 @@ $('.search-icon').on('click', function() {
 
                 if (foundRecords > 0)
                 {
-                    if (user_role == 'student') {
+                    if (user_role == 'student' || user_role == 'parent') {
                         document.getElementById("btn_validate_events").style.display = "none";
                         document.getElementById("btn_validate_events_mobile").style.display = "none";
                         document.getElementById("btn_delete_events").style.display = "none";
@@ -2974,7 +2976,7 @@ $('.search-icon').on('click', function() {
                 listEvents.innerHTML = startDate.format('DD/MM/YYYY');
 
 
-                @if(!$AppUI->isStudent())
+                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                 $('#start_date').val('');
                 $('#end_date').val('');
                 if (getSchoolIDs('is_multi')) {
@@ -3199,7 +3201,9 @@ $('.search-icon').on('click', function() {
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
-              //console.log('test', eventsToPut);
+              //console.log('test', json_events);
+
+
 
                 $('#calendar').fullCalendar('addEventSource',JSON.parse(json_events), true);
                 //$("#agenda_table tr:gt(0)").remove();
@@ -3279,7 +3283,6 @@ $('.search-icon').on('click', function() {
         $('#q').append('third <br>');
     }
     function getCurrentListFreshEvents(p_view=getCookie("cal_view_mode"),firstLoad=''){
-
 
         document.getElementById("agenda_list").style.display = "none";
 
@@ -3646,7 +3649,7 @@ $('.search-icon').on('click', function() {
         // if (getCookie('v_t_cnt') == '1') {
         //     document.getElementById("event_teacher").style.display="none";
         // }
-        if (user_role =='student'){
+        if (user_role =='student' || user_role =='parent'){
             document.getElementById("btn_copy_events").style.display="none";
             document.getElementById("btn_copy_events_mobile").style.display="none";
             document.getElementById("btn_goto_planning").style.display="none";

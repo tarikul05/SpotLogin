@@ -23,7 +23,7 @@
     <div>
         <label id="page_header" name="page_header">
             <i class="fa-solid fa-envelope"></i> {{__('Contact Form')}}<br>
-            <p style="font-size:14px;">@if(!$AppUI->isStudent())
+            <p style="font-size:14px;">@if(!$AppUI->isStudent() && !$AppUI->isParent())
                 {{ __('Send a message that your student directly receive by mail') }} :
                 @else
                 {{ __('Send a message that your teacher directly receive by mail') }} :
@@ -38,8 +38,8 @@
             <input type="text" class="form-control" id="subject" name="subject" required>
         </div>
         <div class="mb-3">
-        <label for="emailTo" class="form-label">{{ __('Send To') }} {{ $AppUI->isStudent() ? '' : '' }}</label>
-            @if(!$AppUI->isStudent())
+        <label for="emailTo" class="form-label">{{ __('Send To') }} {{ $AppUI->isStudent() || $AppUI->isParent() ? '' : '' }}</label>
+            @if(!$AppUI->isStudent() && !$AppUI->isParent())
             <div class="student_list text-left">
                 <div class="input-group">
             <select class="form-select multiselect" id="emailTo" name="emailTo[]" multiple="multiple" required>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             @else
-            <select class="form-select" id="emailTo" name="emailTo" required>
+            <select class="form-select" id="emailTo" name="emailTo[]" required>
                 @foreach($students as $student)
                 <option value="{{ $student->email }}">{{ $student->firstname . ' ' . $student->lastname }} [ {{ $student->email }} ]</option>
                 @endforeach
@@ -61,10 +61,14 @@
             <label for="message" class="form-label">Message</label>
             <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
         </div>
-        @if(!$AppUI->isStudent())
+        @if($AppUI->isParent())
+        <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from Parents/Family {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
+        @else
+        @if(!$AppUI->isStudent() && !$AppUI->isParent())
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from your teacher {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
         @else
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from your student {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
+        @endif
         @endif
         <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
         <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>

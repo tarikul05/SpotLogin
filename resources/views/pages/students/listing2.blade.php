@@ -1,21 +1,30 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
-        <div class="card">
-            <div class="card-header">{{ __('List all') }}</div>
+
+
+<div class="row justify-content-center pt-1">
+    <div class="col-md-12">
+
+        <form method="POST" action="{{ route('students.delete') }}">
+            @csrf
+
+        <div class="card" style="border-radius:10px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <b class="d-none d-sm-inline">{{ __("Student\"s List") }}</b>
+                <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
+            </div>
             <div class="card-body">
 
-                <form method="POST" action="{{ route('students.delete') }}">
-                    @csrf
-                    <input name="schoolId" type="hidden" value="{{$schoolId}}">
-                    <table class="table table-stripped table-hover" id="studentList">
+                <input name="schoolId" type="hidden" value="{{$schoolId}}">
+
+
+                    <table class="table table-bordered table-hover" id="example1" style="width:100%">
                         <thead>
                         <tr>
-                            <th colspan="2" width="10px">
-                                <div style="display:flex;">
+                            <th style="width: 10px!important;" class="text-left">
+                                <div style="tetx-align:left!important;">
                                   <input type="checkbox" id="select-all">
-                                  <small style="font-size:11px; padding-left:4px;">{{ __('check all') }}</small>
                                 </div>
                               </th>
+                              <th></th>
                             <th class="d-none d-lg-table-cell">{{ __('Name') }}</th>
                             <th class="d-none d-lg-table-cell">Status</th>
                             <th width="110" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
@@ -25,8 +34,8 @@
                         <tbody>
                             @foreach($students as $student)
                                 <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
-                                    <td style="width: 10px;" class="vertical-align"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                                    <td class="text-center d-none d-lg-table-cell" style="width:45px; text-align: center;">
+                                <td style="width: 10px!important; text-align:center!important;" class="p-2"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
+                                    <td class="text-center d-none d-lg-table-cell" style="width:55px; text-align: center;">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                         <?php if (!empty($student->profileImageStudent->path_name)): ?>
                                         <img src="{{ $student->profileImageStudent->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
@@ -39,8 +48,14 @@
                                     </td>
                                     <td style="position: relative;">
                                         <!--<a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; position:absolute; right:0; top:0; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>-->
+
+                                        @if(count($student->family) > 0)
+                                        <a href="#" data-toggle="modal" data-target="#student_family_{{ $student->id }}">
+                                        <i class="fa fa-users" aria-hidden="true" title="{{ $student->firstname }} is a member of a family"></i>
+                                        </a>
+                                        @endif
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
-                                           <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
+                                            <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
                                            {{ $student->email; }}
                                         </a>
                                     </td>
@@ -142,13 +157,55 @@
                         </tbody>
                     </table>
 
-                    <br>
-                    <button class="btn btn-danger btn-md" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
-                </form>
             </div>
         </div>
+
+        <button class="btn btn-danger btn-md mt-3" type="submit" id="delete-selected" onclick="return confirm('{{ __('Are you sure you want to delete the selected students?') }}')">{{ __('Delete selected students') }}</button>
+    </form>
+
     </div>
 </div>
+
+
+
+@foreach($students as $student)
+
+    <div class="modal fade confirm-modal" id="student_family_{{ $student->id }}" tabindex="-1" aria-hidden="true"
+    aria-labelledby="student_family_{{ $student->id }}" name="student_family_{{ $student->id }}">
+
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Family members</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            @php $item = 1; @endphp
+            @foreach($student->family as $family)
+            @if($family->student_id === $student->id)
+                <div class="card-body">
+                    <div for="{{ $family->id }}">
+                    <b class="mt-2 text-dark"><i class="fa-solid fa-users"></i> Members of the family</b> <b class="text-primary h6">{{ $family->name }}</b><br>
+                     <ul>
+                    @foreach($family->members as $member)
+                     <li>{{ $member }}</li>
+                    @endforeach
+                     </ul>
+                    </div>
+                </div>
+                @endif
+            @endforeach
+        </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+@endforeach
 
 
 
@@ -169,3 +226,4 @@
         </div>
     </div>
 </div>
+

@@ -112,7 +112,7 @@
                     <div class="nav-item dropdown">
                          <a href="#" class="nav-link dropdown-toggle text-center mr-2" data-bs-toggle="dropdown"><i class="fa-solid fa-file-invoice-dollar"></i> <span class="d-none d-sm-block"></span> {{ __('Invoicing') }}</a>
                         <div class="dropdown-menu header">
-                        @if(!$AppUI->isStudent())
+                        @if(!$AppUI->isStudent() && !$AppUI->isParent())
                             <a href="{{ $urlInvoice }}" class="dropdown-item"><i class="fa-solid fa-file-invoice"></i> {{ __("Invoices generated") }}</a>
 
 
@@ -146,11 +146,11 @@
                     </div>
 
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                        @if(!$AppUI->isStudent())
+                        @if(!$AppUI->isStudent() && !$AppUI->isParent())
                             <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
                         @endif
-                        <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                        @if(!$AppUI->isStudent())
+                        <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() || $AppUI->isParent() ? __('Contact teacher') : __('Contact students') }}</a>
+                        @if(!$AppUI->isStudent() && !$AppUI->isParent())
                             <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-staff"><i class="fa-solid fa-envelope"></i> {{ __('Contact support') }}</a>
                         @endif
                     @endif
@@ -177,16 +177,18 @@
 
                     @unlessrole('superadmin')
                         @unlessrole('student')
+                        @if(!$AppUI->isParent())
                             @if(count($AppUI->schools()) > 1)
                                 <a href="/permission-check" class="nav-item nav-link permission-btn btn">{{ __('Change Permission') }}</a>
                             @endif
+                        @endif
                         @endunlessrole
                     @endunlessrole
 
                 </div>
 
                 <!--Payment Reminded-->
-                @if(!$AppUI->isStudent())
+                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                     @include('elements.payment_remainder')
                 @endif
 
@@ -196,7 +198,7 @@
                     <div class="d-flex align-items-center">
 
                             <div style="position: relative; width:58px; font-size:10px; display:inline;">
-                                @if(!$AppUI->isStudent())
+                                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     @if( $is_subscribed )
                                     @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                                     <span class="badge bg-success p-1 d-none d-sm-block" style="position: absolute; right:-12px; top:-4px;">premium</span>
@@ -259,11 +261,11 @@
                                     <a class="dropdown-item" href="/admin/faqs">{{ __('F.A.Q / Tutos') }}</a>
                                 @endif
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                                    @if(!$AppUI->isStudent())
+                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                         <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
                                     @endif
-                                    <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() ? __('Contact teacher') : __('Contact students') }}</a>
-                                    @if(!$AppUI->isStudent())
+                                    <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() || $AppUI->isParent() ? __('Contact teacher') : __('Contact students') }}</a>
+                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                         <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
                                     @endif
                                 @endif

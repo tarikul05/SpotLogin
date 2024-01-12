@@ -504,7 +504,7 @@
 
                     <?php
                     $totalTaxesSupp=0;
-                    if($invoice_data->tax_amount > 0){ ?>
+                    if($invoice_data->tax_perc > 0){ ?>
 
                     <?php
                         if($invoice_data->invoice_type > 0)

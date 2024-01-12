@@ -17,6 +17,7 @@ use App\Models\InvoiceSended;
 use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
+use App\Models\ParentStudent;
 use App\Models\SchoolStudent;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +63,7 @@ class InvoiceController extends Controller
         $payment_status_all = config('global.payment_status');
 
         list($user_role, $invoice_type) = $this->getUserRoleInvoiceType($user, $school);
-// dd($invoice_type);
+
         $invoices = Invoice::active()
                     ->where('school_id', $schoolId);
 
@@ -74,10 +75,22 @@ class InvoiceController extends Controller
                 $invoice_type = ($type == 'school') ? 'S' : 'T';
                 $invoices->where('category_invoiced_type', $invoice_type);
                 $invoices->where('seller_id', $user->person_id);
-            }elseif ($user_role == 'student') {
+            }else if ($user_role == 'student') {
                 $invoice_type = 'S';
                 $invoices->where('category_invoiced_type', $invoice_type);
                 $invoices->where('client_id', $user->person_id);
+                $invoices->where('invoice_status', 10);
+            }else if ($user_role == 'parent') {
+                $allOthersMembers = ParentStudent::where('parent_id', $user->person_id)->get();
+                $parentMembers = [];
+                foreach ($allOthersMembers as $member) {
+                $student2 = SchoolStudent::where('student_id', $member->student_id)->first();
+                $parentMembers[] = $student2->student_id;
+                }
+                $students = $parentMembers;
+                $invoice_type = 'S';
+                $invoices->where('category_invoiced_type', $invoice_type);
+                $invoices->whereIn('client_id', $students);
                 $invoices->where('invoice_status', 10);
             } else {
                 $invoices->where('category_invoiced_type', $invoice_type);

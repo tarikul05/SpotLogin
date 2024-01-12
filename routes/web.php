@@ -437,6 +437,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
     Route::post('/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');
+    Route::post('/add-family-action', [App\Http\Controllers\StudentsController::class, 'AddFamilyStudent'])->name('student.createFamilyAction');
     Route::get('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('editStudent');
     Route::post('/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'editStudentAction'])->name('editStudentAction');
     Route::match(array('GET', 'POST'), "add-student", array(

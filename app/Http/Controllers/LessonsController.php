@@ -12,6 +12,7 @@ use App\Models\EventDetails;
 use App\Models\School;
 use App\Models\Teacher;
 use App\Models\SchoolTeacher;
+use App\Models\ParentStudent;
 use App\Models\SchoolStudent;
 use App\Models\EventCategory;
 use App\Models\Location;
@@ -736,7 +737,20 @@ class LessonsController extends Controller
         if (empty($school)) {
             return redirect()->route('schools')->with('error', __('School is not selected'));
         }
+
+
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
+
+        if($user->person_type === 'App\Models\Parents'){
+            $allOthersMembers = ParentStudent::where('parent_id', $user->person_id)->get();
+            $parentMembers = [];
+            foreach ($allOthersMembers as $member) {
+            $student2 = SchoolStudent::where('student_id', $member->student_id)->first();
+            $parentMembers[] = $student2;
+            }
+            $students = $parentMembers;
+        }
+
         return view('pages.calendar.add_student_off')->with(compact('schoolId','students'));
     }
 
@@ -764,7 +778,7 @@ class LessonsController extends Controller
                 $end_date = date('Y-m-d H:i:s',strtotime($end_date));
                 $start_date = $this->formatDateTimeZone($start_date, 'long', $studentOffData['zone'],'UTC');
                 $end_date = $this->formatDateTimeZone($end_date, 'long', $studentOffData['zone'],'UTC');
-                if($user->isStudent()){
+                if($user->isStudent() || $user->isParent()){
                     $studentOffData['fullday_flag'] ='Y';
                 }
                 $data = [
@@ -884,7 +898,7 @@ class LessonsController extends Controller
                 $event = Event::where('id', $studoffId)->update($data);
                 EventDetails::where('event_id',$studoffId)->forceDelete();
 
-                if($user->isStudent()){
+                if($user->isStudent() || $user->isParent()){
                     $dataDetails = [
                         'event_id'   => $studoffId,
                         'student_id' => $user->person_id,

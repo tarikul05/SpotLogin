@@ -58,7 +58,7 @@
 											<div class="selectdiv student_list">
 												<select class="form-control" id="student" name="student[]" multiple="multiple">
 													@foreach($students as $key => $student)
-														<option value="{{ $student->id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
+														<option value="{{ $student->student_id }}" {{ old('student') == $student->id ? 'selected' : ''}}>{{ $student->nickname }}</option>
 													@endforeach
 												</select>
 											</div>
@@ -92,7 +92,7 @@
 										</div>
 									</div>
 								</div>
-								@if(!$AppUI->isStudent())
+								@if(!$AppUI->isStudent() && !$AppUI->isParent())
 									<div class="form-group row">
 										<div id="all_day_div111" class="row">
 											<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>

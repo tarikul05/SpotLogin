@@ -147,6 +147,12 @@ class User extends Authenticatable
         return $this->hasAnyRole(['teacher_school_admin','teachers_admin', 'teachers_all', 'teachers_medium','teachers_minimum']);
     }
 
+    public function isParent()
+    {
+
+        return $this->hasAnyRole(['parent']);
+    }
+
     /**
      * Check user has Teachers authority
      * @return boolean
