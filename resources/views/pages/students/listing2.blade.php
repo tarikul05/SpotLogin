@@ -1,22 +1,30 @@
+
+
 <div class="row justify-content-center pt-1">
-    <div class="col-md-10">
+    <div class="col-md-12">
+
         <form method="POST" action="{{ route('students.delete') }}">
-        <div class="card">
-            <div class="card-header">{{ __('List all') }}</div>
+            @csrf
+
+        <div class="card" style="border-radius:10px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <b class="d-none d-sm-inline">{{ __("Student\"s List") }}</b>
+                <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
+            </div>
             <div class="card-body">
 
+                <input name="schoolId" type="hidden" value="{{$schoolId}}">
 
-                    @csrf
-                    <input name="schoolId" type="hidden" value="{{$schoolId}}">
-                    <table class="table table-stripped table-hover" id="studentList">
+
+                    <table class="table table-bordered table-hover" id="example1" style="width:100%">
                         <thead>
                         <tr>
-                            <th colspan="2" width="10px">
-                                <div style="display:flex;">
+                            <th style="width: 10px!important;" class="text-left">
+                                <div style="tetx-align:left!important;">
                                   <input type="checkbox" id="select-all">
-                                  <small style="font-size:11px; padding-left:4px;">{{ __('check all') }}</small>
                                 </div>
                               </th>
+                              <th></th>
                             <th class="d-none d-lg-table-cell">{{ __('Name') }}</th>
                             <th class="d-none d-lg-table-cell">Status</th>
                             <th width="110" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
@@ -26,8 +34,8 @@
                         <tbody>
                             @foreach($students as $student)
                                 <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
-                                    <td style="width: 10px;" class="vertical-align"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                                    <td class="text-center d-none d-lg-table-cell" style="width:45px; text-align: center;">
+                                <td style="width: 10px!important; text-align:center!important;" class="p-2"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
+                                    <td class="text-center d-none d-lg-table-cell" style="width:55px; text-align: center;">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                         <?php if (!empty($student->profileImageStudent->path_name)): ?>
                                         <img src="{{ $student->profileImageStudent->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
@@ -149,8 +157,6 @@
                         </tbody>
                     </table>
 
-                    <br>
-
             </div>
         </div>
 
@@ -220,3 +226,4 @@
         </div>
     </div>
 </div>
+

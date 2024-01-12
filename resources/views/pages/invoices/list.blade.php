@@ -47,20 +47,15 @@
     </nav>
     @endif
 
-
-
-    <div class="row justify-content-center pt-5 mb-5">
+    <div class="row justify-content-center pt-1 mb-5">
         <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">{{ __('Invoices List') }}</div>
+        <div class="card" style="border-radius:10px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <b class="d-none d-sm-inline">{{ __('Invoices List') }}</b>
+                <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
+            </div>
             <div class="card-body">
 
-            <div class="row mb-2">
-                <div class="col-md-9 col-xs-12 col-lg-9"></div>
-                <div class="col-md-3 col-xs-12 col-lg-3">
-                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find an invoice">
-                </div>
-            </div>
 
     <div class="table-responsive11">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
@@ -392,16 +387,20 @@
     $(document).ready( function () {
     var table = $('#example1').DataTable({
         dom: '<"top"f>rt<"bottom"lp><"clear">',
-    ordering: true, // Disable column sorting
-    searching: true, // Enable searching with the search input
-    paging: true, // Disable pagination
-    info: false, // Disable information display
-});
+        ordering: true, // Disable column sorting
+        searching: true, // Enable searching with the search input
+        paging: true, // Disable pagination
+        info: false, // Disable information display
+        order: [[0, 'asc']], // Set default sorting column
+        columnDefs: [
+        { targets: [0, 5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
+        { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes
+    ]
+    });
     $('#search_text').on('keyup change', function () {
         table.search($(this).val()).draw();
     });
-    $("#example1_filter").hide();
-
+        $("#example1_filter").hide();
     });
 
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
