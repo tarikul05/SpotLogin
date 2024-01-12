@@ -12,7 +12,7 @@ use App\Models\EventDetails;
 use App\Models\School;
 use App\Models\Teacher;
 use App\Models\SchoolTeacher;
-use App\Models\parentStudent;
+use App\Models\ParentStudent;
 use App\Models\SchoolStudent;
 use App\Models\EventCategory;
 use App\Models\Location;
@@ -742,7 +742,7 @@ class LessonsController extends Controller
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
 
         if($user->person_type === 'App\Models\Parents'){
-            $allOthersMembers = parentStudent::where('parent_id', $user->person_id)->get();
+            $allOthersMembers = ParentStudent::where('parent_id', $user->person_id)->get();
             $parentMembers = [];
             foreach ($allOthersMembers as $member) {
             $student2 = SchoolStudent::where('student_id', $member->student_id)->first();

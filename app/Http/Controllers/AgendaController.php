@@ -12,7 +12,7 @@ use App\Models\SchoolStudent;
 use App\Models\Event;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
-use App\Models\parentStudent;
+use App\Models\ParentStudent;
 use App\Models\InvoiceItem;
 use App\Models\EventCategory;
 use App\Models\Availability;
@@ -588,7 +588,7 @@ class AgendaController extends Controller
         $data['schools'] = [$schoolId = $user->isSuperAdmin() ? $schoolId : $user->selectedSchoolId()];
 
         if ($user->person_type == 'App\Models\Parents') {
-            $parents = parentStudent::where('parent_id', $user->person_id)->get();
+            $parents = ParentStudent::where('parent_id', $user->person_id)->get();
             $listStudentId = [];
             foreach ($parents as $parent) {
                 $studentIds = $parent->student_id;

@@ -17,7 +17,7 @@ use App\Models\InvoiceSended;
 use App\Models\Currency;
 use App\Models\EventDetails;
 use App\Models\SchoolTeacher;
-use App\Models\parentStudent;
+use App\Models\ParentStudent;
 use App\Models\SchoolStudent;
 use App\Models\AttachedFile;
 use Illuminate\Support\Facades\Auth;
@@ -81,7 +81,7 @@ class InvoiceController extends Controller
                 $invoices->where('client_id', $user->person_id);
                 $invoices->where('invoice_status', 10);
             }else if ($user_role == 'parent') {
-                $allOthersMembers = parentStudent::where('parent_id', $user->person_id)->get();
+                $allOthersMembers = ParentStudent::where('parent_id', $user->person_id)->get();
                 $parentMembers = [];
                 foreach ($allOthersMembers as $member) {
                 $student2 = SchoolStudent::where('student_id', $member->student_id)->first();
