@@ -41,7 +41,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bgdarkblue shadow fixed-top">
 
-    <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <!--<div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>-->
 
     <div class="container-fluid pl-4 pr-4">
         <div class="position-relative pt-1">
@@ -123,6 +123,8 @@
         <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">{{ __('Privacy policy') }}</a>
         <span class="nav-link text-center" style="padding:3px;">|</span>
         <a class="nav-link" style="padding:3px;" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal2">{{ __('Terms & conditions') }}</a>
+        <span class="nav-link text-center checkCookies" style="padding:3px;">|</span>
+        <a class="nav-link checkCookies" style="padding:3px;" href="javascript:openAxeptioCookies()">{{ __('Cookies') }}</a>
       </div>
 
     <h3 class="gilroy-regular txtdarkblue">{{ __('Contact us') }}</h3>
@@ -184,6 +186,16 @@
     e.src = "//static.axept.io/sdk.js";
     t.parentNode.insertBefore(e, t);
     })(document, "script");
+
+    void 0 === window._axcb && (window._axcb = []);
+    window._axcb.push(function(axeptio) {
+    axeptio.on("cookies:complete", function(choices) {
+        console.log('ok bienvenue');
+        //display all element with .checkCookies class
+        $('.checkCookies').css('display', 'inline-block');
+    })
+    })
+
     </script>
 
 </html>
