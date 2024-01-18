@@ -80,7 +80,7 @@
           </video>
         </div>
       </div>
-      <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
+      <div class="col-lg-6 col-md-12 pt-4 about-us-content order-2 order-lg-1">
         <h2 class="gilroy-regular txtdarkblue mb-4">{{ __('What is Sportlogin?') }}</h2>
         <p class="gilroy-light txtdarkblue">{{ __("Over the years, I've noticed spending more and more time managing planning, invoices and communication rather than actually coaching") }}.</p>
         <p class="gilroy-light txtdarkblue">{{ __("I had to find a sustainable solution to remediate that. I decided to create a new solution as I couldn't find an affordable, simple enough solution on the market") }}.</p>
