@@ -81,8 +81,61 @@
 
       //$('.select_two_default_class').select2();
     });
-  </script>
 
+
+    const button = document.querySelector("#changeLanguage");
+
+    button.addEventListener("click", (event) => {
+        var languages = [
+    { language_code: 'fr', title: 'Français', flag_class: 'fr-flag' },
+    { language_code: 'en', title: 'English', flag_class: 'en-flag' },
+    // Ajoutez d'autres langues au besoin
+];
+
+// Fonction pour changer la langue
+function changeLanguage() {
+    var languageCode = $("#setLanSwal").val();
+    window.location.href = BASE_URL + "/setlang/" + languageCode;
+}
+
+// Construire la liste déroulante avec les langues
+var selectOptions = languages.map(function(language) {
+    return `
+        <option
+            value="${language.language_code}"
+            ${language.language_code == "{{ app()->getLocale() }}" ? 'selected="selected"' : ''}
+            data-icon="${language.flag_class}"
+        >${language.title}</option>`;
+});
+
+Swal.mixin({
+    customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-secondary mr-2'
+    },
+    buttonsStyling: false
+}).fire({
+    title: "{{ __('Choose Language') }}",
+    html: `
+        <select id="setLanSwal" class="selectpicker" data-width="fit">
+            ${selectOptions.join('')}
+        </select>`,
+    showCancelButton: true,
+    confirmButtonText: "{{ __('Save') }}",
+    cancelButtonText: "{{ __('Cancel') }}",
+    reverseButtons: true,
+    preConfirm: () => {
+        changeLanguage();
+    }
+});
+    });
+
+    function changeLanguage() {
+    var languageCode = $("#setLan").val();
+    window.location.href = BASE_URL + "/setlang/" + languageCode;
+}
+
+  </script>
 
 </body>
 </html>

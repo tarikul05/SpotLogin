@@ -790,3 +790,11 @@ div#navbarSupportedContent {
   -webkit-animation-delay: 14s;
   -webkit-animation-timing-function:ease-in;
 }
+
+.checkCookies {
+    display: none;
+}
+
+.axeptio_mount{
+    margin-bottom:55px!important;
+}

@@ -12,40 +12,30 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
-					<div class="page_header_class">
-						<label id="page_header" class="page_header bold" name="page_header">{{ __('Student time off') }} : <i class="fa fa-plus-square" aria-hidden="true"></i></label>
-					</div>
-				</div>
-			</div>
-		</header>
-		<!-- Tabs navs -->
+	<div class="container">
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
 
-		<!-- Tabs content -->
-		<div class="tab-content" id="ex1-content">
-			<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
-				<form class="form-horizontal" id="student_off" method="post" action="{{ route('studentOff.createAction',[$schoolId]) }}"  name="student_off" role="form">
+
+        <div class="row justify-content-center pt-1">
+            <div class="col-md-9 mb-4">
+                <h5>{{ __('Student time off') }}</h5>
+
+                <form class="form-horizontal" id="student_off" method="post" action="{{ route('studentOff.createAction',[$schoolId]) }}"  name="student_off" role="form">
+        <div class="card" style="border-radius:10px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                {{ __('Time off information') }}
+            </div>
+            <div class="card-body">
+
 					@csrf
 					<input id="save_btn_value" name="save_btn_more" type="hidden" class="form-control" value="3">
 					<fieldset>
-						<div class="section_header_class">
-							<label id="teacher_personal_data_caption">{{ __('Lesson information') }}</label>
-						</div>
+
 						<div class="row">
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }} :</label>
+									<div class="col-sm-6">
 										<div class="input-group">
 											<input id="Title" name="title" type="text" class="form-control" value="{{old('title')}}">
 										</div>
@@ -53,8 +43,8 @@
 								</div>
 								@if(!$AppUI->isStudent())
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-										<div class="col-sm-7">
+										<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
+										<div class="col-sm-12">
 											<div class="selectdiv student_list">
 												<select class="form-control" id="student" name="student[]" multiple="multiple">
 													@foreach($students as $key => $student)
@@ -66,9 +56,9 @@
 									</div>
 								@endif
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
-									<div class="col-sm-7 row">
-										<div class="col-sm-4">
+									<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
+									<div class="col-sm-12 row">
+										<div class="col-sm-6">
 											<div class="input-group" id="start_date_div">
 												<input id="start_date" required="true" name="start_date" type="text" class="form-control" value="{{old('start_date')}}" autocomplete="off">
 												<input type="hidden" name="zone" id="zone" value="<?php echo $timezone; ?>">
@@ -76,13 +66,24 @@
 													<i class="fa fa-calendar"></i>
 												</span>
 											</div>
+
+                                            @if($futurEvents->count() > 0)
+                                                <div class="card bg-warning p-2 mt-2">
+                                                <b>Information</b>
+                                                @foreach ($futurEvents as $key => $event)
+                                                {{ __('You have a lesson tomorrow') }} {{ $event->event->date_start }}
+                                                @endforeach
+                                                </div>
+                                            @endif
+
 										</div>
+
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
-									<div class="col-sm-7 row">
-										<div class="col-sm-4">
+									<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('End date') }} :</label>
+									<div class="col-sm-12 row">
+										<div class="col-sm-6">
 											<div class="input-group" id="end_date_div">
 												<input id="end_date" required="true" name="end_date" type="text" class="form-control" value="{{old('end_date')}}" autocomplete="off">
 												<span class="input-group-addon">
@@ -95,8 +96,8 @@
 								@if(!$AppUI->isStudent() && !$AppUI->isParent())
 									<div class="form-group row">
 										<div id="all_day_div111" class="row">
-											<label class="col-lg-3 col-sm-3 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
-											<div class="col-sm-7">
+											<label class="col-lg-12 col-sm-12 text-left" for="fullday_flag" id="has_user_ac_label_id">{{__('All day') }} :</label>
+											<div class="col-sm-12">
 												<input id="fullday_flag" name="fullday_flag" type="checkbox" value="Y">
 											</div>
 										</div>
@@ -104,13 +105,10 @@
 								@endif
 
 							</div>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Optional information') }}</label>
-							</div>
-							<div class="col-md-7 offset-md-2">
+							<div class="col-md-12">
 								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
-									<div class="col-sm-7">
+									<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('Description') }} :</label>
+									<div class="col-sm-12">
 										<div class="input-group">
 											<textarea class="form-control" cols="60" id="description" name="description" rows="5">{{old('description')}}</textarea>
 										</div>
@@ -119,13 +117,15 @@
 							</div>
 						</div>
 					</fieldset>
-				    <div class="btn_area2">
-						<a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
-						<button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
-					</div>
-				</form>
+
+
 			</div>
 		</div>
+        <div class="pt-3">
+            <a class="btn btn-theme-outline" href="<?= $BASE_URL;?>/agenda">Back</a>
+            <button id="save_btn" name="save_btn" class="btn btn-theme-success"><i class="fa fa-save"></i>{{ __('Save') }} </button>
+        </div>
+    </form>
 	</div>
 @endsection
 
@@ -135,6 +135,9 @@
 $(function() {
 	// var zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // document.getElementById("zone").value = zone;
+    var today = new Date();
+today.setDate(today.getDate() + 2); // Définir la date minimale comme demain
+
 	var zone = document.getElementById("zone").value;
 	$("#start_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -145,6 +148,7 @@ $(function() {
 		maxView: 3,
 		viewSelect: 3,
 		todayBtn:false,
+        minDate: today
 	});
 	$("#end_date").datetimepicker({
         format: "dd/mm/yyyy",
@@ -164,9 +168,20 @@ $('#student').multiselect({
 
 //Verifiy dates
 $('#start_date').on('change', function(e) {
+
+var startDate = moment($("#start_date").val(), "DD/MM/YYYY");
+var today = moment().add(2, 'days');
+
+if (startDate.isBefore(today, 'day')) {
+    errorModalCall('{{ __("Please select a time-off after tomorrow")}}');
+} else {
+	setTimeout(() => {
+		$("#end_date").val($("#start_date").val());
+	}, "200")
+}
+
 if ($("#end_date").val() < $("#start_date").val()) {
 	$("#end_date").val($("#start_date").val());
-	//errorModalCall('{{ __("Please ensure that the end date comes after the start date ")}}');
 	setTimeout(() => {
 		$("#end_date").val($("#start_date").val());
 	}, "200")

@@ -16,9 +16,9 @@
 @section('content')
 <div class="container">
 
-<h3>Availability</h3>
+<h5>Availability</h5>
 
-<div class="row justify-content-center pt-5">
+<div class="row justify-content-center pt-1">
     <div class="col-md-7">
         <div class="card">
             <div class="card-header">Add Weekly Availabilities</div>

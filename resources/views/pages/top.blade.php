@@ -12,10 +12,10 @@
         <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
                 <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
         <div class="masthead-btn-area" style="display: none;">
-          <a href="#" class="head-btn">
+          <a href="https://apps.apple.com/us/app/sportlogin/id6443801938" class="head-btn">
             <img src="{{ asset('img/app-store.svg') }}" width="148">
           </a>
-          <a href="#" class="head-btn">
+          <a href="https://play.google.com/store/apps/details?id=com.sportlogin.app" class="head-btn">
             <img src="{{ asset('img/play-store.svg') }}" width="148">
           </a>
         </div>
@@ -72,15 +72,15 @@
 <section class="light-grey-bg about-us">
   <div class="container-fluid p-0" style="max-width: 100%;">
     <div class="row no-gutters">
-      <div class="col-lg-6 col-md-12 order-1 order-lg-2">
-        <div class="about-us-cont-bg text-center">
-          <h1 class="mb-0 gilroy-bold text-white text-center position-absolute" id="title_video"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="78">Sportlogin demo</h1>
-          <video controls class="img-thumbnail" style="border:none; width:100%; padding:0 margin:0; border-radius:8px 0 0 8px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
-            <source src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
+      <div class="col-lg-6 col-md-12 order-1 order-lg-2 position-relative">
+        <div class="bg-light text-center" style="margin-bottom:0px; padding-bottom:0px;">
+          <h1 class="mb-0 gilroy-bold text-white text-center position-absolute" style="font-size:20px; background-color:#000; border-radius:13px; margin:10px; opacity:.5; padding:3px; padding-right:15px;" id="title_video"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="40">Sportlogin demo</h1>
+          <video controls width="100%" style="border:none; width:100%; padding:0 margin:0; margin-bottom:0px; padding-bottom:0px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
+        <source style="width:100%;" src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
           </video>
         </div>
       </div>
-      <div class="col-lg-6 col-md-12 py-5 about-us-content order-2 order-lg-1">
+      <div class="col-lg-6 col-md-12 pt-4 about-us-content order-2 order-lg-1">
         <h2 class="gilroy-regular txtdarkblue mb-4">{{ __('What is Sportlogin?') }}</h2>
         <p class="gilroy-light txtdarkblue">{{ __("Over the years, I've noticed spending more and more time managing planning, invoices and communication rather than actually coaching") }}.</p>
         <p class="gilroy-light txtdarkblue">{{ __("I had to find a sustainable solution to remediate that. I decided to create a new solution as I couldn't find an affordable, simple enough solution on the market") }}.</p>
@@ -279,15 +279,6 @@
         const titlevideo = document.getElementById("title_video");
         titlevideo.style.display = "none";
     };
-    media.addEventListener("ended", function() {
-        play.style.display = "block";
-        replay.style.display = "none";
-        media.currentTime = 0.0;
-    });
-    media.addEventListener("play", function() {
-        play.style.display = "none";
-        replay.style.display = "block";
-        end.style.display = "none";
-    });
+
 </script>
 @endsection

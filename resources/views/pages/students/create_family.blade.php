@@ -26,16 +26,22 @@
                 </div>
                 <div class="from-group mt-3">
                     <label for="principal_name"><b>{{ __('Select all members of the family') }}</b></label>
-                       @foreach($students as $student)
+                    <select class="form-select" multiple id="students" name="students[]" required>
+                        @foreach($students as $student)
+                        <option value="{{ $student->id }}" id="{{ $student->id }}">{{ $student->full_name }}</option>
+                        @endforeach
+                    </select>
+                    <!--<hr>
+                    @foreach($students as $student)
 
-                           <div class="form-check">
-                               <input class="form-check-input" type="checkbox" value="{{ $student->id }}" id="{{ $student->id }}" name="students[]">
-                               <label class="form-check-label" for="{{ $student->id }}">
-                                   {{ $student->full_name }}
-                               </label>
-                           </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{ $student->id }}" id="{{ $student->id }}" name="students[]">
+                            <label class="form-check-label" for="{{ $student->id }}">
+                                {{ $student->full_name }}
+                            </label>
+                        </div>
 
-                       @endforeach
+                    @endforeach-->
                 </div>
 
             </div>
@@ -58,30 +64,26 @@
 @section('footer_js')
     @parent
     <script>
-        function updateEmailList() {
+        function updateEmailList(option) {
+
             let selectedEmails = [];
+            var selectedStudentId = $('#students').val();
+            var studentId = option.val();
+            selectedEmails = [];
 
-            // Parcourez les cases à cocher
-            $('input[name="students[]"]:checked').each(function () {
-                var studentId = $(this).val();
-                selectedEmails = [];
-                @foreach($students as $student)
-            var studentId = {{ $student->id }};
-            var isChecked = $('#'+ studentId).prop('checked');
-
-            if (isChecked) {
-                var fatherEmail = '{{ $student->father_email }}';
-                var motherEmail = '{{ $student->mother_email }}';
-
-                if (fatherEmail) {
-                    selectedEmails.push(fatherEmail);
+            @foreach($students as $student)
+                var studentListId = {{ $student->id }};
+                if(selectedStudentId && selectedStudentId.indexOf(studentListId.toString()) !== -1) {
+                    var fatherEmail = '{{ $student->father_email }}';
+                    var motherEmail = '{{ $student->mother_email }}';
+                    if (fatherEmail) {
+                        selectedEmails.push(fatherEmail);
+                    }
+                    if (motherEmail) {
+                        selectedEmails.push(motherEmail);
+                    }
                 }
-                if (motherEmail) {
-                    selectedEmails.push(motherEmail);
-                }
-            }
-                @endforeach
-            });
+            @endforeach
 
             $('#principal_email').empty();
             selectedEmails.forEach(function (email) {
@@ -94,9 +96,6 @@
             $('#principal_email').append($('<option>', { value: 'custom', text: "{{__('Custom address')}}" }));
         }
 
-        $('input[name="students[]"]').change(function () {
-            updateEmailList();
-        });
 
         $('#principal_email').change(function () {
         var selectedOption = $(this).val();
@@ -108,8 +107,7 @@
         }
     });
 
-        $(document).ready(function () {
-            updateEmailList();
-        });
+    $('#principal_email').append($('<option>', { value: 'custom', text: "{{__('Custom address')}}" }));
+
     </script>
 @endsection
