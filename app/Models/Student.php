@@ -132,8 +132,24 @@ class Student extends BaseModel
 
     public function eventDetails()
     {
-        // Relation one-to-many : Un étudiant peut avoir plusieurs détails d'événements futurs
         return $this->hasMany(EventDetails::class, 'student_id', 'id');
+    }
+
+    public function futurEventDetails()
+    {
+        return $this->hasMany(EventDetails::class, 'student_id', 'id')
+                    ->whereHas('event', function ($query) {
+                        $query->where('date_start', '>=', now());
+                    });
+    }
+
+    public function tomorrowEventDetails()
+    {
+
+        return $this->hasMany(EventDetails::class, 'student_id', 'id')
+                    ->whereHas('event', function ($query) {
+                        $query->whereDate('date_start', now()->addDay());
+                    });
     }
 
     /**

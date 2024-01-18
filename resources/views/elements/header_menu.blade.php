@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
-        <div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <!--<div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>-->
         <div class="container-fluid paddingLogo">
             <div class="position-relative d-none d-sm-block pt-1 pl-1">
             <!--<img src="{{ asset('img/merrychristmas.png') }}" class="d-none d-sm-block" width="25px" alt="SpotLogin" style="position:absolute; width:25px padding-left:3px; left:20px; top:6px;">-->
@@ -9,7 +9,7 @@
             </a>
             </div>
                 <a class="user_profile d-block d-sm-none" href="#">
-                <img src="{{ asset('img/merrychristmas.png') }}" width="23px" alt="SpotLogin" style="position:absolute; width:23px padding-left:25px; left:20px; top:2px; z-index:9999;">
+                <!--<img src="{{ asset('img/merrychristmas.png') }}" width="23px" alt="SpotLogin" style="position:absolute; width:23px padding-left:25px; left:20px; top:2px; z-index:9999;">-->
                     <div style="position: relative; width:48px; font-size:11px; display:inline;">
 
                             @if( $is_subscribed )
@@ -282,6 +282,7 @@
                                     <a class="dropdown-item" href="/admin/roles">{{ __('Roles') }}</a>
                                 @endcan
 
+                                <a class="dropdown-item" href="#" id="changeLanguage"><i class="fa-solid fa-globe"></i> {{ __('Languages') }}</a>
 
                                 <a class="dropdown-item text-danger" href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> {{ __('Logout') }}</a>
                             </div>

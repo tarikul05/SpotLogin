@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css')}}"/>
     <script src="{{ asset('js/jquery.wheelcolorpicker.min.js')}}"></script>
     <link rel="stylesheet" href="{{ asset('css/wheelcolorpicker.css')}}"/>
-    <!-- import popper-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css" integrity="sha512-fZNmykQ6RlCyzGl9he+ScLrlU0LWeaR6MO/Kq9lelfXOw54O63gizFMSD5fVgZvU1YfDIc6mxom5n60qJ1nCrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- import popper--><script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js" integrity="sha512-lxQ4VnKKW7foGFV6L9zlSe+6QppP9B2t+tMMaV4s4iqAv4iHIyXED7O+fke1VeLNaRdoVkVt8Hw/jmZ+XocsXQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
@@ -54,6 +55,27 @@
 
 @include('layouts.elements.modal_csv_import')
 @section('footer_js')
+
+<script>
+    $('#students').multiselect({
+    maxHeight: 400,
+    buttonWidth: '100%',
+    dropRight: false,
+    enableFiltering: true,
+    includeSelectAllOption: true,
+    includeFilterClearBtn: true,
+    search: true,
+    noneSelected: "{{__("None selected") }}",
+    selectAllText: "{{__("All Students") }}",
+    enableCaseInsensitiveFiltering: true,
+    enableFullValueFiltering: false,
+
+    onChange:function (option, checked) {
+        updateEmailList(option);
+    }
+  });
+
+</script>
 
 
 <script>

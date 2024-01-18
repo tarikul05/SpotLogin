@@ -13,6 +13,7 @@ use App\Models\School;
 use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\ParentStudent;
+use App\Models\Student;
 use App\Models\SchoolStudent;
 use App\Models\EventCategory;
 use App\Models\Location;
@@ -751,7 +752,16 @@ class LessonsController extends Controller
             $students = $parentMembers;
         }
 
-        return view('pages.calendar.add_student_off')->with(compact('schoolId','students'));
+        $theStudent = Student::active()->where('id', $user->person_id)->where('is_active', 1)->first();
+
+        if ($theStudent) {
+            $futurEvents = $theStudent->tomorrowEventDetails;
+        } else {
+            $futurEvents = [];
+        }
+        $futursevents = Event::active()->where('school_id', $schoolId)->where('event_type', 10)->where('is_active', 1)->get();
+
+        return view('pages.calendar.add_student_off')->with(compact('schoolId','students', 'futurEvents'));
     }
 
      /**

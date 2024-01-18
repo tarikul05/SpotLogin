@@ -1072,11 +1072,11 @@ table#lesson_table > tbody > tr > td {
 }
 .section_header_class label {
     color: #152245;
-    font-size: 20px;
+    font-size: 15px;
     font-family: "Gilroy-Bold";
     margin: 15px 0;
     text-align: left;
-    padding-bottom: 0 10%;
+    padding-bottom: 0 5%;
     font-weight: normal;
 }
 a#correct_btn {
@@ -1152,7 +1152,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
 
 label.section_header_class {
     color: #152245;
-    font-size: 20px;
+    font-size: 15px;
     font-family: "Gilroy-Bold";
     margin: 0px 0 10px 0;
     text-align: left;
