@@ -823,7 +823,12 @@
         e.preventDefault();
     }
 });
-$('#search_text').toggle();
+var windowWidth = $(window).width();
+if (windowWidth < 768) {
+    $('#search_text').hide();
+    } else {
+    $('#search_text').show();
+}
 </script>
 
 @if(session('firstConnexion') === true)
