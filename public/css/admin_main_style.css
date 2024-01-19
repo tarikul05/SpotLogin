@@ -1295,6 +1295,9 @@ label#currency_alert_text {
        margin:0 auto!important;
        text-align: center!important;
     }
+    .search_box_agenda {
+        width: 100%!important;
+    }
     .dataTables_length {
         text-align: center;
         margin:0 auto;
@@ -1307,7 +1310,7 @@ label#currency_alert_text {
         display: block;
         position: absolute;
         top:10px;
-        right: 25px;
+        right: 20px;
     }
 
     #btn_copy_events {

@@ -27,7 +27,6 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-
 <!-- end the assets area -->
 @endsection
 
@@ -45,6 +44,7 @@
                                   {{__('Agenda')}} :
                                 </h1>
                                 <i class="fa-solid fa-magnifying-glass search-icon searchForEvent"></i>
+                                <i class="fa fa-close mt-2 searchForEvent close-icon" style="display:none; font-size:21px;"></i>
                                 <div id="dateTime">
                                 <span style="font-size:11px;">[ {{ $myCurrentTimeZone }} ] {{ \Carbon\Carbon::now()->format('M, d') }} <i class="ml-1 fa-regular fa-clock fa-flip-horizontal"></i> <span id="currentTimer"></span></span>
                                 <em id="eventInProgress" class="text-success" style="font-size:11px; margin-left: 7px; display:none;">
@@ -160,11 +160,11 @@
                           </div>
                         </div>
 
-                    <div class="col-md-3 text-right  btn-area align-items-end text-center">
+                    <div class="col-md-3 text-right btn-area align-items-end text-center">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%; border:1px solid #b3d6ec!important;">
+                        <input type="input" name="search_text" class="form-control search_text_box search_box_agenda" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%!important; border:1px solid #b3d6ec!important;">
                         @else
-                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%; border:1px solid #b3d6ec!important;">
+                        <input type="input" name="search_text" class="form-control search_text_box search_box_agenda" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%!important; border:1px solid #b3d6ec!important;">
                         @endif
                     </div>
 				</div>
@@ -179,32 +179,34 @@
                             <div class="row" id="school_cal">
                                 <div class="col-md-9">
                                     <!-- fullcalendar -->
-                                    <div style="margin-bottom: 5px;" class="agendaContent1 mb-2">
-                                        <div class="btn-group" style="margin-right:5px;">
-                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #3b75bf;"></i></button>
-                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today">{{__('Today')}}</button>
-                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #3b75bf;"></i></button>
+                                    <div style="margin-bottom: 5px; margin:0 auto; width:100%; margin-top:6px;" class="agendaContent1 mb-2">
+                                        <div style="display: flex; align-items: flex-end; justify-content: space-between;">
+                                        <div class="btn-group" style="margin-right:10%; width:22%;">
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_prev"><i class="fa fa-chevron-left" style="color: #b3d6ec;"></i></button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_today" style="padding:2px;">{{__('Today')}}</button>
+                                            <button type="button" class="btn btn-sm calendar_buttons" id="btn_next"><i class="fa fa-chevron-right" style="color: #b3d6ec;"></i></button>
                                         </div>
-                                        <div class="btn-group" id="calendar_dropdown">
+                                    <div style="display: flex; align-items:flex-end; justify-content:end;">
+                                    <div class="btn-group" id="calendar_dropdown" style="width:50%; align-items:flex-end; margin-right:10px;">
                                             <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa-regular fa-eye"></i>  {{__('Views')}} <i class="fa fa-caret-down"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="calendar_dropdown">
-                                                <button class="dropdown-item calendar_buttons" id="btn_day" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Day')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_week" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Week')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_month" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Month')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Monthly schedule')}}</button>
-                                                <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Daily schedule')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_day" type="button" style="font-size:14px;"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Day')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_week" type="button" style="font-size:14px;"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Week')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_month" type="button" style="font-size:14px;"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Month')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_list" type="button" style="font-size:14px;"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Monthly schedule')}}</button>
+                                                <button class="dropdown-item calendar_buttons" id="btn_current_list" type="button" style="font-size:14px;"><i class="fa-solid fa-circle-arrow-right"></i> {{__('Daily schedule')}}</button>
                                             </div>
                                         </div>
-                                        <div class="btn-group ml-2 text-right">
+                                        <div style="display: flex; align-items: flex-end; justify-content: flex-end; width: 50%;">
                                             @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                                 <button type="button" class="btn btn-default w-100 btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     {{__('Actions')}} <i class="fa fa-caret-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="calendar_dropdown" style="padding-top:0; padding-bottom:0;">
-                                                    <button class="dropdown-item calendar_buttons badge-success" id="add_lesson_btn_mobile" type="button"><i class="fa-regular fa-plus"></i> Add new</button>
-                                                    <button class="dropdown-item calendar_buttons" id="btn_copy_events_mobile" type="button"><i class="fa-regular fa-copy"></i> {{__('Copy')}}</button>
+                                                    <button class="dropdown-item calendar_buttons text-success" id="add_lesson_btn_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-plus"></i> Add new</button>
+                                                    <button class="dropdown-item calendar_buttons" id="btn_copy_events_mobile" type="button" style="font-size:14px;"><i class="fa-regular fa-copy"></i> {{__('Copy')}}</button>
                                                     <button class="dropdown-item calendar_buttons" id="btn_goto_planning_mobile" type="button"><i class="fa-regular fa-paste"></i> {{__('Paste')}}</button>
                                                     <button class="dropdown-item calendar_buttons badge-info" id="btn_validate_events_mobile" type="button"><i class="fa-solid fa-lock"></i> {{__('Validate All')}}</button>
                                                     <button class="dropdown-item calendar_buttons badge-warning" id="btn_delete_events_mobile" type="button"><i class="fas fa-trash"></i> {{__('Delete All')}}</button>
@@ -217,7 +219,8 @@
                                                 <div id="btn_delete_events_mobile" style="display: none;"></div>
                                                 @endif
                                         </div>
-
+                                        </div>
+                                        </div>
                                     </div>
                                     <div id="calendar" class="calendarContent"></div>
                                     <div style="margin-top: 15px;" class="agendaContent2">
@@ -269,7 +272,7 @@
                                     </div>
 
 
-                                    
+
 
                                     <div id="event_location_div" name="event_location_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
@@ -820,6 +823,7 @@
         e.preventDefault();
     }
 });
+$('#search_text').toggle();
 </script>
 
 @if(session('firstConnexion') === true)
@@ -834,6 +838,13 @@
 <script>
 $('.search-icon').on('click', function() {
     $('#search_text').toggle();
+    $('.search-icon').toggle();
+    $('.close-icon').toggle();
+});
+$('.close-icon').on('click', function() {
+    $('#search_text').toggle();
+    $('.search-icon').toggle();
+    $('.close-icon').toggle();
 });
 </script>
 
@@ -1970,7 +1981,7 @@ $('.search-icon').on('click', function() {
         console.log('??', p_student_id);
 
         var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
-      
+
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -3067,7 +3078,7 @@ $('.search-icon').on('click', function() {
       //  console.log('get envent end date',end_date);
 
         var list_student_id = getStudentIDs();
-        console.log('list of students', list_student_id);
+        //console.log('list of students', list_student_id);
        // console.log('list des students for delete', list_student_id);
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
@@ -3086,7 +3097,7 @@ $('.search-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
-                console.log(JSON.parse(s));
+                //console.log(JSON.parse(s));
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
