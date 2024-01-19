@@ -600,6 +600,11 @@ class AgendaController extends Controller
         $eventData = $event->filter($data);
         $eventData = $eventData->get();
 
+        $eventData2 = $event->filterTeacher($data);
+        $eventData2 = $eventData2->get();
+
+        $eventData = $eventData2->merge($eventData);
+
         $events = array();
         foreach ($eventData as $key => $fetch) {
             $fetch->date_start = $this->formatDateTimeZone($fetch->date_start, 'long', 'UTC',$data['zone']);

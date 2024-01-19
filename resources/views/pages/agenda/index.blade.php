@@ -162,9 +162,9 @@
 
                     <div class="col-md-3 text-right  btn-area align-items-end text-center">
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
+                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%; border:1px solid #b3d6ec!important;">
                         @else
-                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; max-width:100%; max-width:400px;">
+                        <input type="input" name="search_text" class="form-control search_text_box" id="search_text" value="" placeholder="Search" style="margin-top:10px; margin-left:-1px; width:100%; border:1px solid #b3d6ec!important;">
                         @endif
                     </div>
 				</div>
@@ -244,6 +244,9 @@
 
                                  <div id="allFilters" style="display:none;">
 
+
+                                    <div style="margin-bottom:40px;" id="datepicker_month"></div>
+
                                     <div id="event_type_div" name="event_type_div" class="selectdiv mt-0">
                                         <select class="form-control" multiple="multiple" id="event_type" name="event_type[]" >
                                             @foreach($event_types as $key => $event_type)
@@ -266,7 +269,7 @@
                                     </div>
 
 
-                                    <div style="margin-top:40px;" id="datepicker_month"></div>
+                                    
 
                                     <div id="event_location_div" name="event_location_div" class="selectdiv">
                                         <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
@@ -1964,7 +1967,10 @@ $('.search-icon').on('click', function() {
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
 
+        console.log('??', p_student_id);
+
         var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
+      
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
@@ -3060,9 +3066,9 @@ $('.search-icon').on('click', function() {
        // console.log('get envent start date',start_date);
       //  console.log('get envent end date',end_date);
 
-        var list_student_id = ""; //getStudentIDs();
+        var list_student_id = getStudentIDs();
+        console.log('list of students', list_student_id);
        // console.log('list des students for delete', list_student_id);
-
         var school_id=document.getElementById('school_id').value;
         var p_event_school_id=document.getElementById("event_school_id").value;
         var p_event_location_id= getLocationIDs();
@@ -3080,7 +3086,7 @@ $('.search-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
-                //console.log(JSON.parse(s));
+                console.log(JSON.parse(s));
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
@@ -4830,7 +4836,6 @@ function getAwayStudent() {
 
 function resetStudentList() {
     isOnlyAvailability = document.getElementById("check-students-availability2").checked;
-    console.log('alors K', isOnlyAvailability);
   // Générer un tableau JSON des étudiants côté serveur
   var students = @json($studentsbySchool);
    // console.log('students', students)
