@@ -28,7 +28,7 @@
                         <div id="otherButtons">
                             @if($invoice->invoice_status ==10)
 
-                            @if(!$AppUI->isStudent())
+                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                 @if($invoice->payment_status ==0)
                                     <a id="payment_btn" target href class="btn btn-theme-warn">
                                         <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-block">{{__('Flag as Paid')}}</span>
@@ -52,7 +52,7 @@
 
                             @endif
 
-                            @if(!$AppUI->isStudent())
+                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                 <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
                             @endif
 
@@ -69,7 +69,7 @@
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
-				@if(!$AppUI->isStudent())
+				@if(!$AppUI->isStudent() && !$AppUI->isParent())
                 @if($invoice->invoice_status !== 10)
                 <button class="nav-link" id="nav-basic-tab" data-bs-toggle="tab" data-bs-target="#tab_3" data-bs-target_val="tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Edit') }}</button>
                 @endif
@@ -545,7 +545,7 @@
                                 <div class="col-lg-2 col-sm-2 text-left">
                                     <label id="invoice_status_text">{{ $invoice_status_all[$invoice->invoice_status]; }}</label>
 
-                                    @if(!$AppUI->isStudent())
+                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     <div>
                                         <a id="unlock_btn" href="" class="btn btn-xs btn-warning" style="display: none;">
                                             <span id="unlock_btn_cap">Unlock</span>

@@ -69,6 +69,7 @@ public function index(Request $request, $schoolId = null)
         }
 
         $studentsList = $school->students;
+        $students = [];
 
         //check for each student if there is a relation with table parent_students where student_id
         foreach ($studentsList as $student) {

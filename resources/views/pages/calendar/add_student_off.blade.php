@@ -44,7 +44,7 @@
 								@if(!$AppUI->isStudent())
 									<div class="form-group row">
 										<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{__('Student') }} :</label>
-										<div class="col-sm-12">
+										<div class="col-sm-6">
 											<div class="selectdiv student_list">
 												<select class="form-control" id="student" name="student[]" multiple="multiple">
 													@foreach($students as $key => $student)
@@ -67,7 +67,7 @@
 												</span>
 											</div>
 
-                                            @if($futurEvents->count() > 0)
+                                            @if($futurEvents && $futurEvents->count() > 0)
                                                 <div class="card bg-warning p-2 mt-2">
                                                 <b>Information</b>
                                                 @foreach ($futurEvents as $key => $event)

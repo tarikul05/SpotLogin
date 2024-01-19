@@ -208,6 +208,10 @@ button#add_more_expense_btn {
     border:#CCC 1px solid;
 }
 
+.search_box_agenda {
+    width: 100%!important;
+}
+
 .glyphicon {
 	position: relative;
 	top: 1px;
@@ -1161,7 +1165,7 @@ button#save_btn_more i {
 	}
 
 	input#search_text {
-		max-width: 68%;
+		max-width: 100%;
 		float: left;
 	}
 
