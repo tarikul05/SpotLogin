@@ -1983,7 +1983,7 @@ $('.close-icon').on('click', function() {
         var p_student_id=getStudentIDs();
         var p_teacher_id=getTeacherIDs();
 
-        console.log('??', p_student_id);
+        //console.log('??', p_student_id);
 
         var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
 
