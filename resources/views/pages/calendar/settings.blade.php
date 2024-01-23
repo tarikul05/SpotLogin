@@ -52,6 +52,53 @@
         });
     });
     </script>
+
+<script type="text/javascript">
+
+    let currencyCode = "{{ $school->default_currency_code }}";
+
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip({html:true,placement:"right"})
+    })
+
+    $(document).ready(function(){
+        $('.input-price').keyup(function(e){
+            if ($(this).hasClass('input-price')) {
+            var divider = $(this).data('bs-divider');
+            console.log(divider);
+
+            var textForTypeBilling, textTooltip;
+
+        if (divider == 1) {
+            textForTypeBilling = 'Private session';
+            textTooltip = "student";
+        } else if (divider == 9999) {
+            textForTypeBilling = 'Student more than 10';
+            textTooltip = "each of the students";
+        } else if (divider == -1) {
+            textForTypeBilling = 'Fixed price';
+            textTooltip = "each student";
+        } else {
+            textForTypeBilling = "Group lessons for " + divider + " students";
+            textTooltip = "each of the " + divider + " students";
+        }
+
+        var newValue = this.value;
+        var tooltipText = "For 15 mn. " + textTooltip + " will pay ("+currencyCode+") " + (newValue / 4) + "<hr>For 30 mn. " + textTooltip + " will pay ("+currencyCode+") " + (newValue / 2);
+
+            var tooltipElement = $(this).closest('[data-toggle="tooltip"]');
+                tooltipElement.attr('data-bs-original-title', tooltipText);
+                tooltipElement.tooltip('show');
+            }
+        });
+    });
+
+    $(document).on('click','#add_new_price',function(){
+        $('.hide-custom-price').slideDown('slow');
+        $('#add_new_price').hide();
+    });
+
+    </script>
     <script src="{{ asset('js/pages/settings/index.js') }}"></script>
     @if (session('success_new_cat'))
     <script>
