@@ -395,7 +395,7 @@ $(document).ready(function(){
             if (result.isConfirmed) {
             Swal.fire(
                 'Deleted!',
-                'Your category has been deleted.',
+                'Your tax has been deleted.',
                 'success'
             )
             var lst_id = $('#add_more_event_category_btn').attr('data-last_tax_id');
@@ -420,7 +420,7 @@ $(document).ready(function(){
                         }
                     }
                 })
-                $(this).parents('.add_more_tax_row').fadeOut();
+                $(this).parents('.add_more_tax_row').remove();
             }else{
                 $(this).parents('.add_more_tax_row').remove();
             }

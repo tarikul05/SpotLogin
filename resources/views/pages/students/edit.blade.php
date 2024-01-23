@@ -1484,10 +1484,13 @@ $('#save_btn').click(function (e) {
 									selected_items += 1;
 									resultHtml += "<td><input class='lesson_class' data-amount='"+(value.sell_price+value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
 							} else {
-									resultHtml += "<td>-</td>";
+									//resultHtml += "<td>-</td>";
+                                    resultHtml += '<td><i class="fa-solid fa-file-pdf"></i> <span style="font-size:11px;">(invoiced)</span></td>';
 							}
 
 							//below locked and invoiced
+
+
 
 							if (value.ready_flag == 1) {
 								resultHtml += "<td>";
@@ -1788,10 +1791,11 @@ $('#save_btn').click(function (e) {
 									resultHtml += "-";
 									resultHtml += "</td>";
 							}
-							//if (value.is_sell_invoiced > 0) {
+							if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
-									//resultHtml += "<em class='glyphicon glyphicon glyphicon-print'></em>";
-							//}
+                                    console.log(value.is_sell_invoiced);
+								resultHtml += " <i class='fa fa-check'><i>";
+							}
 
 							//above locked and invoiced
 
