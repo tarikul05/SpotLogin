@@ -13,15 +13,19 @@
 
 @section('content')
   <div class="content">
-	<div class="container-fluid body">
+	<div class="container">
+
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+        <h5>{{ __('Student') }}: <small>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</small></h5>
+
 		<header class="panel-heading" style="border: none;">
 			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
-					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-inline">{{ __('Student Information') }}:</span> <small>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</small></label>
-					</div>
+				<div class="col-sm-6 col-xs-12 header-area">
 				</div>
-				<div class="col-sm-6 col-xs-12 btn-area pt-1">
+				<div class="col-sm-6 col-xs-12 btn-area">
 					<div class="float-end btn-group">
 						@can('students-update')
 							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
@@ -48,6 +52,13 @@
 		<!-- Tabs navs -->
 
 		<!-- Tabs content -->
+
+        <div class="card" style="border-radius:10px; margin-bottom:25px;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <b>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</b>
+            </div>
+            <div class="card-body">
+
 		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{!empty($student) ? route('editStudentAction',[$student->id]): '/'}}"  name="add_student" role="form">
 		<input type="hidden" id="school_id" name="school_id" value="{{$schoolId}}">
 
@@ -528,7 +539,7 @@
 						</div>-->
 						<div class="row">
                             <label class="text-left"> {{ __('Period') }} :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                               <div class="form-group row below_space">
 
 
@@ -537,15 +548,15 @@
                                 </div>
 
                                 <div class="col-12 col-sm-3">
-                              <input class="form-control" name="billing_period_end_date" id="billing_period_end_date" placeholder="Period End Date" type="text">
+                                    <input class="form-control" name="billing_period_end_date" id="billing_period_end_date" placeholder="Period End Date" type="text">
                                 </div>
 
-                                <div id="show_only_pend_div" class="col-12 col-sm-4 text-right" style="padding-left:9px;">
+                                <div id="show_only_pend_div" class="col-12 col-sm-4 text-center" style="padding-left:9px;">
                                   <input type="checkbox" id="chk_show_only_pend" name="chk_show_only_pend" checked>
                                   <label id="lbl_chk_show_only_pend" name="lbl_chk_show_only_pend" for="chk_show_only_pend">{{ __('Only pending lessons') }}</label>
                                 </div>
 
-                                <div class="col-12 col-sm-2">
+                                <div class="col-12 col-sm-2 text-left">
                                   <button type="button" class="btn btn-primary" id="billing_period_search_btn">{{ __('Search') }}</button>
                                 </div>
 
@@ -705,9 +716,12 @@
 						<input type="hidden" name="selected_tax_ids" value="">
 					</form>
 				</div>
+
+            </div>
+        </div>
 				<!--End of Tab 4 -->
 			</div>
-
+        </div></div>
 	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
@@ -1422,28 +1436,28 @@ $('#save_btn').click(function (e) {
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
 									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Date') }}</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Time') }}</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Duration') }}</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Category') }}</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Teacher') }}</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>{{ __('Lesson') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Date') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Time') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Duration') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Category') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Teacher') }}</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Lesson') }}</b></td>';
 
 
 
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Price</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1">' + '' + '</td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price</b></td>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>{{ __('Teacher  price') }}</b></td>';
+											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Teacher  price') }}</b></td>';
 										}
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>{{ __('Student price') }}</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Student price') }}</b></td>';
 									}
 
 
-									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">{{ __('Extra Charges') }}</td></tr></b>';
+									resultHtml += '<td class="table-col-title" style="text-align:right" colspan="1">{{ __('Extra Charges') }}</td></tr></b>';
 								} else {
 
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
@@ -1482,11 +1496,13 @@ $('#save_btn').click(function (e) {
 
 							if ((value.is_sell_invoiced == 0) && (value.ready_flag == 1)) {
 									selected_items += 1;
-									resultHtml += "<td><input class='lesson_class' data-amount='"+(value.sell_price+value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
+									resultHtml += "<td><input class='lesson_class' style='width:20px!important;' data-amount='"+(value.sell_price+value.extra_charges).toFixed(2)+"' type=checkbox id='event_check' name='event_check' checked value=" + value.event_id + "></td>";
 							} else {
 									//resultHtml += "<td>-</td>";
-                                    resultHtml += '<td><i class="fa-solid fa-file-pdf"></i> <span style="font-size:11px;">(invoiced)</span></td>';
-							}
+                                    if(value.ready_flag !== 0) {
+                                        resultHtml += '<td><i class="fa-solid fa-file-pdf"></i> <span style="font-size:11px;">(invoiced)</span></td>';
+                                    }
+                                }
 
 							//below locked and invoiced
 
@@ -1528,7 +1544,7 @@ $('#save_btn').click(function (e) {
 							} else {
 								resultHtml += '<td>' + value.category_name + '</td>';
 							}
-
+                            console.log(value)
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								if (value.count_name > 1) {
@@ -1717,26 +1733,26 @@ $('#save_btn').click(function (e) {
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ EVENT ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
 									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Date</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Time</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Duration</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Category</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Teacher</b></td>';
-									resultHtml += '<b><td class="h6 pt-3" colspan="1"><b>Lesson</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Date</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Time</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Duration</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Category</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Teacher</b></td>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Lesson</b></td>';
 
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
 										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Price/<b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price/<b></td>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
+											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
 										}
-										resultHtml += '<b><td class="h6 pt-3" style="text-align:right" colspan="1"><b>Student Price</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Student Price</b></td>';
 									}
 
 
-									resultHtml += '<td class="h6 pt-3" style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
+									resultHtml += '<td class="table-col-title" style="text-align:right" colspan="1">Extra Charges</td></tr></b>';
 								} else {
 
 								//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';

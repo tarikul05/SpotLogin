@@ -1,5 +1,5 @@
-<div class="row justify-content-center pt-5">
-    <div class="col-md-9">
+<div class="row justify-content-center pt-3">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">{{__('Locations')}}</div>
             <div class="card-body">

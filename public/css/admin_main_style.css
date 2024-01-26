@@ -1055,9 +1055,9 @@ button.btn.btn-sm.btn-warning {
 .course_week_header {
     font-size: 16px;
     line-height: 1.5em;
-    background-color: lightblue;
-    color: black;
-    font-weight: 300;
+    background-color: #e0f4fa;
+    color: #3b75bf;
+    font-weight: 500;
 }
 table#lesson_table {
     border: 1px solid #ddd;

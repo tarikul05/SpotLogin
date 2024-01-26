@@ -1,5 +1,5 @@
 <div class="row justify-content-center pt-3">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 {{ __('My invoices') }}

@@ -174,7 +174,6 @@ $(document).ready(function(){
     });
 
 
-
     $(document).on('click','#add_more_location_btn',function(){
         console.log('ou');
         $('#add_more_location_div').fadeIn();

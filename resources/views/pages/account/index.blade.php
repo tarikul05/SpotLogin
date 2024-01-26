@@ -3,6 +3,9 @@
 @section('content')
     <div class="container">
 
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
         <h5>{{ __('Coach Account') }}</h5>
 
         @include('pages.account.navbar')
@@ -27,6 +30,8 @@
             </div>
 
 
+        </div>
+    </div>
         </div>
     </div>
 @endsection

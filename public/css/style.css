@@ -2912,3 +2912,7 @@ background-color: #ffffff;
       -webkit-animation-timing-function:ease-in;
     }
 
+    .table-col-title {
+        font-size:12px!important;
+        padding-top:35px!important;
+    }
