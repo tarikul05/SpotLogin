@@ -19,6 +19,9 @@
 @section('content')
   <div class="container">
 
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
     <h5>{{ __("Invoices List") }}</h5>
 
     @if(!$AppUI->isStudent() && !$AppUI->isParent())
@@ -121,14 +124,14 @@
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
-                            {{ $date->format('d M Y') }}
+                            {{ $date->format('d-m-Y') }}
                         </td>
                         <td class="sp_only responsive-td">
                             <span class="d-block d-sm-none">
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
-                            <b>{{ $date->format('d M Y') }}</b>
+                            <b>{{ $date->format('d-m-Y') }}</b>
                             </span>
                          <?= $invoice->client_name ?>
                         </td>
@@ -306,6 +309,9 @@
   </div>
 </div>
 
+</div>
+</div>
+
 <div class="modal fade confirm-modal" id="email_list_modal" tabindex="-1" aria-hidden="true"
         aria-labelledby="email_list_modal" name="email_list_modal">
         <div class="modal-dialog modal-dialog-centered mt-5" role="document">
@@ -391,7 +397,7 @@
         searching: true, // Enable searching with the search input
         paging: true, // Disable pagination
         info: false, // Disable information display
-        order: [[0, 'asc']], // Set default sorting column
+        order: [[0, 'desc']], // Set default sorting column
         columnDefs: [
         { targets: [0, 5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
         { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes

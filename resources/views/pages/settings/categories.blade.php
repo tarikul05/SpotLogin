@@ -1,5 +1,7 @@
 <div class="row justify-content-center pt-3">
-    <div class="col-md-8">
+    <div class="col-md-12">
+        <form method="POST" action="{{ route('event_category.create') }}">
+            @csrf
         <div class="card">
             <div class="card-header">Categories</div>
             <div class="card-body">
@@ -9,8 +11,7 @@
                     </div>
                 @endif-->
 
-                <form method="POST" action="{{ route('event_category.create') }}">
-                    @csrf
+              
                     @php $count= isset($eventLastCatId->id) ? ($eventLastCatId->id) : 1; @endphp
 
                     @if(!empty($eventCat) && $eventCat->count() > 0)
@@ -88,10 +89,13 @@
                         </button>
                       </div>
 
-                    <br>
-                    <button type="submit" class="btn btn-primary" id="btnSaveCategories">{{ __('Save Categories') }}</button>
-                </form>
+               
             </div>
         </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary" id="btnSaveCategories">{{ __('Save Categories') }}</button>
+    </form>
+    
     </div>
 </div>

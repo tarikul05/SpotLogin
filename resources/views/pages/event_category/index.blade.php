@@ -27,8 +27,8 @@
 						<button id="save_btn" name="save_btn" class="btn btn-success save_button"><em class="glyphicon glyphicon-floppy-save"></em> Save</button>
 					@endcan
 					</div>
-				</div>    
-			</div>          
+				</div>
+			</div>
 		</header>
 		<!-- Tabs navs -->
 
@@ -100,12 +100,12 @@
 						@endcan
 						</div>
 					</div>
-				</form>	
+				</form>
 			</div>
 		</div>
 		<!-- End Tabs content -->
 	</div>
-	
+
 
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
@@ -180,7 +180,7 @@
 					"id": id,
 					"_token": csrfToken,
 				},
-				success: function(response){	
+				success: function(response){
 					if(response.status == 1){
 						current_obj.parents('.add_more_event_category_row').remove();
 					}
@@ -195,7 +195,7 @@
 	$('#save_btn').click(function (e) {
 		var formData = $('#event_form').serializeArray();
 		var csrfToken = $('meta[name="_token"]').attr('content') ? $('meta[name="_token"]').attr('content') : '';
-	
+
 		var error = '';
 
 		$( ".category_name" ).each(function( key, value ) {
@@ -218,13 +218,13 @@
 			"value": "{{$schoolId}}",
 		});
 
-		if(error < 1){	
+		if(error < 1){
 			$.ajax({
 				url: BASE_URL + '/add-event-category',
 				data: formData,
 				type: 'POST',
 				dataType: 'json',
-				success: function(response){	
+				success: function(response){
 					if(response.status == 1){
 						$('#modal_parameter').modal('show');
 						$("#modal_alert_body").text('{{ __('Successfully Registered') }}');
@@ -237,7 +237,7 @@
 		}else{
 			$('#modal_parameter').modal('show');
 			$("#modal_alert_body").text('{{ __('Required field is empty') }}');
-		}	            
+		}
 	});
 
 

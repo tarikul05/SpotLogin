@@ -413,6 +413,31 @@
                                     </div>
                                 </div>
 
+                                @if($AppUI->isSchoolAdmin())
+                                <div class="form-group row show_coach_off hide_on_off">
+                                <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
+                                @endif
+                                @if(!$AppUI->isSchoolAdmin())
+                                <input style="opacity: 0 !important; visibility: hidden !important;" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id }}" readonly>
+                                @else
+                                <div class="col-sm-9">
+                                    <div class="selectdiv">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa-solid fa-list-ul"></i>
+                                            </span>
+                                        <select class="form-control" id="teacher_select" name="teacher_select">
+                                                <option value="">{{__('Select Professor') }}</option>
+                                            @foreach($professors as $key => $professor)
+                                                <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                @endif
+
                                 <div class="form-group row lesson hide_on_off">
                                     <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
                                     <div class="col-sm-9">
@@ -519,25 +544,7 @@
                                                     @endif
 
 
-                                                    @if(!$AppUI->isTeacherAdmin())
-                                                    <div class="form-group row show_coach_off hide_on_off">
-                                                    <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
-                                                    @endif
-                                                    @if($AppUI->isTeacherAdmin())
-                                                    <input style="opacity: 0 !important; visibility: hidden !important;" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id }}" readonly>
-                                                    @else
-                                                    <div class="col-sm-9">
-                                                        <div class="selectdiv">
-                                                            <select class="form-control" id="teacher_select" name="teacher_select">
-                                                                    <option value="">{{__('Select Professor') }}</option>
-                                                                @foreach($professors as $key => $professor)
-                                                                    <option value="{{ $professor->teacher_id }}" {{ old('teacher_select') == $professor->teacher_id ? 'selected' : ''}}>{{ $professor->nickname }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                    @endif
+
 
 
 
@@ -2604,23 +2611,23 @@ $('.close-icon').on('click', function() {
                     const eventEndTimeStamp = moment.utc(event.end, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
                     const nowTimeStamp =  moment.utc(now, 'YYYY-MM-DDTHH:mm:00').subtract(2, 'hours').tz(myTimezone).valueOf();
 
-                    if (eventEnd.isBefore(now)) {
+                    if (eventEnd.isBefore(nowTimeStamp)) {
                     var timeBetween = timeDifference(nowTimeStamp, eventEndTimeStamp);
                     var phrase = "Completed since " + timeBetween;
                     }
 
-                    if (eventStart.isAfter(now)) {
+                    if (eventStart.isAfter(nowTimeStamp)) {
                     var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
                     var phrase = "Incoming in " + timeBetween;
                     }
 
-                    if (eventStart.isBefore(now) && eventEnd.isAfter(now)) {
+                    if (eventStart.isBefore(nowTimeStamp) && eventEnd.isAfter(nowTimeStamp)) {
                     var timeBetween = timeDifference(eventEndTimeStamp, nowTimeStamp);
                     var phrase = "event in progress - ends in "+timeBetween+"";
                   //  console.log(phrase);
                     }
 
-                    if (eventEnd.isSame(now)) {
+                    if (eventEnd.isSame(nowTimeStamp)) {
                     var phrase = "ends soon - in few seconds";
                   //  console.log(phrase);
                     }

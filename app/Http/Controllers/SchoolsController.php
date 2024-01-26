@@ -174,6 +174,7 @@ class SchoolsController extends Controller
 
         $response = [];
         $authUser = $request->user();
+        $user = $request->user();
         if ($authUser->person_type != 'SUPER_ADMIN') {
             if (!empty($authUser->selectedSchoolId())) {
                 $p_school_id = $authUser->selectedSchoolId();
@@ -270,6 +271,39 @@ class SchoolsController extends Controller
         $levels = Level::active()->where('school_id', $schoolId)->get();
         $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
         $timezones = config('global.timezones');
+
+        $invoice_url = '';
+        $product_object = null;
+        $invoices = null;
+        $subscriber = null;
+        $last_past_subscription = null;
+        $subscription = null;
+        if($authUser->stripe_id){
+            $subscription_info = $this->stripe->subscriptions->all(['customer' => $authUser->stripe_id])->toArray();
+
+            foreach($subscription_info['data'] as $subs) {
+                if($subs['status'] == 'active' || $subs['status'] == 'trialing') {
+                    $subscription = $subs;
+                    $subscriber = (object) $subs;
+                    $product_object = $this->stripe->products->retrieve(
+                        $subs['plan']['product'],
+                        []
+                    );
+                    $invoice_url = $this->stripe->invoices->retrieve(
+                        $subscriber->latest_invoice,
+                        []
+                    );
+                } elseif($subs['status'] == 'canceled' || $subs['status'] == 'inactive') {
+                    $last_past_subscription = $subs;
+                }
+            }
+
+            $invoices = $this->stripe->invoices->all(
+            ['customer' => $authUser->stripe_id],
+            );
+
+        }
+
         return view('pages.schools.edit')
         ->with(compact(
             'levels',
@@ -285,7 +319,8 @@ class SchoolsController extends Controller
             'country',
             'role_type',
             'school_admin',
-            'timezones'
+            'timezones',
+            'subscription', 'product_object', 'subscriber', 'invoice_url', 'user', 'invoices', 'last_past_subscription'
         ));
 
     }

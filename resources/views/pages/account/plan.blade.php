@@ -1,5 +1,5 @@
 <div class="row justify-content-center pt-3">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">{{ __('My plan')}}</div>
             <div class="card-body">
@@ -106,7 +106,7 @@
 
     @if ($subscription && ($subscription['plan']['billing_scheme'] === 'tiered' && $subscription['plan']['tiers_mode'] === 'volume'))
     <tr>
-<td>{{ __('Number of teachers') }}</td>
+        <td>{{ __('Number of teachers') }}</td>
         <td>{{ $subscription['quantity'] }} teachers available</td>
     </tr>
     @endif

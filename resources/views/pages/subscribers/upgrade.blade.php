@@ -319,9 +319,9 @@
                             <div class="plan_name">{{ $plan['plan_name']->name }}</div>
                             @if($plan['tiers'])
 
-                          <div class="card bg-tertiary text-center p-2 m-2">
-                            <small>How many coach account you need ?</small>
-                            <select  name="chooseCoaches" id="chooseCoaches">
+                          <div class="card bg-tertiary text-center p-2 m-3">
+                            <small>{{ __('How many coach account you need') }} ?</small>
+                            <select  name="chooseCoaches" id="chooseCoaches" style="border-radius:15px; margin:10px;">
                                  <option value="1">1 coach</option>
                                  <option value="3">3 coaches</option>
                                  <option value="5">5 coaches</option>
@@ -399,8 +399,8 @@
                                 }
 
                                 amountElement.textContent = initialAmount.toFixed(2);
-                                amountRenewElement.textContent = updatedAmount.toFixed(2);
-                                amountButtonElement.textContent = updatedAmount.toFixed(2);
+                                amountRenewElement.textContent = initialAmount.toFixed(2);
+                                amountButtonElement.textContent = initialAmount.toFixed(2);
                                 quantityInput.value = selectElement.value;
                             });
                         </script>
@@ -464,7 +464,7 @@
 
                         <?php if(!$is_subscribed && empty($subscription)){ ?>
                             <!--<li class="submit-button"><a href="{{ route('subscribe.plan', $plan['id']) }}" class="button">Choose this plan</a></li>-->
-                            <li class="submit-button"><a href="#" id="choose-plan" class="button">{{ __('Choose this plan') }}</a></li>
+                            <li class="submit-button"><a href="#" style="font-size:18px;" id="choose-plan" class="button">{{ __('Choose this plan') }}</a></li>
                             <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php } else {
                             if((!empty($subscription)) && $subscription['plan']['id'] == $plan['id']){
@@ -472,7 +472,7 @@
                             <li class="submit-button disabled"><a href="javascript:void(0)" class="button">{{ __('Your current plan') }}</a></li>
                             <li class="info-txt">Subscription valid until <?php echo  $subscription['billing_cycle_anchor'] ? date('M j, Y', $subscription['billing_cycle_anchor']) : ''; ?></li>
                         <?php } else { ?>
-                            <li class="submit-button"><a href="#" id="choose-plan" class="button" class="button">{{ __('Choose this plan') }}</a></li>
+                            <li class="submit-button"><a href="#" style="font-size:18px;" id="choose-plan" class="button" class="button">{{ __('Choose this plan') }}</a></li>
                             <li class="info-txt text-warning">{{ __('you will not be the charged until the end of your trial period') }}</li>
                         <?php
                                 }

@@ -79,7 +79,7 @@
                         <?php if ($AppUI['person_type']=='SUPER_ADMIN'): ?>
                             <a href="{{ route('schools') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-building"></i> <span class="d-none d-sm-block"></span> {{ __('Schools') }}</a>
                         <?php else: ?>
-                            <a href="{{ route('school-update') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-building"></i> <span class="d-none d-sm-block"></span> {{ __('School') }}</a>
+                            <a href="{{ route('school-update') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('School Account') }}</a>
                         <?php endif; ?>
                     @endcan
 
@@ -89,6 +89,9 @@
 
                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin() || $AppUI->isTeacherMinimum() || $AppUI->isTeacherMedium() || $AppUI->isTeacherAll())
                         <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('My Settings') }}</a>
+                    @endif
+                    @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
+                        <a href="{{ route('calendar.settings') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-gear"></i> <span class="d-none d-sm-block"></span> {{ __('School Settings') }}</a>
                     @endif
 
                     @if($AppUI->isSuperAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())

@@ -6,26 +6,29 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid">
-    <header class="panel-heading invoice_list_header" style="border: none;">
-        <div class="row panel-row" style="margin:0;">
-            <div class="col-sm-6 col-xs-12 header-area">
-                <div class="page_header_class mb-3">
-                    @if($type == 'school')
-                    <label id="page_header_id" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoicing for the school') }}</label>
-                    @else
-                    <label id="page_header_id" name="page_header_id"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoicing System') }}</label>
-                    @endif
-                </div>
+  <div class="container">
 
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 btn-area">
-                <div class="invoce_search_box">
-                    <input name="search_text" type="input" class="form-control search_text_box" id="search_text" value="" placeholder="">
-                </div>
-            </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            @if($type == 'school')
+            <h5 id="page_header_id" name="page_header_id">{{ __('Invoicing for the school') }}</h5>
+            @else
+            <h5 id="page_header_id" name="page_header_id">{{ __('Invoicing System') }}</h5>
+            @endif
+
+            <div class="row justify-content-center pt-3">
+                <div class="col-md-12">
+
+    <div class="card" style="border-radius:10px;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <b class="d-none d-sm-inline">{{ __('Invoice System') }}</b>
+            <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a student">
         </div>
-    </header>
+        <div class="card-body">
+
+
     <div class="table-responsive1">
         <input id="seleted_auto_id" name="seleted_auto_id" style="display: none;">
         <input id="p_school_id" name="p_school_id" style="display: none;">
@@ -74,6 +77,10 @@
         </table>
     </div>
   </div>
+</div>
+</div>
+</div>
+</div>
 @endsection
 
 

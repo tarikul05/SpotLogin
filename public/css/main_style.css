@@ -798,3 +798,7 @@ div#navbarSupportedContent {
 .axeptio_mount{
     margin-bottom:55px!important;
 }
+
+.table-name-width {
+    width: 150px!important;
+}

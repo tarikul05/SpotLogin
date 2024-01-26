@@ -10,36 +10,22 @@
 @endsection
 
 @section('content')
-  <div class="content">
-	<div class="container-fluid body">
 
-			<header class="panel-heading" style="border: none;">
-				<div class="row panel-row" style="margin:0;">
-					<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
-						<div class="page_header_class">
-							<label id="page_header" name="page_header"><i class="fa-solid fa-school"></i> {{ __('School Key Information')}}</label>
-						</div>
-					</div>
-					<div class="col-sm-6 col-xs-12 btn-area">
-						<div class="float-end btn-group pt-1">
-							<button type="submit" class="btn btn-theme-success" id="update_btn">
-								<i class="fa fa-save"></i> {{ __('Save')}}
-							</button>
-						</div>
-					</div>
-				</div>
-			</header>
-			<!-- Tabs navs -->
+	<div class="container">
 
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+
+		<h5>{{ __('School Account') }}</h5>
 
 			<nav>
 				<div class="nav nav-tabs" id="nav-tab" role="tablist">
 					<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
 						{{ __('Contact Information')}}
 					</button>
-					<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+					<!--<button class="nav-link" id="nav-logo-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Logo')}}
-					</button>
+					</button>-->
 					<!-- @can('schools-user-udpate')
 						<button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">
 						{{ __('User Account')}}
@@ -47,9 +33,20 @@
 					@endcan -->
 
 					@can('parameters-list')
-						<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
+
+                    <!--<button class="nav-link" id="nav-parameters-tab" data-bs-toggle="tab" data-bs-target="#tab_5" type="button" role="tab" aria-controls="nav-parameters" aria-selected="false">
 						{{ __('Parameters')}}
-						</button>
+						</button>-->
+
+                        <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_2" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+                            {{ __('My plan')}}
+                        </button>
+                        <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+                            {{ __('My invoices')}}
+                        </button>
+                        <button class="nav-link" id="nav-prices-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-logo" aria-selected="false">
+                        {{ __('My account')}}
+                        </button>
 
 					@endcan
 					<!-- </button> -->
@@ -59,6 +56,19 @@
 
 			<!-- Tabs content -->
 			<div class="tab-content" id="ex1-content">
+
+                <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+                    @include('pages.account.plan')
+                </div>
+
+                <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
+                    @include('pages.account.invoices')
+                </div>
+
+                <div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="tab_4">
+                    @include('pages.account.info-plus')
+                </div>
+
 				<input type="hidden" id="role_type" name="role_type" value="{{$role_type}}">
 				<input type="hidden" id="school_id" name="school_id" value="{{$school->id}}">
 				<!--Start of Tab 1 -->
@@ -66,18 +76,17 @@
 					<form id="schoolForm" name="schoolForm" class="form-horizontal" role="form"
 					 action="{{!empty($school) ? route('school.update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
 						@csrf
-						<fieldset>
-							<div class="section_header_class">
-								<label id="teacher_personal_data_caption">{{ __('Personal data of the school')}}</label>
-							</div>
-							<div class="card">
-								<div class="card-body bg-tertiary">
-							<div class="row">
-								<div class="col-md-6">
+						  <div class="row justify-content-center pt-3">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header">{{ __('Information') }}</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-6 col-xs-12">
 									@if($AppUI->isSuperAdmin())
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
-										<div class="col-sm-7">
+									<div class="form-group">
+										<label class="col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">{{ __('Status')}}: </label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="is_active" id="is_active">
 													<option value="">Select</option>
@@ -103,27 +112,28 @@
 
 											</div>
 									</div> -->
-									<div class="form-group row">
-										<label id="row_hdr_school_name"
-												class="col-lg-3 col-sm-3 text-left">{{ __('Name of the School')}}*:</label>
-										<div class="col-sm-7">
-												<input type="text" class="form-control" id="school_name"
-														name="school_name"
-														value="{{!empty($school->school_name) ? old('school_name', $school->school_name) : old('school_name')}}">
-												@if ($errors->has('school_name'))
-													<span id="" class="error">
-															<strong>{{ $errors->first('school_name') }}.</strong>
-													</span>
-												@endif
+									<div class="form-group mb-3">
+										<label class="mb-1" id="row_hdr_school_name">{{ __('Name of the School')}}</label>
+										<div class="col-sm-10">
+										<div class="input-group">
+											<span class="input-group-addon"><i class="fa-solid fa-building"></i></span>
+											<input type="text" class="form-control" id="school_name"
+													name="school_name"
+													value="{{!empty($school->school_name) ? old('school_name', $school->school_name) : old('school_name')}}">
+											@if ($errors->has('school_name'))
+												<span id="" class="error">
+														<strong>{{ $errors->first('school_name') }}.</strong>
+												</span>
+											@endif
 										</div>
-
+										</div>
 									</div>
 
 									@if($AppUI->isSuperAdmin())
-									<div class="form-group row">
+									<div class="form-group mb-3">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">{{ __('Organization Type')}}:</label>
-										<div class="col-sm-7">
+										class="mb-1">{{ __('Organization Type')}}</label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="legal_status" id="legal_status">
 													<option value="">Select</option>
@@ -139,7 +149,8 @@
 									</div>
 									@endif
 								</div>
-								<div class="col-md-6">
+
+									<div class="col-md-6 col-xs-12">
 									<!-- <div class="form-group row">
 
 										<label id="school_type_lbl" class="col-lg-3 col-sm-3 text-left">
@@ -149,18 +160,18 @@
 											School
 										</label>
 									</div> -->
-									<div class="form-group row">
+									<div class="form-group mb-3">
 										<label id="sender_email_label" name="sender_email_label"
-										class="col-lg-3 col-sm-3 text-left">{{ __('Sender email address')}} :</label>
-										<div class="col-sm-7">
+										class="mb-1">{{ __('Sender email address')}}</label>
+										<div class="col-sm-10">
 												<input type="email" id="sender_email"
 												name="sender_email" size="100" class="form-control"
 												value="{{!empty($school->sender_email) ? old('sender_email', $school->sender_email) : old('sender_email')}}">
 										</div>
 									</div>
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{ __('Incorporation Date')}}:</label>
-										<div class="col-sm-7">
+									<div class="form-group mb-3">
+										<label class="mb-1" id="birth_date_label_id">{{ __('Incorporation Date')}}</label>
+										<div class="col-sm-10">
 											<div class="input-group" id="sbirth_date_div">
 												<input id="incorporation_date" name="incorporation_date" type="text" class="form-control date_picker"
 												value="{{!empty($school->incorporation_date) ? old('incorporation_date', $school->incorporation_date) : old('incorporation_date')}}">
@@ -171,11 +182,11 @@
 										</div>
 									</div>
 
-									<div class="form-group row">
+									<div class="form-group mb-3">
 										<label id="organization_type_caption"
-										class="col-lg-3 col-sm-3 text-left">{{ __('Timezone')}}:</label>
-										<div class="col-sm-7">
-											<div class="selectdiv">
+										class="mb-1">{{ __('Timezone')}}</label>
+										<div class="col-sm-10">
+
 												<select class="form-control selectpicker" name="timezone" data-live-search="true" id="timezone">
 													<option value="">Select</option>
 													@foreach ($timezones as $key => $value)
@@ -185,7 +196,7 @@
 														</option>
 													@endforeach
 												</select>
-											</div>
+
 										</div>
 									</div>
 
@@ -196,14 +207,14 @@
 						</div>
 					</div>
 
-							<div class="clearfix"></div>
+							<div class="clearfix mt-3"></div>
 							<div class="row">
 								<div class="col-xs-12">
 										<div class="form-group alert alert-info row">
 												<label for="default_currency_code" id="default_currency_lbl"
 														name="default_currency_lbl"
-														class="col-lg-3 col-sm-3 pt-3 text-end">{{ __('Base currency')}} :</label>
-												<div class="col-sm-2 pt-3">
+														class="mb-1 text-start">{{ __('Base currency')}}</label>
+														<div class="col-sm-12">
 														<div class="selectdiv">
 															<select class="form-control" name="default_currency_code" id="default_currency_code">
 															<option value="">Select</option>
@@ -215,7 +226,7 @@
 															</select>
 														</div>
 												</div>
-												<div class="col-sm-7">
+												<div class="col-sm-10">
 														<label id="currency_alert_text"
 																name="currency_alert_text">{{ __('Wanring: Generate all pending invoices before change base currency')}}. <br>{{ __('(Lessons already scheduled will be invoiced)')}}</label>
 												</div>
@@ -360,18 +371,17 @@
 							<!-- End Billing Methid -->
 							@endunlessrole
 
-							<div class="clearfix"></div>
-							<div class="section_header_class">
-								<label id="address_caption">{{ __('Contact Person')}}</label>
-							</div>
+							<div class="clearfix mt-3"></div>
+
 							<div class="card">
-								<div class="card-body bg-tertiary">
+								<div class="card-header">{{ __('Contact Person') }}</div>
+								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									@if($AppUI->isSuperAdmin())
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Genre')}}:</label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="contact_gender_id" id="contact_gender_id">
 													<option value="">Select</option>
@@ -383,8 +393,8 @@
 									</div>
 									@endif
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('First Name')}} :*</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('First Name')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="contact_firstname" name="contact_firstname" type="text"
 											value="{{!empty($school->contact_firstname) ? old('contact_firstname', $school->contact_firstname) : old('contact_firstname')}}">
 											@if ($errors->has('contact_firstname'))
@@ -397,8 +407,8 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Family Name')}} :*</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Family Name')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="contact_lastname" name="contact_lastname" type="text"
 											value="{{!empty($school->contact_lastname) ? old('contact_lastname', $school->contact_lastname) : old('contact_lastname')}}">
 											@if ($errors->has('contact_lastname'))
@@ -409,8 +419,8 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Position')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Position')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="contact_position" name="contact_position" type="text"
 											value="{{!empty($school->contact_position) ? old('contact_position', $school->contact_position) : old('contact_position')}}">
 
@@ -422,40 +432,38 @@
 						</div>
 					</div>
 
-							<div class="clearfix"></div>
-							<div class="section_header_class">
-								<label id="address_caption">{{ __('School Address')}}</label>
-								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
-							</div>
+							<div class="clearfix mt-3"></div>
+
 							<div class="card">
-								<div class="card-body bg-tertiary">
+								<div class="card-header">{{ __('School Address') }}</div>
+								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Street')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="street" name="street" type="text"
 											value="{{!empty($school->street) ? old('street', $school->street) : old('street')}}">
 
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street No')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Street No')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="street_number" name="street_number" type="text"
 											value="{{!empty($school->street_number) ? old('street_number', $school->street_number) : old('street_number')}}">
 										</div>
 									</div>
 									<!-- <div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Street 2')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Street 2')}}:</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="street2" name="street2" type="text"
 											value="{{!empty($school->street2) ? old('street2', $school->street2) : old('street2')}}">
 										</div>
 									</div> -->
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Postal Code')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="zip_code" name="zip_code" type="text"
 											value="{{!empty($school->zip_code) ? old('zip_code', $school->zip_code) : old('zip_code')}}">
 										</div>
@@ -463,8 +471,8 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="place" id="place_caption">{{ __('City')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="place" id="place_caption">{{ __('City')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="place" name="place" type="text"
 											value="{{!empty($school->place) ? old('place', $school->place) : old('place')}}">
 
@@ -472,8 +480,8 @@
 									</div>
 
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="country_code" id="country_code_caption">{{ __('Country')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="country_code" id="country_code_caption">{{ __('Country')}}</label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control select_two_defult_class" name="country_code" id="country_code">
 													<option value="">Select</option>
@@ -501,18 +509,16 @@
 						</div>
 					</div>
 
-							<div class="clearfix"></div>
-							<div class="section_header_class">
-								<label id="contact_info_caption">{{ __('Contact Information')}}</label>
-								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
-							</div>
+							<div class="clearfix mt-3"></div>
+
 							<div class="card">
-								<div class="card-body bg-tertiary">
+								<div class="card-header">{{ __('Contact Information') }}</div>
+								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sphone" id="phone_caption">{{ __('Phone')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sphone" id="phone_caption">{{ __('Phone')}}</label>
+										<div class="col-sm-10">
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-phone-square"></i>
@@ -523,10 +529,10 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<div class="btn-group col-lg-3 col-sm-3 text-left">
+										<div class="mb-1">
 											<label>{{ __('Phone 2')}}</label> <label class="text-left"></label>
 										</div>
-										<div class="col-sm-7">
+										<div class="col-sm-10">
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-phone"></i>
@@ -553,8 +559,8 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="semail" id="email_caption">{{ __('Email')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="semail" id="email_caption">{{ __('Email')}}</label>
+										<div class="col-sm-10">
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-envelope"></i>
@@ -565,10 +571,10 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<div class="btn-group col-lg-3 col-sm-3 text-left">
+										<div class="btn-group mb-1">
 											<label for="semail2">{{ __('Email')}}</label> <label class="text-left">(2)</label>
 										</div>
-										<div class="col-sm-7">
+										<div class="col-sm-10">
 											<div class="input-group">
 												<span class="input-group-addon">
 													<i class="fa fa-envelope"></i>
@@ -584,47 +590,44 @@
 								</div>
 							</div>
 
-							<div class="clearfix"></div>
+							<div class="clearfix mt-3"></div>
 							@if($AppUI->isTeacherAdmin() || $school->country_code != 'CA' )
-							<div class="section_header_class">
-								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
-								<p style="color:red; font-size:14px;">{{ __('Optional - this information will appear on the invoice') }}</p>
-							</div>
 							<div class="card">
-								<div class="card-body bg-tertiary">
+								<div class="card-header">{{ __('School Bank Information') }}</div>
+								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Bank Name')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Bank Name')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_name" name="bank_name" type="text"
 												value="{{!empty($school->bank_name) ? old('bank_name', $school->bank_name) : old('bank_name')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Address')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Address')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_address" name="bank_address" type="text"
 												value="{{!empty($school->bank_address) ? old('bank_address', $school->bank_address) : old('bank_address')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Postal Code')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Postal Code')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_zipcode" name="bank_zipcode" type="text"
 												value="{{!empty($school->bank_zipcode) ? old('bank_zipcode', $school->bank_zipcode) : old('bank_zipcode')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('City')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('City')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_place" name="bank_place" type="text"
 											value="{{!empty($school->bank_place) ? old('bank_place', $school->bank_place) : old('bank_place')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Country')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Country')}}</label>
+										<div class="col-sm-10">
 											<div class="selectdiv">
 												<select class="form-control" name="bank_country_code" id="bank_country_code">
 													<option value="">Select</option>
@@ -640,29 +643,29 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account Holder information')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Account Holder information')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_account_holder" name="bank_account_holder" type="text"
 												value="{{!empty($school->bank_account_holder) ? old('bank_account_holder', $school->bank_account_holder) : old('bank_account_holder')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Account No')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('Account No')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_account" name="bank_account" type="text"
 												value="{{!empty($school->bank_account) ? old('bank_account', $school->bank_account) : old('bank_account')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('IBAN No')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('IBAN No')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_iban" name="bank_iban" type="text"
 												value="{{!empty($school->bank_iban) ? old('bank_iban', $school->bank_iban) : old('bank_iban')}}">
 										</div>
 									</div>
 									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('SWIFT A/c No')}}:</label>
-										<div class="col-sm-7">
+										<label class="mb-1" for="sstreet" id="street_caption">{{ __('SWIFT A/c No')}}</label>
+										<div class="col-sm-10">
 											<input class="form-control" id="bank_swift" name="bank_swift" type="text"
 												value="{{!empty($school->bank_swift) ? old('bank_swift', $school->bank_swift) : old('bank_swift')}}">
 										</div>
@@ -690,10 +693,67 @@
 								</div>
 							</div>
 
-							<div class="clearfix"></div>
+							<div class="clearfix mt-3"></div>
 
-						</fieldset>
+
+							<div class="card">
+								<div class="card-header">{{ __('Logo') }}</div>
+								<div class="card-body">
+
+									@if(!$AppUI->isStudent())
+									<span id="page_header" class="page_title text-black"></span>
+									<div class="mb-3">{{ __('Your logo will be added to the invoices you can issue with premium access') }}</div>
+									@endif
+
+									<div class="row">
+										<div class="col-2">
+											<?php if (!empty($school->logoImage->path_name)): ?>
+												<img id="profile_image_user_account" src="{{ $school->logoImage->path_name }}"
+													height="128" width="128" class="img-thumbnail"
+													style="margin-right:10px;">
+											<?php else: ?>
+												<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
+													height="128" width="128" class="img-thumbnail"
+													style="margin-right:10px;">
+											<?php endif; ?>
+										</div>
+										<div class="col-10 text-left">
+											<div class="center-block">
+												<div style="margin:5px;">
+												  <span class="btn btn-theme-success">
+													<span id="select_image_button_caption" onclick="UploadImage()"><i class="fa-solid fa-camera"></i></span>
+													<input onchange="ChangeImage()"
+														class="custom-file-input" id="profile_image_file"
+														type="file" name="profile_image_file"
+														accept="image/*" style="display: none;">
+												  </span>
+												</div>
+												<?php if (!empty($school->logo_image_id)): ?>
+												  <div style="margin:5px;">
+													<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($AppUI->profile_image_id) ? '' : 'display:none;'}}">
+													  <span id="delete_image_button_caption"><i class="fa fa-trash"></i></span>
+													</a>
+												  </div>
+												<?php endif; ?>
+											  </div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
 					</form>
+
+                    <div class="row justify-content-center pt-3">
+                        <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary" id="update_btn">
+                            <i class="fa fa-save"></i> {{ __('Save')}}
+                        </button>
+                    </div>
+                    </div>
+
 				</div>
 				<!--End of Tab 1-->
 
@@ -786,7 +846,7 @@
 				<!--End of Tab 2-->
 
 				<!--Start of Tab 4 -->
-				<div id="tab_4" class="tab-pane">
+				<!--<div id="tab_4" class="tab-pane">
 					<div class="row">
 						<div class="col-sm-12 col-xs-12 header-area">
 							<div class="page_header_class">
@@ -839,7 +899,7 @@
 						</div>
 					</div>
 
-				</div>
+				</div>-->
 				<!--End of Tab 4-->
 
 				<!--Start of Tab 5 -->
@@ -847,9 +907,13 @@
 					@include('pages.schools.elements.school-parameters')
 				</div>
 				<!--End of Tab 5-->
-			</div>
 
-	</div>
+
+
+			</div></div>
+        </div></div>
+
+
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_parameter">
 		<div class="modal-dialog modal-dialog-centered">

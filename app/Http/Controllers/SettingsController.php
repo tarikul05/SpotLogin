@@ -69,7 +69,14 @@ class SettingsController extends Controller
         $countries = Country::active()->get();
         $genders = config('global.gender');
 
-        $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+        $schoolTeacher = SchoolTeacher::active()->where('teacher_id', $user->person_id)->first();
+        if($schoolTeacher->role_type === "school_admin" || $schoolTeacher->role_type === "teachers_admin") {
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get(); //->where('invoiced_type', "S")
+        } else {
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', "T")->where('created_by', $user->id)->get();
+        }
+
+
         $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
         $locations = Location::active()->where('school_id', $schoolId)->get();
         $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();

@@ -78,7 +78,7 @@
                                                 @endif
                                             </div>
 											<div class="col-sm-8">
-												<div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?> >
+												<div class="pack_invoice_area student form-group row" <?php if($cat->invoiced_type == 'T'){ echo 'style="display:none"'; }  ?>>
                                                     @if(!$AppUI->isTeacherAdmin())
 													<div class="col-md-6">
 														<label class="titl">Teachers</label>
