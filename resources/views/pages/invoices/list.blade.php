@@ -120,7 +120,7 @@
                         <!--<th>&nbsp;</th>-->
                         <!--<td class="txt-grey text-left">{{ $i }} </td>-->
 
-                        <td class="responsive-td mobile-hide">
+                        <td class="responsive-td mobile-hide" data-sort="{{ strtotime($invoice->date_invoice) }}">
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
@@ -397,7 +397,7 @@
         searching: true, // Enable searching with the search input
         paging: true, // Disable pagination
         info: false, // Disable information display
-        order: [[0, 'desc']], // Set default sorting column
+        //order: [[0, 'desc']], // Set default sorting column
         columnDefs: [
         { targets: [0, 5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
         { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes
