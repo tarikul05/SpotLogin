@@ -126,17 +126,17 @@
                             @endphp
                             {{ $date->format('d-m-Y') }}
                         </td>
-                        <td class="sp_only responsive-td">
+                        <td class="sp_only responsive-td" data-sort="{{ $invoice->date_invoice }}">
                             <span class="d-block d-sm-none">
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
                             <b>{{ $date->format('d-m-Y') }}</b>
                             </span>
-                         <?= $invoice->client_name ?>
+                            <!--<?= $invoice->client_name ?>-->
                         </td>
                         @php
-                        if($invoice->invoice_type ==0){
+                        if($invoice->invoice_type == 0){
                             @endphp
                             <td class="responsive-td mobile-hide">{{ $invoice_type_all[$invoice->invoice_type]; }} (M)</td>
                             @php
