@@ -49,7 +49,7 @@
 <section class="pt-2" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
-    <div id="pageloader" style="display: none;">
+    <div id="pageloader">
       <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
     </div>
 </section>

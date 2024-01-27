@@ -3,7 +3,7 @@
     @csrf
     <input type="hidden" name="schoolID" value="{{ $schoolId }}">
     <div class="row justify-content-center pt-1">
-    <div class="col-md-10">
+    <div class="col-md-12">
 
         <div class="card">
         <div class="card-header h6">{{ __('Create a family') }}</div>
