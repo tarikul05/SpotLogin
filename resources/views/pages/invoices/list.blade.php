@@ -152,7 +152,15 @@
                             $invoice_name .= '-'.$invoice->client_name. '-ID#' . $invoice->id;
                         }
                         @endphp
-                        <td class="responsive-td mobile-hide">{{ $invoice_name}}</td>
+                        <td class="responsive-td mobile-hide">
+                            @if ($invoice->invoice_status > 1)
+                            <a href="{{ $edit_view_url }}">
+                            {{ $invoice_name}}
+                            </a>
+                            @else
+                            {{ $invoice_name}}
+                            @endif
+                        </td>
 
                         @if ($invoice->invoice_type == 0)
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b>
@@ -532,7 +540,7 @@
             }, 800);
         }
             Swal.fire({
-            title: "{{ __('Choose payment status') }}",
+                title: "{{ __('Choose payment status') }}",
                 text: "{{ __('How student paid this invoice ?') }}",
                 icon: "question",
                 showDenyButton: true,

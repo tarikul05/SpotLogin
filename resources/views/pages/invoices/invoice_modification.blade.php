@@ -9,63 +9,19 @@
 <script src="{{ asset('ckeditor/ckeditor.js')}}"></script>
 @endsection
 <?php
-    $invoiceIssued = ($invoice->invoice_status ==10);
+    $invoiceIssued = ($invoice->invoice_status == 10);
     $totalWithDiscount=0;
  ?>
 @section('content')
 <div class="content">
-	<div class="container-fluid">
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-6 header-area">
-				<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{ __('Invoice Detail')}}</label>
-					</div>
-				</div>
-				<div class="col-sm-6 col-6 btn-area" style="text-align: right;">
-					    <div class="pull-right btn-group save-button" id="invoice_modification">
+	<div class="container">
 
-                        <div id="otherButtons">
-                            @if($invoice->invoice_status ==10)
+        <div class="row justify-content-center">
+            <div class="col-md-10">
 
-                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                @if($invoice->payment_status ==0)
-                                    <a id="payment_btn" target href class="btn btn-theme-warn">
-                                        <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-block">{{__('Flag as Paid')}}</span>
-                                    </a>
-                                @else
-                                    <a id="payment_btn" target href class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
-                                        <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-block">{{__('Flag as UnPaid')}}</span>
-                                    </a>
-                                @endif
-                                <button id="approved_btn" target="" href="" class="btn btn-theme-success" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-block">{{__('Send by email')}}</span></button>
-                            @endif
-                            <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
-                                    <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block"> {{__('Download PDF')}}</span></label>
-                                </a>
+        <h5>{{ __("Invoice Detail") }}</h5>
 
-                            @else
-                                <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
-                                    <i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Generate invoice')}}</span>
-                                </a>
-                                <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-block">{{__('Print Preview')}}</span></a>
-
-                            @endif
-
-                            @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-theme-warn" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-block">{{__('Delete')}}</span></a>
-                            @endif
-
-                        </div>
-
-                            <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-block">{{__('Update invoice')}}</span></a>
-
-
-                        </div>
-				</div>
-			</div>
-		</header>
-		<!-- Tabs navs -->
+        @if($invoice->invoice_status !== 10)
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
 				<button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Invoice Detail') }}</button>
@@ -76,8 +32,14 @@
                 @endif
             </div>
 		</nav>
-		<!-- Tabs navs -->
+        @else
+        <br>
+        @endif
+
 		<!-- Tabs content -->
+        <div class="card" style="margin-bottom:25px;">
+            <div class="card-header">{{ __('Invoice Detail') }}</div>
+            <div class="card-body">
 			<div class="tab-content" id="invoice-details-content">
 				<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 						<form role="form" id="form_main" class="form-horizontal" method="post" action="">
@@ -994,6 +956,63 @@
                     </form>
 				</div>
 			</div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12 col-12 btn-area mb-5" style="text-align: left;">
+            <div class="pull-right btn-group save-button" id="invoice_modification">
+
+            <div id="otherButtons">
+                @if($invoice->invoice_status ==10)
+
+                @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                    @if($invoice->payment_status == 0)
+                        <a id="payment_btn" target href="#" class="btn btn-theme-warn">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>  <span class="d-none d-sm-inline-block">{{__('Flag as Paid')}}</span>
+                        </a>
+                    @endif
+                    @if($invoice->payment_status == 1)
+                        <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                            <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid')}}</span>
+                        </a>
+                    @endif
+                    @if($invoice->payment_status == 2)
+                    <a id="payment_btn" target href="#" class="btn btn-theme-success"><i class="fa fa-money" aria-hidden="true"></i>
+                        <i class="fa-solid fa-hand-holding-dollar"></i> <span class="d-none d-sm-inline-block">{{__('Paid in cash')}}</span>
+                    </a>
+                    @endif
+                    <button id="approved_btn" target="" href="" class="btn btn-theme-outline" onclick="SendPayRemiEmail({{$invoice->id}},{{$invoice->invoice_type}},{{$invoice->school_id}})"><label><i class="fa-solid fa-envelope-open-text"></i> <span class="d-none d-sm-inline-block">{{__('Send by email')}}</span></label></button>
+                @endif
+                <a id="download_pdf_btn_a" target="_blank" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" class="btn btn-theme-outline">
+                        <label name="download_pdf_btn d-none d-sm-block" id="download_pdf_btn"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block"> {{__('Download PDF')}}</span></label>
+                    </a>
+
+                @else
+                    <a id="issue_inv_btn" name="issue_inv_btn" class="btn btn-sm btn-success" target="">
+                        <i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Generate invoice')}}</span>
+                    </a>
+                    <a id="print_preview_btn" href="{{ route('generateInvoicePDF',['invoice_id'=> $invoice->id, 'type' => 'print_view']) }}" name="print_preview_btn" class="btn btn-theme-outline" target="_blank"><i class="fa-solid fa-file-pdf"></i> <span class="d-none d-sm-inline-block">{{__('Print Preview')}}</span></a>
+
+                @endif
+
+                @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                    <a id="delete_btn_inv" name="delete_btn_inv" class="btn btn-danger" href=""><i class="fa-solid fa-trash"></i> <span class="d-none d-sm-inline-block">{{__('Delete')}}</span></a>
+                @endif
+
+            </div>
+
+                <a id="save_btn" name="save_btn" class="btn btn-theme-success" style="display: none;"><i class="fa-solid fa-check"></i> <span class="d-none d-sm-inline-block">{{__('Update invoice')}}</span></a>
+
+
+            </div>
+    </div>
+
+
+
+            </div>
+        </div>
+
 		</form>
 	</div>
 	<!-- success modal-->
@@ -1216,18 +1235,45 @@ function extractExtraCharges($inputString) {
         });
 
         $('#payment_btn').click(function (e) {
+            e.preventDefault();
             var p_invoice_id = document.getElementById("invoice_id").value;
-            var payment_status = ''; /* 0=unpaid, 1=paid*/
+            var payment_status = document.getElementById("payment_status").value; /* 0=unpaid, 1=paid*/
 
             if (p_invoice_id == '') {
                 errorModalCall('Invalid_invoice');
                 return false;
             }
 
-            if (document.getElementById("payment_status").value == '1') {
+        if (payment_status == 1 || payment_status == 2) {
                 payment_status = '0';
+                loading();
+                return setTimeout(() => {
+                    actionpaid('paid', p_invoice_id, 1);
+                }, 800);
             } else {
-                payment_status = '1';
+                payment_status = '0';
+                return Swal.fire({
+                title: "{{ __('Choose payment status') }}",
+                text: "{{ __('How student paid this invoice ?') }}",
+                icon: "question",
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "{{ __('actionPaid') }}",
+                denyButtonText: "{{ __('actionCashPaid') }}",
+                denyButtonColor: '#007bff',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                loading();
+                setTimeout(() => {
+                    actionpaid('paid', p_invoice_id, 0);
+                }, 1100);
+            } else if (result.isDenied) {
+                loading();
+                setTimeout(() => {
+                    actionpaid('cash', p_invoice_id, 2);
+                }, 800);
+            }
+            });
             }
             //alert('payment_status='+payment_status);
             var status = '';
@@ -1244,7 +1290,26 @@ function extractExtraCharges($inputString) {
 
                     status = result.status;
                     if (status == 'success') {
-				        successModalCall('invoice payment paid');
+
+                        let timerInterval;
+                            Swal.fire({
+                            html: "{{ __('invoice payment paid') }}",
+                            icon:"success",
+                            timer: 2000,
+                            timerProgressBar: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                timerInterval = setInterval(() => {
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                            }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                            }
+                            });
+
                     }
                     else {
                         errorModalCall('error_message_text');
@@ -1258,6 +1323,102 @@ function extractExtraCharges($inputString) {
 
         });
     });
+
+    function loading() {
+        let timerInterval;
+        Swal.fire({
+        html: "{{ __('ongoing treatment') }}",
+        timer: 2000,
+        timerProgressBar: false,
+        didOpen: () => {
+            Swal.showLoading();
+            timerInterval = setInterval(() => {
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+        }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+        });
+    }
+
+
+    function actionpaid(type,invoiceId,invoiceState) {
+
+            var p_invoice_id = invoiceId;
+            var payment_status = '';
+            var payment_success_modal = "";
+
+            if (p_invoice_id == '') {
+                errorModalCall('Invalid_invoice');
+                return false;
+            }
+
+            if (invoiceState == '1') {
+                payment_status = '0';
+                payment_success_modal = "{{ __('invoice payment updated to unpaid') }}";
+            } else {
+                payment_status = '1';
+                payment_success_modal = "{{ __('invoice payment updated to paid') }}";
+                if(type === "cash") {
+                    payment_status = '2';
+                    payment_success_modal = "{{ __('invoice payment updated to cash paid') }}";
+                }
+
+            }
+            //alert('payment_status='+payment_status);
+            var status = '';
+            var data = 'type=update_payment_status&p_payment_status=' + payment_status + '&p_auto_id=' + p_invoice_id;
+            // console.log(data);
+            // return false;
+            $.ajax({
+                url: BASE_URL+'/update_payment_status',
+                data: data,
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                success: function (result) {
+                    console.log('alors?', result);
+                    status = result.status;
+                    if (status == 'success') {
+				        successModalCall(payment_success_modal);
+
+                        let timerInterval;
+                            Swal.fire({
+                            html: payment_success_modal,
+                            icon:"success",
+                            timer: 2000,
+                            timerProgressBar: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                timerInterval = setInterval(() => {
+                                    var redirectUrl = './' + p_invoice_id;
+                                    window.location.href = redirectUrl;
+                                }, 100);
+
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                            }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                $("#pageloader").fadeIn('fast');
+                            }
+                            });
+                    }
+                    else {
+                        errorModalCall('error_message_text');
+                    }
+                },   //success
+                error: function (ts) {
+                    errorModalCall('error_message_text');
+
+                }
+            }); //ajax-type
+
+    };
 
     function DisplayOnOff_buttons(p_tab) {
         var invoice_status = document.getElementById("invoice_status").value;
@@ -1392,8 +1553,8 @@ function extractExtraCharges($inputString) {
         text: "{{ __('The lessons/events from that invoice will be available to invoice after you delete this invoice.') }}",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#AAA',
         confirmButtonText: "{{ __('Yes, delete it!') }}"
         }).then((result) => {
         if (result.isConfirmed) {
@@ -1651,7 +1812,7 @@ function extractExtraCharges($inputString) {
                 console.log(result);
                 var status = result.status;
                 if (status == 'success') {
-                    successModalCall('Invoice generated');
+                    successModalCall("{{ __('Invoice updated') }}");
                     var p_school_id = document.getElementById("p_school_id").value;
                     return true;
 

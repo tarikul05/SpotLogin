@@ -1,5 +1,5 @@
 <div class="row justify-content-center pt-1">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">{{ __('Import / Export') }}</div>
             <div class="text-center p-5">

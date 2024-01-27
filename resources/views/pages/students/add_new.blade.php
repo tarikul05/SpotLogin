@@ -1,7 +1,7 @@
 
 
 <div class="row justify-content-center pt-1">
-    <div class="col-md-10">
+    <div class="col-md-12">
 
 
 <form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="post" action="{{ route('student.createAction') }}"  name="add_student" role="form">
