@@ -397,9 +397,9 @@
         searching: true, // Enable searching with the search input
         paging: true, // Disable pagination
         info: false, // Disable information display
-        //order: [[0, 'desc']], // Set default sorting column
+        order: [[0, 'desc']], // Set default sorting column
         columnDefs: [
-        { targets: [0, 5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
+        { targets: [0,5], orderable: true }, // Autoriser le tri pour les colonnes 0 et 4
         { targets: '_all', orderable: false } // Désactiver le tri pour toutes les autres colonnes
     ]
     });
