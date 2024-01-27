@@ -126,7 +126,7 @@
                             @endphp
                             {{ $date->format('d-m-Y') }}
                         </td>
-                        <td class="sp_only responsive-td" data-sort="{{ $invoice->date_invoice }}">
+                        <td class="sp_only responsive-td" data-sort="{{ strtotime($invoice->date_invoice) }}">
                             <span class="d-block d-sm-none">
                             @php
                             $date = new DateTime($invoice->date_invoice);
