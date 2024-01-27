@@ -103,6 +103,7 @@ class InvoiceController extends Controller
         //$invoices = Invoice::orderByRaw('DATE_FORMAT(date_invoice, "%Y-%m-%d %H:%i:%s") DESC');
         $results =  $invoices = $invoices->where('school_id', $schoolId)->get();
 
+
     return view('pages.invoices.list', compact('timeZone','school', 'invoices', 'schoolId', 'invoice_type_all', 'payment_status_all'));
     }
 
