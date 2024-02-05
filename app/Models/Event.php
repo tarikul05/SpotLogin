@@ -477,20 +477,20 @@ class Event extends BaseModel
                     $query->select('events.*')->distinct();
                     $query->groupBy('events.id');
                 }
-                
+
                 $query->orderBy('events.id', 'asc');
 
                 if ($fromFilterDate && $toFilterDate) {
                     $timeZone = 'UTC';
-                
+
                     if (!empty($params['school_id'])) {
                         $school = School::active()->find($params['school_id']);
-                
+
                         if (!empty($school->timezone)) {
                             $timeZone = $school->timezone;
                         }
                     }
-                
+
                     $fromFilterDate = $this->formatDateTimeZone($fromFilterDate . ' 00:00:00', 'long', $timeZone, 'UTC');
                     $toFilterDate = $this->formatDateTimeZone($toFilterDate . ' 23:59:59', 'long', $timeZone, 'UTC');
                     $liststudentsIDs = explode('|', $params['list_student_id']);
@@ -502,11 +502,11 @@ class Event extends BaseModel
                 return $query;
 
 
-                
+
             } else {
 
                 $query->where('events.deleted_at', null);
-                
+
                 if(isset($params['list_student_id'])) {
                 $studentIds1 = explode('|', $params['list_student_id']);
                 $query->join('event_details', 'events.id', '=', 'event_details.event_id')
@@ -517,7 +517,7 @@ class Event extends BaseModel
                 //} else {
                    // $query->where('events.school_id', $params['schools'])->orWhere('events.event_type', 50);
                 //}
-                
+
                 $query->distinct()->select(['events.*']);
                 $query->groupBy('events.id');
                 }
@@ -656,7 +656,7 @@ class Event extends BaseModel
 
 
     /** Get Coach Time Off */
-    
+
     public function filterTeacher($params)
     {
         $query = $this->newQuery();
@@ -693,7 +693,7 @@ class Event extends BaseModel
                 (events.date_start < '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND
                 (events.date_end BETWEEN '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $fromFilterDate))) . "' AND '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."' OR events.date_end > '" . date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $toFilterDate))) ."')) AND
                 events.school_id = '" . $params['school_id'] . "'";
-                
+
         $query->whereRaw($qq);
         return $query;
 
@@ -1015,7 +1015,7 @@ class Event extends BaseModel
  // dd($priceKey,$prices);
 
       $buyPrice = $sellPrice = 0;
-      if ($evtCategory->invoiced_type == 'S') {
+      if ($evtCategory && $evtCategory->invoiced_type == 'S') {
         if (($evtCategory->s_thr_pay_type == 1) && ($evtCategory->s_std_pay_type == 1) ) {
           $buyPrice = isset($priceFixed->price_buy) ? $priceFixed->price_buy : 0;
           $sellPrice = isset($priceFixed->price_sell) ? $priceFixed->price_sell : 0;
@@ -1036,12 +1036,15 @@ class Event extends BaseModel
           $sellPrice = 0;
         }
 
-      }else if ($evtCategory->invoiced_type == 'T') {
+      }else if ($evtCategory && $evtCategory->invoiced_type == 'T') {
         if ($evtCategory->t_std_pay_type == 1) {
           $sellPrice = isset($priceFixed->price_sell)? $priceFixed->price_sell : 0;
         }elseif ( $evtCategory->t_std_pay_type == 0 ) {
           $sellPrice = isset($prices->price_sell)? $prices->price_sell : 0;
         }
+      } else {
+        $buyPrice = 0;
+        $sellPrice = 0;
       }
 
       // dd($buyPrice, $sellPrice);

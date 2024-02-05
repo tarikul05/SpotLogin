@@ -52,7 +52,7 @@ class SettingsController extends Controller
         if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
             $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
         }else{
-            $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->get();
+            $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->where('created_by', $user->id)->get();
         }
 
         $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();

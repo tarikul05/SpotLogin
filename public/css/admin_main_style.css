@@ -1730,5 +1730,11 @@ label#currency_alert_text {
        display: block;
     }
 
+    .mobile-editLesson-btn {
+        width: 100%;
+        display: inline-block;
+        margin-bottom:5px;
+    }
+
   }
 

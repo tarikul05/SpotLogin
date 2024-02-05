@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
 use App\Models\ParentStudent;
@@ -104,6 +105,14 @@ class AgendaController extends Controller
         $teachers = Teacher::orderBy('id')->get();
 
         $eventCategories = EventCategory::active()->where('school_id', $schoolId)->orderBy('id')->get();
+
+        //if($user->isSuperAdmin()) {
+            $eventCategory = new EventCategory();
+            $eventCategory->id = 0; // Définir l'ID souhaité
+            $eventCategory->title = "Temp"; // Définir le titre souhaité
+            $eventCategory->school_id = $schoolId; // Assurez-vous de définir l'ID de l'école appropriée
+            $eventCategories->push($eventCategory);
+        //}
 
 
         $event_types_all = config('global.event_type');
@@ -644,11 +653,11 @@ class AgendaController extends Controller
             $eventCategory = EventCategory::find($fetch->event_category);
             if(empty($eventCategory)) {
                 $e['event_category'] = '(deleted)';
-                $e['event_category_name'] = '(deleted)';
+                $e['event_category_name'] = 'Temp';
                 $e['event_category_type'] = '(deleted)';
 
                 $eventCategory = new EventCategory;
-                $eventCategory->title = '(deleted)';
+                $eventCategory->title = 'Temp';
                 $eventCategory->bg_color_agenda = '#AAAAAA';
                 $eventCategory->invoiced_type = 'T';
 
@@ -657,7 +666,7 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
-                    if (!$user->isTeacherSchoolAdmin()) {
+                    if (!$user->isTeacherSchoolAdmin() && !$user->isSchoolAdmin()) {
                         $e['backgroundColor'] = trim($eventCategory->bg_color_agenda);
                     }
                 $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
@@ -876,6 +885,20 @@ class AgendaController extends Controller
 
 
 
+            //Alert message for No Category Lesson
+            if($fetch->event_type == 10){
+                if($e['event_category_name'] === "Temp") {
+                    if (!$user->isStudent()) {
+                        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin())  {
+                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-triangle-exclamation text-white" style="color:orange;"></i> No category</span>';
+                        } else {
+                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-triangle-exclamation text-white" style="color:orange;"></i> Select a category</span>';
+                        }
+                    }
+                }
+            }
+
+
 
             $e['content'] = ($e['cours_name']);
 
@@ -953,8 +976,10 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
 
             $now = Carbon::now($fetch->school->timezone);
-            if ($now > $fetch->date_start) {
-                $e['can_lock'] = 'Y';
+            if ($now > $fetch->date_start && $fetch->event_category !== 0) {
+            if($fetch->event_invoice_type == 'T' && $fetch->created_by !== Auth::user()->id){
+
+            } else { $e['can_lock'] = 'Y'; }
             } else{
                 $e['can_lock'] = 'N';
             }
@@ -1191,14 +1216,32 @@ class AgendaController extends Controller
         $user = Auth::user();
         $schoolId = $data['school_id'];
 
-        if ($user->isTeacherMediumMinimum()) {
-            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->get();
+        if (!$user->isSchoolAdmin() && !$user->isTeacherSchoolAdmin()) {
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
         }else{
-            $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
+        }
+
+        return $eventCategory = json_encode($eventCat);
+
+    }
+
+
+    public function getEventCategoryByType(Request $request) {
+        $data = $request->all();
+        $type = $data['type'];
+        $teacher = $data['teacher'];
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+        $teacherDetail = User::where('person_id',$teacher)->first();
+
+        if ($type == 'T') {
+            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->where('created_by', $teacherDetail->id)->get();
+        }else{
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', $type)->where('created_by', $user->id)->get();
         }
 
         return $eventCategory =json_encode($eventCat);
-
     }
 
 

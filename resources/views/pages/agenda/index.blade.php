@@ -413,12 +413,14 @@
                                     </div>
                                 </div>
 
-                                @if($AppUI->isSchoolAdmin())
+
+
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
                                 <div class="form-group row show_coach_off hide_on_off">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
-                                @if(!$AppUI->isSchoolAdmin())
-                                <input style="opacity: 0 !important; visibility: hidden !important;" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id }}" readonly>
+                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                            <input style="opacity: 0 !important; visibility: hidden !important; height: 0 !important" type="text" name="teacher_select" value="{{ $AppUI->person_id }}" readonly>
                                 @else
                                 <div class="col-sm-9">
                                     <div class="selectdiv">
@@ -438,6 +440,32 @@
                                 </div>
                                 @endif
 
+
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                <div class="form-group row event show_coach_off hide_on_off">
+                                    <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
+                                    <div class="col-sm-9">
+                                        <div class="selectdiv">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="fa-solid fa-list-ul"></i>
+                                                </span>
+                                                <select class="form-control" id="event_invoice_type" name="event_invoice_type" disabled>
+                                                    <option value="">{{__('Select Type') }}</option>
+                                                    <option value="T">{{__('Teacher invoice')}}</option>
+                                                    <option value="S">{{__('School invoice')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @else
+                                    <input style="opacity: 0; visibility: hidden; height: 0 !important" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
+                                @endif
+
+
+
+
                                 <div class="form-group row lesson hide_on_off">
                                     <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
                                     <div class="col-sm-9">
@@ -446,7 +474,7 @@
                                             <span class="input-group-addon">
                                                 <i class="fa-solid fa-list-ul"></i>
                                             </span>
-                                            <select class="form-control" id="category_select" name="category_select">
+                                            <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
                                                     <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
                                                 @endforeach
@@ -498,7 +526,7 @@
 
                                                         <div id="studentListAvailabilities"></div>
 
-                                                            <div class="student_list pt-3">
+                                                            <div class="student_list pt-4">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-users"></i>
@@ -525,30 +553,14 @@
                                                         </div>
                                                     </div>
 
-                                                    @if($AppUI->isSchoolAdmin())
-                                                    <div class="form-group row event hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="selectdiv">
-                                                                <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
-                                                                    <option value="T">{{__('Teacher invoice')}}</option>
-                                                                    @if($AppUI->isSchoolAdmin())
-                                                                    <option value="S">{{__('School invoice')}}</option>
-                                                                    @endif
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @else
-                                                        <input style="opacity: 0; visibility: hidden;" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
-                                                    @endif
 
 
 
 
 
 
-                                                    <div class="form-group row not-allday">
+
+                                                    <div class="mt-5 form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-9 row">
                                                             <div class="col-sm-6">
@@ -667,12 +679,12 @@
                                                         </div>
                                                         <div class="form-group row not_teacher">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">({{__('class/hour') }})</span><span class="event-text">(per event)</span> :</label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="number" step="0.01" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -806,6 +818,11 @@
                             <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_edit_text">{{ __('View') }}<span>
                             </a>
+
+                            <div id="messageNoCategory" class="text-warning" style="display:none; border-top:1px solid #EEE; margin-top:20px; padding-top:10px;">
+                               <i class="fa fa-solid fa-triangle-exclamation"></i> You need to choose a category for validate this lesson.
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -1518,9 +1535,15 @@ $('.close-icon').on('click', function() {
                   //  $("#pageloader").hide();
                     if (data.length >0) {
                         var resultHtml ="";
+                        resultHtml+='<option value="">Select Category</option>';
                         var i='0';
                         $.each(data, function(key,value){
-                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>';
+                            var isAdmin = "{{ $AppUI->isSchoolAdmin() }}";
+                            let textAdmin = "";
+                            if(isAdmin) {
+                                textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
+                            }
+                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
@@ -2490,6 +2513,13 @@ $('.close-icon').on('click', function() {
                         $(el).find('.fc-time').html(icon);
                     }
 
+                    if(event.event_category_name === "Temp") {
+                        if(event.event_type == 10){
+                            var icon ='<span class="fa fa-solid fa-triangle-exclamation txt-orange" style="padding:2px;"></span>';
+                            $(el).find('div.fc-content').prepend(icon);
+                        }
+                    }
+
                     if (event.isInvoice){
                         var icon ='<span class="fa fa-solid fa-file-pdf txt-orange" style="padding:2px;"></span>';
                         $(el).find('div.fc-content').prepend(icon);
@@ -2586,6 +2616,12 @@ $('.close-icon').on('click', function() {
                         } else {
                             $('#btn_confirm').hide();
                             //$('#btn_confirm_unlock').show();
+                        }
+
+                        if (event.event_category == 0) {
+                            $('#messageNoCategory').show();
+                        } else {
+                            $('#messageNoCategory').hide();
                         }
 
                     } else {
@@ -3109,7 +3145,7 @@ $('.close-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
-                //console.log(JSON.parse(s));
+                console.log(JSON.parse(s));
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
@@ -3230,7 +3266,7 @@ $('.close-icon').on('click', function() {
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
-              //console.log('test', json_events);
+                //console.log('test', json_events);
 
 
 
@@ -4093,6 +4129,7 @@ $('#add_lesson').on('submit', function(e) {
 
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
+    var invoice_cat_type_id = $('#event_invoice_type option:selected').val();
     var agendaSelect = +$("#agenda_select").val();
     var evetCat = $('#category_select option:selected').val();
     var evetLoc = $('#location option:selected').val();
@@ -4104,6 +4141,8 @@ $('#add_lesson').on('submit', function(e) {
 	var endTime = $('#end_time').val();
 	var errMssg = '';
 	var type = $("#agenda_select").val();
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+
 
     var selected_school_ids = [];
     $.each($("#event_school option:selected"), function(){
@@ -4160,27 +4199,74 @@ $('#add_lesson').on('submit', function(e) {
             $('#teacher_select').removeClass('error');
         }
 
-        if( evetCat == undefined || evetCat == ''){
-            var errMssg = '{{ __("Select event category") }}';
-            $('#category_select').addClass('error');
+        if(invoice_cat_type_id == ''){
+            var errMssg = 'Category type is required';
+            $('#event_invoice_type').addClass('error');
         }else{
-            $('#category_select').removeClass('error');
+            $('#event_invoice_type').removeClass('error');
         }
 
-        if ($("#student_empty").prop('checked') == false){
-            if (!emptyStdchecked) {
-                if( selected < 1){
-                    var errMssg = 'Please select at least one student to continue';
-                    $('.student_list').addClass('error');
-                }else{
-                    //var errMssg = '';
-                    $('.student_list').removeClass('error');
+        //
+        if(isAdmin) {
+            if( evetCat == undefined || evetCat == '' || evetCat == 0){
+                if(invoice_cat_type_id == 'S'){
+                    var errMssg = '{{ __("Select event category") }}';
+                    $('#category_select').addClass('error');
                 }
+            }else{
+                    $('#category_select').removeClass('error');
             }
-        }else{
-            // var errMssg = '';
-            $('.student_list').removeClass('error');
+        } else {
+            if( evetCat == undefined || evetCat == ''){
+            if(agendaSelect === "1")
+                var errMssg = '{{ __("Select event category") }}';
+                $('#category_select').addClass('error');
+            }else{
+                $('#category_select').removeClass('error');
+            }
         }
+        //
+
+
+
+        if(isAdmin) {
+
+            if ($("#student_empty").prop('checked') == false){
+                if (!emptyStdchecked) {
+                    if( selected < 1){
+                        if(invoice_cat_type_id == 'T'){
+                            var errMssg = 'Please select at least one student to continue';
+                            $('.student_list').addClass('error');
+                        }
+                    }else{
+                        //var errMssg = '';
+                        $('.student_list').removeClass('error');
+                    }
+                }
+            }else{
+                // var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
+
+        } else {
+
+            if ($("#student_empty").prop('checked') == false){
+                if (!emptyStdchecked) {
+                    if( selected < 1){
+                        var errMssg = 'Please select at least one student to continue';
+                        $('.student_list').addClass('error');
+                    }else{
+                        //var errMssg = '';
+                        $('.student_list').removeClass('error');
+                    }
+                }
+            }else{
+                // var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
+
+        }
+
 
         if((agendaSelect == 1) && (startTime == endTime)){
             var errMssg = 'Please select a start and end time to continue';
@@ -4351,6 +4437,38 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
+
+$("body").on('change', '#teacher_select', function(event) {
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    if(isAdmin)
+    {
+    var teacherSelect = +$("#teacher_select").val();
+        if(teacherSelect == ''){
+            $("#event_invoice_type").prop('disabled', true);
+        } else {
+            $("#event_invoice_type").prop('disabled', false);
+        }
+    } else {
+            $("#event_invoice_type").prop('disabled', false);
+    }
+
+});
+
+$("body").on('change', '#event_invoice_type', function(event) {
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    if(isAdmin)
+    {
+    var event_invoice_type = +$("#teacher_select").val();
+        if(event_invoice_type == ''){
+            $("#category_select").prop('disabled', true);
+        } else {
+            $("#category_select").prop('disabled', false);
+        }
+    } else {
+            $("#category_select").prop('disabled', false);
+    }
+});
+
 $("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
 
@@ -4721,12 +4839,31 @@ $('#agenda_select').on('change', function() {
    // getLatestPrice();
 });
 
+$('#teacher_select').on('change', function() {
+    var resultHtml ="";
+    resultHtml+='<option value="">Select Category</option>';
+    $('#category_select').html(resultHtml);
+    $('#category_select').change();
+
+    var resultHtml ="";
+    resultHtml+='<option value="">Select Type</option>';
+    resultHtml+='<option value="T">Teacher invoice</option>';
+    resultHtml+='<option value="S">School invoice</option>';
+    $('#event_invoice_type').html(resultHtml);
+    $('#event_invoice_type').change();
+
+    $("#category_select").prop('disabled', true);
+    $("#event_invoice_type").prop('disabled', true);
+});
+
 $('#event_invoice_type').on('change', function() {
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var event_invoice_type = "";
+    var teacher =  $("#teacher_select option:selected").val();
+    console.log(teacher);
 
     @if($AppUI->isSchoolAdmin())
     event_invoice_type = $("#event_invoice_type option:selected").val();
@@ -4735,12 +4872,82 @@ $('#event_invoice_type').on('change', function() {
     event_invoice_type = $("#event_invoice_type").val();
     @endif
 
-    if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").show();
-    }else{
-        $("#price_per_student").hide();
+    if(event_invoice_type !== "") {
+
+        getCategoryByType('{{ $schoolId }}', event_invoice_type, teacher);
+
+        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+            $("#price_per_student").show();
+        }else{
+            $("#price_per_student").hide();
+        }
+
+    } else {
+            var resultHtml ="";
+            resultHtml+='<option value="">Select Category</option>';
+            $('#category_select').html(resultHtml);
+            $('#category_select').change();
     }
+
 });
+
+
+function getCategoryByType(school_id=null, type=null, teacher=null) {
+
+if (school_id !=null) {
+    var menuHtml='';
+    var data = 'school_id='+school_id+'&type='+type+'&teacher='+teacher+'';
+    $('#category_select').html('');
+
+    $.ajax({
+        url: BASE_URL + '/get_event_category_by_type',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+        },
+        success: function(data) {
+          $("#pageloader").hide();
+            if (data.length >0) {
+                var resultHtml ="";
+                resultHtml+='<option data-s_thr_pay_type="0" data-s_std_pay_type="0" data-t_std_pay_type="0" data-invoice="T" value="0">Select Category</option>';
+                var i='0';
+                $.each(data, function(key,value){
+                    var isAdmin = "{{ $AppUI->isSchoolAdmin() }}";
+                    let textAdmin = "";
+                    if(isAdmin) {
+                        textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
+                    }
+                    resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+                });
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            } else {
+
+                var resultHtml ="";
+                resultHtml+='<option value="">No category found</option>';
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            }
+
+        },   //success
+        complete: function( xhr ) {
+          $("#pageloader").hide();
+        },
+        error: function(ts) {
+            // alert(ts.responseText)
+            errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+        }
+    }); // Ajax
+}
+
+}
+
+
 
 $( document ).ready(function() {
 
@@ -4879,7 +5086,6 @@ function resetStudentList() {
 
     // Parcourir le tableau JSON côté client
     students.forEach(function(student) {
-        console.log(student);
         var studentName = student.full_name;
         var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + student.student_id + '"])');
         if (studentButton.length > 0) {

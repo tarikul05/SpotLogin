@@ -389,8 +389,10 @@ class LessonsController extends Controller
                 $eventCategory = EventCategory::active()->where('id',$lessonData['category_select'])->first();
 
                 $teacher_id = $lessonData['teacher_select'];
-                $studentCount = !empty($lessonData['student']) ? count($lessonData['student']) : 0 ;
-
+                $studentCount = !empty($lessonData['student']) ? count($lessonData['student']) : 1 ;
+                if($lessonData['category_select'] === "") {
+                    $lessonData['category_select'] = 0;
+                }
                 $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['category_select'],'teacher_id'=>$teacher_id,'student_count'=>$studentCount]);
                 if(!empty($studentCount)){
                     $buyPriceCal = ($eventPrice['price_buy']*($lessonData['duration']/60))/$studentCount;
@@ -527,7 +529,17 @@ class LessonsController extends Controller
         }
         // dd($lessonData);
         $relationData = EventDetails::active()->where(['event_id'=>$lessonlId])->first();
-        $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
+
+        if($lessonData->eventcategory && $lessonData->eventcategory->invoiced_type == 'S') {
+            if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()) {
+                $eventCategory = EventCategory::active()->where('school_id',$schoolId)->get();
+            } else {
+                $eventCategory = EventCategory::find($lessonData->eventcategory);
+            }
+        } else {
+            $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by',$user->id)->get();
+        }
+
         $locations = Location::active()->where('school_id',$schoolId)->get();
         $professors = SchoolTeacher::active()->onlyTeacher()->where('school_id',$schoolId)->get();
         $students = SchoolStudent::active()->where('school_id',$schoolId)->get();
