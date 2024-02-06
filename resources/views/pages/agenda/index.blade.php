@@ -366,24 +366,25 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
+                <div class="addAgendaModalClass" id="addAgendaModalWin">
+
+
                     <div id="infoLesson" class="text-center alert alert-default">
                         <b>{{ __('Create a lesson') }}</b><br>
                         <h4 id="displayDate"></h4>
                         <i class="fa-solid fa-circle-info"></i> {{ __('Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day') }}.
                     </div>
                     <div id="infoLessonEvent" class="text-center alert alert-default">
-                    <b>{{ __('Create an event') }}</b><br>
-                    <h4 id="displayDateEvent"></h4>
-                        <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
+                        <b>{{ __('Create an event') }}</b><br>
+                        <h4 id="displayDateEvent"></h4>
+                            <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
                     </div>
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="col-md-10 offset-md-1 p-l-n p-r-n">
-                                <div class="form-group row">
+
+                            <div class="col-md-10  offset-md-1 mt-4">
+
+                                <div class="row">
                                     <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}}</label>
-                                    <div class="col-sm-9">
-                                        <div class="selectdiv">
+                                    <div class="col-lg-9 col-sm-9">
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <i class="fa-solid fa-list-ul"></i>
@@ -397,11 +398,13 @@
                                                     <option value="4">{{__('Coach off')}}</option>
                                                 </select>
                                             </div>
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="form-group row">
+
+                                <div class="col-md-10 offset-md-1 mt-4">
+                                    <div class="row">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }}</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
@@ -410,6 +413,7 @@
                                             </span>
                                             <input id="Title" name="title" type="text" class="form-control" placeholder="{{ __('Title here') }}" value="">
                                         </div>
+                                </div>
                                     </div>
                                 </div>
 
@@ -420,7 +424,7 @@
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
                                 @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
-                            <input style="opacity: 0 !important; visibility: hidden !important; height: 0 !important" type="text" name="teacher_select" value="{{ $AppUI->person_id }}" readonly>
+                                <input style="opacity: 0 !important; visibility: hidden !important; height: 0 !important" type="text" name="teacher_select" value="{{ $AppUI->person_id }}" readonly>
                                 @else
                                 <div class="col-sm-9">
                                     <div class="selectdiv">
@@ -464,9 +468,11 @@
                                 @endif
 
 
+                                <div class="col-md-10 offset-md-1 mt-1">
 
 
-                                <div class="form-group row lesson hide_on_off">
+
+                                <div class="lesson hide_on_off row mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -484,7 +490,8 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row hide_on_off">
+
+                                <div class="row hide_on_off">
                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -492,27 +499,26 @@
                                                 <span class="input-group-addon">
                                                     <i class="fa-solid fa-list-ul"></i>
                                                 </span>
-                                            <select class="form-control" id="location" name="location">
+                                                <select class="form-control" id="location" name="location">
 
-                                                @foreach($locations as $key => $location)
-                                                    <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
-                                                @endforeach
-                                            </select>
+                                                    @foreach($locations as $key => $location)
+                                                        <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                            </div>
+
+
+                                </div>
+
                             <div class="tab-content" id="agenda_form_area" style="display:none">
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-
-
-
-                                            <div class="row">
+                                            <div class="row m-2">
                                                 <div class="col-md-10 offset-md-1 mt-4">
-
 
                                                     <div class="card form-group bg-tertiary p-3 row hide_coach_off">
                                                         <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
@@ -736,8 +742,7 @@
 
                                 </div>
                             </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -800,11 +805,17 @@
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
+            <div class="modal-header text-white" style="background-color: #152245;">
+                <h6 class="modal-title page_header_class">
+                  <i class="fa-regular fa-calendar"></i>  {{ __('Event / lesson') }}
+                </h6>
+                <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+                </button>
+            </div>
+            <div class="modal-body text-center">
                 <div class="EventModalClass" id="EventModalWin">
-                    <div class="modal-content">
-                        <div class="modal-body text-center">
+
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">{{ __('Title') }}</span></h4>
                             <p style="font-size: 20px;"></p>
 
@@ -823,8 +834,7 @@
                                <i class="fa fa-solid fa-triangle-exclamation"></i> You need to choose a category for validate this lesson.
                             </div>
 
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
