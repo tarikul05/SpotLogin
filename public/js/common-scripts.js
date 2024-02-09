@@ -202,6 +202,48 @@ function confirmDeleteModalCall(p_event_id,title,function_name,showWarning=true)
     $("#confirmModal").modal('show');
 }
 
+function confirmDeleteLessonsModal(p_event_id,title,function_name,showWarning=false){
+    $('#confirmModal').remove();
+    var modalHtml='';
+    var v_title='remove_title_text';
+    var ok_btn_text='Confirm';
+    var cancel_btn_text='Cancel';
+
+    v_title = ((title == '') ? v_title : title);
+    //var selected_ids = [];
+
+    modalHtml =`
+    <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
+        aria-labelledby="confirmModal" name="confirmModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered mt-5">
+            <div class="modal-content">
+            <div class="modal-header text-white" style="background-color: #152245;">
+                <h6 class="modal-title page_header_class">
+                    <i class="fa-solid fa-trash"></i> Delete un-validated lessons
+                </h6>
+                <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+                </button>
+            </div>
+                <div class="modal-body p-3">
+                    <div class="text-center">
+                    </div>`;
+                    modalHtml += `<div class="row">`;
+                    modalHtml += p_event_id;
+                    modalHtml +=`</div>
+                    <div class="text-center mt-3 mb-2">
+                    <button id="confirm_cancel_btn" type="button" class="btn btn-default gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
+                    <button id="confirm_ok_btn" type="button" class="btn btn-theme-warn" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>`
+                    modalHtml +=`</div>
+            </div>
+            <!--<div class="alert alert-warning text-center" role="alert">Only un-validated events/lessons will be deleted</div>-->
+            </div>
+        </div>
+    </div>`;
+    $('body').append(modalHtml);
+    $("#confirmModal").modal('show');
+}
+
 function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_events){
     $('#confirmModal').remove();
     var modalHtml='';
@@ -211,33 +253,37 @@ function confirmMultipleValidateModalCall(p_event_id,title,function_name,all_eve
     var cancel_btn_text='Cancel';
 
     v_title = ((title == '') ? v_title : title);
-    //var selected_ids = [];
-    if (p_event_id.length!=0) {
-        p_event_id = p_event_id.split("|");
-    }
+
+
     modalHtml =`
     <div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" aria-hidden="true"
         aria-labelledby="confirmModal" name="confirmModal">
         <div class="modal-dialog modal-lg modal-dialog-centered mt-5">
             <div class="modal-content">
-                <div class="modal-body text-center p-4">
-                    <h5 class="light-blue-txt gilroy-bold">`+v_title+`</h5>
-                    <!--<div class="alert alert-info">
-                    <p><i class="fa fa-info"></i> You can validate all events you see on the current view for the pasts events.</p>
-                    </div>-->
-                    <br>
-                    <button id="confirm_ok_btn" type="button" class="btn btn-primary gilroy-medium" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>
+            <div class="modal-header text-white" style="background-color: #152245;">
+                <h6 class="modal-title page_header_class">
+                    <i class="fa-solid fa-lock"></i> Validate all lessons
+                </h6>
+                <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+                </button>
+            </div>
+                <div class="modal-body p-3">
+                    <div class="text-center">
+                    </div>`;
+                    modalHtml += `<div class="row">`;
+                    modalHtml += p_event_id;
+                    modalHtml +=`</div>
+                    <div class="text-center mt-3 mb-2">
                     <button id="confirm_cancel_btn" type="button" class="btn btn-default gilroy-medium" aria-label="Close" style="width:188px;" data-bs-dismiss="modal">`+cancel_btn_text+`</button>
-                    <br><br><div class="row">`;
-                    if (p_event_id.length!=0) {
-                        p_event_id.forEach((element) => {
-                            modalHtml += `<div class="col-md-6"><table class="table table-bordered table-hover" style="background-color:#FFFCFA; opacity:.8;">` + element.replace(/['"]+/g, '') + `</table></div>`;
-                        });
-                    }
-                modalHtml +=`</div></div>
+                    <button id="confirm_ok_btn" type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal" style="width:188px;" onclick="`+function_name+`">`+ok_btn_text+`</button>`
+                    modalHtml +=`</div>
+            </div>
+            <!--<div class="alert alert-warning text-center" role="alert">Only un-validated events/lessons will be deleted</div>-->
             </div>
         </div>
     </div>`;
+
     $('body').append(modalHtml);
     $("#confirmModal").modal('show');
 }

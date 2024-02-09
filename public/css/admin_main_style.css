@@ -1759,3 +1759,11 @@ label#currency_alert_text {
 
   }
 
+  /** hateur maximale de 500px avec scrool**/
+
+  #listEventsSearch {
+    max-height: 502px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+  }
+

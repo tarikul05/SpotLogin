@@ -142,6 +142,16 @@ class Event extends BaseModel
      */
     public function multiDelete($params)
     {
+
+        $query = $this->newQuery();
+        if (empty($params) || !is_array($params)) {
+            return $query;
+        }
+        $query->whereIn('id', $params['p_event_school_id']);
+        return $query;
+
+
+        /*
         $query = $this->newQuery();
         if (empty($params) || !is_array($params)) {
             return $query;
@@ -250,7 +260,7 @@ class Event extends BaseModel
         } catch (\Exception $e) {
 
         }
-        return $query;
+        return $query;*/
     }
 
 

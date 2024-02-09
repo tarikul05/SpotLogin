@@ -704,6 +704,7 @@ class AgendaController extends Controller
             $student_name ='';
             $first_student_name ='';
             $i=0;
+            $studentListOfLessonOrEvent = [];
             foreach($eventDetailsStudentId as $std){
                 // $student = Student::find($std['student_id']);
                 $schoolStudent = $schoolTeacher = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
@@ -720,6 +721,7 @@ class AgendaController extends Controller
                     }
                     // $student_name .= $student->firstname;
                     $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname;
+                    $studentListOfLessonOrEvent[] = $theStudent->firstname . ' ' . $theStudent->lastname;
                     $i++;
                 } else {
                     if ($i!=0) {
@@ -814,13 +816,30 @@ class AgendaController extends Controller
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
                 if($fetch->event_type != 100) {
-                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
+
+
+                    $student_name = implode(', ', $studentListOfLessonOrEvent);
+
+                    if ($fetch->no_of_students === 1) {
+                        $student_html = $student_name;
+                    } else {
+                        $student_html = '<div class="dropdown">' .
+                                    '<span class="student-name dropdown-toggle" data-toggle="dropdown" style="cursor:pointer">' . reset($studentListOfLessonOrEvent) . ' (' . $fetch->no_of_students . ') <i class="fa fa-caret-down"></i></span>' .
+                                        '<ul class="dropdown-menu" style="padding:5px; font-size:13px; width:150px;">';
+                        foreach ($studentListOfLessonOrEvent as $student) {
+                            $student_html .= "<li><i class='fa fa-regular fa-user'></i> {$student}</li>";
+                        }
+                        $student_html .= '</ul>' .
+                                        '</div>';
+                    }
+
+                    $e['title_for_modal'] = '<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">' . $student_html . '</td></tr>' .
+                    '<tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">' . $e['teacher_name'] . '</td></tr>' .
+                    '<tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">' . $fetch->duration_minutes . ' Mn.</td></tr>';
+                    //$e['title_for_modal']='<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$fetch->no_of_students . ' '.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
                 } else {
-                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
+                    $e['title_for_modal']='<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
                 }
-
-
-
 
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
@@ -1329,7 +1348,34 @@ class AgendaController extends Controller
      */
     public function deleteMultipleEvent(Request $request, Event $event)
     {
+
         $result = array(
+            'status' => 'failed',
+            'message' => __('Failed to delete'),
+        );
+
+        try {
+            $dataParam = $request->all();
+            $eventIds = explode(',', $dataParam['p_event_school_id']);
+
+            $deletedCount = $event->whereIn('id', $eventIds)->delete();
+
+            if ($deletedCount > 0) {
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+
+
+        /*$result = array(
             'status' => 'failed',
             'message' => __('failed to delete'),
         );
@@ -1368,8 +1414,9 @@ class AgendaController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
+*/
     }
+
      /**
      *  AJAX delete event
      *
@@ -1413,7 +1460,41 @@ class AgendaController extends Controller
      */
     public function validateMultipleEvent(Request $request, Event $event)
     {
+
         $result = array(
+            'status' => 'failed',
+            'message' => __('Failed to validate'),
+        );
+
+        try {
+            $data = $request->all();
+            $eventIds = explode(',', $data['p_event_school_id']);
+
+            foreach ($eventIds as $eventId) {
+                $event = Event::find($eventId);
+
+                // Vérifier si l'événement existe et est de type 10
+                if ($event && $event->event_type == 10) {
+                    // Valider l'événement
+                    Event::validate(['event_id' => $eventId]);
+                }
+            }
+
+            // Si la validation réussit pour au moins un événement de type 10, retourner un succès
+            $result = array(
+                'status' => 'success',
+                'message' => __('Confirmed'),
+            );
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            // Retourner un message d'erreur en cas d'erreur interne du serveur
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+
+        /*$result = array(
             'status' => 'failed',
             'message' => __('failed to validate'),
         );
@@ -1493,7 +1574,7 @@ class AgendaController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
+*/
     }
 
 

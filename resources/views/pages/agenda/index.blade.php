@@ -241,9 +241,9 @@
                                         <i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>
                                     </div>
 
-                                    <div style="position: absolute;" id="loadingSearch"></div>
-                                    <div id="resultSearch"></div>
-                                    <ul id="listEventsSearch"></ul>
+                                    <div id="loadingSearch" class="text-center"></div>
+                                    <div id="resultSearch" class="p-2"></div>
+                                    <div id="listEventsSearch"></div>
 
                                  <div id="allFilters" style="display:none;">
 
@@ -899,6 +899,7 @@ $('.close-icon').on('click', function() {
 </script>
 
 <script>
+    let recentFreshEventsList = [];
     let isOnlyAvailability = false;
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
@@ -1195,7 +1196,7 @@ $('.close-icon').on('click', function() {
         var search_text = $(this).val();
         if (search_text.length > 0) {
             var loadingSearch = document.getElementById('loadingSearch');
-            loadingSearch.innerHTML = '<i class="fa-solid fa-magnifying-glass fa-spin fa-spin-reverse"></i>';
+            loadingSearch.innerHTML = '<i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>';
             $('#calendar').fullCalendar('rerenderEvents');
         }
         if (search_text.length == 0) {
@@ -1208,62 +1209,117 @@ $('.close-icon').on('click', function() {
             $("#listEventsSearch").hide();
         }
 
-        if (search_text.length > 2) {
+        if (search_text.length > 0) {
+            var eventIds = [];
             // Effacer le délai précédent s'il y en a un
             clearTimeout(typingTimer);
-
             // Définir un nouveau délai
             typingTimer = setTimeout(function() {
                 toastr.options = {
                     "positionClass": "toast-bottom-full-width",
-                    "timeOut": "3000",
+                    "timeOut": "2000",
                 }
 
                 var eventCount = $('.fc-event').length || $('.fc-list-item').length;
                 if (eventCount > 0) {
-                    toastr.info(eventCount + ' results according to your criteria');
+                    if (search_text.length > 3) {
+                        toastr.info(eventCount + ' results according to your criteria');
+                    }
                     $("#allFilters").hide();
                     $("#listEventsSearch").show();
                     $("#resultSearch").show();
                     resultSearch.style.display = 'block';
-                    resultSearch.innerHTML = '<br><b><i class="fa-solid fa-arrow-right"></i> Your search result</b><br><br><div class="alert alert-primary"><b>' + eventCount + '</b> results for your search <i>' + search_text + '</i>.</div>';
+                    resultSearch.innerHTML = '<b><i class="fa-solid fa-arrow-right"></i> Your search result:</b><br><div class="light-blue-txt"><b>' + eventCount + '</b> results for your search <b><i>' + search_text + '</i></b>.</div>';
                     var cal_view_mode = $('#calendar').fullCalendar('getView');
                     var ulElement = document.getElementById("listEventsSearch");
                     while (ulElement.firstChild) {
                     ulElement.removeChild(ulElement.firstChild);
                     }
+
+                    let getClassForSearch = "";
                     if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+                        getClassForSearch = '.fc-list-item';
                         $('.fc-list-item-title a').each(function() {
-                            //console.log($(this).text());
                             var text = $(this).text();
                             if (text.indexOf('all-day') > -1) {
                                 text = text.replace('all-day', 'all-day ');
                             }
-                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                           // $('#listEventsSearch').append('<li>' + text + '</li>');
                         });
                     }
                     else {
+                        getClassForSearch = '.fc-event';
                         $('.fc-event').each(function() {
-                            //console.log(foundedSearchItems);
                             var text = $(this).text();
-                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                           // $('#listEventsSearch').append('<li>' + text + '</li>');
                         });
                     }
 
+
+
+                        //Get current IDs
+                        $(getClassForSearch).each(function() {
+                            var id = $(this).data('event-id');
+                            eventIds.push(id);
+                        });
+                        //
+
+                        var jsonEvents = recentFreshEventsList;
+
+                        eventIds.forEach(function(eventId) {
+
+                        var matchedEvent = jsonEvents.find(function(event) {
+                            return event.id === eventId;
+                        });
+
+
+                        if (matchedEvent) {
+                            const startDate = new Date(matchedEvent.start);
+                            const endDate = new Date(matchedEvent.end);
+                            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+                            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+                            let iconSearchResult = matchedEvent.action_type == "view" ? 'fa-solid fa-eye' : 'fa-solid fa-pen-to-square';
+                            var html = `
+                                <div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:12px; position:relative;">
+                                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                                <a href="${matchedEvent.url}"><i class="fa ${iconSearchResult}" style="cursor:pointer; position:absolute; right:10px; top:10px; cursor:pointer;"></i></a>
+                                </div>
+                            `;
+
+                                $('#listEventsSearch').append(html);
+                        }
+
+                        });
+
+                        if(loadingSearch) {
+                            loadingSearch.innerHTML = "";
+                        }
 
 
                 } else {
                     toastr.info('No results according to your criteria');
                     $("#allFilters").show();
+                    $('#listEventsSearch').html("");
+                    $("#resultSearch").html("No results according to your criteria");
+                    if(loadingSearch) {
+                        loadingSearch.innerHTML = "";
+                    }
                 }
                 if (search_text.length < 2) {
                     toastr.info('No results according to your criteria');
                     $("#resultSearch").hide();
                     $("#allFilters").show();
+                    $('#listEventsSearch').html("");
+                    $("#resultSearch").html("No results according to your criteria");
+                    if(loadingSearch) {
+                        loadingSearch.innerHTML = "";
+                    }
                 }
             }, doneTypingInterval);
         }
-        loadingSearch.innerHTML = "";
     });
     $("#datepicker_month").datetimepicker()
     .on('changeDate', function(ev){
@@ -2028,9 +2084,52 @@ $('.close-icon').on('click', function() {
         var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
 
 
+
+        /** get events id **/
+        var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+        } else {
+            getClassForSearch = '.fc-event';
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            var is_locked = $(this).data('locked');
+            var allDay = $(this).data('allday');
+            if(Number(is_locked) === 0 && !allDay) {
+                eventIds.push(id);
+            }
+        });
+        var jsonEvents = recentFreshEventsList;
+        var html = '';
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+
+        if (matchedEvent) {
+            //console.log(matchedEvent.content);
+            const startDate = new Date(matchedEvent.start);
+            const endDate = new Date(matchedEvent.end);
+            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            let iconSearchResult = 'fa-solid fa-trash text-danger';
+             html += `
+                <div class="col-lg-6 col-xs-12"><div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:13px; position:relative;">
+                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                </div></div>
+            `;
+        }
+
+        });
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmDeleteModalCall(p_event_id,'Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmDeleteLessonsModal(html,'Do you want to delete events',"delete_multiple_lessons('"+eventIds+"');");
         return false;
     })
 
@@ -2064,16 +2163,60 @@ $('.close-icon').on('click', function() {
         var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
 
 
+         /** get events id **/
+         var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+        } else {
+            getClassForSearch = '.fc-event';
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            var is_locked = $(this).data('locked');
+            var allDay = $(this).data('allday');
+            var can_lock = $(this).data('canlock');
+            if(Number(is_locked) === 0 && !allDay && can_lock === "Y") {
+                eventIds.push(id);
+            }
+        });
+        var jsonEvents = recentFreshEventsList;
+        var html = '';
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+
+        if (matchedEvent) {
+            //console.log(matchedEvent.content);
+            const startDate = new Date(matchedEvent.start);
+            const endDate = new Date(matchedEvent.end);
+            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            let iconSearchResult = 'fa-solid fa-lock text-primary';
+             html += `
+                <div class="col-lg-6 col-xs-12"><div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:13px; position:relative;">
+                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                </div></div>
+            `;
+        }
+
+        });
+
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(get_non_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(html,'Do you want to validate events',"validate_multiple_events('"+eventIds+"');");
         return false;
     })
 
-    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id,p_event_id){
+    function validate_multiple_events(p_event_school_id){
         var p_event_location_id=getLocationIDs();
-        var data='location_id='+p_event_location_id+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id+'&p_event_id='+p_event_id;
+        var data='p_event_school_id='+p_event_school_id;
 
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -2117,6 +2260,32 @@ $('.close-icon').on('click', function() {
                     //alert(status);
                     getFreshEvents();      //refresh calendar
                    // window.location.reload(false);
+
+                },   //success
+                error: function(ts) {
+                    errorModalCall('delete_multiple_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+                    // alert(ts.responseText)
+                }
+            }); //ajax-type
+    }
+
+    function delete_multiple_lessons(p_event_school_id){
+
+        var data='p_event_school_id='+p_event_school_id;
+
+            //e.preventDefault();
+            $.ajax({type: "POST",
+                url: BASE_URL + '/delete_multiple_events',
+                data: data,
+                dataType: "JSON",
+                success:function(result){
+                    document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
+                    var status =  result.status;
+
+                    //reload events/lessons
+                    getFreshEvents();
+
 
                 },   //success
                 error: function(ts) {
@@ -2316,6 +2485,16 @@ $('.close-icon').on('click', function() {
                 /* Start datepicker - change date */
                 var dt=moment(event.start).format('DD/MM/YYYY');
 
+
+                var eventIdTest = event.id;
+                var eventIsLockedTest = event.is_locked;
+                var eventallDayTest = event.allDay;
+                var eventCanLockTest = event.can_lock;
+                // Ajouter l'ID à l'élément DOM
+                el.attr('data-event-id', eventIdTest);
+                el.attr('data-locked', eventIsLockedTest);
+                el.attr('data-allday', eventallDayTest);
+                el.attr('data-canlock', eventCanLockTest);
 
                 //$('#datepicker_month').data("DateTimePicker").date(dt)
                 /* END datepicker - change date */
@@ -3155,7 +3334,8 @@ $('.close-icon').on('click', function() {
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
-                console.log(JSON.parse(s));
+                //console.log(JSON.parse(s));
+                recentFreshEventsList = JSON.parse(s);
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
@@ -4873,7 +5053,7 @@ $('#event_invoice_type').on('change', function() {
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var event_invoice_type = "";
     var teacher =  $("#teacher_select option:selected").val();
-    console.log(teacher);
+
 
     @if($AppUI->isSchoolAdmin())
     event_invoice_type = $("#event_invoice_type option:selected").val();
