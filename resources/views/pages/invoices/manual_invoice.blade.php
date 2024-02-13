@@ -18,7 +18,7 @@
 			<div class="row panel-row" style="margin:0; padding-top:15px;">
 				<div class="col-sm-6 col-xs-12 header-area" style="padding-bottom:25px;">
 					<div class="page_header_class">
-						<label id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Invoice')}}</label>
+						<h5 id="page_header" name="page_header"><i class="fa-solid fa-file-invoice"></i> {{__('Manual Invoice')}}</h5>
 					</div>
 				</div>
                 <div class="col-sm-6 col-xs-12 btn-area pt-1">
@@ -310,19 +310,12 @@
 
                             <div id="" open="">
                                 <div class="row" id="payment_bank_info">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label id="payment_bank_account_name_cap" name="payment_bank_account_name_cap" for="payment_bank_account_name" class="col-lg-2 col-sm-2 text-left">Payment Bank Account Name</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="payment_bank_account_name" name="payment_bank_account_name" value="" placeholder="" maxlength="100"> </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label id="name_of_bank_caption" name="name_of_bank_caption" for="payment_bank_name" class="col-lg-2 col-sm-2 text-left">Bank Name</label>
-                                            <div class="col-sm-9">
+                                            <label id="name_of_bank_caption" name="name_of_bank_caption" for="payment_bank_name" class="col-lg-3 col-sm-3 text-left">Bank Name</label>
+                                            <div class="col-sm-7">
                                                 <input type="text" class="form-control" id="payment_bank_name" name="payment_bank_name" value="" placeholder="" maxlength="100"> </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
                                         <div class="form-group row">
                                             <label id="address_caption" name="address_caption" for="payment_bank_address" class="col-lg-3 col-sm-3 text-left">Address</label>
                                             <div class="col-sm-7">
@@ -945,7 +938,7 @@ $( document ).ready(function() {
 
 			document.getElementById("seller_email").value=value.email;
 
-			document.getElementById("payment_bank_account_name").value=value.bank_account;
+			//document.getElementById("payment_bank_account_name").value=value.bank_account;
 
             if(isInEurope) {
                 document.getElementById("payment_bank_name").value=value.bank_name;
@@ -1035,13 +1028,17 @@ function get_client_seller_info(obj){
 				document.getElementById("client_firstname").value= fname;
 				document.getElementById("client_lastname").value=value.lastname;
 
+                //add city and postal code
+                document.getElementById("client_place").value=value.place;
+                document.getElementById("client_zip_code").value=value.zip_code;
+
 				document.getElementById("client_street_number").value=value.street_number;
 				document.getElementById("client_street").value=value.street;
 				document.getElementById("client_street2").value=value.street2;
 				document.getElementById("client_country_id").value=value.country_code
 
              //  document.getElementById("select2-client_country_id-container").textContent = value.country_code;
-               var selectElement = document.getElementById("select2-client_country_id-container").textContent = value.country_code;
+              // var selectElement = document.getElementById("select2-client_country_id-container").textContent = value.country_code;
 
 
 				if(value.country_code == 'CA'){
@@ -1245,7 +1242,8 @@ function AddEditInvoice(){
     var p_seller_phone = document.getElementById("seller_phone").value;
     var p_seller_mobile = document.getElementById("seller_mobile").value;
     var p_seller_email = document.getElementById("seller_email").value;
-    var p_payment_bank_account_name = document.getElementById("payment_bank_account_name").value;
+
+    var p_payment_bank_account_name = isInEurope ? '' : document.getElementById("payment_bank_account_name").value;
 
     var p_payment_bank_name = !isInEurope ? '' : document.getElementById("payment_bank_name").value;
     var p_payment_bank_address = !isInEurope ? '' : document.getElementById("payment_bank_address").value;
@@ -1420,15 +1418,9 @@ $(document).on('change','#client_list_id',function(){
 })
 
 
-</script>
-<script type="text/javascript">
-	/*
-	* manual client province list
-	* function @billing province
-	*/
+
 	$(document).ready(function(){
 		var country_code = $('#client_country_id option:selected').val();
-        console.log(country_code,'clientclientclient');
 		get_client_province_lists(country_code);
 	});
 
@@ -1474,7 +1466,6 @@ $(document).on('change','#client_list_id',function(){
 
 	$(document).ready(function(){
 		var country_code = $('#seller_country_id option:selected').val();
-        console.log(country_code,'country_codecountry_code');
 		get_seller_province_lists(country_code);
 	});
 

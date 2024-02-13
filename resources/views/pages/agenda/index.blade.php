@@ -275,7 +275,7 @@
 
 
                                     <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                        <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                        <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;">
                                             @foreach($locations as $key => $location)
                                                 <option value="{{ $location->id }}">{{ $location->title }}</option>
                                             @endforeach
@@ -500,7 +500,7 @@
                                                     <i class="fa-solid fa-list-ul"></i>
                                                 </span>
                                                 <select class="form-control" id="location" name="location">
-
+                                                    <option value="" selected>Select Location</option>
                                                     @foreach($locations as $key => $location)
                                                         <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
                                                     @endforeach
@@ -4418,6 +4418,13 @@ $('#add_lesson').on('submit', function(e) {
         //
 
 
+        if(evetLoc == ''){
+            var errMssg = 'Location required';
+            $('#location').addClass('error');
+        }else{
+            $('#location').removeClass('error');
+        }
+
 
         if(isAdmin) {
 
@@ -5050,6 +5057,7 @@ $('#event_invoice_type').on('change', function() {
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacherSchoolAdmin = +"{{$AppUI->isTeacherSchoolAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var event_invoice_type = "";
     var teacher =  $("#teacher_select option:selected").val();
@@ -5064,7 +5072,9 @@ $('#event_invoice_type').on('change', function() {
 
     if(event_invoice_type !== "") {
 
-        getCategoryByType('{{ $schoolId }}', event_invoice_type, teacher);
+        if(isSchoolAdmin || isTeacherSchoolAdmin) {
+            getCategoryByType('{{ $schoolId }}', event_invoice_type, teacher);
+        }
 
         if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
             $("#price_per_student").show();
