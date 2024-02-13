@@ -245,6 +245,7 @@ class SubscriptionController extends Controller
                             'id' => $get_plan->id,
                             'nickname' => $get_plan->nickname,
                             'amount' => $get_plan->unit_amount_decimal / 100,
+                            'currency' => $get_plan->currency,
                             'interval' => $get_plan->recurring->interval,
                             'interval_count' => $get_plan->recurring->interval_count,
                             'metadata' => $get_plan->metadata,
@@ -257,7 +258,7 @@ class SubscriptionController extends Controller
                     }
                 }
             }
-
+            //dd($plans);
             $intent = $request->user()->createSetupIntent();
             return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
