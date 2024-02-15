@@ -1287,6 +1287,27 @@ label#currency_alert_text {
 }
 
 @media (max-width: 768px) {
+
+    .modal-dialog,.modal-content {
+        margin-top:50px;
+        width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        border-radius:0!important;
+        overflow-y: auto!important;
+        display: flex!important;
+      }
+     .modal-footer {
+        border-radius:0!important;
+        position:fixed!important;
+        bottom:0!important;
+        width: 100%;
+      }
+      .modal-header {
+        border-radius:0!important;
+      }
+
     .container {
         padding-top: 10px !important; /* Adjust this value as needed */
     }
@@ -1730,5 +1751,19 @@ label#currency_alert_text {
        display: block;
     }
 
+    .mobile-editLesson-btn {
+        width: 100%;
+        display: inline-block;
+        margin-bottom:5px;
+    }
+
+  }
+
+  /** hateur maximale de 500px avec scrool**/
+
+  #listEventsSearch {
+    max-height: 502px;
+    overflow-y:scroll;
+    overflow-x:hidden;
   }
 

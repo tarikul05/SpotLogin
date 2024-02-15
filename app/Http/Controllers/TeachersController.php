@@ -75,7 +75,13 @@ class TeachersController extends Controller
         }
         $teachers = $school->teachers;
 
-        return view('pages.teachers.list',compact('teachers','schoolId'));
+        if($user->isSchoolAdmin()) {
+            $number_of_coaches = $school->number_of_coaches;
+        } else {
+            $number_of_coaches = 0;
+        }
+
+        return view('pages.teachers.list',compact('teachers','schoolId','number_of_coaches'));
     }
 
     /**
@@ -95,6 +101,18 @@ class TeachersController extends Controller
         }else {
             $schoolId = $user->selectedSchoolId();
             $school = School::active()->find($schoolId);
+        }
+
+        if ($user->isSchoolAdmin()) {
+            $number_of_coaches = $school->number_of_coaches;
+            $teachersCount = $school->teachers()->where('role_type', '!=', 'school_admin')->count();
+            if($number_of_coaches > 0 || $teachersCount > 0) {
+            if ($teachersCount >= $number_of_coaches) {
+                return redirect()->back()->with('error', __('You have reached the maximum number of teachers.'));
+            }
+            } else {
+                $number_of_coaches = 1;
+            }
         }
 
         $countries = Country::active()->get();

@@ -499,6 +499,7 @@
                                 <input type="hidden" name="plan_name" value="{{ $plans[0]['plan_name']->name }}" />
                                 <input type="hidden" name="paymentMethod" id="paymentMethod" value="" />
                                 <input type="hidden" name="quantity" id="quantity" value="1" />
+                                <input type="hidden" name="number_of_coaches" id="number_of_coaches" value="1" />
 
                                 <div class="form-group">
                                     <label style="font-size:11px;" for="coupon_code">{{ __('Coupon code') }}</label>
@@ -680,10 +681,14 @@ card.on('change', function(event) {
             text:result.error.message,
             });
         } else {
-            console.log('la carte est ok', result)
             //send resu.tid in input text id <input type="hidden" name="paymentMethod" id="paymentMethod" value="" />
             document.getElementById("paymentMethod").value = result.paymentMethod.id;
             // submit form id="payment-form-sub"
+            //send select id chooseCoaches value in input number_of_coaches
+            var requestIsSchoolAdmin = "{{ $user->isSchoolAdmin() }}";
+            if(requestIsSchoolAdmin) {
+                document.getElementById("number_of_coaches").value = $("#chooseCoaches").val();
+            }
             $("#payment-form-sub").submit();
         }
         });

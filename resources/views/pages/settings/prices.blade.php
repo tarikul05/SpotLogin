@@ -82,8 +82,8 @@
                                 </table>
                                 @if($category->s_std_pay_type == 0)
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-theme-primary" id="add_new_price"><i class="fa fa-plus"></i> {{ __('See more') }}</a>
-                                        <a href="#" style="display: none;" class="btn btn-theme-primary" id="hide_new_price"><i class="fa fa-plus"></i> {{ __('See less') }}</a>
+                                        <a href="#" class="btn btn-theme-primary see_more_prices" id="add_new_price"><i class="fa fa-plus"></i> {{ __('See more') }}</a>
+                                        <a href="#" style="display: none;" class="btn btn-theme-primary see_less_prices" id="hide_new_price"><i class="fa fa-minus"></i> {{ __('See less') }}</a>
                                     </div>
                                 @endif
                             </div>

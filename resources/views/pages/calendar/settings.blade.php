@@ -254,10 +254,10 @@
         });
     });
 
-    $(document).on('click','#add_new_price',function(){
-        $('.hide-custom-price').slideDown('slow');
-        $('#add_new_price').hide();
-    });
+    /*$(document).on('click','#add_new_price',function(){
+        $('#add_new_price').fadeOut();
+        $('#hide_new_price').fadeIn();
+    });*/
 
     </script>
     <script src="{{ asset('js/pages/settings/index.js') }}"></script>

@@ -673,9 +673,9 @@
 								</div>
 							</div>
 							@else
-							<div class="section_header_class">
-								<label id="contact_info_caption">{{ __('School Bank Information')}}</label>
-							</div>
+							<div class="card">
+								<div class="card-header">{{ __('School Bank Information') }}</div>
+								<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
@@ -688,6 +688,8 @@
 									</div>
 								</div>
 							</div>
+                                </div>
+                            </div>
 							@endif
 
 								</div>
@@ -755,159 +757,6 @@
                     </div>
 
 				</div>
-				<!--End of Tab 1-->
-
-				<!--Start of Tab 2 -->
-				<!-- <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
-					<form id="schoolUserForm" name="schoolUserForm" class="form-horizontal" role="form"
-					 action="{{!empty($school) ? route('school.user_update',[$school->id]): '/'}}" method="POST" enctype="multipart/form-data">
-						@csrf
-						<input type="hidden" id="user_id" name="user_id" value="{{!empty($school_admin->id) ? old('user_id', $school_admin->id) : old('user_id')}}">
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('User Account')}}</label>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Name of User')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_username" name="admin_username" value="{{!empty($school_admin->username) ? old('admin_username', $school_admin->username) : old('admin_username')}}" disabled="disabled">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Email')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="admin_email" name="admin_email" value="{{!empty($school_admin->email) ? old('admin_email', $school_admin->email) : old('admin_email')}}">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Password')}}:</label>
-							<div class="col-sm-7">
-								<input type="password" type="text" class="form-control" id="admin_password" name="admin_password" value="">
-
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Status')}}:</label>
-							<div class="col-sm-7">
-								<div class="selectdiv">
-									<select class="form-control" name="admin_is_active" id="admin_is_active">
-										<option value="">Select</option>
-										<option value="1" {{!empty($school_admin->is_active) ? (old('admin_is_active', $school_admin->is_active) == 1 ? 'selected' : '') : (old('admin_is_active') == 1 ? 'selected' : '')}}>{{ __('Active')}}</option>
-										<option value="0" {{!empty($school_admin->is_active) ? (old('admin_is_active', $school_admin->is_active) == 0 ? 'selected' : '') : (old('admin_is_active') == 0 ? 'selected' : '')}}>{{ __('Inactive')}}</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="clearfix"></div>
-						<div class="section_header_class">
-							<label id="course_for_billing_caption">{{ __('Send Activation Email')}}</label>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('TO')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_to_id" name="email_to_id" value="{{!empty($school_admin->email) ? $school_admin->email : old('email_to_id')}}">
-
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="sstreet" id="street_caption">{{ __('Subject')}}:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="email_subject_id" name="subject_text" value="{{!empty($emailTemplate->subject_text) ? old('subject_text', $emailTemplate->subject_text) : old('subject_text')}}">
-
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-10 col-md-10">
-								<div class="email_template_tbl table-responsive mt-1">
-									<table id="email_template_tbl" name="email_template_tbl" width="100%" border="0" class="email_template school resizable">
-										<tbody>
-											<tr align="left" valign="middle">
-												<td>
-													<div class="form-group-data">
-														<textarea rows="30" name="body_text" id="body_text" type="textarea" class="form-control my_ckeditor textarea">
-														{{!empty($emailTemplate->body_text) ? old('body_text', $emailTemplate->body_text) : old('body_text')}}
-														</textarea>
-														<span id="body_text_error" class="error"></span>
-														<span class="pull-right">
-															<div class="text-center">
-															<a id="send_email_btn" name="send_email_btn" href="#" class="btn btn-sm btn-info">{{ __('Send Email')}}</a>
-															</div>
-														</span>
-													</div>
-
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div> -->
-				<!--End of Tab 2-->
-
-				<!--Start of Tab 4 -->
-				<!--<div id="tab_4" class="tab-pane">
-					<div class="row">
-						<div class="col-sm-12 col-xs-12 header-area">
-							<div class="page_header_class">
-								<label id="page_header" class="page_title text-black">{{ __('Logo')}}</label>
-							</div>
-						</div>
-
-						<div class="col-md-6">
-							<form enctype="multipart/form-data" role="form" id="form_images" class="form-horizontal" method="post" action="#">
-								<div class="form-group row">
-									<div class="col-sm-8">
-										<fieldset>
-											<div class="profile-image-cropper responsive">
-											<?php if (!empty($school->logoImage->path_name)): ?>
-												<img id="profile_image_user_account" src="{{ $school->logoImage->path_name }}"
-														height="128" width="128" class="img-circle"
-														style="margin-right:10px;">
-											<?php else: ?>
-												<img id="profile_image_user_account" src="{{ asset('img/photo_blank.jpg') }}"
-														height="128" width="128" class="img-circle"
-														style="margin-right:10px;">
-											<?php endif; ?>
-
-
-												<div style="display:flex;flex-direction: column;">
-													<div style="margin:5px;">
-														<span class="btn btn-theme-success">
-															<i class="fa fa-picture-o"></i>
-															<span id="select_image_button_caption" onclick="UploadImage()">{{ __('Choose an image ...')}}</span>
-															<input onchange="ChangeImage()"
-																	class="custom-file-input" id="profile_image_file"
-																	type="file" name="profile_image_file"
-																	accept="image/*" style="display: none;">
-														</span>
-													</div>
-													<?php //if (!empty($AppUI->profile_image_id)): ?>
-														<div style="margin:5px;">
-															<a id="delete_profile_image" name="delete_profile_image" class="btn btn-theme-warn" style="{{!empty($school->logo_image_id) ? '' : 'display:none;'}}">
-																<i class="fa fa-trash"></i>
-																<span id="delete_image_button_caption">{{ __('Remove Image')}}</span>
-															</a>
-														</div>
-													<?php //endif; ?>
-												</div>
-											</div>
-										</fieldset>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-
-				</div>-->
-				<!--End of Tab 4-->
-
-				<!--Start of Tab 5 -->
-				<div id="tab_5" class="tab-pane">
-					@include('pages.schools.elements.school-parameters')
-				</div>
-				<!--End of Tab 5-->
-
 
 
 			</div></div>

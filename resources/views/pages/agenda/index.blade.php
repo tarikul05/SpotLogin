@@ -241,9 +241,9 @@
                                         <i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>
                                     </div>
 
-                                    <div style="position: absolute;" id="loadingSearch"></div>
-                                    <div id="resultSearch"></div>
-                                    <ul id="listEventsSearch"></ul>
+                                    <div id="loadingSearch" class="text-center"></div>
+                                    <div id="resultSearch" class="p-2"></div>
+                                    <div id="listEventsSearch"></div>
 
                                  <div id="allFilters" style="display:none;">
 
@@ -275,7 +275,7 @@
 
 
                                     <div id="event_location_div" name="event_location_div" class="selectdiv">
-                                        <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;" >
+                                        <select class="form-control" multiple="multiple" id="event_location" name="event_location[]" style="margin-bottom: 15px;">
                                             @foreach($locations as $key => $location)
                                                 <option value="{{ $location->id }}">{{ $location->title }}</option>
                                             @endforeach
@@ -366,24 +366,25 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="modal-dialog addAgendaModalClass" id="addAgendaModalWin">
+                <div class="addAgendaModalClass" id="addAgendaModalWin">
+
+
                     <div id="infoLesson" class="text-center alert alert-default">
                         <b>{{ __('Create a lesson') }}</b><br>
                         <h4 id="displayDate"></h4>
                         <i class="fa-solid fa-circle-info"></i> {{ __('Create a lesson with a minimum attendance of 1 student and a maximum duration of 1 day') }}.
                     </div>
                     <div id="infoLessonEvent" class="text-center alert alert-default">
-                    <b>{{ __('Create an event') }}</b><br>
-                    <h4 id="displayDateEvent"></h4>
-                        <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
+                        <b>{{ __('Create an event') }}</b><br>
+                        <h4 id="displayDateEvent"></h4>
+                            <i class="fa-solid fa-circle-warning"></i> {{ __('Create an event for 1 or more complete days') }}.
                     </div>
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="col-md-10 offset-md-1 p-l-n p-r-n">
-                                <div class="form-group row">
+
+                            <div class="col-md-10  offset-md-1 mt-4">
+
+                                <div class="row">
                                     <label class="col-lg-3 col-sm-3 text-left">{{__('Agenda Type')}}</label>
-                                    <div class="col-sm-9">
-                                        <div class="selectdiv">
+                                    <div class="col-lg-9 col-sm-9">
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <i class="fa-solid fa-list-ul"></i>
@@ -397,11 +398,13 @@
                                                     <option value="4">{{__('Coach off')}}</option>
                                                 </select>
                                             </div>
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="form-group row">
+
+                                <div class="col-md-10 offset-md-1 mt-4">
+                                    <div class="row">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Title') }}</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
@@ -410,15 +413,18 @@
                                             </span>
                                             <input id="Title" name="title" type="text" class="form-control" placeholder="{{ __('Title here') }}" value="">
                                         </div>
+                                </div>
                                     </div>
                                 </div>
 
-                                @if($AppUI->isSchoolAdmin())
-                                <div class="form-group row show_coach_off hide_on_off">
+                                <div class="col-md-10 offset-md-1">
+
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                <div class="row show_coach_off hide_on_off mt-4 mb-4">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
-                                @if(!$AppUI->isSchoolAdmin())
-                                <input style="opacity: 0 !important; visibility: hidden !important;" type="text" name="teacher_select" class="form-control" value="{{ $AppUI->person_id }}" readonly>
+                                @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
+                                <input style="opacity: 0 !important; visibility: hidden !important; height: 0 !important" type="text" name="teacher_select" value="{{ $AppUI->person_id }}" readonly>
                                 @else
                                 <div class="col-sm-9">
                                     <div class="selectdiv">
@@ -438,7 +444,37 @@
                                 </div>
                                 @endif
 
-                                <div class="form-group row lesson hide_on_off">
+
+                                @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
+                                <div class="row event show_coach_off hide_on_off mb-4">
+                                    <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
+                                    <div class="col-sm-9">
+                                        <div class="selectdiv">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="fa-solid fa-list-ul"></i>
+                                                </span>
+                                                <select class="form-control" id="event_invoice_type" name="event_invoice_type" disabled>
+                                                    <option value="">{{__('Select Type') }}</option>
+                                                    <option value="T">{{__('Teacher invoice')}}</option>
+                                                    <option value="S">{{__('School invoice')}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @else
+                                    <input style="opacity: 0; visibility: hidden; height: 0 !important" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
+                                @endif
+
+                                </div>
+
+
+                                <div class="col-md-10 offset-md-1 mt-1">
+
+
+
+                                <div class="lesson hide_on_off row mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -446,7 +482,7 @@
                                             <span class="input-group-addon">
                                                 <i class="fa-solid fa-list-ul"></i>
                                             </span>
-                                            <select class="form-control" id="category_select" name="category_select">
+                                            <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
                                                     <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
                                                 @endforeach
@@ -456,7 +492,8 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row hide_on_off">
+
+                                <div class="row hide_on_off">
                                     <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Location') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -464,27 +501,26 @@
                                                 <span class="input-group-addon">
                                                     <i class="fa-solid fa-list-ul"></i>
                                                 </span>
-                                            <select class="form-control" id="location" name="location">
-
-                                                @foreach($locations as $key => $location)
-                                                    <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
-                                                @endforeach
-                                            </select>
+                                                <select class="form-control" id="location" name="location">
+                                                    <option value="" selected>Select Location</option>
+                                                    @foreach($locations as $key => $location)
+                                                        <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : ''}}>{{ $location->title }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                            </div>
+
+
+                                </div>
+
                             <div class="tab-content" id="agenda_form_area" style="display:none">
                                 <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
 
-
-
-
-                                            <div class="row">
+                                            <div class="row m-2">
                                                 <div class="col-md-10 offset-md-1 mt-4">
-
 
                                                     <div class="card form-group bg-tertiary p-3 row hide_coach_off">
                                                         <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
@@ -498,7 +534,7 @@
 
                                                         <div id="studentListAvailabilities"></div>
 
-                                                            <div class="student_list pt-3">
+                                                            <div class="student_list pt-4">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-users"></i>
@@ -525,30 +561,14 @@
                                                         </div>
                                                     </div>
 
-                                                    @if($AppUI->isSchoolAdmin())
-                                                    <div class="form-group row event hide_on_off">
-                                                        <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
-                                                        <div class="col-sm-9">
-                                                            <div class="selectdiv">
-                                                                <select class="form-control" id="event_invoice_type" name="event_invoice_type" disable>
-                                                                    <option value="T">{{__('Teacher invoice')}}</option>
-                                                                    @if($AppUI->isSchoolAdmin())
-                                                                    <option value="S">{{__('School invoice')}}</option>
-                                                                    @endif
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @else
-                                                        <input style="opacity: 0; visibility: hidden;" type="text" id="event_invoice_type" name="event_invoice_type"  value="T">
-                                                    @endif
 
 
 
 
 
 
-                                                    <div class="form-group row not-allday">
+
+                                                    <div class="mt-5 form-group row not-allday">
                                                         <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Start date') }} :</label>
                                                         <div class="col-sm-9 row">
                                                             <div class="col-sm-6">
@@ -667,12 +687,12 @@
                                                         </div>
                                                         <div class="form-group row not_teacher">
                                                             <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher price') }} <span class="lesson-text">({{__('class/hour') }})</span><span class="event-text">(per event)</span> :</label>
-                                                            <div class="col-sm-4">
+                                                            <div class="col-sm-6">
                                                                 <div class="input-group" id="sprice_amount_buy_div">
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-arrow-right"></i>
                                                                     </span>
-                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="text" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
+                                                                    <input id="sprice_amount_buy" name="sprice_amount_buy" type="number" step="0.01" class="form-control" value="{{old('sprice_amount_buy')}}" autocomplete="off">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -724,8 +744,7 @@
 
                                 </div>
                             </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -788,11 +807,17 @@
 <div class="modal fade login-event-modal" id="EventModal" name="EventModal" tabindex="-1" aria-hidden="true" aria-labelledby="EventModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-
-            <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
+            <div class="modal-header text-white" style="background-color: #152245;">
+                <h6 class="modal-title page_header_class">
+                  <i class="fa-regular fa-calendar"></i>  {{ __('Event / lesson') }}
+                </h6>
+                <button type="button" class="close" id="modalClose" class="btn btn-light" data-bs-dismiss="modal" style="margin-top:-11px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+                </button>
+            </div>
+            <div class="modal-body text-center">
                 <div class="EventModalClass" id="EventModalWin">
-                    <div class="modal-content">
-                        <div class="modal-body text-center">
+
                             <h4 class="light-blue-txt gilroy-bold" style="font-size: 17px; line-height: 2"><span id="event_modal_title">{{ __('Title') }}</span></h4>
                             <p style="font-size: 20px;"></p>
 
@@ -806,8 +831,12 @@
                             <a type="button" id="btn_edit_view" onclick="view_edit_event()" class="btn btn-theme-warn" data-dismiss="modal" style="width:100px;">
                                 <span id="event_btn_edit_text">{{ __('View') }}<span>
                             </a>
-                        </div>
-                    </div>
+
+                            <div id="messageNoCategory" class="text-warning" style="display:none; border-top:1px solid #EEE; margin-top:20px; padding-top:10px;">
+                               <i class="fa fa-solid fa-triangle-exclamation"></i> You need to choose a category for validate this lesson.
+                            </div>
+
+
                 </div>
             </div>
         </div>
@@ -872,6 +901,7 @@ $('.close-icon').on('click', function() {
 </script>
 
 <script>
+    let recentFreshEventsList = [];
     let isOnlyAvailability = false;
     var no_of_teachers = document.getElementById("max_teachers").value;
     var resultHtml='';      //for populate list - agenda_table
@@ -1168,7 +1198,7 @@ $('.close-icon').on('click', function() {
         var search_text = $(this).val();
         if (search_text.length > 0) {
             var loadingSearch = document.getElementById('loadingSearch');
-            loadingSearch.innerHTML = '<i class="fa-solid fa-magnifying-glass fa-spin fa-spin-reverse"></i>';
+            loadingSearch.innerHTML = '<i style="color:#DDD;" class="fas fa-spinner fa-spin fa-2x"></i>';
             $('#calendar').fullCalendar('rerenderEvents');
         }
         if (search_text.length == 0) {
@@ -1181,62 +1211,117 @@ $('.close-icon').on('click', function() {
             $("#listEventsSearch").hide();
         }
 
-        if (search_text.length > 2) {
+        if (search_text.length > 0) {
+            var eventIds = [];
             // Effacer le délai précédent s'il y en a un
             clearTimeout(typingTimer);
-
             // Définir un nouveau délai
             typingTimer = setTimeout(function() {
                 toastr.options = {
                     "positionClass": "toast-bottom-full-width",
-                    "timeOut": "3000",
+                    "timeOut": "2000",
                 }
 
                 var eventCount = $('.fc-event').length || $('.fc-list-item').length;
                 if (eventCount > 0) {
-                    toastr.info(eventCount + ' results according to your criteria');
+                    if (search_text.length > 3) {
+                        toastr.info(eventCount + ' results according to your criteria');
+                    }
                     $("#allFilters").hide();
                     $("#listEventsSearch").show();
                     $("#resultSearch").show();
                     resultSearch.style.display = 'block';
-                    resultSearch.innerHTML = '<br><b><i class="fa-solid fa-arrow-right"></i> Your search result</b><br><br><div class="alert alert-primary"><b>' + eventCount + '</b> results for your search <i>' + search_text + '</i>.</div>';
+                    resultSearch.innerHTML = '<b><i class="fa-solid fa-arrow-right"></i> Your search result:</b><br><div class="light-blue-txt"><b>' + eventCount + '</b> results for your search <b><i>' + search_text + '</i></b>.</div>';
                     var cal_view_mode = $('#calendar').fullCalendar('getView');
                     var ulElement = document.getElementById("listEventsSearch");
                     while (ulElement.firstChild) {
                     ulElement.removeChild(ulElement.firstChild);
                     }
+
+                    let getClassForSearch = "";
                     if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+                        getClassForSearch = '.fc-list-item';
                         $('.fc-list-item-title a').each(function() {
-                            //console.log($(this).text());
                             var text = $(this).text();
                             if (text.indexOf('all-day') > -1) {
                                 text = text.replace('all-day', 'all-day ');
                             }
-                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                           // $('#listEventsSearch').append('<li>' + text + '</li>');
                         });
                     }
                     else {
+                        getClassForSearch = '.fc-event';
                         $('.fc-event').each(function() {
-                            //console.log(foundedSearchItems);
                             var text = $(this).text();
-                            $('#listEventsSearch').append('<li>' + text + '</li>');
+                           // $('#listEventsSearch').append('<li>' + text + '</li>');
                         });
                     }
 
+
+
+                        //Get current IDs
+                        $(getClassForSearch).each(function() {
+                            var id = $(this).data('event-id');
+                            eventIds.push(id);
+                        });
+                        //
+
+                        var jsonEvents = recentFreshEventsList;
+
+                        eventIds.forEach(function(eventId) {
+
+                        var matchedEvent = jsonEvents.find(function(event) {
+                            return event.id === eventId;
+                        });
+
+
+                        if (matchedEvent) {
+                            const startDate = new Date(matchedEvent.start);
+                            const endDate = new Date(matchedEvent.end);
+                            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+                            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+                            let iconSearchResult = matchedEvent.action_type == "view" ? 'fa-solid fa-eye' : 'fa-solid fa-pen-to-square';
+                            var html = `
+                                <div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:12px; position:relative;">
+                                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                                <a href="${matchedEvent.url}"><i class="fa ${iconSearchResult}" style="cursor:pointer; position:absolute; right:10px; top:10px; cursor:pointer;"></i></a>
+                                </div>
+                            `;
+
+                                $('#listEventsSearch').append(html);
+                        }
+
+                        });
+
+                        if(loadingSearch) {
+                            loadingSearch.innerHTML = "";
+                        }
 
 
                 } else {
                     toastr.info('No results according to your criteria');
                     $("#allFilters").show();
+                    $('#listEventsSearch').html("");
+                    $("#resultSearch").html("No results according to your criteria");
+                    if(loadingSearch) {
+                        loadingSearch.innerHTML = "";
+                    }
                 }
                 if (search_text.length < 2) {
                     toastr.info('No results according to your criteria');
                     $("#resultSearch").hide();
                     $("#allFilters").show();
+                    $('#listEventsSearch').html("");
+                    $("#resultSearch").html("No results according to your criteria");
+                    if(loadingSearch) {
+                        loadingSearch.innerHTML = "";
+                    }
                 }
             }, doneTypingInterval);
         }
-        loadingSearch.innerHTML = "";
     });
     $("#datepicker_month").datetimepicker()
     .on('changeDate', function(ev){
@@ -1518,9 +1603,15 @@ $('.close-icon').on('click', function() {
                   //  $("#pageloader").hide();
                     if (data.length >0) {
                         var resultHtml ="";
+                        resultHtml+='<option value="">Select Category</option>';
                         var i='0';
                         $.each(data, function(key,value){
-                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+value.title+'</option>';
+                            var isAdmin = "{{ $AppUI->isSchoolAdmin() }}";
+                            let textAdmin = "";
+                            if(isAdmin) {
+                                textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
+                            }
+                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
@@ -1995,9 +2086,52 @@ $('.close-icon').on('click', function() {
         var p_event_id=document.getElementById("get_non_validate_event_delete_id").value;
 
 
+
+        /** get events id **/
+        var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+        } else {
+            getClassForSearch = '.fc-event';
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            var is_locked = $(this).data('locked');
+            var allDay = $(this).data('allday');
+            if(Number(is_locked) === 0 && !allDay) {
+                eventIds.push(id);
+            }
+        });
+        var jsonEvents = recentFreshEventsList;
+        var html = '';
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+
+        if (matchedEvent) {
+            //console.log(matchedEvent.content);
+            const startDate = new Date(matchedEvent.start);
+            const endDate = new Date(matchedEvent.end);
+            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            let iconSearchResult = 'fa-solid fa-trash text-danger';
+             html += `
+                <div class="col-lg-6 col-xs-12"><div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:13px; position:relative;">
+                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                </div></div>
+            `;
+        }
+
+        });
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmDeleteModalCall(p_event_id,'Do you want to delete events',"delete_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"');");
+        confirmDeleteLessonsModal(html,'Do you want to delete events',"delete_multiple_lessons('"+eventIds+"');");
         return false;
     })
 
@@ -2031,16 +2165,60 @@ $('.close-icon').on('click', function() {
         var get_non_validate_event_id=document.getElementById("get_non_validate_event_id").value;
 
 
+         /** get events id **/
+         var eventIds = [];
+        var cal_view_mode = $('#calendar').fullCalendar('getView');
+        let getClassForSearch = "";
+        if (cal_view_mode.name == 'listMonth' || cal_view_mode.name == 'timeGridThreeDay') {
+            getClassForSearch = '.fc-list-item';
+        } else {
+            getClassForSearch = '.fc-event';
+        }
+        $(getClassForSearch).each(function() {
+            var id = $(this).data('event-id');
+            var is_locked = $(this).data('locked');
+            var allDay = $(this).data('allday');
+            var can_lock = $(this).data('canlock');
+            if(Number(is_locked) === 0 && !allDay && can_lock === "Y") {
+                eventIds.push(id);
+            }
+        });
+        var jsonEvents = recentFreshEventsList;
+        var html = '';
+        eventIds.forEach(function(eventId) {
+        var matchedEvent = jsonEvents.find(function(event) {
+            return event.id === eventId;
+        });
+
+        if (matchedEvent) {
+            //console.log(matchedEvent.content);
+            const startDate = new Date(matchedEvent.start);
+            const endDate = new Date(matchedEvent.end);
+            const startHourMinute = startDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            const endHourMinute = endDate.toTimeString().split(' ')[0].slice(0, 5); // HH:MM
+            let iconSearchResult = 'fa-solid fa-lock text-primary';
+             html += `
+                <div class="col-lg-6 col-xs-12"><div style="padding:10px; background-color:#F5F5F5; border-radius:15px; margin-bottom:10px; font-size:13px; position:relative;">
+                <b><i class="fa solid fa-calendar"></i> ${startDate.toISOString().split('T')[0]}</b>
+                [ <i style="font-size:10px;" class="fa-regular fa-clock"></i> ${startHourMinute} - ${endHourMinute} ]
+                <div class="title"><span style="width:10px; height:10px; background-color:${matchedEvent.backgroundColor}; border-radius:50px; display:inline-block;"></span> ${matchedEvent.content}</div>
+                <div style="border-top:1px solid #EEE; padding-top:10px;"><table>${matchedEvent.title_for_modal}</table></div>
+                </div></div>
+            `;
+        }
+
+        });
+
 
         //var retVal = confirm("Tous les événements affichés seront supprimés. Voulez-vous supprimer ?");
         e.preventDefault();
-        confirmMultipleValidateModalCall(get_non_validate_event_id,'Do you want to validate events',"validate_multiple_events('"+p_event_school_id+"','"+p_from_date+"','"+p_to_date+"','"+p_event_type_id+"','"+p_student_id+"','"+p_teacher_id+"','"+p_event_id+"');");
+        confirmMultipleValidateModalCall(html,'Do you want to validate events',"validate_multiple_events('"+eventIds+"');");
         return false;
     })
 
-    function validate_multiple_events(p_event_school_id,p_from_date,p_to_date,p_event_type_id,p_student_id,p_teacher_id,p_event_id){
+    function validate_multiple_events(p_event_school_id){
         var p_event_location_id=getLocationIDs();
-        var data='location_id='+p_event_location_id+'&p_event_school_id='+p_event_school_id+'&p_from_date='+p_from_date+'&p_to_date='+p_to_date+'&p_event_type_id='+p_event_type_id+'&p_student_id='+p_student_id+'&p_teacher_id='+p_teacher_id+'&p_event_id='+p_event_id;
+        var data='p_event_school_id='+p_event_school_id;
 
             //e.preventDefault();
             $.ajax({type: "POST",
@@ -2084,6 +2262,32 @@ $('.close-icon').on('click', function() {
                     //alert(status);
                     getFreshEvents();      //refresh calendar
                    // window.location.reload(false);
+
+                },   //success
+                error: function(ts) {
+                    errorModalCall('delete_multiple_events:'+ts.responseText+'-'+GetAppMessage('error_message_text'));
+                    // alert(ts.responseText)
+                }
+            }); //ajax-type
+    }
+
+    function delete_multiple_lessons(p_event_school_id){
+
+        var data='p_event_school_id='+p_event_school_id;
+
+            //e.preventDefault();
+            $.ajax({type: "POST",
+                url: BASE_URL + '/delete_multiple_events',
+                data: data,
+                dataType: "JSON",
+                success:function(result){
+                    document.getElementById("btn_delete_events").style.display = "none";
+                    document.getElementById("btn_delete_events_mobile").style.display = "none";
+                    var status =  result.status;
+
+                    //reload events/lessons
+                    getFreshEvents();
+
 
                 },   //success
                 error: function(ts) {
@@ -2283,6 +2487,16 @@ $('.close-icon').on('click', function() {
                 /* Start datepicker - change date */
                 var dt=moment(event.start).format('DD/MM/YYYY');
 
+
+                var eventIdTest = event.id;
+                var eventIsLockedTest = event.is_locked;
+                var eventallDayTest = event.allDay;
+                var eventCanLockTest = event.can_lock;
+                // Ajouter l'ID à l'élément DOM
+                el.attr('data-event-id', eventIdTest);
+                el.attr('data-locked', eventIsLockedTest);
+                el.attr('data-allday', eventallDayTest);
+                el.attr('data-canlock', eventCanLockTest);
 
                 //$('#datepicker_month').data("DateTimePicker").date(dt)
                 /* END datepicker - change date */
@@ -2490,6 +2704,13 @@ $('.close-icon').on('click', function() {
                         $(el).find('.fc-time').html(icon);
                     }
 
+                    if(event.event_category_name === "Temp") {
+                        if(event.event_type == 10){
+                            var icon ='<span class="fa fa-solid fa-triangle-exclamation txt-orange" style="padding:2px;"></span>';
+                            $(el).find('div.fc-content').prepend(icon);
+                        }
+                    }
+
                     if (event.isInvoice){
                         var icon ='<span class="fa fa-solid fa-file-pdf txt-orange" style="padding:2px;"></span>';
                         $(el).find('div.fc-content').prepend(icon);
@@ -2586,6 +2807,12 @@ $('.close-icon').on('click', function() {
                         } else {
                             $('#btn_confirm').hide();
                             //$('#btn_confirm_unlock').show();
+                        }
+
+                        if (event.event_category == 0) {
+                            $('#messageNoCategory').show();
+                        } else {
+                            $('#messageNoCategory').hide();
                         }
 
                     } else {
@@ -3110,6 +3337,7 @@ $('.close-icon').on('click', function() {
             async: true,
             success: function(s){
                 //console.log(JSON.parse(s));
+                recentFreshEventsList = JSON.parse(s);
                 SetEventCookies();
                 json_events = s;
                 var selected_ids = [];
@@ -3230,7 +3458,7 @@ $('.close-icon').on('click', function() {
                     // OBJECT is created when processing response
                     eventsToPut.push(v);
                 });
-              //console.log('test', json_events);
+                //console.log('test', json_events);
 
 
 
@@ -4093,6 +4321,7 @@ $('#add_lesson').on('submit', function(e) {
 
 	var title = $('#Title').val();
 	var professor = $('#teacher_select').val();
+    var invoice_cat_type_id = $('#event_invoice_type option:selected').val();
     var agendaSelect = +$("#agenda_select").val();
     var evetCat = $('#category_select option:selected').val();
     var evetLoc = $('#location option:selected').val();
@@ -4104,6 +4333,8 @@ $('#add_lesson').on('submit', function(e) {
 	var endTime = $('#end_time').val();
 	var errMssg = '';
 	var type = $("#agenda_select").val();
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+
 
     var selected_school_ids = [];
     $.each($("#event_school option:selected"), function(){
@@ -4160,27 +4391,81 @@ $('#add_lesson').on('submit', function(e) {
             $('#teacher_select').removeClass('error');
         }
 
-        if( evetCat == undefined || evetCat == ''){
-            var errMssg = '{{ __("Select event category") }}';
-            $('#category_select').addClass('error');
+        if(invoice_cat_type_id == ''){
+            var errMssg = 'Category type is required';
+            $('#event_invoice_type').addClass('error');
         }else{
-            $('#category_select').removeClass('error');
+            $('#event_invoice_type').removeClass('error');
         }
 
-        if ($("#student_empty").prop('checked') == false){
-            if (!emptyStdchecked) {
-                if( selected < 1){
-                    var errMssg = 'Please select at least one student to continue';
-                    $('.student_list').addClass('error');
-                }else{
-                    //var errMssg = '';
-                    $('.student_list').removeClass('error');
+        //
+        if(isAdmin) {
+            if( evetCat == undefined || evetCat == '' || evetCat == 0){
+                if(invoice_cat_type_id == 'S'){
+                    var errMssg = '{{ __("Select event category") }}';
+                    $('#category_select').addClass('error');
                 }
+            }else{
+                    $('#category_select').removeClass('error');
             }
-        }else{
-            // var errMssg = '';
-            $('.student_list').removeClass('error');
+        } else {
+            if( evetCat == undefined || evetCat == ''){
+            if(agendaSelect === "1")
+                var errMssg = '{{ __("Select event category") }}';
+                $('#category_select').addClass('error');
+            }else{
+                $('#category_select').removeClass('error');
+            }
         }
+        //
+
+
+        if(evetLoc == ''){
+            var errMssg = 'Location required';
+            $('#location').addClass('error');
+        }else{
+            $('#location').removeClass('error');
+        }
+
+
+        if(isAdmin) {
+
+            if ($("#student_empty").prop('checked') == false){
+                if (!emptyStdchecked) {
+                    if( selected < 1){
+                        if(invoice_cat_type_id == 'T'){
+                            var errMssg = 'Please select at least one student to continue';
+                            $('.student_list').addClass('error');
+                        }
+                    }else{
+                        //var errMssg = '';
+                        $('.student_list').removeClass('error');
+                    }
+                }
+            }else{
+                // var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
+
+        } else {
+
+            if ($("#student_empty").prop('checked') == false){
+                if (!emptyStdchecked) {
+                    if( selected < 1){
+                        var errMssg = 'Please select at least one student to continue';
+                        $('.student_list').addClass('error');
+                    }else{
+                        //var errMssg = '';
+                        $('.student_list').removeClass('error');
+                    }
+                }
+            }else{
+                // var errMssg = '';
+                $('.student_list').removeClass('error');
+            }
+
+        }
+
 
         if((agendaSelect == 1) && (startTime == endTime)){
             var errMssg = 'Please select a start and end time to continue';
@@ -4351,6 +4636,38 @@ $(document).ready(function() {
         $('#agenda_form_area').hide();
     }
 });
+
+$("body").on('change', '#teacher_select', function(event) {
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    if(isAdmin)
+    {
+    var teacherSelect = +$("#teacher_select").val();
+        if(teacherSelect == ''){
+            $("#event_invoice_type").prop('disabled', true);
+        } else {
+            $("#event_invoice_type").prop('disabled', false);
+        }
+    } else {
+            $("#event_invoice_type").prop('disabled', false);
+    }
+
+});
+
+$("body").on('change', '#event_invoice_type', function(event) {
+    var isAdmin = "{{ $AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() }}";
+    if(isAdmin)
+    {
+    var event_invoice_type = +$("#teacher_select").val();
+        if(event_invoice_type == ''){
+            $("#category_select").prop('disabled', true);
+        } else {
+            $("#category_select").prop('disabled', false);
+        }
+    } else {
+            $("#category_select").prop('disabled', false);
+    }
+});
+
 $("#category_select, #teacher_select").change();
 $("body").on('change', '#category_select, #teacher_select', function(event) {
 
@@ -4721,12 +5038,32 @@ $('#agenda_select').on('change', function() {
    // getLatestPrice();
 });
 
+$('#teacher_select').on('change', function() {
+    var resultHtml ="";
+    resultHtml+='<option value="">Select Category</option>';
+    $('#category_select').html(resultHtml);
+    $('#category_select').change();
+
+    var resultHtml ="";
+    resultHtml+='<option value="">Select Type</option>';
+    resultHtml+='<option value="T">Teacher invoice</option>';
+    resultHtml+='<option value="S">School invoice</option>';
+    $('#event_invoice_type').html(resultHtml);
+    $('#event_invoice_type').change();
+
+    $("#category_select").prop('disabled', true);
+    $("#event_invoice_type").prop('disabled', true);
+});
+
 $('#event_invoice_type').on('change', function() {
 
     var isSchoolAdmin = +"{{$AppUI->isSchoolAdmin()}}";
     var isTeacherAdmin = +"{{$AppUI->isTeacherAdmin()}}";
+    var isTeacherSchoolAdmin = +"{{$AppUI->isTeacherSchoolAdmin()}}";
     var isTeacher = +"{{$AppUI->isTeacher()}}";
     var event_invoice_type = "";
+    var teacher =  $("#teacher_select option:selected").val();
+
 
     @if($AppUI->isSchoolAdmin())
     event_invoice_type = $("#event_invoice_type option:selected").val();
@@ -4735,12 +5072,84 @@ $('#event_invoice_type').on('change', function() {
     event_invoice_type = $("#event_invoice_type").val();
     @endif
 
-    if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
-        $("#price_per_student").show();
-    }else{
-        $("#price_per_student").hide();
+    if(event_invoice_type !== "") {
+
+        if(isSchoolAdmin || isTeacherSchoolAdmin) {
+            getCategoryByType('{{ $schoolId }}', event_invoice_type, teacher);
+        }
+
+        if( ((isSchoolAdmin || isTeacherAdmin) && event_invoice_type == 'S') || (isTeacher &&  event_invoice_type == 'T') ){
+            $("#price_per_student").show();
+        }else{
+            $("#price_per_student").hide();
+        }
+
+    } else {
+            var resultHtml ="";
+            resultHtml+='<option value="">Select Category</option>';
+            $('#category_select').html(resultHtml);
+            $('#category_select').change();
     }
+
 });
+
+
+function getCategoryByType(school_id=null, type=null, teacher=null) {
+
+if (school_id !=null) {
+    var menuHtml='';
+    var data = 'school_id='+school_id+'&type='+type+'&teacher='+teacher+'';
+    $('#category_select').html('');
+
+    $.ajax({
+        url: BASE_URL + '/get_event_category_by_type',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        //async: false,
+        beforeSend: function( xhr ) {
+            $("#pageloader").show();
+        },
+        success: function(data) {
+          $("#pageloader").hide();
+            if (data.length >0) {
+                var resultHtml ="";
+                resultHtml+='<option data-s_thr_pay_type="0" data-s_std_pay_type="0" data-t_std_pay_type="0" data-invoice="T" value="0">Select Category</option>';
+                var i='0';
+                $.each(data, function(key,value){
+                    var isAdmin = "{{ $AppUI->isSchoolAdmin() }}";
+                    let textAdmin = "";
+                    if(isAdmin) {
+                        textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
+                    }
+                    resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+                });
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            } else {
+
+                var resultHtml ="";
+                resultHtml+='<option value="">No category found</option>';
+                $('#category_select').html(resultHtml);
+                $('#category_select').change();
+
+            }
+
+        },   //success
+        complete: function( xhr ) {
+          $("#pageloader").hide();
+        },
+        error: function(ts) {
+            // alert(ts.responseText)
+            errorModalCall('Populate Event Type:'+GetAppMessage('error_message_text'));
+        }
+    }); // Ajax
+}
+
+}
+
+
 
 $( document ).ready(function() {
 
@@ -4879,7 +5288,6 @@ function resetStudentList() {
 
     // Parcourir le tableau JSON côté client
     students.forEach(function(student) {
-        console.log(student);
         var studentName = student.full_name;
         var studentButton = $('button.multiselect-option:has(input.form-check-input[value="' + student.student_id + '"])');
         if (studentButton.length > 0) {

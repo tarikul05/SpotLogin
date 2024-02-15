@@ -245,6 +245,7 @@ class SubscriptionController extends Controller
                             'id' => $get_plan->id,
                             'nickname' => $get_plan->nickname,
                             'amount' => $get_plan->unit_amount_decimal / 100,
+                            'currency' => $get_plan->currency,
                             'interval' => $get_plan->recurring->interval,
                             'interval_count' => $get_plan->recurring->interval_count,
                             'metadata' => $get_plan->metadata,
@@ -257,7 +258,7 @@ class SubscriptionController extends Controller
                     }
                 }
             }
-
+            //dd($plans);
             $intent = $request->user()->createSetupIntent();
             return view('pages.subscribers.upgrade', compact('intent','user','is_subscribed', 'trial_ends_date', 'plans', 'subscription'));
         } catch (Exception $e) {
@@ -334,6 +335,8 @@ class SubscriptionController extends Controller
             $plan_id = $request->plan;
             $plan_name = $request->plan_name;
             $quantity = $quantity = $request->filled('quantity') ? $request->input('quantity') : 1;
+            $number_of_coaches = $request->filled('number_of_coaches') ? $request->input('number_of_coaches') : 1;
+
 
             if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
@@ -387,6 +390,11 @@ class SubscriptionController extends Controller
 
             $user->trial_ends_at = null;
             $user->save();
+
+            if ($user->isSchoolAdmin()) {
+                $school->number_of_coaches = $number_of_coaches;
+                $school->save();
+            }
 
             //return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
             return redirect()->route('mySubscription.congratulations');

@@ -1,20 +1,20 @@
 
 
 //Display more prices
-$(document).on('click','#add_new_price',function(){
+$(document).on('click','.see_more_prices',function(){
     $('.hide-custom-price').slideToggle('slow');
-    $('#add_new_price').hide();
-    $('#hide_new_price').show();
+    $('.see_more_prices').slideToggle();
+    $('.see_less_prices').slideToggle();
     $('html, body').animate({
     scrollTop: $(document).height()
     }, 100);
 });
 
 //Hide more prices
-$(document).on('click','#hide_new_price',function(){
+$(document).on('click','.see_less_prices',function(){
     $('.hide-custom-price').slideToggle('slow');
-    $('#add_new_price').show();
-    $('#hide_new_price').hide();
+    $('.see_more_prices').slideToggle();
+    $('.see_less_prices').slideToggle();
     $('html, body').animate({
     scrollTop: $(document).height()
     }, 100);

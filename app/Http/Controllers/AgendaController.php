@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use App\Models\SchoolTeacher;
 use App\Models\SchoolStudent;
 use App\Models\Event;
+use App\Models\User;
 use App\Models\CalendarSetting;
 use App\Models\EventDetails;
 use App\Models\ParentStudent;
@@ -104,6 +105,14 @@ class AgendaController extends Controller
         $teachers = Teacher::orderBy('id')->get();
 
         $eventCategories = EventCategory::active()->where('school_id', $schoolId)->orderBy('id')->get();
+
+        //if($user->isSuperAdmin()) {
+            $eventCategory = new EventCategory();
+            $eventCategory->id = 0; // Définir l'ID souhaité
+            $eventCategory->title = "Temp"; // Définir le titre souhaité
+            $eventCategory->school_id = $schoolId; // Assurez-vous de définir l'ID de l'école appropriée
+            $eventCategories->push($eventCategory);
+        //}
 
 
         $event_types_all = config('global.event_type');
@@ -644,11 +653,11 @@ class AgendaController extends Controller
             $eventCategory = EventCategory::find($fetch->event_category);
             if(empty($eventCategory)) {
                 $e['event_category'] = '(deleted)';
-                $e['event_category_name'] = '(deleted)';
+                $e['event_category_name'] = 'Temp';
                 $e['event_category_type'] = '(deleted)';
 
                 $eventCategory = new EventCategory;
-                $eventCategory->title = '(deleted)';
+                $eventCategory->title = 'Temp';
                 $eventCategory->bg_color_agenda = '#AAAAAA';
                 $eventCategory->invoiced_type = 'T';
 
@@ -657,7 +666,7 @@ class AgendaController extends Controller
             if (!empty($eventCategory)) {
                 $e['event_category'] = $fetch->event_category;
                 $e['event_category_name'] = trim($eventCategory->title);
-                    if (!$user->isTeacherSchoolAdmin()) {
+                    if (!$user->isTeacherSchoolAdmin() && !$user->isSchoolAdmin()) {
                         $e['backgroundColor'] = trim($eventCategory->bg_color_agenda);
                     }
                 $e['event_category_type'] = ($eventCategory->invoiced_type == 'S') ? 'School ' : 'Teacher';
@@ -695,6 +704,7 @@ class AgendaController extends Controller
             $student_name ='';
             $first_student_name ='';
             $i=0;
+            $studentListOfLessonOrEvent = [];
             foreach($eventDetailsStudentId as $std){
                 // $student = Student::find($std['student_id']);
                 $schoolStudent = $schoolTeacher = SchoolStudent::where('student_id',$std['student_id'])->where('school_id',$fetch->school_id)->first();
@@ -711,6 +721,7 @@ class AgendaController extends Controller
                     }
                     // $student_name .= $student->firstname;
                     $student_name .= $theStudent->firstname . ' ' . $theStudent->lastname;
+                    $studentListOfLessonOrEvent[] = $theStudent->firstname . ' ' . $theStudent->lastname;
                     $i++;
                 } else {
                     if ($i!=0) {
@@ -805,13 +816,30 @@ class AgendaController extends Controller
                     $e['title']= $e['title'].' ('.$student_name. ')';
                 }
                 if($fetch->event_type != 100) {
-                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
+
+
+                    $student_name = implode(', ', $studentListOfLessonOrEvent);
+
+                    if ($fetch->no_of_students === 1) {
+                        $student_html = $student_name;
+                    } else {
+                        $student_html = '<div class="dropdown">' .
+                                    '<span class="student-name dropdown-toggle" data-toggle="dropdown" style="cursor:pointer">' . reset($studentListOfLessonOrEvent) . ' (' . $fetch->no_of_students . ') <i class="fa fa-caret-down"></i></span>' .
+                                        '<ul class="dropdown-menu" style="padding:5px; font-size:13px; width:150px;">';
+                        foreach ($studentListOfLessonOrEvent as $student) {
+                            $student_html .= "<li><i class='fa fa-regular fa-user'></i> {$student}</li>";
+                        }
+                        $student_html .= '</ul>' .
+                                        '</div>';
+                    }
+
+                    $e['title_for_modal'] = '<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">' . $student_html . '</td></tr>' .
+                    '<tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">' . $e['teacher_name'] . '</td></tr>' .
+                    '<tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">' . $fetch->duration_minutes . ' Mn.</td></tr>';
+                    //$e['title_for_modal']='<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$fetch->no_of_students . ' '.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">'.$fetch->duration_minutes . ' Mn.</td></tr>';
                 } else {
-                    $e['title_for_modal']='<tr><td width="130"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
+                    $e['title_for_modal']='<tr><td width="130" class="vertical-align"><i class="fa fa-users"></i> Students :</td><td class="light-blue-txt gilroy-bold">'.$student_name.'</td></tr><tr><td><i class="fa fa-user"></i> Teacher :</td><td class="light-blue-txt gilroy-bold">'.$e['teacher_name'].'</td></tr><tr><td><i class="fa fa-arrow-right"></i> Duration:</td><td class="light-blue-txt gilroy-bold">Entire Day(s)</td></tr>';
                 }
-
-
-
 
 
                 $eventDetailsStudentId = EventDetails::active()->where('event_id', $fetch->id)->get()->pluck('student_id')->join(',');
@@ -874,6 +902,20 @@ class AgendaController extends Controller
 
             }
 
+
+
+            //Alert message for No Category Lesson
+            if($fetch->event_type == 10){
+                if($e['event_category_name'] === "Temp") {
+                    if (!$user->isStudent()) {
+                        if ($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin())  {
+                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-triangle-exclamation text-white" style="color:orange;"></i> No category</span>';
+                        } else {
+                            $e['tooltip'] .= '<br><span class="badge bg-warning"><i class="fa-solid fa-triangle-exclamation text-white" style="color:orange;"></i> Select a category</span>';
+                        }
+                    }
+                }
+            }
 
 
 
@@ -953,8 +995,10 @@ class AgendaController extends Controller
             $e['event_mode'] = $fetch->event_mode;
 
             $now = Carbon::now($fetch->school->timezone);
-            if ($now > $fetch->date_start) {
-                $e['can_lock'] = 'Y';
+            if ($now > $fetch->date_start && $fetch->event_category !== 0) {
+            if($fetch->event_invoice_type == 'T' && $fetch->created_by !== Auth::user()->id){
+
+            } else { $e['can_lock'] = 'Y'; }
             } else{
                 $e['can_lock'] = 'N';
             }
@@ -1191,14 +1235,32 @@ class AgendaController extends Controller
         $user = Auth::user();
         $schoolId = $data['school_id'];
 
-        if ($user->isTeacherMediumMinimum()) {
-            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->get();
+        if (!$user->isSchoolAdmin() && !$user->isTeacherSchoolAdmin()) {
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
         }else{
-            $eventCat = EventCategory::active()->where('school_id', $schoolId)->get();
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
+        }
+
+        return $eventCategory = json_encode($eventCat);
+
+    }
+
+
+    public function getEventCategoryByType(Request $request) {
+        $data = $request->all();
+        $type = $data['type'];
+        $teacher = $data['teacher'];
+        $user = Auth::user();
+        $schoolId = $data['school_id'];
+        $teacherDetail = User::where('person_id',$teacher)->first();
+
+        if ($type == 'T') {
+            $eventCat = EventCategory::TeacherInvoiced()->where('school_id', $schoolId)->where('created_by', $teacherDetail->id)->get();
+        }else{
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', $type)->where('created_by', $user->id)->get();
         }
 
         return $eventCategory =json_encode($eventCat);
-
     }
 
 
@@ -1286,7 +1348,34 @@ class AgendaController extends Controller
      */
     public function deleteMultipleEvent(Request $request, Event $event)
     {
+
         $result = array(
+            'status' => 'failed',
+            'message' => __('Failed to delete'),
+        );
+
+        try {
+            $dataParam = $request->all();
+            $eventIds = explode(',', $dataParam['p_event_school_id']);
+
+            $deletedCount = $event->whereIn('id', $eventIds)->delete();
+
+            if ($deletedCount > 0) {
+                $result = array(
+                    'status' => 'success',
+                    'message' => __('Confirmed'),
+                );
+            }
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+
+
+        /*$result = array(
             'status' => 'failed',
             'message' => __('failed to delete'),
         );
@@ -1325,8 +1414,9 @@ class AgendaController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
+*/
     }
+
      /**
      *  AJAX delete event
      *
@@ -1370,7 +1460,41 @@ class AgendaController extends Controller
      */
     public function validateMultipleEvent(Request $request, Event $event)
     {
+
         $result = array(
+            'status' => 'failed',
+            'message' => __('Failed to validate'),
+        );
+
+        try {
+            $data = $request->all();
+            $eventIds = explode(',', $data['p_event_school_id']);
+
+            foreach ($eventIds as $eventId) {
+                $event = Event::find($eventId);
+
+                // Vérifier si l'événement existe et est de type 10
+                if ($event && $event->event_type == 10) {
+                    // Valider l'événement
+                    Event::validate(['event_id' => $eventId]);
+                }
+            }
+
+            // Si la validation réussit pour au moins un événement de type 10, retourner un succès
+            $result = array(
+                'status' => 'success',
+                'message' => __('Confirmed'),
+            );
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            // Retourner un message d'erreur en cas d'erreur interne du serveur
+            $result['message'] = __('Internal server error');
+            return response()->json($result);
+        }
+
+
+        /*$result = array(
             'status' => 'failed',
             'message' => __('failed to validate'),
         );
@@ -1450,7 +1574,7 @@ class AgendaController extends Controller
             $result['message'] = __('Internal server error');
             return response()->json($result);
         }
-
+*/
     }
 
 

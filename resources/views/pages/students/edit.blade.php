@@ -1434,26 +1434,26 @@ $('#save_btn').click(function (e) {
 								if(justOneWeekLabel == 0) {
 
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
-									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
-									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Date') }}</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Time') }}</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Duration') }}</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Category') }}</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Teacher') }}</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Lesson') }}</b></td>';
+									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:12px;"><b>[ LESSON ]</b><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</span></td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Date') }}</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Time') }}</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Duration') }}</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Category') }}</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Teacher') }}</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>{{ __('Lesson') }}</b></td></b>';
 
 
 
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
-										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1">' + '' + '</td></b>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price</b></td></b>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Teacher  price') }}</b></td>';
+											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Teacher  price') }}</b></td></b>';
 										}
-										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Student price') }}</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>{{ __('Student price') }}</b></td></b>';
 									}
 
 
@@ -1461,26 +1461,26 @@ $('#save_btn').click(function (e) {
 								} else {
 
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
-										resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ LESSON ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
-									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td colspan="1"></td>';
-									resultHtml += '<b><td colspan="1"></td>';
-									resultHtml += '<b><td colspan="1"></td>';
-									resultHtml += '<b><td colspan="1"></td>';
-									resultHtml += '<b><td colspan="1"></td>';
-									resultHtml += '<b><td colspan="1"></td>';
+									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:12px;"><b>[ LESSON ]</b><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</span></td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
+									resultHtml += '<b><td colspan="1"></td></b>';
 
 
 
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
-										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td></b>';
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+											resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 										}
-										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 									}
 
 
@@ -1501,6 +1501,8 @@ $('#save_btn').click(function (e) {
 									//resultHtml += "<td>-</td>";
                                     if(value.ready_flag !== 0) {
                                         resultHtml += '<td><i class="fa-solid fa-file-pdf"></i> <span style="font-size:11px;">(invoiced)</span></td>';
+                                    } else {
+                                        resultHtml += "<td>-</td>";
                                     }
                                 }
 
@@ -1509,16 +1511,15 @@ $('#save_btn').click(function (e) {
 
 
 							if (value.ready_flag == 1) {
-								resultHtml += "<td>";
+								resultHtml += "<td style='width:20px!important;'>";
 									resultHtml += "<i class='fa fa-lock'></i> ";
                                     if($(window).width() < 768){
                                         resultHtml += " is locked to validate";
                                     }
 									resultHtml += "</td>";
 							} else {
-								resultHtml += "<td>";
-									resultHtml += "-";
-									resultHtml += "</td>";
+								resultHtml += "<td style='width:20px!important;'>-</td>";
+
 							}
 							//if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
@@ -1586,9 +1587,9 @@ $('#save_btn').click(function (e) {
 
 							if (eventStart.isBefore(now)) {
 								if (value.event_type == 100) {
-									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
+									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-event/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a></td>";
 								} else {
-									resultHtml += "<td style='margin-top:15px; margin:left:5px; vertical-align:middle; text-align:center;'><a id='correct_btn' class='button_lock_and_save' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important;' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a>";
+								    resultHtml += "<td style='vertical-align:middle; text-align:center;'><a id='correct_btn' href='/"+school_id+"/edit-lesson/"+value.event_id+"/?redirect_url="+CURRENT_URL+"' style='max-height:20px!important; width:90px' class='btn btn-xs btn-info'> <i class='fa-regular fa-bell fa-bounce'></i> " + correct_btn_text + "</a></td>";
 								}
 							} else {
 								var timeBetween = timeDifference(eventStartTimeStamp, nowTimeStamp);
@@ -1668,8 +1669,14 @@ $('#save_btn').click(function (e) {
 					resultHtml += '<td style="text-align:right">';
 					resultHtml += '<input type="text" class="form-control numeric" id="extra_1" name="extra_1" style="text-align:right; padding-right: 5px;" value="0" placeholder="">';
 					resultHtml += '</td>';
-					resultHtml += '<td><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
+                    resultHtml += '</tr>';
+
+                    resultHtml += '<tr>';
+					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
+                    resultHtml += '<td style="text-align:right"></td>';
+                    resultHtml += '<td colspan="2"><textarea type="text" class="form-control" id="extra_1_description" name="extra_1_description" placeholder="Description"></textarea></td>';
 					resultHtml += '</tr>';
+
 					resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">{{ __('Discount(%) on Lessons') }}:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
@@ -1690,10 +1697,10 @@ $('#save_btn').click(function (e) {
                     resultHtml += '<tr>';
 					resultHtml += '<td colspan="7" style="text-align:right">Description:</td>';
 					resultHtml += '<td style="text-align:right"></td>';
-					resultHtml += '<td style="text-align:right">';
+					resultHtml += '<td style="text-align:right" colspan="2">';
 					resultHtml += '<textarea type="text" class="form-control" id="lesson_discount_description" name="lesson_discount_description" placeholder="Description"></textarea>';
 					resultHtml += '</td>';
-					resultHtml += '<td></td>';
+					//resultHtml += '<td></td>';
 					resultHtml += '</tr>';
 
 
@@ -1732,23 +1739,23 @@ $('#save_btn').click(function (e) {
 
 									//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 									resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ EVENT ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
-									resultHtml += '<b><td colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Date</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Time</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Duration</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Category</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Teacher</b></td>';
-									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Lesson</b></td>';
+									resultHtml += '<b><td colspan="1">' + '' + '</td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Date</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Time</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Duration</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Category</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Teacher</b></td></b>';
+									resultHtml += '<b><td class="table-col-title" colspan="1"><b>Lesson</b></td></b>';
 
 									//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 									if (result.no_of_teachers == 1){
-										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price/<b></td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td></b>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Price/<b></td></b>';
 									} else {
 										if (!isTeacher) {
-											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Teacher Price</b></td>';
+											resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Teacher Price</b></td></b>';
 										}
-										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Student Price</b></td>';
+										resultHtml += '<b><td class="table-col-title" style="text-align:right" colspan="1"><b>Student Price</b></td></b>';
 									}
 
 
@@ -1757,25 +1764,25 @@ $('#save_btn').click(function (e) {
 
 								//resultHtml+='<b><tr class="course_week_header"><td colspan="10">'+week_caption+' '+value.week_no+'</tr></b>';
 								resultHtml += '<b><tr class="course_week_header table_header_invoice"><td colspan="1"><span style="font-size:11px;">[ EVENT ]</span><br><i class="fa-solid fa-calendar-check"></i> ' + week_caption + ' ' + value.week_no + '</td>';
-								resultHtml += '<b><td colspan="1">' + '' + '</td>';
-								resultHtml += '<b><td colspan="1"></td>';
-								resultHtml += '<b><td colspan="1"></td>';
-								resultHtml += '<b><td colspan="1"></td>';
-								resultHtml += '<b><td colspan="1"></td>';
-								resultHtml += '<b><td colspan="1"></td>';
-								resultHtml += '<b><td colspan="1"></td>';
+								resultHtml += '<b><td colspan="1">' + '' + '</td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
+								resultHtml += '<b><td colspan="1"></td></b>';
 
 
 
 								//resultHtml+='<b><td style="text-align:center" colspan="2">'+value.price_currency+'</td>';
 								if (result.no_of_teachers == 1){
-									resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td>';
-									resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1">' + '' + '</td></b>';
+									resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 								} else {
 									if (!isTeacher) {
-										resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+										resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 									}
-									resultHtml += '<b><td style="text-align:right" colspan="1"></td>';
+									resultHtml += '<b><td style="text-align:right" colspan="1"></td></b>';
 								}
 
 
