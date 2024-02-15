@@ -106,10 +106,12 @@ class TeachersController extends Controller
         if ($user->isSchoolAdmin()) {
             $number_of_coaches = $school->number_of_coaches;
             $teachersCount = $school->teachers()->where('role_type', '!=', 'school_admin')->count();
-
+            if($number_of_coaches > 0 || $teachersCount > 0) {
             if ($teachersCount >= $number_of_coaches) {
                 return redirect()->back()->with('error', __('You have reached the maximum number of teachers.'));
-                // Remplacez 'other.route' par le nom de la route vers laquelle vous souhaitez rediriger l'utilisateur.
+            }
+            } else {
+                $number_of_coaches = 1;
             }
         }
 

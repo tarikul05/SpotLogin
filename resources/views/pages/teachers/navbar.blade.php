@@ -10,7 +10,7 @@
         </button>
 
         <a class="nav-link" style="background-color:#EEE; padding-left:10px;" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">
-            {{ __('Add new teacher') }} ({{ $teachers->where('pivot.role_type', '!=', 'school_admin')->count() }}/{{ $number_of_coaches }})
+            {{ __('Add new teacher') }} ({{ $teachers->where('pivot.role_type', '!=', 'school_admin')->count() }}/{{ $number_of_coaches > 0 ? $number_of_coaches : 1 }})
         </a>
 
     </div>
