@@ -417,10 +417,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-10 offset-md-1 mt-4">
+                                <div class="col-md-10 offset-md-1">
 
                                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                <div class="row show_coach_off hide_on_off">
+                                <div class="row show_coach_off hide_on_off mt-4 mb-4">
                                 <label class="col-lg-3 col-sm-3 text-left" for="availability_select" id="visibility_label_id">{{__('Teacher') }} :</label>
                                 @endif
                                 @if(!$AppUI->isSchoolAdmin() && !$AppUI->isTeacherSchoolAdmin())
@@ -446,7 +446,7 @@
 
 
                                 @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin())
-                                <div class="row event show_coach_off hide_on_off mt-4">
+                                <div class="row event show_coach_off hide_on_off mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="event_invoice_type" id="invoice_cat_type_id">{{__('Category type') }} :</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">
@@ -474,7 +474,7 @@
 
 
 
-                                <div class="lesson hide_on_off row mt-4 mb-4">
+                                <div class="lesson hide_on_off row mb-4">
                                     <label class="col-lg-3 col-sm-3 text-left" for="category_select" id="category_label_id">{{__('Category') }}</label>
                                     <div class="col-sm-9">
                                         <div class="selectdiv">

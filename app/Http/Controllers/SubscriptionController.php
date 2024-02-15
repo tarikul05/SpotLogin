@@ -335,6 +335,8 @@ class SubscriptionController extends Controller
             $plan_id = $request->plan;
             $plan_name = $request->plan_name;
             $quantity = $quantity = $request->filled('quantity') ? $request->input('quantity') : 1;
+            $number_of_coaches = $request->filled('number_of_coaches') ? $request->input('number_of_coaches') : 1;
+
 
             if ($user->subscribed('default')) {
                 return redirect()->route('agenda')->with('success', 'You have already subscribed to ' . $plan_name);
@@ -388,6 +390,11 @@ class SubscriptionController extends Controller
 
             $user->trial_ends_at = null;
             $user->save();
+
+            if ($user->isSchoolAdmin()) {
+                $school->number_of_coaches = $number_of_coaches;
+                $school->save();
+            }
 
             //return redirect()->route('profile.plan')->with('success', 'Congratulations, you have successfully subscribed to our ' . $plan_name);
             return redirect()->route('mySubscription.congratulations');

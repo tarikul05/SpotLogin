@@ -11,8 +11,28 @@
 @endsection
 
 @section('content')
-  <div class="container-fluid body">
-   <table id="example" class="display" style="width:100%">
+  <div class="container">
+
+
+<div class="row justify-content-center pt-1">
+    <div class="col-md-10">
+
+    <h5>{{ __("Teacher\"s List") }}</h5>
+
+    @include('pages.teachers.navbar')
+
+    <div class="tab-content" id="ex1-content">
+
+<div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
+
+    <div class="card" style="border-radius:10px;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <b class="d-none d-sm-inline">{{ __("Teacher\"s List") }}</b>
+            <input name="search_text" type="input" class="form-control search_text_box" id="search_text"  placeholder="Find a teacher">
+        </div>
+        <div class="card-body">
+
+    <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
                 <!--<th>{{ __('#') }}</th>-->
@@ -31,7 +51,7 @@
             @endphp
             <tr>
                 <!--<td>{{ $teacher->id; }}</td>-->
-                <td>
+                <td class="text-center" style="width: 50px; margin: auto;">
                     <?php if (!empty($teacher->profileImage->path_name)): ?>
                         <img src="{{ $teacher->profileImage->path_name }}" class="admin_logo" id="admin_logo"  alt="globe">
                     <?php else: ?>
@@ -91,13 +111,21 @@
                             </form>
 
                         </div>
-                    </div>  
+                    </div>
                 </td>
                 @endif
             </tr>
             @endforeach
         </tbody>
     </table>
+</div></div></div>
+
+<div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
+    @include('pages.teachers.import_export')
+</div>
+
+    </div>
+</div></div>
   </div>
 @endsection
 
@@ -105,9 +133,19 @@
 @section('footer_js')
 <script type="text/javascript">
     $(document).ready( function () {
-        $('#example').DataTable({
-            "responsive": true,
+        var table =  $('#example').DataTable({
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
+            ordering: false,
+            searching: true,
+            paging: true,
+            info: false,
         });
+        $('#search_text').on('keyup change', function () {
+            table.search($(this).val()).draw();
+        });
+
+        $("#example_filter").hide();
+
         @can('teachers-create')
         $("#example_filter").append('<a id="csv_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teacher.export',['school'=> $schoolId]) : route('teacher.export') }}" target="_blank" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Export")}}</a><a href="#" data-bs-toggle="modal" data-bs-target="#importModal" id="csv_btn_import" class="btn btn-theme-success add_teacher_btn"><img src="{{ asset('img/excel_icon.png') }}" width="18" height="auto"/>{{__("Import")}}</a><a class="btn btn-theme-success add_teacher_btn" href="{{ auth()->user()->isSuperAdmin() ? route('admin.teachers.create',['school'=> $schoolId]) : route('teachers.create') }}">Add a professor</a>')
         @endcan
