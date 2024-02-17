@@ -4402,7 +4402,7 @@ $('#add_lesson').on('submit', function(e) {
         if(isAdmin) {
             if( evetCat == undefined || evetCat == '' || evetCat == 0){
                 if(invoice_cat_type_id == 'S'){
-                    var errMssg = '{{ __("Select event category") }}';
+                    var errMssg = '{{ __("Select a category") }}';
                     $('#category_select').addClass('error');
                 }
             }else{
@@ -4410,23 +4410,20 @@ $('#add_lesson').on('submit', function(e) {
             }
         } else {
             if( evetCat == undefined || evetCat == ''){
-            if(agendaSelect === "1")
-                var errMssg = '{{ __("Select event category") }}';
+            if(agendaSelect == "1")
+                var errMssg = '{{ __("Select a category") }}';
                 $('#category_select').addClass('error');
             }else{
                 $('#category_select').removeClass('error');
             }
         }
         //
-
-
-        if(evetLoc == ''){
+        /*if(evetLoc == ''){
             var errMssg = 'Location required';
             $('#location').addClass('error');
         }else{
             $('#location').removeClass('error');
-        }
-
+        }*/
 
         if(isAdmin) {
 
