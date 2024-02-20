@@ -95,20 +95,30 @@ class Parents extends BaseModel
     public function student()
     {
         return $this->hasMany(ParentStudent::class);
-
-
     }
+
 
      /**
      * Get the schools for the teacher.
      */
     public function studentData()
     {
-
         return $this->hasMany(ParentStudent::class)
             ->join('students as u', 'u.id', '=', 'parent_students.student_id')
             ->select(['u.*']);
+    }
 
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'person_id', 'id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'parent_students', 'parent_id', 'student_id')
+                    ->withPivot('relations')
+                    ->withTimestamps();
     }
 
 }

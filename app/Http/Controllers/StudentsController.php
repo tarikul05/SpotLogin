@@ -70,6 +70,31 @@ public function index(Request $request, $schoolId = null)
 
         $studentsList = $school->students;
         $students = [];
+        $families = Parents::where('created_by', $user->id)->get();
+        $studentFamily = [];
+        foreach ($families as $family) {
+            $familyMembers = ParentStudent::where('parent_id', $family->id)->get();
+            $parentMembers = [];
+            foreach ($familyMembers as $member) {
+                $student2 = Student::where('id', $member->student_id)->first();
+                $parentMembers[] = [
+                    'id' => $student2->id,
+                    'firstname' => $student2->firstname,
+                ];
+            }
+            $family->students = $parentMembers;
+
+            if ($family->user) {
+                // La famille a un compte utilisateur associé
+                $family->has_user_account = 1;
+            } else {
+                // La famille n'a pas de compte utilisateur associé
+                $family->has_user_account = 0;
+            }
+        }
+
+       // dd($families);
+
 
         //check for each student if there is a relation with table parent_students where student_id
         foreach ($studentsList as $student) {
@@ -132,7 +157,7 @@ public function index(Request $request, $schoolId = null)
             // print_r($exStudent); exit;
         }
 
-            return view('pages.students.list',compact('students','schoolId', 'countries', 'exStudent','searchEmail' ,'genders', 'levels','provinces','school'));
+            return view('pages.students.list',compact('students','families','schoolId', 'countries', 'exStudent','searchEmail' ,'genders', 'levels','provinces','school'));
     }
 
     /**
@@ -178,7 +203,67 @@ public function index(Request $request, $schoolId = null)
         return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces','school'));
     }
 
+    public function updateFamilyAction(Request $request) {
+
+        $user = Auth::user();
+        $alldata = $request->all();
+        $parent = Parents::find($request->parent_id);
+        $parent->firstname = $request->family_name;
+        $parent->modified_by = $user->id;
+        $parent->email = $request->principal_email_family;
+        $emailTo = null;
+
+        if ($request->filled('principal_email_family')) {
+            if($request->principal_email_family !== "custom"){
+                $parent->email = $request->principal_email_family;
+                $emailTo = $request->principal_email_family;
+            }
+        }
+
+        if($emailTo == null) {
+            if ($request->filled('custom_email')) {
+                $parent->email = $request->custom_email;
+                $emailTo = $request->custom_email;
+            } else {
+                return back()->withInput($request->all())->with('error', __('Please add an email address to update the family'));
+            }
+        }
+        $parent->save();
+
+        $parent->students()->detach();
+        $newStudents = $alldata['students_family'];
+
+        // Ajoute de nouvelles relations parent-étudiant avec les étudiants sélectionnés
+        if (isset($newStudents) && is_array($newStudents)) {
+            foreach ($newStudents as $studentId) {
+                $parent->students()->attach($studentId, ['relations' => 'parent']);
+            }
+        }
+
+        return back()->with('success', "Family updated successfully");
+    }
+
+    public function deleteFamily($parentId) {
+
+        $parent = Parents::find($parentId);
+
+        if (!$parent) {
+            return back()->with('error', "Parent not found.");
+        }
+
+        $students = $parent->students;
+
+        foreach ($students as $student) {
+            $parent->students()->detach($student->id);
+        }
+
+        $parent->delete();
+
+        return back()->with('success', "Family deleted successfully.");
+    }
+
     public function AddFamilyStudent(Request $request, $schoolId = null) {
+        $user = Auth::user();
         // Créer un nouveau parent
         $alldata = $request->all();
         $parent = new Parents();
@@ -203,6 +288,7 @@ public function index(Request $request, $schoolId = null)
         }
 
         $parent->firstname = $request->family_name;
+        $parent->created_by = $user->id;
         $parent->save();
 
         // Récupérer l'ID du parent nouvellement créé
@@ -869,6 +955,61 @@ public function index(Request $request, $schoolId = null)
 
         } catch (\Exception $e) {
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+        }
+    }
+
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    public function familyInvitationGet(Request $request)
+    {
+        $alldata = $request->all();
+        $schoolId = $request->route('school');
+        $familyId = $request->route('family');
+
+        try {
+            $family = Parents::active()->find($familyId);
+            $school = School::active()->find($schoolId);
+            $schoolName = $school->school_name;
+            $schoolEmail = $school->email;
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+
+            if ($family && !empty($family->email)) {
+
+                $data = [];
+                $data['email'] = $family->email;
+                $data['username'] = $family->firstname;
+                $data['school_name'] = $schoolName;
+                $data['admin_email_from'] = $schoolEmail;
+                $data['admin_email_from_name'] = $schoolName;
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $familyId,
+                    'person_type' => 'App\Models\Parents',
+                    'token' => $alldata['_token'],
+                    'token_type' => 'VERIFY_SIGNUP',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('add.verify.email', $data['token']);
+
+                if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                    $msg = __('We sent an activation link to the new family email address.');
+                }  else {
+                    return redirect()->back()->withInput($request->all())->with('error', __('An error occured. Please contact your school for more informations.'));
+                }
+
+                return response()->json(['success' => true, 'message' => $msg]);
+            }else{
+                return response()->json(['success' => false, 'message' => 'Email not found']);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 

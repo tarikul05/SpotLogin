@@ -47,6 +47,10 @@
                 @include('pages.students.create_family')
             </div>
 
+            <div class="tab-pane fade" id="family-list" role="tabpanel" aria-labelledby="family">
+                @include('pages.students.families')
+            </div>
+
         </div>
     </div>
 
@@ -74,8 +78,102 @@
         updateEmailList(option);
     }
   });
+</script>
+
+
+@foreach($families as $family)
+    <script>
+    $('#students_family_{{ $family->id }}').multiselect({
+    maxHeight: 400,
+    buttonWidth: '100%',
+    dropRight: false,
+    enableFiltering: true,
+    includeSelectAllOption: false,
+    includeFilterClearBtn: true,
+    search: true,
+    noneSelected: "{{__("None selected") }}",
+    selectAllText: "{{__("All Students") }}",
+    enableCaseInsensitiveFiltering: true,
+    enableFullValueFiltering: false,
+    onChange:function (option, checked) {
+        updateEmailListFamily(option, '{{ $family->id }}');
+    },
+    onDropdownShow:function (event) {
+    var id = $(event.target).data('family-id');
+    var students = {!! json_encode($students) !!};
+    var families = {!! json_encode($families) !!};
+    var data = students.map(function(student) {
+        var selected = false;
+        families.forEach(function(family) {
+            family.students.forEach(function(familyStudent) {
+                if (familyStudent.id === student.id) {
+                    selected = true;
+                }
+            });
+        });
+        return {
+            label: student.firstname,
+            value: student.id,
+            selected: selected
+        };
+    });
+    $("#students_family_{{ $family->id }}").multiselect('dataprovider', data);
+    },
+    });
+    </script>
+
+@endforeach
+
+
+
+<script>
+    function updateEmailListFamily(option, id) {
+        console.log('alors', id);
+        let selectedEmails = [];
+        var selectedStudentId = $('#students_family_' + id).val();
+        var studentId = option.val();
+        selectedEmails = [];
+
+        @foreach($students as $student)
+            var studentListId = {{ $student->id }};
+            if(selectedStudentId && selectedStudentId.indexOf(studentListId.toString()) !== -1) {
+                var fatherEmail = '{{ $student->father_email }}';
+                var motherEmail = '{{ $student->mother_email }}';
+                if (fatherEmail) {
+                    selectedEmails.push(fatherEmail);
+                }
+                if (motherEmail) {
+                    selectedEmails.push(motherEmail);
+                }
+            }
+        @endforeach
+
+        $('#principal_email_family').empty();
+        selectedEmails.forEach(function (email) {
+            $('#principal_email_family').append($('<option>', { value: email, text: email }));
+        });
+
+        if(selectedEmails.length === 0) {
+            $('#principal_email_family').append($('<option>', { value: '', text: "{{__('Select address')}}" }));
+        }
+        $('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__('Custom address')}}" }));
+    }
+
+
+    $('#principal_email_family').change(function () {
+    var selectedOption = $(this).val();
+
+    if (selectedOption === 'custom') {
+        $('.custom-email-input').show();
+    } else {
+        $('.custom-email-input').hide();
+    }
+});
+
+$('#principal_email_family').append($('<option>', { value: 'custom', text: "{{__('Custom address')}}" }));
 
 </script>
+
 
 
 <script>
@@ -96,7 +194,23 @@
     });
 </script>
 
+<script>
+    $(document).ready(function () {
+        var table = $('#example2').DataTable({
+            dom: '<"top"f>rt<"bottom"lp><"clear">',
+            ordering: false,
+            searching: true,
+            paging: true,
+            info: false,
+        });
 
+        $('#search_text_families').on('keyup change', function () {
+            table.search($(this).val()).draw();
+        });
+
+        $("#example2_filter").hide();
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -287,6 +401,13 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function() {
+    $('#save_btn_family').on('click', function() {
+        $('#pageloader').fadeIn('fast');
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
     $(document).on('click', '.send-password-btn', function(event) {
         event.preventDefault();
         $("#pageloader").fadeIn("fast");
@@ -317,6 +438,65 @@ $(document).ready(function() {
     });
 });
     </script>
+
+
+<script>
+    $(document).ready(function() {
+        $(document).on('click', '.send-invite-btn-family', function(event) {
+            event.preventDefault();
+            $("#pageloader").fadeIn("fast");
+            var schoolId = $(this).attr('data-school');
+            var familyId = $(this).attr('data-family');
+            var email = $(this).attr('data-email');
+
+            if(email === null || email === "") {
+                $("#pageloader").fadeOut("fast");
+                Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "{{ __('Student needs to have an email to send the invitation.') }}",
+                allowOutsideClick: false
+
+                });
+                return false;
+            }
+
+                var redirectUrl = '{{ route('familyInvitationGet', ['school' => ':school', 'family' => ':family']) }}';
+                redirectUrl = redirectUrl.replace(':school', schoolId).replace(':family', familyId);
+
+                // Sending an AJAX request
+                $.ajax({
+                    url: redirectUrl,
+                    method: 'GET',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $("#pageloader").fadeOut("fast");
+                        if (response.success) {
+                        Swal.fire(
+                            'Successfully sended',
+                            response.message,
+                            'success'
+                        )
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            response.message,
+                            'error'
+                        )
+                    }
+                    },
+                    error: function(error) {
+                        $("#pageloader").fadeOut("fast");
+                        alert('Error occurred while sending the invitation. Please try again.');
+                    }
+                });
+        });
+    });
+    </script>
+
+
 <script>
     document.getElementById('select-all').addEventListener('change', function () {
         var checkboxes = document.querySelectorAll('input[name="selected_students[]"]');

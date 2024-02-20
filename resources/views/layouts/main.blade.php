@@ -49,7 +49,7 @@
 <section class="pt-2" id="main-content">
 	@include('elements/flash-message')
     @yield('content')
-    <div id="pageloader">
+    <div id="pageloader" style="display: none;">
       <img src="{{ asset('img/loading.gif') }}" alt="processing..." />
     </div>
 </section>
@@ -63,12 +63,13 @@
     $(document).ready(function() {
 
       let loader = $('#pageloader');
+
       window.addEventListener('load', function() {
         $("#pageloader").fadeOut('fast');
         $("#loaderFilters").fadeOut('fast');
         setTimeout(() => {
           $("#allFilters").fadeIn('fast');
-        }, 500);
+        }, 1000);
       });
 
       setTimeout(() => {

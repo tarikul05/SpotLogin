@@ -34,6 +34,8 @@ class ParentStudent extends BaseModel
     protected $casts = [
         'created_at' => 'date:Y/m/d H:i',
         'updated_at' => 'date:Y/m/d H:i',
+        'modified_at' => 'date:Y/m/d H:i',
+
     ];
 
      /**

@@ -26,8 +26,8 @@
                               </th>
                               <th></th>
                             <th class="d-none d-lg-table-cell">{{ __('Name') }}</th>
-                            <th class="d-none d-lg-table-cell">Status</th>
-                            <th width="110" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('Status') }}</th>
+                            <th width="40" class="text-center d-none d-lg-table-cell">{{ __('Action') }}</th>
 
                         </tr>
                         </thead>
@@ -35,7 +35,7 @@
                             @foreach($students as $student)
                                 <tr class="add_more_level_row mobile_list_student" id="row_{{ $student->id }}">
                                 <td style="width: 10px!important; text-align:center!important;" class="p-2"><input type="checkbox" name="selected_students[]" value="{{ $student->id }}"></td>
-                                    <td class="text-center d-none d-lg-table-cell" style="width:55px; text-align: center;">
+                                    <td class="text-center d-none d-lg-table-cell" style="width:40px; text-align: center;">
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                         <?php if (!empty($student->profileImageStudent->path_name)): ?>
                                         <img src="{{ $student->profileImageStudent->path_name }}" class="img-thumbnail" id="admin_logo"  alt="Sportlogin">
@@ -48,7 +48,6 @@
                                     </td>
                                     <td style="position: relative;">
                                         <!--<a disabled style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; position:absolute; right:0; top:0; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>-->
-
                                         @if(count($student->family) > 0)
                                         <a href="#" data-toggle="modal" data-target="#student_family_{{ $student->id }}">
                                         <i class="fa fa-users" aria-hidden="true" title="{{ $student->firstname }} is a member of a family"></i>
@@ -56,15 +55,19 @@
                                         @endif
                                         <a class="text-reset text-decoration-none" href="{{ auth()->user()->isSuperAdmin() ? route('adminEditStudent',['school'=> $schoolId,'student'=> $student->id]) : route('editStudent',['student' => $student->id]) }}">
                                             <b>{{ $student->full_name; }}</b> @if($student->user)| ID: {{$student->user->username}}@endif<br>
-                                           {{ $student->email; }}
                                         </a>
+                                        {{ $student->email; }}
                                     </td>
                                     <td class="d-none d-lg-table-cell">
-                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:auto; background-color:#EEE;">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a><br>
+                                        @if($student->user)
+                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn badge bg-success">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>
+                                        @else
+                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn badge bg-info">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>
+                                        @endif
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
-
                                     </td>
-                                    <td class="text-center align-middle">
+
+                                    <td class="text-center align-middle" width="40">
 
                                         <!--<div class="btn-group">
                                             <div class="dropdown" id="dropdownActions" style="margin-top:0; padding-top:0;">
@@ -176,11 +179,13 @@
 
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Family members</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-header text-white" style="background-color: #152245;">
+            <h6 class="modal-title page_header_class">
+                <i class="fa fa-users"></i>  {{ __('Family members') }}
+            </h6>
+            <button type="button" data-dismiss="modal" aria-label="Close" id="modalClose" class="btn btn-light close" data-bs-dismiss="modal" style="margin-top:0px; font-size:23px;">
+                <i class="fa-solid fa-circle-xmark fa-lg text-white"></i>
+            </button>
         </div>
         <div class="modal-body">
             @php $item = 1; @endphp
@@ -199,9 +204,7 @@
                 @endif
             @endforeach
         </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-</div>
+
 </div>
 </div>
 </div>

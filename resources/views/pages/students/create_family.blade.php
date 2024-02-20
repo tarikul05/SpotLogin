@@ -13,17 +13,7 @@
                     <label for="name"><b>{{ __('Family name') }}</b></label>
                     <input class="form-control" id="family_name" placeholder="{{ __('Family name') }}" name="family_name" type="text" required>
                 </div>
-                <div class="from-group mt-3">
-                    <label for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Parents email addresses are added to this list when you check students (if parents email adresses are registered)')}}"></i></label>
-                    <select class="form-control" id="principal_email" name="principal_email">
-                       <option>{{ __('Select Email') }}</option>
-                    </select>
-                    <!-- Champ d'entrée pour une adresse personnalisée (initialement caché) -->
-                    <div class="custom-email-input mt-3" style="display: none;">
-                        <label for="custom_email"><b>{{__('Custom address')}}</b></label>
-                        <input class="form-control" id="custom_email" placeholder="{{__('Custom address')}}" name="custom_email" type="email">
-                    </div>
-                </div>
+
                 <div class="from-group mt-3">
                     <label for="principal_name"><b>{{ __('Select all members of the family') }}</b></label>
                     <select class="form-select" multiple id="students" name="students[]" required>
@@ -43,6 +33,19 @@
 
                     @endforeach-->
                 </div>
+
+                <div class="from-group mt-3">
+                    <label for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Parents email addresses are added to this list when you check students (if parents email adresses are registered)')}}"></i></label>
+                    <select class="form-control" id="principal_email" name="principal_email">
+                       <option>{{ __('Select Email') }}</option>
+                    </select>
+                    <!-- Champ d'entrée pour une adresse personnalisée (initialement caché) -->
+                    <div class="custom-email-input mt-3" style="display: none;">
+                        <label for="custom_email"><b>{{__('Custom address')}}</b></label>
+                        <input class="form-control" id="custom_email" placeholder="{{__('Custom address')}}" name="custom_email" type="email">
+                    </div>
+                </div>
+
 
             </div>
         </div>
