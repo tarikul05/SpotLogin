@@ -319,7 +319,7 @@ public function index(Request $request, $schoolId = null)
             'school_id' => $schoolId,
             'person_id' => $parentId,
             'person_type' => 'App\Models\Parents',
-            'token' => $alldata['_token'],
+            'token' => Str::random(40),
             'token_type' => 'VERIFY_SIGNUP',
             'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
         ];
@@ -986,7 +986,7 @@ public function index(Request $request, $schoolId = null)
                     'school_id' => $schoolId,
                     'person_id' => $familyId,
                     'person_type' => 'App\Models\Parents',
-                    'token' => $alldata['_token'],
+                    'token' => Str::random(40),
                     'token_type' => 'VERIFY_SIGNUP',
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
@@ -1054,7 +1054,7 @@ public function index(Request $request, $schoolId = null)
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
                     'person_type' => $type,
-                    'token' => Str::random(10),
+                    'token' => Str::random(40),
                     'token_type' => 'VERIFY_SIGNUP',
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
@@ -1094,7 +1094,7 @@ public function index(Request $request, $schoolId = null)
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
                     'person_type' => $type,
-                    'token' => Str::random(10),
+                    'token' => Str::random(40),
                     'token_type' => 'VERIFY_RESET_PASSWORD',
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
@@ -1408,7 +1408,7 @@ public function index(Request $request, $schoolId = null)
                             'school_id' => $alldata['school_id'],
                             'person_id' => $student->id,
                             'person_type' => 'App\Models\Student',
-                            'token' => Str::random(10),
+                            'token' => Str::random(40),
                             'token_type' => 'VERIFY_SIGNUP',
                             'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                         ];

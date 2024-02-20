@@ -32,7 +32,6 @@
                              @endif
                         </td>
                         <td>
-                            @foreach($families as $family)
                             @if(count($family->students) > 1)
                                 <div class="dropdown">
                                     <span class="student-name dropdown-toggle" data-toggle="dropdown" style="cursor:pointer">
@@ -50,7 +49,6 @@
                                     {{ $family_student['firstname'] }}
                                 @endforeach
                             @endif
-                        @endforeach
                         </td>
                     <td class="text-center" width="40">
                             <div class="dropdown">
@@ -62,10 +60,12 @@
                                         <i class="fa-solid fa-pen-to-square"></i>
                                         {{ __('Edit')}}
                                     </a>
+                                    @if(!$family->has_user_account)
                                     <a href="javascript:void(0)" class="dropdown-item send-invite-btn-family" data-email="{{ $family->email }}" data-school="{{ $schoolId }}" data-family="{{ $family->id }}">
                                         <i class="fa-solid fa-envelope"></i>
                                         {{ __('Re-send invite')}}
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                         </td>
