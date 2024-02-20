@@ -111,7 +111,8 @@ class Parents extends BaseModel
 
     public function user()
     {
-        return $this->hasOne(User::class, 'person_id', 'id');
+        return $this->morphOne(User::class, 'personable','person_type', 'person_id');
+        //return $this->hasOne(User::class, 'person_id', 'id');
     }
 
     public function students()
