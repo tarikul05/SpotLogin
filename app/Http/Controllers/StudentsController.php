@@ -84,16 +84,13 @@ public function index(Request $request, $schoolId = null)
             }
             $family->students = $parentMembers;
 
-            if ($family->user) {
-                // La famille a un compte utilisateur associé
+            $isParentHaveUserAccount = User::where('person_id', $family->id)->where('person_type', 'App\Models\Parents')->first();
+            if ($isParentHaveUserAccount) {
                 $family->has_user_account = 1;
             } else {
-                // La famille n'a pas de compte utilisateur associé
                 $family->has_user_account = 0;
             }
         }
-
-       // dd($families);
 
 
         //check for each student if there is a relation with table parent_students where student_id

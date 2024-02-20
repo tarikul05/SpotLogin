@@ -108,13 +108,6 @@ class Parents extends BaseModel
             ->select(['u.*']);
     }
 
-
-    public function user()
-    {
-        return $this->morphOne(User::class, 'personable','person_type', 'person_id');
-        //return $this->hasOne(User::class, 'person_id', 'id');
-    }
-
     public function students()
     {
         return $this->belongsToMany(Student::class, 'parent_students', 'parent_id', 'student_id')
