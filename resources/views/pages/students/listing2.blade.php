@@ -60,9 +60,9 @@
                                     </td>
                                     <td class="d-none d-lg-table-cell">
                                         @if($student->user)
-                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn badge bg-success">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>
+                                        <span disabled  class="badge bg-success">{{$student->user ?  __('Registered') : __('Not yet registered') }}</span>
                                         @else
-                                        <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn badge bg-info">{{$student->user ?  __('Registered') : __('Not yet registered') }}</a>
+                                        <span disabled class="badge bg-info">{{$student->user ?  __('Registered') : __('Not yet registered') }}</span>
                                         @endif
                                         <a href="javascript:void(0)" disabled data-status="{{ $student->pivot->is_active }}" data-school="{{ $student->pivot->school_id }}" data-student="{{ $student->id }}" class="switch-student-btn" style="border:1px solid #EEE; font-size:12px; margin:0; width:150px;" href="#"><i class="fa-solid fa-retweet"></i> {{ !empty($student->pivot->is_active) ? __('Switch to inactive')  : __('Switch to active') ; }}</a>
                                     </td>

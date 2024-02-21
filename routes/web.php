@@ -435,6 +435,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/update-student', [App\Http\Controllers\StudentsController::class, 'self_edit'])->name('updateStudent');
     Route::post('/update-student', [App\Http\Controllers\StudentsController::class, 'self_update'])->name('updateStudentAction');
 
+    //Edit Family
+    Route::get('/update-family', [App\Http\Controllers\StudentsController::class, 'self_edit_family'])->name('updateFamily');
+    Route::post('/update-family', [App\Http\Controllers\StudentsController::class, 'self_update_family'])->name('updateFamilyAction');
 
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('studentHome');
     Route::post('/add-student-action', [App\Http\Controllers\StudentsController::class, 'AddStudent'])->name('student.createAction');

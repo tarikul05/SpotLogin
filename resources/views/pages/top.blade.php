@@ -3,23 +3,14 @@
 @section('content')
 <!-- Full Page Image Header with Vertically Centered Content -->
 <header class="masthead">
-  <div class="circle-bg"></div>
-  <div class="container-fluid h-100">
-    <div class="row h-100 align-items-center">
-      <div class="col-12 bloc-title">
+    <div class="circle-bg"></div>
+  <div class="container-fluid h-100 position-relative pt-5">
+    <img src="{{ asset('img/preview-video.png') }}" style="left:20px; width:250px; border-radius:10px; margin-bottom:20px; opacity:.7;" class="preview-video">
         <h1 class="mb-0 gilroy-bold text-white"><!--<img src="{{ asset('img/christmas.png') }}">-->Sportlogin</h1>
         <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
-        <!-- <h4 class="gilroy-bold text-white">Finally an app that makes the coaches life easier</h4>
-                <p class="gilroy-normal text-white">Simplify your daily organization</p> -->
         <div class="masthead-btn-area" style="display: none;">
-          <a href="https://apps.apple.com/us/app/sportlogin/id6443801938" class="head-btn">
-            <img src="{{ asset('img/app-store.svg') }}" width="148">
-          </a>
-          <a href="https://play.google.com/store/apps/details?id=com.sportlogin.app" class="head-btn">
-            <img src="{{ asset('img/play-store.svg') }}" width="148">
-          </a>
-        </div>
-      </div>
+          <a href="https://apps.apple.com/us/app/sportlogin/id6443801938" class="head-btn"><img src="{{ asset('img/app-store.svg') }}" width="148"></a>
+          <a href="https://play.google.com/store/apps/details?id=com.sportlogin.app" class="head-btn"><img src="{{ asset('img/play-store.svg') }}" width="148"></a>
     </div>
   </div>
   <div class="phone-bg mx-auto text-right"></div>
@@ -75,8 +66,8 @@
       <div class="col-lg-6 col-md-12 order-1 order-lg-2 position-relative">
         <div class="bg-light text-center" style="margin-bottom:0px; padding-bottom:0px;">
           <h1 class="mb-0 gilroy-bold text-white text-center position-absolute" style="font-size:20px; background-color:#000; border-radius:13px; margin:10px; opacity:.5; padding:3px; padding-right:15px;" id="title_video"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" width="40">Sportlogin demo</h1>
-          <video controls width="100%" style="border:none; width:100%; padding:0 margin:0; margin-bottom:0px; padding-bottom:0px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
-        <source style="width:100%;" src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
+          <video id="video-section" controls width="100%" style="border:none; width:100%; padding:0; margin:0; margin-bottom:0px; padding-bottom:0px;" poster="img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png" preload="auto">
+            <source style="width:100%;" src="{{ asset('videos/sportlogin.mp4') }}" type="video/mp4" />
           </video>
         </div>
       </div>
@@ -279,6 +270,14 @@
         const titlevideo = document.getElementById("title_video");
         titlevideo.style.display = "none";
     };
+
+    const preview = document.querySelector(".preview-video");
+    preview.addEventListener("click", playPauseMedia);
+    function playPauseMedia() {
+        document.getElementById("video-section").scrollIntoView({block: "nearest", inline: "start", behavior: "smooth"});
+        const media = document.querySelector("video");
+        media.play();
+    }
 
 </script>
 @endsection

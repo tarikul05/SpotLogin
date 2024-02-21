@@ -322,7 +322,7 @@
                                     }
                                 } else {
                                     if($event_key == 10){
-                                     echo 'Group of ' . $item->no_of_students . ' students';
+                                    //echo 'Group of ' . $item->no_of_students . ' students';
                                     }
                                 } ?>
                             @endif

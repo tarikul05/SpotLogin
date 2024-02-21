@@ -1447,6 +1447,174 @@ public function index(Request $request, $schoolId = null)
         }
     }
 
+
+
+     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
+    public function self_edit_family(Request $request)
+    {
+        $user = Auth::user();
+
+        $student = Parents::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+        $schoolName = $user->selectedSchoolName();
+        $school = School::active()->find($schoolId);
+
+        $provinces = Province::active()->get()->toArray();
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+
+
+        $relationalData = $student;
+        $relationalData['school_id'] = $schoolId;
+        $relationalData['nickname'] = $user->username;
+
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'student'],
+            ['language', $lanCode]
+        ])->first();
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        }
+        $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
+        $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
+        $genders = config('global.gender');
+
+        // dd($student);
+        return view('pages.parents.self_edit')->with(compact('levels',
+        'emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','schoolName','provinces','school'));
+    }
+
+
+
+    public function self_update_family(Request $request, Student $student)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $student = Parents::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+
+        DB::beginTransaction();
+        try{
+
+            $studentData = [
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'country_code' => $alldata['country_code'],
+                    'province_id' => isset($alldata['province_id']) ? $alldata['province_id'] : null,
+                    'billing_street' => $alldata['billing_street'],
+                    'billing_street_number' => $alldata['billing_street_number'],
+                    'billing_zip_code' => $alldata['billing_zip_code'],
+                    'billing_place' => $alldata['billing_place'],
+                    'billing_country_code' => $alldata['billing_country_code'],
+                    'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id'] : null,
+                    'phone' => $alldata['father_phone'],
+                    'phone2' => $alldata['mother_phone'],
+                    'email' => $alldata['email'],
+                    'modified_by' => $user->id,
+            ];
+
+            if($request->file('profile_image_file'))
+            {
+                $image = $request->file('profile_image_file');
+                $mime_type = $image->getMimeType();
+                $extension = $image->getClientOriginalExtension();
+                if($image->getSize()>0)
+                {
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$user);
+
+                    if (!empty($path)) {
+                        $fileData = [
+                            'visibility' => 1,
+                            'file_type' =>'image',
+                            'title' => $user->username,
+                            'path_name' =>$path,
+                            'file_name' => $imageNewName,
+                            'extension'=>$extension,
+                            'mime_type'=>$mime_type
+                        ];
+
+                        $attachedImage = AttachedFile::create($fileData);
+                        $studentData['profile_image_id'] = $attachedImage->id;
+
+                    }
+                }
+            }
+
+            /*$exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
+            if (!empty($alldata['email'])) {
+                if ($exist->email != $alldata['email']) {
+                    // notify user by email about new Teacher role
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $user->update($data);
+                        $data['username'] = $data['name'] = $user->username;
+
+                        $verifyUser = [
+                            'school_id' => $alldata['school_id'],
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(40),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email',$data['token']);
+                        if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
+                    }
+                }
+            }*/
+
+            Parents::where('id', $student->id)->update($studentData);
+            /*$schoolStudent = [
+                'student_id' => $student->id,
+                'school_id' => $schoolId,
+                'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                // 'nickname' => $alldata['nickname'],
+                'email' => $alldata['email'],
+                'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
+                'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
+                'licence_usp' => $alldata['licence_usp'],
+                'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
+                'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
+            ];
+
+            SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);*/
+            DB::commit();
+            return back()->withInput($request->all())->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
+        }catch (\Exception $e) {
+            // dd($e);
+            DB::rollBack();
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', $e->getMessage());
+        }
+    }
+
+
+
+
     /**
      * export student school wise
      *

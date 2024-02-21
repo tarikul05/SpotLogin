@@ -1085,9 +1085,9 @@ a#correct_btn {
     border-color: #46b8da;
 }
 .student_save {
-    position: absolute;
+    /*position: absolute;*/
     /* top: 131px; */
-    right: 7%;
+   /* right: 7%;*/
 }
 label.profile_img_area {
     position: relative;

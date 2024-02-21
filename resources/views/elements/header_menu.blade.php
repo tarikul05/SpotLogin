@@ -106,6 +106,10 @@
                         <a href="{{ route('updateStudent') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a>
                     @endif
 
+                    @if($AppUI->isParent())
+                        <a href="{{ route('updateFamily') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-user"></i> <span class="d-none d-sm-block"></span> {{ __('My Account') }}</a>
+                    @endif
+
                     @can('students-list')
                         @if($AppUI['person_type'] != 'SUPER_ADMIN')
                            <a href="{{ route('studentHome') }}" class="nav-item nav-link text-center mr-2"><i class="fa-solid fa-users"></i> <span class="d-none d-sm-block"></span> {{ __('Students') }}</a>
