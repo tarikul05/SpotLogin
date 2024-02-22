@@ -105,11 +105,13 @@
     var data = students.map(function(student) {
         var selected = false;
         families.forEach(function(family) {
-            family.students.forEach(function(familyStudent) {
-                if (familyStudent.id === student.id) {
-                    selected = true;
-                }
-            });
+            if(family.id == '{{ $family->id }}') {
+                family.students.forEach(function(familyStudent) {
+                    if (familyStudent.id === student.id) {
+                        selected = true;
+                    }
+                });
+            }
         });
         return {
             label: student.firstname,
