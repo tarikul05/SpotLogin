@@ -79,7 +79,7 @@ public function index(Request $request, $schoolId = null)
                 $student2 = Student::where('id', $member->student_id)->first();
                 $parentMembers[] = [
                     'id' => $student2->id,
-                    'firstname' => $student2->firstname,
+                    'firstname' => $student2->firstname . ' ' . $student2->lastname,
                 ];
             }
             $family->students = $parentMembers;
@@ -108,7 +108,7 @@ public function index(Request $request, $schoolId = null)
                     $parentMembers = [];
                     foreach ($allOthersMembers as $member) {
                     $student2 = Student::where('id', $member->student_id)->first();
-                    $parentMembers[] = $student2->firstname;
+                    $parentMembers[] = $student2->firstname . ' ' . $student2->lastname;
                     }
                     $parent->members = $parentMembers;
                     $memberFamily[] = $parent;

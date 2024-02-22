@@ -114,7 +114,7 @@
             }
         });
         return {
-            label: student.firstname,
+            label: student.firstname + ' ' + student.lastname,
             value: student.id,
             selected: selected
         };
