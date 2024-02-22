@@ -13,26 +13,33 @@
 @endsection
 
 @section('content')
-<div class="container body">
+<div class="container">
+
+    <div class="row justify-content-center pt-1">
+        <div class="col-md-10">
+
+            <h5>{{__('Contact Form')}}</h5>
+
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <div>
-        <label id="page_header" name="page_header">
-            <i class="fa-solid fa-envelope"></i> {{__('Contact Form')}}<br>
-            <p style="font-size:14px;">@if(!$AppUI->isStudent() && !$AppUI->isParent())
+    <form action="{{ route('contact.form.submit') }}" method="POST">
+        @csrf
+
+
+        <div class="card">
+            <div class="card-header">
+                @if(!$AppUI->isStudent() && !$AppUI->isParent())
                 {{ __('Send a message that your student directly receive by mail') }} :
                 @else
                 {{ __('Send a message that your teacher directly receive by mail') }} :
                 @endif
-            </p>
-        </label>
-    </div>
-    <form action="{{ route('contact.form.submit') }}" method="POST">
-        @csrf
+            </div>
+            <div class="card-body">
+
         <div class="mb-3">
             <label for="subject" class="form-label">{{ __('Subject') }}</label>
             <input type="text" class="form-control" id="subject" name="subject" required>
@@ -71,6 +78,9 @@
         @endif
         @endif
         <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
+            </div>
+        </div>
+        <br>
         <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
     </form>
 </div>

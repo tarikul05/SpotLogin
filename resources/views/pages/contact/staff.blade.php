@@ -1,26 +1,48 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container body">
+<div class="container">
+
+    <div class="row justify-content-center pt-1">
+        <div class="col-md-10">
+
+            <h5>{{__('Help')}} <small style="font-size:18px;"> // {{__('Contact Sportlogin Staff')}}</small></h5>
+
+            <form action="{{ route('contact.form.submit') }}" method="POST">
+                @csrf
+
+            <div class="card">
+                <div class="card-header">
+                    @if(!$AppUI->isStudent())
+                    {{ __('Send a message to the Sportlogins Team') }}
+                    @else
+                    {{ __('Send a message to the Sportlogins Team') }}
+                    @endif
+                </div>
+                <div class="card-body">
+
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <div>
-        <label id="page_header" name="page_header">
-            <i class="fa-solid fa-envelope"></i> {{__('Contact Sportlogin Staff')}}<br>
-            <p style="font-size:14px;">@if(!$AppUI->isStudent())
-                {{ __('Send a message to the Sportlogins Team') }}
-                @else
-                {{ __('Send a message to the Sportlogins Team') }}
-                @endif
-            </p>
-        </label>
+    <div class="mb-3">
+        <div class="form-check">
+        <input class="form-check-input" type="radio" name="language" id="english" value="english" required>
+            <label class="form-check-label" for="english">
+                {{ __('Help in English') }}
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="language" id="french" value="french" required>
+            <label class="form-check-label" for="french">
+                {{ __('Aide en Français') }}
+            </label>
+        </div>
     </div>
-    <form action="{{ route('contact.form.submit') }}" method="POST">
-        @csrf
+
+
         <div class="mb-3">
             <label for="subject" class="form-label">{{ __('Subject') }}</label>
             <select class="form-control" id="subject" name="subject" required>
@@ -29,7 +51,7 @@
                 <option value="probleme_technique">{{ __('Technical problem') }}</option>
                 <option value="bug_report">{{ __('Bug report') }}</option>
                 <option value="amelioration_suggestion">{{ __('Suggestion for improvement') }}</option>
-                <option value="autre">{{ __('Other') }}</option>
+                <option value="autre_sujet">{{ __('Other') }}</option>
             </select>
         </div>
 
@@ -45,7 +67,12 @@
         <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from the student {{ $AppUI->firstname . ' ' . $AppUI->lastname }} of the school #{{ $AppUI->school_id }}">
         @endif
         <input type="hidden" id="person_id" name="person_id" value="{{ $AppUI->person_id}}">
-        <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
-    </form>
+
+
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">{{ __('Send') }}</button>
+        </form>
 </div>
 @endsection

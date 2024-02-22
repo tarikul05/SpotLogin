@@ -68,7 +68,12 @@ class ContactFormController extends Controller
         if($emailTo !== "staff") {
             $contactForm->email_destinataire = $emailToConcatenated;
         } else {
-            $contactForm->email_destinataire = config('services.mail.from_address');
+            $language = $request->input('language');
+            if($language == "english") {
+                $contactForm->email_destinataire = config('services.mail.from_address_us');
+            } else {
+                $contactForm->email_destinataire = config('services.mail.from_address');
+            }
         }
         $contactForm->id_expediteur = $authUser->id;
         $contactForm->id_destinataire = $person_id;
@@ -80,7 +85,7 @@ class ContactFormController extends Controller
                 Mail::send(new ContactFormMailable($subject, $recipient, $headerMessage, $messageBody));
             }
         } else {
-            Mail::send(new ContactFormMailable($subject, config('services.mail.from_address'), $headerMessage, $messageBody));
+            Mail::send(new ContactFormMailable($subject, $contactForm->email_destinataire, $headerMessage, $messageBody));
         }
 
         if($data['emailTo'] === "staff") {

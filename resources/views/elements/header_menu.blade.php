@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top" style="padding-left:1%!important; padding-right:4.5%!important; width:100%!important; margin:0 auto!important;">
         <!--<div class="snowflakes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>-->
         <div class="container-fluid paddingLogo">
             <div class="position-relative d-none d-sm-block pt-1 pl-1">
@@ -148,13 +148,21 @@
                             @endif
                         @else
                             <a href="{{ $urlInvoice }}" class="dropdown-item">{{ __('My Invoice') }}</a>
-                        @endcan
+                        @endif
                         </div>
                     </div>
 
+                    @if(!$AppUI->isParent() && !$AppUI->isStudent() && $AppUI['person_type'] != 'SUPER_ADMIN')
+                        <div class="custom-items d-flex align-items-center">
+                            <a href="/contact-staff" class="d-none d-sm-block nav-item nav-link text-center nav-link-item-custom mr-1"><i class="fa-solid fa-question"></i> <span class="d-none d-sm-block">{{ __('Help') }}</span></a>
+                            <a class="d-none d-sm-block nav-item nav-link text-center nav-link-item-custom mr-1" href="/faqs-tutos"><i class="fa-regular fa-file-video"></i> <span class="d-none d-sm-block">{{ __('Tutorial') }}</span></a>
+                        </div>
+                    @endif
+
+
                     @if($AppUI['person_type'] != 'SUPER_ADMIN')
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                            <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('F.A.Q / Tutos') }}</a>
+                            <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/faqs-tutos"><i class="fa-solid fa-circle-question"></i> {{ __('Tutorial') }}</a>
                         @endif
                         <a class="d-block d-sm-none nav-item nav-link text-center mr-2" href="/contact-form"><i class="fa-solid fa-envelope"></i> {{ $AppUI->isStudent() || $AppUI->isParent() ? __('Contact teacher') : __('Contact students') }}</a>
                         @if(!$AppUI->isStudent() && !$AppUI->isParent())
@@ -252,8 +260,8 @@
                             <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical fa-lg"></i></a>
                             <div class="dropdown-menu header">
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
-                               <a class="dropdown-item" href="/admin/email-template">
-                                    Email Template
+                                <a class="dropdown-item" href="/admin/email-template">
+                                    Email Templates
                                 </a>
                                 @endif
                                 <!--<a class="dropdown-item" href="/admin/update_core_dataset_options">
@@ -265,15 +273,15 @@
                                     @endcan
                                 @endif
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
-                                    <a class="dropdown-item" href="/admin/faqs">{{ __('F.A.Q / Tutos') }}</a>
+                                    <a class="dropdown-item" href="/admin/faqs">{{ __('Tutorial') }}</a>
                                 @endif
                                 @if($AppUI['person_type'] != 'SUPER_ADMIN')
-                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
-                                        <a class="dropdown-item" href="/faqs-tutos">{{ __('F.A.Q / Tutos') }}</a>
-                                    @endif
                                     <a class="dropdown-item" href="/contact-form">{{ $AppUI->isStudent() || $AppUI->isParent() ? __('Contact teacher') : __('Contact students') }}</a>
                                     @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                         <a class="dropdown-item" href="/contact-staff">{{ __('Contact support') }}</a>
+                                    @endif
+                                    @if(!$AppUI->isStudent() && !$AppUI->isParent())
+                                        <a class="dropdown-item" href="/faqs-tutos">{{ __('Tutorial') }}</a>
                                     @endif
                                 @endif
                                 @can('terms-condition-list')
