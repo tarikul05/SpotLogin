@@ -212,7 +212,7 @@
                     <?php if (!empty($AppUI['id'])): ?>
                     <div class="d-flex align-items-center">
 
-                            <div style="position: relative; width:58px; font-size:10px; display:inline;">
+                            <div style="position: relative; width:58px; font-size:10px; display:inline;" class="custom-dropdown-toggle">
                                 @if(!$AppUI->isStudent() && !$AppUI->isParent())
                                     @if( $is_subscribed )
                                     @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
@@ -237,7 +237,7 @@
                             </div>
 
 
-                            <span class="admin_name" style="padding-left:2px; font-size:15px;"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
+                            <span class="admin_name custom-dropdown-toggle" style="padding-left:2px; font-size:15px;"><?php echo !empty($AppUI['firstname']) ? $AppUI['firstname'] . ' ' . $AppUI['lastname'] : $AppUI['nickname'];?>
                                 @if( $is_subscribed )
                                 @if($plan->stripe_status == 'active' || $plan->stripe_status == 'trialing')
                                     <span class="badge bg-success d-sm-none">premium</span>
@@ -257,8 +257,8 @@
 
 
                         <div class="dropdown">
-                            <a href="#" class="dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical fa-lg"></i></a>
-                            <div class="dropdown-menu header">
+                            <a href="#" id="custom-dropdown-toggle" class="dropdown-toggle custom-dropdown-toggle text-white" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical fa-lg"></i></a>
+                            <div class="dropdown-menu header" style="margin-top:22px!important;">
                                 @if($AppUI['person_type'] == 'SUPER_ADMIN')
                                 <a class="dropdown-item" href="/admin/email-template">
                                     Email Templates
@@ -309,3 +309,11 @@
         </div>
     </nav>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $('.custom-dropdown-toggle').on('mouseenter', function() {
+            $("#custom-dropdown-toggle").dropdown('toggle');
+        });
+    });
+</script>

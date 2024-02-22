@@ -1814,35 +1814,40 @@ label#currency_alert_text {
     }
   }
 
+  .paginate_button {
+    padding:5px!important;
+    height: 29px!important;
+    line-height: normal!important;
+  }
+
   .paginate_button .current {
     border-radius:20px!important;
   }
 
   .current {
-    border-radius:20px!important;
+    border-radius:50px!important;
     color:#152245!important;
     border:1px solid #152245!important;
   }
 
-  select {
+  .dataTables_wrapper select {
     border-radius:20px!important;
   }
 
   .dataTables_wrapper .dataTables_paginate .paginate_button {
     color:#152245!important;
-    border-radius:20px!important;
+    border-radius:10px!important;
   }
   .dataTables_wrapper .dataTables_paginate .paginate_button {
-    background-color:#EEE!important;
     color:#152245!important;
     border-radius:20px!important;
   }
   .dataTables_wrapper .dataTables_paginate .paginate_button .current,.next,.previous {
-    border:1px solid #152245!important;
-    color:#152245!important;
+    border:1px solid #EEE!important;
+    color:#AAA!important;
     opacity:.7!important;
     border-radius:20px!important;
   }
   .dataTables_length {
-    margin-top:10px!important;
+    margin-top:7px!important;
   }
