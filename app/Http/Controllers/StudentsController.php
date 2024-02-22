@@ -70,6 +70,28 @@ public function index(Request $request, $schoolId = null)
 
         $studentsList = $school->students;
         $students = [];
+        $families = Parents::where('created_by', $user->id)->get();
+        $studentFamily = [];
+        foreach ($families as $family) {
+            $familyMembers = ParentStudent::where('parent_id', $family->id)->get();
+            $parentMembers = [];
+            foreach ($familyMembers as $member) {
+                $student2 = Student::where('id', $member->student_id)->first();
+                $parentMembers[] = [
+                    'id' => $student2->id,
+                    'firstname' => $student2->firstname,
+                ];
+            }
+            $family->students = $parentMembers;
+
+            $isParentHaveUserAccount = User::where('person_id', $family->id)->where('person_type', 'App\Models\Parents')->first();
+            if ($isParentHaveUserAccount) {
+                $family->has_user_account = 1;
+            } else {
+                $family->has_user_account = 0;
+            }
+        }
+
 
         //check for each student if there is a relation with table parent_students where student_id
         foreach ($studentsList as $student) {
@@ -132,7 +154,7 @@ public function index(Request $request, $schoolId = null)
             // print_r($exStudent); exit;
         }
 
-            return view('pages.students.list',compact('students','schoolId', 'countries', 'exStudent','searchEmail' ,'genders', 'levels','provinces','school'));
+            return view('pages.students.list',compact('students','families','schoolId', 'countries', 'exStudent','searchEmail' ,'genders', 'levels','provinces','school'));
     }
 
     /**
@@ -178,7 +200,67 @@ public function index(Request $request, $schoolId = null)
         return view('pages.students.add')->with(compact('countries','genders','exUser','exStudent','searchEmail','schoolId','levels','provinces','school'));
     }
 
+    public function updateFamilyAction(Request $request) {
+
+        $user = Auth::user();
+        $alldata = $request->all();
+        $parent = Parents::find($request->parent_id);
+        $parent->firstname = $request->family_name;
+        $parent->modified_by = $user->id;
+        $parent->email = $request->principal_email_family;
+        $emailTo = null;
+
+        if ($request->filled('principal_email_family')) {
+            if($request->principal_email_family !== "custom"){
+                $parent->email = $request->principal_email_family;
+                $emailTo = $request->principal_email_family;
+            }
+        }
+
+        if($emailTo == null) {
+            if ($request->filled('custom_email')) {
+                $parent->email = $request->custom_email;
+                $emailTo = $request->custom_email;
+            } else {
+                return back()->withInput($request->all())->with('error', __('Please add an email address to update the family'));
+            }
+        }
+        $parent->save();
+
+        $parent->students()->detach();
+        $newStudents = $alldata['students_family'];
+
+        // Ajoute de nouvelles relations parent-étudiant avec les étudiants sélectionnés
+        if (isset($newStudents) && is_array($newStudents)) {
+            foreach ($newStudents as $studentId) {
+                $parent->students()->attach($studentId, ['relations' => 'parent']);
+            }
+        }
+
+        return back()->with('success', "Family updated successfully");
+    }
+
+    public function deleteFamily($parentId) {
+
+        $parent = Parents::find($parentId);
+
+        if (!$parent) {
+            return back()->with('error', "Parent not found.");
+        }
+
+        $students = $parent->students;
+
+        foreach ($students as $student) {
+            $parent->students()->detach($student->id);
+        }
+
+        $parent->delete();
+
+        return back()->with('success', "Family deleted successfully.");
+    }
+
     public function AddFamilyStudent(Request $request, $schoolId = null) {
+        $user = Auth::user();
         // Créer un nouveau parent
         $alldata = $request->all();
         $parent = new Parents();
@@ -203,6 +285,7 @@ public function index(Request $request, $schoolId = null)
         }
 
         $parent->firstname = $request->family_name;
+        $parent->created_by = $user->id;
         $parent->save();
 
         // Récupérer l'ID du parent nouvellement créé
@@ -236,7 +319,7 @@ public function index(Request $request, $schoolId = null)
             'school_id' => $schoolId,
             'person_id' => $parentId,
             'person_type' => 'App\Models\Parents',
-            'token' => $alldata['_token'],
+            'token' => Str::random(40),
             'token_type' => 'VERIFY_SIGNUP',
             'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
         ];
@@ -878,6 +961,61 @@ public function index(Request $request, $schoolId = null)
      * @param
      * @return \Illuminate\Http\Response
      */
+    public function familyInvitationGet(Request $request)
+    {
+        $alldata = $request->all();
+        $schoolId = $request->route('school');
+        $familyId = $request->route('family');
+
+        try {
+            $family = Parents::active()->find($familyId);
+            $school = School::active()->find($schoolId);
+            $schoolName = $school->school_name;
+            $schoolEmail = $school->email;
+            //->update(['is_sent_invite'=>$is_sent_invite]);
+
+            if ($family && !empty($family->email)) {
+
+                $data = [];
+                $data['email'] = $family->email;
+                $data['username'] = $family->firstname;
+                $data['school_name'] = $schoolName;
+                $data['admin_email_from'] = $schoolEmail;
+                $data['admin_email_from_name'] = $schoolName;
+                $verifyUser = [
+                    'school_id' => $schoolId,
+                    'person_id' => $familyId,
+                    'person_type' => 'App\Models\Parents',
+                    'token' => Str::random(40),
+                    'token_type' => 'VERIFY_SIGNUP',
+                    'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                ];
+                $verifyUser = VerifyToken::create($verifyUser);
+                $data['token'] = $verifyUser->token;
+                $data['url'] = route('add.verify.email', $data['token']);
+
+                if ($this->emailSend($data,'sign_up_confirmation_email')) {
+                    $msg = __('We sent an activation link to the new family email address.');
+                }  else {
+                    return redirect()->back()->withInput($request->all())->with('error', __('An error occured. Please contact your school for more informations.'));
+                }
+
+                return response()->json(['success' => true, 'message' => $msg]);
+            }else{
+                return response()->json(['success' => false, 'message' => 'Email not found']);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * send invitation.
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
     public function studentPasswordGet(Request $request)
     {
         $schoolId = $request->route('school');
@@ -916,7 +1054,7 @@ public function index(Request $request, $schoolId = null)
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
                     'person_type' => $type,
-                    'token' => Str::random(10),
+                    'token' => Str::random(40),
                     'token_type' => 'VERIFY_SIGNUP',
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
@@ -956,7 +1094,7 @@ public function index(Request $request, $schoolId = null)
                     'school_id' => $schoolId,
                     'person_id' => $person->id,
                     'person_type' => $type,
-                    'token' => Str::random(10),
+                    'token' => Str::random(40),
                     'token_type' => 'VERIFY_RESET_PASSWORD',
                     'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                 ];
@@ -1270,7 +1408,7 @@ public function index(Request $request, $schoolId = null)
                             'school_id' => $alldata['school_id'],
                             'person_id' => $student->id,
                             'person_type' => 'App\Models\Student',
-                            'token' => Str::random(10),
+                            'token' => Str::random(40),
                             'token_type' => 'VERIFY_SIGNUP',
                             'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
                         ];
@@ -1308,6 +1446,174 @@ public function index(Request $request, $schoolId = null)
             return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
         }
     }
+
+
+
+     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // public function edit(Request $request, $schoolId = null, Teacher $teacher)
+    public function self_edit_family(Request $request)
+    {
+        $user = Auth::user();
+
+        $student = Parents::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+        $schoolName = $user->selectedSchoolName();
+        $school = School::active()->find($schoolId);
+
+        $provinces = Province::active()->get()->toArray();
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+
+
+        $relationalData = $student;
+        $relationalData['school_id'] = $schoolId;
+        $relationalData['nickname'] = $user->username;
+
+        $lanCode = 'en';
+        if (Session::has('locale')) {
+            $lanCode = Session::get('locale');
+        }
+        $emailTemplate = EmailTemplate::where([
+            ['template_code', 'student'],
+            ['language', $lanCode]
+        ])->first();
+        if ($emailTemplate) {
+            $http_host=$this->BASE_URL."/";
+            if (!empty($emailTemplate->body_text)) {
+                $emailTemplate->body_text = str_replace("[~~ HOSTNAME ~~]",$http_host,$emailTemplate->body_text);
+                $emailTemplate->body_text = str_replace("[~~HOSTNAME~~]",$http_host,$emailTemplate->body_text);
+            }
+        }
+        $profile_image = !empty($student->profile_image_id) ? AttachedFile::find($student->profile_image_id) : null ;
+        $countries = Country::active()->get();
+        $levels = Level::active()->where('school_id',$schoolId)->get();
+        $genders = config('global.gender');
+
+        // dd($student);
+        return view('pages.parents.self_edit')->with(compact('levels',
+        'emailTemplate','countries','genders','student','relationalData','profile_image','schoolId','schoolName','provinces','school'));
+    }
+
+
+
+    public function self_update_family(Request $request, Student $student)
+    {
+        $user = Auth::user();
+        $alldata = $request->all();
+
+        $student = Parents::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+
+        DB::beginTransaction();
+        try{
+
+            $studentData = [
+                    'lastname' => $alldata['lastname'],
+                    'firstname' => $alldata['firstname'],
+                    'street' => $alldata['street'],
+                    'street_number' => $alldata['street_number'],
+                    'zip_code' => $alldata['zip_code'],
+                    'country_code' => $alldata['country_code'],
+                    'province_id' => isset($alldata['province_id']) ? $alldata['province_id'] : null,
+                    'billing_street' => $alldata['billing_street'],
+                    'billing_street_number' => $alldata['billing_street_number'],
+                    'billing_zip_code' => $alldata['billing_zip_code'],
+                    'billing_place' => $alldata['billing_place'],
+                    'billing_country_code' => $alldata['billing_country_code'],
+                    'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id'] : null,
+                    'phone' => $alldata['father_phone'],
+                    'phone2' => $alldata['mother_phone'],
+                    'email' => $alldata['email'],
+                    'modified_by' => $user->id,
+            ];
+
+            if($request->file('profile_image_file'))
+            {
+                $image = $request->file('profile_image_file');
+                $mime_type = $image->getMimeType();
+                $extension = $image->getClientOriginalExtension();
+                if($image->getSize()>0)
+                {
+                    list($path, $imageNewName) = $this->__processImg($image,'StudentImage',$user);
+
+                    if (!empty($path)) {
+                        $fileData = [
+                            'visibility' => 1,
+                            'file_type' =>'image',
+                            'title' => $user->username,
+                            'path_name' =>$path,
+                            'file_name' => $imageNewName,
+                            'extension'=>$extension,
+                            'mime_type'=>$mime_type
+                        ];
+
+                        $attachedImage = AttachedFile::create($fileData);
+                        $studentData['profile_image_id'] = $attachedImage->id;
+
+                    }
+                }
+            }
+
+            /*$exist = SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$schoolId])->first();
+            if (!empty($alldata['email'])) {
+                if ($exist->email != $alldata['email']) {
+                    // notify user by email about new Teacher role
+                    if (config('global.email_send') == 1) {
+                        $data = [];
+                        $data['email'] = $alldata['email'];
+                        $user->update($data);
+                        $data['username'] = $data['name'] = $user->username;
+
+                        $verifyUser = [
+                            'school_id' => $alldata['school_id'],
+                            'person_id' => $student->id,
+                            'person_type' => 'App\Models\Student',
+                            'token' => Str::random(40),
+                            'token_type' => 'VERIFY_SIGNUP',
+                            'expire_date' => Carbon::now()->addDays(config('global.token_validity'))->format("Y-m-d")
+                        ];
+                        $verifyUser = VerifyToken::create($verifyUser);
+                        $data['token'] = $verifyUser->token;
+                        $data['url'] = route('add.verify.email',$data['token']);
+                        if (!$this->emailSend($data,'sign_up_confirmation_email')) {
+                            return redirect()->back()->withInput($request->all())->with('error', __('Internal server error'));
+                        }
+                    }
+                }
+            }*/
+
+            Parents::where('id', $student->id)->update($studentData);
+            /*$schoolStudent = [
+                'student_id' => $student->id,
+                'school_id' => $schoolId,
+                'has_user_account' => !empty($alldata['has_user_account']) ? $alldata['has_user_account'] : null,
+                // 'nickname' => $alldata['nickname'],
+                'email' => $alldata['email'],
+                'level_date_arp' => isset($alldata['level_date_arp']) && !empty($alldata['level_date_arp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_arp'])) : null ,
+                'licence_arp' => isset($alldata['licence_arp']) && !empty($alldata['licence_arp']) ? $alldata['licence_arp'] : null ,
+                'licence_usp' => $alldata['licence_usp'],
+                'level_skating_usp' => isset($alldata['level_skating_usp']) && !empty($alldata['level_skating_usp']) ? $alldata['level_skating_usp'] : null ,
+                'level_date_usp' => isset($alldata['level_date_usp']) && !empty($alldata['level_date_usp']) ? date('Y-m-d H:i:s',strtotime($alldata['level_date_usp'])) : null ,
+            ];
+
+            SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);*/
+            DB::commit();
+            return back()->withInput($request->all())->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
+        }catch (\Exception $e) {
+            // dd($e);
+            DB::rollBack();
+            //return error message
+            return redirect()->back()->withInput($request->all())->with('error', $e->getMessage());
+        }
+    }
+
+
+
 
     /**
      * export student school wise

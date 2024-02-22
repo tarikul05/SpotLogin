@@ -2,39 +2,79 @@
 
 @section('content')
 <div class="content">
-<div class="container-fluid body pt-3">
- 
-        <header class="panel-heading" style="border: none;">
-            <div class="row panel-row pt-2" style="margin:0;">
-                <div class="col-lg-4 col-12 header-area">
-                        <div class="page_header_class pt-1">
-                            <h1 for="calendar" class="titleCalendar" id="cal_title" style="display: block;">
-                              {{__('FAQs/Tutorials')}}
-                            </h1> 
-                        </div>
-                </div>
-            </div>
-        </header>
-        
-        <div class="row">
+    <div class="container-fluid body pt-3 pb-3">
+
+        <h5> {{__('Tutorials')}}</h5>
+
+        <div class="row mb-2">
+        <div class="col-lg-12 d-flex justify-content-end align-items-end">
+            <a href="#" id="view_list" class="btn btn-primary btn-sm"> <i class="fa-regular fa-rectangle-list"></i> View list</a>
+            <a href="#" style="display: none;" id="view_col" class="btn btn-primary btn-sm"> <i class="fa-solid fa-table-columns"></i> View Col</a>
+        </div>
+        </div>
+
+        <div class="row" id="tutos_col">
             @foreach ($faqs as $faq)
-                <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4">
+                <div class='p-1'>
                     <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $faq->title }}</h5>
-                            <p class="card-text">{{ $faq->description }}</p>
-                            
+                        <div class="card-header p-0">
                             <div class="embed-responsive embed-responsive-16by9">
-                                <!--<iframe class="embed-responsive-item" src="{{ $faq->youtube_link }}" allowfullscreen></iframe>-->
                                 <x-embed url="{{ $faq->youtube_link }}" />
                             </div>
-                            
-                            <a href="{{ route('faqs.tutos.show', $faq) }}" class="btn btn-primary mt-3">View Details</a>
+                        </div>
+                        <div class="card-body" style="height: 150px;">
+                            <h6 class="card-title overflow-ellipsis">{{ $faq->title }}</h6>
+                            <p class="card-text overflow-ellipsis" style="font-size:13px;">{{ $faq->description }}</p>
+                            <!--<a href="{{ route('faqs.tutos.show', $faq) }}" class="btn btn-primary mt-3">View Details</a>-->
                         </div>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
+
+
+        <div class="row" id="tutos_line" style="display:none;">
+            @foreach ($faqs as $faq)
+            <div class="col-md-12 mb-4">
+                <div class="row bg-tertiary">
+                    <div class="col-md-4">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <x-embed url="{{ $faq->youtube_link }}" />
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-2">
+                        <h6 class="card-title">{{ $faq->title }}</h6>
+                        <p style="font-size:13px;">{{ $faq->description }}</p>
+                        <!--<a href="{{ route('faqs.tutos.show', $faq) }}" class="btn btn-primary mt-3">View Details</a>-->
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+
     </div>
 </div>
+@endsection
+
+@section('footer_js')
+
+<script type="text/javascript">
+//hide #tutos_col and display tutos_line when click on view_list
+    $("#view_list").click(function(){
+        $("#tutos_col").hide();
+        $("#tutos_line").show();
+        $("#view_list").hide();
+        $("#view_col").show();
+    });
+
+    $("#view_col").click(function(){
+        $("#tutos_col").show();
+        $("#tutos_line").hide();
+        $("#view_list").show();
+        $("#view_col").hide();
+    });
+</script>
 @endsection

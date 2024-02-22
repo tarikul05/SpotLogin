@@ -135,7 +135,7 @@
 
                                             @if($AppUI->isStudent() || $AppUI->isParent())
                                                 <a style="display:inline-block; min-width: 190px;" href="../{{$schoolId}}/student-off" title="" class="btn btn-sm btn-theme-success m-1 mb-2"><i class="glyphicon glyphicon-plus"></i> {{ __("Add") }}</a>
-                                                <a style="display:inline-block; min-width: 190px;" href="{{ route('student.availabilities') }}" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-calendar"></i> <span id ="btn_validate_events_cap">{{__('Availability')}}</span></a>
+                                                <!--<a style="display:inline-block; min-width: 190px;" href="{{ route('student.availabilities') }}" class="btn btn-sm btn-info m-1 mb-2"><i class="fa-solid fa-calendar"></i> <span id ="btn_validate_events_cap">{{__('Availability')}}</span></a>-->
                                             @endif
 
                                         </div>

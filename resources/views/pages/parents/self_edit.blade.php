@@ -15,22 +15,20 @@
         <div class="row justify-content-center pt-1">
             <div class="col-md-10">
 
-        <h5>Student information</h5>
+                <h5>Family information</h5>
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
-			</div>
-		</nav>
-		<!-- Tabs navs -->
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#tab_1" data-bs-target_val="tab_1" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Student Information') }}</button>
+                        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_2" data-bs-target_val="tab_2" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Contact Information') }}</button>
+                    </div>
+                </nav>
 
-        <div class="card">
-            <div class="card-header">{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</div>
-            <div class="card-body">
+                <div class="card">
+                    <div class="card-header">{{!empty($relationalData->firstname) ? $relationalData->firstname : ''}}</div>
+                    <div class="card-body">
 
-		<!-- Tabs content -->
-		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="POST" action="{{ route('updateStudentAction') }}"  name="add_student" role="form">
+		<form enctype="multipart/form-data" class="form-horizontal" id="add_student" method="POST" action="{{ route('updateFamilyAction') }}"  name="add_student" role="form">
 		<input type="hidden" name="school_id" value="{{ $relationalData->school_id }}">
 		<input type="hidden" id="school_name" name="school_name" value="{{$schoolName}}">
 		<input type="hidden" id="active_tab" name="active_tab" value="">
@@ -46,7 +44,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }} : *</label>
 									<div class="col-sm-7">
-										<input class="form-control" disabled="disabled" id="nickname" maxlength="50" name="nickname" placeholder="Nickname" type="text" value="{{!empty($relationalData->nickname) ? old('nickname', $relationalData->nickname) : old('nickname')}}">
+										<input class="form-control" disabled="disabled" id="nickname" maxlength="50" name="nickname" placeholder="Nickname" type="text" value="{{!empty($relationalData->nickname) ? $relationalData->nickname : old('nickname')}}">
 										@if ($errors->has('nickname'))
 											<span id="" class="error">
 													<strong>{{ $errors->first('nickname') }}.</strong>
@@ -54,18 +52,7 @@
 										@endif
 									</div>
 								</div>
-								<!-- <div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" for="gender_id" id="gender_label_id">{{__('Gender') }} : *</label>
-									<div class="col-sm-7">
-										<div class="selectdiv">
-											<select class="form-control require" id="gender_id" name="gender_id">
-												@foreach($genders as $key => $gender)
-													<option value="{{ $key }}" {{!empty($student->gender_id) ? (old('gender_id', $student->gender_id) == $key ? 'selected' : '') : (old('gender_id') == $key ? 'selected' : '')}}>{{ $gender }}</option>
-												@endforeach
-											</select>
-										</div>
-									</div>
-								</div> -->
+
 								<div class="form-group row">
 									<label class="col-lg-3 col-sm-3 text-left" for="email" id="email_caption">{{__('Email') }} :</label>
 									<div class="col-sm-7">
@@ -100,17 +87,7 @@
 										@endif
 									</div>
 								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left" id="birth_date_label_id">{{__('Birth date') }}:</label>
-									<div class="col-sm-7">
-										<div class="input-group" id="birth_date_div">
-											<input id="birth_date" name="birth_date" type="text" class="form-control" value="{{!empty($student->birth_date) ? date('d/m/Y', strtotime($student->birth_date)) : '' }}">
-											<span class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</span>
-										</div>
-									</div>
-								</div>
+
 								<div class="form-group row" id="profile_image">
 									<label class="col-lg-3 col-sm-3 text-left">{{__('Profile Image') }} : </label>
 									<div class="col-sm-7">
@@ -133,72 +110,6 @@
 
 							</div>
 							<div class="clearfix"></div>
-							<!-- <div class="section_header_class">
-								<label id="address_caption">{{__('Level') }}</label>
-							</div> -->
-							<div class="row">
-								<div class="col-md-6">
-									<!-- <div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="level_id">{{__('Level') }} :</label>
-										<div class="col-sm-7">
-											<div class="selectdiv">
-												<select class="form-control m-bot15" id="level_id" name="level_id">
-													<option value="">Select level</option>
-													@foreach($levels as $key => $level)
-														<option value="{{ $level->id }}"  {{ ($relationalData->level_id == $level->id) ? 'selected' : ''}}>{{ $level->title }}</option>
-													@endforeach
-												</select>
-											</div>
-										</div>
-									</div> -->
-									@if($school->country_code == 'CH')
-									<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level ASP') }}:</label>
-										<div class="col-sm-7">
-											<div class="input-group">
-												<input id="level_date_arp" name="level_date_arp" type="text" class="form-control" value="{{!empty($relationalData->level_date_arp) ? old('level_date_arp', $relationalData->level_date_arp) : old('level_date_arp')}}">
-												<span class="input-group-addon">
-													<i class="fa fa-calendar"></i>
-												</span>
-											</div>
-										</div>
-									</div>
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="licence_arp" id="postal_code_caption">{{__('ARP license') }} :</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="licence_arp" name="licence_arp" type="text" value="{{!empty($relationalData->licence_arp) ? old('licence_arp', $relationalData->licence_arp) : old('licence_arp')}}">
-										</div>
-									</div>
-									@endif
-								</div>
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="licence_usp" id="locality_caption">{{__('License number') }} :</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="licence_usp" name="licence_usp" type="text" value="{{!empty($relationalData->licence_usp) ? old('licence_usp', $relationalData->licence_usp) : old('licence_usp')}}">
-										</div>
-									</div>
-									@if($school->country_code == 'CH')
-									<div class="form-group row">
-										<label class="col-lg-3 col-sm-3 text-left" for="level_skating_usp" id="locality_caption">{{__('USP Level') }} :</label>
-										<div class="col-sm-7">
-											<input class="form-control" id="level_skating_usp" name="level_skating_usp" type="text" value="{{!empty($relationalData->level_skating_usp) ? old('level_skating_usp', $relationalData->level_skating_usp) : old('level_skating_usp')}}">
-										</div>
-									</div>
-									<div class="form-group row">
-									<label class="col-lg-3 col-sm-3 text-left">{{__('Date last level USP') }}:</label>
-										<div class="col-sm-7">
-											<div class="input-group" id="date_last_level_usp_div">
-												<input id="level_date_usp" name="level_date_usp" type="text" class="form-control" value="{{!empty($relationalData->level_date_usp) ? old('level_date_usp', $relationalData->level_date_usp) : old('level_date_usp')}}">
-												<span class="input-group-addon">
-													<i class="fa fa-calendar"></i>
-												</span>
-											</div>
-										</div>
-									</div>
-									@endif
-								</div>
-							</div>
 
 						</div>
 					</fieldset>
@@ -329,15 +240,6 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
-                            <div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="parent_1" >{{__("Parent 1") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-										<input class="form-control" id="parent_1" name="parent_1" value="{{!empty($student->parent_1) ? old('parent_1', $student->parent_1) : old('parent_1')}}" type="text">
-									</div>
-								</div>
-							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" >{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
@@ -356,68 +258,20 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-										<input class="form-control" id="mobile" name="mobile" value="{{!empty($student->mobile) ? old('mobile', $student->mobile) : old('mobile')}}" type="text">
-									</div>
-								</div>
-							</div>
+
 						</div>
-						<div class="col-md-6">
-                            <div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="parent_1" id="parent_2">{{__("Parent 2") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="parent_2" value="1" {{ !empty($student->parent_2) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="parent_2" name="parent_2" value="{{!empty($student->parent_2) ? old('parent_2', $student->parent_2) : old('parent_2')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father's email") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="father_email" name="father_email" value="{{!empty($student->father_email) ? old('father_email', $student->father_email) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother's email") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="mother_email" name="mother_email" value="{{!empty($student->mother_email) ? old('mother_email', $student->mother_email) : old('mother_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="student_email" >{{__("Student's email") }} :</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="student_notify" value="1" {{ !empty($student->student_notify) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="email2" name="email2" value="{{!empty($student->email2) ? old('email2', $student->email2) : $student->email}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									</div>
-								</div>
-							</div>
-						</div>
+
 					</div>
 				</div>
 				</form>
 
-            </div>
-            </div>
-            </div>
-            <br>
-            <button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save">{{ __('Save') }}</button>
-            </div>
+                </div>
+                </div>
+                </div>
+                <br>
+                <button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save">{{ __('Save') }}</button>
+                </div>
 
-
-			</div>
-	</div>
 	<!-- success modal-->
 	<div class="modal modal_parameter" id="modal_add_teacher">
 		<div class="modal-dialog">

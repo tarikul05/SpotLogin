@@ -31,6 +31,7 @@ return [
     ],
     'mail' => [
         'from_address' => env('MAIL_STAFF_ADDRESS'),
+        'from_address_us' => env('MAIL_STAFF_ADDRESS_US'),
     ],
     'stripe' => [
         'model'  => App\User::class,

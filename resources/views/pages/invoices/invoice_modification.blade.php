@@ -100,7 +100,7 @@
                                                         if($item->no_of_students == 1) {
                                                             echo 'Private Lesson';
                                                         } else {
-                                                            echo 'Group of ' . $item->no_of_students . ' students';
+                                                            //echo 'Group of ' . $item->no_of_students . ' students';
                                                         } ?>
                                                         @endif
                                                     </td>
