@@ -20,7 +20,7 @@
 
                                     @if($AppUI->isTeacherAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin() || $AppUI->isTeacherAll())
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" for="is_active" id="visibility_label_id"><b>{{__('Status') }}</b></label>
+                                        <label class="text-left" for="is_active" id="visibility_label_id">{{__('Status') }}</label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa-regular fa-square-check"></i></span>
                                             <select class="form-control" name="is_active" id="is_active">
@@ -32,7 +32,7 @@
                                     @endif
 
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" for="gender_id" id="gender_label_id"><b>{{__('Gender') }}</b></label>
+                                        <label class="text-left" for="gender_id" id="gender_label_id">{{__('Gender') }}</label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa-solid fa-venus-mars"></i></span>
                                                 <select class="form-control require" require id="gender_id" name="gender_id">
@@ -45,7 +45,7 @@
                                     <input type="hidden" id="billing_method" name="billing_method" value="E">
 
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" id="birth_date_label_id"><b>{{__('Birth date') }}</b></label>
+                                        <label class="text-left" id="birth_date_label_id">{{__('Birth date') }}</label>
 
                                             <div class="input-group" id="birth_date_div">
                                                 <span class="input-group-addon">
@@ -60,8 +60,8 @@
                                     <div class="border mt-5 p-2">
                                         <div class="form-group" id="shas_user_account_div">
                                             <div id="shas_user_account_div111" class="text-center">
-                                                <h6 style="font-size:25px;"><small>
-                                                <input id="shas_user_account" name="is_sent_invite" type="checkbox" value="1" style="width:19px;height:19px;">
+                                                <h6 style="font-size:18px;"><small>
+                                            <input id="shas_user_account" name="is_sent_invite" type="checkbox" value="1" style="width:15px;height:15px;">
                                                 <label class="text-left" for="shas_user_account" id="has_user_ac_label_id">{{__('Send account invite') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If you enter an email, the student will receive an email with instructions to connect to his student account.')}}"></i></label>
                                                 </small></h6>
                                             </div>
@@ -75,7 +75,7 @@
                                 <div class="col-md-6 col-xs-12">
 
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" for="nickname" id="nickname_label_id"><b>{{__('Nickname') }}</b></label>
+                                        <label class="text-left" for="nickname" id="nickname_label_id">{{__('Nickname') }}*</label>
                                             <div class="input-group">
                                             <span class="input-group-addon"><i class="fa-solid fa-lock"></i></span>
                                             <input class="form-control require" required="true" id="nickname" maxlength="50" name="nickname" type="text" value="{{old('nickname')}}">
@@ -88,7 +88,7 @@
                                     </div>
 
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" for="lastname" id="family_name_label_id"><b>{{__('Family Name') }}</b></label>
+                                        <label class="text-left" for="lastname" id="family_name_label_id">{{__('Family Name') }}*</label>
                                             <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                                 <input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->lastname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="lastname" name="lastname" type="text" value="{{old('lastname')}}">
@@ -100,7 +100,7 @@
                                             @endif
                                     </div>
                                     <div class="form-group custom-form-group">
-                                        <label class="text-left" for="firstname" id="first_name_label_id"><b>{{__('First Name') }}</b></label>
+                                        <label class="text-left" for="firstname" id="first_name_label_id">{{__('First Name') }}*</label>
                                         <div class="input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                                 <input class="form-control require" required="true" value="{{ $exStudent ? $exStudent->firstname : '' }}" {{ $exStudent ? 'readonly' : '' }} id="firstname" name="firstname" type="text" value="{{old('firstname')}}">
@@ -115,7 +115,7 @@
 
 
                                     <div class="form-group custom-form-group mt-5">
-                                        <label class="text-left" for="email" id="email_caption"><b>{{__('Email') }}</b></label>
+                                        <label class="text-left" for="email" id="email_caption">{{__('Email') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                                 <input class="form-control" id="email" value="{{$searchEmail}}" name="email" type="text">
