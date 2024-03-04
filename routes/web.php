@@ -128,10 +128,10 @@ Route::post('get_teacher_lessons', [App\Http\Controllers\InvoiceController::clas
 Route::post('generate_teacher_invoice', [App\Http\Controllers\InvoiceController::class, 'generateTeacherInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 //AJAX generate student invoice
-Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController::class, 'generateStudentInvoice'])->name('generate_teacher_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('generate_student_invoice', [App\Http\Controllers\InvoiceController::class, 'generateStudentInvoice'])->name('generate_student_invoice.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 // update_payment_status AJAX
-Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceDiscount'])->name('update_payment_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('update_invoice_discount', [App\Http\Controllers\InvoiceController::class, 'updateInvoiceDiscount'])->name('update_invoice_status.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 
 // update_payment_status AJAX
@@ -149,15 +149,15 @@ Route::post('/fetch_tc_cms_template', [App\Http\Controllers\TermCondController::
 
 //confirm event AJAX
 Route::post('confirm_event', [App\Http\Controllers\AgendaController::class, 'confirmEvent'])->name('confirm_event.submit')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-Route::post('/{school}/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::get('/{school}/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/{school}/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
-Route::post('/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event1.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::get('/get_event', [App\Http\Controllers\AgendaController::class, 'getEvent'])->name('event1.get')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_locations', [App\Http\Controllers\AgendaController::class, 'getLocations'])->name('event.get_locations')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_teachers', [App\Http\Controllers\AgendaController::class, 'getTeachers'])->name('event.get_teachers')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_event_category', [App\Http\Controllers\AgendaController::class, 'getEventCategory'])->name('event.get_event_category')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_event_category_by_type', [App\Http\Controllers\AgendaController::class, 'getEventCategoryByType'])->name('event.get_event_category_by_type')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-Route::post('/get_school_currency', [App\Http\Controllers\AgendaController::class, 'getSchoolCurrency'])->name('event.get_school_currency')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::get('/get_school_currency', [App\Http\Controllers\AgendaController::class, 'getSchoolCurrency'])->name('event.get_school_currency')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/get_students', [App\Http\Controllers\AgendaController::class, 'getStudents'])->name('event.get_students')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/copy_paste_events', [App\Http\Controllers\AgendaController::class, 'copyPasteEvent'])->name('event1.copy_paste')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
@@ -322,26 +322,26 @@ Route::group(['middleware' => ['auth']], function () {
     ))->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-student/{student}', [App\Http\Controllers\StudentsController::class, 'edit'])->name('adminEditStudent');
 
-    Route::get('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create');
-    Route::post('/{school}/add-event', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction');
-    Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
-    Route::post('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction');
-    Route::get('/{school}/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view');
-    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
-    Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
-    Route::get('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit');
-    Route::post('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction');
-    Route::get('/{school}/view-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'viewLesson'])->name('lesson.view');
-    Route::get('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create');
-    Route::post('/{school}/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction');
-    Route::get('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOff'])->name('studentOff.edit');
-    Route::post('/{school}/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOffAction'])->name('studentOff.editAction');
-    Route::get('/{school}/view-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewStudentOff'])->name('studentOff.view');
-    Route::get('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create');
-    Route::post('/{school}/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction');
-    Route::get('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit');
-    Route::post('/{school}/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction');
-    Route::get('/{school}/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view');
+    Route::get('/{school}/admin/add-event', [App\Http\Controllers\LessonsController::class, 'addEvent'])->name('event.create-admin');
+    Route::post('/{school}/admin/add-event-action', [App\Http\Controllers\LessonsController::class, 'addEventAction'])->name('event.createAction-admin');
+    Route::get('/{school}/admin/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit-admin');
+    Route::post('/{school}/admin/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction-admin');
+    Route::get('/{school}/admin/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view-admin');
+    Route::get('/{school}/admin/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create-admin');
+    Route::post('/{school}/admin/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction-admin');
+    Route::get('/{school}/admin/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit-admin');
+    Route::post('/{school}/admin/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction-admin');
+    Route::get('/{school}/admin/view-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'viewLesson'])->name('lesson.view-admin');
+    Route::get('/{school}/admin/student-off', [App\Http\Controllers\LessonsController::class, 'studentOff'])->name('studentOff.create-admin');
+    Route::post('/{school}/admin/student-off', [App\Http\Controllers\LessonsController::class, 'studentOffAction'])->name('studentOff.createAction-admin');
+    Route::get('/{school}/admin/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOff'])->name('studentOff.edit-admin');
+    Route::post('/{school}/admin/edit-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'editStudentOffAction'])->name('studentOff.editAction-admin');
+    Route::get('/{school}/admin/view-student-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewStudentOff'])->name('studentOff.view-admin');
+    Route::get('/{school}/admin/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOff'])->name('coachOff.create-admin');
+    Route::post('/{school}/admin/coach-off', [App\Http\Controllers\LessonsController::class, 'coachOffAction'])->name('coachOff.createAction-admin');
+    Route::get('/{school}/admin/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOff'])->name('coachOff.edit-admin');
+    Route::post('/{school}/admin/edit-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'editCoachOffAction'])->name('coachOff.editAction-admin');
+    Route::get('/{school}//admin/view-coach-off/{id}', [App\Http\Controllers\LessonsController::class, 'viewCoachOff'])->name('coachOff.view-admin');
 
 
     // Invoice
@@ -483,8 +483,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEvent'])->name('event.edit');
     Route::post('/{school}/edit-event/{event}', [App\Http\Controllers\LessonsController::class, 'editEventAction'])->name('event.editAction');
     Route::get('/{school}/view-event/{event}', [App\Http\Controllers\LessonsController::class, 'viewEvent'])->name('event.view');
-    Route::get('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
-    Route::post('/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction');
+    Route::get('/{school}/add-lesson-custom', [App\Http\Controllers\LessonsController::class, 'addLesson'])->name('lesson.create');
+    Route::match(['post'], '/{school}/add-lesson', [App\Http\Controllers\LessonsController::class, 'addLessonAction'])->name('lesson.createAction')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     Route::get('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLesson'])->name('lesson.edit');
     Route::post('/{school}/edit-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'editLessonAction'])->name('lesson.editAction');
     Route::get('/{school}/view-lesson/{lesson}', [App\Http\Controllers\LessonsController::class, 'viewLesson'])->name('lesson.view');

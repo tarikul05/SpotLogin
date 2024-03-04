@@ -205,7 +205,8 @@ class AuthController extends Controller
 
                 $user_name = $data['login_username'];
                 $password = $data['login_password'];
-                $user = User::getFirstLoginData_after_reset($user_name, $password);
+                $userInit = new User();
+                $user = $userInit->getFirstLoginData_after_reset($user_name, $password);
                 $result = array(
                     'status' => 0,
                     'message' => __('First login'),

@@ -11,12 +11,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 @endsection
 
+
+
 @php
-	//$zone = $_COOKIE['timezone_user'];
-	$zone = $timezone;
-	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
-	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
-	$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'))
+use App\Helpers\Helper;
+    //$zone = $_COOKIE['timezone_user'];
+    $zone = $timezone;
+    $date_start = $lessonData->date_start;
+    $date_end = $lessonData->date_end;
+    $showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'));
 @endphp
 
 @section('content')

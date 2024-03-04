@@ -65,6 +65,7 @@ class Currency extends BaseModel
 
     public function getCurrencyByCountry($code,$isArry=false)
     {
+
         $currency = self::active()->where('country_code', $code)->get();
 
         if (count($currency) == 0) {

@@ -20,9 +20,10 @@
 @php
 	//$zone = $_COOKIE['timezone_user'];
 	$zone = $timezone;
-	$date_start = Helper::formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
-	$date_end = Helper::formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
-	$current_time = Helper::formatDateTimeZone(now(), 'long','UTC', $zone);
+	$initDate = new Helper();
+	$date_start = $initDate->formatDateTimeZone($lessonData->date_start, 'long','UTC',$zone);
+	$date_end = $initDate->formatDateTimeZone($lessonData->date_end, 'long','UTC', $zone);
+	$current_time = $initDate->formatDateTimeZone(now(), 'long','UTC', $zone);
 	if($lessonData->eventcategory) {
 		$showPrice = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($lessonData->eventcategory->invoiced_type == 'S') || ($AppUI->isTeacher() && ($lessonData->eventcategory->invoiced_type == 'T'));
 	} else {

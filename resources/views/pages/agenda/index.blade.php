@@ -26,7 +26,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
 <!-- end the assets area -->
 @endsection
 
@@ -1633,7 +1632,7 @@ $('.close-icon').on('click', function() {
 
     // populate location
     function PopulateSchoolCurrencyDropdown(school_id=null){
-
+        return null;
         if (school_id !=null) {
             var menuHtml='';
             var data = 'school_id='+school_id;
@@ -1642,7 +1641,7 @@ $('.close-icon').on('click', function() {
             $.ajax({
                 url: BASE_URL + '/get_school_currency',
                 data: data,
-                type: 'POST',
+                type: 'GET',
                 dataType: 'json',
                 //async: false,
                 beforeSend: function( xhr ) {
@@ -3332,7 +3331,7 @@ $('.close-icon').on('click', function() {
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
-            type: 'POST',
+            type: 'GET',
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
@@ -3565,7 +3564,7 @@ $('.close-icon').on('click', function() {
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
-            type: 'POST',
+            type: 'GET',
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view + '&list_student_id='+list_student_id,
             //async: false,
             success: function(s){
@@ -4357,6 +4356,8 @@ $('#add_lesson').on('submit', function(e) {
         "name": "_token",
         "value": csrfToken,
     });
+
+    
     var errMssg = '';
 
     if(type == 1 || type == 2){
@@ -4509,6 +4510,11 @@ $('#add_lesson').on('submit', function(e) {
     if(errMssg == ""){
 
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
         // console.log("hello");
         $.ajax({
             url: page_action,
