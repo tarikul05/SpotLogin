@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="from-group mt-3">
-                    <label for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('Parents email addresses are added to this list when you check students (if parents email adresses are registered)')}}"></i></label>
+                    <label for="principal_email"><b>{{ __('Principal Email') }}</b> <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('This address will receive the email necessary to set up the familly account')}}"></i></label>
                     <select class="form-control" id="principal_email" name="principal_email">
                        <option>{{ __('Select Email') }}</option>
                     </select>
