@@ -521,20 +521,21 @@
                                             <div class="row m-2">
                                                 <div class="col-md-10 offset-md-1 mt-4">
 
-                                                    <div class="card form-group bg-tertiary p-3 row hide_coach_off">
-                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
-                                                            <h6><small>{{__('Student') }}</small></h6>
-                                                           <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
-                                                        </label>
+                                                    <div class="card bg-tertiary hide_coach_off p-3" style="border-color:#b3d6ec;"><!--card-->
+                                                        <!--<label class="text-left col-lg-12 row col-sm-12 text-left" for="availability_select" id="visibility_label_id">
+                                                           <b>{{__('Select student(s)') }}</b>
+                                                            <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                                        </label>-->
 
-                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
+                                                        <!--<label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
                                                            <input type="checkbox" name="check-students-availability2" id="check-students-availability2"> {{__('Show only students with availabilty') }}
-                                                        </label>
-
+                                                        </label>-->
+                                                      
                                                         <div id="studentListAvailabilities"></div>
 
                                                             <div class="student_list pt-4">
-                                                                <div class="input-group">
+                                                            <label>  <b>{{__('Select student(s)') }}</b></label>
+                                                                <div class="input-group">  
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-users"></i>
                                                                     </span>
@@ -3249,7 +3250,7 @@ $('.close-icon').on('click', function() {
                     $('#end_time').val(endTime).trigger('change');
                     $('#agenda_select').trigger('change');
                     $('#Title').val('');
-                    resetStudentList();
+                    //resetStudentList();
                     getAwayStudent();
                 }
                 @endif
@@ -4115,7 +4116,7 @@ $(function() {
 
 
   $('#start_date').on('change', function(e) {
-    resetStudentList();
+   // resetStudentList();
     getAwayStudent();
 });
 
@@ -5176,7 +5177,7 @@ $( document ).ready(function() {
             $('#end_time').val(endTime).trigger('change');
             $('#agenda_select').trigger('change');
             $('#Title').val('');
-            resetStudentList();
+           // resetStudentList();
             getAwayStudent();
         }
 
@@ -5188,10 +5189,10 @@ $( document ).ready(function() {
     $("#check-students-availability2").click(function() {
         if (this.checked) {
             isOnlyAvailability = true;
-            resetStudentList();
+           // resetStudentList();
         } else {
             isOnlyAvailability = false;
-            resetStudentList();
+           // resetStudentList();
         }
     })
 });
