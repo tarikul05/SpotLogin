@@ -74,6 +74,7 @@ Route::post('/admin/create-alert', [App\Http\Controllers\AlertController::class,
 
 //Contacts Form
 Route::get('/admin/contacts', [ContactFormController::class, 'index'])->name('contacts.index')->middleware('permission:superadmin');
+Route::get('/admin/contacts/show/{contact}', [ContactFormController::class,'show'])->name('contacts.show')->middleware('permission:superadmin');
 
 //Faqs
 Route::get('/faqs-tutos', [App\Http\Controllers\FaqController::class, 'tutos'])->name('faqs.tutos'); //for users
@@ -98,6 +99,10 @@ Route::delete('/admin/faqs/remove/{faq}', [App\Http\Controllers\FaqController::c
 Route::get('contact-form', [ContactFormController::class, 'showForm'])->name('contact.form');
 Route::get('contact-staff', [ContactFormController::class, 'showFormStaff'])->name('contact.staff');
 Route::post('contact-form', [ContactFormController::class, 'submitForm'])->name('contact.form.submit');
+Route::post('contact-answer', [ContactFormController::class, 'submitAnswer'])->name('contact.form.answer');
+
+Route::get('contact-answer/{id}', [ContactFormController::class, 'showAnswerForm'])->name('contact.answer');
+
 
 //email-send school AJAX
 Route::post('school_email_send', [App\Http\Controllers\SchoolsController::class, 'schoolEmailSend'])->name('school_email_send.submit');

@@ -86,7 +86,7 @@
             <a class="nav-link" href="{{ route('alert.index') }}">Alerts</a>
           </li>
           <li class="nav-item @if(request()->is('admin/contacts')) active @endif">
-            <a class="nav-link" href="{{ route('contacts.index') }}">Messages</a>
+            <a class="nav-link" href="{{ route('contacts.index') }}">Messages Help</a>
           </li>
           <li class="nav-item @if(request()->is('admin/email-template')) active @endif">
             <a class="nav-link" href="{{ route('view.email_template') }}">Templates</a>
