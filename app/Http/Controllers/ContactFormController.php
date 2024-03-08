@@ -229,7 +229,11 @@ class ContactFormController extends Controller
         if($person_id == 0) {
             return redirect()->route('contact.answer', $discussion_id)->with('success', 'Message sent successfully!');
         } else {
+            if($authUser->isSuperAdmin()) {
             return redirect()->route('contacts.show', $discussion_id)->with('success', 'Message sent successfully!');
+            } else {
+                return redirect()->route('contact.answer', $discussion_id)->with('success', 'Message sent successfully!');
+            }
         }
         
         

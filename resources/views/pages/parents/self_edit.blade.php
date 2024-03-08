@@ -240,12 +240,21 @@
 					</div>
 					<div class="row">
 						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_1" >{{__("Parent's name 1") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-user"></i></span>
+										<input class="form-control" id="parent_name_1" name="parent_name_1" value="{{!empty($student->parent_name_1) ? old('parent_name_1', $student->parent_name_1) : old('parent_name_1')}}" type="text">
+									</div>
+								</div>
+							</div>
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="father_phone" >{{__("Father’s phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-										<input class="form-control" id="father_phone" name="father_phone" value="{{!empty($student->father_phone) ? old('father_phone', $student->father_phone) : old('father_phone')}}" type="text">
+										<input class="form-control" id="phone2" name="phone2" value="{{!empty($student->phone2) ? old('father_phone', $student->phone2) : old('father_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
@@ -254,13 +263,42 @@
 								<div class="col-sm-7">
 									<div class="input-group">
 										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-										<input class="form-control" id="mother_phone" name="mother_phone" value="{{!empty($student->mother_phone) ? old('mother_phone', $student->mother_phone) : old('mother_phone')}}" type="text">
+										<input class="form-control" id="phone" name="phone" value="{{!empty($student->phone) ? old('mother_phone', $student->phone) : old('mother_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
 
 						</div>
+						<div class="col-md-6">
+                            <div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="parent_name_2" id="parent_name_2">{{__("Parent's name 2") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+										<input class="form-control" id="parent_name_2" name="parent_name_2" value="{{!empty($student->parent_name_2) ? old('parent_name_2', $student->parent_name_2) : old('parent_name_2')}}" type="text">
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="email2" id="email2">{{__("Father's email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span>
+										<input class="form-control" id="email2" name="email2" value="{{!empty($student->email2) ? old('father_email', $student->email2) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother's email") }} :</label>
+								<div class="col-sm-7">
+									<div class="input-group">
+										<span class="input-group-addon"><input type="checkbox" name="mother_notify" value="1" {{ !empty($student->mother_notify) ? 'checked' : '' }} ></span>
+										<input class="form-control" id="email" name="email" value="{{!empty($student->email) ? old('mother_email', $student->email) : old('mother_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+									</div>
+								</div>
+							</div>
 
+						</div>
 					</div>
 				</div>
 				</form>

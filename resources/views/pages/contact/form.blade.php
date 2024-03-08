@@ -89,7 +89,7 @@
 
                 <ul class="list-group" style="padding:0px!important; margin:0px!important; border:none!important;">
             @foreach($messages as $message)
-            <li class="list-group-item d-flex align-items-start" style="padding:0px!important; margin:0px!important; border:none!important; border-bottom:1px solid #EEE!important;">
+            <li class="list-group-item d-flex align-items-start" style="padding:0px!important; margin:0px!important; border:none!important; margin-bottom:15px!important;">
             @if($message->id_expediteur == $AppUI->id)
                 <div class="mr-3">
                     @if(!empty($AppUI->profileImage->path_name))
@@ -105,17 +105,8 @@
             @endif
         <div>
             <a href="{{ route('contact.answer', $message->discussion_id) }}">{{ $message->sujet }}</a><br>
-            <small style="font-size:11px;">(last message the {{ $message->created_at }})</small><br>
+            <small style="font-size:11px; color:#AAA;">(last message the {{ $message->created_at }})</small><br>
             <small>{{ Str::limit($message->message, 50) }}</small>
-            @if($message->id_expediteur == $AppUI->id)
-                <div style="font-size:12px; position:absolute; top:4px; right:4px;">
-                    @if($message->read == 0)
-                        <span class="text text-warning"><i class="fa fa-warning"></i> {{ __('not read yet') }}</span>
-                    @else
-                        <span class="text text-success"><i class="fa fa-check"></i> {{ __('is read') }}</span>
-                    @endif
-                </div>
-            @endif
         </div>
     </li>
     @endforeach

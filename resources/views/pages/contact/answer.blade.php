@@ -29,7 +29,13 @@
                             </div>
                             @endif
 
-                            @if($messageItem->id_expediteur == $AppUI->id)
+                            @if($messageItem->id_expediteur == $AppUI->id && $messageItem->id_destinataire == $AppUI->id)
+                                    <div class="alert alert-info">
+                                        The recipient is not registered with a Sportlogin account, then the message cannot be answered.
+                                </div>
+                            @endif
+
+                            @if($messageItem->id_expediteur == $AppUI->id && $messageItem->id_destinataire !== $AppUI->id)
                                 <div style="font-size:12px;">
                                     @if($messageItem->read == 0)
                                         <span class="text text-warning"><i class="fa fa-warning"></i> {{ __('not read yet') }}</span>
@@ -73,14 +79,24 @@
             @else
             <input type="hidden" id="headerMessage" name="headerMessage" value="You have an answer from the student {{ $AppUI->firstname . ' ' . $AppUI->lastname }} of the school #{{ $AppUI->school_id }}">
             @endif
-            <input type="hidden" id="person_id" name="person_id" value="0">
+
+            @if($message->id_destinataire == 0)
+            <input type="hidden" id="person_id" name="person_id" value="{{ $message->id_destinataire }}">
+            @else
+            <input type="hidden" id="person_id" name="person_id" value="{{ $message->id_expediteur }}">
+            @endif
             <input type="hidden" id="id_destinataire" name="id_destinataire" value="{{ $AppUI->id }}">
+
+    
+                <br>
+                <button type="submit" class="btn btn-primary">{{ __('Send the answer') }}</button>
+          
 
                     </div>
                 </div>
                 <br>
-                <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">{{ __('Send the answer') }}</button>
+                <div class="d-flex justify-content-end">
+   
                     <a href="#" id="refreshPageBottom" class="text text-primary btn-sm"><i class="fa fa-refresh"></i> {{ __('Refresh') }}</a>
                 </div>
         </form>
