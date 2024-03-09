@@ -17,11 +17,15 @@
             @foreach ($faqs as $faq)
             <div class="col-md-4 mb-4">
                 <div class='p-1'>
-                    <div class="card">
-                        <div class="card-header p-0">
-                            <div class="embed-responsive embed-responsive-16by9">
+                    <div class="card" style="border-radius:10px 10px 0 0;">
+                        <div class="card-header p-0" style="border-radius:10px 10px 0 0; padding-bottom:0px; margin-bottom:0px;">
+                            <!--<div class="embed-responsive embed-responsive-16by9">
                                 <x-embed url="{{ $faq->youtube_link }}" />
-                            </div>
+                            </div>-->
+                            <video width="100%" controls style="border-radius:10px 10px 0 0; padding-bottom:0px; margin-bottom:0px;">
+                                <source src="videos/{{ $faq->youtube_link }}" type="video/mp4">
+                                Your browser does not support the video player.
+                            </video>
                         </div>
                         <div class="card-body" style="height: 150px;">
                             <h6 class="card-title overflow-ellipsis">{{ $faq->title }}</h6>
@@ -40,9 +44,13 @@
             <div class="col-md-12 mb-4">
                 <div class="row bg-tertiary">
                     <div class="col-md-4">
-                        <div class="embed-responsive embed-responsive-16by9">
+                        <!--<div class="embed-responsive embed-responsive-16by9">
                             <x-embed url="{{ $faq->youtube_link }}" />
-                        </div>
+                        </div>-->
+                        <video width="320" height="240" controls>
+                            <source src="{{ $faq->youtube_link }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                     <div class="col-md-8 p-2">
                         <h6 class="card-title">{{ $faq->title }}</h6>

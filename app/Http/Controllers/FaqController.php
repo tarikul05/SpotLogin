@@ -47,8 +47,8 @@ class FaqController extends Controller
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',
-            'description' => 'required',
-            'youtube_link' => 'required|url',
+            'description' => 'nullable|string',
+            'youtube_link' => 'required',
         ]);
 
         Faq::create($data);
@@ -61,8 +61,8 @@ class FaqController extends Controller
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required',
-            'description' => 'required',
-            'youtube_link' => 'required|url',
+            'description' => 'nullable|string',
+            'youtube_link' => 'required',
         ]);
 
         $faq->update($data);

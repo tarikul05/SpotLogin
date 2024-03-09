@@ -33,6 +33,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|unique:categories,name',
+            'description' => 'nullable|string',
         ]);
 
         Category::create($data);
@@ -44,6 +45,7 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', Rule::unique('categories')->ignore($category->id)],
+            'description' => 'nullable|string',
         ]);
 
         $category->update($data);

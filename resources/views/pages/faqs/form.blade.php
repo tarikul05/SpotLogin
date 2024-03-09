@@ -40,7 +40,7 @@
         <br><label for="description">Description:</label>
         <textarea name="description" class="form-control">{{ old('description', $faq->description ?? '') }}</textarea>
 
-        <br><label for="youtube_link">YouTube Link:</label>
+        <br><label for="youtube_link">Link: (youtube link or /videos/file-name.mp4)</label>
         <input type="text" class="form-control" name="youtube_link" value="{{ old('youtube_link', $faq->youtube_link ?? '') }}">
 
         <br>
