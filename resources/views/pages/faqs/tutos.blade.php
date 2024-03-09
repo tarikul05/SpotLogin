@@ -23,7 +23,7 @@
                                 <x-embed url="{{ $faq->youtube_link }}" />
                             </div>-->
                             <video width="100%" controls style="border-radius:10px 10px 0 0; padding-bottom:0px; margin-bottom:0px;">
-                                <source src="videos/{{ $faq->youtube_link }}" type="video/mp4">
+                                <source src="https://dev.sportlogin.ch/videos/{{ $faq->youtube_link }}" type="video/mp4">
                                 Your browser does not support the video player.
                             </video>
                         </div>
@@ -48,7 +48,7 @@
                             <x-embed url="{{ $faq->youtube_link }}" />
                         </div>-->
                         <video width="320" height="240" controls>
-                            <source src="{{ $faq->youtube_link }}" type="video/mp4">
+                            <source src="https://dev.sportlogin.ch/videos/{{ $faq->youtube_link }}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
