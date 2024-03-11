@@ -378,7 +378,10 @@ function confirmPayReminderModalCall(p_event_id,title,all_events,p_school_id){
     //send email dialog -->
 
     //$('body').append(modalHtml);
-    $("#email_list_modal").modal('show');
+    setTimeout(function () {
+        $("#pageloader").hide();
+        $("#email_list_modal").modal('show');
+    }, 1500);
 }
 
 

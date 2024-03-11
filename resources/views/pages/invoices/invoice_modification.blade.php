@@ -1608,6 +1608,8 @@ function extractExtraCharges($inputString) {
 
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
 
+      $('#pageloader').show();
+
         $('#seleted_auto_id').val(p_value);
         $('#p_school_id').val(p_school_id);
 
@@ -1642,8 +1644,9 @@ function extractExtraCharges($inputString) {
             }
         }); // Ajax
 
-
-        $("#email_list_modal").modal('show');
+        setTimeout(function () {
+            $("#email_list_modal").modal('show');
+        }, 1500);
 
     };
 

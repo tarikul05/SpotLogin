@@ -131,9 +131,8 @@
                             @php
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
-                            <b>{{ $date->format('d-m-Y') }}</b>
+                            <?= $invoice->client_name ?> <br><span style="font-size:11px;">{{ $date->format('d-m-Y') }}</span>
                             </span>
-                            <!--<?= $invoice->client_name ?>-->
                         </td>
                         @php
                         if($invoice->invoice_type == 0){
@@ -324,25 +323,32 @@
         aria-labelledby="email_list_modal" name="email_list_modal">
         <div class="modal-dialog modal-dialog-centered mt-5" role="document">
             <div class="modal-content">
-                <div class="modal-header text-center border-0">
-                    <h4 class="light-blue-txt gilroy-bold">{{ __('Send the invoice') }}</h4>
-                </div>
-                <div class="modal-body row" style="margin: 0 auto;padding-top: 0;">
+
+            <div class="modal-header d-block text-center border-0">
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+              <h3 class="modal-title light-blue-txt gilroy-bold mt-4" id="signupModalLabel">{{ __('Send the invoice') }}</h3>
+                <a href="#" class="close" id="modalClose" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px; border-radius:50%!important; padding:3px; font-size:23px;">
+                    <i class="fa-solid fa-circle-xmark fa-lg" style="color:#0075bf;"></i>
+                </a>
+            </div>
+
+ 
+                <div class="modal-body" style="margin: 0 auto;padding-top: 0;">
                     <!-- <form id="email_list_form" name="email_list_form" method="POST"> -->
-                        <div class="alert alert-info">
+                        <div class="alert alert-info" style="height: 70px; font-size:13px;">
                             <div class="form-group col-md-12">
-                            <i class="fa-solid fa-file-pdf"></i> {{ __('Format type file') }}: PDF<br>
-                            <i class="fa-regular fa-envelope"></i> {{ __('Send Type') }}: {{ __('By email') }}
+                            <i class="fa-solid fa-file-pdf"></i> {{ __('Format type file') }}: <b>PDF</b><br>
+                            <i class="fa-regular fa-envelope"></i> {{ __('Send Type') }}: <b>{{ __('By email') }}</b>
                             </div>
                         </div>
                         <div class="form-group row col-md-12" id="father_email_div">
                             <div class="btn-group border-bottom col-md-9 text-left">
                                 <input  type="checkbox" id="father_email_chk" name="father_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
                                 <label for="father_email_chk" id="father_email_cap" name="father_email_cap"></label>
-                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Father's email")}})</div>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px; float: right;margin: 15px 5px; height: 15px;">({{ __("Father's email")}})</div>
                             </div>
                             <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
-                                ({{ __("Father's email")}})
+                            <small style="font-size:12px;">({{ __("Father's email")}})</small>
                             </div>
                         </div>
 
@@ -350,10 +356,10 @@
                             <div class="btn-group col-md-9 border-bottom text-left">
                                 <input type="checkbox" id="mother_email_chk" name="mother_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
                                 <label for="mother_email_chk" id="mother_email_cap" name="mother_email_cap"></label>
-                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Mother's email")}})</div>
+                                <div class="d-block d-sm-none text-small" style="font-size:10px; float: right;margin: 15px 5px; height: 15px;">({{ __("Mother's email")}})</div>
                             </div>
                             <div class="col-md-3 border-bottom pt-2 text-right d-none d-sm-block">
-                                ({{ __("Mother's email")}})
+                            <small style="font-size:12px;">({{ __("Mother's email")}})</small>
                             </div>
                         </div>
 
@@ -361,10 +367,10 @@
                             <div class="btn-group col-md-9 text-left">
                                 <input type="checkbox" id="student_email_chk" name="student_email_chk" value="" style="float: left;margin: 15px 5px;width: 15px;height: 15px;" checked>
                                 <label for="student_email_chk" id="student_email_cap" name="student_email_cap"></label>
-                                <div class="d-block d-sm-none text-small" style="font-size:10px;">({{ __("Student's email")}})</div>
+                                <span class="d-block d-sm-none text-small" style="font-size:10px; float: right;margin: 15px 5px; height: 15px;">({{ __("Student's email")}})</span>
                             </div>
                             <div class="col-md-3 pt-2 text-right d-none d-sm-block">
-                                <small>({{ __("Student's email")}})</small>
+                                <small style="font-size:12px;">({{ __("Student's email")}})</small>
                             </div>
                         </div>
 
@@ -384,8 +390,8 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-12">
-                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success">{{ __('Send') }}</button>
+                        <div class="form-group col-sm-12 mt-3 text-center">
+                                <button type="submit" id="email_send" class="btn btn-sm btn-theme-success email_send_btn">{{ __('Send') }}</button>
                         </div>
 
                     <!-- </form> -->

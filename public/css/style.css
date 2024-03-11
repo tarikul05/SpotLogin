@@ -195,6 +195,18 @@ button#add_more_expense_btn {
 	border-radius: 4px;
 }
 
+.email_send_btn {
+	width: 300px;
+	margin:0 auto!important;
+}
+
+@media (max-width: 768px) {
+	.email_send_btn {
+		width: 100%;
+		margin:0 auto;
+	}
+}
+
 @media (max-width: 768px) {
     .search_text_box {
         width: 100%;

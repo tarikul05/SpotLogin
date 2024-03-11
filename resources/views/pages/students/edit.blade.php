@@ -1008,7 +1008,7 @@ $("#country_code, #billing_country_code").trigger('change')
 		var auto_id = 0;
 		var inv_type=getUrlVarsO()["inv_type"];
 
-		console.log('he', JSON.stringify(selectedTaxIds))
+	
 		var tax_ids = selectedTaxIds
 
 		var sdiscountPercentInput = document.getElementById('sdiscount_percent_1');
@@ -1060,7 +1060,7 @@ $("#country_code, #billing_country_code").trigger('change')
 			success: function(result) {
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
-                    console.log(result)
+                    //console.log(result)
 					successModalCall("{{ __('invoice drafted')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.
@@ -1071,7 +1071,7 @@ $("#country_code, #billing_country_code").trigger('change')
 			}, // success
 			error: function(ts) {
 				//errorModalCall(ts);
-				console.log(ts)
+				//console.log(ts)
 				// alert(ts.responseText + ' Generate Invoice')
 			}
 		}); // Ajax
@@ -1181,7 +1181,7 @@ $(function() {
 	});
 
 	var saction= getUrlVarsO()["action"];
-	console.log(saction)
+	//console.log(saction)
 
 	//For fetching the student details
 	//document.getElementById("sperson_id").value=getUrlVarsO()["person_id"];
@@ -1197,7 +1197,7 @@ $(function() {
 		vtab='';
 	}
 	if (vtab == 'tab_3') {
-		document.getElementById("delete_btn").style.display="none";
+		//document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {
@@ -1387,7 +1387,7 @@ $('#save_btn').click(function (e) {
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
 		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
-		console.log(data);
+		//console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',
 			//url: '../student/student_events_data.php',
@@ -1551,7 +1551,7 @@ $('#save_btn').click(function (e) {
 							} else {
 								resultHtml += '<td>' + value.category_name + '</td>';
 							}
-                            console.log(value)
+                           // console.log(value)
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								if (value.count_name > 1) {
@@ -1822,7 +1822,7 @@ $('#save_btn').click(function (e) {
 							}
 							if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
-                                    console.log(value.is_sell_invoiced);
+                                  //  console.log(value.is_sell_invoiced);
 								resultHtml += " <i class='fa fa-check'><i>";
 							}
 
@@ -2001,7 +2001,7 @@ $('#save_btn').click(function (e) {
 			}, // success
 			error: function(ts) {
 				//errorModalCall(GetAppMessage('error_message_text'));
-				console.log(ts.responseText + ' populate_student_lesson')
+				//console.log(ts.responseText + ' populate_student_lesson')
 			}
 		}); // Ajax
 
@@ -3057,7 +3057,7 @@ $(function() {
 
     var vtab = '{!! Session::get('vtab') !!}';
     if (vtab == 'tab_3') {
-		document.getElementById("delete_btn").style.display="none";
+		//document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {
