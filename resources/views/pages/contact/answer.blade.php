@@ -1,4 +1,21 @@
 @extends('layouts.main')
+
+@section('head_links')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+<style>
+    span p {
+        font-size: 14px!important;
+    }
+    .ck-content p {
+        font-size: 14px!important;
+    }
+    .ck-content {
+        min-height: 150px;
+    }
+    </style>
+    
+@endsection
+
 @section('content')
 
 <div class="container mb-2">
@@ -20,12 +37,12 @@
                                     <img src="{{ asset('img/photo_blank.jpg') }}" class="admin_logo" id="admin_logo_mobile" style="width:35px!important; height :35px!important;" alt="globe">
                                 <?php endif; ?>
                                 <span style="font-size:12px; color:#color:#EEE;"><b><i>{{ $messageItem->sujet }}</i></b></span> <span style="font-size:11px; color:#AAA;">write by {{ $AppUI->firstname }} {{ $AppUI->lastname }} the {{ $messageItem->created_at }}</span><br>
-                                <span style="font-size:15px;">{{ $messageItem->message }}</span>
+                                <span style="font-size:15px;">{!! $messageItem->message !!}</span>
                             </div>
                             @else
                             <div class="p-2" style="border: 1px solid #EEE; text-align:right!important;">   
                                 <span style="font-size:12px; color:#color:#EEE;"><b><i>{{ $messageItem->sujet }}</i></b></span> <span style="font-size:11px; color:#AAA;">write by Support the {{ $messageItem->created_at }}</span>  <img src="{{ asset('img/logo-blue.png') }}" class="admin_logo" id="admin_logo_mobile" alt="globe"><br>
-                                <span style="font-size:15px;">{{ $messageItem->message }}</span>
+                                <span style="font-size:15px;">{!! $messageItem->message !!}</span>
                             </div>
                             @endif
 
@@ -73,7 +90,9 @@
             </div>
             <div class="card-body"> 
             <label for="message" class="form-label">Your answer</label>
-            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+            <textarea name="message" id="editor">
+                
+            </textarea>
             @if(!$AppUI->isStudent())
             <input type="hidden" id="headerMessage" name="headerMessage" value="You have an answer from the teacher {{ $AppUI->firstname . ' ' . $AppUI->lastname }} of the school #{{ $AppUI->school_id }}">
             @else
@@ -127,4 +146,25 @@
         });
     });
 </script>
-@endsection
+
+<script>
+
+    ClassicEditor
+    .create( document.querySelector( '#editor' ),
+     {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-test' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+            ]
+        }
+    }  )
+    .catch( error => {
+        console.error('error ?', error );
+    } );
+
+</script>
+
+@endSection

@@ -2,7 +2,7 @@
 
 @section('head_links')
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data-10-year-range.js" integrity="sha512-QSV7x6aYfVs/XXIrUoerB2a7Ea9M8CaX4rY5pK/jVV0CGhYiGSHaDCKx/EPRQ70hYHiaq/NaQp8GtK+05uoSOw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css" integrity="sha512-fZNmykQ6RlCyzGl9he+ScLrlU0LWeaR6MO/Kq9lelfXOw54O63gizFMSD5fVgZvU1YfDIc6mxom5n60qJ1nCrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous">
@@ -10,6 +10,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js" integrity="sha512-lxQ4VnKKW7foGFV6L9zlSe+6QppP9B2t+tMMaV4s4iqAv4iHIyXED7O+fke1VeLNaRdoVkVt8Hw/jmZ+XocsXQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link href="//cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+
+<style>
+.ck-content p {
+    font-size: 14px!important;
+}
+.ck-content {
+    min-height: 300px;
+}
+</style>
+
 @endsection
 
 @section('content')
@@ -19,7 +30,7 @@
         <div class="col-md-8">
             <h5>{{__('Contact Form')}}</h5>
 
-            <form action="{{ route('contact.form.submit') }}" method="POST">
+            <form action="{{ route('contact.form.submit') }}" method="POST" id="contactForm">
             @csrf
 
 
@@ -59,7 +70,9 @@
             </div>
             <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                <textarea name="message" id="editor">
+                    &lt;p&gt;This is some sample content.&lt;/p&gt;
+                </textarea>
             </div>
             @if($AppUI->isParent())
             <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from Parents/Family {{ $AppUI->firstname . ' ' . $AppUI->lastname }}">
@@ -106,7 +119,7 @@
         <div>
             <a href="{{ route('contact.answer', $message->discussion_id) }}">{{ $message->sujet }}</a><br>
             <small style="font-size:11px; color:#AAA;">(last message the {{ $message->created_at }})</small><br>
-            <small>{{ Str::limit($message->message, 50) }}</small>
+            <small><?php echo strip_tags(Str::limit($message->message, 50)); ?> </small>
         </div>
     </li>
     @endforeach
@@ -126,6 +139,23 @@
 @section('footer_js')
 
 <script>
+
+    ClassicEditor
+    .create( document.querySelector( '#editor' ),
+     {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-test' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+            ]
+        }
+    }  )
+    .catch( error => {
+        console.error('error ?', error );
+    } );
+
     $('#emailTo').multiselect({
     maxHeight: 400,
     buttonWidth: '100%',

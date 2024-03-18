@@ -1,4 +1,18 @@
 @extends('layouts.main')
+
+@section('head_links')
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+<style>
+    .ck-content p {
+        font-size: 14px!important;
+    }
+    .ck-content {
+        min-height: 300px;
+    }
+    </style>
+    
+@endsection
+
 @section('content')
 @php
 use Illuminate\Support\Str;
@@ -61,7 +75,9 @@ use Illuminate\Support\Str;
 
                     <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                        <textarea name="message" id="editor">
+                            Hi Sportlogin Support,<br><br>Your message... 
+                        </textarea>
                     </div>
                     @if(!$AppUI->isStudent())
                     <input type="hidden" id="headerMessage" name="headerMessage" value="You have a message from the teacher {{ $AppUI->firstname . ' ' . $AppUI->lastname }} of the school #{{ $AppUI->school_id }}">
@@ -108,7 +124,7 @@ use Illuminate\Support\Str;
         <div>
             <a href="{{ route('contact.answer', $message->discussion_id) }}">{{ $message->sujet }}</a><br>
             <small style="font-size:11px;">(last message the {{ $message->created_at }})</small><br>
-            <small>{{ Str::limit($message->message, 50) }}</small>
+            <small><?php echo strip_tags(Str::limit($message->message, 50)); ?></small>
             @if($message->id_expediteur == $AppUI->id)
                 <div style="font-size:12px; position:absolute; top:4px; right:4px;">
                     @if($message->read == 0)
@@ -127,3 +143,27 @@ use Illuminate\Support\Str;
 
 </div>
 @endsection
+
+@section('footer_js')
+
+<script>
+
+    ClassicEditor
+    .create( document.querySelector( '#editor' ),
+     {
+        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
+        heading: {
+            options: [
+                { model: 'paragraph', title: 'Paragraph', class: 'ck-test' },
+                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
+            ]
+        }
+    }  )
+    .catch( error => {
+        console.error('error ?', error );
+    } );
+
+</script>
+
+@endSection

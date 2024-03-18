@@ -483,6 +483,9 @@ class LessonsController extends Controller
 
                 DB::commit();
 
+                //create session "last_cat"
+                Session::put('last_cat', $lessonData['category_select']);
+
                 if($lessonData['save_btn_more'] == 1){
                     return [
                         'status' => 1,

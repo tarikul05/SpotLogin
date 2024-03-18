@@ -483,7 +483,7 @@
                                             </span>
                                             <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
-                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" {{ session('last_cat') == $eventcat->id ? 'selected' : '' }}>{{ $eventcat->title }}</option>
                                                 @endforeach
                                             </select>
                                             </div>
@@ -1611,7 +1611,13 @@ $('.close-icon').on('click', function() {
                             if(isAdmin) {
                                 textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
                             }
-                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+
+                            @php
+    $selected = (session('last_cat') == $eventcat->id) ? 'selected' : '';
+@endphp
+
+resultHtml += '<option data-s_thr_pay_type="{{$eventcat->s_thr_pay_type}}" data-s_std_pay_type="{{$eventcat->s_std_pay_type}}" data-t_std_pay_type="{{$eventcat->t_std_pay_type}}" value="{{$eventcat->id}}" data-invoice="{{$eventcat->invoiced_type}}" {{$selected}}>' + textAdmin + '{{$eventcat->title}}</option>';
+                            //resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
