@@ -1526,8 +1526,11 @@ public function index(Request $request, $schoolId = null)
                     'billing_place' => $alldata['billing_place'],
                     'billing_country_code' => $alldata['billing_country_code'],
                     'billing_province_id' => isset($alldata['billing_province_id']) ? $alldata['billing_province_id'] : null,
-                    'phone' => $alldata['father_phone'],
-                    'phone2' => $alldata['mother_phone'],
+                    'parent_name_1' => $alldata['parent_name_1'],
+                    'parent_name_2' => $alldata['parent_name_2'],
+                    'phone2' => $alldata['phone2'],
+                    'email2' => $alldata['email2'],
+                    'phone' => $alldata['phone'],
                     'email' => $alldata['email'],
                     'modified_by' => $user->id,
             ];
@@ -1602,6 +1605,34 @@ public function index(Request $request, $schoolId = null)
             ];
 
             SchoolStudent::where(['student_id'=>$student->id, 'school_id'=>$alldata['school_id']])->update($schoolStudent);*/
+
+
+            /* foreach all students for update a field */
+            $studentsToUpdate = $student->students;
+            foreach ($studentsToUpdate as $studentToUpdate) {
+                $studentToUpdate->street = $alldata['street'];
+                $studentToUpdate->street_number = $alldata['street_number'];
+                $studentToUpdate->zip_code = $alldata['zip_code'];
+                $studentToUpdate->country_code = $alldata['country_code'];
+                $studentToUpdate->province_id = isset($alldata['province_id']) ? $alldata['province_id'] : null;
+                $studentToUpdate->billing_street = $alldata['billing_street'];
+                $studentToUpdate->billing_street_number = $alldata['billing_street_number'];
+                $studentToUpdate->billing_zip_code = $alldata['billing_zip_code'];
+                $studentToUpdate->billing_place = $alldata['billing_place'];
+                $studentToUpdate->billing_country_code = $alldata['billing_country_code'];
+                $studentToUpdate->billing_province_id = isset($alldata['billing_province_id']) ? $alldata['billing_province_id'] : null;
+                
+                $studentToUpdate->parent_name_1 = $alldata['parent_name_1'];
+                $studentToUpdate->parent_name_2 = $alldata['parent_name_2'];
+                $studentToUpdate->mother_email = $alldata['email'];
+                $studentToUpdate->father_email = $alldata['email2'];
+                $studentToUpdate->mother_phone = $alldata['phone'];
+                $studentToUpdate->father_phone = $alldata['phone2'];
+                
+                $studentToUpdate->save();
+            }
+
+
             DB::commit();
             return back()->withInput($request->all())->with('vtab', isset($alldata['active_tab']) && !empty($alldata['active_tab']) ? $alldata['active_tab'] : 'tab_1')->with('success', __('Student updated successfully!'));
         }catch (\Exception $e) {

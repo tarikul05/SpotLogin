@@ -26,7 +26,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
 <!-- end the assets area -->
 @endsection
 
@@ -484,7 +483,7 @@
                                             </span>
                                             <select class="form-control" id="category_select" name="category_select" @if($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) disabled @endif>
                                                 @foreach($eventCategoryList as $key => $eventcat)
-                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}"  value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" value="{{ $eventcat->id }}" {{ old('category_select') == $eventcat->id ? 'selected' : ''}}>{{ $eventcat->title }}</option>
+                                                    <option s_thr_pay_type="{{ $eventcat->s_thr_pay_type }}" s_std_pay_type="{{  $eventcat->s_std_pay_type }}" t_std_pay_type="{{  $eventcat->t_std_pay_type }}" value="{{ $eventcat->id }}" category_type="{{ $eventcat->invoiced_type }}" {{ session('last_cat') == $eventcat->id ? 'selected' : '' }}>{{ $eventcat->title }}</option>
                                                 @endforeach
                                             </select>
                                             </div>
@@ -522,20 +521,21 @@
                                             <div class="row m-2">
                                                 <div class="col-md-10 offset-md-1 mt-4">
 
-                                                    <div class="card form-group bg-tertiary p-3 row hide_coach_off">
-                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id">
-                                                            <h6><small>{{__('Student') }}</small></h6>
-                                                           <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
-                                                        </label>
+                                                    <div class="card bg-tertiary hide_coach_off p-3" style="border-color:#b3d6ec;"><!--card-->
+                                                        <!--<label class="text-left col-lg-12 row col-sm-12 text-left" for="availability_select" id="visibility_label_id">
+                                                           <b>{{__('Select student(s)') }}</b>
+                                                            <input checked type="checkbox" name="check-students-availability" id="check-students-availability"> {{__('Show students availability') }} <i class="fa fa-info-circle" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="top" title="{{__('If checked, you will be able to show students\'s availability if student registered it.')}}"></i>
+                                                        </label>-->
 
-                                                        <label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
+                                                        <!--<label class="text-left col-lg-12 col-sm-12 text-left" for="availability_select" id="visibility_label_id2">
                                                            <input type="checkbox" name="check-students-availability2" id="check-students-availability2"> {{__('Show only students with availabilty') }}
-                                                        </label>
-
+                                                        </label>-->
+                                                      
                                                         <div id="studentListAvailabilities"></div>
 
                                                             <div class="student_list pt-4">
-                                                                <div class="input-group">
+                                                            <label>  <b>{{__('Select student(s)') }}</b></label>
+                                                                <div class="input-group">  
                                                                     <span class="input-group-addon">
                                                                         <i class="fa-solid fa-users"></i>
                                                                     </span>
@@ -1611,7 +1611,13 @@ $('.close-icon').on('click', function() {
                             if(isAdmin) {
                                 textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
                             }
-                            resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+
+                            @php
+    $selected = (session('last_cat') == $eventcat->id) ? 'selected' : '';
+@endphp
+
+resultHtml += '<option data-s_thr_pay_type="{{$eventcat->s_thr_pay_type}}" data-s_std_pay_type="{{$eventcat->s_std_pay_type}}" data-t_std_pay_type="{{$eventcat->t_std_pay_type}}" value="{{$eventcat->id}}" data-invoice="{{$eventcat->invoiced_type}}" {{$selected}}>' + textAdmin + '{{$eventcat->title}}</option>';
+                            //resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
@@ -1633,7 +1639,7 @@ $('.close-icon').on('click', function() {
 
     // populate location
     function PopulateSchoolCurrencyDropdown(school_id=null){
-
+        return null;
         if (school_id !=null) {
             var menuHtml='';
             var data = 'school_id='+school_id;
@@ -1642,7 +1648,7 @@ $('.close-icon').on('click', function() {
             $.ajax({
                 url: BASE_URL + '/get_school_currency',
                 data: data,
-                type: 'POST',
+                type: 'GET',
                 dataType: 'json',
                 //async: false,
                 beforeSend: function( xhr ) {
@@ -3250,7 +3256,7 @@ $('.close-icon').on('click', function() {
                     $('#end_time').val(endTime).trigger('change');
                     $('#agenda_select').trigger('change');
                     $('#Title').val('');
-                    resetStudentList();
+                    //resetStudentList();
                     getAwayStudent();
                 }
                 @endif
@@ -3332,7 +3338,7 @@ $('.close-icon').on('click', function() {
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
-            type: 'POST',
+            type: 'GET',
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view+'&list_student_id='+list_student_id,
             async: true,
             success: function(s){
@@ -3565,7 +3571,7 @@ $('.close-icon').on('click', function() {
         $.ajax({
             //url: BASE_URL + '/'+school_id+'/get_event',
             url: BASE_URL + '/get_event',
-            type: 'POST',
+            type: 'GET',
             data: 'type=fetch&location_id='+p_event_location_id+'&event_type='+p_event_type+'&school_id='+p_event_school_id+'&start_date='+start_date+'&end_date='+end_date+'&zone='+zone+'&p_view='+p_view + '&list_student_id='+list_student_id,
             //async: false,
             success: function(s){
@@ -4116,7 +4122,7 @@ $(function() {
 
 
   $('#start_date').on('change', function(e) {
-    resetStudentList();
+   // resetStudentList();
     getAwayStudent();
 });
 
@@ -4357,6 +4363,8 @@ $('#add_lesson').on('submit', function(e) {
         "name": "_token",
         "value": csrfToken,
     });
+
+    
     var errMssg = '';
 
     if(type == 1 || type == 2){
@@ -4509,6 +4517,11 @@ $('#add_lesson').on('submit', function(e) {
     if(errMssg == ""){
 
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            }
+        });
         // console.log("hello");
         $.ajax({
             url: page_action,
@@ -5170,7 +5183,7 @@ $( document ).ready(function() {
             $('#end_time').val(endTime).trigger('change');
             $('#agenda_select').trigger('change');
             $('#Title').val('');
-            resetStudentList();
+           // resetStudentList();
             getAwayStudent();
         }
 
@@ -5182,10 +5195,10 @@ $( document ).ready(function() {
     $("#check-students-availability2").click(function() {
         if (this.checked) {
             isOnlyAvailability = true;
-            resetStudentList();
+           // resetStudentList();
         } else {
             isOnlyAvailability = false;
-            resetStudentList();
+           // resetStudentList();
         }
     })
 });

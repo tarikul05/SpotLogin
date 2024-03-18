@@ -17,25 +17,9 @@
 
 
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-12">
 
         <h5>{{ __('Student') }}: <small>{{!empty($relationalData->full_name) ? $relationalData->full_name : ''}}</small></h5>
-
-		<header class="panel-heading" style="border: none;">
-			<div class="row panel-row" style="margin:0;">
-				<div class="col-sm-6 col-xs-12 header-area">
-				</div>
-				<div class="col-sm-6 col-xs-12 btn-area">
-					<div class="float-end btn-group">
-						@can('students-update')
-							<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save"><i class="fa fa-save"></i>{{ __('Save') }}</button>
-						@endcan
-						<a style="display: none;" id="delete_btn" href="#" class="btn btn-theme-warn"><em class="glyphicon glyphicon-trash"></em> {{ __('Delete:') }}</a>
-					</div>
-				</div>
-			</div>
-		</header>
-		<!-- Tabs navs -->
 
 		<nav>
 			<div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -44,7 +28,7 @@
 				<!-- <a class="nav-link" href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{__('coming soon')}}" aria-controls="nav-logo" aria-selected="false">
 					{{ __('Lesson')}}
 				</a> -->
-				<button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
+				<button class="nav-link" id="nav-lesson-tab" data-bs-toggle="tab" data-bs-target="#tab_3" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('Lesson') }}</button>
 
 				<!-- <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#tab_4" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{ __('User Account') }}</button> -->
 			</div>
@@ -72,7 +56,7 @@
 						<div class="section_header_class">
 							<label id="teacher_personal_data_caption">{{ __('Student Personal Information') }}</label>
 						</div>
-						<div class="card">
+						<div class="cardd">
 							<div class="card-body bg-tertiary">
 						<div class="row">
 							<div class="col-md-6">
@@ -213,7 +197,7 @@
 							<div class="section_header_class">
 								<label id="address_caption">{{__('Level') }}</label>
 							</div>
-							<div class="card">
+							<div class="cardd">
 								<div class="card-body bg-tertiary">
 							<div class="row">
 								<div class="col-md-6">
@@ -285,12 +269,11 @@
 									<div class="section_header_class">
 										<label id="private_comment_caption">{{__('Private comment') }}</label>
 									</div>
-									<div class="card">
+									<div class="cardd">
 										<div class="card-body bg-tertiary">
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-12">
 											<div class="form-group row">
-												<label class="col-lg-3 col-sm-3 text-left">{{__('Private comment') }} :</label>
 												<div class="col-sm-7">
 													<textarea class="form-control" cols="60" id="comment" name="comment" rows="5">{{!empty($relationalData->comment) ? old('comment', $relationalData->comment) : old('comment')}}</textarea>
 												</div>
@@ -308,7 +291,7 @@
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Address') }}</label>
 					</div>
-					<div class="card">
+					<div class="cardd">
 						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
@@ -377,7 +360,7 @@
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Billing address - Same as above') }} <input onclick="bill_address_same_as_click()" type="checkbox" name="bill_address_same_as" id="bill_address_same_as"></label>
 					</div>
-					<div class="card">
+					<div class="cardd">
 						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
@@ -442,7 +425,7 @@
 					<div class="section_header_class">
 						<label id="address_caption">{{__('Contact Information (At least one email needs to be selected to receive invoices)') }}</label>
 					</div>
-					<div class="card">
+					<div class="cardd">
 						<div class="card-body bg-tertiary">
 					<div class="row">
 						<div class="col-md-6">
@@ -464,15 +447,19 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="form-group row">
-							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
+								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father's email") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
-										<input class="form-control" id="mother_phone" name="mother_phone" value="{{!empty($student->mother_phone) ? old('mother_phone', $student->mother_phone) : old('mother_phone')}}" type="text">
+										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span>
+										<input class="form-control" id="father_email" name="father_email" value="{{!empty($student->father_email) ? old('father_email', $student->father_email) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 									</div>
 								</div>
 							</div>
+
+
+					
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="student_phone" id="student_phone">{{__("Student's phone:") }} :</label>
 								<div class="col-sm-7">
@@ -493,15 +480,18 @@
 									</div>
 								</div>
 							</div>
+							
+
 							<div class="form-group row">
-								<label class="col-lg-3 col-sm-3 text-left" for="father_email" id="father_email">{{__("Father's email") }} :</label>
+							<label class="col-lg-3 col-sm-3 text-left" for="mother_phone" id="mother_phone">{{__("Mother's phone") }} :</label>
 								<div class="col-sm-7">
 									<div class="input-group">
-										<span class="input-group-addon"><input type="checkbox" name="father_notify" value="1" {{ !empty($student->father_notify) ? 'checked' : '' }} ></span>
-										<input class="form-control" id="father_email" name="father_email" value="{{!empty($student->father_email) ? old('father_email', $student->father_email) : old('father_email')}}" type="text"><span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+										<span class="input-group-addon"><i class="fa fa-phone-square"></i></span>
+										<input class="form-control" id="mother_phone" name="mother_phone" value="{{!empty($student->mother_phone) ? old('mother_phone', $student->mother_phone) : old('mother_phone')}}" type="text">
 									</div>
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-lg-3 col-sm-3 text-left" for="mother_email" >{{__("Mother's email") }} :</label>
 								<div class="col-sm-7">
@@ -525,7 +515,12 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="p-3">
+					<button type="submit" id="save_btn" name="save_btn" class="btn btn-theme-success student_save">{{ __('Save') }}</button>
+				</div>
 				</form>
+		
 				<div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
 					<form role="form" id="form_invoicing" class="form-horizontal" method="post" action="#">
 						<input type="hidden" name="selected_month" id="selected_month" value="">
@@ -583,6 +578,7 @@
 						<!-- <div class="alert alert-danger" id="lesson_footer_div" style="display: block;">
 							<label id="verify_label_id" style="display: block;">{{ __('Please check all entries before you can convert these items into invoices.') }}</label>
 						</div> -->
+						
 					</form>
 
 
@@ -713,6 +709,7 @@
 								</div>
 							</div>
 						</div>
+						
 						<input type="hidden" name="selected_tax_ids" value="">
 					</form>
 				</div>
@@ -1011,7 +1008,7 @@ $("#country_code, #billing_country_code").trigger('change')
 		var auto_id = 0;
 		var inv_type=getUrlVarsO()["inv_type"];
 
-		console.log('he', JSON.stringify(selectedTaxIds))
+	
 		var tax_ids = selectedTaxIds
 
 		var sdiscountPercentInput = document.getElementById('sdiscount_percent_1');
@@ -1063,7 +1060,7 @@ $("#country_code, #billing_country_code").trigger('change')
 			success: function(result) {
 				if (result.status == 'success') {
 					auto_id = result.auto_id;
-                    console.log(result)
+                    //console.log(result)
 					successModalCall("{{ __('invoice drafted')}}");
 
 					//location.reload(); //commented by soumen divert to invoice screen.
@@ -1074,7 +1071,7 @@ $("#country_code, #billing_country_code").trigger('change')
 			}, // success
 			error: function(ts) {
 				//errorModalCall(ts);
-				console.log(ts)
+				//console.log(ts)
 				// alert(ts.responseText + ' Generate Invoice')
 			}
 		}); // Ajax
@@ -1157,6 +1154,15 @@ $(function() {
 		$('#active_tab').val(x[0].id);
 		$('#active_tab_user').val(x[0].id);
 	$('button[data-bs-toggle=tab]').click(function(e){
+
+		if(e.target.id == 'nav-lesson-tab'){
+			$('#save_btn').hide();
+		} else {
+			setTimeout(() => {
+				$('#save_btn').show();
+			}, 500);
+		}
+
 		var target = $(e.target).attr("data-bs-target_val") // activated tab
 		$('#active_tab').val(target);
 		$('#active_tab_user').val(target);
@@ -1175,7 +1181,7 @@ $(function() {
 	});
 
 	var saction= getUrlVarsO()["action"];
-	console.log(saction)
+	//console.log(saction)
 
 	//For fetching the student details
 	//document.getElementById("sperson_id").value=getUrlVarsO()["person_id"];
@@ -1191,7 +1197,7 @@ $(function() {
 		vtab='';
 	}
 	if (vtab == 'tab_3') {
-		document.getElementById("delete_btn").style.display="none";
+		//document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {
@@ -1381,7 +1387,7 @@ $('#save_btn').click(function (e) {
 
 		//resultHtml='<tr><td colspan="8"><font color="blue"><h5> Cours disponibles à la facturation</h5></font></tr>';
 		data = 'type=' + person_type + '&school_id=' + school_id + '&p_person_id=' + p_person_id + '&p_billing_period_start_date='+p_billing_period_start_date+'&p_billing_period_end_date=' + p_billing_period_end_date+'&p_pending_only='+p_pending_only+'&inv_type=' + inv_type;
-		console.log(data);
+		//console.log(data);
 		$.ajax({
 			url: BASE_URL + '/get_student_lessons',
 			//url: '../student/student_events_data.php',
@@ -1545,7 +1551,7 @@ $('#save_btn').click(function (e) {
 							} else {
 								resultHtml += '<td>' + value.category_name + '</td>';
 							}
-                            console.log(value)
+                           // console.log(value)
 							resultHtml += '<td>' + value.teacher_name + '</td>';
 							if (value.event_type == 100) {
 								if (value.count_name > 1) {
@@ -1816,7 +1822,7 @@ $('#save_btn').click(function (e) {
 							}
 							if (value.is_sell_invoiced > 0) {
 									//comments as Kim as per Sportlogin Before the app.doc
-                                    console.log(value.is_sell_invoiced);
+                                  //  console.log(value.is_sell_invoiced);
 								resultHtml += " <i class='fa fa-check'><i>";
 							}
 
@@ -1995,7 +2001,7 @@ $('#save_btn').click(function (e) {
 			}, // success
 			error: function(ts) {
 				//errorModalCall(GetAppMessage('error_message_text'));
-				console.log(ts.responseText + ' populate_student_lesson')
+				//console.log(ts.responseText + ' populate_student_lesson')
 			}
 		}); // Ajax
 
@@ -3051,7 +3057,7 @@ $(function() {
 
     var vtab = '{!! Session::get('vtab') !!}';
     if (vtab == 'tab_3') {
-		document.getElementById("delete_btn").style.display="none";
+		//document.getElementById("delete_btn").style.display="none";
 		document.getElementById("save_btn").style.display="none";
 		activaTab('tab_3');
 	} else {

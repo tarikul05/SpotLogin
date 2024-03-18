@@ -1,12 +1,15 @@
 @extends('layouts.auth')
 @section('title', 'Sportlogin')
 @section('content')
-<!-- Full Page Image Header with Vertically Centered Content -->
 <header class="masthead">
-    <div class="circle-bg"></div>
+  <div class="circle-bg"></div>
   <div class="container-fluid h-100 position-relative pt-5">
-    <img src="{{ asset('img/preview-video.png') }}" style="left:20px; width:250px; border-radius:10px; margin-bottom:20px; opacity:.7;" class="preview-video">
-        <h1 class="mb-0 gilroy-bold text-white"><!--<img src="{{ asset('img/christmas.png') }}">-->Sportlogin</h1>
+    <div class="text-center position-relative pt-2" style="margin:0 auto; width:100%; max-width:375px;" class="preview-video">
+    <img src="{{ asset('img/nguyen-thu-hoai-v0H-vn0BixI-un@2x.png') }}" style="margin:0 auto; width:100%; max-width:375px; border-radius:15px; margin-bottom:20px; opacity:.6;" class="preview-video">
+    <img src="{{ asset('img/play2.png') }}" class="playButton" style="width:52px; position:absolute; bottom:100px; right:155px; opacity:.9;">
+    <h1 style="position:absolute; top:7px; right:5px; font-size:1.2em; background-color:#0075bf; padding:1px; padding-right:10px; color:#FFF; margin:10px; border-radius:15px;" class="gilroy-bold"><img src="{{ asset('img/SPORT-LOGIN-logo.png') }}" style="width:32px;" width="30">What is SportLogin</h1>
+    </div>
+        <h1 class="mb-0 gilroy-bold text-white" class="titlesportlogin"><!--<img src="{{ asset('img/christmas.png') }}">-->Sportlogin</h1>
         <h4 class="gilroy-bold text-white">{{ __('Your off-ice champion') }} </h4>
         <div class="masthead-btn-area" style="display: none;">
           <a href="https://apps.apple.com/us/app/sportlogin/id6443801938" class="head-btn"><img src="{{ asset('img/app-store.svg') }}" width="148"></a>
@@ -273,6 +276,14 @@
 
     const preview = document.querySelector(".preview-video");
     preview.addEventListener("click", playPauseMedia);
+    function playPauseMedia() {
+        document.getElementById("video-section").scrollIntoView({block: "nearest", inline: "start", behavior: "smooth"});
+        const media = document.querySelector("video");
+        media.play();
+    }
+
+    const previewButtonPlay = document.querySelector(".playButton");
+    previewButtonPlay.addEventListener("click", playPauseMedia);
     function playPauseMedia() {
         document.getElementById("video-section").scrollIntoView({block: "nearest", inline: "start", behavior: "smooth"});
         const media = document.querySelector("video");

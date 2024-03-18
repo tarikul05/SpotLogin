@@ -283,7 +283,8 @@ class AgendaController extends Controller
 
 
             $p_event_auto_id = $data['p_event_auto_id'];
-            $dta = Event::validate(['event_id'=>$p_event_auto_id], $locStatus);
+            $eventInit = new Event();
+            $dta = $eventInit->validate(['event_id'=>$p_event_auto_id], $locStatus);
             if ($dta) {
                 $result = array(
                     "status"     => 'success',
@@ -554,7 +555,7 @@ class AgendaController extends Controller
      * @author Mamun <lemonpstu09@gmail.com>
      * @version 0.1 written in 2022-04-09
      */
-    public function getEvent(Request $request,$schoolId = null, Event $event)
+    public function getEvent(Request $request, Event $event)
     {
         $data = $request->all();
 
@@ -1277,7 +1278,7 @@ class AgendaController extends Controller
         $schoolId = $data['school_id'];
         $school = School::active()->find($schoolId);
         if (!empty($school->country_code)) {
-            $currency = Currency::getCurrencyByCountry($school->country_code,true);
+            $currency = Currency::getCurrencyByCountry($school->country_code);
         }else{
             $currency = Currency::active()->get();
         }

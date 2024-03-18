@@ -1154,7 +1154,8 @@ class Event extends BaseModel
 
                 }
                 if ($lockStatus && $currentEvent->event_type !== 100) {
-                    Event::updateLatestPrice($event_id);
+                    $eventInit = new Event();
+                    $eventInit->updateLatestPrice($event_id);
                 }
 
 

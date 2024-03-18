@@ -16,6 +16,7 @@ class AddIsSpecialToAvailabilitiesTable extends Migration
         Schema::table('availabilities', function (Blueprint $table) {
             $table->boolean('is_special')->default(false);
             $table->text('day_special')->nullable();
+            $table->text('day_of_week')->nullable();
         });
     }
 

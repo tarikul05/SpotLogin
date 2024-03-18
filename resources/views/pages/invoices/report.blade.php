@@ -82,7 +82,7 @@
             <div class="mb-4">
                 <div class="card-body p-3 text-right">
                 <b>Total Discount</b><div class="text-lowercase" id="totalDiscount"></div>
-                <b>Total amount invoiced (including taxes)</b> <div class="text-lowercase" id="totalAmountLessonHT"></div>
+                <b>Total amount invoiced (excluding taxes)</b> <div class="text-lowercase" id="totalAmountLessonHT"></div>
                 <b>Net total (after taxes)</b> <div class="text-lowercase" id="totalAmount"></div>
                 </div>
             </div>

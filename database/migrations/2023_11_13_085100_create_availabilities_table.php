@@ -20,7 +20,7 @@ class CreateAvailabilitiesTable extends Migration
                 $table->string('day_of_week');
                 // Ajoutez d'autres colonnes si nécessaire
 
-                $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+                $table->foreign('student_id')->references('id')->on('students');
                 $table->timestamps();
             });
         }

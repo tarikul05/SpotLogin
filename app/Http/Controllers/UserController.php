@@ -87,7 +87,8 @@ class UserController extends Controller
             $schoolData['default_currency_code'] = 'USD';
 
             if (!empty($data['country_code'])) {
-                $currencyExists = Currency::getCurrencyByCountry($data['country_code']);
+                $currencyModel = new Currency();
+                $currencyExists = $currencyModel->getCurrencyByCountry($data['country_code']);
                 if ($currencyExists) {
                     $schoolData['default_currency_code'] = $currencyExists->currency_code;
                 }

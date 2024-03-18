@@ -14,6 +14,10 @@
 }
 
 
+.oldermails:hover {
+    cursor: pointer;
+    opacity: .95!important;
+}
 
 .navbar-light .navbar-nav .nav-link.active,
 .navbar-light .navbar-nav .show>.nav-link,
@@ -189,6 +193,18 @@ button#add_more_expense_btn {
 	background-color: #b3d6ec;
 	border: 1px solid #b3d6ec;
 	border-radius: 4px;
+}
+
+.email_send_btn {
+	width: 300px;
+	margin:0 auto!important;
+}
+
+@media (max-width: 768px) {
+	.email_send_btn {
+		width: 100%;
+		margin:0 auto;
+	}
 }
 
 @media (max-width: 768px) {

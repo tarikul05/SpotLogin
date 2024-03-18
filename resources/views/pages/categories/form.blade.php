@@ -28,6 +28,9 @@
         <label for="name">Name:</label>
         <input class="form-control" type="text" name="name" value="{{ old('name', $category->name ?? '') }}">
 
+        <br><label for="description">Description:</label>
+        <textarea name="description" class="form-control">{{ old('description', $category->description ?? '') }}</textarea>
+
         <br>
         <button class="btn btn-success" type="submit">{{ isset($category) ? 'Update' : 'Create' }}</button>
     </form>

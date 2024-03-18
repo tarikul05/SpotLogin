@@ -61,10 +61,11 @@
                                         $total_event = 0;
                                         $total_min = 0;
                                         $total = 0;
-                                        $invoice->date_invoice = Helper::formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
-                                        $invoice->date_due = $invoice->date_due ? Helper::formatDateTimeZone($invoice->date_due, 'long','UTC',$zone) : '';
-                                        $invoice->period_starts = Helper::formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
-                                        $invoice->period_ends = Helper::formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
+                                        $initHelper = new Helper();
+                                        $invoice->date_invoice = $initHelper->formatDateTimeZone($invoice->date_invoice, 'long','UTC',$zone);
+                                        $invoice->date_due = $invoice->date_due ? $initHelper->formatDateTimeZone($invoice->date_due, 'long','UTC',$zone) : '';
+                                        $invoice->period_starts = $initHelper->formatDateTimeZone($invoice->period_starts, 'long','UTC',$zone);
+                                        $invoice->period_ends = $initHelper->formatDateTimeZone($invoice->period_ends, 'long','UTC',$zone);
 
                                     @endphp
 
@@ -82,8 +83,8 @@
 
                                             @foreach($group as $key => $item)
                                                 @php
-
-                                                $item->item_date = Helper::formatDateTimeZone($item->item_date, 'long','UTC',$zone);
+                                                $initHelper = new Helper();
+                                                $item->item_date = $initHelper->formatDateTimeZone($item->item_date, 'long','UTC',$zone);
 
                                                 @endphp
                                                 <tr>
@@ -1607,6 +1608,8 @@ function extractExtraCharges($inputString) {
 
     function SendPayRemiEmail(p_value,p_invoice_type,p_school_id) {
 
+      $('#pageloader').show();
+
         $('#seleted_auto_id').val(p_value);
         $('#p_school_id').val(p_school_id);
 
@@ -1641,8 +1644,9 @@ function extractExtraCharges($inputString) {
             }
         }); // Ajax
 
-
-        $("#email_list_modal").modal('show');
+        setTimeout(function () {
+            $("#email_list_modal").modal('show');
+        }, 1500);
 
     };
 

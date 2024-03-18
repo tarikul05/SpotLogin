@@ -7,8 +7,9 @@
 @php
 	//$zone = $_COOKIE['timezone_user'];
 	$zone = $timezone;
-	$date_start = Helper::formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
-	$date_end = Helper::formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
+	$initDate = new Helper();
+	$date_start = $initDate->formatDateTimeZone($eventData->date_start, 'long','UTC',$zone);
+	$date_end = $initDate->formatDateTimeZone($eventData->date_end, 'long','UTC', $zone);
 	$priceShow = ($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin() || $AppUI->isTeacherAdmin()) && ($eventData->event_invoice_type == 'S') || ($AppUI->isTeacher() && ($eventData->event_invoice_type == 'T')) 
 @endphp
 @section('content')
