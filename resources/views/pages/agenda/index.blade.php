@@ -1612,13 +1612,8 @@ $('.close-icon').on('click', function() {
                                 textAdmin = "<span class='text-danger'>("+value.invoiced_type+")</span> ";
                             }
 
-                           /* @php
-                                $selected = (session('last_cat') == $eventcat->id) ? 'selected' : '';
-                            @endphp*/
-
-                            //resultHtml += '<option data-s_thr_pay_type="{{$eventcat->s_thr_pay_type}}" data-s_std_pay_type="{{$eventcat->s_std_pay_type}}" data-t_std_pay_type="{{$eventcat->t_std_pay_type}}" value="{{$eventcat->id}}" data-invoice="{{$eventcat->invoiced_type}}" {{$selected}}>' + value.title + '{{$eventcat->title}}</option>';
-                           
                             resultHtml+='<option data-s_thr_pay_type="'+value.s_thr_pay_type+'" data-s_std_pay_type="'+value.s_std_pay_type+'" data-t_std_pay_type="'+value.t_std_pay_type+'" value="'+value.id+'" data-invoice="'+value.invoiced_type+'">'+textAdmin+''+value.title+'</option>';
+                            
                         });
                         $('#category_select').html(resultHtml);
                         $('#category_select').change();
