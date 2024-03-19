@@ -1274,7 +1274,8 @@ class LessonsController extends Controller
         if ($request->isMethod('post')){
             $lessonData = $request->all();
             $studentCount = $lessonData['no_of_students'];
-            $eventPrice = Event::priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
+            $initEventPrice = new Event();
+            $eventPrice = $initEventPrice->priceCalculations(['event_category_id'=>$lessonData['event_category_id'],'teacher_id'=>$lessonData['teacher_select'],'student_count'=>$lessonData['no_of_students']]);
             $lessonPriceTeacher = LessonPriceTeacher::active()->where(['event_category_id'=>$lessonData['event_category_id']])->first();
             $duration = $lessonData['duration'];
 
