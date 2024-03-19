@@ -1414,7 +1414,7 @@ function extractExtraCharges($inputString) {
                     }
                 },   //success
                 error: function (ts) {
-                    errorModalCall('error_message_text');
+                  //  errorModalCall('error_message_text');
 
                 }
             }); //ajax-type
@@ -1533,7 +1533,7 @@ function extractExtraCharges($inputString) {
                 }
                 else {
 
-                    errorModalCall(GetAppMessage('error_message_text'));
+                  //  errorModalCall(GetAppMessage('error_message_text'));
 
                 }
             },   //success
@@ -1788,9 +1788,10 @@ function extractExtraCharges($inputString) {
 
         if (p_invoice_id == '') {
             errorModalCall(GetAppMessage('error_message_text'));
-
             return false;
         }
+
+        $('#pageloader').show();
 
         var vform = $("#form_details")[0];
         var form_data = new FormData(vform);
@@ -1813,23 +1814,22 @@ function extractExtraCharges($inputString) {
             cache: false,
             processData: false,
             success: function (result) {
-                console.log(result);
                 var status = result.status;
                 if (status == 'success') {
+                    $('#pageloader').hide();
                     successModalCall("{{ __('Invoice updated') }}");
                     var p_school_id = document.getElementById("p_school_id").value;
                     return true;
-
                     //alert(GetAppMessage("save_confirm_message"));
                 }
                 else {
+                    $('#pageloader').hide();
                     errorModalCall(GetAppMessage('error_message_text'));
-
                 }
             },   //success
             error: function (ts) {
+                $('#pageloader').hide();
                 errorModalCall(GetAppMessage('error_message_text'));
-
             }
         }); //ajax-type
         return false;

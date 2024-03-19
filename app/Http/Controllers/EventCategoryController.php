@@ -75,7 +75,7 @@ class EventCategoryController extends Controller
                         $s_thr_pay_type = !empty($cat['s_thr_pay_type']) ? $cat['s_thr_pay_type'] : 0;
                         $s_std_pay_type = !empty($cat['s_std_pay_type']) ? $cat['s_std_pay_type'] : 0;
                         $t_std_pay_type = !empty($cat['t_std_pay_type']) ? $cat['t_std_pay_type'] : 0;
-                        if ($invoicedType == 'T') {
+                        if ($invoicedType == 'T' && $s_std_pay_type == 0) {
                             $s_thr_pay_type = $s_std_pay_type = 0;
                         }else{
                             $t_std_pay_type = 0;
