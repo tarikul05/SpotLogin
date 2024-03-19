@@ -42,9 +42,9 @@
                                                 <input type="radio" class="form-check-input invcat_name" name="category[{{$count}}][invoice]" value="S" <?php if($cat->invoiced_type == 'S'){ echo 'checked'; }  ?>> <label> {{ __('School Invoiced') }}</label>
                                             </div>
 
-                                            <div>
+                                            <!--<div>
                                                 <input type="radio" class="form-check-input invcat_name" name="category[{{$count}}][invoice]" value="T" <?php if($cat->invoiced_type == 'T'){ echo 'checked'; }  ?>> <label> {{ __('Teacher Invoiced') }}</label>
-                                            </div>
+                                            </div>-->
                                         </td>
                                         <td>
 
@@ -52,11 +52,11 @@
                                                 @if(!$AppUI->isTeacherAdmin())
                                                 <div class="col-md-6">
                                                     <label class="titl">Teachers</label>
-                                                    <div class="form-check">
+                                                    <!--<div class="form-check">
                                                         <label class="form-check-label" for="radio2{{$count}}">
                                                             <input type="radio" class="form-check-input" id="radio2{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="0" <?php if($cat->s_thr_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
                                                         </label>
-                                                    </div>
+                                                    </div>-->
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="radio{{$count}}">
                                                             <input type="radio" class="form-check-input" id="radio{{$count}}" name="category[{{$count}}][s_thr_pay_type]" value="1" <?php if($cat->s_thr_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
@@ -68,7 +68,7 @@
                                                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                                                     <label class="titl">Students</label>
                                                     @endif
-                                                    <div class="form-check">
+                                                    <!--<div class="form-check">
                                                         <label class="form-check-label" for="sradio2{{$count}}">
                                                             <input type="radio" class="form-check-input" id="sradio2{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="0" <?php if($cat->s_std_pay_type == 0){ echo 'checked'; }  ?>>Hourly rate
                                                         </label>
@@ -77,7 +77,7 @@
                                                         <label class="form-check-label" for="sradio{{$count}}">
                                                             <input type="radio" class="form-check-input" id="sradio{{$count}}" name="category[{{$count}}][s_std_pay_type]" value="1" <?php if($cat->s_std_pay_type == 1){ echo 'checked'; }  ?>>Fixed price <span class="d-none d-sm-inline-block" style="font-size:11px;">(per student /hour)</span>
                                                         </label>
-                                                    </div>
+                                                    </div>-->
                                                     @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                                                     <div class="form-check">
                                                         <label class="form-check-label" for="sradio3{{$count}}">

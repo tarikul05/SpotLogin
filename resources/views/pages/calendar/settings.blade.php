@@ -85,9 +85,9 @@
                 <div>
                     <input class="form-check-input invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="S" checked> <label> School Invoiced</label>
                 </div>
-                <div>
+                <!--<div>
                     <input class="form-check-input invcat_name" name="category[`+lst_id+`][invoice]" type="radio" value="T"> <label> Teacher Invoiced </label>
-                </div>
+                </div>-->
             @endif
         </td>
         <td>
@@ -95,11 +95,11 @@
             @if(!$AppUI->isTeacherAdmin())
             <div class="col-md-6">
                 <label class="titl">Teachers</label>
-                <div class="form-check">
+                <!--<div class="form-check">
                     <label class="form-check-label" for="radio2`+lst_id+`">
                         <input type="radio" class="form-check-input" id="radio2`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="0">Hourly rate
                     </label>
-                </div>
+                </div>-->
                 <div class="form-check">
                     <label class="form-check-label" for="radio`+lst_id+`">
                         <input type="radio" class="form-check-input" id="radio`+lst_id+`" name="category[`+lst_id+`][s_thr_pay_type]" value="1">Fixed price <span style="font-size:11px;" class="d-none d-sm-inline-block">(per student /hour)</span>
@@ -111,7 +111,7 @@
                 @if($AppUI->isTeacherSchoolAdmin() || $AppUI->isSchoolAdmin())
                 <label class="titl">Students</label>
                 @endif
-                <div class="form-check">
+                <!--<div class="form-check">
                     <label class="form-check-label" for="sradio2`+lst_id+`">
                         <input type="radio" class="form-check-input" id="sradio2`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="0">Hourly rate
                     </label>
@@ -120,7 +120,7 @@
                     <label class="form-check-label" for="sradio`+lst_id+`">
                         <input type="radio" class="form-check-input" id="sradio`+lst_id+`" name="category[`+lst_id+`][s_std_pay_type]" value="1">Fixed price <span style="font-size:11px;" class="d-none d-sm-inline-block">(per student /hour)</span>
                     </label>
-                </div>
+                </div>-->
                 @if($AppUI->isSchoolAdmin())
                 <div class="form-check">
                     <label class="form-check-label" for="sradio3`+lst_id+`">
