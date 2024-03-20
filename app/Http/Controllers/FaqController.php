@@ -17,8 +17,9 @@ class FaqController extends Controller
 
     public function tutos()
     {
+        $categories = Category::all();
         $faqs = Faq::with('category')->get();
-        return view('pages.faqs.tutos', compact('faqs'));
+        return view('pages.faqs.tutos', compact('faqs', 'categories'));
     }
 
     public function tutosShow(Faq $faq)
