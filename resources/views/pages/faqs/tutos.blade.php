@@ -1,15 +1,20 @@
 @extends('layouts.main')
 
+@section('head_links')
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+@endsection
 @section('content')
 <div class="content">
     <div class="container-fluid body pt-3 pb-3">
 
         <h3> {{__('Tutorials')}}</h3>
 
-        @foreach ($categories as $category)
-        <h5 style="color:#0075bf;">{{ $category->name }}</h5> <!-- Afficher le nom de la catégorie -->
-    
-        <div class="row" id="tutos_col">
+        @foreach ($categories as $index => $category)
+        <h5 style="color:#0075bf; cursor: pointer;" data-toggle="collapse" data-target="#category{{ $category->id }}" aria-expanded="{{ $index == 0 ? 'true' : 'false' }}">{{ $category->name }} <i class="fa-solid fa-chevron-down"></i></h5> <!-- Ajouter un collapse au titre de la catégorie -->
+
+            <div class="mb-4 collapse {{ $index == 0 ? 'show' : '' }}" id="category{{ $category->id }}"> <!-- Ajouter la classe 'show' pour la première catégorie -->
+                
+        <div class="row m-4" id="tutos_col">
             @foreach ($faqs as $faq)
                 @if ($faq->category_id == $category->id) <!-- Vérifier si la faq appartient à la catégorie en cours -->
                     <div class="col-md-3 mb-4">
@@ -19,7 +24,7 @@
                                     <!--<div class="embed-responsive embed-responsive-16by9">
                                         <x-embed url="{{ $faq->youtube_link }}" />
                                     </div>-->
-                                    <video width="100%" controls style="border-radius:10px 10px 0 0; padding-bottom:0px; margin-bottom:0px;">
+                                    <video width="100%" height="200" controls style="border-radius:10px 10px 0 0; padding:0px; margin:0px;" poster="{{ asset('img/background-video.png') }}">
                                         <source src="{{ $faq->youtube_link }}" type="video/mp4">
                                         Your browser does not support the video player.
                                     </video>
@@ -35,6 +40,7 @@
                     </div>
                 @endif
             @endforeach
+        </div>
         </div>
     @endforeach
 
@@ -64,6 +70,7 @@
 
 @section('footer_js')
     <script>
+        
         function openFaqModal(title, description) {
             $('#faqModalLabel').text(title);
             $('#faqModalDescription').text(description);
