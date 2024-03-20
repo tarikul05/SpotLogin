@@ -40,8 +40,28 @@
         <br><label for="description">Description:</label>
         <textarea name="description" class="form-control">{{ old('description', $faq->description ?? '') }}</textarea>
 
-        <br><label for="youtube_link">Link: (youtube link or /videos/file-name.mp4)</label>
-        <input type="text" class="form-control" name="youtube_link" value="{{ old('youtube_link', $faq->youtube_link ?? '') }}">
+        <br><label for="youtube_link">Choose a video</label>
+        <!--<input type="text" class="form-control" name="youtube_link" value="{{ old('youtube_link', $faq->youtube_link ?? '') }}">-->
+
+        <select name="youtube_link" class="form-control">
+            @foreach($videos as $video)
+                <?php
+                    // Séparer le nom du répertoire et le nom de la vidéo
+                    $parts = explode('/', $video);
+                    $directory = $parts[0];
+                    $videoName = isset($parts[1]) ? $parts[1] : ''; // Vérifier si l'index 1 existe
+                ?>
+                @if (!isset($group) || $group != $directory)
+                    @if (isset($group))
+                        </optgroup>
+                    @endif
+                    <optgroup label="{{ $directory }}">
+                @endif
+                <option value="{{ asset('videos/' . $video) }}">{{ $videoName }}</option>
+                <?php $group = $directory; ?>
+            @endforeach
+            </optgroup>
+        </select>
 
         <br>
         <button class="btn btn-success" type="submit">{{ isset($faq) ? 'Update' : 'Create' }}</button>
