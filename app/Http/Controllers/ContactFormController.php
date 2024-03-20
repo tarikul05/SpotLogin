@@ -157,6 +157,7 @@ class ContactFormController extends Controller
         $contactForm = new ContactForm();
         $contactForm->sujet = $subject;
         $contactForm->email_expediteur = $authUser->email;
+        $sender_name = $authUser->firstname.' '. $authUser->lastname;
         if($emailTo !== "staff") {
             $contactForm->email_destinataire = $emailToConcatenated;
             $contactForm->id_destinataire = $person_id;
@@ -183,10 +184,10 @@ class ContactFormController extends Controller
 
         if($emailTo !== "staff") {
             foreach ($data['emailTo'] as $recipient) {
-                Mail::send(new ContactFormMailable($subject, $recipient, $headerMessage, $messageBody, $contactFormId, $contactForm->id_destinataire));
+                Mail::send(new ContactFormMailable($subject, $sender_name, $contactForm->email_expediteur, $recipient, $headerMessage, $messageBody, $contactFormId, $contactForm->id_destinataire));
             }
         } else {
-            Mail::send(new ContactFormMailable($subject, $contactForm->email_destinataire, $headerMessage, $messageBody, $contactFormId, $contactForm->id_destinataire));
+            Mail::send(new ContactFormMailable($subject, $sender_name, $contactForm->email_expediteur, $contactForm->email_destinataire, $headerMessage, $messageBody, $contactFormId, $contactForm->id_destinataire));
         }
 
 
@@ -215,6 +216,7 @@ class ContactFormController extends Controller
         $contactForm = new ContactForm();
         $contactForm->sujet = $subject;
         $contactForm->email_expediteur = $email_from;
+        $sender_name = $authUser->firstname.' '. $authUser->lastname;
         $contactForm->email_destinataire = $emailTo;
         $contactForm->id_destinataire = $person_id;
         $contactForm->id_expediteur = $id_destinataire;
@@ -224,7 +226,7 @@ class ContactFormController extends Controller
 
         $contactFormId = $contactForm->id; 
 
-        Mail::send(new ContactFormMailable($contactForm->sujet, $contactForm->email_destinataire, $headerMessage, $messageBody, $discussion_id, $contactForm->id_destinataire));
+        Mail::send(new ContactFormMailable($contactForm->sujet, $sender_name, $contactForm->email_expediteur, $contactForm->email_destinataire, $headerMessage, $messageBody, $discussion_id, $contactForm->id_destinataire));
 
         if($person_id == 0) {
             return redirect()->route('contact.answer', $discussion_id)->with('success', 'Message sent successfully!');
