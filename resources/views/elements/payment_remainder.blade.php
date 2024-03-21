@@ -4,7 +4,7 @@
         <div class="d-none d-sm-block">
                 <div class="text-success">
                     <p class="text">
-                        <span class="day_count"><?php echo $day_diff ?></span> {{ __('days remaining in your trial period') }} <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}!</a>
+                        <span class="day_count"><?php echo $day_diff ?></span> {{ __('days remaining in your trial period') }} <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}</a>
                     </p>
                     </div>
                 </div>
@@ -13,7 +13,7 @@
         <div class="d-block d-sm-none">
             <div class="text-success pt-3 text-center">
                 <p class="text small">
-                    {{ __('Trial period valid') }} <?php echo $day_diff ?> days <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}!</a>
+                    {{ __('Trial period valid') }} <?php echo $day_diff ?> days <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}</a>
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="subscription_info">
                 <div class="text-success">
                     <p class="text pb-2">
-                      Trial period ended. <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}!</a>
+                      Trial period ended. <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}</a>
                         <?php /*date('M j, Y', strtotime($trial_ends_date)) date('M j, Y, g:i a', strtotime($trial_ends_date))*/ ?>
                     </p>
                 </div>
@@ -33,7 +33,7 @@
         <div class="d-block d-sm-none">
             <div class="text-warning pt-3">
                 <p class="text small">
-                    Your trial period ended. <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}!</a>
+                    Trial period ended. <a class="custom-link" href="{{ route('subscription.upgradePlan') }}"> {{ __('Upgrade now') }}</a>
                 </p>
             </div>
         </div>

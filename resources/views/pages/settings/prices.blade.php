@@ -67,7 +67,7 @@
                                         } else {
                                         }
                                         ?>
-                                        <?php if($AppUI->isSchoolAdmin()) { ?>
+                                        <?php if(($AppUI->isSchoolAdmin() || $AppUI->isTeacherSchoolAdmin()) && $category->invoiced_type == "S") { ?>
                                             <?php if($lessionPrice->divider == -1) { ?>
                                             <tr class="{{$class}}">
                                                 <input type="hidden" name="data[{{$category->id}}][{{$lessionPrice->lesson_price_student}}][id]" value="{{ isset($ltprice[$category->id][$lessionPrice->lesson_price_student]) ? $ltprice[$category->id][$lessionPrice->lesson_price_student]['id'] : '' }}">

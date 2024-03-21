@@ -49,15 +49,15 @@ class SettingsController extends Controller
             }
 
 
-        if($user->isSchoolAdmin() || $user->isTeacherAdmin()){
-            $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->get();
+        if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()){
+            $eventCategory = EventCategory::schoolInvoiced()->where('school_id',$schoolId)->where('invoiced_type', 'S')->get();
         }else{
-            $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->where('created_by', $user->id)->get();
+            $eventCategory = EventCategory::active()->where('school_id',$schoolId)->where('created_by', $user->id)->get();
         }
 
         $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();
         $lessonPriceTeachers = LessonPriceTeacher::active()
-                              ->where(['teacher_id' => $teacher->id])
+                              //->where(['teacher_id' => $teacher->id])
                               ->whereIn('event_category_id',$eventCategory->pluck('id'))
                               ->get();
         $ltprice =[];
@@ -70,10 +70,10 @@ class SettingsController extends Controller
         $genders = config('global.gender');
 
         $schoolTeacher = SchoolTeacher::active()->where('teacher_id', $user->person_id)->first();
-        if($schoolTeacher->role_type === "school_admin" || $schoolTeacher->role_type === "teachers_admin") {
-            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get(); //->where('invoiced_type', "S")
+        if($user->isSchoolAdmin() || $user->isTeacherSchoolAdmin()){
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', 'S')->get(); //->where('invoiced_type', "S")
         } else {
-            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', "T")->where('created_by', $user->id)->get();
+            $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
         }
 
 
@@ -102,6 +102,78 @@ class SettingsController extends Controller
         'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope', 'calendarSettings'));
     }
 
+
+    public function indexTeacher(Request $request)
+    {
+        // Récupérez l'utilisateur connecté
+        $user = auth()->user();
+
+        $calendarSettings = $user->calendarSetting ?? new CalendarSetting;
+
+        $user = Auth::user();
+        $schoolId = $request->route('school');
+        $teacherId = $request->route('teacher');
+
+        $teacher = Teacher::find($user->person_id);
+        $schoolId = $user->selectedSchoolId();
+        $schoolName = $user->selectedSchoolName();
+
+
+        $relationalData = SchoolTeacher::where([
+            ['teacher_id',$teacher->id],
+            ['school_id',$schoolId]
+            ])->first();
+            $lanCode = 'en';
+            if (Session::has('locale')) {
+                $lanCode = Session::get('locale');
+            }
+
+        $eventCategory = EventCategory::teacherInvoiced()->where('school_id',$schoolId)->where('invoiced_type', 'T')->where('created_by', $user->id)->get();
+        
+
+        $lessonPrices = LessonPrice::active()->orderBy('divider', 'asc')->get();
+        $lessonPriceTeachers = LessonPriceTeacher::active()
+                              //->where(['teacher_id' => $teacher->id])
+                              ->whereIn('event_category_id',$eventCategory->pluck('id'))
+                              ->get();
+        $ltprice =[];
+        foreach ($lessonPriceTeachers as $lkey => $lpt) {
+          $ltprice[$lpt->event_category_id][$lpt->lesson_price_student] = $lpt->toArray();
+        }
+        // dd($lessionPriceTeacher);
+
+        $countries = Country::active()->get();
+        $genders = config('global.gender');
+
+        $schoolTeacher = SchoolTeacher::active()->where('teacher_id', $user->person_id)->first();
+
+        $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('invoiced_type', 'T')->where('created_by', $user->id)->get();
+
+
+        $eventLastCatId = DB::table('event_categories')->orderBy('id','desc')->first();
+        $locations = Location::active()->where('school_id', $schoolId)->get();
+        $eventLastLocaId = DB::table('locations')->orderBy('id','desc')->first();
+        $levels = Level::active()->where('school_id', $schoolId)->get();
+        $eventLastLevelId = DB::table('levels')->orderBy('id','desc')->first();
+        $school = School::find($schoolId);
+        $InvoicesTaxData = InvoicesTaxes::active()->where(['invoice_id'=> null, 'created_by' => $user->id])->get();
+
+        $timezone = $school->timezone;
+        $europeanTimezones = DateTimeZone::listIdentifiers(DateTimeZone::EUROPE);
+        $isInEurope = in_array($timezone, $europeanTimezones);
+        $allTimezones = config('global.timezones');
+
+        // dd($relationalData);
+        return view('pages.calendar.settings_teacher')->with(compact('levels',
+        'eventLastLevelId',
+        'allTimezones',
+        'locations',
+        'school',
+        'eventLastLocaId',
+        'eventCat',
+        'InvoicesTaxData',
+        'eventLastCatId','teacher','relationalData','countries','genders','schoolId','schoolName','eventCategory','lessonPrices','ltprice', 'isInEurope', 'calendarSettings'));
+    }
 
 
 
