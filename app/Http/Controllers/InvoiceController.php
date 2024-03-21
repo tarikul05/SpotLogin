@@ -98,7 +98,7 @@ class InvoiceController extends Controller
 
         }
 
-        $invoices->orderBy('date_invoice', 'desc');
+        $invoices->orderBy('date_invoice', 'asc');
         //$invoices->orderBy('id', 'desc');
         //$invoices = Invoice::orderByRaw('DATE_FORMAT(date_invoice, "%Y-%m-%d %H:%i:%s") DESC');
         $results =  $invoices = $invoices->where('school_id', $schoolId)->get();
