@@ -55,6 +55,16 @@
                            <option value="0" @if($calendarSettings->weekends === 0) selected @endif>{{ __('No')}}</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="weekends">{{ __('Use local timezone')}}</label>
+                            <select id="current" name="current" class="form-control">
+                               <option value="0" @if($calendarSettings->current === 0) selected @endif>{{ __('No')}}</option>
+                               <option value="1" @if($calendarSettings->current === 1) selected @endif>{{ __('Yes')}}</option>
+                            </select>
+                        </div>
+
+
                     <br>
                     <button type="submit" class="btn btn-primary">{{ __('Save Schedule Settings') }}</button>
                 </form>

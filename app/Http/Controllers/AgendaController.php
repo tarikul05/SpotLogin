@@ -1242,6 +1242,16 @@ class AgendaController extends Controller
             $eventCat = EventCategory::active()->where('school_id', $schoolId)->where('created_by', $user->id)->get();
         }
 
+        //check if each category have LessonPrice
+        foreach ($eventCat as $key => $value) {
+            $lessonPrice = LessonPriceTeacher::where('event_category_id', $value->id)->first();
+           if ($lessonPrice) {
+            $value->prices = $lessonPrice;
+           }else{
+               $value->prices = [];
+           }
+        }
+
         return $eventCategory = json_encode($eventCat);
 
     }
