@@ -75,6 +75,7 @@
                 <th class="sp_only">{{ __('Client') }}</th>
                 <th class="mobile-hide">{{ __('Type') }}</th>
                 <th class="mobile-hide">{{ __('Invoice Name') }}</th>
+                <th class="mobile-hide">N°</th>
                 <th>{{ __('Amount') }}</th>
                 <th class="mobile-hide">{{ __('Status') }}</th>
                 <th class="mobile-hide"></th>
@@ -86,7 +87,7 @@
                 @php
                     $i = 0;
                 @endphp
-                @foreach($invoices as $invoice)
+                @foreach($invoices as $key => $invoice)
                     @php
                         $i++;
                         $urlInvoice = route('invoiceList');
@@ -132,7 +133,7 @@
                             $date = new DateTime($invoice->date_invoice);
                             @endphp
                             <?= $invoice->client_name ?> <br><span style="font-size:11px;">{{ $date->format('d-m-Y') }}</span>
-                            </span>
+                            </span> #{{$key+1}}
                         </td>
                         @php
                         if($invoice->invoice_type == 0){
@@ -146,9 +147,9 @@
                         }
                         $invoice_name = $invoice->invoice_name;
                         if($invoice->invoice_type ==1){
-                            $invoice_name .= '-'.$invoice->client_name. '-ID#' . $invoice->id;
+                            $invoice_name .= '-'.$invoice->client_name;
                         } else {
-                            $invoice_name .= '-'.$invoice->client_name. '-ID#' . $invoice->id;
+                            $invoice_name .= '-'.$invoice->client_name;
                         }
                         @endphp
                         <td class="responsive-td mobile-hide">
@@ -160,7 +161,9 @@
                             {{ $invoice_name}}
                             @endif
                         </td>
-
+                        <td class="responsive-td mobile-hide">
+                            #{{$key+1}}
+                          </td>
                         @if ($invoice->invoice_type == 0)
                         <td class="responsive-td">{{ $invoice->invoice_currency }} <b>{{ number_format($invoice->total_amount + $invoice->tax_amount + $invoice->extra_expenses, 2) }}</b>
 
